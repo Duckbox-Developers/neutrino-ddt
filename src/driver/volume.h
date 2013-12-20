@@ -29,7 +29,7 @@
 #include <driver/framebuffer.h>
 #include <gui/volumebar.h>
 
-class CVolume : public CChangeObserver
+class CVolume
 {
 	private:
 		CFrameBuffer * frameBuffer;
@@ -54,7 +54,6 @@ class CVolume : public CChangeObserver
 		void SetCurrentChannel(t_channel_id id) { channel_id = id; }
 		bool hideVolscale();
 		void showVolscale();
-		bool changeNotify(const neutrino_locale_t OptionName, void *);
 };
 
 #endif // __CVOLUME__

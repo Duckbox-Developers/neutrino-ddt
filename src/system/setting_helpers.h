@@ -110,7 +110,10 @@ class CFontSizeNotifier : public CChangeObserver
 
 class CSubtitleChangeExec : public CMenuTarget
 {
+	private:
+		cPlayback *playback;
 	public:
+		CSubtitleChangeExec(cPlayback *p = NULL) { playback = p; }
 		int exec(CMenuTarget* parent, const std::string & actionKey);
 };
 

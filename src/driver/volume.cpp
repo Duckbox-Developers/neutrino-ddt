@@ -204,23 +204,3 @@ void CVolume::showVolscale()
 		volscale->paint();
 	}
 }
-
-bool CVolume::changeNotify(const neutrino_locale_t OptionName, void * data)
-{
-	bool ret = false;
-	if (ARE_LOCALES_EQUAL(OptionName, NONEXISTANT_LOCALE)) {
-		int percent = *(int *) data;
-#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
-		int vol =  CZapit::getInstance()->GetVolume();
-		/* keep resulting volume = (vol * percent)/100 not more than 115 */
-		if (vol * percent > 11500)
-			percent = 11500 / vol;
-#endif
-
-		printf("CVolume::changeNotify: percent %d\n", percent);
-		CZapit::getInstance()->SetPidVolume(channel_id, apid, percent);
-		CZapit::getInstance()->SetVolumePercent(percent);
-		*(int *) data = percent;
-	}
-	return ret;
-}

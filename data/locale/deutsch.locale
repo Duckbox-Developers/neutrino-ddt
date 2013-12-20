@@ -1,4 +1,5 @@
-AUDIOSelectMenue.head Auswahl der Tonspur
+AUDIOSelectMenue.head Tonspur und Untertitel
+AUDIOSelectMenue.volume Tonspur und Lautstärkeanpassung
 EPGMenu.epgplus Vorschauübersicht
 EPGMenu.eventinfo Info zur Sendung
 EPGMenu.eventlist Vorschau aktuelles Programm
@@ -131,7 +132,6 @@ audiomenu.pref_subs Sprache
 audiomenu.pref_subs_head Untertitelwahl
 audiomenu.spdif_dd Dolby Digital über S/PDIF
 audiomenu.stereo stereo
-audiomenu.volume_adjust Lautstärke ändern, in %
 audiomenu.volume_adjustment Lautstärkeanpassung pro Kanal
 audiomenu.volume_adjustment_ac3 AC3-Tonspuren
 audiomenu.volume_adjustment_clear Gespeicherte Werte löschen
