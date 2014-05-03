@@ -2230,10 +2230,14 @@ void *CChannelList::paint_events(void *arg)
 
 void CChannelList::paint_events()
 {
-	set_threadname(__func__);
-
 	// slight race condition, but unlikely and not worth locking
 	int index = paint_events_index;
+
+	set_threadname(__func__);
+
+	usleep(200000);
+	if (index != paint_events_index)
+		return;
 
 	ffheight = g_Font[eventFont]->getHeight();
 
