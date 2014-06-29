@@ -150,7 +150,7 @@ int CAudioSetup::showAudioSetup()
 	as_oj_analogmode->setHint("", LOCALE_MENU_HINT_AUDIO_ANALOG_MODE);
 
 	//dd subchannel auto on/off
-	CMenuOptionChooser * as_oj_ddsubchn 	= new CMenuOptionChooser(LOCALE_AUDIOMENU_DOLBYDIGITAL, &g_settings.audio_DolbyDigital, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, audioSetupNotifier);
+	CMenuOptionChooser * as_oj_ddsubchn = new CMenuOptionChooser(LOCALE_AUDIOMENU_DOLBYDIGITAL, &g_settings.audio_DolbyDigital, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, audioSetupNotifier);
 	as_oj_ddsubchn->setHint("", LOCALE_MENU_HINT_AUDIO_DD);
 
 	//dd via hdmi
@@ -176,7 +176,7 @@ int CAudioSetup::showAudioSetup()
 	as_oj_vsteps = new CMenuOptionNumberChooser(LOCALE_AUDIOMENU_VOLUME_STEP, (int *)&g_settings.current_volume_step, true, 1, 25, NULL);
 	as_oj_vsteps->setHint("", LOCALE_MENU_HINT_AUDIO_VOLSTEP);
 
-	st    = new CMenuOptionNumberChooser(LOCALE_AUDIOMENU_VOLUME_START, &g_settings.start_volume, true, -1, 100, NULL, CRCInput::RC_nokey, NULL, 0, -1, LOCALE_OPTIONS_OFF);
+	st = new CMenuOptionNumberChooser(LOCALE_AUDIOMENU_VOLUME_START, &g_settings.start_volume, true, -1, 100, NULL, CRCInput::RC_nokey, NULL, 0, -1, LOCALE_OPTIONS_OFF);
 	st->setHint("", LOCALE_MENU_HINT_AUDIO_VOLSTART);
 	//clock rec
 	//CMenuOptionChooser * as_oj_clockrec new CMenuOptionChooser(LOCALE_AUDIOMENU_CLOCKREC, &g_settings.clockrec, AUDIOMENU_CLOCKREC_OPTIONS, AUDIOMENU_CLOCKREC_OPTION_COUNT, true, audioSetupNotifier);
@@ -234,7 +234,6 @@ int CAudioSetup::showAudioSetup()
 #endif
 	CMenuOptionNumberChooser *ch;
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
-	audioSetupNotifier->openMixers();
 	audioSettings->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_AUDIOMENU_MIXER_VOLUME));
 	ch = new CMenuOptionNumberChooser(LOCALE_AUDIOMENU_MIXER_VOLUME_ANALOG,
 		(int *)&g_settings.audio_mixer_volume_analog, true, 0, 100, audioSetupNotifier);
@@ -262,9 +261,6 @@ int CAudioSetup::showAudioSetup()
 
 	int res = audioSettings->exec(NULL, "");
 	selected = audioSettings->getSelected();
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
-	audioSetupNotifier->closeMixers();
-#endif
 	CZapit::getInstance()->SetVolumePercent(g_settings.audio_volume_percent_ac3, g_settings.audio_volume_percent_pcm);
 	delete audioSettings;
 #ifdef BOXMODEL_APOLLO
