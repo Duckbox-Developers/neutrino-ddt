@@ -95,7 +95,10 @@ TUXBOX_APPS_LIB_PKGCONFIG(PNG,libpng)
 TUXBOX_APPS_LIB_PKGCONFIG(AVFORMAT,libavformat)
 TUXBOX_APPS_LIB_PKGCONFIG(AVCODEC,libavcodec)
 TUXBOX_APPS_LIB_PKGCONFIG(AVUTIL,libavutil)
-TUXBOX_APPS_LIB_PKGCONFIG(BLURAY,libbluray)
+TUXBOX_APPS_LIB_PKGCONFIG(SWRESAMPLE,libswresample)
+if test "$BOXTYPE" = "coolstream"; then
+	TUXBOX_APPS_LIB_PKGCONFIG(BLURAY,libbluray)
+fi
 TUXBOX_APPS_LIB_PKGCONFIG(SIGC,sigc++-2.0)
 
 #TUXBOX_APPS_LIB_PKGCONFIG(CONFIGFILE,tuxbox-configfile)
@@ -126,6 +129,20 @@ AC_ARG_ENABLE(freesatepg,
 	[  --enable-freesatepg                  enable Freesat EPG code (experimental)],
 	[AC_DEFINE(ENABLE_FREESATEPG,1,[enable Freesat EPG code])])
 
+AC_ARG_ENABLE(fastscan,
+	AS_HELP_STRING(--enable-fastscan,include FASTSCAN support),
+	,[enable_fastscan=no])
+AM_CONDITIONAL(ENABLE_FASTSCAN,test "$enable_fastscan" = "yes")
+
+AC_ARG_ENABLE(graphlcd,
+	[  --enable-graphlcd                    enable GraphLCD support],
+	[AC_DEFINE(ENABLE_GRAPHLCD,1,[enable GraphLCD support])])
+
+AM_CONDITIONAL(ENABLE_GRAPHLCD,test "$enable_graphlcd" = "yes")
+if test "$enable_graphlcd" = "yes"; then
+	AC_DEFINE(ENABLE_GRAPHLCD,1,[include GraphLCD support])
+fi
+
 AC_ARG_ENABLE(giflib,
 	AS_HELP_STRING(--enable-giflib,use giflib instead of libungif),
 	,[enable_giflib=no])
@@ -155,6 +172,31 @@ if test "$enable_upnp" = "yes"; then
 	AC_DEFINE(ENABLE_UPNP,1,[include UPNP support - currently broken])
 fi
 
+AC_ARG_ENABLE(extupdate,
+	AS_HELP_STRING(--enable-extupdate,include extended update routine),
+	,[enable_extupdate=no])
+
+AM_CONDITIONAL(ENABLE_EXTUPDATE,test "$enable_extupdate" = "yes")
+if test "$enable_extupdate" = "yes"; then
+	AC_DEFINE(ENABLE_EXTUPDATE,1,[include extended update routine])
+fi
+
+AC_ARG_WITH(stb-hal-includes,
+	[  --with-stb-hal-includes=PATH  path for libstb-hal includes [[NONE]]],
+	[STB_HAL_INC="$withval"],[STB_HAL_INC=""])
+AC_ARG_WITH(stb-hal-build,
+	[  --with-stb-hal-build=PATH   path where libstb-hal is built [[NONE]]],
+	[STB_HAL_LIB="-L$withval"],[STB_HAL_LIB=""])
+
+AM_CONDITIONAL(USE_STB_HAL, test "$BOXTYPE" != "coolstream")
+if test "$BOXTYPE" != coolstream; then
+	AC_DEFINE(USE_STB_HAL, 1,[use libstb-hal])
+	if test "$STB_HAL_INC" = ""; then
+		AC_MSG_ERROR([need libstb-hal includes path with --with-stb-hal-includes=...])
+	fi
+	HWLIB_CFLAGS="-I$STB_HAL_INC"
+fi
+
 # Lua - embeddable scripting language
 AC_ARG_ENABLE(lua,
 	AS_HELP_STRING(--enable-lua,include Lua support),
@@ -182,7 +224,7 @@ AC_ARG_ENABLE(pip,
 
 
 AC_ARG_ENABLE(testing,
-       AS_HELP_STRING(--enable-testing,include devel code parts for neutrino tests))
+	AS_HELP_STRING(--enable-testing,include devel code parts for neutrino tests))
 
 AM_CONDITIONAL(ENABLE_TESTING,test "$enable_testing" = "yes")
 if test "$enable_testing" = "yes"; then
@@ -194,8 +236,10 @@ if test "$BOXTYPE" = "coolstream"; then
 if test -e ${srcdir}/lib/libcoolstream/nevis_ir.h; then
 	AC_DEFINE(HAVE_COOLSTREAM_NEVIS_IR_H,1,[Define to 1 if you have the <nevis_ir.h> header file.])
 fi
+HWLIB_CFLAGS='-I$(top_srcdir)/lib/libcoolstream'
 
 if test "$BOXMODEL" = "apollo"; then
+HWLIB_CFLAGS='-I$(top_srcdir)/lib/libcoolstream2'
 if test -e ${srcdir}/lib/libcoolstream2/cs_ir_generic.h; then
 	AC_DEFINE(HAVE_COOLSTREAM_CS_IR_GENERIC_H,1,[Define to 1 if you have the <cs_ir_generic.h> header file.])
 fi
@@ -220,12 +264,14 @@ fi
 #*** libcoolstream $CSL_VERSION or newer is required! ***
   #])
 #fi
-AC_SUBST(LIBCS_CFLAGS)
+AC_SUBST(HWLIB_CFLAGS)
 AC_SUBST(LIBCS_LIBS)
 AC_SUBST(FREETYPE_CFLAGS)
 AC_SUBST(FREETYPE_LIBS)
 AC_SUBST(VORBISIDEC_CFLAGS)
 AC_SUBST(VORBISIDEC_LIBS)
+AC_SUBST(STB_HAL_INC)
+AC_SUBST(STB_HAL_LIB)
 AC_SUBST(LUA_CFLAGS)
 AC_SUBST(LUA_LIBS)
 AC_SUBST(BLURAY_LIBS)
@@ -241,7 +287,7 @@ lib/libnet/Makefile
 lib/xmltree/Makefile
 lib/sectionsdclient/Makefile
 lib/timerdclient/Makefile
-lib/libtriple/Makefile
+lib/libcoolstream/Makefile
 lib/libtuxtxt/Makefile
 lib/libdvbsub/Makefile
 lib/libupnpclient/Makefile

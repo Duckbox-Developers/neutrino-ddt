@@ -33,6 +33,7 @@
 #include <eitd/sectionsd.h>
 #include <cs_api.h>
 #include <system/configure_network.h>
+#include <hardware_caps.h>
 
 extern CBouquetManager *g_bouquetManager;
 
@@ -253,7 +254,11 @@ std::string  CNeutrinoYParser::func_get_bouquets_as_templatelist(CyhookHandler *
 			g_bouquetManager->Bouquets[i]->getRadioChannels(channels);
 		else
 			g_bouquetManager->Bouquets[i]->getTvChannels(channels);
+#if HAVE_DUCKBOX_HARDWARE
+		if(!channels.empty() && (!g_bouquetManager->Bouquets[i]->bHidden || do_show_hidden == "true") && g_bouquetManager->Bouquets[i]->bUser) {
+#else
 		if(!channels.empty() && (!g_bouquetManager->Bouquets[i]->bHidden || do_show_hidden == "true")) {
+#endif
 			yresult += string_printf(ytemplate.c_str(), i + 1, g_bouquetManager->Bouquets[i]->bFav ? g_Locale->getText(LOCALE_FAVORITES_BOUQUETNAME) : g_bouquetManager->Bouquets[i]->Name.c_str());
 			yresult += "\r\n";
 		}
@@ -688,6 +693,9 @@ std::string  CNeutrinoYParser::func_get_partition_list(CyhookHandler *, std::str
 //-------------------------------------------------------------------------
 std::string CNeutrinoYParser::func_get_boxtype(CyhookHandler *, std::string)
 {
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	std::string boxname = string(g_info.hw_caps->boxvendor) + " " + string(g_info.hw_caps->boxname);
+#else
 	unsigned int system_rev = cs_get_revision();
 	std::string boxname = "CST ";
 
@@ -733,6 +741,19 @@ std::string CNeutrinoYParser::func_get_boxtype(CyhookHandler *, std::string)
 			break;
 	}
 
+#endif
+#if BOXMODEL_UFS910
+	boxname = "ufs910";
+#endif
+#if BOXMODEL_UFS922
+	boxname = "ufs922";
+#endif
+#if BOXTYPE_SPARK
+	boxname = "spark";
+#endif
+#if BOXMODEL_SPARK7162
+	boxname = "spark7162";
+#endif
 	return boxname;
 }
 //-------------------------------------------------------------------------

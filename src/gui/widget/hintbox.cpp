@@ -161,6 +161,7 @@ void CHintBox::refresh(void)
 	{
 		return;
 	}
+	window->blit(false);
 
 	//window->paintBoxRel(borderwidth, height, width, borderwidth, COL_INFOBAR_SHADOW_PLUS_0);
 	//window->paintBoxRel(width, borderwidth, borderwidth, height - borderwidth, COL_INFOBAR_SHADOW_PLUS_0);
@@ -198,6 +199,7 @@ void CHintBox::refresh(void)
 		unsigned int marker_size = (entries_per_page * fheight) / ((line.size() + entries_per_page - 1) / entries_per_page);
 		window->paintBoxRel(width - 13, ypos + current_page * marker_size, 11, marker_size               , COL_MENUCONTENT_PLUS_3);
 	}
+	window->blit();
 }
 
 bool CHintBox::has_scrollbar(void)

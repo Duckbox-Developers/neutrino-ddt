@@ -63,6 +63,7 @@ const struct personalize_settings_t personalize_settings[SNeutrinoSettings::P_SE
 	{"personalize_settingsmager"		, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	{"personalize_video"			, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	{"personalize_audio"			, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
+	{"personalize_parentallock"		, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	{"personalize_network"			, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	{"personalize_recording"		, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	{"personalize_osdlang"			, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
@@ -82,6 +83,7 @@ const struct personalize_settings_t personalize_settings[SNeutrinoSettings::P_SE
 	{"personalize_reset_channels"		, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE}, 
 	{"personalize_restart"			, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	{"personalize_reload_plugins"		, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
+	{"personalize_restart_tuner"		, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	{"personalize_infomenu_service"		, CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE},
 	{"personalize_softupdate"		, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	
@@ -96,6 +98,7 @@ const struct personalize_settings_t personalize_settings[SNeutrinoSettings::P_SE
 	//media menu->movieplayer
 	{"personalize_mplayer_mbrowswer"	, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	{"personalize_mplayer_fileplay"		, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
+	{"personalize_mplayer_inetplay"		, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	{"personalize_mplayer_ytplay"		, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	
 	//key
@@ -120,7 +123,7 @@ CScanSettings::CScanSettings(void)
 	bouquetMode     = CZapitClient::BM_UPDATEBOUQUETS;
 	scanType = CServiceScan::SCAN_TVRADIO;
 	satName = "none";
-	cableName ="none";
+	cableName = "none";
 }
 
 bool CScanSettings::loadSettings(const char * const fileName)

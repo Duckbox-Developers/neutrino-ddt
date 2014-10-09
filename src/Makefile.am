@@ -21,18 +21,10 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib/libmd5sum \
 	-I$(top_srcdir)/lib/libupnpclient \
 	@FREETYPE_CFLAGS@ \
-	@LIBCS_CFLAGS@
+	@HWLIB_CFLAGS@
 
-if BOXTYPE_COOL
-if BOXMODEL_APOLLO
-AM_CPPFLAGS += -I$(top_srcdir)/lib/libcoolstream2
-else
-AM_CPPFLAGS += -I$(top_srcdir)/lib/libcoolstream
-endif
-endif
 if BOXTYPE_TRIPLE
 SUBDIRS += lcddisplay
-AM_CPPFLAGS += -I$(top_srcdir)/lib/libtriple
 endif
 
 if USE_TREMOR
@@ -59,6 +51,8 @@ endif
 bin_PROGRAMS = neutrino rcsim
 
 neutrino_SOURCES = neutrino_menue.cpp neutrino.cpp
+
+rcsim_SOURCES = rcsim.c rcsim.h
 
 AM_CPPFLAGS += -D_FILE_OFFSET_BITS=64
 
@@ -109,24 +103,23 @@ neutrino_LDADD = \
 	@PNG_LIBS@ \
 	@BLURAY_LIBS@ \
 	@LIBCS_LIBS@ \
-	@AVFORMAT_LIBS@ \
-	@AVUTIL_LIBS@ \
-	@AVCODEC_LIBS@ \
 	$(ADEC_LIBS) \
 	@SIGC_LIBS@ \
 	-ldvbsi++ \
 	-ljpeg \
 	-lOpenThreads \
-	-lrt -lpthread
+	-lrt -lpthread \
+	-ldl -lblkid
 
+if ENABLE_GRAPHLCD
+neutrino_LDADD += -lglcddrivers -lglcdgraphics -lusb-1.0
+endif
 if ENABLE_GIFLIB
 neutrino_LDADD += -lgif
 else
 neutrino_LDADD += -lungif
 endif
-if ENABLE_LUA
 neutrino_LDADD += @LUA_LIBS@
-endif
 
 if ENABLE_UPNP
 neutrino_LDADD += \
@@ -134,6 +127,8 @@ neutrino_LDADD += \
 endif
 
 if BOXTYPE_COOL
+neutrino_LDADD += \
+	$(top_builddir)/lib/libcoolstream/libhwcaps.a
 neutrino_LDADD += -lcoolstream-mt -lca-sc
 if ENABLE_TMSDK 
 else
@@ -148,20 +143,36 @@ if BOXMODEL_APOLLO
 neutrino_LDADD += -liconv
 endif
 
+if BOXTYPE_SPARK
+neutrino_LDADD += -lass
+endif
+
+if BOXTYPE_DUCKBOX
+neutrino_LDADD += -lass
+endif
+
 bin_PROGRAMS += drivertool
 drivertool_SOURCES = drivertool.c
 bin_PROGRAMS += dt
 dt_SOURCES = dt.c
-bin_PROGRAMS += rcsim
-rcsim_SOURCES = rcsim.c rcsim.h
 bin_PROGRAMS += mdev_helper
 mdev_helper_SOURCES = mdev_helper.cpp
-
 endif
+
+if USE_STB_HAL
+neutrino_LDADD += \
+	-lstb-hal
+neutrino_LDFLAGS = \
+	$(STB_HAL_LIB)
+endif
+
 if BOXTYPE_TRIPLE
 neutrino_LDADD += \
-	$(top_builddir)/lib/libtriple/libtriple.a \
-	@DIRECTFB_LIBS@ \
 	$(top_builddir)/src/lcddisplay/liblcddisplay.a
 endif
 
+neutrino_LDADD += \
+	@AVFORMAT_LIBS@ \
+	@AVUTIL_LIBS@ \
+	@AVCODEC_LIBS@ \
+	@SWRESAMPLE_LIBS@

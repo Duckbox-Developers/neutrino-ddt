@@ -66,7 +66,8 @@ class CCam : public CBasicClient
 		bool sendMessage(const char * const data, const size_t length, bool update = false);
 		bool makeCaPmt(CZapitChannel * channel, bool add_private, uint8_t list = CAPMT_ONLY, const CaIdVector &caids = CaIdVector());
 		bool setCaPmt(bool update = false);
-		bool sendCaPmt(uint64_t tpid, uint8_t *rawpmt, int rawlen);
+//		bool sendCaPmt(uint64_t tpid, uint8_t *rawpmt, int rawlen);
+		bool sendCaPmt(uint64_t tpid, uint8_t *rawpmt, int rawlen, unsigned char scrambled = 0, casys_map_t camap = std::set<int>(), int mode = 0 , bool enable = false);
 		int  makeMask(int demux, bool add);
 		int  getCaMask(void) { return camask; }
 		void setCaMask(int mask) { camask = mask; }

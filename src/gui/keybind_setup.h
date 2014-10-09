@@ -75,7 +75,7 @@ class CKeybindSetup : public CMenuTarget, public CChangeObserver
 			MPKEY_TIME,
 			MPKEY_BOOKMARK,
 			MPKEY_GOTO,
-			//MPKEY_NEXT3DMODE,
+			MPKEY_NEXT3DMODE,
 			MPKEY_NEXT_REPEAT_MODE,
 			//MPKEY_VTXT,
 			NKEY_TIMESHIFT,

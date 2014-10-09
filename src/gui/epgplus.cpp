@@ -32,6 +32,7 @@
 #include <neutrino.h>
 
 #include <gui/epgplus.h>
+#include <gui/epgview.h>
 #include <sectionsdclient/sectionsdclient.h>
 #include <timerdclient/timerdclient.h>
 
@@ -84,7 +85,7 @@ static EpgPlus::FontSetting fontSettingTable[] = {
 	{ EpgPlus::EPGPlus_footer_fontbouquetchannelname,	"Bold",		24 },
 	{ EpgPlus::EPGPlus_footer_fonteventdescription,		"Regular",	16 },
 	{ EpgPlus::EPGPlus_footer_fonteventshortdescription,	"Regular",	16 },
-	{ EpgPlus::EPGPlus_footer_fontbuttons,			"Regular",	16 },
+	{ EpgPlus::EPGPlus_footer_fontbuttons,			"Regular",	16 }
 };
 
 /* negative size means "screen width in percent" */
@@ -95,7 +96,7 @@ static EpgPlus::SizeSetting sizeSettingTable[] = {
 	{EpgPlus::EPGPlus_horgap1_height, 4},
 	{EpgPlus::EPGPlus_horgap2_height, 4},
 	{EpgPlus::EPGPlus_vergap1_width, 4},
-	{EpgPlus::EPGPlus_vergap2_width, 4},
+	{EpgPlus::EPGPlus_vergap2_width, 4}
 };
 
 static bool bigfont = false;
@@ -807,6 +808,7 @@ int EpgPlus::exec (CChannelList * pchannelList, int selectedChannelIndex, CBouqu
 		this->footer->paintButtons (buttonLabels, sizeof (buttonLabels) / sizeof (button_label));
 
 		this->paint();
+		frameBuffer->blit();
 
 		uint64_t timeoutEnd = CRCInput::calcTimeoutEnd (g_settings.timing[SNeutrinoSettings::TIMING_CHANLIST]);
 		bool loop = true;
@@ -1144,6 +1146,7 @@ int EpgPlus::exec (CChannelList * pchannelList, int selectedChannelIndex, CBouqu
 				loop = false;
 			else if (this->refreshFooterButtons)
 				this->footer->paintButtons (buttonLabels, sizeof (buttonLabels) / sizeof (button_label));
+			frameBuffer->blit();
 		}
 
 		this->hide();
@@ -1182,6 +1185,7 @@ EpgPlus::TCChannelEventEntries::const_iterator EpgPlus::getSelectedEvent() const
 void EpgPlus::hide()
 {
 	this->frameBuffer->paintBackgroundBoxRel (this->usableScreenX, this->usableScreenY, this->usableScreenWidth, this->usableScreenHeight);
+	frameBuffer->blit();
 }
 
 void EpgPlus::paintChannelEntry (int position)

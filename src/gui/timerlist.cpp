@@ -46,10 +46,12 @@
 #include <driver/screen_max.h>
 #include <driver/fade.h>
 #include <driver/record.h>
+#include <driver/display.h>
 
 
 #include <gui/channellist.h>
 #include <gui/color.h>
+#include <gui/epgview.h>
 
 #include <gui/eventlist.h>
 #include <gui/filebrowser.h>
@@ -496,6 +498,7 @@ int CTimerList::show()
 			updateEvents();
 			update=false;
 			paint();
+			frameBuffer->blit();
 		}
 		g_RCInput->getMsgAbsoluteTimeout( &msg, &data, &timeoutEnd );
 		
@@ -677,6 +680,7 @@ int CTimerList::show()
 				res = menu_return::RETURN_EXIT_ALL;
 			}
 		}
+		frameBuffer->blit();
 	}
 	hide();
 	fader.StopFade();
@@ -689,6 +693,7 @@ void CTimerList::hide()
 	if (visible)
 	{
 		frameBuffer->paintBackgroundBoxRel(x, y, width + SHADOW_OFFSET, height + SHADOW_OFFSET);
+		frameBuffer->blit();
 		visible = false;
 	}
 }

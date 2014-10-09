@@ -62,7 +62,7 @@ void CTimerManager::Init(void)
 	m_saveEvents = false;
 	m_isTimeSet = false;
 	timer_is_rec = false;
-	wakeup = 0;
+	wakeup = NULL;
 	shutdown_eventID = -1;
 	loadRecordingSafety();
 
@@ -638,6 +638,50 @@ void CTimerManager::loadRecordingSafety()
 		m_extraTimeEnd  = config.getInt32 ("EXTRA_TIME_END",0);
 	}
 }
+
+// -------------------------------------------------------------------------------------
+void CTimerManager::setWakeupTime()
+{
+	time_t nextAnnounceTime=0;
+	//bool status=false;
+	timer_is_rec = false;
+
+	if (pthread_mutex_trylock(&tm_eventsMutex) == EBUSY)
+	{
+		dprintf("error: mutex is still LOCKED\n");
+		return;
+	}
+
+	CTimerEventMap::iterator pos = events.begin();
+	for(;pos != events.end();pos++)
+	{
+		CTimerEvent *event = pos->second;
+		dprintf("%s: timer type %d state %d announceTime: %ld\n", __func__, event->eventType, event->eventState, event->announceTime);
+		if((event->eventType == CTimerd::TIMER_RECORD ||
+			 event->eventType == CTimerd::TIMER_ZAPTO ) &&
+			event->eventState < CTimerd::TIMERSTATE_ISRUNNING)
+		{
+			// Wir wachen nur für Records und Zaptos wieder auf
+			if(event->announceTime < nextAnnounceTime || nextAnnounceTime==0)
+			{
+				nextAnnounceTime=event->announceTime;
+				dprintf("shutdown: nextAnnounceTime %ld\n", nextAnnounceTime);
+				if ( event->eventType == CTimerd::TIMER_RECORD )
+					timer_is_rec = true;
+			}
+		}
+	}
+
+	timer_minutes = 0;
+	if(nextAnnounceTime != 0)
+	{
+		timer_minutes = (nextAnnounceTime - 3*60)/60;
+	}
+	dprintf("%s: timeset: %d timer_minutes %ld\n", __func__, timeset, timer_minutes);
+
+	pthread_mutex_unlock(&tm_eventsMutex);
+}
+
 // -------------------------------------------------------------------------------------
 void CTimerManager::saveEventsToConfig()
 {
@@ -652,7 +696,8 @@ void CTimerManager::saveEventsToConfig()
 	{
 		CTimerEvent *event = pos->second;
 		dprintf("event #%d\n",event->eventID);
-		event->saveToConfig(&config);
+		if (event->eventType != CTimerd::TIMER_RECORD || event->eventState != CTimerd::TIMERSTATE_ISRUNNING)
+			event->saveToConfig(&config);
 	}
 	dprintf("\n");
 	config.setInt32 ("EXTRA_TIME_START", m_extraTimeStart);
@@ -666,6 +711,7 @@ void CTimerManager::saveEventsToConfig()
 
 	// Freigeben !!!
 	pthread_mutex_unlock(&tm_eventsMutex);
+	setWakeupTime();
 }
 //------------------------------------------------------------
 bool CTimerManager::shutdown()
@@ -688,6 +734,7 @@ bool CTimerManager::shutdown()
 		saveEventsToConfig();
 		dprintf("shutdown: saved config\n");
 	}
+	setWakeupTime();
 	if (pthread_mutex_trylock(&tm_eventsMutex) == EBUSY)
 	{
 		dprintf("error: mutex is still LOCKED\n");
@@ -732,7 +779,7 @@ void CTimerManager::shutdownOnWakeup(int currEventID)
 	time_t nextAnnounceTime=0;
 
 	pthread_mutex_lock(&tm_eventsMutex);
-	if(wakeup == 0) {
+	if(!*wakeup) {
 		pthread_mutex_unlock(&tm_eventsMutex);
 		return;
 	}
@@ -761,7 +808,7 @@ void CTimerManager::shutdownOnWakeup(int currEventID)
 		dprintf("Programming shutdown event\n");
 		CTimerEvent_Shutdown* event = new CTimerEvent_Shutdown(now+120, now+180);
 		shutdown_eventID = addEvent(event);
-		wakeup = 0;
+		*wakeup = false;
 	}
 	pthread_mutex_unlock(&tm_eventsMutex);
 }
@@ -773,7 +820,7 @@ void CTimerManager::cancelShutdownOnWakeup()
 		removeEvent(shutdown_eventID);
 		shutdown_eventID = -1;
 	}
-	wakeup = 0;
+	*wakeup = false;
 	pthread_mutex_unlock(&tm_eventsMutex);
 }
 

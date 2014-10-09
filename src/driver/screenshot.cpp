@@ -58,18 +58,25 @@ CScreenShot::CScreenShot(const std::string fname, screenshot_format_t fmt)
 	format = fmt;
 	filename = fname;
 	pixel_data = NULL;
+#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
 	fd = NULL;
+#endif
 	xres = 0;
 	yres = 0;
-	get_video = g_settings.screenshot_video;
-	get_osd = g_settings.screenshot_mode;
-	scale_to_video = g_settings.screenshot_scale;
+	get_video = g_settings.screenshot_mode & 1;
+	get_osd = g_settings.screenshot_mode & 2;
+#if HAVE_GENERIC_HARDWARE
+	scale_to_video = (g_settings.screenshot_mode == 3);
+#else
+	scale_to_video = (g_settings.screenshot_mode == 3) & (g_settings.screenshot_res & 1);
+#endif
 }
 
 CScreenShot::~CScreenShot()
 {
 }
 
+#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
 /* try to get video frame data in ARGB format, restore GXA state */
 bool CScreenShot::GetData()
 {
@@ -82,7 +89,7 @@ bool CScreenShot::GetData()
 #endif
 	if (videoDecoder->getBlank()) 
 		get_video = false;
-#if 1 // to enable after libcs/drivers update
+#if !HAVE_GENERIC_HARDWARE
 	res = videoDecoder->GetScreenImage(pixel_data, xres, yres, get_video, get_osd, scale_to_video);
 #endif
 
@@ -90,7 +97,7 @@ bool CScreenShot::GetData()
 	/* sort of hack. GXA used to transfer/convert live image to RGB,
 	 * so setup GXA back */
 	CFrameBuffer::getInstance()->setupGXA();
-	CFrameBuffer::getInstance()->add_gxa_sync_marker();
+	//CFrameBuffer::getInstance()->add_gxa_sync_marker();
 	CFrameBuffer::getInstance()->setActive(true);
 #endif
 	mutex.unlock();
@@ -102,18 +109,51 @@ bool CScreenShot::GetData()
 	printf("CScreenShot::GetData: data: %p %d x %d\n", pixel_data, xres, yres);
 	return true;
 }
+#endif
 
 /* start ::run in new thread to save file in selected format */
 bool CScreenShot::Start()
 {
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	std::string cmd = "/bin/grab ";
+	if (get_osd && !get_video)
+		cmd += "-o ";
+	else if (!get_osd && get_video)
+		cmd += "-v ";
+	switch (format) {
+		case FORMAT_PNG:
+			cmd += "-p "; break;
+		case FORMAT_JPG:
+			cmd += "-j 100"; break;
+		default:
+			;
+	}
+	if (!scale_to_video)
+		cmd += " -d";
+
+	if (xres) {
+		char tmp[10];
+		snprintf(tmp, sizeof(tmp), "%d", xres);
+		cmd += "-w " + std::string(tmp);
+	}
+		
+	cmd += " '";
+	cmd += filename;
+	cmd += "'";
+	fprintf(stderr, "running: %s\n", cmd.c_str());
+	system(cmd.c_str());
+	return true;
+#else
 	bool ret = false;
 	if(GetData())
 		ret = (start() == 0);
 	else
 		delete this;
 	return ret;
+#endif
 }
 
+#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
 /* thread function to save data asynchroniosly. delete itself after saving */
 void CScreenShot::run()
 {
@@ -346,6 +386,7 @@ bool CScreenShot::SaveBmp()
 	return true;
 
 }
+#endif
 
 /* 
  * create filename member from channel name and its current EPG data,
@@ -378,13 +419,15 @@ void CScreenShot::MakeFileName(const t_channel_id channel_id)
 			}
 		}
 	}
+	if (g_settings.screenshot_cover != 1) {
 	pos = strlen(fname);
 
 	struct timeval tv;
-	gettimeofday(&tv, NULL);	
+	gettimeofday(&tv, NULL);
 	strftime(&(fname[pos]), sizeof(fname) - pos - 1, "_%Y%m%d_%H%M%S", localtime(&tv.tv_sec));
 	pos = strlen(fname);
 	snprintf(&(fname[pos]), sizeof(fname) - pos - 1, "_%03d", (int) tv.tv_usec/1000);
+	}
 
 	switch (format) {
 	case FORMAT_PNG:

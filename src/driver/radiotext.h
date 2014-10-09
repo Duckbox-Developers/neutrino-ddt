@@ -49,43 +49,15 @@
 #include <driver/framebuffer.h>
 #include <driver/fontrenderer.h>
 
-#if 0
-#include <vdr/player.h>
-#include <vdr/device.h>
-#include <vdr/audio.h>
-#include <vdr/osd.h>
-#include <vdr/menu.h>
-#include <vdr/receiver.h>
-#endif
-
 #include <dmx.h>
 #include <OpenThreads/Thread>
 #include <OpenThreads/Condition>
+#include <map>
 
-//#define ENABLE_RASS
+#define ENABLE_RASS 1
 
 typedef unsigned char uchar;
 typedef unsigned int uint;
-
-extern const char *ConfigDir;
-extern const char *DataDir;
-extern char *ReplayFile;
-
-
-#if 0
-// RDS-Receiver for seperate Data-Pids
-class cRDSReceiver : public cReceiver {
-private:
-    int pid;
-    bool rt_start;
-    bool rt_bstuff;
-protected:
-    virtual void Receive(uchar *Data, int Length);
-public:
-    cRDSReceiver(int Pid);
-    virtual ~cRDSReceiver(void);
-};
-#endif
 
 #define RT_MEL 65
 #define tr(a) a
@@ -104,18 +76,45 @@ private:
 	int first_packets;
 
 	//Radiotext
-#if 0
-//	cDevice *rdsdevice;
-	void RadiotextCheckPES(const uchar *Data, int Length);
-	void AudioRecorderService(void);
-#endif
 	void RadioStatusMsg(void);
 	void RassDecode(uchar *Data, int Length);
 	bool DividePes(unsigned char *data, int length, int *substart, int *subend);
+	void RassShow(char *filename, unsigned char *md5sum = NULL);
+	void RassShow(int slidenumber, unsigned char *md5sum = NULL);
+	void RassUpdate(char *filename, int slidenumber = -1);
+	void RassPaint(int slidenumber = -1, bool blit = true);
+	neutrino_msg_t RassShow_prev(void);
+	neutrino_msg_t RassShow_next(void);
+	neutrino_msg_t RassShow_left(void);
+	neutrino_msg_t RassShow_right(void);
+	neutrino_msg_t RassShow_category(int);
+	neutrino_msg_t RassChangeSelection(int slidenumber);
 
 	uint pid;
-	//pthread_t threadRT;
-	//int dmxfd;
+	uint lastRassPid;
+	unsigned char last_md5sum[16];
+
+	CFrameBuffer *framebuffer;
+	int iconWidth;
+	int iconHeight;
+
+	bool Rass_interactive_mode;
+
+	struct slideinfo { unsigned char md5sum[16]; };
+
+	class RASS_slides
+	{
+		private:
+			OpenThreads::Mutex mutex;
+			std::map<int, slideinfo> sim;
+		public:
+			bool set(int, slideinfo);
+			unsigned char *exists(int);
+			void clear(void);
+	};
+	RASS_slides slides;
+	int Rass_current_slide;
+	int Rass_first_slide;
 
 	OpenThreads::Mutex mutex;
 	OpenThreads::Mutex pidmutex;
@@ -142,6 +141,8 @@ public:
 
 	void radiotext_stop(void);
 	bool haveRadiotext(void) {return have_radiotext; }
+	bool haveRASS(void) { return lastRassPid; }
+	void RASS_interactive_mode(void);
 
 	cDemux *audioDemux;
 
@@ -185,70 +186,6 @@ public:
 #endif
 
 };
-
-#if 0
-class cRadioTextOsd : public cOsdObject {
-private:
-    cOsd *osd;
-    cOsd *qosd;
-    cOsd *qiosd;
-    const cFont *ftitel;
-    const cFont *ftext;
-    int fheight;
-    int bheight;
-    eKeys LastKey;
-    cTimeMs osdtimer;
-    void rtp_print(void);
-    bool rtclosed;
-    bool rassclosed;
-    static cBitmap rds, arec, rass;
-    static cBitmap index, marker, page1, pages2, pages3, pages4, pageE;
-    static cBitmap no0, no1, no2, no3, no4, no5, no6, no7, no8, no9, bok;
-public:
-    cRadioTextOsd();
-    ~cRadioTextOsd();
-    virtual void Hide(void);
-    virtual void Show(void);
-    virtual void ShowText(void);
-    virtual void RTOsdClose(void);
-    int RassImage(int QArchiv, int QKey, bool DirUp);
-    virtual void RassOsd(void);
-    virtual void RassOsdTip(void);
-    virtual void RassOsdClose(void);
-    virtual void RassImgSave(char *size, int pos);
-    virtual eOSState ProcessKey(eKeys Key);
-    virtual bool IsInteractive(void) { return false; }
-};
-
-class cRTplusOsd : public cOsdMenu {
-private:
-    int bcount;
-    int helpmode;
-    const char *listtyp[7];
-    char *btext[7];
-    int rtptyp(char *btext);
-    void rtp_fileprint(void);
-public:
-    cRTplusOsd(void);
-    virtual ~cRTplusOsd();
-    virtual void Load(void);
-    virtual void Update(void);
-    virtual eOSState ProcessKey(eKeys Key);	
-};
-
-class cRTplusList : public cOsdMenu {
-private:
-    int typ;
-    bool refresh;
-public:
-    cRTplusList(int Typ = 0);
-    ~cRTplusList();
-    virtual void Load(void);
-    virtual void Update(void);
-    virtual eOSState ProcessKey(eKeys Key);	
-};
-
-#endif
 
 // Radiotext-Memory
 #define MAX_RTPC 50
@@ -294,7 +231,7 @@ struct rtp_classes {
     char *phone_Studio;			// 40
     char *email_Hotline;		// 44
     char *email_Studio;			// 45
-// to be continue...
+// to be continued ...
 };
 
 #endif //__RADIO_AUDIO_H

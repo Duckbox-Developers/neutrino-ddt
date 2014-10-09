@@ -112,8 +112,6 @@ class CFrontend
 		/* current adapter where this frontend is on */
 		int adapter;
 		bool locked;
-		/* tuning finished flag */
-		bool tuned;
 		/* information about the used frontend type */
 		struct dvb_frontend_info info;
 		/* current 22kHz tone mode */
@@ -181,6 +179,9 @@ class CFrontend
 
 		friend class CFEManager;
 	public:
+		/* tuning finished flag */
+		bool tuned;
+
 		~CFrontend(void);
 
 		static fe_code_rate_t		getCodeRate(const uint8_t fec_inner, delivery_system_t delsys);

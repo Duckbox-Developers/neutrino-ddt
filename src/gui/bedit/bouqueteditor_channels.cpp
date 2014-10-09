@@ -165,10 +165,9 @@ void CBEChannelWidget::paint()
 	if (sbc < 1)
 		sbc = 1;
 
-	int sbh= (sb- 4)/ sbc;
 	int sbs= (selected/listmaxshow);
 
-	frameBuffer->paintBoxRel(x+ width- 13, ypos+ 2+ int(sbs* sbh) , 11, int(sbh),  COL_MENUCONTENT_PLUS_3);
+	frameBuffer->paintBoxRel(x+ width- 13, ypos+ 2+ sbs * (sb-4)/sbc, 11, (sb-4)/sbc,  COL_MENUCONTENT_PLUS_3);
 }
 
 void CBEChannelWidget::paintHead()
@@ -268,6 +267,7 @@ void CBEChannelWidget::hide()
 {
 	frameBuffer->paintBackgroundBoxRel(x,y, width,height+footerHeight);
  	clearItem2DetailsLine ();
+	frameBuffer->blit();
 }
 
 void CBEChannelWidget::updateSelection(unsigned int newpos)
@@ -317,6 +317,7 @@ int CBEChannelWidget::exec(CMenuTarget* parent, const std::string & /*actionKey*
 	paintHead();
 	paint();
 	paintFoot();
+	frameBuffer->blit();
 
 	channelsChanged = false;
 
@@ -442,6 +443,7 @@ int CBEChannelWidget::exec(CMenuTarget* parent, const std::string & /*actionKey*
 		{
 			CNeutrinoApp::getInstance()->handleMsg( msg, data );
 		}
+		frameBuffer->blit();
 	}
 	hide();
 	return res;

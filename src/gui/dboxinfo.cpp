@@ -281,7 +281,7 @@ void CDBoxInfoWidget::paint()
 		while (getline(in, line)) {
 			size_t firstslash = line.find_first_of('/');
 			size_t firstspace = line.find_first_of(' ');
-			if ( (firstspace != string::npos && firstslash != string::npos && firstslash < firstspace) || (line.find("rootfs") == 0) ) {
+			if ((firstspace != string::npos && firstslash != string::npos && firstslash < firstspace) || (line.find("rootfs") == 0)) {
 				firstspace++;
 				size_t nextspace = line.find_first_of(' ', firstspace);
 				if (nextspace == string::npos || line.find("nodev", nextspace + 1) != string::npos)
@@ -312,7 +312,7 @@ void CDBoxInfoWidget::paint()
 	height += mounts.size() * mheight;	// file systems
 	height += mheight/2;			// space
 
-	//int offsetw = satWidth+ (sizeWidth+10)*3 +10+percWidth+10;
+	//int offsetw = nameWidth+ (sizeWidth+10)*3 +10+percWidth+10;
 	int offsetw = satWidth+ (sizeWidth)*3 +percWidth;
 	width = offsetw + 10 + 120;
 
@@ -332,27 +332,8 @@ void CDBoxInfoWidget::paint()
 
 	//paint head
 	std::string title(g_Locale->getText(LOCALE_EXTRA_DBOXINFO));
-	std::map<std::string,std::string> cpuinfo;
-	in.open("/proc/cpuinfo");
-	if (in.is_open()) {
-		std::string line;
-		while (getline(in, line)) {
-			size_t colon = line.find_first_of(':');
-			if (colon != string::npos && colon > 1) {
-				std::string key = line.substr(0, colon - 1);
-				std::string val = line.substr(colon + 1);
-				cpuinfo[trim(key)] = trim(val);
-			}
-		}
-		in.close();
-	}
-	if (!cpuinfo["Hardware"].empty()) {
-		title += ": ";
-		title += cpuinfo["Hardware"];
-	} else if (!cpuinfo["machine"].empty()) {
-		title += ": ";
-		title + cpuinfo["machine"];
-	}
+	title += ": ";
+	title += g_info.hw_caps->boxname;
 
 	CComponentsHeader header(x, ypos, width, hheight, title, NEUTRINO_ICON_SHELL);
 	header.paint(CC_SAVE_SCREEN_NO);
@@ -384,23 +365,23 @@ void CDBoxInfoWidget::paint()
 
 	char ubuf[80] = { 0 };
 	char sbuf[256] = { 0 };
-        int updays, uphours, upminutes;
+	int updays, uphours, upminutes;
 
-        updays = (int) info.uptime / (60*60*24);
-        upminutes = (int) info.uptime / 60;
-        uphours = (upminutes / 60) % 24;
-        upminutes %= 60;
+	updays = (int) info.uptime / (60*60*24);
+	upminutes = (int) info.uptime / 60;
+	uphours = (upminutes / 60) % 24;
+	upminutes %= 60;
 
-        if (updays) {
-                snprintf(ubuf, sizeof(sbuf), "%d day%s, ", updays, (updays != 1) ? "s" : "");
-                strcat(sbuf, ubuf);
-        }
-        if (uphours) {
-                snprintf(ubuf, sizeof(sbuf), "%d hour%s, ", uphours, (uphours != 1) ? "s" : "");
-                strcat(sbuf, ubuf);
-        }
-        snprintf(ubuf,sizeof(sbuf), "%d minute%s", upminutes, (upminutes != 1) ? "s" : "");
-        strcat(sbuf, ubuf);
+	if (updays) {
+		snprintf(ubuf, sizeof(sbuf), "%d day%s, ", updays, (updays != 1) ? "s" : "");
+		strcat(sbuf, ubuf);
+	}
+	if (uphours) {
+		snprintf(ubuf, sizeof(sbuf), "%d hour%s, ", uphours, (uphours != 1) ? "s" : "");
+		strcat(sbuf, ubuf);
+	}
+	snprintf(ubuf,sizeof(sbuf), "%d minute%s", upminutes, (upminutes != 1) ? "s" : "");
+	strcat(sbuf, ubuf);
 
 	snprintf(ubuf, sizeof(ubuf), "%s: ", g_Locale->getText(LOCALE_EXTRA_DBOXINFO_LOAD));
 	int time_width = fm->getRenderWidth(ubuf);
@@ -418,10 +399,10 @@ void CDBoxInfoWidget::paint()
 	fm->RenderString(x + offsetw - time_width_total - 10, ypos + mheight, time_title_width, str_now_title, COL_MENUCONTENTINACTIVE_TEXT);
 	fm->RenderString(x + offsetw - time_width_total - 10 + time_title_width, ypos + mheight, time_width, str_now, COL_MENUCONTENT_TEXT);
 	ypos += mheight;
-        // paint uptime
+	// paint uptime
 	fm->RenderString(x + offsetw - time_width_total - 10, ypos + mheight, time_title_width, str_up_title, COL_MENUCONTENTINACTIVE_TEXT);
 	fm->RenderString(x + offsetw - time_width_total - 10 + time_title_width, ypos + mheight, time_width, sbuf, COL_MENUCONTENT_TEXT);
-        ypos += mheight;
+	ypos += mheight;
 
 	if (data_last > -1) {
 		fm->RenderString(x + offsetw - time_width_total - 10, ypos + mheight, time_title_width, ubuf, COL_MENUCONTENTINACTIVE_TEXT);
@@ -449,7 +430,7 @@ void CDBoxInfoWidget::paint()
 
 	ypos = y + hheight + mheight/2;
 
-        fm->RenderString(x + 10, ypos + mheight, width - 10, g_Locale->getText(LOCALE_EXTRA_DBOXINFO_FRONTEND), COL_MENUCONTENTINACTIVE_TEXT);
+	fm->RenderString(x + 10, ypos + mheight, width - 10, g_Locale->getText(LOCALE_EXTRA_DBOXINFO_FRONTEND), COL_MENUCONTENTINACTIVE_TEXT);
 	ypos += mheight;
 	for (int i = 0; i < frontend_count; i++) {
 		CFrontend *fe = CFEManager::getInstance()->getFE(i);
@@ -508,7 +489,7 @@ void CDBoxInfoWidget::paint()
 				int rw = fm->getRenderWidth(tmp);
 				maxWidth[column] = std::max(maxWidth[column], rw);
 				space = widths[column] - rw;
-                               if( (mpOffset + rw + space) > offsetw)
+				if( (mpOffset + rw + space) > offsetw)
 					pbw_fix =  ((mpOffset + rw + space + 10) - offsetw);
 			}
 			fm->RenderString(x + mpOffset + space, ypos+ mheight, width, tmp, COL_MENUCONTENT_TEXT);
@@ -628,14 +609,14 @@ void CDBoxInfoWidget::paint()
 	};
 	for (int column = 0; column < headSize; column++) {
 		headOffset = offsets[column];
-                int space = 0;
-                if (column > 0) {
+		int space = 0;
+		if (column > 0) {
 			int rw = fm->getRenderWidth(head_mnt[column]);
 			if (rw > maxWidth[column])
 				space = widths[column] - rw;
 			else
 				space = widths[column] - maxWidth[column] + (maxWidth[column] - rw)/2;
-                }
+		}
 		fm->RenderString(x + headOffset + space, ypos_mnt_head + mheight, width, head_mnt[column], COL_MENUCONTENTINACTIVE_TEXT);
 	}
 }

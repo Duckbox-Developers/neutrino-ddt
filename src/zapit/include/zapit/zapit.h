@@ -35,9 +35,6 @@ typedef std::multimap<t_channel_id, pid_pair_t> volume_map_t;
 typedef volume_map_t::iterator volume_map_iterator_t;
 typedef std::pair<volume_map_iterator_t,volume_map_iterator_t> volume_map_range_t;
 
-#define VOLUME_PERCENT_AC3 100
-#define VOLUME_PERCENT_PCM 100
-
 /* complete zapit start thread-parameters in a struct */
 typedef struct ZAPIT_start_arg
 {
@@ -63,6 +60,7 @@ typedef struct Zapit_config {
         int useGotoXX;
         /* FE common */
         int feTimeout;
+        int feRetries;
         int gotoXXLaDirection;
         int gotoXXLoDirection;
         double gotoXXLatitude;
@@ -105,6 +103,7 @@ class CZapit : public OpenThreads::Thread
 		};
 
 		OpenThreads::ReentrantMutex	mutex;
+		OpenThreads::Mutex zapit_mutex;
 		bool started;
 		bool event_mode;
 		bool firstzap;
@@ -148,6 +147,9 @@ class CZapit : public OpenThreads::Thread
 
 		audio_map_t audio_map;
 		volume_map_t vol_map;
+		OpenThreads::Mutex vol_map_mutex;
+		int volume_percent_ac3;
+		int volume_percent_pcm;
 		//bool current_is_nvod;
 		//bool standby;
 		t_channel_id  lastChannelRadio;
@@ -202,7 +204,7 @@ class CZapit : public OpenThreads::Thread
 		void LoadVolumeMap();
 		void SaveChannelPids(CZapitChannel* channel);
 		virtual void ConfigFrontend();
-		bool StopPlayBack(bool send_pmt);
+		bool StopPlayBack(bool send_pmt, bool blank = true);
 		virtual void leaveStandby();
 
 		static CZapit * zapit;
@@ -210,6 +212,7 @@ class CZapit : public OpenThreads::Thread
 	public:
 		~CZapit();
 		static CZapit * getInstance();
+		void ClearVolumeMap();
 
 		virtual void LoadSettings();
 		virtual bool Start(Z_start_arg* ZapStart_arg);
@@ -227,7 +230,9 @@ class CZapit : public OpenThreads::Thread
 		bool PrepareChannels();
 		bool StartScan(int scan_mode);
 		bool StartScanTP(TP_params * TPparams);
+#ifdef ENABLE_FASTSCAN
 		bool StartFastScan(int scan_mode, int opid);
+#endif
 
 		void addChannelToBouquet(const unsigned int bouquet, const t_channel_id channel_id);
 		void SetConfig(Zapit_config * Cfg);
@@ -262,6 +267,7 @@ class CZapit : public OpenThreads::Thread
 		void SetVolume(int vol);
 		int GetVolume() { return current_volume; };
 		int SetVolumePercent(int percent);
+		void SetVolumePercent(int default_ac3, int default_pcm);
 		bool StartPip(const t_channel_id channel_id);
 		bool StopPip();
 		void Lock() { mutex.lock(); }

@@ -27,6 +27,7 @@
 
 #include <algorithm>
 #include <gui/epgview.h>
+#include <gui/eventlist.h>
 
 #include <gui/widget/buttons.h>
 #include <gui/widget/hintbox.h>
@@ -679,6 +680,7 @@ int CEpgData::show(const t_channel_id channel_id, uint64_t a_id, time_t* a_start
 			frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_RIGHT, sx + ox - iw - 5, iy);
 	}
 
+	frameBuffer->blit();
 	if ( doLoop )
 	{
 		neutrino_msg_t      msg = 0;
@@ -914,6 +916,7 @@ int CEpgData::show(const t_channel_id channel_id, uint64_t a_id, time_t* a_start
 				}
 				break;
 			}
+#if 0
 			case CRCInput::RC_info:
 			case CRCInput::RC_help:
 				bigFonts = bigFonts ? false : true;
@@ -935,6 +938,10 @@ int CEpgData::show(const t_channel_id channel_id, uint64_t a_id, time_t* a_start
 				show(channel_id, id, &startzeit, false, call_fromfollowlist);
 				showPos=0;
 				break;
+#else
+			case CRCInput::RC_info:
+			case CRCInput::RC_help:
+#endif
 
 			case CRCInput::RC_ok:
 			case CRCInput::RC_timeout:
@@ -970,6 +977,7 @@ int CEpgData::show(const t_channel_id channel_id, uint64_t a_id, time_t* a_start
 					}
 				}
 			}
+			frameBuffer->blit();
 		}
 		hide();
 		fader.StopFade();
@@ -987,6 +995,7 @@ void CEpgData::hide()
 	}
 
 	frameBuffer->paintBackgroundBoxRel(sx, sy, ox, oy);
+	frameBuffer->blit();
 	showTimerEventBar (false);
 }
 
@@ -1155,8 +1164,9 @@ void CEpgData::showTimerEventBar (bool pshow, bool webzap)
 	h = std::max(fh, icol_h+4);
 
 	// hide only?
-	if (! pshow){ 
+	if (! pshow) {
 		frameBuffer->paintBackgroundBoxRel(sx,y,ox,h);
+		frameBuffer->blit();
 		return;
 	}
 	frameBuffer->paintBoxRel(sx,y,ox,h, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_LARGE, CORNER_BOTTOM);//round
@@ -1173,6 +1183,7 @@ void CEpgData::showTimerEventBar (bool pshow, bool webzap)
 	else
 		::paintButtons(x, y, 0, (has_follow_screenings && !call_fromfollowlist) ? 2:1, &EpgButtons[1], aw, h,"",false,COL_INFOBAR_SHADOW_TEXT,tmp_but_name.empty() ? NULL:tmp_but_name.c_str(),0);
 
+	frameBuffer->blit();
 #if 0
 	// Button: Timer Record & Channelswitch
 	if (g_settings.recording_type != CNeutrinoApp::RECORDING_OFF)

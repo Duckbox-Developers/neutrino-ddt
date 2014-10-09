@@ -63,6 +63,7 @@
 #include <gui/widget/helpbox.h>
 #include <gui/widget/stringinput.h>
 #include <driver/screen_max.h>
+#include <driver/display.h>
 
 
 #include <system/settings.h>
@@ -266,6 +267,7 @@ int CPictureViewerGui::show()
 			hide();
 			update=false;
 			paint();
+			frameBuffer->blit();
 		}
 
 		if (audioplayer)
@@ -548,6 +550,12 @@ int CPictureViewerGui::show()
 					update=true;
 				}
 			}
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+			else
+			{
+				m_viewer->Zoom(0.0); // Reset original view
+			}
+#endif
 		}
 		else if ( msg == CRCInput::RC_6 )
 		{
@@ -638,6 +646,7 @@ int CPictureViewerGui::show()
 				loop = false;
 			}
 		}
+		frameBuffer->blit();
 	}
 	hide();
 

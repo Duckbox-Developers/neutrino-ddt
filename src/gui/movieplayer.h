@@ -86,20 +86,21 @@ class CMoviePlayerGui : public CMenuTarget
 	int duration;
 	CTimeOSD FileTime;
 
-	unsigned short numpida;
-	unsigned short vpid;
-	unsigned short vtype;
-	std::string    language[MAX_PLAYBACK_PIDS];
-	unsigned short apids[MAX_PLAYBACK_PIDS];
-	unsigned short ac3flags[MAX_PLAYBACK_PIDS];
-	unsigned short currentapid, currentac3;
+	unsigned int numpida;
+	int vpid;
+	int vtype;
+	std::string    language[REC_MAX_APIDS];
+	int apids[REC_MAX_APIDS];
+	unsigned int ac3flags[REC_MAX_APIDS];
+	int currentapid, currentac3;
 	repeat_mode_enum repeat_mode;
+	bool probePids;
 
 	/* subtitles vars */
 	unsigned short numsubs;
-	std::string    slanguage[MAX_PLAYBACK_PIDS];
-	unsigned short spids[MAX_PLAYBACK_PIDS];
-	unsigned short sub_supported[MAX_PLAYBACK_PIDS];
+	std::string    slanguage[REC_MAX_APIDS];
+	unsigned short spids[REC_MAX_APIDS];
+	unsigned short sub_supported[REC_MAX_APIDS];
 	int currentspid;
 	int min_x, min_y, max_x, max_y;
 	time_t end_time;
@@ -117,6 +118,9 @@ class CMoviePlayerGui : public CMenuTarget
 	MI_MOVIE_INFO movie_info;
 	P_MI_MOVIE_LIST milist;
 	const static short MOVIE_HINT_BOX_TIMER = 5;	// time to show bookmark hints in seconds
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	CFrameBuffer::Mode3D old3dmode;
+#endif
 
 	/* playback from file */
 	bool is_file_player;
@@ -198,6 +202,7 @@ class CMoviePlayerGui : public CMenuTarget
 	void UpdatePosition();
 	int timeshift;
 	int file_prozent;
+	cPlayback *getPlayback() { return playback; }
 	void SetFile(std::string &name, std::string &file, std::string info1="", std::string info2="") { pretty_name = name; file_name = file; info_1 = info1; info_2 = info2; }
 	bool PlayBackgroundStart(const std::string &file, const std::string &name, t_channel_id chan);
 	void stopPlayBack(void);

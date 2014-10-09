@@ -107,7 +107,7 @@ class CSectionThread : public OpenThreads::Thread, public DMX
 		bool		running;
 		int		event_count; // debug
 		/* section read timeout, msec */
-		unsigned	timeoutInMSeconds;
+		time_t		timeoutInMSeconds;
 		/* read timeouts count to switch to next filter */
 		int		skipTimeouts;
 		/* time to switch to next filter */

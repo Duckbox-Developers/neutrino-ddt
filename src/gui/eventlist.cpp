@@ -32,6 +32,7 @@
 #include <neutrino.h>
 #include <gui/eventlist.h>
 #include <gui/epgplus.h>
+#include <gui/epgview.h>
 
 #include <gui/timerlist.h>
 #include <gui/user_menue.h>
@@ -48,6 +49,7 @@
 
 #include <driver/screen_max.h>
 #include <driver/fade.h>
+#include <driver/display.h>
 
 #include <system/helpers.h>
 #include <zapit/client/zapittools.h>
@@ -318,6 +320,7 @@ int CNeutrinoEventList::exec(const t_channel_id channel_id, const std::string& c
 	paintHead(channel_id, channelname, channelname_prev, channelname_next);
 	paint(channel_id);
 	showFunctionBar(true, channel_id);
+	frameBuffer->blit();
 
 	int oldselected = selected;
 
@@ -326,6 +329,7 @@ int CNeutrinoEventList::exec(const t_channel_id channel_id, const std::string& c
 	bool loop = true;
 	while (loop)
 	{
+		frameBuffer->blit();
 		g_RCInput->getMsgAbsoluteTimeout(&msg, &data, &timeoutEnd);
 
 		if ( msg <= CRCInput::RC_MaxRC )
@@ -669,6 +673,7 @@ int CNeutrinoEventList::exec(const t_channel_id channel_id, const std::string& c
 				res = menu_return::RETURN_EXIT_ALL;
 			}
 		}
+		frameBuffer->blit();
 	}
 
 	if (cc_infozone)
@@ -688,6 +693,7 @@ int CNeutrinoEventList::exec(const t_channel_id channel_id, const std::string& c
 void CNeutrinoEventList::hide()
 {
 	frameBuffer->paintBackgroundBoxRel(x,y, full_width,height);
+	frameBuffer->blit();
 }
 
 CTimerd::CTimerEventTypes CNeutrinoEventList::isScheduled(t_channel_id channel_id, CChannelEvent * event, int * tID)
@@ -803,6 +809,7 @@ void CNeutrinoEventList::paintItem(unsigned int pos, t_channel_id channel_idI)
 		// paint 2nd line text
 		g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_ITEMLARGE]->RenderString(x+10+iw, ypos+ fheight, width- 25- 20 -iw, evtlist[curpos].description, color);
 	}
+	frameBuffer->blit();
 }
 
 void CNeutrinoEventList::paintDescription(int index)

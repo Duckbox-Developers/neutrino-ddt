@@ -515,6 +515,7 @@ bool CMsgBox::hide(void)
 	// delete window
 	// delete m_pcWindow;
 	m_pcWindow->paintBackgroundBoxRel(m_cBoxFrame.iX, m_cBoxFrame.iY, m_cBoxFrame.iWidth, m_cBoxFrame.iHeight);
+	m_pcWindow->blit();
 	m_pcWindow = NULL;
 	return (true);
 }
@@ -639,13 +640,13 @@ int CMsgBox::exec( int timeout, int returnDefaultOnTimeout)
 	int return_button = m_nFootButtons;
 	int res = menu_return::RETURN_REPAINT;
 
-	// show message box
-	paint();
 	if (m_pcWindow == NULL)
 	{
 		return res; /* out of memory */
 	}
 
+	// show message box
+	paint();
 	if ( timeout == -1 )
 		timeout = g_settings.timing[SNeutrinoSettings::TIMING_EPG];
 
@@ -654,6 +655,8 @@ int CMsgBox::exec( int timeout, int returnDefaultOnTimeout)
 	bool loop=true;
 	while (loop)
 	{
+		m_pcWindow->blit();
+
 		g_RCInput->getMsgAbsoluteTimeout( &msg, &data, &timeoutEnd );
 
 		if (msg == CRCInput::RC_timeout && returnDefaultOnTimeout)
@@ -720,7 +723,6 @@ int CMsgBox::exec( int timeout, int returnDefaultOnTimeout)
 			res  = menu_return::RETURN_EXIT_ALL;
 			loop = false;
 		}
-
 	}
 
 	hide();
@@ -832,11 +834,11 @@ int ShowMsg2UTF(	const char * const Title,
 	int mode =  CMsgBox::SCROLL |
 				CMsgBox::TITLE |
 				CMsgBox::FOOT |
-				CMsgBox::BORDER;// |
+				CMsgBox::BORDER |
+				CMsgBox::AUTO_HIGH;
 				//CMsgBox::NO_AUTO_LINEBREAK |
 				//CMsgBox::CENTER |
 				//CMsgBox::AUTO_WIDTH |
-				//CMsgBox::AUTO_HIGH;
 	CBox position (	g_settings.screen_StartX+30,
 					g_settings.screen_StartY+30,
 					g_settings.screen_EndX - g_settings.screen_StartX-60,

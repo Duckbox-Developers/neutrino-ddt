@@ -52,6 +52,10 @@
 
 
 #include <driver/record.h>
+#ifdef ENABLE_GRAPHLCD
+#include <driver/nglcd.h>
+#endif
+#include <driver/radiotext.h>
 #include <driver/streamts.h>
 #include <zapit/capmt.h>
 #include <zapit/channel.h>
@@ -133,6 +137,18 @@ void CRecordInstance::WaitRecMsg(time_t StartTime, time_t WaitTime)
 		usleep(100000);
 }
 
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+void recordingFailureHelper(void *data)
+{
+	CRecordInstance *inst = (CRecordInstance *) data;
+	std::string errormsg = std::string(g_Locale->getText(LOCALE_RECORDING_FAILED)) + "\n" + string(inst->GetFileName());
+	CHintBox hintBox(LOCALE_MESSAGEBOX_INFO, errormsg.c_str());
+	hintBox.paint();
+	sleep(3);
+	hintBox.hide();
+}
+#endif
+
 int CRecordInstance::GetStatus()
 {
 	if (record)
@@ -207,8 +223,15 @@ record_error_msg_t CRecordInstance::Start(CZapitChannel * channel)
 		apids[numpids++] = allpids.PIDs.pmtpid;
 #endif
 
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	if(record == NULL) {
+		record = new cRecord(channel->getRecordDemux(), g_settings.recording_bufsize_dmx * 1024 * 1024, g_settings.recording_bufsize * 1024 * 1024);
+		record->setFailureCallback(&recordingFailureHelper, this);
+	}
+#else
 	if(record == NULL)
 		record = new cRecord(channel->getRecordDemux() /*RECORD_DEMUX*/);
+#endif
 
 	record->Open();
 
@@ -252,7 +275,7 @@ bool CRecordInstance::Stop(bool remove_event)
 	}
 
 	time_t end_time = time(0);
-	recMovieInfo->length = (int) round((double) (end_time - start_time) / (double) 60);
+	recMovieInfo->length = (end_time - start_time + 30) / 60;
 
 	CHintBox hintBox(LOCALE_MESSAGEBOX_INFO, rec_stop_msg.c_str());
 	if ((!(autoshift && g_settings.auto_timeshift)) && g_settings.recording_startstop_msg)
@@ -976,6 +999,9 @@ bool CRecordManager::Record(const CTimerd::RecordingInfo * const eventinfo, cons
 				if(eventinfo->channel_id == live_channel_id)
 					recordingstatus = 1;
 #endif
+#ifdef ENABLE_GRAPHLCD
+				nGLCD::Update();
+#endif
 			} else {
 				delete inst;
 			}
@@ -1121,6 +1147,11 @@ void CRecordManager::StopInstance(CRecordInstance * inst, bool remove_event)
 
 	if(inst->Timeshift())
 		autoshift = false;
+#ifdef BOXMODEL_SPARK7162
+		CVFD::getInstance()->SetIcons(SPARK_TIMESHIFT, false);
+#elif defined(BOXMODEL_FORTIS_HDBOX)
+		CVFD::getInstance()->ShowIcon(FP_ICON_TIMESHIFT, false);
+#endif
 
 	delete inst;
 }
@@ -1169,6 +1200,9 @@ bool CRecordManager::Stop(const CTimerd::RecordingStopInfo * recinfo)
 	if(inst != NULL && recinfo->eventID == inst->GetRecordingId()) {
 		StopInstance(inst, false);
 		ret = true;
+#ifdef ENABLE_GRAPHLCD
+		nGLCD::Update();
+#endif
 	} else {
 		for(nextmap_iterator_t it = nextmap.begin(); it != nextmap.end(); it++) {
 			if((*it)->eventID == recinfo->eventID) {
@@ -1262,6 +1296,11 @@ void CRecordManager::StartTimeshift()
 		std::string tmode = "ptimeshift"; // already recording, pause
 		bool res = true;
 		t_channel_id live_channel_id = CZapit::getInstance()->GetCurrentChannelID();
+#ifdef BOXMODEL_SPARK7162
+		CVFD::getInstance()->SetIcons(SPARK_TIMESHIFT, true);
+#elif defined(BOXMODEL_FORTIS_HDBOX)
+		CVFD::getInstance()->ShowIcon(FP_ICON_TIMESHIFT, true);
+#endif
 		/* start temporary timeshift if enabled and not running, but dont start second record */
 		if (g_settings.temp_timeshift) {
 			if (!FindTimeshift()) {

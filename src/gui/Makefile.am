@@ -1,5 +1,8 @@
+if ENABLE_UPNP
 AM_CPPFLAGS = -fno-rtti -D__STDC_FORMAT_MACROS
-#AM_CPPFLAGS = -fno-rtti
+else
+AM_CPPFLAGS = -fno-rtti -fno-exceptions -D__STDC_FORMAT_MACROS
+endif
 BUILT_SOURCES = version.h
 version.h:
 	@rm -f $@; \
@@ -28,24 +31,12 @@ AM_CPPFLAGS += \
 	-I$(top_srcdir)/lib/xmltree \
 	-I$(top_srcdir)/lib/libupnpclient \
 	@CURL_CFLAGS@ \
-	@FREETYPE_CFLAGS@
+	@FREETYPE_CFLAGS@ \
+	@HWLIB_CFLAGS@
 
 if ENABLE_LUA
 AM_CPPFLAGS += \
 	@LUA_CFLAGS@
-endif
-
-
-if BOXTYPE_COOL
-if BOXMODEL_APOLLO
-AM_CPPFLAGS += -I$(top_srcdir)/lib/libcoolstream2
-else
-AM_CPPFLAGS += -I$(top_srcdir)/lib/libcoolstream
-endif
-endif
-
-if BOXTYPE_TRIPLE
-AM_CPPFLAGS += -I$(top_srcdir)/lib/libtriple
 endif
 
 noinst_LIBRARIES = libtimerlist.a libneutrino_gui.a libneutrino_gui2.a
@@ -97,6 +88,7 @@ libneutrino_gui_a_SOURCES = \
 	record_setup.cpp \
 	scan.cpp \
 	scan_setup.cpp \
+	screensaver.cpp \
 	screensetup.cpp \
 	settings_manager.cpp \
 	sleeptimer.cpp \
@@ -106,7 +98,6 @@ libneutrino_gui_a_SOURCES = \
 	themes.cpp \
 	timeosd.cpp \
 	update.cpp \
-	update_ext.cpp \
 	update_menue.cpp \
 	update_settings.cpp \
 	user_menue.cpp \
@@ -116,6 +107,22 @@ libneutrino_gui_a_SOURCES = \
 	volumebar.cpp \
 	webtv_setup.cpp \
 	zapit_setup.cpp
+
+if !BOXTYPE_GENERIC
+libneutrino_gui_a_SOURCES += \
+	3dsetup.cpp \
+	psisetup.cpp
+endif
+
+if ENABLE_GRAPHLCD
+libneutrino_gui_a_SOURCES += \
+	glcdsetup.cpp
+endif
+
+if ENABLE_EXTUPDATE
+libneutrino_gui_a_SOURCES += \
+	update_ext.cpp
+endif
 
 if ENABLE_TESTING
 libneutrino_gui_a_SOURCES += \
@@ -128,11 +135,16 @@ libneutrino_gui_a_SOURCES += \
 endif
 
 libneutrino_gui2_a_SOURCES = \
-	cam_menu.cpp \
 	color.cpp \
 	hdd_menu.cpp \
 	infoclock.cpp \
+	kerneloptions.cpp \
 	motorcontrol.cpp
+
+if !BOXTYPE_SPARK
+libneutrino_gui2_a_SOURCES += \
+	cam_menu.cpp
+endif
 
 if ENABLE_UPNP
 libneutrino_gui2_a_SOURCES += \

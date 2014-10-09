@@ -47,6 +47,198 @@
 #include <cs_api.h>
 extern CRemoteControl * g_RemoteControl; /* neutrino.cpp */
 
+#ifdef HAVE_DUCKBOX_HARDWARE
+#include <zapit/zapit.h>
+#include <stropts.h>
+#define VFD_DEVICE "/dev/vfd"
+
+#if defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_TF7700)
+	#define VFDLENGTH 8
+#elif defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500)
+#define VFDLENGTH 12
+#elif defined (BOXMODEL_HS7810A) || defined (BOXMODEL_HS7119) || defined (BOXMODEL_HS7819)
+#define VFDLENGTH 4
+#elif defined (BOXMODEL_HS7110)
+#define VFDLENGTH 0
+#else
+	#define VFDLENGTH 16
+#endif
+
+#define SCROLL_TIME 350000
+
+bool invert = false;
+char g_str[64];
+bool blocked = false;
+int blocked_counter = 0;
+int file_vfd = -1;
+
+pthread_t vfd_scrollText;
+
+struct vfd_ioctl_data {
+	unsigned char start;
+	unsigned char data[64];
+	unsigned char length;
+};
+
+static void write_to_vfd(unsigned int DevType, struct vfd_ioctl_data * data, bool force = false)
+{
+	int file_closed = 0;
+	if (blocked) {
+		if (file_vfd > -1) {
+			blocked_counter++;
+			usleep(SCROLL_TIME);
+		} else {
+			blocked = false;
+		}
+	}
+	if (blocked_counter > 10) {
+		force = true;
+		blocked_counter = 0;
+	}
+//	printf("[CVFD] - blocked_counter=%i, blocked=%i, force=%i\n", blocked, blocked_counter, force);
+	if (force || !blocked) {
+		if (blocked) {
+			if (file_vfd > -1) {
+				file_closed = close(file_vfd);
+				file_vfd = -1;
+			}
+		}
+		blocked = true;
+		if (file_vfd == -1)
+			file_vfd = open (VFD_DEVICE, O_RDWR);
+		if (file_vfd > -1) {
+			ioctl(file_vfd, DevType, data);
+			ioctl(file_vfd, I_FLUSH, FLUSHRW);
+			file_closed = close(file_vfd);
+			file_vfd = -1;
+		}
+		blocked = false;
+		blocked_counter = 0;
+	}
+}
+
+#if defined (BOXMODEL_UFS910) || defined (BOXMODEL_UFS922)
+static void writeCG (unsigned char adress, unsigned char pixeldata[5])
+{
+	struct vfd_ioctl_data data;
+	data.start = adress & 0x07;
+	data.data[0] = pixeldata[0];
+	data.data[1] = pixeldata[1];
+	data.data[2] = pixeldata[2];
+	data.data[3] = pixeldata[3];
+	data.data[4] = pixeldata[4];
+	data.length = 5;
+	write_to_vfd(VFDWRITECGRAM, &data);
+	return;
+}
+#endif
+
+static void ShowNormalText(char * str, bool fromScrollThread = false)
+{
+	int ws = 0; // needed whitespace for centering
+	struct vfd_ioctl_data data;
+
+	if (!fromScrollThread)
+	{
+		if(vfd_scrollText != 0)
+		{
+			pthread_cancel(vfd_scrollText);
+			pthread_join(vfd_scrollText, NULL);
+
+			vfd_scrollText = 0;
+		}
+	}
+	if ((strlen(str) > VFDLENGTH && !fromScrollThread) && (g_settings.lcd_vfd_scroll >= 1))
+	{
+		CVFD::getInstance()->ShowScrollText(str);
+		return;
+	}
+
+	if (strlen(str) < VFDLENGTH && VFDLENGTH > 7) // do not center on small displays
+		ws = (VFDLENGTH-strlen(str))/2;
+	else
+		ws = 0;
+	memset(data.data, ' ', 63);
+	if (!fromScrollThread)
+	{
+		memcpy (data.data+ws, str, VFDLENGTH-ws);
+		data.start = 0;
+		if ((strlen(str) % 2) == 1 && VFDLENGTH > 7) // do not center on small displays
+			data.length = VFDLENGTH-ws-1;
+		else
+			data.length = VFDLENGTH-ws;
+	}
+	else
+	{
+		memcpy ( data.data, str, VFDLENGTH);
+		data.start = 0;
+		data.length = VFDLENGTH;
+	}
+	write_to_vfd(VFDDISPLAYCHARS, &data);
+	return;
+}
+void CVFD::ShowScrollText(char *str)
+{
+	printf("CVFD::ShowScrollText: [%s]\n", str);
+
+	//stop scrolltextthread
+	if(vfd_scrollText != 0)
+	{
+		pthread_cancel(vfd_scrollText);
+		pthread_join(vfd_scrollText, NULL);
+
+		vfd_scrollText = 0;
+		scrollstr = (char *)"";
+	}
+
+	//scroll text thread
+	scrollstr = str;
+	pthread_create(&vfd_scrollText, NULL, ThreadScrollText, (void *)scrollstr);
+}
+
+void* CVFD::ThreadScrollText(void * arg)
+{
+	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+
+	int i;
+	char *str = (char *)arg;
+	int len = strlen(str);
+	char out[VFDLENGTH+1];
+	char buf[VFDLENGTH+65];
+
+	memset(out, 0, VFDLENGTH+1);
+
+	int retries = g_settings.lcd_vfd_scroll;
+
+	if (len > VFDLENGTH)
+	{
+		printf("CVFD::ThreadScrollText: [%s], length %d\n", str, len);
+		memset(buf, ' ', (len + VFDLENGTH));
+		memcpy(buf, str, len);
+
+		while(retries--)
+		{
+			usleep(SCROLL_TIME);
+
+			for (i=0; i<=(len-1); i++)
+			{
+				// scroll text until end
+				memcpy(out, buf+i, VFDLENGTH);
+				ShowNormalText(out,true);
+				usleep(SCROLL_TIME);
+			}
+		}
+	}
+	memcpy(out, str, VFDLENGTH); // display first VFDLENGTH chars after scrolling
+	ShowNormalText(out,true);
+
+	pthread_exit(0);
+
+	return NULL;
+}
+
+#endif
+
 CVFD::CVFD()
 {
 #ifdef VFD_UPDATE
@@ -63,12 +255,15 @@ CVFD::CVFD()
 #endif // VFD_UPDATE
 
 	has_lcd = 1;
+#if !HAVE_DUCKBOX_HARDWARE
 	fd = open("/dev/display", O_RDONLY);
 	if(fd < 0) {
 		perror("/dev/display");
 		has_lcd = 0;
 	}
+#endif
 	text[0] = 0;
+	g_str[0] = 0;
 	clearClock = 0;
 	mode = MODE_TVRADIO;
 	switch_name_time_cnt = 0;
@@ -77,10 +272,12 @@ CVFD::CVFD()
 
 CVFD::~CVFD()
 {
+#if !HAVE_DUCKBOX_HARDWARE
 	if(fd > 0){
 		close(fd);
 		fd = -1;
 	}
+#endif
 }
 
 CVFD* CVFD::getInstance()
@@ -117,7 +314,7 @@ void CVFD::count_down() {
 }
 
 void CVFD::wake_up() {
- 	if(!has_lcd) return;
+	if(!has_lcd) return;
 	if (atoi(g_settings.lcd_setting_dim_time.c_str()) > 0) {
 		timeout_cnt = atoi(g_settings.lcd_setting_dim_time.c_str());
 		g_settings.lcd_setting_dim_brightness > -1 ?
@@ -128,6 +325,9 @@ void CVFD::wake_up() {
 	if(g_settings.lcd_info_line){
 		switch_name_time_cnt = g_settings.timing[SNeutrinoSettings::TIMING_INFOBAR] + 10;
 	}
+#if defined (BOXMODEL_OCTAGON1008)
+	ShowIcon(ICON_COLON2, false);
+#endif
 }
 
 void* CVFD::TimeThread(void *)
@@ -175,9 +375,68 @@ void CVFD::setlcdparameter(int dimm, const int power)
 	brightness = dimm;
 
 printf("CVFD::setlcdparameter dimm %d power %d\n", dimm, power);
+#if !HAVE_DUCKBOX_HARDWARE
 	int ret = ioctl(fd, IOC_FP_SET_BRIGHT, dimm);
 	if(ret < 0)
 		perror("IOC_FP_SET_BRIGHT");
+#else
+// Brightness
+	struct vfd_ioctl_data data;
+#if !defined (BOXMODEL_HS7810A) && !defined (BOXMODEL_HS7119) && !defined (BOXMODEL_HS7819)
+	memset(&data, 0, sizeof(struct vfd_ioctl_data));
+	data.start = brightness & 0x07;
+	data.length = 0;
+	write_to_vfd(VFDBRIGHTNESS, &data);
+#endif
+#if defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500)
+	usleep(100000);
+	memset(&data, 0, sizeof(struct vfd_ioctl_data));
+	data.start = 0;
+	data.length = 5;
+	if (power) {
+		data.data[0] = 0x01; // red led
+	}
+	else
+	{
+		data.data[0] = 0xf2; // cross plus blue led
+	}
+	data.start = 0;
+	data.data[4] = 0; // off
+	data.length = 5;
+	write_to_vfd(VFDPWRLED, &data);
+	usleep(100000);
+	memset(&data, 0, sizeof(struct vfd_ioctl_data));
+	data.start = 0;
+	data.length = 5;
+	if (power) {
+		data.data[0] = 0xf2; // cross plus blue led
+	}
+	else
+	{
+		data.data[0] = 0x01; // red led
+	}
+	data.start = 0;
+	data.data[4] = brightness*2;
+	data.length = 5;
+	write_to_vfd(VFDPWRLED, &data);
+#elif defined (BOXMODEL_HS7810A) || defined (BOXMODEL_HS7819)
+	memset(&data, 0, sizeof(struct vfd_ioctl_data));
+	data.start = 0;
+	data.data[0] = 0x02; // logo
+	data.data[4] = (brightness & 0x07);
+	data.length = 5;
+	write_to_vfd(VFDPWRLED, &data);
+#elif !defined (BOXMODEL_UFS912) && !defined (BOXMODEL_UFS913) && !defined (BOXMODEL_OCTAGON1008)
+// Power on/off
+	if (power) {
+		data.start = 0x01;
+	} else {
+		data.start = 0x00;
+	}
+	data.length = 0;
+	write_to_vfd(VFDDISPLAYWRITEONOFF, &data, true);
+#endif
+#endif
 }
 
 void CVFD::setlcdparameter(void)
@@ -188,6 +447,7 @@ void CVFD::setlcdparameter(void)
 			last_toggle_state_power);
 }
 
+#if !HAVE_DUCKBOX_HARDWARE
 void CVFD::setled(int led1, int led2){
 	int ret = -1;
 
@@ -281,6 +541,7 @@ void CVFD::setled(void)
 	}
 	setled(led1, led2);
 }
+#endif
 
 void CVFD::showServicename(const std::string & name) // UTF-8
 {
@@ -304,7 +565,11 @@ void CVFD::showTime(bool force)
 		return;
 #endif
 	if(has_lcd && mode == MODE_SHUTDOWN) {
+#ifdef HAVE_DUCKBOX_HARDWARE
+		ShowIcon(FP_ICON_REC, false);
+#else
 		ShowIcon(FP_ICON_CAM1, false);
+#endif
 		return;
 	}
 	if (has_lcd && showclock) {
@@ -319,8 +584,24 @@ void CVFD::showTime(bool force)
 			if(force || ( switch_name_time_cnt == 0 && ((hour != t->tm_hour) || (minute != t->tm_min))) ) {
 				hour = t->tm_hour;
 				minute = t->tm_min;
-				strftime(timestr, 20, "%H:%M", t);
+#if !defined (BOXMODEL_HS7810A) && !defined (BOXMODEL_HS7819)
+#if defined (BOXMODEL_OCTAGON1008)
+				ShowIcon(ICON_COLON2, true);
+#elif defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_HS7119)
+				strftime(timestr, 5, "%H%M", t);
+#else
+				strftime(timestr, 6, "%H:%M", t);
+#endif
 				ShowText(timestr);
+#else //HS7810A or HS7819, string should not scroll
+				strftime(timestr, 6, "%H:%M", t);
+				struct vfd_ioctl_data data;
+				memset(data.data, ' ', 6);
+				memcpy (data.data, timestr, 6);
+				data.start = 0;
+				data.length = 5;
+				write_to_vfd(VFDDISPLAYCHARS, &data);
+#endif
 			}
 		}
 	}
@@ -330,25 +611,57 @@ void CVFD::showTime(bool force)
 		if(clearClock) {
 			clearClock = 0;
 			if(has_lcd)
+#ifdef HAVE_DUCKBOX_HARDWARE
+				ShowIcon(FP_ICON_REC, false);
+#else
 				ShowIcon(FP_ICON_CAM1, false);
 			setled(false);//off
+#endif
 		} else {
 			clearClock = 1;
 			if(has_lcd)
+#ifdef HAVE_DUCKBOX_HARDWARE
+				ShowIcon(FP_ICON_REC, true);
+#else
 				ShowIcon(FP_ICON_CAM1, true);
 			setled(true);//on
+#endif
 		}
 	} else if(clearClock || (recstatus != tmp_recstatus)) { // in case icon ON after record stopped
 		clearClock = 0;
 		if(has_lcd)
+#ifdef HAVE_DUCKBOX_HARDWARE
+			ShowIcon(FP_ICON_REC, false);
+#else
 			ShowIcon(FP_ICON_CAM1, false);
 		setled();
+#endif
 	}
 	recstatus = tmp_recstatus;
 }
 
+#if HAVE_DUCKBOX_HARDWARE
+void CVFD::UpdateIcons()
+{
+	CZapitChannel * chan = CZapit::getInstance()->GetCurrentChannel();
+	if (chan)
+	{
+		ShowIcon(FP_ICON_HD,chan->isHD());
+		ShowIcon(FP_ICON_LOCK,!chan->camap.empty());
+		if (chan->getAudioChannel() != NULL)
+			ShowIcon(FP_ICON_DD, chan->getAudioChannel()->audioChannelType == CZapitAudioChannel::AC3);
+	}
+}
+#endif
+
 void CVFD::showRCLock(int /*duration*/)
 {
+#ifdef HAVE_DUCKBOX_HARDWARE
+	if (VFDLENGTH < 8)
+		ShowText("Lock");
+	else
+		ShowText("<LOCKED>");
+#endif
 }
 
 void CVFD::showVolume(const char vol, const bool force_update)
@@ -362,9 +675,78 @@ void CVFD::showVolume(const char vol, const bool force_update)
 
 	volume = vol;
 	wake_up();
+#if !HAVE_DUCKBOX_HARDWARE
 	ShowIcon(FP_ICON_FRAME, true);
+#endif
 
 	if ((mode == MODE_TVRADIO) && g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME]) {
+#if HAVE_DUCKBOX_HARDWARE
+		int pp = (int) round((double) vol / (double) 2);
+		if(oldpp != pp)
+		{
+#if defined (BOXMODEL_UFS910) || defined (BOXMODEL_UFS922)
+			int i;
+			unsigned char speaker[5] = {0x1C, 0x1C, 0x1C, 0x3E, 0x7F}; // speaker symbol
+			writeCG(0, speaker);
+
+			int j = pp / 5;
+			// v-lines 0-5 = {0x10,0x11,0x12,0x13,0x14,0x15}
+			char c0[1] = {0x5F};
+			char c1[1] = {0x11};
+			char c2[1] = {0x12};
+			char c3[1] = {0x13};
+			char c4[1] = {0x14};
+			char c5[1] = {0x15};
+			char VolumeBar[17];
+			memset (VolumeBar, 0, sizeof(VolumeBar));
+			char act[2] = {0x01, 0x20};
+			strncat(VolumeBar, act, 2);
+			for(i=1; i <= j; i++)
+			{
+				strncat(VolumeBar, c5, 1);
+			}
+			i = pp % 5;
+			switch (i)
+			{
+				case 1:
+					strncat(VolumeBar, c1, 1);
+					break;
+				case 2:
+					strncat(VolumeBar, c2, 1);
+					break;
+				case 3:
+					strncat(VolumeBar, c3, 1);
+					break;
+				case 4:
+					strncat(VolumeBar, c4, 1);
+				break;
+			}
+			//dprintf(DEBUG_DEBUG,"CVFD::showVolume: vol %d - pp %d - fullblocks %d - mod %d - %s\n", vol, pp, j, i, VolumeBar);
+			if (strlen(VolumeBar) < 12) {
+				for (int a=strlen(VolumeBar); a < 12; a++)
+					strncat(VolumeBar, c0, 1);
+			}
+			ShowText(VolumeBar);
+#elif defined (BOXMODEL_TF7700)
+			char vol_chr[64] = "";
+			snprintf(vol_chr, sizeof(vol_chr)-1, "VOL: %d%%", (int)vol);
+			ShowText(vol_chr);
+#elif defined (BOXMODEL_OCTAGON1008)
+			char vol_chr[64] = "";
+			snprintf(vol_chr, sizeof(vol_chr)-1, "VOL=%3d", (int)vol);
+			ShowText(vol_chr);
+#elif defined (BOXMODEL_HS7119) || defined (BOXMODEL_HS7810A) || defined (BOXMODEL_HS7819)
+			char vol_chr[64] = "";
+			snprintf(vol_chr, sizeof(vol_chr)-1, "v%3d", (int)vol);
+			ShowText(vol_chr);
+#elif defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500) || defined (BOXMODEL_UFS912) || defined (BOXMODEL_UFS913) || defined (BOXMODEL_CUBEREVO) || defined (BOXMODEL_CUBEREVO_MINI2) || defined (BOXMODEL_CUBEREVO_2000HD)
+			char vol_chr[64] = "";
+			snprintf(vol_chr, sizeof(vol_chr)-1, "Volume: %d%%", (int)vol);
+			ShowText(vol_chr);
+#endif
+			oldpp = pp;
+		}
+#else
 		int pp = (int) round((double) vol * (double) 8 / (double) 100);
 		if(pp > 8) pp = 8;
 
@@ -382,6 +764,7 @@ printf("CVFD::showVolume: %d, bar %d\n", (int) vol, pp);
 			}
 			oldpp = pp;
 		}
+#endif
 	}
 }
 
@@ -392,7 +775,9 @@ void CVFD::showPercentOver(const unsigned char perc, const bool /*perform_update
 	if (((mode == MODE_TVRADIO) || (mode == MODE_MENU_UTF8)) && !(g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME])) {
 		//if (g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME] == 0)
 		{
+#if !HAVE_DUCKBOX_HARDWARE
 			ShowIcon(FP_ICON_FRAME, true);
+#endif
 			int pp;
 			if(perc == 255)
 				pp = 0;
@@ -450,18 +835,38 @@ void CVFD::showAudioPlayMode(AUDIOMODES m)
 		case AUDIO_MODE_PLAY:
 			ShowIcon(FP_ICON_PLAY, true);
 			ShowIcon(FP_ICON_PAUSE, false);
+#ifdef HAVE_DUCKBOX_HARDWARE
+			ShowIcon(FP_ICON_FF, false);
+			ShowIcon(FP_ICON_FR, false);
+#endif
 			break;
 		case AUDIO_MODE_STOP:
 			ShowIcon(FP_ICON_PLAY, false);
 			ShowIcon(FP_ICON_PAUSE, false);
+#ifdef HAVE_DUCKBOX_HARDWARE
+			ShowIcon(FP_ICON_FF, false);
+			ShowIcon(FP_ICON_FR, false);
+#endif
 			break;
 		case AUDIO_MODE_PAUSE:
 			ShowIcon(FP_ICON_PLAY, false);
 			ShowIcon(FP_ICON_PAUSE, true);
+#ifdef HAVE_DUCKBOX_HARDWARE
+			ShowIcon(FP_ICON_FF, false);
+			ShowIcon(FP_ICON_FR, false);
+#endif
 			break;
 		case AUDIO_MODE_FF:
+#ifdef HAVE_DUCKBOX_HARDWARE
+			ShowIcon(FP_ICON_FF, true);
+			ShowIcon(FP_ICON_FR, false);
+#endif
 			break;
 		case AUDIO_MODE_REV:
+#ifdef HAVE_DUCKBOX_HARDWARE
+			ShowIcon(FP_ICON_FF, false);
+			ShowIcon(FP_ICON_FR, true);
+#endif
 			break;
 	}
 	wake_up();
@@ -552,6 +957,9 @@ void CVFD::setMode(const MODES m, const char * const title)
 		ShowIcon(FP_ICON_COL1, true);
 		ShowIcon(FP_ICON_COL2, true);
 #endif
+		ClearIcons();
+		ShowIcon(FP_ICON_USB, false);
+		ShowIcon(FP_ICON_HDD, false);
 		showclock = true;
 		showTime(true);      /* "showclock = true;" implies that "showTime();" does a "displayUpdate();" */
 		                 /* "showTime()" clears the whole lcd in MODE_STANDBY                         */
@@ -579,7 +987,9 @@ void CVFD::setMode(const MODES m, const char * const title)
 #endif // VFD_UPDATE
 	}
 	wake_up();
+#if !HAVE_DUCKBOX_HARDWARE
 	setled();
+#endif
 }
 
 void CVFD::setBrightness(int bright)
@@ -593,9 +1003,13 @@ void CVFD::setBrightness(int bright)
 int CVFD::getBrightness()
 {
 	//FIXME for old neutrino.conf
+#if defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500)
+	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] > 7)
+		g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] = 7;
+#else
 	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] > 15)
 		g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] = 15;
-
+#endif
 	return g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS];
 }
 
@@ -610,8 +1024,13 @@ void CVFD::setBrightnessStandby(int bright)
 int CVFD::getBrightnessStandby()
 {
 	//FIXME for old neutrino.conf
+#if defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500)
+	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] > 7)
+		g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] = 7;
+#else
 	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] > 15)
 		g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] = 15;
+#endif
 	return g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS];
 }
 
@@ -626,8 +1045,13 @@ void CVFD::setBrightnessDeepStandby(int bright)
 int CVFD::getBrightnessDeepStandby()
 {
 	//FIXME for old neutrino.conf
+#if defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500)
+	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] > 7)
+		g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] = 7;
+#else
 	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] > 15)
 		g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] = 15;
+#endif
 	return g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS];
 }
 
@@ -685,23 +1109,86 @@ void CVFD::Unlock()
 void CVFD::Clear()
 {
 	if(!has_lcd) return;
+#if !HAVE_DUCKBOX_HARDWARE
 	int ret = ioctl(fd, IOC_FP_CLEAR_ALL, 0);
 	if(ret < 0)
 		perror("IOC_FP_SET_TEXT");
 	else
 		text[0] = 0;
+#else
+#if defined (BOXMODEL_HS7810A) || defined (BOXMODEL_HS7119) || defined (BOXMODEL_HS7819)
+	ShowText("    ");
+#elif defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_TF7700)
+	ShowText("        ");
+#elif defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500)
+	ShowText("            ");
+#elif !defined (BOXMODEL_HS7110)
+	ShowText("                ");
+#endif
+#endif
 }
 
 void CVFD::ShowIcon(fp_icon icon, bool show)
 {
+#if !HAVE_DUCKBOX_HARDWARE
 	if(!has_lcd || fd < 0) return;
 //printf("CVFD::ShowIcon %s %x\n", show ? "show" : "hide", (int) icon);
 	int ret = ioctl(fd, show ? IOC_FP_SET_ICON : IOC_FP_CLEAR_ICON, icon);
 	if(ret < 0)
 		perror(show ? "IOC_FP_SET_ICON" : "IOC_FP_CLEAR_ICON");
+#else
+#if defined (BOXMODEL_ATEVIO7500) || defined (BOXMODEL_HS7110) || defined (BOXMODEL_HS7810A) || defined (BOXMODEL_HS7119) || defined (BOXMODEL_HS7819)
+	return;
+#endif
+	if (icon == 0)
+		return;
+	struct vfd_ioctl_data data;
+	memset(&data, 0, sizeof(struct vfd_ioctl_data));
+	data.start = 0x00;
+	data.data[0] = icon;
+	data.data[4] = show;
+	data.length = 5;
+	write_to_vfd(VFDICONDISPLAYONOFF, &data);
+	return;
+#endif
+}
+
+#ifdef HAVE_DUCKBOX_HARDWARE
+void CVFD::ClearIcons()
+{
+#if defined (BOXMODEL_ATEVIO7500) || defined (BOXMODEL_HS7110) || defined (BOXMODEL_HS7810A) || defined (BOXMODEL_HS7119) || defined (BOXMODEL_HS7819)
+	return;
+#endif
+	for (int id = 0x10; id < FP_ICON_MAX; id++) {
+#if defined (BOXMODEL_OCTAGON1008)
+		if (id != FP_ICON_USB && id != FP_ICON_HDD)
+#elif defined(BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_TF7700)
+		if (id != FP_ICON_USB)
+#else
+		if (id != 0x10 && id != 0x12)
+#endif
+			ShowIcon((fp_icon)id, false);
+	}
+	return;
 }
 
 void CVFD::ShowText(const char * str)
+{
+	memset(g_str, 0, sizeof(g_str));
+	memcpy(g_str, str, sizeof(g_str)-1);
+
+	int i = strlen(str);
+	if (i > 63) {
+		g_str[60] = '.';
+		g_str[61] = '.';
+		g_str[62] = '.';
+		g_str[63] = '\0';
+		i = 63;
+	}
+	ShowNormalText(g_str, false);
+}
+#else
+void CVFD::ShowText(const char *str)
 {
 	char flags[2] = { FP_FLAG_ALIGN_LEFT, 0 };
 
@@ -721,6 +1208,7 @@ void CVFD::ShowText(const char * str)
 	if(ret < 0)
 		perror("IOC_FP_SET_TEXT");
 }
+#endif
 
 #ifdef VFD_UPDATE
 /*****************************************************************************************/

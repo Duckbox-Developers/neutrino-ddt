@@ -33,6 +33,7 @@
 #include <gui/infoclock.h>
 #include <gui/volumebar.h>
 #include <gui/audiomute.h>
+#include <driver/display.h>
 
 CAudioMute::CAudioMute():CComponentsPicture(0, 0, NEUTRINO_ICON_BUTTON_MUTE)
 {
@@ -91,6 +92,7 @@ void CAudioMute::AudioMute(int newValue, bool isEvent)
 			frameBuffer->setFbArea(CFrameBuffer::FB_PAINTAREA_MUTEICON1);
 		}
 		frameBuffer->fbNoCheck(false);
+		frameBuffer->blit();
 	}
 }
 
@@ -112,4 +114,5 @@ void CAudioMute::enableMuteIcon(bool enable)
 		do_paint_mute_icon = false;
 	}
 	frameBuffer->fbNoCheck(false);
+	frameBuffer->blit();
 }

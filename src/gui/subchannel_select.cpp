@@ -112,7 +112,7 @@ int CSubChannelSelectMenu::getNVODMenu(CMenuWidget* menu)
 
 	if ( g_RemoteControl->are_subchannels ) {
 		menu->addItem(GenericMenuSeparatorLine);
-		CMenuOptionChooser* oj = new CMenuOptionChooser(LOCALE_NVODSELECTOR_DIRECTORMODE, &g_RemoteControl->director_mode, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW);
+		CMenuOptionChooser* oj = new CMenuOptionChooser(LOCALE_NVODSELECTOR_DIRECTORMODE, &g_RemoteControl->director_mode, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, NULL, CRCInput::RC_yellow);
 		menu->addItem(oj);
 	}
 	return true;

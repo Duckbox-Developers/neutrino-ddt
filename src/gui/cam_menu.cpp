@@ -76,6 +76,7 @@ int CCAMMenuHandler::exec(CMenuTarget* parent, const std::string &actionkey)
 
 		if(ca && ca->ModulePresent(CA_SLOT_TYPE_CI, slot))
 			ca->ModuleReset(CA_SLOT_TYPE_CI, slot);
+		return menu_return::RETURN_EXIT;
 	} else if ((loc = actionkey.find("ca_ci", 0)) != std::string::npos) {
 		slot = actionkey.at(5) - '0';
 		printf("CCAMMenuHandler::exec: actionkey %s for slot %d\n", actionkey.c_str(), slot);
@@ -85,6 +86,7 @@ int CCAMMenuHandler::exec(CMenuTarget* parent, const std::string &actionkey)
 
 		if(ca && ca->ModulePresent(CA_SLOT_TYPE_SMARTCARD, slot))
 			ca->ModuleReset(CA_SLOT_TYPE_SMARTCARD, slot);
+		return menu_return::RETURN_EXIT;
 	} else if ((loc = actionkey.find("ca_sc", 0)) != std::string::npos) {
 		slot = actionkey.at(5) - '0';
 		printf("CCAMMenuHandler::exec: actionkey %s for slot %d\n", actionkey.c_str(), slot);
@@ -108,14 +110,12 @@ int CCAMMenuHandler::doMainMenu()
 	CMenuWidget* cammenu = new CMenuWidget(LOCALE_CI_SETTINGS, NEUTRINO_ICON_SETTINGS);
 	cammenu->addIntroItems();
 
-	if (!g_settings.easymenu) {
-		if(CiSlots) {
-			cammenu->addItem( new CMenuOptionChooser(LOCALE_CI_RESET_STANDBY, &g_settings.ci_standby_reset, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true));
-			cammenu->addItem( new CMenuOptionNumberChooser(LOCALE_CI_CLOCK, &g_settings.ci_clock, true, 6, 12, this));
-		}
-		cammenu->addItem( new CMenuOptionChooser(LOCALE_CI_IGNORE_MSG, &g_settings.ci_ignore_messages, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true));
-		cammenu->addItem( GenericMenuSeparatorLine );
+	if(CiSlots) {
+		cammenu->addItem( new CMenuOptionChooser(LOCALE_CI_RESET_STANDBY, &g_settings.ci_standby_reset, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true));
+		cammenu->addItem( new CMenuOptionNumberChooser(LOCALE_CI_CLOCK, &g_settings.ci_clock, true, 6, 12, this));
 	}
+	cammenu->addItem( new CMenuOptionChooser(LOCALE_CI_IGNORE_MSG, &g_settings.ci_ignore_messages, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true));
+	cammenu->addItem( GenericMenuSeparatorLine );
 
 	CMenuWidget * tempMenu;
 	int i = 0;
@@ -459,7 +459,7 @@ int CCAMMenuHandler::doMenu(int slot, CA_SLOT_TYPE slotType)
 				g_Locale->getText(slotType == CA_SLOT_TYPE_CI ? LOCALE_CI_WAITING : LOCALE_SC_WAITING));
 
 			g_RCInput->getMsgAbsoluteTimeout (&msg, &data, &timeoutEnd);
-			printf("CCAMMenuHandler::doMenu: msg %x data %x\n", msg, data);
+			printf("CCAMMenuHandler::doMenu: msg %lx data %lx\n", msg, data);
 			if (msg == CRCInput::RC_timeout) {
 				printf("CCAMMenuHandler::doMenu: menu timeout\n");
 				hideHintBox();

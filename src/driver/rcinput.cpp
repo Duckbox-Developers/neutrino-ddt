@@ -61,11 +61,29 @@
 #include <sectionsdclient/sectionsdclient.h>
 #include <cs_api.h>
 
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#include <gui/cec_setup.h>
+#endif
+
 //#define RCDEBUG
 
 #define ENABLE_REPEAT_CHECK
 
+#if HAVE_SPARK_HARDWARE
+/* this relies on event0 being the AOTOM frontpanel driver device
+ * TODO: what if another input device is present? */
+const char * const RC_EVENT_DEVICE[NUMBER_OF_EVENT_DEVICES] = {"/dev/input/nevis_ir", "/dev/input/event0"};
+#elif HAVE_GENERIC_HARDWARE
+/* the FIFO created by libstb-hal */
+const char * const RC_EVENT_DEVICE[NUMBER_OF_EVENT_DEVICES] = {"/tmp/neutrino.input"};
+#else
+#if HAVE_DUCKBOX_HARDWARE
+const char * const RC_EVENT_DEVICE[NUMBER_OF_EVENT_DEVICES] = {"/dev/input/event0"};
+#else
+//const char * const RC_EVENT_DEVICE[NUMBER_OF_EVENT_DEVICES] = {"/dev/input/nevis_ir", "/dev/input/event0"};
 const char * const RC_EVENT_DEVICE[NUMBER_OF_EVENT_DEVICES] = {"/dev/input/nevis_ir"};
+#endif
+#endif
 typedef struct input_event t_input_event;
 
 #ifdef KEYBOARD_INSTEAD_OF_REMOTE_CONTROL
@@ -78,10 +96,11 @@ static bool input_stopped = false;
 *	Constructor - opens rc-input device, selects rc-hardware and starts threads
 *
 *********************************************************************************/
-CRCInput::CRCInput()
+CRCInput::CRCInput(bool &_timer_wakeup)
 {
 	timerid= 1;
 	repeatkeys = NULL;
+	timer_wakeup = &_timer_wakeup;
 	longPressAny = false;
 
 	// pipe for internal event-queue
@@ -145,7 +164,6 @@ CRCInput::CRCInput()
 	repeat_block = repeat_block_generic = 0;
 	open();
 	rc_last_key =  KEY_MAX;
-	firstKey = true;
 	longPressEnd = 0;
 
 	//select and setup remote control hardware
@@ -1243,13 +1261,8 @@ void CRCInput::getMsg_us(neutrino_msg_t * msg, neutrino_msg_data_t * data, uint6
 				if (ev.type == EV_SYN)
 					continue; /* ignore... */
 				SHTDCNT::getInstance()->resetSleepTimer();
-				if (firstKey) {
-					firstKey = false;
-					CTimerManager::getInstance()->cancelShutdownOnWakeup();
-				}
-
 				uint32_t trkey = translate(ev.code);
-#ifdef DEBUG
+#ifdef _DEBUG
 				printf("%d key: %04x value %d, translate: %04x -%s-\n", ev.value, ev.code, ev.value, trkey, getKeyName(trkey).c_str());
 #endif
 				if (trkey == RC_nokey)
@@ -1288,6 +1301,15 @@ void CRCInput::getMsg_us(neutrino_msg_t * msg, neutrino_msg_data_t * data, uint6
 #ifdef RCDEBUG
 					printf("rc_last_key %04x rc_last_repeat_key %04x\n\n", rc_last_key, rc_last_repeat_key);
 #endif
+					if (*timer_wakeup) {
+						unlink("/tmp/.timer_wakeup");
+						*timer_wakeup = false;
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+						CCECSetup cecsetup;
+						cecsetup.setCECSettings(true);
+#endif
+						CTimerManager::getInstance()->cancelShutdownOnWakeup();
+					}
 					uint64_t now_pressed;
 					bool keyok = true;
 
@@ -1296,7 +1318,7 @@ void CRCInput::getMsg_us(neutrino_msg_t * msg, neutrino_msg_data_t * data, uint6
 					if (trkey == rc_last_key) {
 						/* only allow selected keys to be repeated */
 						if (mayRepeat(trkey, bAllowRepeatLR) ||
-						    (g_settings.shutdown_real_rcdelay && ((trkey == RC_standby) && (cs_get_revision() > 7))) )
+							(g_settings.shutdown_real_rcdelay && ((trkey == RC_standby) && (g_info.hw_caps->can_shutdown))))
 						{
 #ifdef ENABLE_REPEAT_CHECK
 							if (rc_last_repeat_key != trkey) {
@@ -1326,6 +1348,12 @@ void CRCInput::getMsg_us(neutrino_msg_t * msg, neutrino_msg_data_t * data, uint6
 						{
 							last_keypress = now_pressed;
 
+							FILE* rclocked = fopen("/tmp/rc.locked", "r");
+							if (rclocked)
+							{
+								fclose(rclocked);
+								continue;
+							}
 							*msg = trkey;
 							*data = 0; /* <- button pressed */
 							if(g_settings.key_click)
@@ -1575,6 +1603,8 @@ const char * CRCInput::getSpecialKeyName(const unsigned int key)
 				return "analog off";
 			case RC_www:
 				return "www";
+			case RC_playmode:
+				return "play mode";
 			case RC_sub:
 				return "sub";
 			case RC_pos:
@@ -1611,10 +1641,20 @@ int CRCInput::translate(int code)
 {
 	switch(code)
 	{
-		case 0x100: // FIXME -- needed?
+		case 0x100:
 			return RC_up;
-		case 0x101: // FIXME -- needed?
+		case 0x101:
 			return RC_down;
+#ifdef HAVE_AZBOX_HARDWARE
+		case KEY_HOME:
+			return RC_favorites;
+		case KEY_TV:
+			return RC_stop;
+		case KEY_RADIO:
+			return RC_record;
+		case KEY_PLAY:
+			return RC_pause;
+#endif
 		default:
 			break;
 	}

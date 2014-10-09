@@ -84,6 +84,27 @@ extern int allow_flash;
 #define gTmpPath "/tmp/"
 #define gUserAgent "neutrino/softupdater 1.0"
 
+#if HAVE_DUCKBOX_HARDWARE
+#define LIST_OF_UPDATES_LOCAL_FILENAME "update.list"
+#define UPDATE_LOCAL_FILENAME          "update.img"
+#define RELEASE_CYCLE                  "2.0"
+#define FILEBROWSER_UPDATE_FILTER      "img"
+
+#if BOXMODEL_UFS910 || BOXMODEL_FORTIS_HDBOX || BOXMODEL_OCTAGON1008
+#define MTD_OF_WHOLE_IMAGE              5
+#define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd5"
+#elif BOXMODEL_CUBEREVO_MINI2
+#define MTD_OF_WHOLE_IMAGE              6
+#define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd6"
+#elif BOXMODEL_UFS922
+#define MTD_OF_WHOLE_IMAGE              4
+#define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd4"
+#else // update blocked with invalid data
+#define MTD_OF_WHOLE_IMAGE              999
+#define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd999"
+#endif
+
+#else
 #define LIST_OF_UPDATES_LOCAL_FILENAME "coolstream.list"
 #define UPDATE_LOCAL_FILENAME          "update.img"
 #define RELEASE_CYCLE                  "2.0"
@@ -94,6 +115,7 @@ extern int allow_flash;
 #define MTD_DEVICE_OF_UPDATE_PART      "/dev/mtd0"
 #else
 #define MTD_DEVICE_OF_UPDATE_PART      "/dev/mtd3"
+#endif
 #endif
 
 CFlashUpdate::CFlashUpdate()
@@ -417,11 +439,13 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 	menu_ret = menu_return::RETURN_REPAINT;
 	paint();
 
+#if !HAVE_DUCKBOX_HARDWARE
 	if(sysfs.size() < 8) {
 		ShowHint(LOCALE_MESSAGEBOX_ERROR, g_Locale->getText(LOCALE_FLASHUPDATE_CANTOPENMTD));
 		hide();
 		return menu_return::RETURN_REPAINT;
 	}
+#endif
 	if(!checkVersion4Update()) {
 		hide();
 		return menu_ret; //menu_return::RETURN_REPAINT;
@@ -453,8 +477,12 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 	showGlobalStatus(40);
 
 	CFlashTool ft;
+#if HAVE_DUCKBOX_HARDWARE
+	ft.setMTDDevice(MTD_DEVICE_OF_UPDATE_PART);
+#else
 	//ft.setMTDDevice(MTD_DEVICE_OF_UPDATE_PART);
 	ft.setMTDDevice(sysfs);
+#endif
 	ft.setStatusViewer(this);
 
 	showStatusMessageUTF(g_Locale->getText(LOCALE_FLASHUPDATE_MD5CHECK)); // UTF-8
@@ -478,6 +506,7 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 #endif
 	if(fileType < '3') {
 		//flash it...
+#if ENABLE_EXTUPDATE
 #ifndef BOXMODEL_APOLLO
 		if (g_settings.apply_settings) {
 			if (ShowMsg(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_FLASHUPDATE_APPLY_SETTINGS), CMessageBox::mbrYes, CMessageBox::mbYes | CMessageBox::mbNo, NEUTRINO_ICON_UPDATE) == CMessageBox::mbrYes)
@@ -486,6 +515,7 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 					return menu_return::RETURN_REPAINT;
 				}
 		}
+#endif
 #endif
 
 #ifdef DEBUG1
@@ -691,6 +721,7 @@ void CFlashExpert::readmtd(int preadmtd)
 	netGetHostname(hostName);
 	std::string timeStr  = getNowTimeStr("_%Y%m%d_%H%M");
 	std::string tankStr  = "";
+#if ENABLE_EXTUPDATE
 #ifdef BOXMODEL_APOLLO
 	int eSize = CMTDInfo::getInstance()->getMTDEraseSize(CMTDInfo::getInstance()->findMTDsystem());
 	if (preadmtd == 0) {
@@ -707,6 +738,7 @@ void CFlashExpert::readmtd(int preadmtd)
 	if (g_settings.softupdate_name_mode_backup == CExtUpdate::SOFTUPDATE_NAME_HOSTNAME_TIME)
 		filename = (std::string)g_settings.update_dir + "/" + mtdInfo->getMTDName(preadmtd) + timeStr + "_" + hostName + tankStr + ".img";
 	else
+#endif
 		filename = (std::string)g_settings.update_dir + "/" + mtdInfo->getMTDName(preadmtd) + timeStr + tankStr + ".img";
 
 #ifdef BOXMODEL_APOLLO
@@ -721,12 +753,14 @@ void CFlashExpert::readmtd(int preadmtd)
 	}
 
 	bool skipCheck = false;
-#ifndef BOXMODEL_APOLLO
+#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE && !BOXMODEL_APOLLO
 	if ((std::string)g_settings.update_dir == "/tmp")
 		skipCheck = true;
 #else
+#if BOXMODEL_APOLLO
 	if (forceOtherFilename)
 		filename = otherFilename;
+#endif
 #endif
 	if ((!skipCheck) && (!checkSize(preadmtd, filename)))
 		return;
@@ -831,9 +865,11 @@ int CFlashExpert::showMTDSelector(const std::string & actionkey)
 		sprintf(sActionKey, "%s%d", actionkey.c_str(), lx);
 		mtdselector->addItem(new CMenuForwarder(mtdInfo->getMTDName(lx).c_str(), enabled, NULL, this, sActionKey, CRCInput::convertDigitToKey(shortcut++)));
 	}
+#if ENABLE_EXTUPDATE
 #ifndef BOXMODEL_APOLLO
 	if (actionkey == "writemtd")
 		mtdselector->addItem(new CMenuForwarder("systemFS with settings", true, NULL, this, "writemtd10", CRCInput::convertDigitToKey(shortcut++)));
+#endif
 #endif
 	int res = mtdselector->exec(NULL,"");
 	delete mtdselector;
@@ -903,11 +939,14 @@ int CFlashExpert::exec(CMenuTarget* parent, const std::string & actionKey)
 			selectedMTD = iWritemtd;
 			showFileSelector("");
 		} else {
+#if ENABLE_EXTUPDATE
 			if(selectedMTD == 10) {
 				std::string aK = actionKey;
 				CExtUpdate::getInstance()->applySettings(aK, CExtUpdate::MODE_EXPERT);
 			}
-			else if(selectedMTD==-1) {
+			else
+#endif
+			if (selectedMTD == -1) {
 				writemtd(actionKey, MTD_OF_WHOLE_IMAGE);
 			} else {
 				writemtd(actionKey, selectedMTD);

@@ -54,6 +54,7 @@
 #include <system/hddstat.h>
 #include <daemonc/remotecontrol.h>
 #include <driver/volume.h>
+#include <driver/radiotext.h>
 
 #include <zapit/femanager.h>
 #include <zapit/zapit.h>
@@ -524,7 +525,11 @@ void CInfoViewerBB::showIcon_Resolution()
 #if 0
 	if ((scrambledNoSig) || ((!fta) && (scrambledErr)))
 #else
+#if BOXMODEL_UFS910
+	if (!g_InfoViewer->chanready)
+#else
 	if (!g_InfoViewer->chanready || videoDecoder->getBlank())
+#endif
 #endif
 	{
 		icon_name = NEUTRINO_ICON_RESOLUTION_000;
@@ -641,7 +646,11 @@ void CInfoViewerBB::showSysfsHdd()
 		//sysFS info
 		int percent = 0;
 		uint64_t t, u;
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+		if (get_fs_usage("/var", t, u))
+#else
 		if (get_fs_usage("/", t, u))
+#endif
 			percent = (int)((u * 100ULL) / t);
 		showBarSys(percent);
 
@@ -747,11 +756,12 @@ void CInfoViewerBB::showIcon_CA_Status(int notfirst)
 		return;
 	}
 
-	int caids[] = {  0x900, 0xD00, 0xB00, 0x1800, 0x0500, 0x0100, 0x600,  0x2600, 0x4a00, 0x0E00 };
+	const int caids[] = {  0x900, 0xD00, 0xB00, 0x1800, 0x0500, 0x0100, 0x600,  0x2600, 0x4a00, 0x0E00 };
 	const char * white = (char *) "white";
 	const char * yellow = (char *) "yellow";
+	const char * green = (char *) "green";
 	int icon_space_offset = 0;
-
+	const char *ecm_info_f = "/tmp/ecm.info";
 	if(!g_InfoViewer->chanready) {
 		if (g_settings.casystem_display == 2) {
 			fta = true;
@@ -776,6 +786,40 @@ void CInfoViewerBB::showIcon_CA_Status(int notfirst)
 	}
 
 	if(!notfirst) {
+		FILE* fd = fopen (ecm_info_f, "r");
+		int ecm_caid = 0;
+		if (fd)
+		{
+			char *buffer = NULL;
+			size_t len = 0;
+			ssize_t read;
+			while ((read = getline(&buffer, &len, fd)) != -1)
+			{
+				if ((sscanf(buffer, "=%*[^9-0]%x", &ecm_caid) == 1) || (sscanf(buffer, "caid: %x", &ecm_caid) == 1))
+				{
+					continue;
+				}
+			}
+			fclose (fd);
+			if (buffer)
+				free (buffer);
+		}
+		if ((ecm_caid & 0xFF00) == 0x1700)
+		{
+			bool nagra_found = false;
+			bool beta_found = false;
+			for(casys_map_iterator_t it = channel->camap.begin(); it != channel->camap.end(); ++it) {
+				int caid = (*it) & 0xFF00;
+				if(caid == 0x1800)
+					nagra_found = true;
+				if (caid == 0x1700)
+					beta_found = true;
+			}
+			if(beta_found)
+				ecm_caid = 0x600;
+			else if(!beta_found && nagra_found)
+				ecm_caid = 0x1800;
+		}
 #if 0
 		static int icon_space_offset = 0;
 		if ((g_settings.casystem_display == 1) && (icon_space_offset)) {
@@ -793,9 +837,9 @@ void CInfoViewerBB::showIcon_CA_Status(int notfirst)
 					break;
 			}
 			if(g_settings.casystem_display == 0)
-				paint_ca_icons(caids[i], (char *) (found ? yellow : white), icon_space_offset);
+				paint_ca_icons(caids[i], (char *) (found ? (caids[i] == (ecm_caid & 0xFF00) ? green : yellow) : white), icon_space_offset);
 			else if(found)
-				paint_ca_icons(caids[i], (char *) yellow, icon_space_offset);
+				paint_ca_icons(caids[i], (char *) ( caids[i] == (ecm_caid & 0xFF00) ? green : yellow), icon_space_offset);
 		}
 	}
 }
@@ -809,14 +853,17 @@ void CInfoViewerBB::paintCA_bar(int left, int right)
 	if (left)
 		left =  xcnt - ((left/4)-1);
 
-	frameBuffer->paintBox(g_InfoViewer->ChanInfoX + (right*4), g_InfoViewer->BoxEndY, g_InfoViewer->BoxEndX - (left*4), g_InfoViewer->BoxEndY + bottom_bar_offset, COL_BLACK);
+	frameBuffer->paintBox(g_InfoViewer->ChanInfoX + (right*4), g_InfoViewer->BoxEndY, g_InfoViewer->BoxEndX - (left*4), g_InfoViewer->BoxEndY + bottom_bar_offset, (g_settings.dotmatrix == 1) ? COL_BLACK : COL_INFOBAR_PLUS_0);
 
-	if (left)
-		left -= 1;
+	if (g_settings.dotmatrix == 1)
+	{
+		if (left)
+			left -= 1;
 
-	for (int i = 0  + right; i < xcnt - left; i++) {
-		for (int j = 0; j < ycnt; j++) {
-			frameBuffer->paintBoxRel((g_InfoViewer->ChanInfoX + 2) + i*4, g_InfoViewer->BoxEndY + 2 + j*4, 2, 2, COL_INFOBAR_PLUS_1);
+		for (int i = 0  + right; i < xcnt - left; i++) {
+			for (int j = 0; j < ycnt; j++) {
+				frameBuffer->paintBoxRel((g_InfoViewer->ChanInfoX + 2) + i*4, g_InfoViewer->BoxEndY + 2 + j*4, 2, 2, COL_INFOBAR_PLUS_1);
+			}
 		}
 	}
 }

@@ -51,12 +51,10 @@
 #include <system/debug.h>
 
 static bool usermenu_show = true;
-#if 0
-#if HAVE_SPARK_HARDWARE
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 static bool usermenu_show_three_d_mode = true;
 #else
 static bool usermenu_show_three_d_mode = false;
-#endif
 #endif
 #if HAVE_SPARK_HARDWARE
 static bool usermenu_show_cam = false; // FIXME -- use hwcaps?
@@ -97,11 +95,11 @@ static keyvals usermenu_items[] =
 	{ SNeutrinoSettings::ITEM_GAMES,		LOCALE_MAINMENU_GAMES,			usermenu_show },
 	{ SNeutrinoSettings::ITEM_TOOLS,		LOCALE_MAINMENU_TOOLS,			usermenu_show },
 	{ SNeutrinoSettings::ITEM_SCRIPTS,		LOCALE_MAINMENU_SCRIPTS,		usermenu_show },
-	{ SNeutrinoSettings::ITEM_LUA,                  LOCALE_MAINMENU_LUA,			usermenu_show },
-#if 0
-	{ SNeutrinoSettings::ITEM_ADZAP,		LOCALE_USERMENU_ITEM_ADZAP,		usermenu_show },
+	{ SNeutrinoSettings::ITEM_LUA,			LOCALE_MAINMENU_LUA,			usermenu_show },
 	{ SNeutrinoSettings::ITEM_TUNER_RESTART,	LOCALE_SERVICEMENU_RESTART_TUNER,	usermenu_show },
 	{ SNeutrinoSettings::ITEM_THREE_D_MODE,		LOCALE_THREE_D_SETTINGS,		usermenu_show_three_d_mode },
+#if 0
+	{ SNeutrinoSettings::ITEM_ADZAP,		LOCALE_USERMENU_ITEM_ADZAP,		usermenu_show },
 	{ SNeutrinoSettings::ITEM_RASS,			LOCALE_RASS_HEAD,			usermenu_show },
 	{ SNeutrinoSettings::ITEM_NETZKINO,		LOCALE_MOVIEPLAYER_NKPLAYBACK,		usermenu_show },
 #endif

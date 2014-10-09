@@ -31,13 +31,18 @@
 #include <gui/infoclock.h>
 #include <gui/keybind_setup.h>
 #include <system/debug.h>
-#include <audio_cs.h>
+#include <audio.h>
 #include <system/settings.h>
+#include <system/helpers.h>
 #include <daemonc/remotecontrol.h>
 #include <driver/volume.h>
+#include <driver/display.h>
 #include <gui/audiomute.h>
 #include <gui/mediaplayer.h>
 #include <zapit/zapit.h>
+#ifdef ENABLE_GRAPHLCD
+#include <driver/nglcd.h>
+#endif
 
 
 extern CRemoteControl * g_RemoteControl;
@@ -135,6 +140,9 @@ void CVolume::setVolume(const neutrino_msg_t key)
 						}
 					}
 					g_settings.current_volume = v;
+#ifdef ENABLE_GRAPHLCD
+					nGLCD::ShowVolume(true);
+#endif
 				}
 			}
 			else if (msg == CRCInput::RC_home)
@@ -168,6 +176,9 @@ void CVolume::setVolume(const neutrino_msg_t key)
 		}
 	} while (msg != CRCInput::RC_timeout);
 
+#ifdef ENABLE_GRAPHLCD
+	nGLCD::ShowVolume(false);
+#endif
 	hideVolscale();
 }
 
@@ -177,6 +188,7 @@ bool CVolume::hideVolscale()
 	if (volscale) {
 		if (volscale->isPainted()) {
 			volscale->hide();
+			frameBuffer->blit();
 			ret = true;
 		}
 		delete volscale;
@@ -198,10 +210,12 @@ bool CVolume::changeNotify(const neutrino_locale_t OptionName, void * data)
 	bool ret = false;
 	if (ARE_LOCALES_EQUAL(OptionName, NONEXISTANT_LOCALE)) {
 		int percent = *(int *) data;
+#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
 		int vol =  CZapit::getInstance()->GetVolume();
 		/* keep resulting volume = (vol * percent)/100 not more than 115 */
 		if (vol * percent > 11500)
 			percent = 11500 / vol;
+#endif
 
 		printf("CVolume::changeNotify: percent %d\n", percent);
 		CZapit::getInstance()->SetPidVolume(channel_id, apid, percent);

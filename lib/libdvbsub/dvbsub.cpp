@@ -11,48 +11,81 @@
 #include <sys/time.h>
 
 #include <cerrno>
+#include <map>
 
 #include <zapit/include/dmx.h>
+#include <system/set_threadname.h>
+#include <driver/framebuffer.h>
+
+#include <poll.h>
+
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+extern "C" {
+#include <ass/ass.h>
+}
+#endif
+
+#include <OpenThreads/ScopedLock>
+#include <OpenThreads/Thread>
+#include <OpenThreads/Condition>
 
 #include "Debug.hpp"
 #include "PacketQueue.hpp"
 #include "helpers.hpp"
 #include "dvbsubtitle.h"
 
-#define Log2File	printf
-#define RECVBUFFER_STEPSIZE 1024
-
-enum {NOERROR, NETWORK, DENIED, NOSERVICE, BOXTYPE, THREAD, ABOUT};
-enum {GET_VOLUME, SET_VOLUME, SET_MUTE, SET_CHANNEL};
-
 Debug sub_debug;
 static PacketQueue packet_queue;
-//sem_t event_semaphore;
+static PacketQueue bitmap_queue;
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+static PacketQueue ass_queue;
+static sem_t ass_sem;
+#endif
 
 static pthread_t threadReader;
 static pthread_t threadDvbsub;
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+static pthread_t threadAss = 0;
+#endif
 
 static pthread_cond_t readerCond = PTHREAD_COND_INITIALIZER;
 static pthread_mutex_t readerMutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t packetCond = PTHREAD_COND_INITIALIZER;
 static pthread_mutex_t packetMutex = PTHREAD_MUTEX_INITIALIZER;
 
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+static OpenThreads::Mutex ass_mutex;
+static std::map<int,ASS_Track*> ass_map;
+static ASS_Library *ass_library = NULL;
+static ASS_Renderer *ass_renderer = NULL;
+static ASS_Track *ass_track = NULL;
+#endif
+
 static int reader_running;
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+static int ass_reader_running;
+#endif
 static int dvbsub_running;
 static int dvbsub_paused = true;
-static int dvbsub_pid;
+static int dvbsub_pid = 0;
 static int dvbsub_stopped;
 static int pid_change_req;
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+static bool isEplayer = false;
+#endif
 
 cDvbSubtitleConverter *dvbSubtitleConverter;
 static void* reader_thread(void *arg);
-static void* dvbsub_thread(void* arg);
+static void* dvbsub_thread(void *arg);
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+static void* ass_reader_thread(void *arg);
+#endif
 static void clear_queue();
 
 int dvbsub_init() {
 	int trc;
 
-	sub_debug.set_level(3);
+	sub_debug.set_level(0);
 
 	reader_running = true;
 	dvbsub_stopped = 1;
@@ -74,6 +107,17 @@ int dvbsub_init() {
 		return -1;
 	}
 
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	ass_reader_running = true;
+	sem_init(&ass_sem, 0, 0);
+	trc = pthread_create(&threadAss, 0, ass_reader_thread, NULL);
+	if (trc) {
+		fprintf(stderr, "[dvb-sub] failed to create %s-thread (rc=%d)\n", "ass-reader", trc);
+		ass_reader_running = false;
+		return -1;
+	}
+	pthread_detach(threadAss);
+#endif
 	return(0);
 }
 
@@ -86,31 +130,47 @@ int dvbsub_pause()
 
 		printf("[dvb-sub] paused\n");
 	}
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(ass_mutex);
+	ass_track = NULL;
+#endif
 
 	return 0;
 }
 
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+int dvbsub_start(int pid, bool _isEplayer)
+#else
 int dvbsub_start(int pid)
-{
-	if(!dvbsub_paused && (pid == 0)) {
-		return 0;
-	}
-
-	if(pid) {
-		if(pid != dvbsub_pid) {
-			dvbsub_pause();
-			if(dvbSubtitleConverter)
-				dvbSubtitleConverter->Reset();
-			dvbsub_pid = pid;
-			pid_change_req = 1;
-		}
-	}
-printf("[dvb-sub] ***************************************** start, stopped %d pid %x\n", dvbsub_stopped, dvbsub_pid);
-#if 0
-	while(!dvbsub_stopped)
-		usleep(10);
 #endif
-	if(dvbsub_pid > 0) {
+{
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	isEplayer = _isEplayer;
+	if (isEplayer && !dvbsub_paused)
+		return 0;
+#endif
+	if(!dvbsub_paused && !pid)
+		return 0;
+
+	if(pid && (pid != dvbsub_pid)) {
+		dvbsub_pause();
+		if(dvbSubtitleConverter)
+			dvbSubtitleConverter->Reset();
+		dvbsub_pid = pid;
+		pid_change_req = 1;
+	}
+printf("[dvb-sub] start, stopped %d pid %x\n", dvbsub_stopped, dvbsub_pid);
+	if(dvbsub_pid) {
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+		if (isEplayer) {
+			OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(ass_mutex);
+			std::map<int,ASS_Track*>::iterator it = ass_map.find(dvbsub_pid);
+			if (it != ass_map.end())
+				ass_track = it->second;
+			else
+				ass_track = NULL; //FIXME
+		}
+#endif
 		dvbsub_stopped = 0;
 		dvbsub_paused = false;
 		if(dvbSubtitleConverter)
@@ -124,6 +184,8 @@ printf("[dvb-sub] ***************************************** start, stopped %d pi
 	return 1;
 }
 
+static int flagFd = -1;
+
 int dvbsub_stop()
 {
 	dvbsub_pid = 0;
@@ -131,6 +193,7 @@ int dvbsub_stop()
 		dvbsub_stopped = 1;
 		dvbsub_pause();
 		pid_change_req = 1;
+		write(flagFd, "", 1);
 	}
 
 	return 0;
@@ -143,10 +206,10 @@ int dvbsub_getpid()
 
 void dvbsub_setpid(int pid)
 {
-	dvbsub_pid = pid;
-
-	if(dvbsub_pid == 0)
+	if(!pid)
 		return;
+
+	dvbsub_pid = pid;
 
 	clear_queue();
 
@@ -167,12 +230,15 @@ int dvbsub_close()
 		dvbsub_pause();
 		reader_running = false;
 		dvbsub_stopped = 1;
+		write(flagFd, "", 1);
 
 		pthread_mutex_lock(&readerMutex);
 		pthread_cond_broadcast(&readerCond);
 		pthread_mutex_unlock(&readerMutex);
 
-		pthread_join(threadReader, NULL);
+// dvbsub_close() is called at shutdown time only. Instead of waiting for
+// the threads to terminate just detach. --martii
+		pthread_detach(threadReader);
 		threadReader = 0;
 	}
 	if(threadDvbsub) {
@@ -182,21 +248,37 @@ int dvbsub_close()
 		pthread_cond_broadcast(&packetCond);
 		pthread_mutex_unlock(&packetMutex);
 
-		pthread_join(threadDvbsub, NULL);
+		pthread_detach(threadDvbsub);
 		threadDvbsub = 0;
 	}
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	if (ass_reader_running) {
+		ass_reader_running = false;
+		sem_post(&ass_sem);
+	}
+#endif
 	printf("[dvb-sub] stopped\n");
 
 	return 0;
 }
 
-static cDemux * dmx;
+static cDemux * dmx = NULL;
 
+extern void getPlayerPts(int64_t *);
 
 void dvbsub_get_stc(int64_t * STC)
 {
-	if(dmx)
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE // requires libeplayer3
+	if (isEplayer) {
+		getPlayerPts(STC);
+		return;
+	}
+#endif
+	if(dmx) {
 		dmx->getSTC(STC);
+		return;
+	}
+	*STC = 0;
 }
 
 static int64_t get_pts(unsigned char * packet)
@@ -230,25 +312,245 @@ static int64_t get_pts_stc_delta(int64_t pts)
 static void clear_queue()
 {
 	uint8_t* packet;
+	cDvbSubtitleBitmaps *Bitmaps;
 
 	pthread_mutex_lock(&packetMutex);
 	while(packet_queue.size()) {
 		packet = packet_queue.pop();
 		free(packet);
 	}
+	while(bitmap_queue.size()) {
+		Bitmaps = (cDvbSubtitleBitmaps *) bitmap_queue.pop();
+		delete Bitmaps;
+	}
+	pthread_mutex_unlock(&packetMutex);
+}
+
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+struct ass_data
+{
+	AVCodecContext *c;
+	AVSubtitle sub;
+	int pid;
+	ass_data(AVCodecContext *_c, AVSubtitle *_sub, int _pid) : c(_c),pid(_pid) { memcpy(&sub, _sub, sizeof(sub));}
+};
+
+void dvbsub_ass_clear(void)
+{
+	OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(ass_mutex);
+
+	while(ass_queue.size()) {
+		ass_data *a = (ass_data *) ass_queue.pop();
+		if (a) {
+			avsubtitle_free(&a->sub);
+			delete a;
+		}
+	}
+	while(!sem_trywait(&ass_sem));
+
+	ass_track = NULL;
+	for(std::map<int,ASS_Track*>::iterator it = ass_map.begin(); it != ass_map.end(); ++it)
+		ass_free_track(it->second);
+	ass_map.clear();
+	if (ass_renderer) {
+		ass_renderer_done(ass_renderer);
+		ass_renderer = NULL;
+	}
+	if (ass_library) {
+		ass_library_done(ass_library);
+		ass_library = NULL;
+	}
+	clear_queue();
+}
+
+// from neutrino.cpp
+extern std::string *sub_font_file;
+extern int sub_font_size;
+static std::string ass_font;
+static int ass_size;
+
+// Thes functions below are based on ffmpeg-2.1.4/libavcodec/ass.c,
+// Copyright (c) 2010 Aurelien Jacobs <aurel@gnuage.org>
+
+// These are the FFMPEG defaults:
+#define ASS_DEFAULT_FONT		"Arial"
+#define ASS_DEFAULT_FONT_SIZE		16
+#define ASS_DEFAULT_COLOR		0xffffff
+#define ASS_DEFAULT_OUTLINE_COLOR	0
+#define ASS_DEFAULT_BACK_COLOR		0
+#define ASS_DEFAULT_BOLD		0
+#define ASS_DEFAULT_ITALIC		0
+#define ASS_DEFAULT_UNDERLINE		0
+#define ASS_DEFAULT_ALIGNMENT		2
+
+// And this is what we're going to use:
+#define ASS_CUSTOM_FONT			"Arial"
+#define ASS_CUSTOM_FONT_SIZE		36
+#define ASS_CUSTOM_COLOR		0xffffff
+#define ASS_CUSTOM_OUTLINE_COLOR	0
+#define ASS_CUSTOM_BACK_COLOR		0
+#define ASS_CUSTOM_BOLD			0
+#define ASS_CUSTOM_ITALIC		0
+#define ASS_CUSTOM_UNDERLINE		0
+#define ASS_CUSTOM_ALIGNMENT		2
+
+static std::string ass_subtitle_header(const char *font, int font_size,
+		int color, int outline_color, int back_color, int bold, int italic, int underline, int alignment)
+{
+	char buf[8192];
+	snprintf(buf, sizeof(buf), 
+		"[Script Info]\r\n"
+		"ScriptType: v4.00+\r\n"
+		"\r\n"
+		"[V4+ Styles]\r\n"
+		"Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, AlphaLevel, Encoding\r\n"
+		"Style: Default,%s,%d,&H%x,&H%x,&H%x,&H%x,%d,%d,%d,1,1,0,%d,10,10,10,0,0\r\n"
+		"\r\n"
+		"[Events]\r\n"
+		"Format: Layer, Start, End, Style, Text\r\n",
+		font, font_size, color, color, outline_color, back_color, -bold, -italic, -underline, alignment);
+	return std::string(buf);
+}
+
+static std::string ass_subtitle_header_default(void) {
+	return ass_subtitle_header(
+		ASS_DEFAULT_FONT,
+		ASS_DEFAULT_FONT_SIZE,
+		ASS_DEFAULT_COLOR,
+		ASS_DEFAULT_OUTLINE_COLOR,
+		ASS_DEFAULT_BACK_COLOR,
+		ASS_DEFAULT_BOLD,
+		ASS_DEFAULT_ITALIC,
+		ASS_DEFAULT_UNDERLINE,
+		ASS_DEFAULT_ALIGNMENT);
+}
+
+static std::string ass_subtitle_header_custom(void) {
+	return ass_subtitle_header(
+		ASS_CUSTOM_FONT,
+		ASS_CUSTOM_FONT_SIZE,
+		ASS_CUSTOM_COLOR,
+		ASS_CUSTOM_OUTLINE_COLOR,
+		ASS_CUSTOM_BACK_COLOR,
+		ASS_CUSTOM_BOLD,
+		ASS_CUSTOM_ITALIC,
+		ASS_CUSTOM_UNDERLINE,
+		ASS_CUSTOM_ALIGNMENT);
+}
+// The functions above are based on ffmpeg-2.1.4/libavcodec/ass.c,
+// Copyright (c) 2010 Aurelien Jacobs <aurel@gnuage.org>
+
+static void *ass_reader_thread(void *)
+{
+	set_threadname("ass_reader_thread");
+	while (!sem_wait(&ass_sem)) {
+		if (!ass_reader_running)
+			break;
+
+		ass_data *a = (ass_data *) ass_queue.pop();
+		if (!a) {
+			if (!ass_reader_running)
+				break;
+			continue;
+		}
+
+		OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(ass_mutex);
+		std::map<int,ASS_Track*>::iterator it = ass_map.find(a->pid);
+		ASS_Track *track;
+		if (it == ass_map.end()) {
+			CFrameBuffer *fb = CFrameBuffer::getInstance();
+			int xres = fb->getScreenWidth(true);
+			int yres = fb->getScreenHeight(true);
+			if (!ass_library) {
+				ass_library = ass_library_init();
+				ass_set_extract_fonts(ass_library, 1);
+				ass_set_style_overrides(ass_library, NULL);
+				ass_renderer = ass_renderer_init(ass_library);
+				ass_set_frame_size(ass_renderer, xres, yres);
+				ass_set_margins(ass_renderer, 3 * yres / 100, 3 * yres / 100, 3 * xres / 100, 3 * xres / 100);
+				ass_set_use_margins(ass_renderer, 1);
+				ass_set_hinting(ass_renderer, ASS_HINTING_LIGHT);
+				ass_set_aspect_ratio(ass_renderer, 1.0, 1.0);
+				ass_font = *sub_font_file;
+				ass_set_fonts(ass_renderer, ass_font.c_str(), "Arial", 0, NULL, 1);
+			}
+			track = ass_new_track(ass_library);
+			track->PlayResX = xres;
+			track->PlayResY = yres;
+			ass_size = sub_font_size;
+			ass_set_font_scale(ass_renderer, ((double) ass_size)/ASS_CUSTOM_FONT_SIZE);
+			if (a->c->subtitle_header) {
+				std::string ass_hdr = ass_subtitle_header_default();
+				if (ass_hdr.compare((char*) a->c->subtitle_header)) {
+					ass_process_codec_private(track, (char *) a->c->subtitle_header, a->c->subtitle_header_size);
+				} else {
+					// This is the FFMPEG default ASS header. Use something more suitable instead:
+					ass_hdr = ass_subtitle_header_custom();
+					ass_process_codec_private(track, (char *) ass_hdr.c_str(), ass_hdr.length());
+				}
+			}
+			ass_map[a->pid] = track;
+			if (a->pid == dvbsub_pid)
+				ass_track = track;
+//fprintf(stderr, "### got subtitle track %d, subtitle header: \n---\n%s\n---\n", pid, c->subtitle_header);
+		} else
+			track = it->second;
+		for (unsigned int i = 0; i < a->sub.num_rects; i++)
+			if (a->sub.rects[i]->ass)
+				ass_process_data(track, a->sub.rects[i]->ass, strlen(a->sub.rects[i]->ass));
+		avsubtitle_free(&a->sub);
+		delete a;
+	}
+	ass_reader_running = false;
+	pthread_exit(NULL);
+}
+
+void dvbsub_ass_write(AVCodecContext *c, AVSubtitle *sub, int pid)
+{
+	if (ass_reader_running) {
+		ass_queue.push((uint8_t *)new ass_data(c, sub, pid));
+		sem_post(&ass_sem);
+		memset(sub, 0, sizeof(AVSubtitle));
+	} else
+		avsubtitle_free(sub);
+}
+
+#endif
+
+void dvbsub_write(AVSubtitle *sub, int64_t pts)
+{
+	pthread_mutex_lock(&packetMutex);
+	cDvbSubtitleBitmaps *Bitmaps = new cDvbSubtitleBitmaps(pts);
+	Bitmaps->SetSub(sub); // Note: this will copy sub, including all references. DON'T call avsubtitle_free() from the caller.
+	memset(sub, 0, sizeof(AVSubtitle));
+	bitmap_queue.push((unsigned char *) Bitmaps);
+	pthread_cond_broadcast(&packetCond);
 	pthread_mutex_unlock(&packetMutex);
 }
 
 static void* reader_thread(void * /*arg*/)
 {
+	int fds[2];
+	pipe(fds);
+	fcntl(fds[0], F_SETFD, FD_CLOEXEC);
+	fcntl(fds[0], F_SETFL, O_NONBLOCK);
+	fcntl(fds[1], F_SETFD, FD_CLOEXEC);
+	fcntl(fds[1], F_SETFL, O_NONBLOCK);
+	flagFd = fds[1];
 	uint8_t tmp[16];  /* actually 6 should be enough */
 	int count;
 	int len;
 	uint16_t packlen;
 	uint8_t* buf;
+	bool bad_startcode = false;
+	set_threadname("dvbsub_reader_thread");
 
-        dmx = new cDemux(0);
-        dmx->Open(DMX_PES_CHANNEL, NULL, 64*1024);
+	dmx = new cDemux(0);
+#if HAVE_TRIPLEDRAGON
+	dmx->Open(DMX_PES_CHANNEL, NULL, 16*1024);
+#else
+	dmx->Open(DMX_PES_CHANNEL, NULL, 64*1024);
+#endif
 
 	while (reader_running) {
 		if(dvbsub_stopped /*dvbsub_paused*/) {
@@ -279,17 +581,69 @@ static void* reader_thread(void * /*arg*/)
 			sub_debug.print(Debug::VERBOSE, "%s changed to pid 0x%x\n", __FUNCTION__, dvbsub_pid);
 		}
 
+		struct pollfd pfds[2];
+		pfds[0].fd = fds[1];
+		pfds[0].events = POLLIN;
+		char _tmp[64];
+
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+		if (isEplayer) {
+			poll(pfds, 1, -1);
+			while (0 > read(pfds[0].fd, _tmp, sizeof(tmp)));
+			continue;
+		}
+#endif
 		len = 0;
 		count = 0;
+
+		pfds[1].fd = dmx->getFD();
+		pfds[1].events = POLLIN;
+		switch (poll(pfds, 2, -1)) {
+			case 0:
+			case -1:
+				if (pfds[0].revents & POLLIN)
+					while (0 > read(pfds[0].fd, _tmp, sizeof(tmp)));
+				continue;
+			default:
+				if (pfds[0].revents & POLLIN)
+					while (0 > read(pfds[0].fd, _tmp, sizeof(tmp)));
+				if (!(pfds[1].revents & POLLIN))
+					continue;
+		}
 
 		len = dmx->Read(tmp, 6, 1000);
 		if(len <= 0)
 			continue;
 
-		if(memcmp(tmp, "\x00\x00\x01\xbd", 4)) {
-			sub_debug.print(Debug::VERBOSE, "[subtitles] bad start code: %02x%02x%02x%02x\n", tmp[0], tmp[1], tmp[2], tmp[3]);
+		if(!memcmp(tmp, "\x00\x00\x01\xbe", 4)) { // padding stream
+			packlen =  getbits(tmp, 4*8, 16) + 6;
+			count = 6;
+			buf = (uint8_t*) malloc(packlen);
+
+			// actually, we're doing slightly too much here ...
+			memmove(buf, tmp, 6);
+			/* read rest of the packet */
+			while((count < packlen) && !dvbsub_stopped) {
+				len = dmx->Read(buf+count, packlen-count, 1000);
+				if (len < 0) {
+					break;
+				} else {
+					count += len;
+				}
+			}
+			free(buf);
+			buf = NULL;
 			continue;
 		}
+
+		if(memcmp(tmp, "\x00\x00\x01\xbd", 4)) {
+			if (!bad_startcode) {
+				sub_debug.print(Debug::VERBOSE, "[subtitles] bad start code: %02x%02x%02x%02x\n", tmp[0], tmp[1], tmp[2], tmp[3]);
+				bad_startcode = true;
+			}
+			continue;
+		}
+		bad_startcode = false;
 		count = 6;
 
 		packlen =  getbits(tmp, 4*8, 16) + 6;
@@ -301,7 +655,7 @@ static void* reader_thread(void * /*arg*/)
 		while((count < packlen) && !dvbsub_stopped) {
 			len = dmx->Read(buf+count, packlen-count, 1000);
 			if (len < 0) {
-				continue;
+				break;
 			} else {
 				count += len;
 			}
@@ -321,10 +675,10 @@ static void* reader_thread(void * /*arg*/)
 		if(!dvbsub_stopped /*!dvbsub_paused*/) {
 			sub_debug.print(Debug::VERBOSE, "[subtitles] *** new packet, len %d buf 0x%x pts-stc diff %lld ***\n", count, buf, get_pts_stc_delta(get_pts(buf)));
 			/* Packet now in memory */
+			pthread_mutex_lock(&packetMutex);
 			packet_queue.push(buf);
 			/* TODO: allocation exception */
 			// wake up dvb thread
-			pthread_mutex_lock(&packetMutex);
 			pthread_cond_broadcast(&packetCond);
 			pthread_mutex_unlock(&packetMutex);
 		} else {
@@ -337,6 +691,10 @@ static void* reader_thread(void * /*arg*/)
 	delete dmx;
 	dmx = NULL;
 
+	close(fds[0]);
+	close(fds[1]);
+	flagFd = -1;
+
 	sub_debug.print(Debug::VERBOSE, "%s shutdown\n", __FUNCTION__);
 	pthread_exit(NULL);
 }
@@ -345,13 +703,99 @@ static void* dvbsub_thread(void* /*arg*/)
 {
 	struct timespec restartWait;
 	struct timeval now;
+	set_threadname("dvbsub_thread");
 
 	sub_debug.print(Debug::VERBOSE, "%s started\n", __FUNCTION__);
 	if (!dvbSubtitleConverter)
 		dvbSubtitleConverter = new cDvbSubtitleConverter;
 
 	int timeout = 1000000;
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	CFrameBuffer *fb = CFrameBuffer::getInstance();
+	int xres = fb->getScreenWidth(true);
+	int yres = fb->getScreenHeight(true);
+	int clr_x0 = xres, clr_y0 = yres, clr_x1 = 0, clr_y1 = 0;
+	uint32_t colortable[256];
+	memset(colortable, 0, sizeof(colortable));
+	uint32_t last_color = 0;
+#endif
+
 	while(dvbsub_running) {
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+		if (ass_track) {
+			usleep(100000); // FIXME ... should poll instead
+
+			OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(ass_mutex);
+
+			if (!ass_track)
+				continue;
+
+			if (ass_size != sub_font_size) {
+				ass_size = sub_font_size;
+				ass_set_font_scale(ass_renderer, ((double) ass_size)/ASS_CUSTOM_FONT_SIZE);
+			}
+
+			int detect_change = 0;
+			int64_t pts;
+			getPlayerPts(&pts);
+			ASS_Image *image = ass_render_frame(ass_renderer, ass_track, pts/90, &detect_change);
+			if (detect_change) {
+				if (clr_x1 && clr_y1) {
+					fb->paintBox(clr_x0, clr_y0, clr_x1 + 1, clr_y1 + 1, 0);
+					clr_x0 = xres;
+					clr_y0 = yres;
+					clr_x1 = clr_y1 = 0;
+				}
+
+				while (image) {
+					if (last_color != image->color) {
+						last_color = image->color;
+						uint32_t c = last_color >> 8, a = 255 - (last_color & 0xff);
+						for (int i = 0; i < 256; i++) {
+							uint32_t k = (a * i) >> 8;
+							colortable[i] = k ? (c | (k << 24)) : 0;
+						}
+					}
+					if (image->w && image->h && image->dst_x > -1 && image->dst_x + image->w < xres && image->dst_y > -1 && image->dst_y + image->h < yres) {
+						if (image->dst_x < clr_x0)
+							clr_x0 = image->dst_x;
+						if (image->dst_y < clr_y0)
+							clr_y0 = image->dst_y;
+						if (image->dst_x + image->w > clr_x1)
+							clr_x1 = image->dst_x + image->w;
+						if (image->dst_y + image->h > clr_y1)
+							clr_y1 = image->dst_y + image->h;
+
+						uint32_t *lfb = fb->getFrameBufferPointer() + image->dst_x + xres * image->dst_y;
+						unsigned char *bm = image->bitmap;
+						int bm_add = image->stride - image->w;
+						int lfb_add = xres - image->w;
+						for (int y = 0; y < image->h; y++) {
+							for (int x = 0; x < image->w; x++) {
+								if (*bm)
+									*lfb = colortable[*bm];
+								lfb++, bm++;
+							}
+							lfb += lfb_add;
+							bm += bm_add;
+						}
+					}
+					image = image->next;
+				}
+				fb->getInstance()->blit();
+			}
+			continue;
+		} else {
+			if (clr_x1 && clr_y1) {
+				fb->paintBox(clr_x0, clr_y0, clr_x1 + 1, clr_y1 + 1, 0);
+				clr_x0 = xres;
+				clr_y0 = yres;
+				clr_x1 = clr_y1 = 0;
+				fb->getInstance()->blit();
+			}
+		}
+#endif
+
 		uint8_t* packet;
 		int64_t pts;
 		int dataoffset;
@@ -373,56 +817,64 @@ static void* dvbsub_thread(void* /*arg*/)
 
 		timeout = dvbSubtitleConverter->Action();
 
-		if(packet_queue.size() == 0) {
+		pthread_mutex_lock(&packetMutex);
+		if(packet_queue.size() == 0 && bitmap_queue.size() == 0) {
+			pthread_mutex_unlock(&packetMutex);
 			continue;
 		}
-		sub_debug.print(Debug::VERBOSE, "PES: Wakeup, queue size %d\n\n", packet_queue.size());
+		sub_debug.print(Debug::VERBOSE, "PES: Wakeup, packet queue size %u, bitmap queue size %u\n", packet_queue.size(), bitmap_queue.size());
 		if(dvbsub_stopped /*dvbsub_paused*/) {
+			pthread_mutex_unlock(&packetMutex);
 			clear_queue();
 			continue;
 		}
-		pthread_mutex_lock(&packetMutex);
-		packet = packet_queue.pop();
-		pthread_mutex_unlock(&packetMutex);
+		if (packet_queue.size()) {
+			packet = packet_queue.pop();
+			pthread_mutex_unlock(&packetMutex);
 
-		if (!packet) {
-			sub_debug.print(Debug::VERBOSE, "Error no packet found\n");
-			continue;
-		}
-		packlen = (packet[4] << 8 | packet[5]) + 6;
+			if (!packet) {
+				sub_debug.print(Debug::VERBOSE, "Error no packet found\n");
+				continue;
+			}
+			packlen = (packet[4] << 8 | packet[5]) + 6;
 
-		pts = get_pts(packet);
+			pts = get_pts(packet);
 
-		dataoffset = packet[8] + 8 + 1;
-		if (packet[dataoffset] != 0x20) {
-			sub_debug.print(Debug::VERBOSE, "Not a dvb subtitle packet, discard it (len %d)\n", packlen);
+			dataoffset = packet[8] + 8 + 1;
+			if (packet[dataoffset] != 0x20) {
+				sub_debug.print(Debug::VERBOSE, "Not a dvb subtitle packet, discard it (len %d)\n", packlen);
 #if 0
-			for(int i = 0; i < packlen; i++)
-				printf("%02X ", packet[i]);
-			printf("\n");
+				for(int i = 0; i < packlen; i++)
+					printf("%02X ", packet[i]);
+				printf("\n");
 #endif
-			goto next_round;
-		}
+				goto next_round;
+			}
 
-		sub_debug.print(Debug::VERBOSE, "PES packet: len %d data len %d PTS=%Ld (%02d:%02d:%02d.%d) diff %lld\n",
-				packlen, packlen - (dataoffset + 2), pts, (int)(pts/324000000), (int)((pts/5400000)%60),
-				(int)((pts/90000)%60), (int)(pts%90000), get_pts_stc_delta(pts));
+			sub_debug.print(Debug::VERBOSE, "PES packet: len %d data len %d PTS=%Ld (%02d:%02d:%02d.%d) diff %lld\n",
+					packlen, packlen - (dataoffset + 2), pts, (int)(pts/324000000), (int)((pts/5400000)%60),
+					(int)((pts/90000)%60), (int)(pts%90000), get_pts_stc_delta(pts));
 
-		if (packlen <= dataoffset + 3) {
-			sub_debug.print(Debug::INFO, "Packet too short, discard\n");
-			goto next_round;
-		}
+			if (packlen <= dataoffset + 3) {
+				sub_debug.print(Debug::INFO, "Packet too short, discard\n");
+				goto next_round;
+			}
 
-		if (packet[dataoffset + 2] == 0x0f) {
-			dvbSubtitleConverter->Convert(&packet[dataoffset + 2],
-					packlen - (dataoffset + 2), pts);
+			if (packet[dataoffset + 2] == 0x0f) {
+				dvbSubtitleConverter->Convert(&packet[dataoffset + 2],
+						packlen - (dataoffset + 2), pts);
+			} else {
+				sub_debug.print(Debug::INFO, "End_of_PES is missing\n");
+			}
+next_round:
+			if (packet)
+				free(packet);
 		} else {
-			sub_debug.print(Debug::INFO, "End_of_PES is missing\n");
+			cDvbSubtitleBitmaps *Bitmaps = (cDvbSubtitleBitmaps *) bitmap_queue.pop();
+			pthread_mutex_unlock(&packetMutex);
+			dvbSubtitleConverter->Convert(Bitmaps->GetSub(), Bitmaps->Pts());
 		}
 		timeout = dvbSubtitleConverter->Action();
-
-next_round:
-		free(packet);
 	}
 
 	delete dvbSubtitleConverter;

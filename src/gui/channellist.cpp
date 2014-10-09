@@ -46,8 +46,11 @@
 #include <driver/abstime.h>
 #include <driver/record.h>
 #include <driver/fade.h>
+#include <driver/display.h>
+#include <driver/radiotext.h>
 
 #include <gui/color.h>
+#include <gui/epgview.h>
 #include <gui/eventlist.h>
 #include <gui/infoviewer.h>
 #include <gui/osd_setup.h>
@@ -547,10 +550,19 @@ void CChannelList::calcSize()
 	if (g_settings.channellist_additional)
 		width = full_width / 3 * 2;
 	else
+	{
+		/* don't use 100% of screen if additional info / minitv is not used */
+		full_width = full_width * 76 / 99; /* same width as the old code with my settings :-) */
 		width = full_width;
+	}
 
 	// calculate height (the infobox below mainbox is handled outside height)
 	info_height = 2*fheight + fdescrheight + 10;
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	if (g_settings.channellist_additional != 0)
+		if (g_settings.channellist_foot != 0)
+			info_height = 2*fheight + 10; 
+#endif
 	height = pig_on_win ?  frameBuffer->getScreenHeight(): frameBuffer->getScreenHeightRel();
 	height = height - info_height;
 
@@ -650,6 +662,13 @@ int CChannelList::show()
 
 	new_zap_mode = g_settings.channellist_new_zap_mode;
 
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	if (CNeutrinoApp::getInstance()->getMode() == NeutrinoMessages::mode_radio)
+		if (g_settings.channellist_additional == 2) {
+			previous_channellist_additional = g_settings.channellist_additional;
+			g_settings.channellist_additional = 1;
+		}
+#endif
 	calcSize();
 	displayNext = false;
 
@@ -658,6 +677,7 @@ int CChannelList::show()
 
 	paintHead();
 	paint();
+	frameBuffer->blit();
 
 	gettimeofday(&t2, NULL);
 	fprintf(stderr, "CChannelList::show(): %llu ms to paint channellist\n",
@@ -975,6 +995,7 @@ int CChannelList::show()
 				res = - 2;
 			}
 		}
+		frameBuffer->blit();
 	}
 
 	if (bouquet_changed)
@@ -1010,6 +1031,11 @@ int CChannelList::show()
 
 void CChannelList::hide()
 {
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	if (CNeutrinoApp::getInstance()->getMode() == NeutrinoMessages::mode_radio)
+		if (g_settings.channellist_additional == 1 && previous_channellist_additional == 2)
+			g_settings.channellist_additional = 2;
+#endif
 	if ((g_settings.channellist_additional == 2) || (previous_channellist_additional == 2)) // with miniTV
 	{
 		if (cc_minitv)
@@ -1022,6 +1048,7 @@ void CChannelList::hide()
 	}
 	frameBuffer->paintBackgroundBoxRel(x, y, full_width, height + info_height);
 	clearItem2DetailsLine();
+	frameBuffer->blit();
 }
 
 bool CChannelList::showInfo(int number, int epgpos)
@@ -1411,6 +1438,7 @@ int CChannelList::numericZap(int key)
 				valstr[i+ 1] = 0;
 				g_Font[SNeutrinoSettings::FONT_TYPE_CHANNEL_NUM_ZAP]->RenderString(ox+fw/3+ i*fw, oy+sy-3, sx, &valstr[i], COL_INFOBAR_TEXT);
 			}
+			frameBuffer->blit();
 
 			showInfo(chn);
 			lastchan = chn;
@@ -1498,7 +1526,11 @@ CZapitChannel* CChannelList::getPrevNextChannel(int key, unsigned int &sl)
 		size_t cactive = sl;
 
 		printf("CChannelList::getPrevNextChannel: selected %d total %d active bouquet %d total %d\n", (int)cactive, (int)chanlist.size(), bactive, bsize);
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+		if ((key == g_settings.key_quickzap_down) || (key == CRCInput::RC_left) || (key == CRCInput::RC_page_down)) {
+#else
 		if ((key == g_settings.key_quickzap_down) || (key == CRCInput::RC_left)) {
+#endif
 			if(cactive == 0) {
 				bactive = getPrevNextBouquet(false);
 				if (bactive >= 0) {
@@ -1508,7 +1540,11 @@ CZapitChannel* CChannelList::getPrevNextChannel(int key, unsigned int &sl)
 			} else
 				--cactive;
 		}
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+		else if ((key == g_settings.key_quickzap_up) || (key == CRCInput::RC_right) || (key == CRCInput::RC_page_up)) {
+#else
 		else if ((key == g_settings.key_quickzap_up) || (key == CRCInput::RC_right)) {
+#endif
 			cactive++;
 			if(cactive >= chanlist.size()) {
 				bactive = getPrevNextBouquet(true);
@@ -1520,16 +1556,24 @@ CZapitChannel* CChannelList::getPrevNextChannel(int key, unsigned int &sl)
 		}
 		sl = cactive;
 		channel = bouquetList->Bouquets[bactive]->channelList->getChannelFromIndex(cactive);
-		printf("CChannelList::getPrevNextChannel: selected %u total %d active bouquet %d total %d channel %x (%s)\n",
-				cactive, chanlist.size(), bactive, bsize, (int) channel, channel ? channel->getName().c_str(): "");
+		printf("CChannelList::getPrevNextChannel: selected %d total %d active bouquet %d total %d channel %p (%s)\n",
+				(int)cactive, (int)chanlist.size(), bactive, bsize, channel, channel ? channel->getName().c_str(): "");
 	} else {
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+		if ((key == g_settings.key_quickzap_down) || (key == CRCInput::RC_left) || (key == CRCInput::RC_page_down)) {
+#else
 		if ((key == g_settings.key_quickzap_down) || (key == CRCInput::RC_left)) {
+#endif
 			if(sl == 0)
 				sl = chanlist.size()-1;
 			else
 				sl--;
 		}
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+		else if ((key == g_settings.key_quickzap_up) || (key == CRCInput::RC_right) || (key == CRCInput::RC_page_up)) {
+#else
 		else if ((key==g_settings.key_quickzap_up) || (key == CRCInput::RC_right)) {
+#endif
 			sl = (sl+1)%chanlist.size();
 		}
 		channel = chanlist[sl];
@@ -1718,7 +1762,7 @@ void CChannelList::paintDetails(int index)
 
 		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->RenderString(x+ 10, y+ height+ 5+ 2*fheight +fdescrheight, full_width - 30, desc.c_str(), COL_MENUCONTENTDARK_TEXT);
 	}
-	else if( !displayNext && g_settings.channellist_foot == 1) { // next Event
+	else if( !displayNext && g_settings.channellist_foot == 1 && g_settings.channellist_additional == 0) { // next Event
 
 		CSectionsdClient::CurrentNextInfo CurrentNext;
 		CEitManager::getInstance()->getCurrentNextServiceKey(chanlist[index]->channel_id, CurrentNext);
@@ -2013,7 +2057,7 @@ void CChannelList::paintItem(int pos, const bool firstpaint)
 		bool isWebTV = !chan->getUrl().empty();
 		const char *icon = isWebTV ? NEUTRINO_ICON_STREAMING : NEUTRINO_ICON_SCRAMBLED;
 		int  icon_x = (x+width-15-2) - RADIUS_LARGE/2;
-		int r_icon_w;  int s_icon_h=0; int s_icon_w=0;
+		int r_icon_w=0;  int s_icon_h=0; int s_icon_w=0; int h_icon_w=0;
 		frameBuffer->getIconSize(icon, &s_icon_w, &s_icon_h);
 		r_icon_w = ChannelList_Rec;
 		int r_icon_x = icon_x;
@@ -2022,6 +2066,13 @@ void CChannelList::paintItem(int pos, const bool firstpaint)
 		if(chan->scrambled || isWebTV)
 			if (frameBuffer->paintIcon(icon, icon_x - s_icon_w, ypos, fheight))//ypos + (fheight - 16)/2);
 				r_icon_x = r_icon_x - s_icon_w;
+
+		//paint HD Icon
+		if(chan->isHD() && g_settings.channellist_hdicon) {
+			frameBuffer->getIconSize(NEUTRINO_ICON_RESOLUTION_HD, &h_icon_w, &s_icon_h);
+			if (frameBuffer->paintIcon(NEUTRINO_ICON_RESOLUTION_HD, icon_x - s_icon_w - h_icon_w, ypos, fheight))//ypos + (fheight - 16)/2);
+				r_icon_x = r_icon_x - h_icon_w;
+		}
 
  		//paint recording icon
 		//if (rec_mode != CRecordManager::RECMODE_OFF)
@@ -2032,7 +2083,7 @@ void CChannelList::paintItem(int pos, const bool firstpaint)
 		if (paintbuttons)
 			paintButtonBar(iscurrent);
 
-		int icon_space = r_icon_w+s_icon_w;
+		int icon_space = r_icon_w+s_icon_w+h_icon_w+8; //+8 to be sure
 
 		//channel numbers
 		if (g_settings.channellist_show_numbers) {

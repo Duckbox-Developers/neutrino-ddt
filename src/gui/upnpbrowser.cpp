@@ -48,6 +48,7 @@
 #include <driver/audiofile.h>
 #include <driver/audiometadata.h>
 #include <driver/screen_max.h>
+#include <driver/display.h>
 
 #include <gui/audiomute.h>
 #include <gui/color.h>
@@ -141,6 +142,7 @@ int CUpnpBrowserGui::exec(CMenuTarget* parent, const std::string & /*actionKey*/
 	g_Sectionsd->setPauseScanning(false);
 	videoDecoder->StopPicture();
 	m_frameBuffer->Clear();
+	g_Zapit->startPlayBack();
 
 	CZapit::getInstance()->EnablePlayback(true);
 	CNeutrinoApp::getInstance()->handleMsg(NeutrinoMessages::CHANGEMODE , m_LastMode);
@@ -473,6 +475,7 @@ void CUpnpBrowserGui::selectDevice()
 			refresh=false;
 		}
 
+		m_frameBuffer->blit();
 		g_RCInput->getMsg(&msg, &data, 10); // 1 sec timeout to update play/stop state display
 		neutrino_msg_t msg_repeatok = msg & ~CRCInput::RC_Repeat;
 
@@ -706,6 +709,7 @@ bool CUpnpBrowserGui::selectItem(std::string id)
 				paintItems(entries, selected - liststart, total - liststart, liststart);
 			refresh=false;
 		}
+		m_frameBuffer->blit();
 
 		g_RCInput->getMsg(&msg, &data, 10); // 1 sec timeout to update play/stop state display
 		neutrino_msg_t msg_repeatok = msg & ~CRCInput::RC_Repeat;
@@ -779,6 +783,7 @@ bool CUpnpBrowserGui::selectItem(std::string id)
 					}
 					else if (mime.substr(0,6) == "image/")
 					{
+						videoDecoder->StopPicture();
 						videoDecoder->setBlank(true);
 						showPicture((*entries)[selected - liststart].resources[preferred].url);
 						m_playid = selected;
@@ -804,6 +809,7 @@ bool CUpnpBrowserGui::selectItem(std::string id)
 						}
 						m_frameBuffer->Clear();
 						videoDecoder->setBlank(false);
+						videoDecoder->ShowPicture(DATADIR "/neutrino/icons/mp3.jpg");
 						refresh = true;
 					}
 				}
@@ -872,6 +878,7 @@ bool CUpnpBrowserGui::selectItem(std::string id)
 	delete entries;
 	timeout = 0;
 	m_frameBuffer->Clear();
+	m_frameBuffer->blit();
 
 	return endall;
 }
@@ -1272,6 +1279,7 @@ void CUpnpBrowserGui::showPicture(std::string name)
 		g_PicViewer->SetAspectRatio(4.0/3);
 
 	g_PicViewer->ShowImage(name, false);
+	m_frameBuffer->blit();
 	g_PicViewer->Cleanup();
 }
 

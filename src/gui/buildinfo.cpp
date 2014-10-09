@@ -67,8 +67,10 @@ int CBuildInfo::exec(CMenuTarget* parent, const string & /*actionKey*/)
 	}
 
 	//paint window
-	if (!is_painted)
+	if (!is_painted) {
 		paint();
+		frameBuffer->blit();
+	}
 
 
 	neutrino_msg_t msg;
@@ -100,6 +102,7 @@ int CBuildInfo::exec(CMenuTarget* parent, const string & /*actionKey*/)
 
 	//hide window
 	hide();
+	frameBuffer->blit();
 
 	return res;
 }

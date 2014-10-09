@@ -30,6 +30,11 @@
 #include <global.h>
 #include <neutrino.h>
 
+#include <driver/fontrenderer.h>
+#include <driver/neutrinofonts.h>
+#include <driver/rcinput.h>
+#include <driver/display.h>
+
 
 CProgressWindow::CProgressWindow(CComponentsForm *parent) 
 : CComponentsWindow(0, 0, 700, 200, string(), NEUTRINO_ICON_INFO, NULL, parent)
@@ -103,6 +108,7 @@ void CProgressWindow::showGlobalStatus(const unsigned int prog)
 	global_progress = prog;
 	global_bar->setValues(prog, 100);
 	global_bar->paint(false);
+	frameBuffer->blit();
 
 #ifdef VFD_UPDATE
 	CVFD::getInstance()->showProgressBar2(-1,NULL,global_progress);
@@ -117,6 +123,7 @@ void CProgressWindow::showLocalStatus(const unsigned int prog)
 	local_progress = prog;
 	local_bar->setValues(prog, 100);
 	local_bar->paint(false);
+	frameBuffer->blit();
 
 #ifdef VFD_UPDATE
 	CVFD::getInstance()->showProgressBar2(local_progress);
@@ -133,6 +140,7 @@ void CProgressWindow::showStatusMessageUTF(const std::string & text)
 	status_txt->setText(txt, CTextBox::CENTER, *CNeutrinoFonts::getInstance()->getDynFont(w_txt, h_txt, txt, CNeutrinoFonts::FONT_STYLE_BOLD), COL_MENUCONTENT_TEXT);
 
 	status_txt->paint(false);
+	frameBuffer->blit();
 
 #ifdef VFD_UPDATE
 	CVFD::getInstance()->showProgressBar2(-1,text.c_str()); // set local text in VFD
@@ -148,6 +156,7 @@ unsigned int CProgressWindow::getGlobalStatus(void)
 void CProgressWindow::hide(bool no_restore)
 {
 	CComponentsWindow::hide(no_restore);
+	frameBuffer->blit();
 }
 
 int CProgressWindow::exec(CMenuTarget* parent, const std::string & /*actionKey*/)
@@ -157,6 +166,7 @@ int CProgressWindow::exec(CMenuTarget* parent, const std::string & /*actionKey*/
 		parent->hide();
 	}
 	paint();
+	frameBuffer->blit();
 
 	return menu_return::RETURN_REPAINT;
 }

@@ -182,19 +182,19 @@ const CMenuOptionChooser::keyval PERSONALIZE_MODE_OPTIONS[CPersonalizeGui::PERSO
 {
 	{ CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE	, LOCALE_PERSONALIZE_NOTVISIBLE      	},// The option is NOT visible on the menu's
 	{ CPersonalizeGui::PERSONALIZE_MODE_VISIBLE	, LOCALE_PERSONALIZE_VISIBLE         	},// The option is visible on the menu's
-	{ CPersonalizeGui::PERSONALIZE_MODE_PIN		, LOCALE_PERSONALIZE_PIN      		},// PIN Protect the item on the menu
+	{ CPersonalizeGui::PERSONALIZE_MODE_PIN		, LOCALE_PERSONALIZE_PIN      		} // PIN Protect the item on the menu
 };
 
 const CMenuOptionChooser::keyval PERSONALIZE_ACTIVE_MODE_OPTIONS[CPersonalizeGui::PERSONALIZE_ACTIVE_MODE_MAX] =
 {
 	{ CPersonalizeGui::PERSONALIZE_ACTIVE_MODE_DISABLED	, LOCALE_PERSONALIZE_DISABLED        	},// The option is NOT enabled / accessible
-	{ CPersonalizeGui::PERSONALIZE_ACTIVE_MODE_ENABLED	, LOCALE_PERSONALIZE_ENABLED         	},// The option is enabled / accessible
+	{ CPersonalizeGui::PERSONALIZE_ACTIVE_MODE_ENABLED	, LOCALE_PERSONALIZE_ENABLED         	} // The option is enabled / accessible
 };
 
 const CMenuOptionChooser::keyval PERSONALIZE_PROTECT_MODE_OPTIONS[CPersonalizeGui::PERSONALIZE_PROTECT_MODE_MAX] =
 {
 	{ CPersonalizeGui::PERSONALIZE_PROTECT_MODE_NOT_PROTECTED	, LOCALE_PERSONALIZE_NOTPROTECTED    	},// The menu/option is NOT protected
-	{ CPersonalizeGui::PERSONALIZE_PROTECT_MODE_PIN_PROTECTED	, LOCALE_PERSONALIZE_PINPROTECT      	},// The menu/option is protected by a PIN
+	{ CPersonalizeGui::PERSONALIZE_PROTECT_MODE_PIN_PROTECTED	, LOCALE_PERSONALIZE_PINPROTECT      	} // The menu/option is protected by a PIN
 };
 
 CPersonalizeGui::CPersonalizeGui() : CPINProtection(g_settings.personalize_pincode)
@@ -306,7 +306,7 @@ int CPersonalizeGui::exec(CMenuTarget* parent, const string & actionKey)
 	//pin protected access to personalize menu also if found any pin protected items
 	bool is_pin_protected = g_settings.personalize[SNeutrinoSettings::P_MAIN_PINSTATUS];
 
-	if (!g_settings.easymenu && (is_pin_protected || hasPinItems())) {
+	if (is_pin_protected || hasPinItems()) {
 		setHint(LOCALE_PERSONALIZE_PINHINT); //from CPINProtection
 		is_pin_protected = true;
 		if (check())
@@ -326,40 +326,13 @@ int CPersonalizeGui::ShowPersonalizationMenu()
 {
 	width = w_max (40, 10);
 
-	CMenuWidget* pMenu = new CMenuWidget(g_settings.easymenu ? LOCALE_PARENTALLOCK_MENU : LOCALE_PERSONALIZE_HEAD, NEUTRINO_ICON_PERSONALIZE, width, MN_WIDGET_ID_PERSONALIZE);
+	CMenuWidget* pMenu = new CMenuWidget(LOCALE_PERSONALIZE_HEAD, NEUTRINO_ICON_PERSONALIZE, width, MN_WIDGET_ID_PERSONALIZE);
 	pMenu->addIntroItems(NONEXISTANT_LOCALE, LOCALE_PERSONALIZE_ACCESS);
 
 	//pin
 	CPINChangeWidget *pinChangeWidget = NULL;
-	if (!g_settings.easymenu && show_pin_setup)
+	if (show_pin_setup)
 		ShowPinSetup(pMenu, pinChangeWidget);
-
-	int res;
-	if (g_settings.easymenu) {
-		int count = 0;
-		for (uint j = 0; j<v_item.size(); j++) {
-			printf("v_item[i].widget [%s]\n", v_item[j].widget->getName());
-			//pin protected items only
-			if (v_item[j].item_mode == PERSONALIZE_SHOW_AS_ACCESS_OPTION)
-			{
-				const neutrino_msg_t key = (count == 0) ? CRCInput::RC_red :
-					(count == 1) ? CRCInput::RC_green :
-					(count == 2) ? CRCInput::RC_yellow :
-					(count == 3) ? CRCInput::RC_blue : CRCInput::RC_nokey;
-				count++;
-				string 	itm_name = g_Locale->getText(v_item[j].locale_name);
-				itm_name += " ";
-				itm_name += g_Locale->getText(LOCALE_PERSONALIZE_PINSTATUS);
-
-				if (v_item[j].personalize_mode != NULL)
-					pMenu->addItem(new CMenuOptionChooser(itm_name.c_str(), v_item[j].personalize_mode, PERSONALIZE_PROTECT_MODE_OPTIONS, PERSONALIZE_PROTECT_MODE_MAX, v_item[j].menuItem->active, NULL, key));
-			}
-		}
-		res = pMenu->exec(NULL, "");
-		delete pMenu;
-		delete pinChangeWidget;
-		return res;
-	}
 
 	//personalized menues
 	CMenuForwarder *p_mn[widget_count];
@@ -403,7 +376,7 @@ int CPersonalizeGui::ShowPersonalizationMenu()
 	pMenu->addItem(GenericMenuSeparatorLine);
 	pMenu->addItem(new CMenuForwarder(LOCALE_PERSONALIZE_HELP, true, NULL, this, "personalize_help", CRCInput::RC_help));
 
-	res = pMenu->exec(NULL, "");
+	int res = pMenu->exec(NULL, "");
 	if (show_pluginmenu) {
 		g_settings.plugins_disabled = "";
 		g_settings.plugins_game = "";
@@ -755,10 +728,6 @@ void CPersonalizeGui::SaveAndExit()
 	// Save the settings and left menu, if user wants to!
 	if (haveChangedSettings())
 	{
-		if (g_settings.easymenu) {
-			ApplySettings();
-			return;
-		}
 		if (ShowMsg(LOCALE_PERSONALIZE_HEAD, g_Locale->getText(LOCALE_PERSONALIZE_APPLY_SETTINGS), CMessageBox::mbrYes, CMessageBox::mbYes | CMessageBox::mbNo, NEUTRINO_ICON_QUESTION) == CMessageBox::mbrYes)
 		{
 			CHintBox hintBox(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_MAINSETTINGS_SAVESETTINGSNOW_HINT)); // UTF-8
@@ -874,7 +843,11 @@ void CPersonalizeGui::addSeparator(CMenuWidget &widget, const neutrino_locale_t 
 		menu_item_t to_add_sep = {&widget, GenericMenuSeparatorLine, false, locale_text, NULL, item_mode, NULL};
 		v_item.push_back(to_add_sep);
 	} else {
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+		menu_item_t to_add_sep = {&widget, new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, locale_text, true), false, locale_text, NULL, item_mode, NULL};
+#else
 		menu_item_t to_add_sep = {&widget, new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, locale_text), false, locale_text, NULL, item_mode, NULL};
+#endif
 		v_item.push_back(to_add_sep);
 	}
 }
@@ -952,7 +925,7 @@ void CPersonalizeGui::addPersonalizedItems()
 					use_pin = true;
 
 				//set pinmode for personalize menu or for settings manager menu and if any item is pin protected
-				if (!g_settings.easymenu && (in_pinmode && !use_pin))
+				if (in_pinmode && !use_pin)
 					if (v_item[i].personalize_mode == &g_settings.personalize[SNeutrinoSettings::P_MAIN_PINSTATUS] || v_item[i].personalize_mode == &g_settings.personalize[SNeutrinoSettings::P_MSET_SETTINGS_MANAGER])
 					{
 						use_pin = true;
@@ -961,7 +934,7 @@ void CPersonalizeGui::addPersonalizedItems()
 
 				//convert item to locked forwarder and use generated pin mode for usage as ask parameter
 				v_item[i].menuItem = new CLockedMenuForwarder(fw->getTextLocale(),
-						g_settings.easymenu ? g_settings.parentallock_pincode : g_settings.personalize_pincode,
+						g_settings.personalize_pincode,
 						use_pin, fw->active, NULL, fw->getTarget(), fw->getActionKey(), d_key, NULL, lock_icon);
 				v_item[i].menuItem->hintIcon = fw->hintIcon;
 				v_item[i].menuItem->hint = fw->hint;

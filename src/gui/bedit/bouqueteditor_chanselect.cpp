@@ -146,6 +146,7 @@ void CBEChannelSelectWidget::paintItem(uint32_t itemNr, int paintNr, bool pselec
 		else if (!Channels[itemNr]->getUrl().empty())
 			frameBuffer->paintIcon(NEUTRINO_ICON_STREAMING, x+width- 15 - 28, ypos, fheight);
 	}
+	frameBuffer->blit();
 }
 
 void CBEChannelSelectWidget::onOkKeyPressed()
@@ -253,6 +254,7 @@ void CBEChannelSelectWidget::paintFoot()
 		break;
 	}
 	::paintButtons(x, y + (height-footerHeight), width, numbuttons, Button, width, footerHeight);
+	frameBuffer->blit();
 #if 0
 	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_OKAY, x+width- 3* ButtonWidth+ 8, y+height+1);
 	g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(x+width- 3* ButtonWidth+ 38, y+height+24 - 2, width, g_Locale->getText(LOCALE_BOUQUETEDITOR_SWITCH), COL_INFOBAR_TEXT);

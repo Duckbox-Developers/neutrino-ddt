@@ -5,7 +5,7 @@
 	Homepage: http://dbox.cyberphoria.org/
 
 	Copyright (C) 2008 Novell, Inc. Author: Stefan Seyfried
-		  (C) 2009 Stefan Seyfried
+		  (C) 2009-2013 Stefan Seyfried
 
 	License: GPL
 
@@ -106,6 +106,17 @@ CLCD::CLCD()
 	 */
 	has_lcd = false;
 	clearClock = 0;
+	fontRenderer = NULL;
+	thread_started = false;
+}
+
+CLCD::~CLCD()
+{
+	if (thread_started) {
+		thread_started = false;
+		pthread_join(thrTime, NULL);
+	}
+	delete fontRenderer;
 }
 
 CLCD* CLCD::getInstance()
@@ -137,9 +148,10 @@ void CLCD::wake_up() {
 }
 
 #ifndef BOXMODEL_DM500
-void* CLCD::TimeThread(void *)
+void* CLCD::TimeThread(void *p)
 {
-	while(1)
+	((CLCD *)p)->thread_started = true;
+	while (((CLCD *)p)->thread_started)
 	{
 		sleep(1);
 		struct stat buf;
@@ -149,6 +161,7 @@ void* CLCD::TimeThread(void *)
 		} else
 			CLCD::getInstance()->wake_up();
 	}
+	printf("CLCD::TimeThread exit\n");
 	return NULL;
 }
 #else
@@ -199,7 +212,7 @@ void CLCD::init(const char * fontfile, const char * fontname,
 #endif
 	}
 
-	if (pthread_create (&thrTime, NULL, TimeThread, NULL) != 0 )
+	if (pthread_create (&thrTime, NULL, TimeThread, this) != 0 )
 	{
 		perror("[lcdd]: pthread_create(TimeThread)");
 		return ;
@@ -540,7 +553,7 @@ void CLCD::showTextScreen(const std::string & big, const std::string & small, co
 	displayUpdate();
 }
 
-void CLCD::showServicename(const std::string name, const bool perform_wakeup)
+void CLCD::showServicename(const std::string name, const bool clear_epg)
 {
 	/*
 	   1 = show servicename
@@ -555,11 +568,13 @@ void CLCD::showServicename(const std::string name, const bool perform_wakeup)
 
 	if (!name.empty())
 		servicename = name;
+	if (clear_epg)
+		epg_title.clear();
 
 	if (mode != MODE_TVRADIO)
 		return;
 
-	showTextScreen(servicename, epg_title, showmode, perform_wakeup, true);
+	showTextScreen(servicename, epg_title, showmode, true, true);
 	return;
 }
 
@@ -602,7 +617,7 @@ void CLCD::setMovieAudio(const bool is_ac3)
 	showPercentOver(percentOver, true, MODE_MOVIE);
 }
 
-void CLCD::showTime()
+void CLCD::showTime(bool)
 {
 	if (showclock)
 	{
@@ -885,7 +900,7 @@ void CLCD::showAudioProgress(const char perc, bool isMuted)
 	if (mode == MODE_AUDIO)
 	{
 		display.draw_fill_rect (11,53,73,61, CLCDDisplay::PIXEL_OFF);
-		int dp = int( perc/100.0*61.0+12.0);
+		int dp = perc * 61 / 100 + 12;
 		display.draw_fill_rect (11,54,dp,60, CLCDDisplay::PIXEL_ON);
 		if(isMuted)
 		{
@@ -1115,7 +1130,7 @@ void CLCD::pause()
 	display.pause();
 }
 
-void CLCD::ShowIcon(vfd_icon icon, bool show)
+void CLCD::ShowIcon(fp_icon icon, bool show)
 {
 	fprintf(stderr, "CLCD::ShowIcon(%d, %d)\n", icon, show);
 }

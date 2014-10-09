@@ -34,6 +34,7 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <errno.h>
+#include <driver/framebuffer.h>
 #include <ctype.h>
 #include <system/helpers.h>
 

@@ -43,6 +43,9 @@
 #include <gui/plugins.h>
 #include <gui/sleeptimer.h>
 #include <gui/zapit_setup.h>
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#include <gui/kerneloptions.h>
+#endif
 
 #include <gui/widget/icons.h>
 #include <gui/widget/stringinput.h>
@@ -183,7 +186,7 @@ const CMenuOptionChooser::keyval EPG_SCAN_OPTIONS[] =
 {
 	{ CEpgScan::SCAN_CURRENT, LOCALE_MISCSETTINGS_EPG_SCAN_BQ },
 	{ CEpgScan::SCAN_FAV,     LOCALE_MISCSETTINGS_EPG_SCAN_FAV },
-	{ CEpgScan::SCAN_SEL,     LOCALE_MISCSETTINGS_EPG_SCAN_SEL },
+	{ CEpgScan::SCAN_SEL,     LOCALE_MISCSETTINGS_EPG_SCAN_SEL }
 };
 #define EPG_SCAN_OPTION_COUNT (sizeof(EPG_SCAN_OPTIONS)/sizeof(CMenuOptionChooser::keyval))
 
@@ -225,7 +228,7 @@ int CMiscMenue::showMiscSettingsMenu()
 	misc_menue.addItem(mf);
 
 	//energy, shutdown
-	if(cs_get_revision() > 7)
+	if (g_info.hw_caps->can_shutdown)
 	{
 		mf = new CMenuForwarder(LOCALE_MISCSETTINGS_ENERGY, true, NULL, this, "energy", CRCInput::RC_green);
 		mf->setHint("", LOCALE_MENU_HINT_MISC_ENERGY);
@@ -250,10 +253,18 @@ int CMiscMenue::showMiscSettingsMenu()
 
 	//cec settings
 	CCECSetup cecsetup;
-	mf = new CMenuForwarder(LOCALE_VIDEOMENU_HDMI_CEC, true, NULL, &cecsetup, NULL, CRCInput::RC_1);
-	mf->setHint("", LOCALE_MENU_HINT_MISC_CEC);
-	misc_menue.addItem(mf);
+	if (g_info.hw_caps->can_cec) {
+		mf = new CMenuForwarder(LOCALE_VIDEOMENU_HDMI_CEC, true, NULL, &cecsetup, NULL, CRCInput::RC_1);
+		mf->setHint("", LOCALE_MENU_HINT_MISC_CEC);
+		misc_menue.addItem(mf);
+	}
 
+	if (!g_info.hw_caps->can_shutdown) {
+		/* we don't have the energy menu, but put the sleeptimer directly here */
+		mf = new CMenuDForwarder(LOCALE_MISCSETTINGS_SLEEPTIMER, true, NULL, new CSleepTimerWidget, "permanent", CRCInput::RC_1);
+		mf->setHint("", LOCALE_MENU_HINT_INACT_TIMER);
+		misc_menue.addItem(mf);
+	}
 	//channellist
 	mf = new CMenuForwarder(LOCALE_MISCSETTINGS_CHANNELLIST, true, NULL, this, "channellist", CRCInput::RC_2);
 	mf->setHint("", LOCALE_MENU_HINT_MISC_CHANNELLIST);
@@ -267,10 +278,19 @@ int CMiscMenue::showMiscSettingsMenu()
 
 #ifdef CPU_FREQ
 	//CPU
-	CMenuWidget misc_menue_cpu("CPU", NEUTRINO_ICON_SETTINGS, width);
+	CMenuWidget misc_menue_cpu(LOCALE_MAINSETTINGS_HEAD, NEUTRINO_ICON_SETTINGS, width);
 	showMiscSettingsMenuCPUFreq(&misc_menue_cpu);
-	misc_menue.addItem( new CMenuForwarder("CPU", true, NULL, &misc_menue_cpu, NULL, CRCInput::RC_4));
+	mf = new CMenuForwarder(LOCALE_MISCSETTINGS_CPU, true, NULL, &misc_menue_cpu, NULL, CRCInput::RC_4);
+	mf->setHint("", LOCALE_MENU_HINT_MISC_CPUFREQ);
+	misc_menue.addItem(mf);
 #endif /*CPU_FREQ*/
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	// kerneloptions
+	CKernelOptions kernelOptions;
+	mf = new CMenuForwarder(LOCALE_KERNELOPTIONS_HEAD, true, NULL, &kernelOptions, NULL, CRCInput::RC_5);
+	mf->setHint("", LOCALE_MENU_HINT_MISC_KERNELOPTIONS);
+	misc_menue.addItem(mf);
+#endif
 
 	int res = misc_menue.exec(NULL, "");
 
@@ -378,11 +398,9 @@ int CMiscMenue::showMiscSettingsMenuEnergy()
 	m4->setHint("", LOCALE_MENU_HINT_SLEEPTIMER_MIN);
 	ms_energy->addItem(m4);
 
-	if (g_settings.easymenu) {
-		CMenuOptionChooser *cec_ch = new CMenuOptionChooser(LOCALE_VIDEOMENU_HDMI_CEC, &g_settings.hdmi_cec_mode, VIDEOMENU_HDMI_CEC_MODE_OPTIONS, VIDEOMENU_HDMI_CEC_MODE_OPTION_COUNT, true, this);
-		cec_ch->setHint("", LOCALE_MENU_HINT_CEC_MODE);
-		ms_energy->addItem(cec_ch);
-	}
+	CMenuOptionChooser *cec_ch = new CMenuOptionChooser(LOCALE_VIDEOMENU_HDMI_CEC, &g_settings.hdmi_cec_mode, VIDEOMENU_HDMI_CEC_MODE_OPTIONS, VIDEOMENU_HDMI_CEC_MODE_OPTION_COUNT, true, this);
+	cec_ch->setHint("", LOCALE_MENU_HINT_CEC_MODE);
+	ms_energy->addItem(cec_ch);
 
 	int res = ms_energy->exec(NULL, "");
 
@@ -534,11 +552,15 @@ int CMiscMenue::showMiscSettingsMenuChanlist()
 //CPU
 void CMiscMenue::showMiscSettingsMenuCPUFreq(CMenuWidget *ms_cpu)
 {
-	ms_cpu->addIntroItems();
+	ms_cpu->addIntroItems(LOCALE_MISCSETTINGS_CPU);
 
 	CCpuFreqNotifier * cpuNotifier = new CCpuFreqNotifier();
 	ms_cpu->addItem(new CMenuOptionChooser(LOCALE_CPU_FREQ_NORMAL, &g_settings.cpufreq, CPU_FREQ_OPTIONS, CPU_FREQ_OPTION_COUNT, true, cpuNotifier));
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	ms_cpu->addItem(new CMenuOptionChooser(LOCALE_CPU_FREQ_STANDBY, &g_settings.standby_cpufreq, CPU_FREQ_OPTIONS_STANDBY, CPU_FREQ_OPTION_STANDBY_COUNT, true));
+#else
 	ms_cpu->addItem(new CMenuOptionChooser(LOCALE_CPU_FREQ_STANDBY, &g_settings.standby_cpufreq, CPU_FREQ_OPTIONS, CPU_FREQ_OPTION_COUNT, true));
+#endif
 }
 #endif /*CPU_FREQ*/
 

@@ -33,6 +33,8 @@
 #ifndef __neutrino__
 #define __neutrino__
 
+#include "config.h"
+
 #include <configfile.h>
 
 #include <neutrinoMessages.h>
@@ -98,8 +100,6 @@ private:
 	bool 				skipSleepTimer;
 	bool                            lockStandbyCall;
 	bool 				pbBlinkChange;
-	bool				g_channel_list_changed;
-	bool                            timer_wakeup;
 	int tvsort[LIST_MODE_LAST];
 	int radiosort[LIST_MODE_LAST];
 
@@ -115,7 +115,9 @@ private:
 	void standbyMode( bool bOnOff, bool fromDeepStandby = false );
 	void getAnnounceEpgName(CTimerd::RecordingInfo * eventinfo, std::string &name);
 
+#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
 	void ExitRun(const bool write_si = true, int retcode = 0);
+#endif
 	void RealRun(CMenuWidget &mainSettings);
 	void InitZapper();
 	void InitTimerdClient();
@@ -167,6 +169,7 @@ public:
 	CChannelList			*TVchannelList;
 	CChannelList			*RADIOchannelList;
 	CChannelList			*channelList;
+	bool				timer_wakeup;
 
 	static CNeutrinoApp* getInstance();
 
@@ -209,6 +212,7 @@ public:
 	void showInfo(void);
 	CConfigFile* getConfigFile() {return &configfile;};
 	bool 		SDTreloadChannels;
+	bool 		g_channel_list_changed;
 
 	void saveEpg(bool cvfd_mode);
 	void stopDaemonsForFlash();
@@ -216,6 +220,13 @@ public:
 	CPersonalizeGui & getPersonalizeGui() { return personalize; }
 	bool getChannellistIsVisible() { return channellist_visible; }
 	void zapTo(t_channel_id channel_id);
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	enum {
+		SHUTDOWN,
+		REBOOT
+	};
+	void ExitRun(const bool write_si = true, int retcode = SHUTDOWN);
+#endif
 	bool wakeupFromStandby(void);
 	void standbyToStandby(void);
 	void lockPlayBack(bool blank = true);

@@ -41,6 +41,17 @@ SHTDCNT::SHTDCNT()
 {
 	sleep_cnt = 0;
 	shutdown_cnt = 0;
+	thread_running = false;
+}
+
+SHTDCNT::~SHTDCNT()
+{
+	if (thread_running)
+	{
+		thread_running = false;
+		pthread_cancel(thrTime);
+		pthread_join(thrTime, NULL);
+	}
 }
 
 SHTDCNT* SHTDCNT::getInstance()
@@ -67,9 +78,11 @@ void SHTDCNT::init()
 {
 	shutdown_cnt = g_settings.shutdown_count * 60;
 	sleep_cnt = g_settings.shutdown_min * 60;
+	thread_running = true;
 	if (pthread_create (&thrTime, NULL, TimeThread, NULL) != 0 )
 	{
 		perror("[SHTDCNT]: pthread_create(TimeThread)");
+		thread_running = false;
 		return ;
 	}
 }

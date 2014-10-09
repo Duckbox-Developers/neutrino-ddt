@@ -36,6 +36,7 @@
 
 #include <system/settings.h>
 #include <driver/screen_max.h>
+#include <driver/display.h>
 
 #include <gui/components/cc.h>
 #include <gui/widget/messagebox.h>
@@ -389,6 +390,7 @@ void CBookmarkManager::paintItem(int pos)
 			CVFD::getInstance()->showMenuText(1, theBookmark.getUrl(), -1, true); // UTF-8
 		}
 	}
+	frameBuffer->blit();
 }
 
 //------------------------------------------------------------------------
@@ -398,6 +400,7 @@ void CBookmarkManager::hide()
 	if (visible)
 	{
 		frameBuffer->paintBackgroundBoxRel(x, y, width, height+ info_height+ 5);
+		frameBuffer->blit();
 		visible = false;
 	}
 }
@@ -464,5 +467,6 @@ void CBookmarkManager::paint()
 
 	paintFoot();
 	visible = true;
+	frameBuffer->blit();
 }
 

@@ -106,9 +106,12 @@ int CImageInfo::exec(CMenuTarget* parent, const std::string &)
 	//init window object, add cc-items and paint all
 	ShowWindow();
 
+	CFrameBuffer *frameBuffer = CFrameBuffer::getInstance();
+
 	neutrino_msg_t msg;
 	while (1)
 	{
+		frameBuffer->blit();
 		neutrino_msg_data_t data;
 		uint64_t timeoutEnd = CRCInput::calcTimeoutEnd_MS(100);
 		g_RCInput->getMsgAbsoluteTimeout( &msg, &data, &timeoutEnd );
@@ -172,6 +175,7 @@ int CImageInfo::exec(CMenuTarget* parent, const std::string &)
 	}
 
 	hide();
+	frameBuffer->blit();
 	
 	return res;
 }
@@ -397,5 +401,6 @@ void CImageInfo::hide()
 	if (cc_win){
 		cc_win->hide();
 		Clean();
+		CFrameBuffer::getInstance()->blit();
 	}
 }

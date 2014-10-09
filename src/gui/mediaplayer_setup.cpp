@@ -46,6 +46,7 @@
 
 #include <gui/audioplayer_setup.h>
 #include <gui/pictureviewer_setup.h>
+#include <gui/moviebrowser.h>
 #include <gui/webtv_setup.h>
 
 
@@ -83,21 +84,38 @@ int CMediaPlayerSetup::exec(CMenuTarget* parent, const std::string & /*actionKey
 /*shows media setup menue entries*/
 int CMediaPlayerSetup::showMediaPlayerSetup()
 {
-
 	CMenuWidget* mediaSetup = new CMenuWidget(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_SETTINGS, width);
 	mediaSetup->setSelected(selected);
 
 	// intros
-	mediaSetup->addIntroItems(LOCALE_MAINSETTINGS_MULTIMEDIA);
+	mediaSetup->addIntroItems(LOCALE_MAINMENU_MEDIA);
+
+	CMenuForwarder *mf;
+
+	CAudioPlayerSetup asetup;
+	mf = new CMenuForwarder(LOCALE_AUDIOPLAYER_NAME, true, NULL, &asetup, "", CRCInput::RC_red);
+	mf->setHint(NEUTRINO_ICON_HINT_APLAY, LOCALE_MENU_HINT_APLAY_SETUP);
+	mediaSetup->addItem(mf);
 
 	CPictureViewerSetup psetup;
-	mediaSetup->addItem(new CMenuForwarder(LOCALE_PICTUREVIEWER_HEAD, true, NULL, &psetup, "", CRCInput::RC_red));
-	CAudioPlayerSetup asetup;
-	mediaSetup->addItem(new CMenuForwarder(LOCALE_AUDIOPLAYER_NAME, true, NULL, &asetup, "", CRCInput::RC_green));
+	mf = new CMenuForwarder(LOCALE_PICTUREVIEWER_HEAD, true, NULL, &psetup, "", CRCInput::RC_blue);
+	mf->setHint(NEUTRINO_ICON_HINT_PICVIEW, LOCALE_MENU_HINT_PICTUREVIEWER_SETUP);
+	mediaSetup->addItem(mf);
+
+	mediaSetup->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_MAINMENU_MOVIEPLAYER));
+
+	CMovieBrowser msetup;
+	int shortcut = 1;
+	mf = new CMenuForwarder(LOCALE_MOVIEBROWSER_HEAD, true, NULL, &msetup, "show_menu", CRCInput::convertDigitToKey(shortcut++));
+	mf->setHint(NEUTRINO_ICON_HINT_MB, LOCALE_MENU_HINT_MOVIEBROWSER_SETUP);
+	mediaSetup->addItem(mf);
+
+	mf = new CMenuForwarder(LOCALE_MOVIEPLAYER_YTPLAYBACK, true, NULL, &msetup, "show_ytmenu", CRCInput::convertDigitToKey(shortcut++));
+	mf->setHint(NEUTRINO_ICON_HINT_YTPLAY, LOCALE_MENU_HINT_YTPLAY_SETUP);
+	mediaSetup->addItem(mf);
 
 	CWebTVSetup wsetup;
-	CMenuForwarder *mf;
-	mf = new CMenuForwarder(LOCALE_WEBTV_HEAD, true, NULL, &wsetup, "show_menu", CRCInput::RC_yellow);
+	mf = new CMenuForwarder(LOCALE_WEBTV_HEAD, true, NULL, &wsetup, "show_menu", CRCInput::convertDigitToKey(shortcut++));
 	mf->setHint(NEUTRINO_ICON_HINT_TVMODE /* FIXME */, LOCALE_MENU_HINT_WEBTV_SETUP);
 	mediaSetup->addItem(mf);
 

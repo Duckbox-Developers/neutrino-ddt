@@ -36,6 +36,7 @@
 #include <gui/screensetup.h>
 
 #include <gui/color.h>
+#include <gui/infoviewer.h>
 #include <gui/widget/messagebox.h>
 #include <gui/widget/icons.h>
 
@@ -91,6 +92,7 @@ int CScreenSetup::exec(CMenuTarget* parent, const std::string &)
 	y_coord[1] = g_settings.screen_EndY;
 
 	paint();
+	frameBuffer->blit();
 
 	selected = 0;
 
@@ -171,7 +173,7 @@ int CScreenSetup::exec(CMenuTarget* parent, const std::string &)
 			}
 			case CRCInput::RC_down:
 			{
-				int max = (selected == 0 )? 200 : frameBuffer->getScreenHeight(true) - 1;
+				int max = (selected == 0 )? 200 : frameBuffer->getScreenHeight(true);
 				if (y_coord[selected] >= max)
 					y_coord[selected] = max;
 				else
@@ -197,7 +199,7 @@ int CScreenSetup::exec(CMenuTarget* parent, const std::string &)
 			}
 			case CRCInput::RC_right:
 			{
-				int max = (selected == 0) ? 200 : frameBuffer->getScreenWidth(true) - 1;
+				int max = (selected == 0) ? 200 : frameBuffer->getScreenWidth(true);
 				if (x_coord[selected] >= max)
 					x_coord[selected] = max;
 				else
@@ -219,6 +221,7 @@ int CScreenSetup::exec(CMenuTarget* parent, const std::string &)
 					res = menu_return::RETURN_EXIT_ALL;
 				}
 		}
+		frameBuffer->blit();
 
 	}
 
@@ -231,6 +234,7 @@ void CScreenSetup::hide()
 	int w = (int) frameBuffer->getScreenWidth(true);
 	int h = (int) frameBuffer->getScreenHeight(true);
 	frameBuffer->paintBackgroundBox(0, 0, w, h);
+	frameBuffer->blit();
 }
 
 void CScreenSetup::paintBorder( int pselected )

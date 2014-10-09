@@ -41,28 +41,36 @@ CFBWindow::CFBWindow(const int _x, const int _y, const int _dx, const int _dy)
 	Background = new fb_pixel_t [_dx * _dy];
 	if (Background != NULL)
 		frameBuffer->SaveScreen(_x, _y, _dx, _dy, Background);
-
+	mayBlit = true;
 }
 
 CFBWindow::~CFBWindow(void)
 {
-	if (Background != NULL)
+	if (Background != NULL) {
 		frameBuffer->RestoreScreen(x, y, dx, dy, Background);
+		frameBuffer->blit();
+	}
 	delete[] Background;
 }
 
 void CFBWindow::paintBoxRel(const int _x, const int _y, const int _dx, const int _dy, const color_t _col, int radius, int type)
 {
 	frameBuffer->paintBoxRel(x + _x, y + _y, _dx, _dy, _col, radius, type);
+	if (mayBlit)
+		frameBuffer->blit();
 }
 
 bool CFBWindow::paintIcon(const char * const _filename, const int _x, const int _y, const int _h, const color_t _offset)
 {
 	frameBuffer->paintIcon(_filename, x + _x, y + _y, _h, _offset);
+	if (mayBlit)
+		frameBuffer->blit();
 	return 0;
 }
 
 void CFBWindow::RenderString(const font_t _font, const int _x, const int _y, const int _width, const char * const _text, const color_t _color, const int _boxheight, const unsigned int _flags)
 {
 	((Font *)_font)->RenderString(x + _x, y + _y, _width, _text, _color, _boxheight, _flags);
+	if (mayBlit)
+		frameBuffer->blit();
 }

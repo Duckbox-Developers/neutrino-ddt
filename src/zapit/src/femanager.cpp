@@ -47,9 +47,7 @@ static int unused_demux;
 #define FEDEBUG(fmt, args...)					\
         do {							\
                 if (fedebug)					\
-                        fprintf(stdout, "[%s:%s:%d] " fmt "\n",	\
-                                __FILE__, __FUNCTION__,		\
-                                __LINE__ , ## args);		\
+			INFO(fmt, ##args);			\
         } while (0)
 
 CFeDmx::CFeDmx(int i)
@@ -116,6 +114,14 @@ bool CFEManager::Init()
 		dmap.push_back(CFeDmx(i));
 
 	INFO("found %d frontends, %d demuxes\n", (int)femap.size(), (int)dmap.size());
+	/* for testing without a frontend, export SIMULATE_FE=1 */
+	if (femap.empty() && getenv("SIMULATE_FE")) {
+		INFO("SIMULATE_FE is set, adding dummy frontend for testing");
+		fe = new CFrontend(0,0);
+		fekey = MAKE_FE_KEY(0, 0);
+		femap.insert(std::pair <unsigned short, CFrontend*> (fekey, fe));
+		livefe = fe;
+	}
 	if (femap.empty())
 		return false;
 
@@ -485,8 +491,15 @@ void CFEManager::Close()
 
 CFrontend * CFEManager::getFE(int index)
 {
-	if((unsigned int) index < femap.size())
-		return femap[index];
+	int i = 0;
+	/* the naive approach of just returning "femap[index]" does not work, since
+	 * the first frontend (index = 0) does not necessary live on adapter0/frontend0 */
+	for (fe_map_iterator_t it = femap.begin(); it != femap.end(); it++)
+	{
+		if (index == i)
+			return it->second;
+		i++;
+	}
 	INFO("Frontend #%d not found", index);
 	return NULL;
 }
@@ -653,7 +666,10 @@ CFrontend * CFEManager::allocateFE(CZapitChannel * channel, bool forrecord)
 #else
 		channel->setRecordDemux(frontend->fenumber+1);
 		channel->setPipDemux(frontend->fenumber+1);
+#if HAVE_COOL_HARDWARE
+		/* I don't know if this check is necessary on cs, but it hurts on other hardware */
 		if(femap.size() > 1)
+#endif
 			cDemux::SetSource(frontend->fenumber+1, frontend->fenumber);
 #ifdef ENABLE_PIP
 		/* FIXME until proper demux management */
@@ -671,7 +687,9 @@ void CFEManager::setLiveFE(CFrontend * fe)
 {
 	OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(mutex);
 	livefe = fe; 
+#if HAVE_COOL_HARDWARE
 	if(femap.size() > 1)
+#endif
 		cDemux::SetSource(0, livefe->fenumber);
 }
 

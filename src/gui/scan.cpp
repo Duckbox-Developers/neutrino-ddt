@@ -2,8 +2,6 @@
 	Neutrino-GUI  -   DBoxII-Project
 
 	Copyright (C) 2001 Steffen Hehn 'McClean'
-	Homepage: http://dbox.cyberphoria.org/
-
 	Copyright (C) 2011-2012 Stefan Seyfried
 
 	License: GPL
@@ -19,8 +17,7 @@
 	GNU General Public License for more details.
 
 	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #ifdef HAVE_CONFIG_H
@@ -38,6 +35,7 @@
 #include <driver/screen_max.h>
 #include <driver/record.h>
 #include <driver/volume.h>
+#include <driver/display.h>
 
 #include <gui/color.h>
 
@@ -107,7 +105,7 @@ void CScanTs::prev_next_TP( bool up)
 			}
 		}
 	} else {
-		for ( tI=select_transponders.end() ; tI != select_transponders.begin(); --tI ) {
+		for (tI = select_transponders.end(); tI != select_transponders.begin(); --tI ) {
 			if(tI->second.feparams.frequency < TP.feparams.frequency) {
 				next_tp = true;
 				break;
@@ -142,6 +140,7 @@ void CScanTs::testFunc()
 	printf("CScanTs::testFunc: %s\n", buffer);
 	paintLine(xpos2, ypos_cur_satellite, w - 95, pname.c_str());
 	paintLine(xpos2, ypos_frequency, w, buffer);
+	paintRadar();
 	success = g_Zapit->tune_TP(TP);
 }
 
@@ -187,10 +186,10 @@ int CScanTs::exec(CMenuTarget* /*parent*/, const std::string & actionKey)
 	mheight     = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	fw = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getWidth();
 	width       = w_max(fw * 42, 0);
-	height      = h_max(hheight + (12 * mheight), 0); //9 lines
+	height      = h_max(hheight + (10 * mheight), 0); //9 lines
 	x = frameBuffer->getScreenX() + (frameBuffer->getScreenWidth() - width) / 2;
 	y = frameBuffer->getScreenY() + (frameBuffer->getScreenHeight() - height) / 2;
-	xpos_radar = x + 36 * fw;
+	xpos_radar = x + width - 20 - 64; /* TODO: don't assume radar is 64x64... */
 	ypos_radar = y + hheight + (mheight >> 1);
 	xpos1 = x + 10;
 
@@ -290,14 +289,17 @@ int CScanTs::exec(CMenuTarget* /*parent*/, const std::string & actionKey)
 
 	tuned = -1;
 	paint(test);
+	frameBuffer->blit();
 	/* go */
 	if(test) {
 		testFunc();
 	} else if(manual)
 		success = g_Zapit->scan_TP(TP);
 	else if(fast) {
+#if ENABLE_FASTSCAN
 		CServiceScan::getInstance()->QuietFastScan(false);
 		success = CZapit::getInstance()->StartFastScan(scansettings.fast_type, scansettings.fast_op);
+#endif
 	}
 	else
 		success = g_Zapit->startScan(scan_flags);
@@ -336,6 +338,7 @@ int CScanTs::exec(CMenuTarget* /*parent*/, const std::string & actionKey)
 		}
 		while (!(msg == CRCInput::RC_timeout));
 		showSNR();
+		frameBuffer->blit();
 	}
 	/* to join scan thread */
 	g_Zapit->stopScan();
@@ -348,6 +351,7 @@ int CScanTs::exec(CMenuTarget* /*parent*/, const std::string & actionKey)
 	if(!test) {
 		CComponentsHeaderLocalized header(x, y, width, hheight, success ? LOCALE_SCANTS_FINISHED : LOCALE_SCANTS_FAILED);
 		header.paint(CC_SAVE_SCREEN_NO);
+		frameBuffer->blit();
 		uint64_t timeoutEnd = CRCInput::calcTimeoutEnd(0xFFFF);
 		do {
 			g_RCInput->getMsgAbsoluteTimeout(&msg, &data, &timeoutEnd);
@@ -373,7 +377,10 @@ int CScanTs::exec(CMenuTarget* /*parent*/, const std::string & actionKey)
 	return menu_return::RETURN_REPAINT;
 }
 
-int CScanTs::handleMsg(neutrino_msg_t msg, neutrino_msg_data_t data)
+/* this is not type "int", because it does not return a code indicating success but
+ * instead returns altered "msg". This is different ot all other "handleMsg" functions
+ * and should probably be fixed somewhen... */
+neutrino_msg_t CScanTs::handleMsg(neutrino_msg_t msg, neutrino_msg_data_t data)
 {
 	int w = x + width - xpos2;
 //printf("CScanTs::handleMsg: x %d xpos2 %d width %d w %d\n", x, xpos2, width, w);
@@ -385,7 +392,7 @@ int CScanTs::handleMsg(neutrino_msg_t msg, neutrino_msg_data_t data)
 			break;
 
 		case NeutrinoMessages::EVT_SCAN_NUM_TRANSPONDERS:
-			sprintf(buffer, "%u", data);
+			sprintf(buffer, "%ld", data);
 			paintLine(xpos2, ypos_transponder, w - (8*fw), buffer);
 			total = data;
 			snprintf(str, sizeof(buffer), "scan: %d/%d", done, total);
@@ -425,22 +432,22 @@ int CScanTs::handleMsg(neutrino_msg_t msg, neutrino_msg_data_t data)
 			break;
 
 		case NeutrinoMessages::EVT_SCAN_NUM_CHANNELS:
-			sprintf(buffer, " = %u", data);
+			sprintf(buffer, " = %ld", data);
 			paintLine(xpos1 + 3 * (6*fw), ypos_service_numbers + mheight, width - 3 * (6*fw) - 10, buffer);
 			break;
 
 		case NeutrinoMessages::EVT_SCAN_FOUND_TV_CHAN:
-			sprintf(buffer, "%u", data);
+			sprintf(buffer, "%ld", data);
 			paintLine(xpos1, ypos_service_numbers + mheight, (6*fw), buffer);
 			break;
 
 		case NeutrinoMessages::EVT_SCAN_FOUND_RADIO_CHAN:
-			sprintf(buffer, "%u", data);
+			sprintf(buffer, "%ld", data);
 			paintLine(xpos1 + (6*fw), ypos_service_numbers + mheight, (6*fw), buffer);
 			break;
 
 		case NeutrinoMessages::EVT_SCAN_FOUND_DATA_CHAN:
-			sprintf(buffer, "%u", data);
+			sprintf(buffer, "%ld", data);
 			paintLine(xpos1 + 2 * (6*fw), ypos_service_numbers + mheight, (6*fw), buffer);
 			break;
 
@@ -461,6 +468,7 @@ int CScanTs::handleMsg(neutrino_msg_t msg, neutrino_msg_data_t data)
 	}
 	if ((msg >= CRCInput::RC_WithData) && (msg < CRCInput::RC_WithData + 0x10000000))
 		delete[] (unsigned char*) data;
+	frameBuffer->blit();
 	return msg;
 }
 
@@ -570,8 +578,7 @@ void CScanTs::showSNR ()
 {
 	if (signalbox == NULL){
 		CFrontend * frontend = CServiceScan::getInstance()->GetFrontend();
-		//signalbox = new CSignalBox(xpos1, y + height - mheight - 5, width - 2*(xpos1-x), g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight(), frontend, false);
-		signalbox = new CSignalBox(xpos1, y + height - (mheight*2*3)/2 - 5, width - 2*(xpos1-x), (g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight()*2*3)/2, frontend, true);
+		signalbox = new CSignalBox(xpos1, y + height - mheight - 5, width - 2*(xpos1-x), g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight(), frontend, false);
 		signalbox->setColorBody(COL_MENUCONTENT_PLUS_0);
 		signalbox->setTextColor(COL_MENUCONTENT_TEXT);
 		signalbox->doPaintBg(true);

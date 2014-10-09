@@ -35,6 +35,9 @@
 
 
 #include "vfd_setup.h"
+#ifdef ENABLE_GRAPHLCD
+#include <gui/glcdsetup.h>
+#endif
 
 #include <global.h>
 #include <neutrino.h>
@@ -44,6 +47,7 @@
 #include <gui/widget/icons.h>
 
 #include <driver/screen_max.h>
+#include <driver/display.h>
 
 #include <system/debug.h>
 #include <cs_api.h>
@@ -107,11 +111,24 @@ const CMenuOptionChooser::keyval LCD_INFO_OPTIONS[LCD_INFO_OPTION_COUNT] =
 	{ 0, LOCALE_LCD_INFO_LINE_CHANNEL },
 	{ 1, LOCALE_LCD_INFO_LINE_CLOCK }
 };
+#if HAVE_DUCKBOX_HARDWARE || BOXMODEL_SPARK7162
+#define OPTIONS_OFF_ON_OPTION_COUNT 2
+const CMenuOptionChooser::keyval OPTIONS_OFF_ON_OPTIONS[OPTIONS_OFF_ON_OPTION_COUNT] =
+{
+    { 0, LOCALE_OPTIONS_OFF  },
+    { 1, LOCALE_OPTIONS_ON }
+};
+#endif
 
 int CVfdSetup::showSetup()
 {
 	CMenuWidget *vfds = new CMenuWidget(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_LCD, width, MN_WIDGET_ID_VFDSETUP);
 	vfds->addIntroItems(LOCALE_LCDMENU_HEAD);
+
+#ifdef ENABLE_GRAPHLCD
+	GLCD_Menu *glcdMenu = new GLCD_Menu();
+	vfds->addItem(new CMenuForwarder(LOCALE_GLCD_HEAD, true, NULL, glcdMenu, NULL, CRCInput::RC_blue));
+#endif
 
 	//vfd brightness menu
 	CMenuWidget lcd_sliders(LOCALE_LCDMENU_HEAD, NEUTRINO_ICON_LCD,width, MN_WIDGET_ID_VFDSETUP_LCD_SLIDERS);
@@ -120,6 +137,7 @@ int CVfdSetup::showSetup()
 	mf->setHint("", LOCALE_MENU_HINT_VFD_BRIGHTNESS_SETUP);
 	vfds->addItem(mf);
 
+#ifndef HAVE_DUCKBOX_HARDWARE
 	//led menu
 	if(cs_get_revision() > 7)
 	{
@@ -137,6 +155,7 @@ int CVfdSetup::showSetup()
 		mf->setHint("", LOCALE_MENU_HINT_BACKLIGHT);
 		vfds->addItem(mf);
 	}
+#endif
 
 	vfds->addItem(GenericMenuSeparatorLine);
 
@@ -148,12 +167,19 @@ int CVfdSetup::showSetup()
 	vfds->addItem(oj);
 	vfds->addItem(lcd_clock_channelname_menu);
 
+#if HAVE_DUCKBOX_HARDWARE || BOXMODEL_SPARK7162
+	vfds->addItem(new CMenuOptionNumberChooser(LOCALE_LCDMENU_VFD_SCROLL, &g_settings.lcd_vfd_scroll, true, 0, 999, this, 0, 0, NONEXISTANT_LOCALE, true));
+#else
 	oj = new CMenuOptionChooser(LOCALE_LCDMENU_SCROLL, &g_settings.lcd_scroll, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, vfd_enabled);
 	oj->setHint("", LOCALE_MENU_HINT_VFD_SCROLL);
 	vfds->addItem(oj);
+#endif
 
 	int res = vfds->exec(NULL, "");
 
+#ifdef ENABLE_GRAPHLCD
+	delete glcdMenu;
+#endif
 	delete vfds;
 	return res;
 }
@@ -200,6 +226,7 @@ void CVfdSetup::showBrightnessSetup(CMenuWidget *mn_widget)
 	mn_widget->addItem(mf);
 }
 
+#ifndef HAVE_DUCKBOX_HARDWARE
 void CVfdSetup::showLedSetup(CMenuWidget *mn_led_widget)
 {
 	CMenuOptionChooser * mc;
@@ -225,6 +252,7 @@ void CVfdSetup::showLedSetup(CMenuWidget *mn_led_widget)
 	mc->setHint("", LOCALE_MENU_HINT_LEDS_BLINK);
 	mn_led_widget->addItem(mc);
 }
+#endif
 
 void CVfdSetup::showBacklightSetup(CMenuWidget *mn_led_widget)
 {
@@ -261,10 +289,12 @@ bool CVfdSetup::changeNotify(const neutrino_locale_t OptionName, void */* data *
 	{
 		CVFD::getInstance()->setBrightnessDeepStandby(brightnessdeepstandby);
 	}
+#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
 	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_LEDCONTROLER_MODE_TV))
 	{
 		CVFD::getInstance()->setled();
 	}
+#endif
 	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_LEDCONTROLER_BACKLIGHT_TV))
 	{
 		CVFD::getInstance()->setBacklight(g_settings.backlight_tv);

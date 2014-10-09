@@ -46,6 +46,7 @@
 #include "osd_setup.h"
 #include "osdlang_setup.h"
 #include "scan_setup.h"
+#include "videosettings.h"
 #include <zapit/zapit.h>
 #include <system/helpers.h>
 
@@ -68,7 +69,7 @@ CStartUpWizard::~CStartUpWizard()
 const CMenuOptionChooser::keyval WIZARD_SETUP_TYPE[] =
 {
 	{ 0, LOCALE_WIZARD_SETUP_EASY },
-	{ 1, LOCALE_WIZARD_SETUP_ADVANCED },
+	{ 1, LOCALE_WIZARD_SETUP_ADVANCED }
 };
 
 int CStartUpWizard::exec(CMenuTarget* parent, const string & /*actionKey*/)
@@ -90,7 +91,9 @@ int CStartUpWizard::exec(CMenuTarget* parent, const string & /*actionKey*/)
 	languageSettings.showLanguageSetup(&osdl_setup);
 	osdl_setup.exec(NULL, "");
 
+#if 0
 	if(ShowMsg (LOCALE_WIZARD_WELCOME_HEAD, g_Locale->getText(LOCALE_WIZARD_WELCOME_TEXT), CMessageBox::mbrYes, CMessageBox::mbYes | CMessageBox::mbrCancel) == CMessageBox::mbrYes)
+#endif
 	{
 		int advanced = 1;
 #ifdef ENABLE_FASTSCAN
@@ -112,7 +115,7 @@ int CStartUpWizard::exec(CMenuTarget* parent, const string & /*actionKey*/)
 			res = g_videoSettings->exec(NULL, "");
 			g_videoSettings->setWizardMode(CVideoSettings::V_SETUP_MODE_WIZARD_NO);
 		}
-		if(!g_settings.easymenu && advanced && res != menu_return::RETURN_EXIT_ALL)
+		if(advanced && res != menu_return::RETURN_EXIT_ALL)
 		{
 			COsdSetup osdSettings(COsdSetup::OSD_SETUP_MODE_WIZARD);
 			res = osdSettings.exec(NULL, "");

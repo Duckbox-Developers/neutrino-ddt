@@ -160,14 +160,11 @@ int fh_jpeg_getsize(const char *filename,int *x,int *y, int wanted_width, int wa
 	jpeg_read_header(&cinfo,TRUE);
 	cinfo.out_color_space=JCS_RGB;
 	// should be more flexible...
-	if((int)cinfo.image_width/8 >= wanted_width ||
-      (int)cinfo.image_height/8 >= wanted_height)
+	if((int)cinfo.image_width/8 >= wanted_width || (int)cinfo.image_height/8 >= wanted_height)
 		cinfo.scale_denom=8;
-	else if((int)cinfo.image_width/4 >= wanted_width ||
-      (int)cinfo.image_height/4 >= wanted_height)
+	else if((int)cinfo.image_width/4 >= wanted_width || (int)cinfo.image_height/4 >= wanted_height)
 		cinfo.scale_denom=4;
-	else if((int)cinfo.image_width/2 >= wanted_width ||
-           (int)cinfo.image_height/2 >= wanted_height)
+	else if((int)cinfo.image_width/2 >= wanted_width || (int)cinfo.image_height/2 >= wanted_height)
 		cinfo.scale_denom=2;
 	else
 		cinfo.scale_denom=1;

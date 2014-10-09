@@ -34,16 +34,20 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/vfs.h>    /* or <sys/statfs.h> */
+#include <sys/time.h>	/* gettimeofday */
+#include <sys/ioctl.h>
 #include <string.h>
 #include <fcntl.h>
 #include <dirent.h>
 #include <stdarg.h>
+#include <algorithm>
 #include <mntent.h>
 #include <linux/hdreg.h>
 #include <linux/fs.h>
-
+#include "debug.h"
 #include <system/helpers.h>
 #include <gui/update_ext.h>
+using namespace std;
 
 void mySleep(int sec) {
 	struct timeval timeout;
@@ -641,8 +645,11 @@ bool CFileHelpers::copyDir(const char *Src, const char *Dst, bool backupMode)
 			// is file
 			else if (S_ISREG(FileInfo.st_mode)) {
 				std::string save = "";
+				(void)backupMode; /* squelch unused parameter warning */
+#if ENABLE_EXTUPDATE
 				if (backupMode && (CExtUpdate::getInstance()->isBlacklistEntry(srcPath)))
 					save = ".save";
+#endif
 				copyFile(srcPath, (dstPath + save).c_str(), FileInfo.st_mode & 0x0FFF);
 			}
 		}

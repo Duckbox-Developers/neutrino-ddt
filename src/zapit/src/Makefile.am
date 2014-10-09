@@ -9,18 +9,8 @@ AM_CPPFLAGS += \
 	-I$(top_srcdir)/lib/libconfigfile \
 	-I$(top_srcdir)/lib/connection \
 	-I$(top_srcdir)/lib/libeventserver \
-	-I$(top_srcdir)/lib/xmltree
-
-if BOXTYPE_COOL
-if BOXMODEL_APOLLO
-AM_CPPFLAGS += -I$(top_srcdir)/lib/libcoolstream2
-else
-AM_CPPFLAGS += -I$(top_srcdir)/lib/libcoolstream
-endif
-endif
-if BOXTYPE_TRIPLE
-AM_CPPFLAGS += -I$(top_srcdir)/lib/libtriple
-endif
+	-I$(top_srcdir)/lib/xmltree \
+	@HWLIB_CFLAGS@
 
 noinst_LIBRARIES = libzapit.a
 
@@ -28,7 +18,6 @@ libzapit_a_SOURCES = \
 	bouquets.cpp \
 	capmt.cpp \
 	channel.cpp \
-	fastscan.cpp \
 	femanager.cpp \
 	frontend.cpp \
 	getservices.cpp \
@@ -40,6 +29,11 @@ libzapit_a_SOURCES = \
 	scansdt.cpp \
 	transponder.cpp \
 	zapit.cpp
+
+if ENABLE_FASTSCAN
+libzapit_a_SOURCES += \
+	fastscan.cpp
+endif
 
 bin_PROGRAMS = pzapit
 sbin_PROGRAMS = udpstreampes

@@ -103,7 +103,7 @@ function do_check(){
 	=}
 ~=}
 	
-	{=var-set:ether-wake={=if-file-exists:/bin/ether-wake~/bin/ether-wake~{=if-file-exists:/var/bin/ether-wake~/var/bin/ether-wake~false=}=}=}
+	{=var-set:ether-wake={=if-file-exists:/usr/bin/ether-wake~/usr/bin/ether-wake~{=if-file-exists:/var/bin/ether-wake~/var/bin/ether-wake~false=}=}=}
 	{=if-equal:{=var-get:ether-wake=}~false~
 		sLog_addRow(sLog_body, "red", "Programs: ether-wake is not installed. Wake on LAN is disabled. "+y_url("Help-Tools-Wake_on_LAN"), "failed");
 	~

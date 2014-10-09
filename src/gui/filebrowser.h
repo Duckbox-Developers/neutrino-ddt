@@ -172,7 +172,6 @@ class CFileBrowser
 		std::string		m_baseurl;
 		int 			width;
 		int 			height;
-		bool			use_filter;
 		bool			bCancel;
 
 		int 			x;

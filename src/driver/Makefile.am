@@ -12,7 +12,8 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib/libconfigfile \
 	-I$(top_srcdir)/lib/connection \
 	-I$(top_srcdir)/lib/libeventserver \
-	@FREETYPE_CFLAGS@
+	@FREETYPE_CFLAGS@ \
+	@HWLIB_CFLAGS@
 
 noinst_LIBRARIES = libneutrino_driver.a libneutrino_driver_netfile.a
 
@@ -24,9 +25,10 @@ libneutrino_driver_a_SOURCES = \
 	colorgradient.cpp \
 	fade.cpp \
 	fb_window.cpp \
+	fbaccel.cpp \
 	file.cpp \
 	fontrenderer.cpp \
-	framebuffer.cpp \
+	framebuffer_ng.cpp \
 	genpsi.cpp \
 	neutrinofonts.cpp \
 	radiotext.cpp \
@@ -40,23 +42,41 @@ libneutrino_driver_a_SOURCES = \
 	streamts.cpp \
 	volume.cpp
 
+if ENABLE_GRAPHLCD
+libneutrino_driver_a_SOURCES += \
+	nglcd.cpp
+endif
+if BOXTYPE_DUCKBOX
+libneutrino_driver_a_SOURCES += \
+	vfd.cpp
+endif
+
 if BOXTYPE_COOL
 libneutrino_driver_a_SOURCES += \
 	vfd.cpp
 
-if BOXMODEL_APOLLO
-AM_CPPFLAGS += -I$(top_srcdir)/lib/libcoolstream2
-else
-AM_CPPFLAGS += -I$(top_srcdir)/lib/libcoolstream
-endif
 endif
 if BOXTYPE_TRIPLE
 libneutrino_driver_a_SOURCES += \
 	newclock.cpp \
 	lcdd.cpp
+endif
 
+if BOXTYPE_SPARK
+libneutrino_driver_a_SOURCES += \
+	simple_display.cpp
+endif
+if BOXTYPE_AZBOX
+libneutrino_driver_a_SOURCES += \
+	simple_display.cpp
+endif
+if BOXTYPE_GENERIC
+libneutrino_driver_a_SOURCES += \
+	simple_display.cpp
+endif
+if USE_STB_HAL
 AM_CPPFLAGS += \
-	-I$(top_srcdir)/lib/libtriple
+	@DIRECTFB_CFLAGS@
 endif
 
 libneutrino_driver_netfile_a_SOURCES = netfile.cpp

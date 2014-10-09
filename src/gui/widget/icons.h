@@ -253,6 +253,9 @@
 #define NEUTRINO_ICON_HINT_RESTORE	"hint_restore"
 #define NEUTRINO_ICON_HINT_FACTORY	"hint_factory"
 
+#define NEUTRINO_ICON_MOVIE		"movie"
+#define NEUTRINO_ICON_PICTURE	"picture"
+
 /* plugins */
 #define NEUTRINO_ICON_HINT_PLUGIN	"hint_plugin"
 

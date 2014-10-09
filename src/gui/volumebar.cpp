@@ -238,6 +238,7 @@ void CVolumeBar::repaintVolScale()
 		initVolumeBarDigitValue();
 		paintVolumeBarDigit();
 	}
+	frameBuffer->blit();
 }
 
 //set current volume value and paint form
@@ -253,6 +254,7 @@ void CVolumeBar::paint(bool do_save_bg)
 {
 	//paint form
 	paintForm(do_save_bg);
+	frameBuffer->blit();
 }
 
 

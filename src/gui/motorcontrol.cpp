@@ -144,6 +144,7 @@ int CMotorControl::exec(CMenuTarget* parent, const std::string &)
 	paintHead();
 	paintMenu();
 	paintStatus();
+	frameBuffer->blit();
 
 	msg = CRCInput::RC_nokey;
 	while (!(msg == CRCInput::RC_setup) && (!(msg == CRCInput::RC_home)))
@@ -314,6 +315,7 @@ int CMotorControl::exec(CMenuTarget* parent, const std::string &)
 			if ((msg >= CRCInput::RC_WithData) && (msg < CRCInput::RC_WithData + 0x10000000))
 				delete[] (unsigned char*) data;
 		}
+		frameBuffer->blit();
 	}
 
 	delete signalbox;
@@ -358,6 +360,7 @@ void CMotorControl::motorStep(bool west)
 void CMotorControl::hide()
 {
 	frameBuffer->paintBackgroundBoxRel(x, y, width, height + 20);
+	frameBuffer->blit();
 	stopSatFind();
 }
 

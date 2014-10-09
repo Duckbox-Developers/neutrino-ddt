@@ -28,7 +28,11 @@ function rcsim(_key) {
 		}
 	}
 	loadSyncURL("/control/rcem?" + _key);
-	window.setTimeout("do_snapshot()", 750);
+	if (enableOSD == 1 && enableVideo == 0) {
+		do_snapshot();
+	} else {
+		window.setTimeout("do_snapshot()", 750);
+	}
 }
 function do_snapshot() {
 	if(!checkEnable()) return;
@@ -43,12 +47,14 @@ function do_snapshot() {
 		filename = id("filename").value;
 	}
 
-	if ({=var-get:fbshot=} == true && enableVideo == 0)
+	if ({=var-get:fbshot=} == true && enableVideo == 0) {
 		dbox_exec_tools("fbshot fb /tmp/"+filename+".png");
-	else
+		do_showshot(filename);
+	} else {
 		loadSyncURL("/control/screenshot?name="+filename+"&osd="+enableOSD+"&video="+enableVideo);
+		do_showshot_bmp(filename);
+	}
 
-	do_showshot(filename);	
 }
 function do_showshot(_filename) {
 	if (_filename == "")
@@ -57,6 +63,15 @@ function do_showshot(_filename) {
 	$('status').hide();
 	$('buttons').show();
 	$('shot').src = "/tmp/"+_filename+".png?"+Math.random();
+	$('shot').show();
+}
+function do_showshot_bmp(_filename) {
+	if (_filename == "")
+		_filename = "screenshot";
+
+	$('status').hide();
+	$('buttons').show();
+	$('shot').src = "/tmp/"+_filename+".bmp?"+Math.random();
 	$('shot').show();
 }
 function do_clearshot(){

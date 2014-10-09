@@ -36,6 +36,7 @@
 #include <pthread.h>
 #include <errno.h>
 #include <signal.h>
+#include <poll.h>
 #include <sys/time.h>
 
 #include <connection/basicsocket.h>
@@ -58,7 +59,7 @@
 //#define DEBUG_SDT_THREAD
 //#define DEBUG_TIME_THREAD
 
-#define DEBUG_SECTION_THREADS
+//#define DEBUG_SECTION_THREADS
 //#define DEBUG_CN_THREAD
 
 /*static*/ bool reader_ready = true;
@@ -96,7 +97,7 @@ static bool messaging_zap_detected = false;
 //NTP-Config
 #define CONF_FILE CONFIGDIR "/neutrino.conf"
 
-std::string ntp_system_cmd_prefix = "/sbin/ntpdate ";
+std::string ntp_system_cmd_prefix = "/usr/sbin/rdate -s "; // from busybox
 
 std::string ntp_system_cmd;
 std::string ntpserver;
@@ -137,6 +138,10 @@ static CFreeSatThread threadFSEIT;
 //#define RESTART_DMX_AFTER_TIMEOUTS 5
 #define TIME_SDT_SCHEDULED_PAUSE 2* 60* 60
 CSdtThread threadSDT;
+#endif
+
+#ifdef DEBUG_EVENT_LOCK
+static time_t lockstart = 0;
 #endif
 
 static int sectionsd_stop = 0;
@@ -181,10 +186,21 @@ inline void readLockEvents(void)
 inline void writeLockEvents(void)
 {
 	pthread_rwlock_wrlock(&eventsLock);
+#ifdef DEBUG_EVENT_LOCK
+	lockstart = time_monotonic_ms();
+#endif
 }
 
 inline void unlockEvents(void)
 {
+#ifdef DEBUG_EVENT_LOCK
+	if (lockstart) {
+		time_t tmp = time_monotonic_ms() - lockstart;
+		if (tmp > 50)
+			xprintf("locked ms %d\n", tmp);
+		lockstart = 0;
+	}
+#endif
 	pthread_rwlock_unlock(&eventsLock);
 }
 
@@ -205,10 +221,11 @@ static MySIeventUniqueKeysMetaOrderServiceUniqueKey mySIeventUniqueKeysMetaOrder
 static MySIservicesOrderUniqueKey mySIservicesOrderUniqueKey;
 static MySIservicesNVODorderUniqueKey mySIservicesNVODorderUniqueKey;
 
+/* needs write lock held! */
 static bool deleteEvent(const event_id_t uniqueKey)
 {
 	bool ret = false;
-	writeLockEvents();
+	// writeLockEvents();
 	MySIeventsOrderUniqueKey::iterator e = mySIeventsOrderUniqueKey.find(uniqueKey);
 
 	if (e != mySIeventsOrderUniqueKey.end()) {
@@ -224,7 +241,7 @@ static bool deleteEvent(const event_id_t uniqueKey)
 		mySIeventsNVODorderUniqueKey.erase(uniqueKey);
 		ret = true;
 	}
-	unlockEvents();
+	// unlockEvents();
 	return ret;
 }
 
@@ -309,7 +326,7 @@ xprintf("addEvent: ch %012" PRIx64 " running %d (%s) got_CN %d\n", evt.get_chann
 			unlockMessaging();
 	}
 
-	readLockEvents();
+	writeLockEvents();
 	MySIeventsOrderUniqueKey::iterator si = mySIeventsOrderUniqueKey.find(evt.uniqueKey());
 	bool already_exists = (si != mySIeventsOrderUniqueKey.end());
 	if (already_exists && (evt.table_id < si->second->table_id))
@@ -432,26 +449,29 @@ xprintf("addEvent: ch %012" PRIx64 " running %d (%s) got_CN %d\n", evt.get_chann
 						delete eptr;
 						return;
 					}
+					/* SRF special case: advertising is inserted with start time of
+					 * an existing event. Duration may differ. To avoid holes in EPG caused
+					 * by the (not useful) advertising event, don't delete the (useful)
+					 * original event */
+					if ((*x)->table_id == e->table_id && (e->table_id & 0xFE) == 0x4e &&
+					    (*x)->times.begin()->startzeit == start_time)
+						continue;
 					/* here we have an overlapping event */
 					dprintf("%s: delete 0x%012" PRIx64 ".%02x time = 0x%012" PRIx64 ".%02x\n", __func__,
 						x_key, (*x)->table_id, e_key, e->table_id);
 					to_delete.push_back(x_key);
 				}
 			}
-			unlockEvents();
 
 			while (! to_delete.empty())
 			{
 				deleteEvent(to_delete.back());
 				to_delete.pop_back();
 			}
-		} else {
-			// Damit in den nicht nach Event-ID sortierten Mengen
-			// Mehrere Events mit gleicher ID sind, diese vorher loeschen
-			unlockEvents();
 		}
+		// Damit in den nicht nach Event-ID sortierten Mengen
+		// Mehrere Events mit gleicher ID sind, diese vorher loeschen
 		deleteEvent(e->uniqueKey());
-		readLockEvents();
 		if ( !mySIeventsOrderFirstEndTimeServiceIDEventUniqueKey.empty() && mySIeventsOrderUniqueKey.size() >= max_events && max_events != 0 ) {
 			MySIeventsOrderFirstEndTimeServiceIDEventUniqueKey::iterator lastEvent =
 				mySIeventsOrderFirstEndTimeServiceIDEventUniqueKey.begin();
@@ -486,12 +506,8 @@ xprintf("addEvent: ch %012" PRIx64 " running %d (%s) got_CN %d\n", evt.get_chann
 			}
 			event_id_t uniqueKey = (*lastEvent)->uniqueKey();
 			// else fprintf(stderr, ">");
-			unlockEvents();
 			deleteEvent(uniqueKey);
 		}
-		else
-			unlockEvents();
-		readLockEvents();
 		// Pruefen ob es ein Meta-Event ist
 		MySIeventUniqueKeysMetaOrderServiceUniqueKey::iterator i = mySIeventUniqueKeysMetaOrderServiceUniqueKey.find(e->get_channel_id());
 
@@ -511,9 +527,6 @@ xprintf("addEvent: ch %012" PRIx64 " running %d (%s) got_CN %d\n", evt.get_chann
 					// Falls das Event in den beiden Mengen mit Zeiten nicht vorhanden
 					// ist, dieses dort einfuegen
 					MySIeventsOrderServiceUniqueKeyFirstStartTimeEventUniqueKey::iterator i2 = mySIeventsOrderServiceUniqueKeyFirstStartTimeEventUniqueKey.find(ie->second);
-					unlockEvents();
-					writeLockEvents();
-
 					if (i2 == mySIeventsOrderServiceUniqueKeyFirstStartTimeEventUniqueKey.end())
 					{
 						// nicht vorhanden -> einfuegen
@@ -526,8 +539,6 @@ xprintf("addEvent: ch %012" PRIx64 " running %d (%s) got_CN %d\n", evt.get_chann
 				}
 			}
 		}
-		unlockEvents();
-		writeLockEvents();
 //		printf("Adding: %04x\n", (int) e->uniqueKey());
 
 		// normales Event
@@ -555,22 +566,18 @@ static void addNVODevent(const SIevent &evt)
 
 	SIeventPtr e(eptr);
 
-	readLockEvents();
+	writeLockEvents();
 	MySIeventsOrderUniqueKey::iterator e2 = mySIeventsOrderUniqueKey.find(e->uniqueKey());
 
 	if (e2 != mySIeventsOrderUniqueKey.end())
 	{
 		// bisher gespeicherte Zeiten retten
-		unlockEvents();
-		writeLockEvents();
 		e->times.insert(e2->second->times.begin(), e2->second->times.end());
 	}
-	unlockEvents();
 
 	// Damit in den nicht nach Event-ID sortierten Mengen
 	// mehrere Events mit gleicher ID sind, diese vorher loeschen
 	deleteEvent(e->uniqueKey());
-	readLockEvents();
 	if ( !mySIeventsOrderUniqueKey.empty() && mySIeventsOrderUniqueKey.size() >= max_events  && max_events != 0 ) {
 		//TODO: Set Old Events to 0 if limit is reached...
 		MySIeventsOrderFirstEndTimeServiceIDEventUniqueKey::iterator lastEvent =
@@ -584,24 +591,18 @@ static void addNVODevent(const SIevent &evt)
 			--lastEvent;
 		}
 		unlockMessaging();
-		unlockEvents();
 		deleteEvent((*lastEvent)->uniqueKey());
 	}
-	else
-		unlockEvents();
-	writeLockEvents();
 	mySIeventsOrderUniqueKey.insert(std::make_pair(e->uniqueKey(), e));
 
 	mySIeventsNVODorderUniqueKey.insert(std::make_pair(e->uniqueKey(), e));
-	unlockEvents();
 	if (!e->times.empty())
 	{
 		// diese beiden Mengen enthalten nur Events mit Zeiten
-		writeLockEvents();
 		mySIeventsOrderServiceUniqueKeyFirstStartTimeEventUniqueKey.insert(e);
 		mySIeventsOrderFirstEndTimeServiceIDEventUniqueKey.insert(e);
-		unlockEvents();
 	}
+	unlockEvents();
 }
 
 static void removeOldEvents(const long seconds)
@@ -611,7 +612,7 @@ static void removeOldEvents(const long seconds)
 	// Alte events loeschen
 	time_t zeit = time(NULL);
 
-	readLockEvents();
+	writeLockEvents();
 	unsigned total_events = mySIeventsOrderUniqueKey.size();
 
 	MySIeventsOrderFirstEndTimeServiceIDEventUniqueKey::iterator e = mySIeventsOrderFirstEndTimeServiceIDEventUniqueKey.begin();
@@ -630,12 +631,9 @@ static void removeOldEvents(const long seconds)
 			to_delete.push_back((*e)->uniqueKey());
 		++e;
 	}
-	unlockEvents();
-
 	for (std::vector<event_id_t>::iterator i = to_delete.begin(); i != to_delete.end(); ++i)
 		deleteEvent(*i);
 
-	readLockEvents();
 	xprintf("[sectionsd] Removed %d old events (%d left), zap detected %d.\n", (int)(total_events - mySIeventsOrderUniqueKey.size()), (int)mySIeventsOrderUniqueKey.size(), messaging_zap_detected);
 	unlockEvents();
 	return;
@@ -1454,7 +1452,32 @@ void CTimeThread::run()
 				change(0);
 
 			xprintf("%s: getting DVB time (isOpen %d)\n", name.c_str(), isOpen());
-			int rc = dmx->Read(static_buf, MAX_SECTION_LENGTH, timeoutInMSeconds);
+			int rc;
+#if HAVE_COOL_HARDWARE
+			/* libcoolstream does not like the repeated read if the dmx is not yet running
+			 * (e.g. during neutrino start) and causes strange openthreads errors which in
+			 * turn cause complete malfunction of the dmx, so we cannot use the "speed up
+			 * shutdown" hack on with libcoolstream... :-( */
+			rc = dmx->Read(static_buf, MAX_SECTION_LENGTH, timeoutInMSeconds);
+#else
+			time_t start = time_monotonic_ms();
+			/* speed up shutdown by looping around Read() */
+			struct pollfd ufds;
+			ufds.events = POLLIN|POLLPRI|POLLERR;
+			DMX::lock();
+			ufds.fd = dmx->getFD();
+			DMX::unlock();
+			do {
+				ufds.revents = 0;
+				rc = ::poll(&ufds, 1, timeoutInMSeconds / 36);
+				if (running && rc == 1) {
+					DMX::lock();
+					if (ufds.fd == dmx->getFD())
+						rc = dmx->Read(static_buf, MAX_SECTION_LENGTH, 10);
+					DMX::unlock();
+				}
+			} while (running && rc == 0 && (time_monotonic_ms() < timeoutInMSeconds + start));
+#endif
 			xprintf("%s: getting DVB time done : %d messaging_neutrino_sets_time %d\n", name.c_str(), rc, messaging_neutrino_sets_time);
 			if (rc > 0) {
 				SIsectionTIME st(static_buf);
@@ -2048,10 +2071,14 @@ static void *houseKeepingThread(void *)
 			count = 0;
 		}
 
-		int rc = HOUSEKEEPING_SLEEP;
+		int i = HOUSEKEEPING_SLEEP;
 
-		while (rc)
-			rc = sleep(rc);
+		while (i > 0 && !sectionsd_stop) {
+			sleep(1);
+			i--;
+		}
+		if (sectionsd_stop)
+			break;
 
 		if (!scanning) {
 			scount++;
@@ -2118,7 +2145,7 @@ bool CEitManager::Start()
 	oldEventsAre = config.epg_old_events*60L*60L; //hours
 	max_events = config.epg_max_events;
 
-	if (find_executable("ntpdate").empty())
+	if (find_executable("rdate").empty())
 		ntp_system_cmd_prefix = "ntpd -n -q -p ";
 
 	printf("[sectionsd] Caching: %d days, %d hours Extended Text, max %d events, Events are old %d hours after end time\n",
@@ -2228,7 +2255,12 @@ printf("SIevent size: %d\n", (int)sizeof(SIevent));
 
 	xprintf("pausing...\n");
 
+	/* sometimes, pthread_cancel seems to not work, maybe it is a bad idea to mix
+	 * plain pthread and OpenThreads? */
+	sectionsd_stop = 1;
 	pthread_cancel(threadHouseKeeping);
+	xprintf("join Housekeeping\n");
+	pthread_join(threadHouseKeeping, NULL);
 
 	xprintf("join TOT\n");
 	threadTIME.Stop();

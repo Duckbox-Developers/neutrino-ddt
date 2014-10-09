@@ -61,7 +61,9 @@
 
 #include <daemonc/remotecontrol.h>
 #include <driver/record.h>
+#include <driver/display.h>
 #include <driver/volume.h>
+#include <driver/radiotext.h>
 
 #include <zapit/satconfig.h>
 #include <zapit/femanager.h>
@@ -93,6 +95,9 @@ CInfoViewer::CInfoViewer ()
 	sigscale = NULL;
 	snrscale = NULL;
 	timescale = NULL;
+	info_CurrentNext.current_zeit.startzeit = 0;
+	info_CurrentNext.current_zeit.dauer = 0;
+	info_CurrentNext.flags = 0;
 	clock = NULL;
 	frameBuffer = CFrameBuffer::getInstance();
 	infoViewerBB = CInfoViewerBB::getInstance();
@@ -392,7 +397,7 @@ void CInfoViewer::paintBackground(int col_NumBox)
 			      BoxEndX + SHADOW_OFFSET,  BoxEndInfoY + SHADOW_OFFSET,
 			      COL_INFOBAR_SHADOW_PLUS_0, c_rad_large, CORNER_RIGHT);
 	frameBuffer->paintBox(ChanInfoX + SHADOW_OFFSET, BoxEndInfoY - c_shadow_width,
-			      BoxEndX - c_shadow_width, BoxEndInfoY + SHADOW_OFFSET,
+			      BoxEndX - c_shadow_width + 2, BoxEndInfoY + SHADOW_OFFSET,
 			      COL_INFOBAR_SHADOW_PLUS_0, c_rad_large, CORNER_BOTTOM_LEFT);
 
 	// background for channel name, epg data
@@ -534,7 +539,7 @@ void CInfoViewer::showMovieTitle(const int playState, const t_channel_id &Channe
 		CMoviePlayerGui::getInstance().file_prozent = 100;
 
 	const char *unit_short_minute = g_Locale->getText(LOCALE_UNIT_SHORT_MINUTE);
- 	char runningRest[32]; // %d can be 10 digits max...
+	char runningRest[32]; // %d can be 10 digits max...
 	snprintf(runningRest, sizeof(runningRest), "%d / %d %s", (curr_pos + 30000) / 60000, (duration - curr_pos + 30000) / 60000, unit_short_minute);
 	display_Info(g_file_epg.c_str(), g_file_epg1.c_str(), true, false, CMoviePlayerGui::getInstance().file_prozent, NULL, runningRest);
 
@@ -835,6 +840,8 @@ void CInfoViewer::showTitle (const int ChanNum, const std::string & Channel, con
 		//loop(fadeValue, show_dot , fadeIn);
 		loop(show_dot);
 	}
+	else
+		frameBuffer->blit();
 	aspectRatio = 0;
 	fileplay = 0;
 }
@@ -875,6 +882,7 @@ void CInfoViewer::loop(bool show_dot)
 		CVolume::getInstance()->showVolscale();
 
 	while (!(res & (messages_return::cancel_info | messages_return::cancel_all))) {
+		frameBuffer->blit();
 		g_RCInput->getMsgAbsoluteTimeout (&msg, &data, &timeoutEnd);
 
 #ifdef ENABLE_PIP
@@ -904,6 +912,9 @@ void CInfoViewer::loop(bool show_dot)
 			else
 				res = messages_return::cancel_info;
 		} else if ((msg == NeutrinoMessages::EVT_TIMER) && (data == sec_timer_id)) {
+			// doesn't belong here, but easiest way to check for a change ...
+			if (is_visible && showButtonBar)
+				infoViewerBB->showIcon_CA_Status(0);
 			showSNR ();
 			paintTime (show_dot);
 			showRecordIcon (show_dot);
@@ -924,7 +935,11 @@ void CInfoViewer::loop(bool show_dot)
 			res = CNeutrinoApp::getInstance()->handleMsg(msg, data);
 		} else if (!fileplay && !CMoviePlayerGui::getInstance().timeshift) {
 			CNeutrinoApp *neutrino = CNeutrinoApp::getInstance ();
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+			if ((msg == (neutrino_msg_t) g_settings.key_quickzap_up) || (msg == (neutrino_msg_t) g_settings.key_quickzap_down) || (msg == CRCInput::RC_left)  || (msg == CRCInput::RC_right) || (msg == CRCInput::RC_page_up) || (msg == CRCInput::RC_page_down) || (msg == CRCInput::RC_0) || (msg == NeutrinoMessages::SHOW_INFOBAR)) {
+#else
 			if ((msg == (neutrino_msg_t) g_settings.key_quickzap_up) || (msg == (neutrino_msg_t) g_settings.key_quickzap_down) || (msg == CRCInput::RC_0) || (msg == NeutrinoMessages::SHOW_INFOBAR)) {
+#endif
 				hideIt = false; // default
 				if ((g_settings.radiotext_enable) && (neutrino->getMode() == NeutrinoMessages::mode_radio))
 					hideIt =  true;
@@ -1156,7 +1171,10 @@ void CInfoViewer::showRadiotext()
 			if (g_Radiotext->RT_Text[i][0] != '\0') lines++;
 		}
 		if (lines == 0)
+		{
 			frameBuffer->paintBackgroundBox(rt_x, rt_y, rt_w, rt_h);
+			frameBuffer->blit();
+		}
 
 		if (g_Radiotext->RT_MsgShow) {
 
@@ -1172,6 +1190,7 @@ void CInfoViewer::showRadiotext()
 					frameBuffer->paintBoxRel(rt_x+SHADOW_OFFSET, rt_y+SHADOW_OFFSET, rt_dx, rt_dy, COL_INFOBAR_SHADOW_PLUS_0, RADIUS_LARGE, CORNER_TOP);
 					frameBuffer->paintBoxRel(rt_x, rt_y, rt_dx, rt_dy, COL_INFOBAR_PLUS_0, RADIUS_LARGE, CORNER_TOP);
 					g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(rt_x+10, rt_y+ 30, rt_dx-20, stext[0], COL_INFOBAR_TEXT, 0, RTisIsUTF);
+					frameBuffer->blit();
 				}
 //				yoff = 17;
 				ii = 1;
@@ -1218,6 +1237,7 @@ void CInfoViewer::showRadiotext()
 					for (int i = g_Radiotext->S_RtOsdRows-1; i > ind; i--)
 						g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(rts_x, rts_y + (ii++)*rt_dy, rts_dx, g_Radiotext->RT_Text[i], COL_INFOBAR_TEXT, 0, RTisIsUTF);
 				}
+				frameBuffer->blit();
 			}
 #if 0
 			// + RT-Plus or PS-Text = 2 rows
@@ -1313,8 +1333,8 @@ int CInfoViewer::handleMsg (const neutrino_msg_t msg, neutrino_msg_data_t data)
 				if (fileplay) {
 					const char *unit_short_minute = g_Locale->getText(LOCALE_UNIT_SHORT_MINUTE);
 					char runningRest[64]; // %d can be 10 digits max...
- 					int curr_pos = CMoviePlayerGui::getInstance().GetPosition(); 
- 					int duration = CMoviePlayerGui::getInstance().GetDuration();
+					int curr_pos = CMoviePlayerGui::getInstance().GetPosition(); 
+					int duration = CMoviePlayerGui::getInstance().GetDuration();
 					snprintf(runningRest, sizeof(runningRest), "%d / %d %s", (curr_pos + 30000) / 60000, (duration - curr_pos + 30000) / 60000, unit_short_minute);
 					display_Info(NULL, NULL, true, false, CMoviePlayerGui::getInstance().file_prozent, NULL, runningRest);
 				} else if (!IS_WEBTV(channel_id)) {
@@ -1415,44 +1435,40 @@ void CInfoViewer::sendNoEpg(const t_channel_id for_channel_id)
 	}
 }
 
-CSectionsdClient::CurrentNextInfo CInfoViewer::getEPG (const t_channel_id for_channel_id, CSectionsdClient::CurrentNextInfo &info)
+void CInfoViewer::getEPG(const t_channel_id for_channel_id, CSectionsdClient::CurrentNextInfo &info)
 {
 	/* to clear the oldinfo for channels without epg, call getEPG() with for_channel_id = 0 */
 	if (for_channel_id == 0 || IS_WEBTV(for_channel_id))
 	{
 		oldinfo.current_uniqueKey = 0;
-		return info;
+		return;
 	}
 
 
 	CEitManager::getInstance()->getCurrentNextServiceKey(for_channel_id, info);
 
-//printf("CInfoViewer::getEPG: old uniqueKey %llx new %llx\n", oldinfo.current_uniqueKey, info.current_uniqueKey);
-
 	/* of there is no EPG, send an event so that parental lock can work */
 	if (info.current_uniqueKey == 0 && info.next_uniqueKey == 0) {
 		sendNoEpg(for_channel_id);
 		oldinfo = info;
-		return info;
+		return;
 	}
 
 	if (info.current_uniqueKey != oldinfo.current_uniqueKey || info.next_uniqueKey != oldinfo.next_uniqueKey) {
 		if (info.flags & (CSectionsdClient::epgflags::has_current | CSectionsdClient::epgflags::has_next)) {
-			char *_info = new char[sizeof(CSectionsdClient::CurrentNextInfo)];
-			memcpy(_info, &info, sizeof(CSectionsdClient::CurrentNextInfo));
+			CSectionsdClient::CurrentNextInfo *_info = new CSectionsdClient::CurrentNextInfo;
+			*_info = info;
 			neutrino_msg_t msg;
 			if (info.flags & CSectionsdClient::epgflags::has_current)
 				msg = NeutrinoMessages::EVT_CURRENTEPG;
 			else
 				msg = NeutrinoMessages::EVT_NEXTEPG;
-			g_RCInput->postMsg(msg, (unsigned) _info, false );
+			g_RCInput->postMsg(msg, (const neutrino_msg_data_t) _info, false);
 		} else {
 			sendNoEpg(for_channel_id);
 		}
 		oldinfo = info;
 	}
-
-	return info;
 }
 
 void CInfoViewer::showSNR ()
@@ -1685,11 +1701,15 @@ void CInfoViewer::show_Data (bool calledFromEvent)
 		info_CurrentNext.current_zeit.startzeit = g_RemoteControl->subChannels[g_RemoteControl->selected_subchannel].startzeit;
 		info_CurrentNext.current_zeit.dauer = g_RemoteControl->subChannels[g_RemoteControl->selected_subchannel].dauer;
 	} else {
+#if 0
+/* this triggers false positives on some channels.
+ * TODO: test on real NVOD channels, if this was even necessary at all */
 		if ((info_CurrentNext.flags & CSectionsdClient::epgflags::has_current) && (info_CurrentNext.flags & CSectionsdClient::epgflags::has_next) && (showButtonBar)) {
 			if ((uint) info_CurrentNext.next_zeit.startzeit < (info_CurrentNext.current_zeit.startzeit + info_CurrentNext.current_zeit.dauer)) {
 				is_nvod = true;
 			}
 		}
+#endif
 	}
 
 	time_t jetzt = time (NULL);
@@ -1950,6 +1970,7 @@ void CInfoViewer::killTitle()
 		}
 
 		killInfobarText();
+		frameBuffer->blit();
 	}
 	showButtonBar = false;
 }
@@ -2057,6 +2078,49 @@ int CInfoViewer::showChannelLogo(const t_channel_id logo_channel_id, const int c
 	return res;
 }
 
+#if HAVE_TRIPLEDRAGON
+/* the cheap COOLSTREAM display cannot do this, so keep the routines separate */
+void CInfoViewer::showLcdPercentOver()
+{
+	if (g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME] != 1)
+	{
+		if (fileplay || NeutrinoMessages::mode_ts == CNeutrinoApp::getInstance()->getMode()) {
+			CVFD::getInstance()->showPercentOver(CMoviePlayerGui::getInstance().file_prozent);
+			return;
+		}
+		static long long old_interval = 0;
+		int runningPercent = -1;
+		time_t jetzt = time(NULL);
+		long long interval = 60000000; /* 60 seconds default update time */
+		if (info_CurrentNext.flags & CSectionsdClient::epgflags::has_current) {
+			if (jetzt < info_CurrentNext.current_zeit.startzeit)
+				runningPercent = 0;
+			else if (jetzt > (int)(info_CurrentNext.current_zeit.startzeit +
+					       info_CurrentNext.current_zeit.dauer))
+				runningPercent = -2; /* overtime */
+			else {
+				runningPercent = MIN((jetzt-info_CurrentNext.current_zeit.startzeit) * 100 /
+					              info_CurrentNext.current_zeit.dauer, 100);
+				interval = info_CurrentNext.current_zeit.dauer * 1000LL * (1000/100); // update every percent
+				if (is_visible && interval > 60000000)	// if infobar visible, update at
+					interval = 60000000;		// least once per minute (radio mode)
+				if (interval < 5000000)
+					interval = 5000000;		// but update only every 5 seconds
+			}
+		}
+		if (interval != old_interval) {
+			g_RCInput->killTimer(lcdUpdateTimer);
+			lcdUpdateTimer = g_RCInput->addTimer(interval, false);
+			//printf("lcdUpdateTimer: interval %lld old %lld\n",interval/1000000,old_interval/1000000);
+			old_interval = interval;
+		}
+		CLCD::getInstance()->showPercentOver(runningPercent);
+		int mode = CNeutrinoApp::getInstance()->getMode();
+		if ((mode == NeutrinoMessages::mode_radio || mode == NeutrinoMessages::mode_tv))
+			CVFD::getInstance()->setEPGTitle(info_CurrentNext.current_name);
+	}
+}
+#else
 void CInfoViewer::showLcdPercentOver ()
 {
 	if (g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME] != 1) {
@@ -2075,11 +2139,12 @@ void CInfoViewer::showLcdPercentOver ()
 			if (jetzt < info_CurrentNext.current_zeit.startzeit)
 				runningPercent = 0;
 			else
-				runningPercent = MIN ((unsigned) ((float) (jetzt - info_CurrentNext.current_zeit.startzeit) / (float) info_CurrentNext.current_zeit.dauer * 100.), 100);
+				runningPercent = MIN ((jetzt - info_CurrentNext.current_zeit.startzeit) * 100 / info_CurrentNext.current_zeit.dauer, 100);
 		}
 		CVFD::getInstance ()->showPercentOver (runningPercent);
 	}
 }
+#endif
 
 void CInfoViewer::showEpgInfo()   //message on event change
 {

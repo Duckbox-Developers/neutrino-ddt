@@ -65,7 +65,7 @@ void recalcColor(unsigned char &orginal, int fade)
 	{
 		return;
 	}
-	int color =  int( float( float(orginal) * float( float(fade) / 100.0)) );
+	int color =  orginal * fade / 100;
 	if(color>255)
 		color=255;
 	if(color<0)

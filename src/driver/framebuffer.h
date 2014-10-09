@@ -21,6 +21,8 @@
 	Boston, MA  02110-1301, USA.
 */
 
+#include "framebuffer_ng.h"
+#if 0
 
 #ifndef __framebuffer__
 #define __framebuffer__
@@ -323,4 +325,5 @@ class CFrameBuffer
 		void blit(void) {}
 };
 
+#endif
 #endif

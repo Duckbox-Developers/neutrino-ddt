@@ -42,6 +42,7 @@
 
 #include <driver/record.h>
 #include <driver/abstime.h>
+#include <driver/display.h>
 #include <libdvbsub/dvbsub.h>
 #include <libtuxtxt/teletext.h>
 
@@ -201,10 +202,10 @@ int CRemoteControl::handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t data
 
 #if 0
 		printf("[neutrino] EVT_CURRENTEPG: uniqueKey %llx chid %llx subid %llx flags %x\n",
-				info_CN->current_uniqueKey >> 16, current_channel_id & 0xFFFFFFFFFFFFULL,
+				GET_CHANNEL_ID_FROM_EVENT_ID(info_CN->current_uniqueKey), current_channel_id & 0xFFFFFFFFFFFFULL,
 				current_sub_channel_id&0xFFFFFFFFFFFFULL, info_CN->flags);
 #endif
-		t_channel_id chid = (info_CN->current_uniqueKey >> 16);
+		t_channel_id chid = GET_CHANNEL_ID_FROM_EVENT_ID(info_CN->current_uniqueKey);
 		if(chid != (current_channel_id&0xFFFFFFFFFFFFULL) && chid != (current_sub_channel_id&0xFFFFFFFFFFFFULL))
 			return messages_return::handled;
 
@@ -240,24 +241,25 @@ int CRemoteControl::handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t data
 			current_programm_timer = g_RCInput->addTimer( &end_program );
 #endif
 		}
-
+#if 0 // FIXME, needs investigation. Has side effect on capmt handling when active.
 		// is_video_started is only false if channel is locked
 		if ((!is_video_started) &&
-				(info_CN->current_fsk == 0 || g_settings.parentallock_prompt == PARENTALLOCK_PROMPT_CHANGETOLOCKED))
+			(info_CN->current_fsk == 0 || g_settings.parentallock_prompt == PARENTALLOCK_PROMPT_CHANGETOLOCKED))
 			g_RCInput->postMsg(NeutrinoMessages::EVT_PROGRAMLOCKSTATUS, 0x100, false);
 		else
 			g_RCInput->postMsg(NeutrinoMessages::EVT_PROGRAMLOCKSTATUS, info_CN->current_fsk, false);
+#endif
 		return messages_return::handled;
 	}
 	else if ( msg == NeutrinoMessages::EVT_NEXTEPG )
 	{
 		CSectionsdClient::CurrentNextInfo* info_CN = (CSectionsdClient::CurrentNextInfo*) data;
-		t_channel_id chid = (info_CN->next_uniqueKey >> 16);
+		t_channel_id chid = GET_CHANNEL_ID_FROM_EVENT_ID(info_CN->next_uniqueKey);
 		if(chid != (current_channel_id&0xFFFFFFFFFFFFULL) && chid != (current_sub_channel_id&0xFFFFFFFFFFFFULL))
 			return messages_return::handled;
 
 #if 0
-		if ( ( info_CN->next_uniqueKey >> 16) == (current_channel_id&0xFFFFFFFFFFFFULL) )
+		if ( GET_CHANNEL_ID_FROM_EVENT_ID(info_CN->next_uniqueKey) == (current_channel_id&0xFFFFFFFFFFFFULL) )
 		{
 			// next-EPG für den aktuellen Kanal bekommen, current ist leider net da?!;
 			if ( info_CN->next_uniqueKey != next_EPGid )
@@ -505,15 +507,19 @@ void CRemoteControl::processAPIDnames()
 
 	for(unsigned int count=0; count< current_PIDs.APIDs.size(); count++)
 	{
-		printf("Neutrino: apid name= %s (%s) pid= %X\n", current_PIDs.APIDs[count].desc, getISO639Description( current_PIDs.APIDs[count].desc ), current_PIDs.APIDs[count].pid);
+		const char *iso = getISO639Description(current_PIDs.APIDs[count].desc);
+		printf("apid=%04x/%s/%s ", current_PIDs.APIDs[count].pid, current_PIDs.APIDs[count].desc, iso);
 		if ( current_PIDs.APIDs[count].component_tag != 0xFF )
 		{
 			has_unresolved_ctags= true;
 		}
+
 		if ( strlen( current_PIDs.APIDs[count].desc ) == 3 )
 		{
 			// unaufgeloeste Sprache...
-			strcpy( current_PIDs.APIDs[count].desc, getISO639Description( current_PIDs.APIDs[count].desc ) );
+			/* getISO639Description returns same pointer as input if nothing is found */
+			if (current_PIDs.APIDs[count].desc != iso)
+				strcpy(current_PIDs.APIDs[count].desc, iso);
 		}
 
 		if ( current_PIDs.APIDs[count].is_ac3 )
@@ -553,7 +559,7 @@ void CRemoteControl::processAPIDnames()
 									strncat(current_PIDs.APIDs[j].desc, " (AC3)", DESC_MAX_LEN - strlen(current_PIDs.APIDs[j].desc)-1);
 								else if (current_PIDs.APIDs[j].is_aac &&  !strstr(current_PIDs.APIDs[j].desc, " (AAC)"))
 									strncat(current_PIDs.APIDs[j].desc, " (AAC)", DESC_MAX_LEN - strlen(current_PIDs.APIDs[j].desc)-1);
-								else if (current_PIDs.APIDs[j].is_eac3 &&  !strstr(current_PIDs.APIDs[j].desc, " (EAC3)"))
+								else if (current_PIDs.APIDs[j].is_eac3 && !strstr(current_PIDs.APIDs[j].desc, " (EAC3)"))
 									strncat(current_PIDs.APIDs[j].desc, " (EAC3)", DESC_MAX_LEN - strlen(current_PIDs.APIDs[j].desc)-1);
 							}
 							current_PIDs.APIDs[j].component_tag = -1;
@@ -721,7 +727,7 @@ void CRemoteControl::startvideo()
 	{
 		is_video_started= true;
 		//g_Zapit->startPlayBack();
-		g_Zapit->unlockPlayBack();
+		g_Zapit->unlockPlayBack(true); /* TODO: check if sendpmt=false is correct in stopvideo() */
 	}
 }
 
@@ -733,9 +739,9 @@ void CRemoteControl::stopvideo()
 #if HAVE_TRIPLEDRAGON
 		/* we need stopPlayback to blank video,
 		   lockPlayback prevents it from being inadvertently starting */
-		g_Zapit->stopPlayBack();
+		g_Zapit->stopPlayBack(false);
 #endif
-		g_Zapit->lockPlayBack();
+		g_Zapit->lockPlayBack(false);
 	}
 }
 

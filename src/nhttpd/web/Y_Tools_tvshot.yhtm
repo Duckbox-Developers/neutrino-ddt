@@ -4,13 +4,22 @@
 <script type="text/javascript">
 //<![CDATA[
 function do_snapshot(){
-	loadSyncURL("/control/screenshot");
-	window.setTimeout("do_showshot();", 3500);
+	loadSyncURL("/control/screenshot?name="+filename+"&osd=0&video=1");
+	do_showshot_bmp("screenshot")
 }
 function do_showshot(){
 	$('statusline').hide();
 	$('buttons').show();
 	$('shot').src = "/tmp/screenshot.png?"+Math.random();
+	$('shot').show();
+}
+function do_showshot_bmp(){
+	if (_filename == "")
+		_filename = "screenshot";
+
+	$('statusline').hide();
+	$('buttons').show();
+	$('shot').src = "/tmp/+_filename+".bmp?"+Math.random();
 	$('shot').show();
 }
 function do_snapshot_again(){

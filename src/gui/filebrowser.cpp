@@ -40,6 +40,7 @@
 #include <global.h>
 #include <neutrino.h>
 #include <driver/screen_max.h>
+#include <driver/display.h>
 
 #include <unistd.h>
 #include <stdio.h>
@@ -59,7 +60,7 @@
 #include <xmltree/xmlinterface.h>
 
 #ifndef __USE_FILE_OFFSET64
-#error not using 64 bit file offsets
+//#error not using 64 bit file offsets
 #endif
 
 #define SMSKEY_TIMEOUT 2000
@@ -247,7 +248,7 @@ void CFileBrowser::commonInit()
 	sc_init_dir = "/legacy/genrelist?k="  + g_settings.shoutcast_dev_id;
 
 	Filter = NULL;
-	use_filter = true;
+
 	Multi_Select = false;
 	Dirs_Selectable = false;
 	Dir_Mode = false;
@@ -323,7 +324,7 @@ void CFileBrowser::ChangeDir(const std::string & filename, int selection)
 	CFileList::iterator file = allfiles.begin();
 	for(; file != allfiles.end() ; file++)
 	{
-		if (Filter != NULL && !file->isDir() && use_filter)
+		if (Filter != NULL && !file->isDir() && g_settings.filebrowser_use_filter)
 		{
 			if (!Filter->matchFilter(file->Name))
 				continue;
@@ -603,7 +604,11 @@ bool CFileBrowser::exec(const char * const dirname)
 	}
 #endif
 
-	name = dirname;
+	if (!*dirname)
+		name = "/";
+	else
+		name = dirname;
+
 	std::replace(name.begin(), name.end(), '\\', '/');
 
 	fontInit();
@@ -621,6 +626,7 @@ bool CFileBrowser::exec(const char * const dirname)
 	bool loop=true;
 	while (loop)
 	{
+		frameBuffer->blit();
 		g_RCInput->getMsgAbsoluteTimeout( &msg, &data, &timeoutEnd );
 		neutrino_msg_t msg_repeatok = msg & ~CRCInput::RC_Repeat;
 
@@ -636,7 +642,7 @@ bool CFileBrowser::exec(const char * const dirname)
 		{
 			if(Filter != NULL)
 			{
-				use_filter = !use_filter;
+				g_settings.filebrowser_use_filter = !g_settings.filebrowser_use_filter;
 				ChangeDir(Path);
 			}
 		}
@@ -871,6 +877,7 @@ bool CFileBrowser::exec(const char * const dirname)
 	}
 
 	hide();
+	frameBuffer->blit();
 
 	selected_filelist.clear();
 
@@ -952,7 +959,7 @@ void CFileBrowser::addRecursiveDir(CFileList * re_filelist, std::string rpath, b
 			std::string basename = tmplist[i].Name.substr(tmplist[i].Name.rfind('/')+1);
 			if( basename != ".." )
 			{
-				if(Filter != NULL && (!tmplist[i].isDir()) && use_filter)
+				if(Filter != NULL && (!tmplist[i].isDir()) && g_settings.filebrowser_use_filter)
 				{
 					if(!Filter->matchFilter(tmplist[i].Name))
 						continue;
@@ -969,6 +976,7 @@ void CFileBrowser::addRecursiveDir(CFileList * re_filelist, std::string rpath, b
 void CFileBrowser::hide()
 {
 	frameBuffer->paintBackgroundBoxRel(x,y, width,height);
+	frameBuffer->blit();
 }
 
 void CFileBrowser::paintItem(unsigned int pos)
@@ -1035,6 +1043,18 @@ void CFileBrowser::paintItem(unsigned int pos)
 				break;
 
 			case CFile::FILE_PICTURE:
+				fileicon = NEUTRINO_ICON_PICTURE;
+				break;
+
+			case CFile::FILE_AVI:
+			case CFile::FILE_ASF:
+			case CFile::FILE_MKV:
+			case CFile::FILE_VOB:
+			case CFile::FILE_MPG:
+			case CFile::FILE_TS:
+				fileicon = NEUTRINO_ICON_MOVIE;
+				break;
+
 			case CFile::FILE_TEXT:
 			default:
 				fileicon = NEUTRINO_ICON_FILE;
@@ -1171,7 +1191,7 @@ bool chooserDir(std::string &setting_dir, bool test_dir, const char *action_str,
 const struct button_label FileBrowserFilterButton[2] =
 {
 	{ NEUTRINO_ICON_BUTTON_BLUE  , LOCALE_FILEBROWSER_FILTER_INACTIVE },
-	{ NEUTRINO_ICON_BUTTON_BLUE  , LOCALE_FILEBROWSER_FILTER_ACTIVE   },
+	{ NEUTRINO_ICON_BUTTON_BLUE  , LOCALE_FILEBROWSER_FILTER_ACTIVE   }
 };
 
 int CFileBrowser::paintFoot(bool show)
@@ -1187,7 +1207,7 @@ int CFileBrowser::paintFoot(bool show)
 	sort_text_len += len;
 
 	neutrino_locale_t f_loc = LOCALE_FILEBROWSER_FILTER_INACTIVE;
-	if (Filter != NULL && use_filter)
+	if (Filter != NULL && g_settings.filebrowser_use_filter)
 		f_loc = LOCALE_FILEBROWSER_FILTER_ACTIVE;
 
 	button_label_ext footerButtons[] = {

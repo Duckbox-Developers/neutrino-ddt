@@ -1,4 +1,6 @@
-
+/* tuxtxt_common.h
+ * for license info see the other tuxtxt files
+ */
 #include <sys/ioctl.h>
 #include <fcntl.h>
 #include <pthread.h>
@@ -7,6 +9,8 @@
 #include <string.h>
 #include <ctype.h>
 #include <unistd.h>
+#include <semaphore.h>
+#include <time.h>
 #if TUXTXT_COMPRESS == 1
 #include <zlib.h>
 #endif
@@ -15,6 +19,7 @@
 
 tuxtxt_cache_struct tuxtxt_cache;
 static pthread_mutex_t tuxtxt_cache_lock = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t tuxtxt_cache_biglock = PTHREAD_MUTEX_INITIALIZER;
 int tuxtxt_get_zipsize(int p,int sp)
 {
     tstCachedPage* pg = tuxtxt_cache.astCachetable[p][sp];
@@ -350,13 +355,14 @@ int tuxtxt_GetSubPage(int page, int subpage, int offset)
 
 void tuxtxt_clear_cache(void)
 {
+	pthread_mutex_lock(&tuxtxt_cache_biglock);
 	pthread_mutex_lock(&tuxtxt_cache_lock);
 	int clear_page, clear_subpage, d26;
 	tuxtxt_cache.maxadippg  = -1;
 	tuxtxt_cache.bttok      = 0;
 	tuxtxt_cache.cached_pages  = 0;
 	tuxtxt_cache.page_receiving = -1;
-	tuxtxt_cache.vtxtpid = -1;
+	tuxtxt_cache.vtxtpid = 0;
 	memset(&tuxtxt_cache.subpagetable, 0xFF, sizeof(tuxtxt_cache.subpagetable));
 	memset(&tuxtxt_cache.basictop, 0, sizeof(tuxtxt_cache.basictop));
 	memset(&tuxtxt_cache.adip, 0, sizeof(tuxtxt_cache.adip));
@@ -413,6 +419,7 @@ void tuxtxt_clear_cache(void)
 	printf("TuxTxt cache cleared\n");
 #endif
 	pthread_mutex_unlock(&tuxtxt_cache_lock);
+	pthread_mutex_unlock(&tuxtxt_cache_biglock);
 }
 /******************************************************************************
  * init_demuxer                                                               *
@@ -540,6 +547,7 @@ void tuxtxt_allocate_cache(int magazine)
 	// Lock here as we have a possible race here with
 	// tuxtxt_clear_cache(). We should not be allocating and
 	// freeing at the same time.
+	// *** this is probably worked around by tuxtxt_cacehe_biglock now *** --seife
 	pthread_mutex_lock(&tuxtxt_cache_lock);
 
 	/* check cachetable and allocate memory if needed */
@@ -561,6 +569,95 @@ void tuxtxt_allocate_cache(int magazine)
 	}
 	pthread_mutex_unlock(&tuxtxt_cache_lock);
 }
+
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+/******************************************************************************
+ * Handling of packets injected by libeplayer3                                *
+ ******************************************************************************/
+
+struct injected_page
+{
+	uint8_t *data;
+	int size;
+	injected_page() : data(NULL){};
+};
+
+#define INJECT_QUEUE_LIMIT 64
+static struct injected_page inject_queue[INJECT_QUEUE_LIMIT];
+static int inject_queue_index_read = 0;
+static int inject_queue_index_write = 0;
+static pthread_mutex_t inject_mutex = PTHREAD_MUTEX_INITIALIZER;
+static sem_t inject_sem;
+static int last_injected_pid = -1;
+
+static void clear_inject_queue(void)
+{
+	pthread_mutex_lock(&inject_mutex);
+	while (!sem_trywait(&inject_sem)) {
+		if (inject_queue[inject_queue_index_read].data)
+			free(inject_queue[inject_queue_index_read].data);
+		inject_queue[inject_queue_index_read].data = NULL;
+		inject_queue_index_read++;
+		inject_queue_index_read %= INJECT_QUEUE_LIMIT;
+	}
+	pthread_mutex_unlock(&inject_mutex);
+}
+
+void teletext_write(int pid, uint8_t *data, int size)
+{
+	if (last_injected_pid != pid) {
+		clear_inject_queue();
+		last_injected_pid = pid;
+	}
+	size -= 1;
+	data++;
+	pthread_mutex_lock(&inject_mutex);
+	bool do_sem_post = true;
+	if (inject_queue[inject_queue_index_write].data) {
+		if (inject_queue[inject_queue_index_write].size != size) {
+			free(inject_queue[inject_queue_index_write].data);
+			inject_queue[inject_queue_index_write].data = (uint8_t *) malloc(size);
+		}
+		do_sem_post = false;
+	} else
+		inject_queue[inject_queue_index_write].data = (uint8_t *) malloc(size);
+	inject_queue[inject_queue_index_write].size = size;
+	if (inject_queue[inject_queue_index_write].data) {
+		memcpy(inject_queue[inject_queue_index_write].data, data, size);
+		inject_queue_index_write++;
+		inject_queue_index_write %= INJECT_QUEUE_LIMIT;
+		if (do_sem_post)
+			sem_post(&inject_sem);
+	}
+	pthread_mutex_unlock(&inject_mutex);
+}
+
+static bool read_injected_packet(unsigned char * &packet, int &size, int timeout_in_ms)
+{
+	struct timespec ts;
+	clock_gettime(CLOCK_REALTIME, &ts);
+	ts.tv_nsec += timeout_in_ms * 1000000;
+	if (ts.tv_nsec > 999999999) {
+		ts.tv_sec++;
+		ts.tv_nsec -= 1000000000;
+	}
+	bool res = !sem_timedwait(&inject_sem, &ts);
+	if (res) {
+		pthread_mutex_lock(&inject_mutex);
+		packet = inject_queue[inject_queue_index_read].data;
+		if (packet) {
+			size = inject_queue[inject_queue_index_read].size;
+			inject_queue_index_read++;
+			inject_queue_index_read %= INJECT_QUEUE_LIMIT;
+			inject_queue[inject_queue_index_read].data = NULL;
+		}
+		else
+			res = false;
+		pthread_mutex_unlock(&inject_mutex);
+	}
+	return res;
+}
+#endif
 
 /******************************************************************************
  * CacheThread                                                                *
@@ -612,6 +709,13 @@ void *tuxtxt_CacheThread(void * /*arg*/)
 			continue;
 		}
 
+		/* this "big hammer lock" is a hack: it avoids a crash if
+		 * tuxtxt_clear_cache() is called while the cache thread is in the
+		 * middle of the following loop, leading to tuxtxt_cache.current_page[]
+		 * etc. being set to -1 and tuxtxt_cache.astCachetable[] etc. being set
+		 * to NULL
+		 * it probably also avoids the possible race in tuxtxt_allocate_cache() */
+		pthread_mutex_lock(&tuxtxt_cache_biglock);
 		/* analyze it */
 		for (line = 0; line < readcnt/0x2e /*4*/; line++)
 		{
@@ -1053,6 +1157,7 @@ void *tuxtxt_CacheThread(void * /*arg*/)
 				printf("line %d row %X %X, continue\n", line, vtx_rowbyte[0], vtx_rowbyte[1]);
 #endif
 		}
+		pthread_mutex_unlock(&tuxtxt_cache_biglock);
 	}
 
 	pthread_exit(NULL);

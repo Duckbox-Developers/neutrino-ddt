@@ -16,7 +16,7 @@ SUBDIRS += \
 	libupnpclient
 endif
 
-if BOXTYPE_TRIPLE
+if BOXTYPE_COOL
 SUBDIRS += \
-	libtriple
+	libcoolstream
 endif

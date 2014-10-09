@@ -34,6 +34,11 @@
 
 
 #include <gui/widget/menue.h>
+#include <zapit/client/zapittypes.h>
+#include <playback.h>
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#include <audio.h>
+#endif
 
 #include <string>
 
@@ -93,7 +98,16 @@ class CColorSetupNotifier : public CChangeObserver
 
 class CAudioSetupNotifier : public CChangeObserver
 {
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+		mixerVolume *mixerAnalog, *mixerHDMI, *mixerSPDIF;
+#endif
 	public:
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+		void openMixers(void);
+		void closeMixers(void);
+		CAudioSetupNotifier(void);
+		~CAudioSetupNotifier(void);
+#endif
 		bool changeNotify(const neutrino_locale_t OptionName, void *);
 };
 

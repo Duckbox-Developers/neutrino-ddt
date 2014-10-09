@@ -31,6 +31,7 @@ class SHTDCNT
 	private:
 
 		pthread_t	thrTime;
+		bool		thread_running;
 		unsigned int	shutdown_cnt;
 		unsigned int	sleep_cnt;
 
@@ -41,6 +42,7 @@ class SHTDCNT
 
 	public:
 
+		~SHTDCNT();
 		void setlcdparameter(void);
 
 		static SHTDCNT* getInstance();

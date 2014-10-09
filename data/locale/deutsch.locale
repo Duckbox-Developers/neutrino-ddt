@@ -3,7 +3,7 @@ EPGMenu.epgplus Vorschauübersicht
 EPGMenu.eventinfo Info zur Sendung
 EPGMenu.eventlist Vorschau aktuelles Programm
 EPGMenu.head EPG - Programminformation
-EPGMenu.streaminfo Technische Information
+EPGMenu.streaminfo Technische Informationen
 EPGPlus.actions Aktionen
 EPGPlus.bybouquet_mode bouquetweise
 EPGPlus.bypage_mode seitenweise
@@ -114,10 +114,14 @@ audiomenu.avs avs
 audiomenu.avsync A/V sync
 audiomenu.avsync_am Audio master
 audiomenu.clockrec 
-audiomenu.dolbydigital DD-Unterkanal automatisch
+audiomenu.dolbydigital Dolby Digital (AC-3)
 audiomenu.hdmi_dd Dolby Digital über HDMI
 audiomenu.hdmi_dd_auto automatisch
 audiomenu.hdmi_dd_force erzwingen
+audiomenu.mixer_volume Mixer-Lautstärke
+audiomenu.mixer_volume_analog Analog
+audiomenu.mixer_volume_hdmi HDMI
+audiomenu.mixer_volume_spdif S/PDIF
 audiomenu.monoleft mono links
 audiomenu.monoright mono rechts
 audiomenu.pref_lang Sprache
@@ -128,6 +132,10 @@ audiomenu.pref_subs_head Untertitelwahl
 audiomenu.spdif_dd Dolby Digital über S/PDIF
 audiomenu.stereo stereo
 audiomenu.volume_adjust Lautstärke ändern, in %
+audiomenu.volume_adjustment Lautstärkeanpassung pro Kanal
+audiomenu.volume_adjustment_ac3 AC-3-Tonspuren
+audiomenu.volume_adjustment_clear Gemerkte Werte löschen
+audiomenu.volume_adjustment_pcm PCM-Tonspuren
 audiomenu.volume_start Einschaltlautstärke
 audiomenu.volume_step Lautstärke Schrittweite
 audioplayer.add Hinzufügen
@@ -169,6 +177,7 @@ audioplayer.receiving_list Liste wird empfangen, bitte warten...
 audioplayer.repeat_on Repeatmodus aktivieren
 audioplayer.rewind schneller Rückl.
 audioplayer.save_playlist Playlist speichern
+audioplayer.screensaver_dir Bildschirmschoner-Verzeichnis
 audioplayer.screensaver_timeout Bildschirmschoner
 audioplayer.select_title_by_name Titelsuche nach Name (SMS)
 audioplayer.show_playlist Playlist anzeigen
@@ -176,6 +185,7 @@ audioplayer.shuffle Zufällig
 audioplayer.spectrum LCD Skala
 audioplayer.stop Stopp
 audioplayer.title_artist Titel, Interpret
+audioplayerpicsettings.general Audioplayer/Bildbetrachter/Movieplayer
 bookmarkmanager.delete Löschen
 bookmarkmanager.name Bookmarks
 bookmarkmanager.rename Umbenennen
@@ -229,6 +239,7 @@ channellist.foot_sort_alpha Sortiert[alpha]
 channellist.foot_sort_chnum Sortiert[nummer]
 channellist.foot_sort_freq Sortiert[freq]
 channellist.foot_sort_sat Sortiert[sat]
+channellist.hdicon HD Icon anzeigen
 channellist.head Alle Kanäle
 channellist.history Verlauf
 channellist.keep_numbers Dauerhafte Kanalnummern
@@ -261,7 +272,7 @@ ci.inserted CAM im Slot
 ci.removed CAM entfernt -> Slot
 ci.reset Reset
 ci.reset_standby Reset nach Standby
-ci.settings Zugangskontrolle
+ci.settings CI-Module
 ci.timeout CAM antwortet nicht
 ci.waiting Warte auf CAM-Antwort
 clock_background Hintergrund anzeigen
@@ -278,7 +289,8 @@ colormenu.background Hintergrundfarbe
 colormenu.clock_textcolor Ziffernfarbe
 colormenu.contrast_fonts Schriftkontrast
 colormenu.fade Ein-/Ausblenden
-colormenu.font Neutrino-HD Schriftart
+colormenu.font Neutrino Schriftart
+colormenu.font_sub Untertitel-Schriftart
 colormenu.font_ttx Teletext Schriftart
 colormenu.hd_preset LCD
 colormenu.menucolors Farben
@@ -412,19 +424,21 @@ extra.key_timeshift Timeshift
 extra.key_unlock Entsperrtaste
 extra.ladirection Breitengrad-Ausrichtung
 extra.latitude Breitengrad
-extra.loadconfig Neutrino-HD Einstellungen: Laden von
+extra.loadconfig Neutrino Einstellungen: Laden von
 extra.loadkeys Lade Tastenbelegung von
 extra.lodirection Längengrad-Ausrichtung
 extra.longitude Längengrad
 extra.menu_left_exit "links" = Menü zurück
 extra.north Norden
+extra.record_bufsize Schreib-Puffer-Größe
+extra.record_bufsize_dmx DMX-Puffer-Größe
 extra.record_time Maximale Aufnahmedauer
 extra.record_time_ts Maximale Timeshiftdauer
 extra.rotor_swap Rotor dreht Ost/West
 extra.rounded_corners Eckendarstellung
 extra.rounded_corners_off eckig
 extra.rounded_corners_on abgerundet
-extra.saveconfig Neutrino-HD Einstellungen: Sichern als
+extra.saveconfig Neutrino Einstellungen: Sichern als
 extra.savekeys Speichere Tastenbelegung als
 extra.scrambled_message Verschlüsselung melden
 extra.show_mute_icon Mute-Icon bei Lautstärke 0
@@ -505,11 +519,12 @@ extra.tp_transmit_mode_c1 C1
 extra.tp_transmit_mode_c3780 C3780
 extra.update_dir Lokales Update-Verzeichnis
 extra.use_gotoxx Benutze gotoXX
-extra.volume_digits Lautstärkeanzeige Ziffern
+extra.volume_digits Lautstärkewert anzeigen
 extra.volume_pos Lautstärkeanzeige
 extra.volume_size Höhe der Anzeige
 extra.west Westen
 extra.zap_cycle Zap nur in Bouquet
+extra.zapit_fe_retries Tuning Wiederholungen
 extra.zapit_fe_timeout Tuning Timeout
 extra.zapit_hvoltage High (13.5/ 18.5) Voltage
 extra.zapit_make_bouquet Kanalliste auffüllen
@@ -674,6 +689,36 @@ fontsize.menu_hint Menü-Hilfe
 fontsize.menu_info Menüinfo
 fontsize.menu_title Menütitel
 fontsize.subtitles Text Untertitel
+glcd.brightness Helligkeit
+glcd.brightness_standby Helligkeit in Standby
+glcd.color.black Schwarz
+glcd.color.blue Blau
+glcd.color.cyan Blaugrün
+glcd.color.green Grün
+glcd.color.magenta Magenta
+glcd.color.red Rot
+glcd.color.white Weiss
+glcd.color.yellow Gelb
+glcd.enable GraphLCD aktiv
+glcd.font Schrift
+glcd.head GraphLCD
+glcd.mirror_osd OSD-Menü auf GraphLCD anzeigen
+glcd.mirror_video Videobild auf GraphLCD anzeigen
+glcd.restart Neu erkennen
+glcd.scroll_speed Scroll-Geschwindigkeit
+glcd.select.bar Fortschrittsbalken-Farbe
+glcd.select.bg Hintergrund-Farbe
+glcd.select.fg Vordergrund-Farbe
+glcd.show_logo Sender-Logo anzeigen
+glcd.show_numbers Kanalnummern anzeigen
+glcd.size_bar Fortschrittsbalken-Größe
+glcd.size_channel Sender-Größe
+glcd.size_epg EPG-Größe
+glcd.size_logo Logo-Größe
+glcd.size_time Uhrzeit-Größe
+glcd.size_time_standby Uhrzeit-Größe in Standby
+glcd.time_in_standby Zeitanzeige in Standby
+glcd.volume Lautstärke
 hdd_10min 10 min.
 hdd_1min 1 min.
 hdd_20min 20 min.
@@ -693,10 +738,10 @@ hdd_fs Dateisystem zum formatieren
 hdd_fs_unknown unbekannt
 hdd_manage Laufwerke verwalten
 hdd_middle Mittel
-hdd_mount Mount
+hdd_mount einhängen
 hdd_mount_failed Fehler! Überprüfen Sie ihre Laufwerkseinstellungen.
 hdd_mount_ok Laufwerk bereit
-hdd_mount_umount Mount/Unmount
+hdd_mount_umount Laufwerke ein-/aushängen
 hdd_noise Akustikkontrolle (AAM)
 hdd_not_found Kein Datenträger
 hdd_removable_device Wechseldatenträger
@@ -707,7 +752,7 @@ hdd_slow Langsam
 hdd_statfs Füllstands-Abfrage
 hdd_statfs_always immer
 hdd_statfs_recording nur während Aufnahme
-hdd_umount Aushängen
+hdd_umount aushängen
 hdd_umount_warn Laufwerk aushängen
 hdd_umounted Laufwerk entfernt
 imageinfo.creator Ersteller:
@@ -740,7 +785,16 @@ infoviewer.subservice Bildregie
 infoviewer.waittime Warte auf Uhrzeit...
 ipsetup.hint_1 Benutzen Sie 0..9 oder hoch/runter
 ipsetup.hint_2 OK speichert, EXIT bricht ab
+kerneloptions.apply Einstellungen anwenden
+kerneloptions.head Kernel-Optionen
+kerneloptions.hint.disabled_loaded Das Kernel-Modul ist noch geladen.
+kerneloptions.hint.disabled_not_loaded Das Kernel-Modul ist nicht geladen.
+kerneloptions.hint.enabled_loaded Das Kernel-Modul ist geladen und verwendbar.
+kerneloptions.hint.enabled_not_loaded Wenden Sie die Einstellungen an, um das Kernel-Modul zu laden.
+kerneloptions.modules Kernel-Module
+kerneloptions.reset Einstellungen zurücksetzen
 keybindingmenu.RC Fernbedienung abstimmen
+keybindingmenu.accept_other_remotes Andere Fernbedienungen akzeptieren
 keybindingmenu.addrecord Aufnahme-Timer hinzufügen
 keybindingmenu.addremind Umschalt-Timer hinzufügen
 keybindingmenu.allchannels_on_ok Kanalliste
@@ -813,6 +867,7 @@ lcdmenu.statusline Statuszeile
 lcdmenu.statusline.both Lautstärke/Fortschritt
 lcdmenu.statusline.playtime Sendungsfortschritt
 lcdmenu.statusline.volume Lautstärke
+lcdmenu.vfd_scroll Laufschrift
 ledcontroler.backlight Hintergrundbeleuchtung Buttons
 ledcontroler.backlight.tv TV Modus
 ledcontroler.blink Blinke im Deep-Standby, wenn Timer aktiv
@@ -873,8 +928,10 @@ mainsettings.timezone Zeitzone
 mainsettings.video Video
 menu.back Zurück
 menu.cancel Abbrechen
-menu.hint_a_pic Konfigurieren Sie den Audioplayer und den Bildbetrachter
+menu.hint_a_pic Konfigurieren Sie den Audioplayer, den Bildbetrachter, den Movieplayer und mehr
+menu.hint_accept_other_remotes Deaktivieren um andere Fernbedienungen zu ignorieren
 menu.hint_aplay Audioplayer
+menu.hint_aplay_setup Ändern Sie Audioplayer-Einstellungen wie Titel-Anzeige, Startverzeichnis oder Bildschirmschoner.
 menu.hint_audio Audio-Ausgang, Dolby Digital und SRS TruVolume Optionen und mehr
 menu.hint_audio_analog_mode Wählen Sie den Modus des Ausgangssignals für den CINCH-Anschluss
 menu.hint_audio_avsync Diese Funktion synchronisiert Bild und Ton
@@ -895,6 +952,7 @@ menu.hint_audioplayer_playlist Aktiviert die Anzeige der Titel in der Wiedergabe
 menu.hint_audioplayer_repeat Aktiviert das Wiederholen der Wiedergabeliste, wenn das Ende erreicht ist
 menu.hint_audioplayer_sc_metadata Aktiviert das Anzeigen der Audio-Metadaten
 menu.hint_audioplayer_screensaver Aktiviert den Bildschirmschoner nach dieser Zeit (Minuten)
+menu.hint_audioplayer_screensaver_dir Hier wählen Sie das Verzeichniss des Bildschirmschoners
 menu.hint_audioplayer_title Aktivieren Sie die Titelsuche (SMS-Stil) in der Playliste
 menu.hint_auto_lang Wählen Sie, ob automatisch ihre bevorzugte Tonspur ausgewählt wird, wenn sie vorhanden ist
 menu.hint_auto_subs Automatische Anzeige der Untertitel in Ihrer bevorzugten Sprache
@@ -914,6 +972,7 @@ menu.hint_channellist_epg_align Legen Sie fest, wie der Text für das EPG in der
 menu.hint_channellist_extended Bei aktivierter Funktion wird vor dem Sendernamen ein Balken eingeblendet, der den Sendungsfortschritt anzeigt
 menu.hint_channellist_fonts Ändern Sie die Schriftgrößen in der Kanalliste
 menu.hint_channellist_foot Definiert, welche Informationen im unteren Sendungsfenster angezeigt werden sollen
+menu.hint_channellist_hdicon Zeigt HD Symbol in der Kanalliste
 menu.hint_channellist_mode Wählen Sie die Start-Kanalliste im TV-Modus
 menu.hint_channellist_mode_radio Wählen Sie die Start-Kanalliste im Radio-Modus
 menu.hint_channellist_setup Wählen Sie die Anzeigeoptionen für die Kanalliste
@@ -954,10 +1013,11 @@ menu.hint_fade Bei aktivierter Funktion werden die GUI-Fenster 'weich' ein- bzw.
 menu.hint_fan_speed Steuerung der Lüftergeschwindigkeit für die CPU
 menu.hint_filebrowser_denydirectoryleave Verhindert das Verlassen des Startverzeichnisses
 menu.hint_filebrowser_showrights Anzeige der Dateirechte der Dateien im Filebrowser
-menu.hint_fileplay Abspielen verschiedener Video-Dateien
+menu.hint_fileplay Abspielen von Video-Dateien
 menu.hint_filesystem_is_utf8 Kodierung für Unicode-Zeichen im Filebrowser
 menu.hint_font_gui Wählen Sie die Schriftart für die Menüs
 menu.hint_font_scaling Legen Sie die vertikale und horizontale Skalierung der Menüschrift fest
+menu.hint_font_sub Wählen Sie die Schriftart für Untertitel im MoviePlayer
 menu.hint_font_ttx Wählen Sie die Schriftart für den Teletext
 menu.hint_fonts Konfigurieren Sie die Schriftart und die Schriftgrößen für die Menüs
 menu.hint_games Zeige Liste der installierten Spiele
@@ -965,7 +1025,7 @@ menu.hint_hdd Formatierung und Prüfung der Datenträger
 menu.hint_hdd_apply Die veränderten Einstellungen zum Sleep- und Akustik-Modus werden übernommen
 menu.hint_hdd_check Überprüft das Dateisystem und führt gegebenfalls eine Reparatur durch (fsck)
 menu.hint_hdd_fmt Wählen Sie das Datenträgerformat aus
-menu.hint_hdd_format Erstellt eine Partition auf dem Datenträger und formatiert diese
+menu.hint_hdd_format Erstellt eine Partition auf dem Datenträger und formatiert diesen
 menu.hint_hdd_noise Setzen Sie Parameter für das Automatic Acoustic Management.\nNicht alle Laufwerke unterstützen diese Funktion
 menu.hint_hdd_sleep Dieser Wert definiert, nach wieviel Minuten die Festplatte bei Inaktivität in den Sleep-Modus geschaltet wird
 menu.hint_hdd_statfs Legen Sie fest, wann die Aufnahmeverzeichnis-Füllstandsanzeige im InfoViewer (und ggf. am VFD-Display) aktualisiert werden darf
@@ -982,6 +1042,7 @@ menu.hint_infobar_back Ändern Sie die Hintergrundfarbe für die Infobar
 menu.hint_infobar_casys ein: zeigt alle Aktiven farbig, Mini: einzelnes Symbol ob gespeert, Diskret: alle Aktiven CA-Systeme
 menu.hint_infobar_colored_event Verwenden Sie unterschiedliche Farben für die aktuelle oder nächste Sendung in der Infobar
 menu.hint_infobar_dd Zeigt ein Dolby Digital Icon bei Verfügbarkeit
+menu.hint_infobar_dotmatrix Punktmatrix anzeigen
 menu.hint_infobar_filesys Zeigen den vom Flash- und einer HDD verwendeten Speicherplatz
 menu.hint_infobar_fonts Ändern Sie die Schriftgrößen in der Infobar
 menu.hint_infobar_logo Logo- und Signal-Optionen
@@ -1063,7 +1124,7 @@ menu.hint_leds_deepstandby Definiert den Status der Power-LEDs im Deep-Standby
 menu.hint_leds_record Definiert, ob die Power-LEDs blinken sollen, wenn eine Aufnahme aktiv ist
 menu.hint_leds_standby Definiert den Status der Power-LEDs im Standby
 menu.hint_leds_tv Definiert den Status der Power-LEDs im TV-Modus
-menu.hint_load Laden der Neutrino-HD-Einstellungen aus einer Datei
+menu.hint_load Laden der Neutrino Einstellungen aus einer Datei
 menu.hint_longkeypress_duration Tasten, die länger als die angegebene Zeit betätigt werden, werden als "langer Tastendruck" behandelt.
 menu.hint_lua Plugins ausführen
 menu.hint_make_hdlist Bei aktiver Option wird ein Bouquet namens 'HD' erzeugt, in dem alle HD-Sender zusammengefasst sind
@@ -1071,7 +1132,7 @@ menu.hint_make_newlist Nach einer Kanalsuche wird ein Bouquet namens 'neue Kanä
 menu.hint_make_removedlist Nach einer Kanalsuche wird ein Bouquet namens 'gelöschte Kanäle' erzeugt
 menu.hint_make_webtvlist Bei aktiver Option wird ein Bouquet namens 'WebTV' erzeugt, in dem alle WebTV-Sender zusammengefasst sind
 menu.hint_manage_settings Sichern, Wiederherstellen und Auslieferungszustand wiederherstellen
-menu.hint_mb Ihre Aufnahmen
+menu.hint_mb Hier spielen Sie Ihre Aufnahmen und andere vorhandene Filme ab.
 menu.hint_media Abspielen von Musik, Internetradio und Filmen; Betrachten Sie Bilder
 menu.hint_menu_fonts Ändern Sie die Schriftgrößen im Menü
 menu.hint_menu_hints Zeigt Ihnen Hinweise zu den Menüpunkten an. Sie erreichen das auch jederzeit mit der Taste 'Hilfe'
@@ -1079,12 +1140,15 @@ menu.hint_menu_pos Legen Sie die Anzeigeposition der Menüs fest
 menu.hint_menus Wählen Sie die Anzeigeoptionen für die Menüs
 menu.hint_misc_cec HDMI-CEC Optionen
 menu.hint_misc_channellist Erweiterte Einstellungen für die Kanallisten und Zapping-Einstellungen
+menu.hint_misc_cpufreq Legen Sie die Taktfrequenz der CPU fest
 menu.hint_misc_energy Energieverbrauchs- und Standby-Optionen, verzögertes Ausschalten, setzen bzw. ändern des Inaktivitätstimers
 menu.hint_misc_epg Diverse EPG-Einstellungen und Speicherverzeichnis für EPG-Daten
 menu.hint_misc_filebrowser Dateisystem, Dateirechte anzeigen im Dateibrowser, Startverzeichnisoptionen
 menu.hint_misc_general Standby-, Teletext- und Rotor-Einstellungen, Pluginverzeichnis auf externem Datenträger
+menu.hint_misc_kerneloptions Wählen Sie die Kernel-Module aus, die zusätzlich geladen werden sollen
 menu.hint_misc_zapit Verwaltung der Start-Kanäle für den TV/Radio-Modus
 menu.hint_movie Wiedergabe von Filmen
+menu.hint_moviebrowser_setup Legen Sie Auswahl- und Anzeigeoptionen des MovieBrowsers fest
 menu.hint_movieplayer_plugin Wählen Sie ein Plugin, das mit einer Schnellstart-Taste im Movieplayer-Modus gestartet wird
 menu.hint_net_broadcast Ändern Sie die Broadcast-Adresse.\nWenn Sie unsicher sind, verwenden Sie zuletzt .255
 menu.hint_net_dhcp Verwenden Sie einen DHCP-Server für die automatische Vergabe einer IP-Adresse im Netzwerk
@@ -1128,7 +1192,7 @@ menu.hint_osd Farben, Schriftarten, Anzeigegröße, Ansichtsoptionen der Menüs 
 menu.hint_osd_language Wählen Sie ihre Menü-Sprache
 menu.hint_osd_preset Wählen Sie zwischen Röhren-TV (CRT) oder Flachbildschirm (LCD)
 menu.hint_osd_timing Einblendzeit, die das OSD auf dem TV angezeigt wird
-menu.hint_other_fonts Ändern Sie andere Schriftgrößen
+menu.hint_other_fonts Ändern anderer Schriftgrößen
 menu.hint_parentallock_changepin Geben Sie den 4-stelligen PIN-Code ein, der dann ggf. abgefragt wird
 menu.hint_parentallock_lockage Legen Sie fest, bei welcher Altersklasse die Abfrage der PIN erfolgt
 menu.hint_parentallock_menu Menüs mit PIN Code sichern
@@ -1136,6 +1200,7 @@ menu.hint_parentallock_prompt Legen Sie fest, wann die Eingabe einer PIN erfolge
 menu.hint_personalize Personalisieren Sie ihre Menüs und konfigurieren Sie ihre Benutzermenüs
 menu.hint_pictureviewer_defdir Wählen Sie das Startverzeichnis für den Bildbetrachter
 menu.hint_pictureviewer_scaling Stellen Sie die Bildauflösung ein
+menu.hint_pictureviewer_setup Konfigurieren Sie die Bildbetrachter-Optionen
 menu.hint_pictureviewer_slide_time Ändern Sie den Diashow-Intervall.\nStandardmäßig sind 10 Sekunden eingstellt
 menu.hint_picview Bilder anzeigen
 menu.hint_plugin_type_games Legt fest, ob Spiele im Benutzermenü unter der Rubrik 'Plugin-Typen' gezeigt werden sollen
@@ -1157,6 +1222,7 @@ menu.hint_progressbar_timescale_red Hier können Sie den roten Farbanteil bunter
 menu.hint_progressbar_timescale_yellow Hier können Sie den gelben Farbanteil bunter Fortschrittsbalken anpassen
 menu.hint_protection Schützen Sie Inhalte per PIN-Code\nStandard-PIN ist 0000
 menu.hint_radiomode Schaltet zum Radio-Modus
+menu.hint_rass Schaltet in den interaktiven "Radio Screen Show"-Modus
 menu.hint_reboot Startet die Box neu\nDer Neustart erfolgt ohne Bestätigung!
 menu.hint_record_apid_ac3 Schließt bei einer Aufnahme die durch den Sender definierte Tonspur 'Dolby Digital' in die Aufnahme ein, sofern diese vorhanden ist
 menu.hint_record_apid_alt Sind weitere Tonspuren verfügbar, dann können diese hiermit bei einer Aufnahme entsprechend ein- bzw. ausgeschlossen werden
@@ -1189,12 +1255,13 @@ menu.hint_record_zap_pre_time Stellen Sie eine Vorlaufzeit in Minuten für den U
 menu.hint_recording Aufnahme-, Timeshift- und Timer-Optionen, Einstellung von aufzunehmenden Tonspuren
 menu.hint_reload_channels Kanallisten neu laden, um Änderungen wirksam zu machen
 menu.hint_reload_plugins Plugins neu laden, um Änderungen wirksam zu machen
-menu.hint_reset Zurücksetzen von Neutrino-HD-Einstellungen auf Standardwerte. Tuner-Einstellungen und Kanäle bleiben erhalten
+menu.hint_reset Zurücksetzen von Neutrino-Einstellungen auf Standardwerte. Tuner-Einstellungen und Kanäle bleiben erhalten
+menu.hint_restart_tuner Führen Sie einen Neustart des internen Tuners durch. Das kann Empfangsprobleme beheben.
 menu.hint_restore Wiederherstellen von vorher erstellten Sicherungen
 menu.hint_rotor_swap Tauschen der Rotordrehrichtung Ost/West in den Motor-Einstellungen
 menu.hint_rounded_corners Aktiviert die Darstellung abgerundeter Ecken für die Menüs
 menu.hint_save_settings Speichert ihre Einstellungen
-menu.hint_saveas Speichern der Neutrino-HD-Einstellungen in eine Datei
+menu.hint_saveas Speichern der Neutrino-Einstellungen in eine Datei
 menu.hint_scan_auto Automatischer Suchlauf ausgewählter Anbieter
 menu.hint_scan_autoall Automatischer Suchlauf aller ausgewählten Anbieter
 menu.hint_scan_autoall_select Suchlauf nur in ausgewählten Satelliten
@@ -1216,8 +1283,9 @@ menu.hint_scan_fastupdate Aktivieren/Deaktivieren Fastscan Auto-Update
 menu.hint_scan_fec Wählen Sie eine Transponder-FEC
 menu.hint_scan_felink Select tuner to link tuner to
 menu.hint_scan_femode Wählen Sie den Verbindungstyp für den zweiten Tuner
+menu.hint_scan_feretries Wiederholungen bei fehlgeschlagenem Tuning
 menu.hint_scan_fesetup Konfigurieren des oder der Tuner
-menu.hint_scan_fetimeout Maximale Wartezeit auf das Signal in 1/10 Sekunden
+menu.hint_scan_fetimeout Wartezeit auf das Signal
 menu.hint_scan_freq Geben Sie eine Transponder-Frequenz ein
 menu.hint_scan_fta Lassen Sie nur frei empfangbare (nicht-verschlüsselte) Programme suchen
 menu.hint_scan_gi Wählen Sie den Schutzintervall für diesen terrestrischen Kanal
@@ -1270,6 +1338,7 @@ menu.hint_screenshot_count Wählen Sie, wie viele Screenshots erstellt werden so
 menu.hint_screenshot_cover Während der Wiedergabe von Aufnahmen kann ein Screenshot für die Vorschau im Moviebrowser erstellt werden
 menu.hint_screenshot_dir Wählen Sie das Verzeichnis zum Speichern der Screenshots
 menu.hint_screenshot_format Wählen Sie das Dateiformat zum Speichern der Screenshots
+menu.hint_screenshot_planes Wählen Sie den Inhalt des Screenshots.
 menu.hint_screenshot_res Screenshot Größe: aktuelle TV-Auflösung oder OSD-Auflösung (1280x720)
 menu.hint_screenshot_scale Skalierung auf TV-Auflösung, wenn OSD aktiviert ist
 menu.hint_screenshot_setup Konfigurieren Sie die Optionen zum Erstellen von Screenshots
@@ -1279,7 +1348,7 @@ menu.hint_selected_back Ändern Sie die Hintergrundfarbe für ausgewählte Fenst
 menu.hint_selected_text Ändern Sie die Textfarbe für ausgewählte Fensterinhalte
 menu.hint_service Sendersuchlauf, Bouquet-Verwaltung, Software-Aktualisierung und mehr
 menu.hint_service_scan Automatischer / manueller Service Suchlauf
-menu.hint_settings Konfigurieren von Neutrino-HD,\nNetzwerk, Video, Audio, OSD und mehr
+menu.hint_settings Konfigurieren von Neutrino,\nNetzwerk, Video, Audio, OSD und mehr
 menu.hint_show_mute_icon Definiert, ob bei einem Lautstärkewert von 0 das Stumm-Symbol eingeblendet werden soll
 menu.hint_shutdown Setzen Sie Ihre Box in den Standby-Modus oder schalten Sie die Box komplett aus
 menu.hint_shutdown_count Die Zeit zum Herunterfahren in den Deep-Standby, wenn die Box im Standby-Modus ist
@@ -1288,7 +1357,7 @@ menu.hint_shutdown_rcdelay Aktiviert den Deep-Standby, wenn die Power-Taste län
 menu.hint_shutdown_real Aktiviert den Standby-Modus. Ist diese Option deaktiviert, fährt die Box in den Deep-Standby
 menu.hint_sleeptimer Zeitschaltuhr auf Ihrer Box aktivieren\nDie Box fährt dann in den Standby-Modus
 menu.hint_sleeptimer_min Voreinstellung der Zeitschaltuhr auf Ihrer Box
-menu.hint_soft_restart Neustarten von Neutrino-HD, ohne die Box neu zu starten
+menu.hint_soft_restart Neustarten von Neutrino, ohne die Box neu zu starten
 menu.hint_softupdate_check Im Internet nach verfügbaren Updates suchen, herunterladen und installieren
 menu.hint_softupdate_check_local Lokal nach verfügbaren Updates suchen und installieren
 menu.hint_softupdate_createimage_menu Sicherung der aktuellen Software inklusive aller Einstellungen
@@ -1300,7 +1369,7 @@ menu.hint_standby Receiver in den Standby Modus versetzen
 menu.hint_start_tostandby Aktiviert den Standby-Modus direkt nach dem Starten der Box
 menu.hint_streaminfo Aktuelle Sender-Informationen über PIDs, SNR-Verhältnis, Bitrate und mehr
 menu.hint_subchannel_pos Wählen Sie die Anzeigeposition der Unterkanäle aus
-menu.hint_sw_update Neutrino-HD aktualisieren, Image sichern und wiederherstellen
+menu.hint_sw_update Neutrino aktualisieren, Image sichern und wiederherstellen
 menu.hint_theme Wählen Sie ein vordefiniertes Farbschema, speichern oder laden Sie ihre eigenen Farbschemata
 menu.hint_timeouts Gibt an, nach welcher Zeit in Sekunden die Menüs oder Infofenster sich automatisch schließen (0 deaktiviert)
 menu.hint_timers Hinzufügen, entfernen und bearbeiten geplanter Aufnahmen oder anderer Timer
@@ -1308,7 +1377,7 @@ menu.hint_timezone Wählen Sie ihre Zeitzone aus
 menu.hint_tools Werkzeuge ausführen
 menu.hint_tvmode Schaltet zum TV-Modus
 menu.hint_tvradio_switch Schaltet zwischen TV- und Radio-Modus um
-menu.hint_upnp Universal Plug and Play Browser
+menu.hint_upnp Zugriff auf UPNP-Server in Ihrem lokalen Netz
 menu.hint_vfd Frontdisplay und Power-LEDs
 menu.hint_vfd_brightness Definiert die Helligkeit im TV-Betrieb 
 menu.hint_vfd_brightness_setup Konfiguriert die Helligkeit des Frontdisplays für verschiedene Modi
@@ -1323,17 +1392,24 @@ menu.hint_vfd_statusline Wählen Sie, was in der Statuszeile angezeigt werden so
 menu.hint_video Video-Ausgang, Auflösung, Format, Seitenverhältnisse und mehr
 menu.hint_video_43mode Anzeige-Modus für 4:3-Inhalte auf 16:9-Fernsehern
 menu.hint_video_analog_mode Wählen Sie den Modus des Ausgangssignals für den CINCH-Anschluss
-menu.hint_video_brightness Change picture brightness
+menu.hint_video_brightness Ändert die Helligkeit
 menu.hint_video_cinch_mode Wählen Sie den Modus des Ausgangssignals für den Composite-Video-Anschluss
-menu.hint_video_contrast Change picture contrast
+menu.hint_video_colorformat_analog Wählt den Farbraum für die analoge Ausgabe (Scart/Cinch)
+menu.hint_video_colorformat_hdmi Wählt den Farbraum für die digitale Ausgabe (HDMI)
+menu.hint_video_contrast Ändert den Kontrast
 menu.hint_video_dbdr Verwendeter MPEG2 Filter
 menu.hint_video_format Wählen Sie das Bildschirmformat ihres Fernsehgerätes
+menu.hint_video_mixer_color Wenn kein Signal vorhanden ist, wird die gewählte Farbe als Hintergrundfarbe verwendet.
 menu.hint_video_mode Wählen Sie den Modus des Ausgangssignals für den HDMI-Anschluss
 menu.hint_video_modes Definiert, welche Videosysteme mit der VF-Taste der Fernbedienung ausgewählt werden können
 menu.hint_video_pip Bild in Bild Größe und Position
-menu.hint_video_saturation Change picture saturation
+menu.hint_video_psi On-Screen-Menü zur Änderung von Farbe, Kontrast und mehr
+menu.hint_video_psi_step Setzt die Schrittweite für das On-Screen-Menü
+menu.hint_video_saturation Ändert die Farbsättigung
 menu.hint_video_scart_mode Wählen Sie den Modus des Ausgangssignals für den SCART-Anschluss
 menu.hint_video_sdosd Aktivieren/Deaktivieren der OSD Anzeige am Analogausgang (Scart, Cinch)
+menu.hint_video_three_d Ändert die kanalspezifischen 3D-Einstellungen
+menu.hint_video_tint Ändert den Farbton
 menu.hint_volume Wählen Sie die Anzeigeoptionen für die Lautstärke
 menu.hint_volume_digits Zifferndarstellung der Lautstärkeanzeige ein- oder ausschalten
 menu.hint_volume_pos Wählen Sie die Position der Lautstärkeanzeige aus
@@ -1341,8 +1417,10 @@ menu.hint_volume_size Wählen Sie die Höhe der Lautstärkeanzeige
 menu.hint_webtv_setup Hier konfigurierte WebTV-Kanäle finden Sie in der Kanalverwaltung.
 menu.hint_window_size Kanalliste, EPG-Infos und einige andere Fenster werden mit diesem Faktor skaliert
 menu.hint_ytplay Wiedergabe von ausgewählten Youtube Feeds
+menu.hint_ytplay_setup Konfigurieren Sie YouTube-spezifische Optionen wie maximale Ergebnisse bei Suchen oder Cache-Verzeichnis
 menu.hint_zap_cycle Wählen Sie, ob nur innerhalb des aktiven Bouquets umgeschaltet werden kann
 menu.next Weiter (Menü zum Beenden)
+messagebox.accept Wollen Sie die Änderungen beibehalten?
 messagebox.back Zurück
 messagebox.cancel Abbruch
 messagebox.discard Wollen Sie die Änderungen verwerfen?
@@ -1357,6 +1435,7 @@ miscsettings.channellist_epgtext_align Event-Text ausrichten
 miscsettings.colored_events_0 keine
 miscsettings.colored_events_1 aktuelle
 miscsettings.colored_events_2 nächste
+miscsettings.cpu CPU
 miscsettings.energy Energieverbrauch
 miscsettings.epg_cache EPG-Cache (Tage)
 miscsettings.epg_cache_hint1 EPG-Daten im Voraus zwischenspeichern?
@@ -1379,7 +1458,7 @@ miscsettings.epg_scan_always Immer
 miscsettings.epg_scan_bouquets Zu scannende Bouquets
 miscsettings.epg_scan_bq Aktuelles Bouquet
 miscsettings.epg_scan_fav Alle Favoriten
-miscsettings.epg_scan_live Bei eingeschalteter Box
+miscsettings.epg_scan_live Bei eingeschaltener Box
 miscsettings.epg_scan_sel Markierte Bouquets
 miscsettings.epg_scan_standby Im Standby Modus
 miscsettings.general Allgemein
@@ -1397,7 +1476,8 @@ miscsettings.infobar_disp_4 Logo+Kanalname/Kanalnummer
 miscsettings.infobar_disp_5 Logo/Signalbalken
 miscsettings.infobar_disp_6 Logo+Kanalnummer/Signalbalken
 miscsettings.infobar_disp_log Logo
-miscsettings.infobar_logo_hdd_dir Logo-Verz.
+miscsettings.infobar_dotmatrix_display Punktmatrix anzeigen
+miscsettings.infobar_logo_hdd_dir Logo Verzeichnis
 miscsettings.infobar_sat_display Kabel-/Satellitenanbieter
 miscsettings.infobar_show Info bei EPG Änderungen
 miscsettings.infobar_show_dd_available DD-Verfügbarkeit anzeigen
@@ -1512,7 +1592,7 @@ moviebrowser.foot_options Optionen
 moviebrowser.foot_play Film starten
 moviebrowser.foot_refresh Liste neu laden
 moviebrowser.foot_sort Sortieren:
-moviebrowser.head Meine Aufnahmen
+moviebrowser.head Movie-Browser
 moviebrowser.head_filter Filme nach Kategorie filtern:
 moviebrowser.head_playlist Zuletzt gesehen:
 moviebrowser.head_recordlist Zuletzt aufgenommen:
@@ -1632,7 +1712,7 @@ movieplayer.bookmarkname_hint1 Geben Sie den Namen für das neue Lesezeichen ein
 movieplayer.bookmarkname_hint2 
 movieplayer.chapters Kapitel
 movieplayer.defplugin Start-Plugin
-movieplayer.fileplayback Abspielen (Multiformat)
+movieplayer.fileplayback Datei-Browser
 movieplayer.head Movieplayer
 movieplayer.starting Wiedergabe starten...
 movieplayer.titles Titel
@@ -1649,12 +1729,13 @@ movieplayer.tshelp6 ca. 1 Minute zurück
 movieplayer.tshelp7 ca. 1 Minute vor
 movieplayer.tshelp8 ca. 5 Minuten zurück
 movieplayer.tshelp9 ca. 5 Minuten vor
-movieplayer.tsplayback TS Abspielen
-movieplayer.ytplayback Youtube-Feed Wiedergabe
+movieplayer.tsplayback Abspielen
+movieplayer.ytplayback Youtube
 mpkey.audio Audiotrack
 mpkey.bookmark Speichere Lesezeichen
 mpkey.forward Vorlauf
 mpkey.goto Zeiteingabe
+mpkey.next3dmode Nächster 3D-Modus
 mpkey.next_repeat_mode Nächster Wiederholungs-Modus
 mpkey.pause Pause
 mpkey.play Play
@@ -1697,7 +1778,7 @@ networkmenu.ssid_scan WLAN-Netzwerke suchen
 networkmenu.ssid_scan_error Keine WLAN-Netzwerke gefunden.
 networkmenu.ssid_scan_wait WLAN-Netzwerke werden gesucht...
 networkmenu.test Netzwerk testen
-neutrino_starting Neutrino-HD wird gestartet...
+neutrino_starting Neutrino wird gestartet...
 nfs.alreadymounted Verzeichnis bereits gemountet.
 nfs.automount Beim Start mounten
 nfs.dir Verzeichnis/Freigabe
@@ -1752,7 +1833,7 @@ options.serial seriell
 parentallock.bouquetmode Bouquets sind standardmässig
 parentallock.changepin PIN-Code festlegen
 parentallock.changepin_hint1 Geben Sie hier Ihren neuen PIN-Code ein!
-parentallock.changetolocked Bei vorgeperrten Bouquets
+parentallock.changetolocked Bei vorgesperrten Bouquets
 parentallock.defaultlocked gesperrt
 parentallock.defaultunlocked nicht gesperrt
 parentallock.head Jugendschutz PIN
@@ -1850,10 +1931,12 @@ plugintype.game Spiel
 plugintype.lua Lua-Plugin
 plugintype.script Skript
 plugintype.tool Werkzeug
-rclock.lockmsg Die Fernbedienung der CST wird gesperrt.\n Um die Sperre aufzuheben, bitte\n <ROT> und <MENU> auf der Fernbedienung\n drücken.
+rass.head Radio Screen Show
+rclock.lockmsg Die Fernbedienung wird gesperrt.\n Um die Sperre aufzuheben, bitte\n <ROT> und <MENU> auf der Fernbedienung\n drücken.
 rclock.menueadd FB sperren
 rclock.title Fernbedienung sperren
 rclock.unlockmsg Fernbedienung reaktiviert...
+recording.failed Aufzeichnung ist fehlgeschlagen!
 recording.is_running Folgende Aufnahme läuft bereits! Neue Aufnahme starten?
 recording.start Starte Aufnahme, bitte warten...!
 recording.startstop_msg Meldung bei Aufnahme Start/Ende
@@ -2010,16 +2093,24 @@ scants.transponders Transponder:
 scrambled_channel Verschlüsselung aktiv
 screensetup.lowerright grün = Bildrand unten, rechts
 screensetup.upperleft rot = Bildrand oben, links
+screenshot.backbuffer Sekundärer Buffer (Back Buffer)
 screenshot.count Anzahl
 screenshot.cover Erzeuge Filmcover für Moviebrowser
 screenshot.defdir Ziel-Verzeichnis
 screenshot.format Format
 screenshot.info Screenshot Taste ist nicht belegt
 screenshot.menu Screenshot
-screenshot.osd OSD-Auflösung
+screenshot.osd OSD
+screenshot.plane.all OSD und Video
+screenshot.plane.osd nur OSD
+screenshot.plane.video nur Video
+screenshot.planes Screenshot-Art
+screenshot.please_wait Erzeuge Video-Screenshot, bitte warten ...
+screenshot.please_wait_cover Erzeuge Video-Cover, bitte warten ...
+screenshot.png_compression PNG-Komprimierungsstärke
 screenshot.res Auflösung
 screenshot.scale Skalierung
-screenshot.tv TV-Auflösung
+screenshot.tv Video
 screenshot.video Video im Hintergrund
 servicemenu.getplugins Plugins neu laden
 servicemenu.getplugins_hint Plugins werden neu geladen,\nbitte warten...
@@ -2027,9 +2118,11 @@ servicemenu.head Service
 servicemenu.imageinfo Imageinfo
 servicemenu.reload Kanallisten neu laden
 servicemenu.reload_hint Kanallisten werden neu geladen,\nbitte warten...
-servicemenu.restart Neutrino-HD neu starten
-servicemenu.restart_hint Neutrino-HD wird neu gestartet...
+servicemenu.restart Neutrino neu starten
+servicemenu.restart_hint Neutrino wird neu gestartet...
 servicemenu.restart_refused_recording Aufnahme läuft. Neustart nicht möglich.
+servicemenu.restart_tuner Tuner neu starten
+servicemenu.restarting_tuner Tuner wird neu gestartet
 servicemenu.scants Kanalsuche
 servicemenu.update Software-Aktualisierung
 settings.backup Image-Einstellungen: Sichern
@@ -2038,8 +2131,8 @@ settings.help Hilfe
 settings.menu_hints Hinweise anzeigen
 settings.menu_pos Position
 settings.menus Menüs
-settings.missingoptionsconffile Die Neutrino-HD Einstellungen wurden erweitert.\nDie neuen Werte werden auf Standard gesetzt.
-settings.noconffile Die Neutrino-HD Einstellungen wurden nicht\ngefunden. Es werden Standardwerte benutzt.
+settings.missingoptionsconffile Die Neutrino Einstellungen wurden erweitert.\nDie neuen Werte werden auf Standard gesetzt.
+settings.noconffile Die Neutrino Einstellungen wurden nicht\ngefunden. Es werden Standardwerte benutzt.
 settings.pos_bottom_center unten zentriert
 settings.pos_bottom_left unten links
 settings.pos_bottom_right unten rechts
@@ -2063,13 +2156,14 @@ streaminfo.aratio_unknown unbekannt
 streaminfo.audiotype Audiotyp
 streaminfo.average_bitrate Durchschnitt
 streaminfo.bitrate Bitrate
+streaminfo.casystems Cryptsysteme
 streaminfo.framerate Bildrate
 streaminfo.framerate_unknown unbekannt
-streaminfo.head Tech. Information
+streaminfo.head Technische Informationen
 streaminfo.not_available nicht verfügbar
 streaminfo.resolution Auflösung
 streaminfo.signal Empfangssignal
-streaming.busy Ein oder mehrere Aufnahmeprozesse sind aktiv.\nSollte die Aufnahme eigentlich beendet sein,\nschafft ein Neustart von Neutrino-HD Abhilfe.
+streaming.busy Ein oder mehrere Aufnahmeprozesse sind aktiv.\nSollte die Aufnahme eigentlich beendet sein,\nschafft ein Neustart von Neutrino Abhilfe.
 streaming.dir_not_writable Das Aufnahmeverzeichnis ist nicht beschreibbar.\nAufnahmen sind daher nicht möglich.
 streaming.overflow Aufnahme-Puffer Überlauf! Bitte ggf. einige Aufnahmen beenden.
 streaming.slow System oder Datenträger zu langsam! Bitte ggf. einige Aufnahmen beenden.
@@ -2081,6 +2175,13 @@ subtitles.head Untertitel
 subtitles.stop Untertitel aus
 terrestrialsetup.area Region
 terrestrialsetup.provider DVB-T Versorgungsbereich
+three.d.off Deaktiviert
+three.d.save Für Kanal speichern
+three.d.settings 3D-Einstellung
+three.d.settings.general Verfahren
+three.d.sideside Side-by-Side
+three.d.tile Tile
+three.d.topbottom Top-and-Bottom
 timer.eventrecord.msg Die Sendung wurde zur Aufnahme vorgemerkt.
 timer.eventrecord.title Aufnahme vormerken
 timer.eventtimed.msg Die Sendung wurde vorgemerkt.
@@ -2215,6 +2316,15 @@ videomenu.analog_sd_yprpb_scart YPbPr -> Scart (SD)
 videomenu.auto Automatisch
 videomenu.brightness Helligkeit
 videomenu.cinch Cinch
+videomenu.colorformat Farbraum
+videomenu.colorformat.cvbs CVBS
+videomenu.colorformat.rgb RGB
+videomenu.colorformat.svideo S-Video (Y/C)
+videomenu.colorformat.ycbcr422 YCbCr 4:2:2
+videomenu.colorformat.ycbcr444 YCbCr 4:4:4
+videomenu.colorformat.yuv YUV
+videomenu.colorformat_analog Cinch/Scart
+videomenu.colorformat_hdmi HDMI
 videomenu.contrast Kontrast
 videomenu.dbdr MPEG2 Filter
 videomenu.dbdr_both deBlock & deRing
@@ -2222,19 +2332,29 @@ videomenu.dbdr_deblock deBlock
 videomenu.dbdr_none aus
 videomenu.enabled_modes Videosysteme auf der VF-Taste
 videomenu.fullscreen Vollbild
-videomenu.hdmi_cec CSTLink (HDMI-CEC)
-videomenu.hdmi_cec_mode Receiver verwenden
+videomenu.hdmi_cec HDMI-CEC
+videomenu.hdmi_cec_broadcast Senden an alle Geräte
+videomenu.hdmi_cec_mode Aktivieren
 videomenu.hdmi_cec_mode_off nein
 videomenu.hdmi_cec_mode_recorder als Sat/Kabel PVR
 videomenu.hdmi_cec_mode_tuner als Sat/Kabel STB
 videomenu.hdmi_cec_standby Aktiviere CEC Standby
+videomenu.hdmi_cec_standby_not_timer nicht bei Timer
 videomenu.hdmi_cec_view_on Aktiviere CEC View on
 videomenu.hue Farbton
 videomenu.letterbox Letterbox
+videomenu.mixer_color Hintergrund-Farbe
 videomenu.panscan Pan & Scan
 videomenu.panscan2 14:9 Pan & Scan
 videomenu.pip PiP Setup
 videomenu.pip_error PiP Startfehler
+videomenu.psi Farbeinstellungen
+videomenu.psi.brightness Helligkeit
+videomenu.psi.contrast Kontrast
+videomenu.psi.reset Standard-Einstellungen
+videomenu.psi.saturation Sättigung
+videomenu.psi.step Videoregler-Schrittweite
+videomenu.psi.tint Farbton
 videomenu.saturation Sättigung
 videomenu.scart Scart
 videomenu.screensetup Bildbereich
@@ -2262,7 +2382,7 @@ wizard.setup_easy Einfach
 wizard.setup_type Installationstyp
 wizard.setup_type_hint Wählen Sie einfache Grundeinstellungen oder erweiterte Auswahlmöglichkeiten für die Installation
 wizard.welcome_head Willkommen zur Ersteinrichtung Ihres Receivers!
-wizard.welcome_text Wir gratulieren Ihnen zum Kauf Ihrer CST. In den nun folgenden\nSchritten begleiten wir Sie durch die Erstinstallation des Gerätes.\nWir wünschen Ihnen viel Freude mit dem wohl einzigartigsten Receiver!\nBeachten Sie: Ihre CST Set-Top-Box lässt sich bequem per Webinterface\nsteuern, um zum Beispiel die Timer-Verwaltung zu nutzen oder Live-TV im Web-Browser zu schauen.\nAchten Sie darauf, dass Ihre Gerät nicht von aussen zugänglich ist,\nda sonst ein Zugriff über das Internet nicht ausgeschlossen werden kann!\nNächster Schritt?
+wizard.welcome_text Wir gratulieren Ihnen zum Kauf Ihrer Box. In den nun folgenden\nSchritten begleiten wir Sie durch die Erstinstallation des Gerätes.\nWir wünschen Ihnen viel Freude mit dem wohl einzigartigsten Receiver!\nBeachten Sie: Ihre Set-Top-Box lässt sich bequem per Webinterface\nsteuern, um zum Beispiel die Timer-Verwaltung zu nutzen oder Live-TV im Web-Browser zu schauen.\nAchten Sie darauf, dass Ihre Gerät nicht von aussen zugänglich ist,\nda sonst ein Zugriff über das Internet nicht ausgeschlossen werden kann!\nNächster Schritt?
 word.from ab
 word.in in
 zapit.scantype Service-Auswahl

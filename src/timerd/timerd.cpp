@@ -477,12 +477,16 @@ int timerd_main_thread(void *data)
 
 	CBasicServer timerd_server;
 
-	if (!timerd_server.prepare(TIMERD_UDS_NAME))
+	if (!timerd_server.prepare(TIMERD_UDS_NAME)) {
+		*(long *)data = -2; /* signal neutrino that waiting is pointless */
 		return -1;
+	}
 
 	// Start timer thread
 	CTimerManager::getInstance();
-	CTimerManager::getInstance()->wakeup =(bool)data;
+	CTimerManager::getInstance()->wakeup =(bool *)data;
+
+	*(bool *)data = true; /* signal we're up and running */
 
 	timerd_server.run(timerd_parse_command, CTimerdMsg::ACTVERSION);
 	printf("timerd shutdown complete\n");

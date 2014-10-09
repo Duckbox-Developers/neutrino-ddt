@@ -34,8 +34,8 @@
 #include <system/configure_network.h>
 #include <cs_api.h>
 #include <global.h>
-#include <gui/plugins.h>//for relodplugins
 #include <neutrino.h>
+#include <gui/plugins.h>//for relodplugins
 #include <driver/screenshot.h>
 #include <gui/rc_lock.h>
 #include <rcsim.h>
@@ -55,7 +55,13 @@ extern cVideo * videoDecoder;
 
 extern CPlugins *g_PluginList;//for relodplugins
 extern CBouquetManager *g_bouquetManager;
+#if HAVE_DUCKBOX_HARDWARE
+#define EVENTDEV "/dev/input/event0"
+#elif HAVE_SPARK_HARDWARE
+#define EVENTDEV "/dev/input/event1"
+#else
 #define EVENTDEV "/dev/input/input0"
+#endif
 
 //-----------------------------------------------------------------------------
 //=============================================================================
@@ -1508,7 +1514,7 @@ void CControlAPI::EpgCGI(CyhookHandler *hh) {
 	else if (hh->ParamList["eventid"] != "") {
 		//special epg query
 		uint64_t epgid = 0;
-		sscanf(hh->ParamList["eventid"].c_str(), "%llu", &epgid);
+		sscanf(hh->ParamList["eventid"].c_str(), "%" SCNu64 "", &epgid);
 		CShortEPGData epg;
 		if (CEitManager::getInstance()->getEPGidShort(epgid, &epg)) {
 			hh->WriteLn(epg.title);
@@ -1520,7 +1526,7 @@ void CControlAPI::EpgCGI(CyhookHandler *hh) {
 		if (hh->ParamList["starttime"] != "") {
 			uint64_t epgid = 0;
 			time_t starttime = 0;
-			sscanf(hh->ParamList["fskid"].c_str(), "%llu", &epgid);
+			sscanf(hh->ParamList["fskid"].c_str(), "%" SCNu64 "", &epgid);
 			sscanf(hh->ParamList["starttime"].c_str(), "%lu", &starttime);
 			CEPGData longepg;
 			if (CEitManager::getInstance()->getEPGid(epgid, starttime, &longepg)) {
@@ -1586,9 +1592,21 @@ void CControlAPI::ScreenshotCGI(CyhookHandler *hh)
 	if(hh->ParamList["name"] != "")
 		filename = hh->ParamList["name"];
 
-	CScreenShot * sc = new CScreenShot("/tmp/" + filename + ".png", (CScreenShot::screenshot_format_t)0 /*PNG*/);
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	if (!enableVideo) {
+		CFrameBuffer::getInstance()->OSDShot("/tmp/screenshot.png");
+		hh->SendOk();
+		return;
+	}
+#endif
+
+	CScreenShot * sc = new CScreenShot("/tmp/" + filename + ".bmp", CScreenShot::FORMAT_BMP);
 	sc->EnableOSD(enableOSD);
 	sc->EnableVideo(enableVideo);
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	sc->Start();
+	hh->SendOk();
+#else
 #if 0
 	sc->Start();
 	hh->SendOk(); // FIXME what if sc->Start() failed?
@@ -1597,6 +1615,7 @@ void CControlAPI::ScreenshotCGI(CyhookHandler *hh)
 		hh->SendOk();
 	else
 		hh->SendError();
+#endif
 #endif
 }
 
@@ -2251,6 +2270,12 @@ void CControlAPI::YWeb_SendRadioStreamingPid(CyhookHandler *hh)
 //-----------------------------------------------------------------------------
 std::string CControlAPI::YexecuteScript(CyhookHandler *, std::string cmd)
 {
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	const char *fbshot = "Y_Tools fbshot fb /";
+	int len = strlen(fbshot);
+	if (!strncmp(cmd.c_str(), fbshot, len))
+		return CFrameBuffer::getInstance()->OSDShot(cmd.substr(len - 1)) ? "" : "error";
+#endif
 	std::string script, para, result;
 	bool found = false;
 

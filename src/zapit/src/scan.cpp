@@ -61,7 +61,9 @@ CServiceScan::CServiceScan()
 	running = false;
 
 	cable_nid = 0;
+#ifdef ENABLE_FASTSCAN
 	fst_version = 0;
+#endif
 
 	frontend = CFEManager::getInstance()->getFE(0);
 }
@@ -111,16 +113,22 @@ void CServiceScan::run()
 
 	switch(scan_mode) {
 		case SCAN_PROVIDER:
+#if ENABLE_FASTSCAN
 			fst_version = 0;
+#endif
 			ScanProviders();
 			break;
 		case SCAN_TRANSPONDER:
+#if ENABLE_FASTSCAN
 			fst_version = 0;
+#endif
 			ScanTransponder();
 			break;
+#if ENABLE_FASTSCAN
 		case SCAN_FAST:
 			ScanFast();
 			break;
+#endif
 		default:
 			break;
 	}
@@ -525,7 +533,7 @@ void CServiceScan::SaveServices()
 
 bool CServiceScan::ScanProviders()
 {
-	flags = (int) scan_arg;
+	flags = *((int *)scan_arg);
 	scanBouquetManager = new CBouquetManager();
 
 	printf("[scan] NIT %s, fta only: %s, satellites %s\n", flags & SCAN_NIT ? "yes" : "no",

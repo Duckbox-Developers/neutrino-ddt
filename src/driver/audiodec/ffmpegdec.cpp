@@ -64,16 +64,14 @@ static OpenThreads::Mutex mutex;
 
 static int cover_count = 0;
 
-#if 0
 static void log_callback(void *, int, const char *format, va_list ap)
 {
 	vfprintf(stderr, format, ap);
 }
-#endif
 
 CFfmpegDec::CFfmpegDec(void)
 {
-	//av_log_set_callback(log_callback);
+	av_log_set_callback(log_callback);
 	meta_data_valid = false;
 	buffer_size = 0x1000;
 	buffer = NULL;
@@ -141,7 +139,7 @@ bool CFfmpegDec::Init(void *_in, const CFile::FileType /* ft */)
 	if (is_stream)
 		avc->probesize = 128 * 1024;
 
-	av_opt_set_int(avc, "analyzeduration", 1000000, 0);
+	av_opt_set_int(avc, "analyzeduration", 1 * AV_TIME_BASE, 0);
 
 	avioc = avio_alloc_context (buffer, buffer_size, 0, this, read_packet, NULL, seek_packet);
 	if (!avioc) {

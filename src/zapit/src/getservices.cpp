@@ -165,7 +165,7 @@ void CServiceManager::RemoveAllChannels()
 
 void CServiceManager::RemovePosition(t_satellite_position satellitePosition)
 {
-	INFO("delete %d, size before: %d", satellitePosition, allchans.size());
+	INFO("delete %d, size before: %zd", satellitePosition, allchans.size());
 	t_channel_id live_id = CZapit::getInstance()->GetCurrentChannelID();
 	for (channel_map_iterator_t it = allchans.begin(); it != allchans.end();) {
 		if (it->second.getSatellitePosition() == satellitePosition && live_id != it->first)
@@ -174,7 +174,7 @@ void CServiceManager::RemovePosition(t_satellite_position satellitePosition)
 			++it;
 	}
 	services_changed = true;
-	INFO("delete %d, size after: %d", satellitePosition, allchans.size());
+	INFO("delete %d, size after: %zd", satellitePosition, allchans.size());
 }
 
 #if 0 
@@ -967,7 +967,7 @@ bool CServiceManager::LoadServices(bool only_current)
 	printf("[zapit] %d services loaded (%d)...\n", service_count, (int)allchans.size());
 	TIMER_STOP("[zapit] service loading took");
 
-	if(zapit_debug) {//FIXME
+	if(0) { //zapit_debug) {//FIXME
 		sat_iterator_t sit;
 		for(sit = satellitePositions.begin(); sit != satellitePositions.end(); ++sit)
 			printf("satelliteName = %s (%d), satellitePosition = %d motor position = %d usals %d\n", sit->second.name.c_str(), (int)sit->second.name.size(), sit->first, sit->second.motor_position, sit->second.use_usals);

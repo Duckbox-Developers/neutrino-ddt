@@ -363,6 +363,8 @@ void CPlugins::popenScriptPlugin(const char * script)
 	{
 		char *output=NULL;
 		size_t len = 0;
+		g_RCInput->clearRCMsg();
+		g_RCInput->stopInput();
 		while ((getline(&output, &len, f)) != -1)
 			scriptOutput += output;
 		pclose(f);
@@ -371,6 +373,8 @@ void CPlugins::popenScriptPlugin(const char * script)
 		kill(pid, SIGTERM);
 		if (output)
 			free(output);
+		g_RCInput->restartInput();
+		g_RCInput->clearRCMsg();
 	}
 	else
 		printf("[CPlugins] can't execute %s\n",script);
@@ -412,7 +416,7 @@ void CPlugins::startLuaPlugin(int number)
 	CLuaInstance *lua = new CLuaInstance();
 	lua->runScript(script);
 	delete lua;
-#if HAVE_SPARK_HARDWARE
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 	frameBuffer->ClearFB();
 #endif
 	videoDecoder->Pig(-1, -1, -1, -1);
@@ -425,29 +429,13 @@ void CPlugins::startPlugin(int number)
 	delScriptOutput();
 	/* export neutrino settings to the environment */
 	char tmp[32];
-#if HAVE_SPARK_HARDWARE
-	sprintf(tmp, "%d", g_settings.screen_StartX_int);
-#else
 	sprintf(tmp, "%d", g_settings.screen_StartX);
-#endif
 	setenv("SCREEN_OFF_X", tmp, 1);
-#if HAVE_SPARK_HARDWARE
-	sprintf(tmp, "%d", g_settings.screen_StartY_int);
-#else
 	sprintf(tmp, "%d", g_settings.screen_StartY);
-#endif
 	setenv("SCREEN_OFF_Y", tmp, 1);
-#if HAVE_SPARK_HARDWARE
-	sprintf(tmp, "%d", g_settings.screen_EndX_int);
-#else
 	sprintf(tmp, "%d", g_settings.screen_EndX);
-#endif
 	setenv("SCREEN_END_X", tmp, 1);
-#if HAVE_SPARK_HARDWARE
-	sprintf(tmp, "%d", g_settings.screen_EndY_int);
-#else
 	sprintf(tmp, "%d", g_settings.screen_EndY);
-#endif
 	setenv("SCREEN_END_Y", tmp, 1);
 
 	bool ispip  = strstr(plugin_list[number].pluginfile.c_str(), "pip") != 0;
@@ -485,7 +473,7 @@ void CPlugins::startPlugin(int number)
 	my_system(2, plugin_list[number].pluginfile.c_str(), NULL);
 	//frameBuffer->setMode(720, 576, 8 * sizeof(fb_pixel_t));
 	frameBuffer->Unlock();
-#if HAVE_SPARK_HARDWARE
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 	frameBuffer->ClearFB();
 #endif
 	videoDecoder->Pig(-1, -1, -1, -1);

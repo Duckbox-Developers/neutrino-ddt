@@ -102,6 +102,7 @@ private:
 	bool pig_on_win;
 	int  first_mode_found;
 
+	bool new_mode_active;
 	int ChannelList_Rec;
 
 	CComponentsChannelLogo* CChannelLogo;

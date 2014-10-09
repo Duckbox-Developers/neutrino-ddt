@@ -83,7 +83,7 @@ static const struct dtv_property dvbs_cmdargs[] = {
 	{ DTV_SYMBOL_RATE,	{0,0,0}, { 27500000		},0 },
 	{ DTV_DELIVERY_SYSTEM,	{0,0,0}, { SYS_DVBS		},0 },
 	{ DTV_INNER_FEC,	{0,0,0}, { FEC_AUTO		},0 },
-	{ DTV_TUNE,		{0,0,0}, { 0			},0 },
+	{ DTV_TUNE,		{0,0,0}, { 0			},0 }
 };
 
 static const struct dtv_property dvbs2_cmdargs[] = {
@@ -96,7 +96,7 @@ static const struct dtv_property dvbs2_cmdargs[] = {
 	{ DTV_INNER_FEC,	{}, { FEC_AUTO		} ,0},
 	{ DTV_PILOT,		{}, { PILOT_AUTO	} ,0},
 	{ DTV_ROLLOFF,		{}, { ROLLOFF_AUTO	} ,0},
-	{ DTV_TUNE,		{}, { 0			} ,0 },
+	{ DTV_TUNE,		{}, { 0			} ,0 }
 };
 
 static const struct dtv_property dvbc_cmdargs[] = {
@@ -107,7 +107,7 @@ static const struct dtv_property dvbc_cmdargs[] = {
 	{ DTV_SYMBOL_RATE,	{}, { 27500000		} ,0},
 	{ DTV_DELIVERY_SYSTEM,	{}, { SYS_DVBC_ANNEX_AC	} ,0},
 	{ DTV_INNER_FEC,	{}, { FEC_AUTO		} ,0},
-	{ DTV_TUNE,		{}, { 0			}, 0},
+	{ DTV_TUNE,		{}, { 0			}, 0}
 };
 
 static const struct dtv_property dvbt_cmdargs[] = {
@@ -122,7 +122,7 @@ static const struct dtv_property dvbt_cmdargs[] = {
 	{ DTV_TRANSMISSION_MODE,{}, { TRANSMISSION_MODE_AUTO}, 0},
 	{ DTV_GUARD_INTERVAL,	{}, { GUARD_INTERVAL_AUTO}, 0},
 	{ DTV_HIERARCHY,	{}, { HIERARCHY_AUTO	}, 0},
-	{ DTV_TUNE,		{}, { 0			}, 0},
+	{ DTV_TUNE,		{}, { 0			}, 0}
 };
 
 #define diff(x,y)	(max(x,y) - min(x,y))
@@ -173,7 +173,7 @@ typedef enum dvb_fec {
 
 CFrontend::CFrontend(int Number, int Adapter)
 {
-	printf("[fe%d] New frontend on adapter %d\n", Number, Adapter);
+	DBG("[fe%d] New frontend on adapter %d\n", Number, Adapter);
 	fd		= -1;
 	fenumber	= Number;
 	adapter		= Adapter;
@@ -207,7 +207,7 @@ CFrontend::CFrontend(int Number, int Adapter)
 
 CFrontend::~CFrontend(void)
 {
-	printf("[fe%d] close frontend fd %d\n", fenumber, fd);
+	DBG("[fe%d] close frontend fd %d\n", fenumber, fd);
 	if(fd >= 0)
 		Close();
 }
@@ -219,7 +219,7 @@ bool CFrontend::Open(bool init)
 
 	char filename[128];
 	snprintf(filename, sizeof(filename), "/dev/dvb/adapter%d/frontend%d", adapter, fenumber);
-	printf("[fe%d] open %s\n", fenumber, filename);
+	DBG("[fe%d] open %s\n", fenumber, filename);
 
 	mutex.lock();
 	if (fd < 0) {
@@ -308,7 +308,7 @@ void CFrontend::getFEInfo(void)
 		switch (info.type) {
 		case FE_QPSK:
 			deliverySystemMask |= DVB_S;
-#ifndef BOXMODEL_NEVIS
+#if !BOXMODEL_NEVIS && !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
 			if (info.caps & FE_CAN_2G_MODULATION)
 #endif
 				deliverySystemMask |= DVB_S2;
@@ -331,6 +331,8 @@ void CFrontend::getFEInfo(void)
 
 void CFrontend::Init(void)
 {
+	/* if frontend was not enabled before, it might not be opened */
+	Open();
 	mutex.lock();
 	// Set the voltage to On, and wait voltage to become stable
 	// and wait for diseqc equipment to be ready.
@@ -346,7 +348,7 @@ void CFrontend::Close(void)
 	if(standby)
 		return;
 
-	printf("[fe%d] close frontend\n", fenumber);
+	INFO("[fe%d] close frontend\n", fenumber);
 
 	if (!slave && config.diseqcType > MINI_DISEQC)
 		sendDiseqcStandby();
@@ -619,6 +621,8 @@ uint32_t CFrontend::getBitErrorRate(void) const
 {
 	uint32_t ber = 0;
 	fop(ioctl, FE_READ_BER, &ber);
+	if (ber > 100000000)	/* azbox minime driver has useless values around 500.000.000 */
+		ber = 0;
 
 	return ber;
 }
@@ -668,7 +672,7 @@ struct dvb_frontend_event CFrontend::getEvent(void)
 	while ((int) timer_msec < TIMEOUT_MAX_MS) {
 		int ret = poll(&pfd, 1, TIMEOUT_MAX_MS - timer_msec);
 		if (ret < 0) {
-			perror("CFrontend::getEvent poll");
+			ERROR("poll");
 			continue;
 		}
 		if (ret == 0) {
@@ -677,24 +681,26 @@ struct dvb_frontend_event CFrontend::getEvent(void)
 		}
 
 		if (pfd.revents & (POLLIN | POLLPRI)) {
-			FE_TIMER_STOP("poll has event after");
 			memset(&event, 0, sizeof(struct dvb_frontend_event));
 
 			ret = ioctl(fd, FE_GET_EVENT, &event);
 			if (ret < 0) {
-				perror("CFrontend::getEvent ioctl");
+				ERROR("ioctl");
 				continue;
 			}
 			//printf("[fe%d] poll events %d status %x\n", fenumber, pfd.revents, event.status);
+			if (event.status == 0) /* some drivers always deliver an empty event after tune */
+				continue;
+			//FE_TIMER_STOP("poll has event after");
 
 			if (event.status & FE_HAS_LOCK) {
-				printf("[fe%d] ****************************** FE_HAS_LOCK: freq %lu\n", fenumber, (long unsigned int)event.parameters.frequency);
+				INFO("[fe%d] ******** FE_HAS_LOCK: freq %lu\n", fenumber, (long unsigned int)event.parameters.frequency);
 				tuned = true;
 				break;
 			} else if (event.status & FE_TIMEDOUT) {
 				if(timedout < timer_msec)
 					timedout = timer_msec;
-				printf("[fe%d] ############################## FE_TIMEDOUT (max %d)\n", fenumber, timedout);
+				INFO("[fe%d] ######## FE_TIMEDOUT (max %d)\n", fenumber, timedout);
 				/*break;*/
 			} else {
 				if (event.status & FE_HAS_SIGNAL)
@@ -867,7 +873,7 @@ void CFrontend::getDelSys(delivery_system_t delsys, int f, int m, char *&fec, ch
 		}
 		break;
 	default:
-		printf("[frontend] unknown delsys %d!\n", delsys);
+		INFO("[frontend] unknown delsys %d!\n", delsys);
 		sys = (char *)"UNKNOWN";
 		mod = (char *)"UNKNOWN";
 		break;
@@ -908,7 +914,7 @@ void CFrontend::getDelSys(delivery_system_t delsys, int f, int m, char *&fec, ch
 		fec = (char *)"2/3";
 		break;
 	default:
-		printf("[frontend] getDelSys: unknown FEC: %d !!!\n", f);
+		INFO("[frontend] getDelSys: unknown FEC: %d !!!\n", f);
 	case FEC_AUTO:
 		fec = (char *)"AUTO";
 		break;
@@ -1094,7 +1100,7 @@ bool CFrontend::buildProperties(const FrontendParameters *feparams, struct dtv_p
 		fec = FEC_2_5;
 		break;
 	default:
-		printf("[fe%d] DEMOD: unknown FEC: %d\n", fenumber, fec_inner);
+		INFO("[fe%d] DEMOD: unknown FEC: %d\n", fenumber, fec_inner);
 	case FEC_AUTO:
 		fec = FEC_AUTO;
 		break;
@@ -1146,7 +1152,7 @@ bool CFrontend::buildProperties(const FrontendParameters *feparams, struct dtv_p
 		cmdseq.props[BANDWIDTH].u.data		= getFEBandwidth(feparams->bandwidth);
 		break;
 	default:
-		printf("frontend: unknown frontend type, exiting\n");
+		INFO("frontend: unknown frontend type, exiting\n");
 		return false;
 	}
 
@@ -1166,6 +1172,10 @@ int CFrontend::setFrontend(const FrontendParameters *feparams, bool nowait)
 {
 	struct dtv_property cmdargs[FE_COMMON_PROPS + FE_DVBT_PROPS]; // WARNING: increase when needed more space
 	struct dtv_properties cmdseq;
+#ifdef PEDANTIC_VALGRIND_SETUP
+	memset(&cmdargs, 0, sizeof(cmdargs));
+	memset(&cmdseq, 0, sizeof(cmdseq));
+#endif
 
 	cmdseq.num	= FE_COMMON_PROPS;
 	cmdseq.props	= cmdargs;
@@ -1186,13 +1196,13 @@ int CFrontend::setFrontend(const FrontendParameters *feparams, bool nowait)
 		return 0;
 
 	{
-		FE_TIMER_INIT();
-		FE_TIMER_START();
+		//FE_TIMER_INIT();
+		//FE_TIMER_START();
 		if ((ioctl(fd, FE_SET_PROPERTY, &cmdseq)) < 0) {
-			perror("FE_SET_PROPERTY failed");
+			ERROR("FE_SET_PROPERTY");
 			return false;
 		}
-		FE_TIMER_STOP("FE_SET_PROPERTY took");
+		//FE_TIMER_STOP("FE_SET_PROPERTY took");
 	}
 	if (nowait)
 		return 0;

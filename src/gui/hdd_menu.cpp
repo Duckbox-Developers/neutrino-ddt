@@ -358,7 +358,7 @@ void CHDDMenuHandler::showHint(std::string &message)
 
 void CHDDMenuHandler::setRecordPath(std::string &dev)
 {
-	std::string newpath = std::string(MOUNT_BASE) + dev + "/movies";
+	std::string newpath = std::string(MOUNT_BASE) + dev + "/movie";
 	if (g_settings.network_nfs_recordingdir == newpath) {
 		printf("CHDDMenuHandler::setRecordPath: recordingdir already set to %s\n", newpath.c_str());
 		return;
@@ -961,7 +961,7 @@ _remount:
 
 		if(res) {
 			std::string dst = MOUNT_BASE + devpart;
-			snprintf(cmd, sizeof(cmd), "%s/movies", dst.c_str());
+			snprintf(cmd, sizeof(cmd), "%s/movie", dst.c_str());
 			safe_mkdir(cmd);
 			snprintf(cmd, sizeof(cmd), "%s/pictures", dst.c_str());
 			safe_mkdir(cmd);

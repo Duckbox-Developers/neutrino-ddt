@@ -115,8 +115,8 @@
 */
 
 
-typedef uint32_t neutrino_msg_t;
-typedef uint32_t neutrino_msg_data_t;
+typedef unsigned long neutrino_msg_t;
+typedef unsigned long neutrino_msg_data_t;
 
 #define NEUTRINO_UDS_NAME "/tmp/neutrino.sock"
 
@@ -147,14 +147,22 @@ class CRCInput
 		int 		fd_pipe_high_priority[2];
 		int 		fd_pipe_low_priority[2];
 		int         	fd_gamerc;
+#ifdef HAVE_SPARK_HARDWARE
+#define NUMBER_OF_EVENT_DEVICES 2
+#else
+#ifdef HAVE_DUCKBOX_HARDWARE
 #define NUMBER_OF_EVENT_DEVICES 1
+#else
+#define NUMBER_OF_EVENT_DEVICES 1
+#endif
+#endif
 		int         	fd_rc[NUMBER_OF_EVENT_DEVICES];
 		int		fd_keyb;
 		int		fd_event;
 
 		int		fd_max;
 		int		clickfd;
-		bool		firstKey;
+		bool		*timer_wakeup;
 		__u16 rc_last_key;
 		void set_dsp();
 
@@ -199,7 +207,11 @@ class CRCInput
 			RC_plus		= KEY_VOLUMEUP,     /* /include/linux/input.h: #define KEY_VOLUMEUP		115   */
 			RC_standby	= KEY_POWER,	    /* /include/linux/input.h: #define KEY_POWER		116   */
 			RC_help		= KEY_HELP,	    /* /include/linux/input.h: #define KEY_HELP			138   */
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+			RC_home		= KEY_HOME,     /* /include/linux/input.h: #define KEY_HOME			102   */
+#else
 			RC_home		= KEY_EXIT,	    /* /include/linux/input.h: #define KEY_HOME			102   */
+#endif
 			RC_setup	= KEY_MENU,	    /* /include/linux/input.h: #define KEY_SETUP		141   */
 			RC_topleft	= KEY_TOPLEFT,	
 			RC_topright	= KEY_TOPRIGHT,	
@@ -229,7 +241,11 @@ class CRCInput
 			RC_record	= KEY_RECORD,
 			RC_play		= KEY_PLAY,
 			RC_pause	= KEY_PAUSE,
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE /* evremote don't use forward */
+			RC_forward	= KEY_FASTFORWARD,
+#else
 			RC_forward	= KEY_FORWARD,
+#endif
 			RC_rewind	= KEY_REWIND,
 			RC_stop		= KEY_STOP,
 			RC_timeshift	= KEY_TIME,
@@ -241,6 +257,7 @@ class CRCInput
 			RC_sub		= KEY_SUBTITLE,
 			RC_pos		= KEY_MOVE,
 			RC_sleep	= KEY_SLEEP,
+			RC_playmode	= KEY_P,
 
 			RC_power_on	= KEY_POWERON,
 			RC_power_off	= KEY_POWEROFF,
@@ -284,7 +301,7 @@ class CRCInput
 
 		uint64_t repeat_block;
 		uint64_t repeat_block_generic;
-		CRCInput();      //constructor - opens rc-device and starts needed threads
+		CRCInput(bool &_timer_wakeup);      //constructor - opens rc-device and starts needed threads
 		~CRCInput();     //destructor - closes rc-device
 
 

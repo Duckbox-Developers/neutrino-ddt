@@ -98,7 +98,6 @@ class CFEManager
 		bool		getSatelliteConfig(CFrontend * fe, sat_config_t &satconfig);
 
 		bool		loopCanTune(CFrontend * fe, CZapitChannel * channel);
-		CFrontend *	getFrontend(CZapitChannel * channel);
 		void		copySettings(CFrontend * from, CFrontend * to);
 
 		static CFEManager * manager;
@@ -116,6 +115,7 @@ class CFEManager
 		void		setLiveFE(CFrontend * fe);
 
 		CFrontend *	allocateFE(CZapitChannel * channel, bool forrecord = false);
+		CFrontend *	getFrontend(CZapitChannel * channel);
 
 		fe_mode_t	getMode() { return mode; };
 

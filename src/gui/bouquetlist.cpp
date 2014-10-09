@@ -51,6 +51,7 @@
 #include <driver/screen_max.h>
 #include <driver/rcinput.h>
 #include <driver/fade.h>
+#include <driver/display.h>
 #include <driver/scanepg.h>
 
 #include <daemonc/remotecontrol.h>
@@ -402,6 +403,7 @@ int CBouquetList::show(bool bShowChannelList)
 
 	paintHead();
 	paint();
+	frameBuffer->blit();
 
 	int oldselected = selected;
 	int firstselected = selected+ 1;
@@ -558,6 +560,7 @@ int CBouquetList::show(bool bShowChannelList)
 				res = -2;
 			}
 		};
+		frameBuffer->blit();
 	}
 	hide();
 
@@ -584,6 +587,7 @@ int CBouquetList::show(bool bShowChannelList)
 void CBouquetList::hide()
 {
 	frameBuffer->paintBackgroundBoxRel(x,y, width,height+10);
+	frameBuffer->blit();
 }
 
 void CBouquetList::paintItem(int pos)

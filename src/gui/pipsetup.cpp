@@ -125,6 +125,7 @@ int CPipSetup::exec(CMenuTarget* parent, const std::string &)
 
 	bool loop=true;
 	while (loop) {
+		frameBuffer->blit();
 		g_RCInput->getMsgAbsoluteTimeout(&msg, &data, &timeoutEnd, true);
 
 		if ( msg <= CRCInput::RC_MaxRC )
@@ -162,6 +163,7 @@ int CPipSetup::exec(CMenuTarget* parent, const std::string &)
 		}
 	}
 	hide();
+	frameBuffer->blit();
 	return res;
 }
 

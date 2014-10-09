@@ -187,6 +187,7 @@ void CTextBox::initVar(void)
 	m_renderMode		= 0;
 
 // 	max_width 		= 0;
+	m_blit			= true;
 }
 
 void CTextBox::initFramesAndTextArray()
@@ -508,6 +509,8 @@ void CTextBox::refreshScroll(void)
 				m_textBackgroundColor);
 		m_has_scrolled = false;
 	}
+	if (m_blit)
+		frameBuffer->blit();
 }
 
 //evaluate comparsion between old and current properties WITHOUT text contents, return true if found changes
@@ -644,6 +647,8 @@ void CTextBox::refreshText(void)
 		m_old_cText = m_cText;
 		y += m_nFontTextHeight;
 	}
+	if (m_blit)
+		frameBuffer->blit();
 }
 
 void CTextBox::scrollPageDown(const int pages)
@@ -699,7 +704,10 @@ void CTextBox::refresh(void)
 		return;
 
 	//Paint text
+	bool _m_blit = m_blit;
+	m_blit = false;
 	refreshScroll();
+	m_blit = _m_blit;
 	refreshText();
 }
 
@@ -757,6 +765,7 @@ void CTextBox::hide (void)
 
 	if (m_nPaintBackground)
 		frameBuffer->paintBackgroundBoxRel(m_cFrame.iX, m_cFrame.iY, m_cFrame.iWidth, m_cFrame.iHeight);
+	frameBuffer->blit();
 
 	frameBuffer = NULL;
 }

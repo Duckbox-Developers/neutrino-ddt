@@ -517,6 +517,10 @@ std::string CyParser::YWeb_cgi_cmd(CyhookHandler *hh, std::string ycmd) {
 //-------------------------------------------------------------------------
 std::string CyParser::YWeb_cgi_get_ini(CyhookHandler *, std::string filename,
 		std::string varname, std::string yaccess) {
+	if (!filename.compare(0, 19, "/var/tuxbox/config/")) {
+		std::string filename_new = CONFIGDIR + filename.substr(18);
+		filename = filename_new;
+	}
 	std::string result;
 	if ((yaccess == "open") || (yaccess == "")) {
 		yConfig->clear();
@@ -532,6 +536,10 @@ std::string CyParser::YWeb_cgi_get_ini(CyhookHandler *, std::string filename,
 //-------------------------------------------------------------------------
 void CyParser::YWeb_cgi_set_ini(CyhookHandler *, std::string filename,
 		std::string varname, std::string varvalue, std::string yaccess) {
+	if (!filename.compare(0, 19, "/var/tuxbox/config/")) {
+		std::string filename_new = CONFIGDIR + filename.substr(18);
+		filename = filename_new;
+	}
 	if ((yaccess == "open") || (yaccess == "")) {
 		yConfig->clear();
 		yConfig->loadConfig(filename);

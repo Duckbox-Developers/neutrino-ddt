@@ -30,6 +30,9 @@
 #include <zapit/debug.h>
 
 #include <ca_cs.h>
+#ifndef HAVE_COOL_HARDWARE
+#include <dmx_td.h>
+#endif
 
 #include <dvbsi++/program_map_section.h>
 #include <dvbsi++/ca_program_map_section.h>
@@ -90,7 +93,7 @@ bool CCam::makeCaPmt(CZapitChannel * channel, bool add_private, uint8_t list, co
         int len;
         unsigned char * buffer = channel->getRawPmt(len);
 
-	INFO("cam %x source %d camask %d list %02x buffer", (int) this, source_demux, camask, list);
+	DBG("cam %p source %d camask %d list %02x buffer\n", this, source_demux, camask, list);
 
 	if(!buffer)
 		return false;
@@ -142,10 +145,12 @@ bool CCam::setCaPmt(bool update)
 	return sendMessage((char *)cabuf, calen, update);
 }
 
-bool CCam::sendCaPmt(uint64_t tpid, uint8_t *rawpmt, int rawlen)
+//bool CCam::sendCaPmt(uint64_t tpid, uint8_t *rawpmt, int rawlen)
+bool CCam::sendCaPmt(uint64_t tpid, uint8_t *rawpmt, int rawlen, unsigned char scrambled, casys_map_t camap, int mode, bool enable)
 {
 	return cCA::GetInstance()->SendCAPMT(tpid, source_demux, camask,
-			rawpmt ? cabuf : NULL, rawpmt ? calen : 0, rawpmt, rawpmt ? rawlen : 0);
+//			rawpmt ? cabuf : NULL, rawpmt ? calen : 0, rawpmt, rawpmt ? rawlen : 0);
+			rawpmt ? cabuf : NULL, rawpmt ? calen : 0, rawpmt, rawpmt ? rawlen : 0, scrambled, camap, mode, enable);
 }
 
 int CCam::makeMask(int demux, bool add)
@@ -226,13 +231,26 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 	//INFO("channel %llx [%s] mode %d %s update %d", channel_id, channel->getName().c_str(), mode, start ? "START" : "STOP", force_update);
 
 	/* FIXME until proper demux management */
+	CFrontend *frontend = NULL;
 	switch(mode) {
 		case PLAY:
+#if HAVE_COOL_HARDWARE
 			source = DEMUX_SOURCE_0;
 			demux = LIVE_DEMUX;
+#else
+			source = cDemux::GetSource(0);
+			demux = cDemux::GetSource(0);
+			frontend = CFEManager::getInstance()->getFrontend(channel);
+			INFO("PLAY: fe_num %d dmx_src %d", frontend ? frontend->getNumber() : -1, cDemux::GetSource(0));
+#endif
 			break;
 		case STREAM:
 		case RECORD:
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+			channel->setRecordDemux(CFEManager::getInstance()->allocateFE(channel)->getNumber());
+#endif
+			frontend = CFEManager::getInstance()->getFrontend(channel);
+			INFO("RECORD/STREAM(%d): fe_num %d rec_dmx %d", mode, frontend ? frontend->getNumber() : -1, channel->getRecordDemux());
 			source = channel->getRecordDemux();
 			demux = channel->getRecordDemux();
 			break;
@@ -254,12 +272,43 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 	INFO("channel %" PRIx64 " [%s] mode %d %s src %d mask %d -> %d update %d", channel_id, channel->getName().c_str(),
 			mode, start ? "START" : "STOP", source, oldmask, newmask, force_update);
 	//INFO("source %d old mask %d new mask %d force update %s", source, oldmask, newmask, force_update ? "yes" : "no");
+
+	/* stop decoding if record stops unless it's the live channel. TODO:PIP? */
+	if (mode == RECORD && start == false && source != cDemux::GetSource(0)) {
+		INFO("MODE!=record(%d) start=false, src %d getsrc %d", mode, source, cDemux::GetSource(0));
+		cam->sendMessage(NULL, 0, false);
+//		cam->sendCaPmt(channel->getChannelID(), NULL, 0);
+		cam->sendCaPmt(channel->getChannelID(), NULL, 0, channel->scrambled, channel->camap, mode, start);
+	}
+
 	if((oldmask != newmask) || force_update) {
 		cam->setCaMask(newmask);
 		cam->setSource(source);
 		if(newmask != 0) {
 			cam->makeCaPmt(channel, true);
 			cam->setCaPmt(true);
+			// CI
+			CaIdVector caids;
+			cCA::GetInstance()->GetCAIDS(caids);
+			uint8_t list = CCam::CAPMT_ONLY;
+			cam->makeCaPmt(channel, false, list, caids);
+			int len;
+			unsigned char * buffer = channel->getRawPmt(len);
+			cam->sendCaPmt(channel->getChannelID(), buffer, len, channel->scrambled, channel->camap, mode, start);
+		}
+	}
+	// CI
+	if((oldmask == newmask) && mode) {
+		if(start) {
+			CaIdVector caids;
+			cCA::GetInstance()->GetCAIDS(caids);
+			uint8_t list = CCam::CAPMT_ONLY;
+			cam->makeCaPmt(channel, false, list, caids);
+			int len;
+			unsigned char * buffer = channel->getRawPmt(len);
+			cam->sendCaPmt(channel->getChannelID(), buffer, len, channel->scrambled, channel->camap, mode, start);
+		} else {
+			cam->sendCaPmt(channel->getChannelID(), NULL, 0, channel->scrambled, channel->camap, mode, start);
 		}
 	}
 
@@ -269,31 +318,36 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 		//channel->setRawPmt(NULL);//FIXME
 		StopCam(channel_id, cam);
 	}
-
-	CaIdVector caids;
-	cCA::GetInstance()->GetCAIDS(caids);
-	//uint8_t list = CCam::CAPMT_FIRST;
-	uint8_t list = CCam::CAPMT_ONLY;
-	if (channel_map.size() > 1)
-		list = CCam::CAPMT_ADD;
-	for (it = channel_map.begin(); it != channel_map.end(); /*++it*/)
-	{
-		cam = it->second;
-		channel = CServiceManager::getInstance()->FindChannel(it->first);
-		++it;
-		if(!channel)
-			continue;
+	// CI
+	if (mode && !start) {
+		CaIdVector caids;
+		cCA::GetInstance()->GetCAIDS(caids);
+		//uint8_t list = CCam::CAPMT_FIRST;
+		uint8_t list = CCam::CAPMT_ONLY;
+		if (channel_map.size() > 1)
+			list = CCam::CAPMT_ADD;
+		for (it = channel_map.begin(); it != channel_map.end(); /*++it*/)
+		{
+			cam = it->second;
+			channel = CServiceManager::getInstance()->FindChannel(it->first);
+			++it;
+			if(!channel)
+				continue;
+			if(!channel->scrambled)
+				continue;
 
 #if 0
-		if (it == channel_map.end())
-			list |= CCam::CAPMT_LAST; // FIRST->ONLY or MORE->LAST
+			if (it == channel_map.end())
+				list |= CCam::CAPMT_LAST; // FIRST->ONLY or MORE->LAST
 #endif
 
-		cam->makeCaPmt(channel, false, list, caids);
-		int len;
-		unsigned char * buffer = channel->getRawPmt(len);
-		cam->sendCaPmt(channel->getChannelID(), buffer, len);
-		//list = CCam::CAPMT_MORE;
+			cam->makeCaPmt(channel, false, list, caids);
+			int len;
+			unsigned char * buffer = channel->getRawPmt(len);
+//			cam->sendCaPmt(channel->getChannelID(), buffer, len);
+			cam->sendCaPmt(channel->getChannelID(), buffer, len, channel->scrambled, channel->camap, 0, true);
+			//list = CCam::CAPMT_MORE;
+		}
 	}
 
 	return true;

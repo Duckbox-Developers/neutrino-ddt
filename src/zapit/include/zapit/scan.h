@@ -42,8 +42,10 @@ class CServiceScan : public OpenThreads::Thread
 	public:
 		typedef enum scan_type {
 			SCAN_PROVIDER,
-			SCAN_TRANSPONDER,
-			SCAN_FAST
+			SCAN_TRANSPONDER
+#ifdef ENABLE_FASTSCAN
+			, SCAN_FAST
+#endif
 		} scan_type_t;
 		typedef enum scan_flags {
 			SCAN_NIT		= 0x01,
