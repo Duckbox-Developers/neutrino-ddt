@@ -1,0 +1,256 @@
+{=include-block:Y_Blocks.txt;head=}
+<script type="text/javascript" src="/prototype.js"></script>
+<script type="text/javascript" src="/Y_Baselib.js"></script>
+<script type="text/javascript" src="/Y_yweb.js"></script>
+<script type="text/javascript">
+//<![CDATA[
+
+var g_sig = 100;
+function set_sigbar(_sig){
+	var l = $("sigbar_left");
+	var r = $("sigbar_right");
+	/*IE: width=0 -> =""*/
+	if(_sig > 0)
+		l.width = _sig.toString()+"%";
+	else
+		l.width = "";
+	if(_sig >= 100)
+		r.width = "";
+	else
+		r.width = (100-_sig).toString()+"%";
+}
+function sig_get(){
+	var __sig_str = loadSyncURL("/control/signal?sig");
+	var __sig = parseInt(__sig_str,10);
+	if(isNaN(__sig)) __sig=100;
+	set_sigbar(__sig);
+	g_sig = __sig;
+	$('sig_value').update(g_sig);
+	return __sig;
+}
+
+var g_snr = 100;
+function set_snrbar(_snr){
+	var l = $("snrbar_left");
+	var r = $("snrbar_right");
+	/*IE: width=0 -> =""*/
+	if(_snr > 0)
+		l.width = _snr.toString()+"%";
+	else
+		l.width = "";
+	if(_snr >= 100)
+		r.width = "";
+	else
+		r.width = (100-_snr).toString()+"%";
+}
+function snr_get(){
+	var __snr_str = loadSyncURL("/control/signal?snr");
+	var __snr = parseInt(__snr_str,10);
+	if(isNaN(__snr)) __snr=100;
+	set_snrbar(__snr);
+	g_snr = __snr;
+	$('snr_value').update(g_snr);
+	return __snr;
+}
+
+var g_ber = 0;
+function ber_get(){
+	var __ber_str = loadSyncURL("/control/signal?ber");
+	var __ber = parseInt(__ber_str,10);
+	if(isNaN(__ber)) __ber=100;
+	g_ber = __ber;
+	$('ber_value').update(g_ber);
+	//return __ber;
+}
+
+var g_volumen = 100;
+function volumen_set_audiobar(_volumen){
+	var l = $("audiobar_left");
+	var r = $("audiobar_right");
+	/*IE: width=0 -> =""*/
+	if(_volumen > 0)
+		l.width = _volumen.toString()+"%";
+	else
+		l.width = "";
+	if(_volumen >= 100)
+		r.width = "";
+	else
+		r.width = (100-_volumen).toString()+"%";
+}
+function volumen_get(){
+	var __volumen_str = loadSyncURL("/control/volume");
+	var __volumen = parseInt(__volumen_str,10);
+	if(isNaN(__volumen)) __volumen=100;
+	volumen_set_audiobar(__volumen);
+	g_volumen = __volumen;
+	return __volumen;
+}
+function volumen_set(_volumen){
+	_volumen = Math.min(100, _volumen);
+	_volumen = Math.max(0, _volumen);
+	loadSyncURL("/control/volume?"+_volumen);
+	volumen_set_audiobar(_volumen);
+	g_volumen = _volumen;
+}
+function set_mute_button(){
+	var status = loadSyncURL("/control/volume?status");
+	$('btMute').update( (status==1) ? "<img src=\"/images/volumeunmute.png\">" : "<img src=\"/images/volumemute.png\">");
+	return status;
+}
+function toggle_mute(){
+	var status = loadSyncURL("/control/volume?status");
+	if(status==0)//aus
+		loadSyncURL("/control/volume?mute");
+	else
+		loadSyncURL("/control/volume?unmute");
+	set_mute_button();
+}
+function set_mode(_mode){
+	var actual_mode = loadSyncURL("/control/getmode");
+	if(actual_mode != _mode)
+		loadSyncURL("/control/setmode?" + _mode);
+	parent.work.location.reload();
+}
+function init(){
+	volumen_set_audiobar(volumen_get());
+	set_mute_button();
+	add_yExtensions('boxcontrol', 'secmenu_boxcontrol');
+
+	set_sigbar(sig_get());
+	set_snrbar(snr_get());
+	ber_get();
+}
+function get_data(){
+	volumen_set_audiobar(volumen_get());
+	set_sigbar(sig_get());
+	set_snrbar(snr_get());
+	ber_get();
+}
+//]]>
+</script>
+</head>
+{=var-set:lcshot={=if-file-exists:/bin/lcshot~true~{=if-file-exists:/var/bin/lcshot~true~false=}=}=}
+<body>
+<div class="y_menu_sec_box">
+	<div class="y_menu_sec_box_head"><h2>{=L:main.boxcontrol=}</h2></div>
+	<div class="y_menu_sec_box_body">
+		<div class="y_menu_sec">
+			<ul id="secmenu_boxcontrol">
+				<li>
+					<a target="work" title="{=L:bc.menue.bouquets_desc=}" href="Y_Boxcontrol_Bouquets.yhtm">{=L:bc.menue.bouquets=}</a>
+				</li>
+				<li>
+					<a target="work" title="{=L:bc.menue.control_desc=}" href="Y_Tools_Boxcontrol.yhtm">{=L:bc.menue.control=}</a>
+				</li>
+				<li>
+					<a target="work" title="{=L:bc.menue.messages_desc=}" href="Y_Boxcontrol_Messages.yhtm">{=L:bc.menue.messages=}</a>
+				</li>
+				<li>
+					<a target="work" title="{=L:bc.menue.remote_desc=}" href="Y_Tools_Rcsim.yhtm">{=L:bc.menue.remote=}</a>
+				</li>
+				{=if-not-equal:{=global-var-get:boxtype=}~coolstream~
+				<li>
+					{=if-equal:{=var-get:lcshot=}~true~
+					<a target="work" title="{=L:bc.menue.lcd_screenshot_desc=}" href="Y_Tools_lcshot.yhtm">{=L:bc.menue.lcd_screenshot=}</a>
+					~
+					<a href="javascript:void(0)" class="disabled" title="{=L:bc.menue.lcd_screenshot_desc_ni=}">{=L:bc.menue.lcd_screenshot=}</a>
+					=}
+				</li>
+				~=}
+				<li>
+					<a target="work" title="OSD-{=L:bc.menue.screenshot=}" href="Y_Tools_Screenshot.yhtm?osd=1&noremote=1">OSD-{=L:bc.menue.screenshot=}</a>
+				</li>
+				<li>
+					<a target="work" title="TV-{=L:bc.menue.screenshot=}" href="Y_Tools_Screenshot.yhtm?video=1&noremote=1">TV-{=L:bc.menue.screenshot=}</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<div class="y_menu_sec_box">
+	<div class="y_menu_sec_box_head"><h2>{=L:bc.menue.control=}</h2></div>
+	<div class="y_menu_sec_box_body">
+		<center>
+			<table class="y_text_boxcontrol_table" cellspacing="0" cellpadding="0" title="{=L:bc.menue.volumen_display=}">
+			<tr>
+			<td id="audiobar_left" width="100%"><img src="/images/blank.gif" height="1" width="0" alt="."/></td>
+			<td id="audiobar_right" width="0%" bgcolor="white"><img src="/images/blank.gif" height="1" width="0" alt="."/></td>
+			</tr>
+			</table>
+			<br/>
+			<span class="control_icon" title="{=L:bc.menue.decrease_volume=}">
+				<a href="javascript:volumen_set(g_volumen-10);">
+					<img src="/images/volumedown.png">
+				</a>
+			</span>
+			<span class="control_icon" title="{=L:bc.menue.increase_volume=}">
+				<a href="javascript:volumen_set(g_volumen+10);">
+					<img src="/images/volumeup.png">
+				</a>
+			</span>
+			<span class="control_icon" title="{=L:bc.menue.mute_volume=}">
+				<a id="btMute" href="javascript:toggle_mute();">
+					<img src="/images/volumemute.png">
+				</a>
+			</span>
+			<span class="control_icon" title="{=L:bc.menue.switch_to_tv=}">
+				<a href="javascript:set_mode('tv');">
+					<img src="/images/live.gif">
+				</a>
+			</span>
+			<span class="control_icon" title="{=L:bc.menue.switch_to_radio=}">
+				<a href="javascript:set_mode('radio');">
+					<img src="/images/radio.png">
+				</a>
+			</span>
+		</center>
+	</div>
+</div>
+<div class="y_menu_sec_box">
+	<div class="y_menu_sec_box_head"><h2>{=L:bc.menue.signal=}</h2></div>
+	<div class="y_menu_sec_box_body">
+		<center>
+			<div class="y_text_boxcontrol_div_progress">SIG <span id="sig_value"></span>%</div>
+			<table class="y_text_boxcontrol_table_progress" cellspacing="0" cellpadding="0" title="{=L:bc.menue.sig_display=}">
+			<tr>
+			<td id="sigbar_left" width="100%"><img src="/images/blank.gif" height="1" width="0" alt="." /></td>
+			<td id="sigbar_right" width="0%" bgcolor="white"><img src="/images/blank.gif" height="1" width="0" alt="." /></td>
+			</tr>
+			</table>
+		</center>
+		<center>
+			<div class="y_text_boxcontrol_div_progress">SNR <span id="snr_value"></span>%</div>
+			<table class="y_text_boxcontrol_table_progress" cellspacing="0" cellpadding="0" title="{=L:bc.menue.snr_display=}">
+			<tr>
+			<td id="snrbar_left" width="100%"><img src="/images/blank.gif" height="1" width="0" alt="." /></td>
+			<td id="snrbar_right" width="0%" bgcolor="white"><img src="/images/blank.gif" height="1" width="0" alt="." /></td>
+			</tr>
+			</table>
+		</center>
+		<center>
+			<div class="y_text_boxcontrol_div_progress">BER <span id="ber_value"></span></div>
+		</center>
+	</div>
+</div>
+{=if-empty:{=ini-get:/var/tuxbox/config/Y-Web.conf;slavebox=}~~
+<div class="y_menu_sec_box">
+	<div class="y_menu_sec_box_head"><h2>Switch to</h2></div>
+	<div class="y_menu_sec_box_body">
+		<div class="y_menu_sec">
+			<ul>
+				<li>
+					<a target="_top" title="{=L:bc.menue.webinf_slavebox=}" href="http://{=ini-get:/var/tuxbox/config/Y-Web.conf;slavebox=}/">{=ini-get:/var/tuxbox/config/Y-Web.conf;slavebox=}</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+=}
+<script type="text/javascript">
+//<![CDATA[
+	init();
+	window.setInterval("get_data();",5000);
+//]]>
+</script>
+</body>
+</html>

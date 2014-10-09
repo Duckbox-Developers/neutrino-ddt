@@ -1,0 +1,29 @@
+{=var-set:cancache=yPyes=}
+{=include-block:Y_Blocks.txt;head=}
+<script type="text/javascript" src="/Y_Baselib.js"></script>
+<script type="text/javascript">
+//<![CDATA[
+function rcsim(_key)
+{
+	if(_key == "KEY_POWER"){
+		var __result = trim(loadSyncURL("/control/standby"));
+		if (__result == "off")	{
+			if(confirm("{=L:bc.control.shutdown.ask=}") != true)
+			return;
+		}
+	}
+	loadSyncURL("/control/rcem?"+_key);
+}
+//]]>
+</script>
+</head>
+<body>
+<div class="work_box" id="work_box">
+	<div class="work_box_head"><div class="work_box_head_h2">
+	{=var-set:help_url==}{=var-set:menu={=L:bc.menue.remote=}=}{=include-block:Y_Blocks.txt;work_menu=}</div></div>
+	<div class="work_box_body">
+		{=include-block:Y_Blocks.txt;remote=}
+	</div>
+</div>
+</body>
+</html>

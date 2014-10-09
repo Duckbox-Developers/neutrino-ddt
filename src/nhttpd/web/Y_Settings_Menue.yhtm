@@ -1,0 +1,143 @@
+{=var-set:cancache=yPConf=}
+{=include-block:Y_Blocks.txt;head=}
+<script type="text/javascript" src="/prototype.js"></script>
+<script type="text/javascript" src="/Y_Baselib.js"></script>
+<script type="text/javascript" src="/Y_yweb.js"></script>
+<script type="text/javascript">
+function init(){
+	add_yExtensions('settings_general', 'secmenu_general');
+	add_yExtensions('settings_neutrino', 'secmenu_neutrino');
+	add_yExtensions('settings_plugins', 'secmenu_plugins');
+}
+</script>
+</head>
+<body onload="init()">
+{=var-set:management={=if-equal:{=func:get_request_data client_addr=}~{=ini-get:/var/tuxbox/config/Y-Web.conf;management_ip;{=func:get_request_data client_addr=}=}~1~=}{=if-equal:{=func:get_request_data client_addr=}~{=ini-get:/var/tuxbox/config/Y-Web.conf;management_ip2=}~1~=}=}
+<div class="y_menu_sec_box">
+	<div class="y_menu_sec_box_head"><h2>{=L:main.settings=}</h2></div>
+	<div class="y_menu_sec_box_body">
+		<div class="y_menu_sec_section">{=L:general=}</div>
+		<div class="y_menu_sec">
+			<ul id="secmenu_general">
+				<li>
+					{=var-set:m_link_href=Y_Settings_yWeb.yhtm=}
+					{=var-set:m_link_text=yWeb=}
+					{=include-block:Y_Blocks.txt;management_link=}
+				</li>
+				<li>
+					{=var-set:m_link_href=Y_Settings_nhttpd.yhtm=}
+					{=var-set:m_link_text={=L:set.menue.webserver=}=}
+					{=include-block:Y_Blocks.txt;management_link=}
+				</li>
+				<li>
+					{=var-set:m_link_href=Y_Settings_zapit.yhtm=}
+					{=var-set:m_link_text={=L:set.menue.zapit=}=}
+					{=include-block:Y_Blocks.txt;management_link=}
+				</li>
+				<li>
+					{=var-set:m_link_href=Y_Settings_Backup.yhtm=}
+					{=var-set:m_link_text={=L:set.menue.backup_restore=}=}
+					{=include-block:Y_Blocks.txt;management_link=}
+				</li>
+				<li>
+					{=var-set:m_link_href=Y_Settings_Timer.yhtm=}
+					{=var-set:m_link_text={=L:set.menue.timer_settings=}=}
+					{=include-block:Y_Blocks.txt;management_link=}
+				</li>
+				<!--<li><a title="change layout skin" target="work" href="Y_Settings_Skin.yhtm">Skins</a></li>-->
+			</ul>
+		</div>
+		<div class="y_menu_sec_section">Neutrino</div>
+		<div class="y_menu_sec">
+			<ul id="secmenu_neutrino">
+				<li>
+					{=var-set:m_link_href=Y_Boxcontrol_Bouquet_Editor_Main.yhtm=}
+					{=var-set:m_link_text={=L:set.menue.bouquet_editor=}=}
+					{=include-block:Y_Blocks.txt;management_link=}
+				</li>
+				<li>
+					{=var-set:m_link_href=Y_Settings_neutrino_forms.yhtm?form=neutrino_form-data_parental=}
+					{=var-set:m_link_text={=L:set.menue.parental=}=}
+					{=include-block:Y_Blocks.txt;management_link=}
+				</li>
+				<li>
+					{=var-set:m_link_href=Y_Settings_neutrino_forms.yhtm?form=neutrino_form-data_record=}
+					{=var-set:m_link_text={=L:set.menue.recording=}=}
+					{=include-block:Y_Blocks.txt;management_link=}
+				</li>
+				<li>
+					{=var-set:m_link_href=Y_Settings_neutrino_forms.yhtm?form=neutrino_form-data_movieplayer=}
+					{=var-set:m_link_text={=L:set.menue.movieplayer=}=}
+					{=include-block:Y_Blocks.txt;management_link=}
+				</li>
+				<li>
+					{=var-set:m_link_href=Y_Settings_neutrino_forms.yhtm?form=neutrino_form-data_audioplayer=}
+					{=var-set:m_link_text={=L:set.menue.audio_player=}=}
+					{=include-block:Y_Blocks.txt;management_link=}
+				</li>
+				<li>
+					{=var-set:m_link_href=Y_Settings_neutrino_forms.yhtm?form=neutrino_form-data_pictureviewer=}
+					{=var-set:m_link_text={=L:set.menue.pictureviewer=}=}
+					{=include-block:Y_Blocks.txt;management_link=}
+				</li>
+				{=if-not-equal:{=global-var-get:boxtype=}~coolstream~
+				<li>
+					{=var-set:m_link_href=Y_Settings_video_audio.yhtm=}
+					{=var-set:m_link_text={=L:set.menue.video_audio=}=}
+					{=include-block:Y_Blocks.txt;management_link=}
+				</li>
+				<li>
+					{=var-set:m_link_href=Y_Settings_neutrino_forms.yhtm?form=neutrino_form-data_esound=}
+					{=var-set:m_link_text={=L:set.menue.esound_server=}=}
+					{=include-block:Y_Blocks.txt;management_link=}
+				</li>
+				<li>
+					{=var-set:m_link_href=Y_Settings_neutrino_forms.yhtm?form=neutrino_form-data_direct_recording=}
+					{=var-set:m_link_text={=L:set.menue.direct_recording=}=}
+					{=include-block:Y_Blocks.txt;management_link=}
+				</li>
+				<li>
+					{=var-set:m_link_href=Y_Settings_lcd.yhtm=}
+					{=var-set:m_link_text={=L:set.menue.lcd_display=}=}
+					{=include-block:Y_Blocks.txt;management_link=}
+				</li>
+				<li>
+					{=var-set:m_link_href=Y_Settings_buttons.yhtm=}
+					{=var-set:m_link_text={=L:set.menue.key_settings=}=}
+					{=include-block:Y_Blocks.txt;management_link=}
+				</li>
+				<li>
+					{=var-set:m_link_href=Y_Settings_neutrino_forms.yhtm?form=neutrino_form-data_bootoptions=}
+					{=var-set:m_link_text={=L:set.menue.boot_options=}=}
+					{=include-block:Y_Blocks.txt;management_link=}
+				</li>
+				<li>
+					{=var-set:m_link_href=Y_Settings_neutrino_forms.yhtm?form=neutrino_form-data_diverse=}
+					{=var-set:m_link_text={=L:set.menue.others=}=}
+					{=include-block:Y_Blocks.txt;management_link=}
+				</li>
+				<li>
+					{=var-set:m_link_href=Y_Settings_personalize.yhtm=}
+					{=var-set:m_link_text={=L:set.menue.peronalization=}=}
+					{=include-block:Y_Blocks.txt;management_link=}
+				</li>
+				~=}
+			</ul>
+		</div>
+		{=if-not-equal:{=global-var-get:boxtype=}~coolstream~
+		<div class="y_menu_sec_section">{=L:plugins=}</div>
+		<div class="y_menu_sec">
+			<ul id="secmenu_plugins">
+				<li>
+					{=var-set:m_link_href=Y_Settings_VNC.yhtm=}
+					{=var-set:m_link_text=VNC=}
+					{=include-block:Y_Blocks.txt;management_link=}
+				</li>
+			</ul>
+		</div>
+		~=}
+	</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,65 @@
+## iso-639.tab
+##
+## Copyright (C) 2004 Alastair McKinstry   <mckinstry@computer.org> 
+## Released under the GNU License; see file COPYING for details
+##
+## Last update: 2004-03-29
+##
+## This file gives a list of all languages in the ISO-639
+## standard, and is used to provide translations (via gettext)
+##
+## Status: ISO 639-2:1998 + additions and changes until 2003-03-05
+## Source: http://lcweb.loc.gov/standards/iso639-2/englangn.html
+##
+## Columns:
+##   iso-639-2 terminology code
+##   iso-639-2 bibliography code
+##   iso-639-1 code (XX if none exists)
+##   Name (English)
+##
+## Notes to translators:
+## Please translate Bøkmal using a-ring (U+00E5)
+## Please translate Proveçal using c-cedilla (U+00E7)
+##
+alb	sqi	sq	Albanian
+ara	ara	ar	Arabic
+arm	hye	hy	Armenian
+aze	aze	az	Azerbaijani
+bel	bel	be	Belarusian
+bul	bul	bg	Bulgarian
+chi	zho	zh	Chinese
+cze	ces	cs	Czech
+dan	dan	da	Danish
+dut	nld	nl	Dutch
+eng	eng	en	English
+est	est	et	Estonian
+fin	fin	fi	Finnish
+fre	fra	fr	French
+geo	kat	ka	Georgian
+ger	deu	de	German
+gre	ell	el	Greek
+heb	heb	he	Hebrew
+hin	hin	hi	Hindi
+hun	hun	hu	Hungarian
+ita	ita	it	Italian
+jpn	jpn	ja	Japanese
+kor	kor	ko	Korean
+lav	lav	lv	Latvian
+lit	lit	lt	Lithuanian
+mac	mkd	mk	Macedonian
+mol	mol	mo	Moldavian
+nor	nor	no	Norwegian
+per	fas	fa	Persian
+pol	pol	pl	Polish
+por	por	pt	Portuguese
+rum	ron	ro	Romanian
+rus	rus	ru	Russian
+scc	srp	sr	Serbian
+scr	hrv	hr	Croatian
+slo	slk	sk	Slovak
+slv	slv	sl	Slovenian
+spa	spa	es	Spanish (Castilian)
+swe	swe	sv	Swedish
+tuk	tuk	tk	Turkmen
+tur	tur	tr	Turkish
+ukr	ukr	uk	Ukrainian
