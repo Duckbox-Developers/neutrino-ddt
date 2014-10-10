@@ -100,10 +100,19 @@ private:
 	bool 				skipSleepTimer;
 	bool                            lockStandbyCall;
 	bool 				pbBlinkChange;
+<<<<<<< HEAD
+=======
+	bool				channels_changed;
+	bool				favorites_changed;
+	bool				bouquets_changed;
+	bool				channels_init;
+	bool                            timer_wakeup;
+>>>>>>> cool-cst-next/cst-next
 	int tvsort[LIST_MODE_LAST];
 	int radiosort[LIST_MODE_LAST];
 
 	bool				channellist_visible;
+	int				first_mode_found;
 
 	void SDT_ReloadChannels();
 	void setupNetwork( bool force= false );
@@ -202,7 +211,10 @@ public:
 		return lastChannelMode;
 	};
 	void SetChannelMode(int mode);
-	void MarkChannelListChanged(void) { g_channel_list_changed = true; };
+	void MarkChannelsChanged(void) { channels_changed = true; };
+	void MarkFavoritesChanged(void) { favorites_changed = true; };
+	void MarkBouquetsChanged(void) { bouquets_changed = true; };
+	void MarkChannelsInit(void) { channels_init = true; };
 	void quickZap(int msg);
 	void numericZap(int msg);
 	void StopSubtitles();
@@ -231,6 +243,7 @@ public:
 	void standbyToStandby(void);
 	void lockPlayBack(bool blank = true);
 	void stopPlayBack(bool lock = false);
+	bool adjustToChannelID(const t_channel_id channel_id);
 };
 #endif
 
