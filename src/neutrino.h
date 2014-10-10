@@ -100,14 +100,10 @@ private:
 	bool 				skipSleepTimer;
 	bool                            lockStandbyCall;
 	bool 				pbBlinkChange;
-<<<<<<< HEAD
-=======
 	bool				channels_changed;
 	bool				favorites_changed;
 	bool				bouquets_changed;
 	bool				channels_init;
-	bool                            timer_wakeup;
->>>>>>> cool-cst-next/cst-next
 	int tvsort[LIST_MODE_LAST];
 	int radiosort[LIST_MODE_LAST];
 
