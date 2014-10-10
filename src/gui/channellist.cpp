@@ -49,6 +49,7 @@
 
 #include <gui/color.h>
 #include <gui/epgview.h>
+#include <gui/eventlist.h>
 #include <gui/osd_setup.h>
 #include <gui/widget/buttons.h>
 #include <gui/widget/icons.h>
