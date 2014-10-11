@@ -47,6 +47,7 @@ typedef struct gradientData_t
 	int mode;
 } gradientData_struct_t;
 
+#define CORNER_NONE		0x0
 #define CORNER_TOP_LEFT		0x1
 #define CORNER_TOP_RIGHT	0x2
 #define CORNER_TOP		0x3
@@ -167,11 +168,7 @@ class CFrameBuffer
 		int getFileHandle() const; //only used for plugins (games) !!
 		t_fb_var_screeninfo *getScreenInfo();
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 		fb_pixel_t * getFrameBufferPointer(bool real = false); // pointer to framebuffer
-#else
-		fb_pixel_t * getFrameBufferPointer() const; // pointer to framebuffer
-#endif
 		fb_pixel_t * getBackBufferPointer() const;  // pointer to backbuffer
 		unsigned int getStride() const;             // size of a single line in the framebuffer (in bytes)
 		unsigned int getScreenWidth(bool real = false);
