@@ -718,11 +718,13 @@ int CChannelList::show()
 				loop = false;
 			}
 		}
-		else if (!edit_state && (msg == CRCInput::RC_sat || msg == CRCInput::RC_favorites)) {
-			int newmode = msg == CRCInput::RC_sat ? LIST_MODE_SAT : LIST_MODE_FAV;
-			CNeutrinoApp::getInstance()->SetChannelMode(newmode);
-			res = CHANLIST_CHANGE_MODE;
-			loop = false;
+		else if (msg == CRCInput::RC_sat || msg == CRCInput::RC_favorites) {
+			if (!edit_state) {
+				int newmode = msg == CRCInput::RC_sat ? LIST_MODE_SAT : LIST_MODE_FAV;
+				CNeutrinoApp::getInstance()->SetChannelMode(newmode);
+				res = CHANLIST_CHANGE_MODE;
+				loop = false;
+			}
 		}
 		else if (!edit_state && msg == CRCInput::RC_setup) {
 			fader.StopFade();
@@ -786,17 +788,19 @@ int CChannelList::show()
 				dont_hide = true;
 			}
 		}
-		else if (!empty && msg == CRCInput::RC_ok ) {
-			if (move_state == beMoving) {
-				finishMoveChannel();
-			} else if (edit_state) {
-				zapTo(selected);
-				actzap = true;
-				oldselected = selected;
-				paint(); // refresh zapped vs selected
-			} else if(SameTP()) {
-				zapOnExit = true;
-				loop=false;
+		else if (msg == CRCInput::RC_ok ) {
+			if (!empty) {
+				if (move_state == beMoving) {
+					finishMoveChannel();
+				} else if (edit_state) {
+					zapTo(selected);
+					actzap = true;
+					oldselected = selected;
+					paint(); // refresh zapped vs selected
+				} else if(SameTP()) {
+					zapOnExit = true;
+					loop=false;
+				}
 			}
 		}
 		else if (!edit_state && ( msg == CRCInput::RC_spkr ) && new_zap_mode ) {
@@ -857,11 +861,13 @@ int CChannelList::show()
 				}
 			}
 		}
-		else if(!edit_state && CRCInput::isNumeric(msg)) {
-			//pushback key if...
-			selected = oldselected;
-			g_RCInput->postMsg( msg, data );
-			loop = false;
+		else if(CRCInput::isNumeric(msg)) {
+			if (!edit_state) {
+				//pushback key if...
+				selected = oldselected;
+				g_RCInput->postMsg( msg, data );
+				loop = false;
+			}
 		}
 		else if (!empty && !edit_state && msg == CRCInput::RC_blue )
 		{
@@ -920,7 +926,7 @@ int CChannelList::show()
 
 			paintHead();
 			paint();
-		} else if (msg > CRCInput::RC_MaxRC) {
+		} else {
 			if ( CNeutrinoApp::getInstance()->handleMsg( msg, data ) & messages_return::cancel_all ) {
 				loop = false;
 				res = CHANLIST_CANCEL_ALL;
