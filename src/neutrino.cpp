@@ -2178,14 +2178,6 @@ TIMER_START();
 	/* only SAT-hd1 before rev 8 has fan */
 	g_info.has_fan = (cs_get_revision()  < 8 && CFEManager::getInstance()->getFE(0)->hasSat());
 #endif
-#if BOXMODEL_UFS922
-	FILE* rd = fopen("/proc/stb/fan/fan_ctrl", "r");
-	if (rd!=NULL)
-	{
-		g_info.has_fan = true;
-		fclose(rd);
-	}
-#endif
 	dprintf(DEBUG_NORMAL, "g_info.has_fan: %d\n", g_info.has_fan);
 	//fan speed
 	if (g_info.has_fan)
