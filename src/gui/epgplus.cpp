@@ -1238,7 +1238,7 @@ void EpgPlus::paint()
 	float sliderKnobHeight = (sliderHeight - 4) / tmp;
 	int sliderKnobPosition = this->selectedChannelEntry == NULL ? 0 : (this->selectedChannelEntry->index / this->maxNumberOfDisplayableEntries);
 
-	this->frameBuffer->paintBoxRel (this->sliderX + 2, this->sliderY + int (sliderKnobPosition * sliderKnobHeight)
+	this->frameBuffer->paintBoxRel(this->sliderX + 2, this->sliderY + int (sliderKnobPosition * sliderKnobHeight)
 					, this->sliderWidth - 4, int (sliderKnobHeight) , COL_MENUCONTENT_PLUS_3);
 }
 

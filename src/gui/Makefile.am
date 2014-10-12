@@ -31,13 +31,9 @@ AM_CPPFLAGS += \
 	-I$(top_srcdir)/lib/xmltree \
 	-I$(top_srcdir)/lib/libupnpclient \
 	@CURL_CFLAGS@ \
+	@LUA_CFLAGS@ \
 	@FREETYPE_CFLAGS@ \
 	@HWLIB_CFLAGS@
-
-if ENABLE_LUA
-AM_CPPFLAGS += \
-	@LUA_CFLAGS@
-endif
 
 noinst_LIBRARIES = libtimerlist.a libneutrino_gui.a libneutrino_gui2.a
 
@@ -108,7 +104,13 @@ libneutrino_gui_a_SOURCES = \
 	webtv_setup.cpp \
 	zapit_setup.cpp
 
-if !BOXTYPE_GENERIC
+if BOXTYPE_SPARK
+libneutrino_gui_a_SOURCES += \
+	3dsetup.cpp \
+	psisetup.cpp
+endif
+
+if BOXTYPE_DUCKBOX
 libneutrino_gui_a_SOURCES += \
 	3dsetup.cpp \
 	psisetup.cpp
@@ -129,10 +131,8 @@ libneutrino_gui_a_SOURCES += \
 	test_menu.cpp
 endif
 
-if ENABLE_LUA
 libneutrino_gui_a_SOURCES += \
 	luainstance.cpp
-endif
 
 libneutrino_gui2_a_SOURCES = \
 	color.cpp \

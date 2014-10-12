@@ -2263,6 +2263,7 @@ void CChannelList::paint_events(int index)
 	}
 	if ( !evtlist.empty() )
 		evtlist.clear();
+	frameBuffer->blit();
 }
 
 static bool sortByDateTime (const CChannelEvent& a, const CChannelEvent& b)

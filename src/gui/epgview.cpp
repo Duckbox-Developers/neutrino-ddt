@@ -656,7 +656,7 @@ int CEpgData::show(const t_channel_id channel_id, uint64_t a_id, time_t* a_start
 	bool wzap = isCurrentEPG(channel_id);
 	// show Timer Event Buttons
 	showTimerEventBar (true,wzap);
-	
+
 	//show progressbar
 	if ( epg_done!= -1 )
 	{
@@ -874,7 +874,7 @@ int CEpgData::show(const t_channel_id channel_id, uint64_t a_id, time_t* a_start
 			{
 				//CTimerdClient timerdclient;
 				if (g_Timerd->isTimerdAvailable())
-				{	
+				{
 					if(!g_Timerd->adzap_eventID && g_settings.wzap_time && isCurrentEPG(channel_id)){
 						g_Timerd->addAdZaptoTimerEvent(channel_id,
 								     time (NULL) + (g_settings.wzap_time * 60));

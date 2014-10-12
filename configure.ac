@@ -197,22 +197,16 @@ if test "$BOXTYPE" != coolstream; then
 	HWLIB_CFLAGS="-I$STB_HAL_INC"
 fi
 
-# Lua - embeddable scripting language
-AC_ARG_ENABLE(lua,
-	AS_HELP_STRING(--enable-lua,include Lua support),
-	,[enable_lua=no])
-
-AM_CONDITIONAL(ENABLE_LUA,test "$enable_lua" = "yes")
-if test "$enable_lua" = "yes"; then
-	AC_DEFINE(ENABLE_LUA,1,[include Lua support])
-	PKG_CHECK_MODULES([LUA], [lua >= 5.2], echo "lua >= 5.2 found", [
-		PKG_CHECK_MODULES([LUA], [lua5.2 >= 5.2], echo "lua5.2 found", [
-			echo "=> lualib not found, assuming static lua in linker path..."
-			LUA_LIBS="-llua -ldl"
-			AC_DEFINE(STATIC_LUAPOSIX,1,[Define to 1 for static lua build.])
-		])
+# either use dynamic lualib in package lua (openSUSE)
+# ... or in package lua5.2 (debian-derivates)
+# ... and if all fails, assume it is in the linker path (cross build)
+PKG_CHECK_MODULES([LUA], [lua >= 5.2], echo "lua >= 5.2 found", [
+	PKG_CHECK_MODULES([LUA], [lua5.2 >= 5.2], echo "lua5.2 found", [
+		echo "=> lualib not found, assuming static lua in linker path..."
+		LUA_LIBS="-llua -ldl"
+		AC_DEFINE(STATIC_LUAPOSIX,1,[Define to 1 for static lua build.])
 	])
-fi
+])
 
 AC_ARG_ENABLE(cleanup,
 	[  --enable-cleanup                  enable cleanup on exit],
@@ -230,7 +224,6 @@ AM_CONDITIONAL(ENABLE_TESTING,test "$enable_testing" = "yes")
 if test "$enable_testing" = "yes"; then
 	AC_DEFINE(ENABLE_TESTING,1,[include devel code parts for neutrino tests - not recommended for general users!])
 fi
-
 
 if test "$BOXTYPE" = "coolstream"; then
 if test -e ${srcdir}/lib/libcoolstream/nevis_ir.h; then
