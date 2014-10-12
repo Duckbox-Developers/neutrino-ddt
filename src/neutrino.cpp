@@ -593,6 +593,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.glcd_percent_time = configfile.getInt32("glcd_percent_time", 32);
 	g_settings.glcd_percent_time_standby = configfile.getInt32("glcd_percent_time_standby", 50);
 	g_settings.glcd_percent_logo = configfile.getInt32("glcd_percent_logo", 50);
+	g_settings.glcd_mirror_osd = configfile.getInt32("glcd_mirror_osd", 0);
 	g_settings.glcd_mirror_video = configfile.getInt32("glcd_mirror_video", 0);
 	g_settings.glcd_time_in_standby = configfile.getInt32("glcd_time_in_standby", 1);
 	g_settings.glcd_show_logo = configfile.getInt32("glcd_show_logo", 1);
@@ -1187,6 +1188,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32("glcd_percent_time", g_settings.glcd_percent_time);
 	configfile.setInt32("glcd_percent_time_standby", g_settings.glcd_percent_time_standby);
 	configfile.setInt32("glcd_percent_logo", g_settings.glcd_percent_logo);
+	configfile.setInt32("glcd_mirror_osd", g_settings.glcd_mirror_osd);
 	configfile.setInt32("glcd_mirror_video", g_settings.glcd_mirror_video);
 	configfile.setInt32("glcd_time_in_standby", g_settings.glcd_time_in_standby);
 	configfile.setInt32("glcd_show_logo", g_settings.glcd_show_logo);
@@ -2039,7 +2041,11 @@ TIMER_START();
 
 	int loadSettingsErg = loadSetup(NEUTRINO_SETTINGS_FILE);
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	cpuFreq = new cCpuFreqManager();
+	cpuFreq->SetCpuFreq(g_settings.cpufreq * 1000 * 1000);
+#endif
 	wake_up( timer_wakeup );
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 	CCECSetup cecsetup;
 	cecsetup.setCECSettings(true);
 #endif
@@ -4500,7 +4506,7 @@ void CNeutrinoApp::loadKeys(const char * fname)
 	/* options */
 	g_settings.menu_left_exit = tconfig.getInt32( "menu_left_exit", 0 );
 	g_settings.key_click = tconfig.getInt32( "key_click", 1 );
-	g_settings.repeat_blocker = tconfig.getInt32("repeat_blocker", 250);
+	g_settings.repeat_blocker = tconfig.getInt32("repeat_blocker", 450);
 	g_settings.repeat_genericblocker = tconfig.getInt32("repeat_genericblocker", 100);
 	g_settings.longkeypress_duration = tconfig.getInt32("longkeypress_duration", LONGKEYPRESS_OFF);
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
