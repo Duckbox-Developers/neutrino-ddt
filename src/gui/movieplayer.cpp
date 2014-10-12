@@ -1245,6 +1245,8 @@ void CMoviePlayerGui::PlayFileLoop(void)
 				makeScreenShot(true);
 		} else if (msg == CRCInput::RC_favorites) {
 			makeScreenShot(false, true);
+		} else if (msg == CRCInput::RC_yellow) {
+			showFileInfos();
 		} else if (msg == CRCInput::RC_sat) {
 			//FIXME do nothing ?
 		} else {
@@ -2292,4 +2294,24 @@ void CMoviePlayerGui::makeScreenShot(bool autoshot, bool forcover)
 		}
 	}
 	sc->Start();
+}
+
+void CMoviePlayerGui::showFileInfos()
+{
+	std::vector<std::string> keys, values;
+	playback->GetMetadata(keys, values);
+	size_t count = keys.size();
+	if (count > 0) {
+		CMenuWidget* sfimenu = new CMenuWidget("Fileinfos", NEUTRINO_ICON_SETTINGS);
+		for (size_t i = 0; i < count; i++) {
+			std::string key = trim(keys[i]);
+			printf("key: %s - values: %s \n", key.c_str(), isUTF8(values[i]) ? values[i].c_str() : convertLatin1UTF8(values[i]).c_str());
+			CMenuForwarder * mf = new CMenuForwarder(key.c_str(), false, isUTF8(values[i]) ? values[i].c_str() : convertLatin1UTF8(values[i]).c_str(), NULL);
+			sfimenu->addItem(mf);
+		}
+		int ret = sfimenu->exec(NULL, "");
+		sfimenu=NULL;
+		delete sfimenu;
+	}
+	return;
 }
