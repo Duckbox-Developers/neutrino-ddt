@@ -1662,7 +1662,7 @@ void CMoviePlayerGui::handleMovieBrowser(neutrino_msg_t msg, int /*position*/)
 		return;
 	}
 	else if (msg == (neutrino_msg_t) g_settings.mpkey_bookmark) {
-		if (newComHintBox.isPainted() == true) {
+		if (newComHintBox.isPainted()) {
 			// yes, let's get the end pos of the jump forward
 			new_bookmark.length = play_sec - new_bookmark.pos;
 			TRACE("[mp] commercial length: %d\r\n", new_bookmark.length);
@@ -1671,7 +1671,7 @@ void CMoviePlayerGui::handleMovieBrowser(neutrino_msg_t msg, int /*position*/)
 			}
 			new_bookmark.pos = 0;	// clear again, since this is used as flag for bookmark activity
 			newComHintBox.hide();
-		} else if (newLoopHintBox.isPainted() == true) {
+		} else if (newLoopHintBox.isPainted()) {
 			// yes, let's get the end pos of the jump backward
 			new_bookmark.length = new_bookmark.pos - play_sec;
 			new_bookmark.pos = play_sec;
@@ -1685,7 +1685,7 @@ void CMoviePlayerGui::handleMovieBrowser(neutrino_msg_t msg, int /*position*/)
 		} else {
 			std::vector<int> positions; std::vector<std::string> titles;
 			playback->GetChapters(positions, titles);
-			if (positions.empty())
+			if (positions.empty() && (isWebTV || isYT))
 				return;
 
 			CMenuWidget bookStartMenu(positions.empty() ? LOCALE_MOVIEBROWSER_BOOK_ADD : LOCALE_MOVIEBROWSER_MENU_MAIN_BOOKMARKS, NEUTRINO_ICON_AUDIO);
@@ -1807,7 +1807,6 @@ void CMoviePlayerGui::handleMovieBrowser(neutrino_msg_t msg, int /*position*/)
 			FileTime.update(position, duration);
 		}
 	}
-	return;
 }
 
 void CMoviePlayerGui::UpdatePosition()
