@@ -392,23 +392,18 @@ void CFbAccel::paintRect(const int x, const int y, const int dx, const int dy, c
 	if (dx <= 0 || dy <= 0)
 		return;
 
-	// The STM blitter introduces considerable overhead probably not worth for single lines. --martii
-	if (dx == 1) {
+	// The STM blitter introduces considerable overhead probably worth for small areas.  --martii
+	if (dx * dy < DEFAULT_XRES * 4) {
 		waitForIdle();
 		fb_pixel_t *fbs = fb->getFrameBufferPointer() + (DEFAULT_XRES * y) + x;
-		fb_pixel_t *fbe = fbs + DEFAULT_XRES * dy;
+		fb_pixel_t *fbe = fbs + DEFAULT_XRES * (dy - 1) + dx;
+		int off = DEFAULT_XRES - dx;
 		while (fbs < fbe) {
-			*fbs = col;
-			fbs += DEFAULT_XRES;
+			fb_pixel_t *ex = fbs + dx;
+			while (fbs < ex)
+				*fbs++ = col;
+			fbs += off;
 		}
-		return;
-	}
-	if (dy == 1) {
-		waitForIdle();
-		fb_pixel_t *fbs = fb->getFrameBufferPointer() + (DEFAULT_XRES * y) + x;
-		fb_pixel_t *fbe = fbs + dx;
-		while (fbs < fbe)
-			*fbs++ = col;
 		return;
 	}
 
@@ -722,7 +717,7 @@ void CFbAccel::blit2FB(void *fbbuff, uint32_t width, uint32_t height, uint32_t x
 		}
 		d += fb->stride;
 	}
-	blit();
+//	blit();
 #if 0
 	for(int i = 0; i < yc; i++){
 		memmove(clfb + (i + yoff)*stride + xoff*4, ip + (i + yp)*width + xp, xc*4);
