@@ -45,6 +45,7 @@ class CMediaPlayerMenu : public CMenuTarget
 		CAudioPlayerGui *inetPlayer;
 				
 		void showMoviePlayer(CMenuWidget *menu_movieplayer, CPersonalizeGui *p);
+		void showNetworkNFSMounts(CMenuWidget *menu_nfs,  CPersonalizeGui *p);
 
 	public:	
 		enum MM_MENU_MODES
