@@ -114,7 +114,7 @@ audiomenu.avs avs
 audiomenu.avsync A/V sync
 audiomenu.avsync_am Audio master
 audiomenu.clockrec 
-audiomenu.dolbydigital Dolby Digital (AC-3)
+audiomenu.dolbydigital DD-Unterkanal automatisch
 audiomenu.hdmi_dd Dolby Digital über HDMI
 audiomenu.hdmi_dd_auto automatisch
 audiomenu.hdmi_dd_force erzwingen
