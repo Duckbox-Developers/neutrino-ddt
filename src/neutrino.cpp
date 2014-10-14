@@ -139,6 +139,8 @@
 #include <lib/libtuxtxt/teletext.h>
 #include <eitd/sectionsd.h>
 
+#include <system/luaserver.h>
+
 int old_b_id = -1;
 
 CInfoClock      *InfoClock;
@@ -2375,8 +2377,13 @@ void CNeutrinoApp::RealRun(CMenuWidget &mainMenu)
 
 	//cCA::GetInstance()->Ready(true);
 
+	CLuaServer *luaServer = CLuaServer::getInstance();
+
 	while( true ) {
+		luaServer->UnBlock();
 		g_RCInput->getMsg(&msg, &data, 100, ((g_settings.mode_left_right_key_tv == SNeutrinoSettings::VOLUME) && (g_RemoteControl->subChannels.size() < 1)) ? true : false);	// 10 secs..
+		if (luaServer->Block(msg, data))
+			continue;
 
 #if HAVE_DUCKBOX_HARDWARE || BOXMODEL_SPARK7162
 		check_timer();
@@ -4741,6 +4748,7 @@ bool CNeutrinoApp::StartPip(const t_channel_id channel_id)
 
 void CNeutrinoApp::Cleanup()
 {
+//	CLuaServer::destroyInstance();
 #ifdef EXIT_CLEANUP
 	INFO("cleanup...");
 	printf("cleanup 10\n");fflush(stdout);
