@@ -891,7 +891,7 @@ mainmenu.channels Kanalliste
 mainmenu.clearsectionsd Lösche EPG Cache
 mainmenu.games Spiele
 mainmenu.head Hauptmenü
-mainmenu.lua Plugins
+mainmenu.lua Lua-Plugins
 mainmenu.media Multimedia
 mainmenu.movieplayer Movieplayer
 mainmenu.pausesectionsd EPG auslesen
@@ -905,7 +905,7 @@ mainmenu.scripts Skripte
 mainmenu.service Service
 mainmenu.settings Einstellungen
 mainmenu.shutdown Ausschalten
-mainmenu.shutdown_menu Ausschalt Optionen
+mainmenu.shutdown_menu Ausschalt-Optionen
 mainmenu.sleeptimer SleepTimer
 mainmenu.standby Standby
 mainmenu.tools Werkzeuge
@@ -915,7 +915,7 @@ mainsettings.audio Audio
 mainsettings.head Einstellungen
 mainsettings.keybinding Tasten
 mainsettings.language Sprache
-mainsettings.lcd VFD-Display
+mainsettings.lcd VFD/LCD-Display
 mainsettings.manage Einstellungen verwalten
 mainsettings.misc Erweiterte Einstellungen
 mainsettings.multimedia Multimedia
