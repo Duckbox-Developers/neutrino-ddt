@@ -77,13 +77,6 @@ bool glcd_play = false;
 //#include <libavcodec/avcodec.h>
 #endif
 
-//extern CPlugins *g_PluginList;
-#if !HAVE_COOL_HARDWARE && !HAVE_DUCKBOX_HARDWARE
-#define LCD_MODE CVFD::MODE_MOVIE
-#else
-#define LCD_MODE CVFD::MODE_MENU_UTF8
-#endif
-
 extern cVideo * videoDecoder;
 extern CRemoteControl *g_RemoteControl;	/* neutrino.cpp */
 extern CInfoClock *InfoClock;
@@ -320,7 +313,7 @@ int CMoviePlayerGui::exec(CMenuTarget * parent, const std::string & actionKey)
 	else if (actionKey == "netstream") {
 		isHTTP = true;
 		p_movie_info = NULL;
-		is_file_player = 1;
+		is_file_player = true;
 		PlayFile();
 	}
 	else if (actionKey == "upnp") {
@@ -374,6 +367,7 @@ int CMoviePlayerGui::exec(CMenuTarget * parent, const std::string & actionKey)
 
 void CMoviePlayerGui::updateLcd()
 {
+#if !HAVE_SPARK_HARDWARE
 	char tmp[20];
 	std::string lcd;
 	std::string name;
@@ -452,6 +446,7 @@ void CMoviePlayerGui::updateLcd()
 	lcd += name;
 	CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8);
 	CVFD::getInstance()->showMenuText(0, lcd.c_str(), -1, true);
+#endif
 }
 
 void CMoviePlayerGui::fillPids()
