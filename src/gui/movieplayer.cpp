@@ -749,7 +749,7 @@ bool CMoviePlayerGui::PlayBackgroundStart(const std::string &file, const std::st
 			fprintf(stderr, "ERROR: pthread_create(%s)\n", __func__);
 	} else
 		PlayFileEnd();
-	printf("%s: this %x started: res %d thread %x\n", __func__, (int) this, res, (int) CMoviePlayerGui::bgPlayThread);fflush(stdout);
+	printf("%s: this %p started: res %d thread %p\n", __func__, this, res, CMoviePlayerGui::bgPlayThread);fflush(stdout);
 	return res;
 }
 
@@ -760,7 +760,7 @@ void CMoviePlayerGui::stopPlayBack(void)
 
 	repeat_mode = REPEAT_OFF;
 	if (bgThread) {
-		printf("%s: this %x join background thread %x\n", __func__, (int) this, (int) CMoviePlayerGui::bgPlayThread);fflush(stdout);
+		printf("%s: this %p join background thread %p\n", __func__, this, CMoviePlayerGui::bgPlayThread);fflush(stdout);
 		cond.broadcast();
 		pthread_join(bgThread, NULL);
 		bgThread = 0;
@@ -1263,7 +1263,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			handleMovieBrowser((neutrino_msg_t) g_settings.mpkey_stop, position);
 		}
 	}
-	printf("CMoviePlayerGui::PlayFile: exit, isMovieBrowser %d p_movie_info %x\n", isMovieBrowser, (int) p_movie_info);
+	printf("CMoviePlayerGui::PlayFile: exit, isMovieBrowser %d p_movie_info %p\n", isMovieBrowser, p_movie_info);
 	playstate = CMoviePlayerGui::STOPPED;
 	handleMovieBrowser((neutrino_msg_t) g_settings.mpkey_stop, position);
 	if (position >= 300000 || (duration < 300000 && (position > (duration /2))))
@@ -1280,7 +1280,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 
 void CMoviePlayerGui::PlayFileEnd(bool restore)
 {
-	printf("%s: stopping, this %x thread %x\n", __func__, (int) this, (int) CMoviePlayerGui::bgPlayThread);fflush(stdout);
+	printf("%s: stopping, this %p thread %p\n", __func__, this, CMoviePlayerGui::bgPlayThread);fflush(stdout);
 	if (filelist_it == filelist.end())
 		FileTime.kill();
 	clearSubtitle();
@@ -1545,7 +1545,7 @@ void CMoviePlayerGui::handleMovieBrowser(neutrino_msg_t msg, int /*position*/)
 	}
 	else if (msg == (neutrino_msg_t) g_settings.mpkey_stop) {
 		// if we have a movie information, try to save the stop position
-		printf("CMoviePlayerGui::handleMovieBrowser: stop, isMovieBrowser %d p_movie_info %x\n", isMovieBrowser, (int) p_movie_info);
+		printf("CMoviePlayerGui::handleMovieBrowser: stop, isMovieBrowser %d p_movie_info %p\n", isMovieBrowser, p_movie_info);
 		if (isMovieBrowser && p_movie_info) {
 			timeb current_time;
 			ftime(&current_time);

@@ -1450,8 +1450,8 @@ CZapitChannel* CChannelList::getPrevNextChannel(int key, unsigned int &sl)
 		}
 		sl = cactive;
 		channel = bouquetList->Bouquets[bactive]->channelList->getChannelFromIndex(cactive);
-		printf("CChannelList::getPrevNextChannel: selected %u total %d active bouquet %d total %d channel %x (%s)\n",
-				cactive, (*chanlist).size(), bactive, bsize, (int) channel, channel ? channel->getName().c_str(): "");
+		printf("CChannelList::getPrevNextChannel: selected %u total %d active bouquet %d total %d channel %p (%s)\n",
+				(unsigned int) cactive, (unsigned int) (*chanlist).size(), (int) bactive, (int) bsize, channel, channel ? channel->getName().c_str(): "");
 	} else {
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 		if ((key == g_settings.key_quickzap_down) || (key == CRCInput::RC_left) || (key == CRCInput::RC_page_down)) {
