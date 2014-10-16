@@ -494,6 +494,7 @@ CMenuWidget::CMenuWidget()
 	details_line	= NULL;
 	info_box	= NULL;
 	show_details_line = true;
+	nextShortcut	= 1;
 }
 
 CMenuWidget::CMenuWidget(const neutrino_locale_t Name, const std::string & Icon, const int mwidth, const mn_widget_id_t &w_index)
@@ -564,6 +565,7 @@ void CMenuWidget::Init(const std::string &Icon, const int mwidth, const mn_widge
 	fbutton_labels	= NULL;
 	fbutton_width	= 0;
 	fbutton_height	= 0;
+	nextShortcut	= 1;
 }
 
 void CMenuWidget::move(int xoff, int yoff)
@@ -956,12 +958,13 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 	return retval;
 }
 
-void CMenuWidget::integratePlugins(void *pluginsExec, CPlugins::i_type_t integration)
+void CMenuWidget::integratePlugins(void *pluginsExec, CPlugins::i_type_t integration, const unsigned int shortcut)
 {
 	CPluginsExec *_pluginsExec = static_cast<CPluginsExec*>(pluginsExec);
 	bool separatorline = false;
 	char id_plugin[5];
 	unsigned int number_of_plugins = (unsigned int) g_PluginList->getNumberOfPlugins();
+	unsigned int sc = shortcut;
 	for (unsigned int count = 0; count < number_of_plugins; count++)
 	{
 		if ((g_PluginList->getIntegration(count) == integration) && !g_PluginList->isHidden(count))
@@ -973,7 +976,8 @@ void CMenuWidget::integratePlugins(void *pluginsExec, CPlugins::i_type_t integra
 			}
 			printf("[neutrino] integratePlugins: add %s\n", g_PluginList->getName(count));
 			sprintf(id_plugin, "%d", count);
-			CMenuForwarder *fw_plugin = new CMenuForwarder(g_PluginList->getName(count), true, NULL, _pluginsExec, id_plugin);
+			neutrino_msg_t dk = (shortcut != CRCInput::RC_nokey) ? CRCInput::convertDigitToKey(sc++) : CRCInput::RC_nokey;
+			CMenuForwarder *fw_plugin = new CMenuForwarder(g_PluginList->getName(count), true, NULL, _pluginsExec, id_plugin, dk);
 			fw_plugin->setHint(g_PluginList->getHintIcon(count), g_PluginList->getDescription(count));
 			addItem(fw_plugin);
 		}
@@ -1075,7 +1079,7 @@ void CMenuWidget::calcSize()
 
 	iconOffset= 0;
 	for (unsigned int i= 0; i< items.size(); i++)
-		if (items[i]->iconName && (/*!g_settings.menu_numbers_as_icons ||*/ !CRCInput::isNumeric(items[i]->directKey)))
+		if (items[i]->iconName /*&& !g_settings.menu_numbers_as_icons*/)
 		{
 			int w, h;
 			frameBuffer->getIconSize(items[i]->iconName, &w, &h);
