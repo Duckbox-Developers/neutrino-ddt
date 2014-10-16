@@ -4208,10 +4208,6 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 		media->exec(NULL, actionKey);
 		return menu_return::RETURN_EXIT_ALL;
 	}
-	else if(actionKey == "hddmenu") {
-		CHDDMenuHandler::getInstance()->exec(NULL, "");
-		return menu_return::RETURN_EXIT_ALL;
-	}
 	else if(actionKey=="rass") {
 		frameBuffer->Clear();
 		CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
