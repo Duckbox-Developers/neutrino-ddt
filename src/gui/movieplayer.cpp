@@ -501,8 +501,6 @@ void CMoviePlayerGui::Cleanup()
 	p_movie_info = NULL;
 	autoshot_done = false;
 	currentaudioname = "Unk";
-	info_1 = "";
-	info_2 = "";
 }
 
 void CMoviePlayerGui::ClearFlags()
