@@ -91,6 +91,7 @@
 #include "gui/sleeptimer.h"
 #include "gui/start_wizard.h"
 #include "gui/update_ext.h"
+#include "gui/update.h"
 #include "gui/videosettings.h"
 #include "gui/audio_select.h"
 
@@ -368,6 +369,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 		parentallocked = true;
 		checkParentallocked.close();
 	}
+	g_settings.softupdate_autocheck = configfile.getBool("softupdate_autocheck" , false);
 
 	// video
 #if HAVE_TRIPLEDRAGON || BOXMODEL_SPARK7162
@@ -1351,6 +1353,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setString("softupdate_url_file"      , g_settings.softupdate_url_file      );
 	configfile.setInt32 ("softupdate_name_mode_apply", g_settings.softupdate_name_mode_apply);
 	configfile.setInt32 ("softupdate_name_mode_backup", g_settings.softupdate_name_mode_backup);
+	configfile.setBool("softupdate_autocheck", g_settings.softupdate_autocheck);
 
 	configfile.setInt32("flashupdate_createimage_add_uldr",   g_settings.flashupdate_createimage_add_uldr);
 	configfile.setInt32("flashupdate_createimage_add_u_boot", g_settings.flashupdate_createimage_add_u_boot);
@@ -2258,6 +2261,7 @@ TIMER_START();
 		startwizard.exec(NULL, "");
 	}
 
+	InitZapper();
 	if(loadSettingsErg) {
 		hintBox->hide();
 		dprintf(DEBUG_INFO, "config file or options missing\n");
@@ -2275,7 +2279,7 @@ TIMER_START();
 	delete hintBox;
 
 	cCA::GetInstance()->Ready(true);
-	InitZapper();
+	//InitZapper();
 
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 	C3DSetup::getInstance()->exec(NULL, "zapped");
@@ -2287,6 +2291,17 @@ TIMER_START();
 	cHddStat::getInstance();
 
 TIMER_STOP("################################## after all ##################################");
+	if (g_settings.softupdate_autocheck) {
+		hintBox = new CHintBox(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_FLASHUPDATE_CHECKUPDATE_INTERNET));
+		hintBox->paint();
+		CFlashUpdate flash;
+		if(flash.checkOnlineVersion()) {
+			hintBox->hide();
+			//flash.enableNotify(false);
+			flash.exec(NULL, "inet");
+		}
+		delete hintBox;
+	}
 	RealRun(personalize.getWidget(0)/**main**/);
 
 	ExitRun(true, !can_deepstandby);

@@ -150,6 +150,9 @@ int CUpdateSettings::initMenu()
 	OnOffNotifier->addItem(apply_kernel);
 #endif
 
+	CMenuOptionChooser *autocheck = new CMenuOptionChooser(LOCALE_FLASHUPDATE_AUTOCHECK, &g_settings.softupdate_autocheck, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, OnOffNotifier);
+//	apply_settings->setHint("", LOCALE_MENU_HINT_XXX);
+
 	w_upsettings.addItem(fw_update_dir);
 	w_upsettings.addItem(fw_url);
 #if ENABLE_EXTUPDATE
@@ -160,6 +163,7 @@ int CUpdateSettings::initMenu()
 	w_upsettings.addItem(name_apply);
 #endif
 #endif
+	w_upsettings.addItem(autocheck);
 
 #if 0
 	w_upsettings.addItem(apply_kernel);

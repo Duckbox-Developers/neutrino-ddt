@@ -106,10 +106,20 @@ void COnOffNotifier::addItem(CMenuItem* menuItem)
 	toDisable.push_back(menuItem);
 }
 
-bool CSectionsdConfigNotifier::changeNotify(const neutrino_locale_t, void *)
+bool CSectionsdConfigNotifier::changeNotify(const neutrino_locale_t locale, void *data)
 {
-        CNeutrinoApp::getInstance()->SendSectionsdConfig();
-        return false;
+	char *str = (char*) data;
+	if (locale == LOCALE_MISCSETTINGS_EPG_CACHE)
+		g_settings.epg_cache = atoi(str);
+	else if (locale == LOCALE_MISCSETTINGS_EPG_EXTENDEDCACHE)
+		g_settings.epg_extendedcache = atoi(str);
+	else if (locale == LOCALE_MISCSETTINGS_EPG_OLD_EVENTS)
+		g_settings.epg_old_events = atoi(str);
+	else if (locale == LOCALE_MISCSETTINGS_EPG_MAX_EVENTS)
+		g_settings.epg_max_events = atoi(str);
+
+	CNeutrinoApp::getInstance()->SendSectionsdConfig();
+	return false;
 }
 
 bool CTouchFileNotifier::changeNotify(const neutrino_locale_t, void * data)
