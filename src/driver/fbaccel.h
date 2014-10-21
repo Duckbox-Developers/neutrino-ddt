@@ -38,7 +38,6 @@
 
 class CFrameBuffer;
 class CFbAccel
-	: public OpenThreads::Thread
 {
 	private:
 		CFrameBuffer *fb;
@@ -52,11 +51,6 @@ class CFbAccel
 #endif /* USE_NEVIS_GXA */
 		void setColor(fb_pixel_t col);
 		void run(void);
-		void _blit(void);
-		bool blit_thread;
-		bool blit_pending;
-		OpenThreads::Condition blit_cond;
-		OpenThreads::Mutex blit_mutex;
 	public:
 		fb_pixel_t *backbuffer;
 		fb_pixel_t *lbb;

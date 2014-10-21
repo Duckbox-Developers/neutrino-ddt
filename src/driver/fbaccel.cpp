@@ -182,16 +182,6 @@ static int backbuf_sz = 0;
 
 void CFbAccel::waitForIdle(void)
 {
-#if 0	/* blits too often and does not seem to be necessary */
-	blit_mutex.lock();
-	if (blit_pending)
-	{
-		blit_mutex.unlock();
-		_blit();
-		return;
-	}
-	blit_mutex.unlock();
-#endif
 	OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(mutex);
 	ioctl(fb->fd, STMFBIO_SYNC_BLITTER);
 }
@@ -203,7 +193,6 @@ void CFbAccel::waitForIdle(void)
 
 CFbAccel::CFbAccel(CFrameBuffer *_fb)
 {
-	blit_thread = false;
 	fb = _fb;
 	init();
 	lastcol = 0xffffffff;
@@ -295,21 +284,10 @@ CFbAccel::CFbAccel(CFrameBuffer *_fb)
 	/* TODO: what to do here? does this really happen? */
 	;
 #endif /* USE_NEVIS_GXA */
-
-#if NEED_BLIT_THREAD
-	/* start the autoblit-thread (run() function) */
-	OpenThreads::Thread::start();
-#endif
 };
 
 CFbAccel::~CFbAccel()
 {
-	if (blit_thread)
-	{
-		blit_thread = false;
-		blit(); /* wakes up the thread */
-		OpenThreads::Thread::join();
-	}
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 	if (backbuffer)
 	{
@@ -484,7 +462,6 @@ void CFbAccel::paintRect(const int x, const int y, const int dx, const int dy, c
 		line++;
 	}
 #endif
-//	blit();
 }
 
 void CFbAccel::paintPixel(const int x, const int y, const fb_pixel_t col)
@@ -608,7 +585,6 @@ void CFbAccel::paintLine(int xa, int ya, int xb, int yb, const fb_pixel_t col)
 			paintPixel(x, y, col);
 		}
 	}
-//	blit();
 #endif
 }
 
@@ -717,7 +693,6 @@ void CFbAccel::blit2FB(void *fbbuff, uint32_t width, uint32_t height, uint32_t x
 		}
 		d += fb->stride;
 	}
-//	blit();
 #if 0
 	for(int i = 0; i < yc; i++){
 		memmove(clfb + (i + yoff)*stride + xoff*4, ip + (i + yp)*width + xp, xc*4);
@@ -780,45 +755,6 @@ void CFbAccel::setupGXA()
 	add_gxa_sync_marker();
 }
 #endif
-
-#define BLIT_INTERVAL_MIN 40
-#define BLIT_INTERVAL_MAX 250
-void CFbAccel::run()
-{
-	printf("CFbAccel::run start\n");
-	time_t last_blit = 0;
-	blit_pending = false;
-	blit_thread = true;
-	blit_mutex.lock();
-	set_threadname("fb::autoblit");
-	while (blit_thread) {
-		blit_cond.wait(&blit_mutex, blit_pending ? BLIT_INTERVAL_MIN : BLIT_INTERVAL_MAX);
-		time_t now = time_monotonic_ms();
-		if (now - last_blit < BLIT_INTERVAL_MIN)
-		{
-			blit_pending = true;
-			//printf("CFbAccel::run: skipped, time %ld\n", now - last_blit);
-		}
-		else
-		{
-			blit_pending = false;
-			blit_mutex.unlock();
-			_blit();
-			blit_mutex.lock();
-			last_blit = now;
-		}
-	}
-	blit_mutex.unlock();
-	printf("CFbAccel::run end\n");
-}
-
-void CFbAccel::blit()
-{
-	//printf("CFbAccel::blit\n");
-	blit_mutex.lock();
-	blit_cond.signal();
-	blit_mutex.unlock();
-}
 
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 void CFbAccel::blitBB2FB(int fx0, int fy0, int fx1, int fy1, int tx0, int ty0, int tx1, int ty1)
@@ -890,7 +826,7 @@ void CFbAccel::blitBoxFB(int x0, int y0, int x1, int y1, fb_pixel_t color)
 }
 
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
-void CFbAccel::_blit()
+void CFbAccel::blit()
 {
 #ifdef ENABLE_GRAPHLCD
 	nGLCD::Blit();
@@ -922,14 +858,8 @@ void CFbAccel::_blit()
 		perror("CFrameBuffer::blit ioctl STMFBIO_SYNC_BLITTER 2");
 }
 #else
-void CFbAccel::_blit()
+void CFbAccel::blit()
 {
-#if 0
-	static time_t last = 0;
-	time_t now = time_monotonic_ms();
-	printf("%s %ld\n", __func__, now - last);
-	last = now;
-#endif
 #ifdef PARTIAL_BLIT
 	if (to_blit.xs == INT_MAX)
 		return;
@@ -1033,7 +963,7 @@ void CFbAccel::_blit()
 #define FBIO_SET_MANUAL_BLIT _IOW('F', 0x21, __u8)
 #endif
 static bool autoblit = getenv("AZBOX_KERNEL_BLIT") ? true : false;
-void CFbAccel::_blit()
+void CFbAccel::blit()
 {
 	if (autoblit)
 		return;
@@ -1050,7 +980,7 @@ void CFbAccel::_blit()
 
 #else
 /* not azbox and not spark -> no blit() needed */
-void CFbAccel::_blit()
+void CFbAccel::blit()
 {
 #if HAVE_GENERIC_HARDWARE
 	if (glfb)
