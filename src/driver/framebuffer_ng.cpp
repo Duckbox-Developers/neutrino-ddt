@@ -534,6 +534,7 @@ void CFrameBuffer::paletteSet(struct fb_cmap *map)
 		realcolor[i] = make16color(cmap.red[i], cmap.green[i], cmap.blue[i], cmap.transp[i],
 					   rl, ro, gl, go, bl, bo, tl, to);
 	}
+	realcolor[(COL_BACKGROUND + 0)] = 0; // background, no alpha
 }
 
 inline fb_pixel_t mergeColor(fb_pixel_t oc, int ol, fb_pixel_t ic, int il)
@@ -1149,12 +1150,12 @@ void CFrameBuffer::paintBackground()
 		for (int i = 0; i < 576; i++)
 			memmove(((uint8_t *)getFrameBufferPointer()) + i * stride, (background + i * BACKGROUNDIMAGEWIDTH), BACKGROUNDIMAGEWIDTH * sizeof(fb_pixel_t));
 		checkFbArea(0, 0, xRes, yRes, false);
-		accel->blit();
 	}
 	else
 	{
 		paintBoxRel(0, 0, xRes, yRes, backgroundColor);
 	}
+	accel->blit();
 }
 
 void CFrameBuffer::SaveScreen(int x, int y, int dx, int dy, fb_pixel_t * const memp)
@@ -1410,23 +1411,19 @@ void *CFrameBuffer::autoBlitThread(void *arg)
 
 void CFrameBuffer::autoBlitThread(void)
 {
-	while (autoBlitStatus)
-	{
+	while (autoBlitStatus) {
 		accel->blit();
 		for (int i = 4; i && autoBlitStatus; i--)
-		usleep(50000);
+			usleep(50000);
 	}
 }
 
 void CFrameBuffer::autoBlit(bool b)
 {
-	if (b && !autoBlitThreadId)
-	{
+	if (b && !autoBlitThreadId) {
 		autoBlitStatus = true;
 		pthread_create(&autoBlitThreadId, NULL, autoBlitThread, this);
-	}
-	else if (!b && autoBlitThreadId)
-	{
+	} else if (!b && autoBlitThreadId) {
 		autoBlitStatus = false;
 		pthread_join(autoBlitThreadId, NULL);
 		autoBlitThreadId = 0;
