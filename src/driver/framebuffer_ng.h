@@ -34,6 +34,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <pthread.h>
 
 #define fb_pixel_t uint32_t
 
@@ -220,7 +221,7 @@ class CFrameBuffer
 
 
 		void setIconBasePath(const std::string & iconPath);
-		std::string getIconBasePath(){return iconBasePath;};
+		std::string getIconBasePath() {return iconBasePath;};
 
 		void getIconSize(const char * const filename, int* width, int *height);
 		/* h is the height of the target "window", if != 0 the icon gets centered in that window */
@@ -282,10 +283,15 @@ class CFrameBuffer
 		void set3DMode(Mode3D);
 		Mode3D get3DMode(void);
 	private:
+		bool autoBlitStatus;
+		pthread_t autoBlitThreadId;
+		static void *autoBlitThread(void *arg);
+		void autoBlitThread();
 		enum Mode3D mode3D;
 
 	public:
 		void blitArea(int src_width, int src_height, int fb_x, int fb_y, int width, int height);
+		void autoBlit(bool b = true);
 		void ClearFB(void);
 		void resChange(void);
 #endif
