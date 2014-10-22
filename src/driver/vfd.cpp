@@ -253,9 +253,9 @@ CVFD::CVFD()
         m_progressLocal = 0;
 #endif // VFD_UPDATE
 
-#if !HAVE_DUCKBOX_HARDWARE
 	has_lcd = true;
 	has_led_segment = false;
+#if !HAVE_DUCKBOX_HARDWARE
 	fd = open("/dev/display", O_RDONLY);
 	if(fd < 0) {
 		perror("/dev/display");
