@@ -236,7 +236,6 @@ void* CVFD::ThreadScrollText(void * arg)
 
 	return NULL;
 }
-
 #endif
 
 CVFD::CVFD()
@@ -254,20 +253,57 @@ CVFD::CVFD()
         m_progressLocal = 0;
 #endif // VFD_UPDATE
 
-	has_lcd = 1;
 #if !HAVE_DUCKBOX_HARDWARE
+	has_lcd = true;
+	has_led_segment = false;
 	fd = open("/dev/display", O_RDONLY);
 	if(fd < 0) {
 		perror("/dev/display");
-		has_lcd = 0;
+		has_lcd = false;
+		has_led_segment = false;
 	}
 #endif
+
+#ifdef BOXMODEL_APOLLO
+	if (fd >= 0) {
+		int ret = ioctl(fd, IOC_FP_GET_DISPLAY_CAPS, &caps);
+		if (ret < 0) {
+			perror("IOC_FP_GET_DISPLAY_CAPS");
+			printf("VFD: please update driver!\n");
+			support_text	= true;
+			support_numbers	= true;
+		} else {
+			switch (caps.display_type) {
+			case FP_DISPLAY_TYPE_NONE:
+				has_lcd		= false;
+				has_led_segment	= false;
+				break;
+			case FP_DISPLAY_TYPE_LED_SEGMENT:
+				has_lcd		= false;
+				has_led_segment	= true;
+				break;
+			default:
+				has_lcd		= true;
+				has_led_segment	= false;
+				break;
+			}
+			support_text    = (caps.display_type != FP_DISPLAY_TYPE_LED_SEGMENT &&
+				           caps.text_support != FP_DISPLAY_TEXT_NONE);
+			support_numbers = caps.number_support;
+		}
+	}
+#else
+	support_text	= true;
+	support_numbers	= true;
+#endif
+
 	text[0] = 0;
 	g_str[0] = 0;
 	clearClock = 0;
 	mode = MODE_TVRADIO;
 	switch_name_time_cnt = 0;
 	timeout_cnt = 0;
+	service_number = -1;
 }
 
 CVFD::~CVFD()
@@ -314,7 +350,8 @@ void CVFD::count_down() {
 }
 
 void CVFD::wake_up() {
-	if(!has_lcd) return;
+	if(fd < 0) return;
+
 	if (atoi(g_settings.lcd_setting_dim_time.c_str()) > 0) {
 		timeout_cnt = atoi(g_settings.lcd_setting_dim_time.c_str());
 		g_settings.lcd_setting_dim_brightness > -1 ?
@@ -328,6 +365,7 @@ void CVFD::wake_up() {
 #if defined (BOXMODEL_OCTAGON1008)
 	ShowIcon(ICON_COLON2, false);
 #endif
+
 }
 
 void* CVFD::TimeThread(void *)
@@ -359,7 +397,7 @@ void CVFD::init(const char * /*fontfile*/, const char * /*fontname*/)
 
 void CVFD::setlcdparameter(int dimm, const int power)
 {
-	if(!has_lcd) return;
+	if(fd < 0) return;
 
 	if(dimm < 0)
 		dimm = 0;
@@ -441,14 +479,15 @@ printf("CVFD::setlcdparameter dimm %d power %d\n", dimm, power);
 
 void CVFD::setlcdparameter(void)
 {
-	if(!has_lcd) return;
+	if(fd < 0) return;
 	last_toggle_state_power = g_settings.lcd_setting[SNeutrinoSettings::LCD_POWER];
 	setlcdparameter((mode == MODE_STANDBY) ? g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] : (mode == MODE_SHUTDOWN) ? g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] : g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS],
 			last_toggle_state_power);
 }
 
 #if !HAVE_DUCKBOX_HARDWARE
-void CVFD::setled(int led1, int led2){
+void CVFD::setled(int led1, int led2)
+{
 	int ret = -1;
 
 	if(led1 != -1){
@@ -480,40 +519,43 @@ void CVFD::setled(bool on_off)
 
 	int led1 = -1, led2 = -1;
 	if(on_off){//on
-		switch(g_settings.led_rec_mode){
+		switch(g_settings.led_rec_mode) {
 			case 1:
-			led1 = FP_LED_1_ON; led2 = FP_LED_2_ON;
-			break;
+				led1 = FP_LED_1_ON; led2 = FP_LED_2_ON;
+				break;
 			case 2:
-			led1 = FP_LED_1_ON;
-			break;
+				led1 = FP_LED_1_ON;
+				break;
 			case 3:
-			led2 = FP_LED_2_ON;
-			break;
+				led2 = FP_LED_2_ON;
+				break;
 			default:
-			break;
+				break;
 	      }
 	}
 	else {//off
-		switch(g_settings.led_rec_mode){
-			break;
+		switch(g_settings.led_rec_mode) {
+			case 1:
+				led1 = FP_LED_1_OFF; led2 = FP_LED_2_OFF;
+				break;
 			case 2:
-			led1 = FP_LED_1_OFF;
-			break;
+				led1 = FP_LED_1_OFF;
+				break;
 			case 3:
-			led2 = FP_LED_2_OFF;
-			break;
+				led2 = FP_LED_2_OFF;
+				break;
 			default:
-			led1 = FP_LED_1_OFF; led2 = FP_LED_2_OFF;
-			break;
+				led1 = FP_LED_1_OFF; led2 = FP_LED_2_OFF;
+				break;
 	      }
 	}
+
 	setled(led1, led2);
 }
 
 void CVFD::setled(void)
 {
-	if(!has_lcd) return;
+	if(fd < 0) return;
 
 	int led1 = -1, led2 = -1;
 	int select = 0;
@@ -525,34 +567,39 @@ void CVFD::setled(void)
 
 	switch(select){
 		case 0:
-		led1 = FP_LED_1_OFF; led2 = FP_LED_2_OFF;
-		break;
+			led1 = FP_LED_1_OFF; led2 = FP_LED_2_OFF;
+			break;
 		case 1:
-		led1 = FP_LED_1_ON; led2 = FP_LED_2_ON;
-		break;
+			led1 = FP_LED_1_ON; led2 = FP_LED_2_ON;
+			break;
 		case 2:
-		led1 = FP_LED_1_ON; led2 = FP_LED_2_OFF;
-		break;
+			led1 = FP_LED_1_ON; led2 = FP_LED_2_OFF;
+			break;
 		case 3:
-		led1 = FP_LED_1_OFF; led2 = FP_LED_2_ON;
-		break;
+			led1 = FP_LED_1_OFF; led2 = FP_LED_2_ON;
+			break;
 		default:
-		break;
+			break;
 	}
 	setled(led1, led2);
 }
 #endif
 
-void CVFD::showServicename(const std::string & name) // UTF-8
+void CVFD::showServicename(const std::string & name, int number) // UTF-8
 {
-	if(!has_lcd) return;
+	if(fd < 0) return;
 
 printf("CVFD::showServicename: %s\n", name.c_str());
 	servicename = name;
+	service_number = number;
+
 	if (mode != MODE_TVRADIO)
 		return;
 
-	ShowText(name.c_str());
+	if (support_text)
+		ShowText(name.c_str());
+	else
+		ShowNumber(service_number);
 	wake_up();
 }
 
@@ -564,7 +611,7 @@ void CVFD::showTime(bool force)
 	if(!has_lcd)
 		return;
 #endif
-	if(has_lcd && mode == MODE_SHUTDOWN) {
+	if(fd >= 0 && mode == MODE_SHUTDOWN) {
 #ifdef HAVE_DUCKBOX_HARDWARE
 		ShowIcon(FP_ICON_REC, false);
 #else
@@ -572,7 +619,7 @@ void CVFD::showTime(bool force)
 #endif
 		return;
 	}
-	if (has_lcd && showclock) {
+	if (fd >= 0 && showclock) {
 		if (mode == MODE_STANDBY || ( g_settings.lcd_info_line && (MODE_TVRADIO == mode))) {
 			char timestr[21];
 			struct timeb tm;
@@ -602,6 +649,16 @@ void CVFD::showTime(bool force)
 				data.length = 5;
 				write_to_vfd(VFDDISPLAYCHARS, &data);
 #endif
+				if (support_text) {
+					strftime(timestr, 20, "%H:%M", t);
+					ShowText(timestr);
+				} else if (support_numbers && has_led_segment) {
+					ShowNumber((t->tm_hour*100) + t->tm_min);
+#if !HAVE_DUCKBOX_HARDWARE
+					if (fd >= 0)
+						ioctl(fd, IOC_FP_SET_COLON, 0x01);
+#endif
+				}
 			}
 		}
 	}
@@ -634,9 +691,11 @@ void CVFD::showTime(bool force)
 			ShowIcon(FP_ICON_REC, false);
 #else
 			ShowIcon(FP_ICON_CAM1, false);
+
 		setled();
 #endif
 	}
+
 	recstatus = tmp_recstatus;
 }
 
@@ -804,7 +863,7 @@ void CVFD::showPercentOver(const unsigned char perc, const bool /*perform_update
 
 void CVFD::showMenuText(const int /*position*/, const char * ptext, const int /*highlight*/, const bool /*utf_encoded*/)
 {
-	if(!has_lcd) return;
+	if(fd < 0) return;
 	if (mode != MODE_MENU_UTF8)
 		return;
 
@@ -814,7 +873,7 @@ void CVFD::showMenuText(const int /*position*/, const char * ptext, const int /*
 
 void CVFD::showAudioTrack(const std::string & /*artist*/, const std::string & title, const std::string & /*album*/)
 {
-	if(!has_lcd) return;
+	if(fd < 0) return;
 	if (mode != MODE_AUDIO)
 		return;
 printf("CVFD::showAudioTrack: %s\n", title.c_str());
@@ -830,7 +889,8 @@ printf("CVFD::showAudioTrack: %s\n", title.c_str());
 
 void CVFD::showAudioPlayMode(AUDIOMODES m)
 {
-	if(!has_lcd) return;
+	if(fd < 0) return;
+
 	switch(m) {
 		case AUDIO_MODE_PLAY:
 			ShowIcon(FP_ICON_PLAY, true);
@@ -892,7 +952,13 @@ void CVFD::showAudioProgress(const char /*perc*/, bool /*isMuted*/)
 
 void CVFD::setMode(const MODES m, const char * const title)
 {
-	if(!has_lcd) return;
+	if(fd < 0) return;
+
+#if !HAVE_DUCKBOX_HARDWARE
+	// Clear colon in display if it is still there
+	if (support_numbers && has_led_segment)
+		ioctl(fd, IOC_FP_SET_COLON, 0x00);
+#endif
 
 	if(mode == MODE_AUDIO)
 		ShowIcon(FP_ICON_MP3, false);
@@ -994,7 +1060,7 @@ void CVFD::setMode(const MODES m, const char * const title)
 
 void CVFD::setBrightness(int bright)
 {
-	if(!has_lcd) return;
+	if(!has_lcd && !has_led_segment) return;
 
 	g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] = bright;
 	setlcdparameter();
@@ -1010,12 +1076,13 @@ int CVFD::getBrightness()
 	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] > 15)
 		g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] = 15;
 #endif
+
 	return g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS];
 }
 
 void CVFD::setBrightnessStandby(int bright)
 {
-	if(!has_lcd) return;
+	if(!has_lcd && !has_led_segment) return;
 
 	g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] = bright;
 	setlcdparameter();
@@ -1036,7 +1103,7 @@ int CVFD::getBrightnessStandby()
 
 void CVFD::setBrightnessDeepStandby(int bright)
 {
-	if(!has_lcd) return;
+	if(!has_lcd && !has_led_segment) return;
 
 	g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] = bright;
 	setlcdparameter();
@@ -1070,7 +1137,7 @@ int CVFD::getPower()
 
 void CVFD::togglePower(void)
 {
-	if(!has_lcd) return;
+	if(fd < 0) return;
 
 	last_toggle_state_power = 1 - last_toggle_state_power;
 	setlcdparameter((mode == MODE_STANDBY) ? g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] : (mode == MODE_SHUTDOWN) ? g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] : g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS],
@@ -1096,19 +1163,19 @@ void CVFD::pause()
 
 void CVFD::Lock()
 {
-	if(!has_lcd) return;
+	if(fd < 0) return;
 	creat("/tmp/vfd.locked", 0);
 }
 
 void CVFD::Unlock()
 {
-	if(!has_lcd) return;
+	if(fd < 0) return;
 	unlink("/tmp/vfd.locked");
 }
 
 void CVFD::Clear()
 {
-	if(!has_lcd) return;
+	if(fd < 0) return;
 #if !HAVE_DUCKBOX_HARDWARE
 	int ret = ioctl(fd, IOC_FP_CLEAR_ALL, 0);
 	if(ret < 0)
@@ -1188,8 +1255,11 @@ void CVFD::ShowText(const char * str)
 	ShowNormalText(g_str, false);
 }
 #else
-void CVFD::ShowText(const char *str)
+void CVFD::ShowText(const char * str)
 {
+	if (fd < 0 || !support_text)
+		return;
+
 	char flags[2] = { FP_FLAG_ALIGN_LEFT, 0 };
 
 	if (g_settings.lcd_scroll)
@@ -1205,12 +1275,32 @@ void CVFD::ShowText(const char *str)
 
 	text = txt;
 	int ret = ioctl(fd, IOC_FP_SET_TEXT, len > 1 ? txt.c_str() : NULL);
-	if(ret < 0)
+	if(ret < 0) {
+		support_text = false;
 		perror("IOC_FP_SET_TEXT");
+	}
 }
 #endif
 
+void CVFD::ShowNumber(int number)
+{
+	if (fd < 0 || (!support_text && !support_numbers))
+		return;
+
+	if (number < 0)
+		return;
+	
+#if !HAVE_DUCKBOX_HARDWARE
+	int ret = ioctl(fd, IOC_FP_SET_NUMBER, number);
+	if(ret < 0) {
+		support_numbers = false;
+		perror("IOC_FP_SET_NUMBER");
+	}
+#endif
+}
+
 #ifdef VFD_UPDATE
+
 /*****************************************************************************************/
 // showInfoBox
 /*****************************************************************************************/
