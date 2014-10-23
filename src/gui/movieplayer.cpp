@@ -954,6 +954,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 {
 	bool first_start = true;
 	bool update_lcd = true;
+	int ss,mm,hh;
 #if HAVE_COOL_HARDWARE
 	int eof = 0;
 #endif
@@ -991,6 +992,15 @@ void CMoviePlayerGui::PlayFileLoop(void)
 				CVFD::getInstance()->showPercentOver(file_prozent, true, CVFD::MODE_MOVIE);
 #else
 				CVFD::getInstance()->showPercentOver(file_prozent);
+#endif
+#if HAVE_DUCKBOX_HARDWARE
+			ss = position/1000;
+			hh = ss/3600;
+			ss -= hh * 3600;
+			mm = ss/60;
+			ss -= mm * 60;
+			std::string Value = to_string(hh/10) + to_string(hh%10) + ":" + to_string(mm/10) + to_string(mm%10) + ":" + to_string(ss/10) + to_string(ss%10);
+			CVFD::getInstance()->ShowText(Value.c_str());
 #endif
 
 				playback->GetSpeed(speed);
@@ -1209,10 +1219,10 @@ void CMoviePlayerGui::PlayFileLoop(void)
 		} else if (msg == (neutrino_msg_t) g_settings.mpkey_goto) {
 			bool cancel = true;
 			playback->GetPosition(position, duration);
-			int ss = position/1000;
-			int hh = ss/3600;
+			ss = position/1000;
+			hh = ss/3600;
 			ss -= hh * 3600;
-			int mm = ss/60;
+			mm = ss/60;
 			ss -= mm * 60;
 			std::string Value = to_string(hh/10) + to_string(hh%10) + ":" + to_string(mm/10) + to_string(mm%10) + ":" + to_string(ss/10) + to_string(ss%10);
 			CTimeInput jumpTime (LOCALE_MPKEY_GOTO, &Value, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, NULL, &cancel);
