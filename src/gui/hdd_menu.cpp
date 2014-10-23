@@ -1076,6 +1076,9 @@ ret1:
 
 int CHDDDestExec::exec(CMenuTarget* /*parent*/, const std::string&)
 {
+	char str[256];
+	FILE * f;
+	int removable = 0;
 	struct dirent **namelist;
 	int n = scandir("/sys/block", &namelist, my_filter, alphasort);
 
@@ -1114,6 +1117,29 @@ int CHDDDestExec::exec(CMenuTarget* /*parent*/, const std::string&)
 	bool have_nonbb_hdparm = !::lstat(hdparm, &stat_buf) && !S_ISLNK(stat_buf.st_mode);
 
 	for (int i = 0; i < n; i++) {
+		removable = 0;
+		printf("CHDDDestExec: checking /sys/block/%s\n", namelist[i]->d_name);
+
+		sprintf(str, "/sys/block/%s/removable", namelist[i]->d_name);
+		f = fopen(str, "r");
+		if (!f) {
+			printf("Can't open %s\n", str);
+			continue;
+		}
+		fscanf(f, "%d", &removable);
+		fclose(f);
+
+		if (removable) {
+			// show USB icon, no need for hdparm/hd-idle
+#if HAVE_DUCKBOX_HARDWARE || BOXMODEL_SPARK7162
+			CVFD::getInstance()->ShowIcon(FP_ICON_USB, true);
+#endif
+			printf("CHDDDestExec: /dev/%s is not a hdd, no sleep needed\n", namelist[i]->d_name);
+		} else {
+			//show HDD icon and set hdparm for all hdd's
+#if HAVE_DUCKBOX_HARDWARE
+			CVFD::getInstance()->ShowIcon(FP_ICON_HDD, true);
+#endif
 		printf("CHDDDestExec: noise %d sleep %d /dev/%s\n",
 			 g_settings.hdd_noise, g_settings.hdd_sleep, namelist[i]->d_name);
 
@@ -1128,6 +1154,7 @@ int CHDDDestExec::exec(CMenuTarget* /*parent*/, const std::string&)
 			my_system(4, hdparm, M_opt, S_opt, opt);
 		else // busybox hdparm doesn't support "-M"
 			my_system(3, hdparm, S_opt, opt);
+		}
 		free(namelist[i]);
 	}
 	free(namelist);
