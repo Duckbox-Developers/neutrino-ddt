@@ -654,9 +654,8 @@ void CVFD::showTime(bool force)
 					ShowText(timestr);
 				} else if (support_numbers && has_led_segment) {
 					ShowNumber((t->tm_hour*100) + t->tm_min);
-#if !HAVE_DUCKBOX_HARDWARE
-					if (fd >= 0)
-						ioctl(fd, IOC_FP_SET_COLON, 0x01);
+#ifdef BOXMODEL_APOLLO
+					ioctl(fd, IOC_FP_SET_COLON, 0x01);
 #endif
 				}
 			}
@@ -954,8 +953,8 @@ void CVFD::setMode(const MODES m, const char * const title)
 {
 	if(fd < 0) return;
 
-#if !HAVE_DUCKBOX_HARDWARE
 	// Clear colon in display if it is still there
+#ifdef BOXMODEL_APOLLO
 	if (support_numbers && has_led_segment)
 		ioctl(fd, IOC_FP_SET_COLON, 0x00);
 #endif
@@ -1290,7 +1289,7 @@ void CVFD::ShowNumber(int number)
 	if (number < 0)
 		return;
 	
-#if !HAVE_DUCKBOX_HARDWARE
+#ifdef BOXMODEL_APOLLO
 	int ret = ioctl(fd, IOC_FP_SET_NUMBER, number);
 	if(ret < 0) {
 		support_numbers = false;
