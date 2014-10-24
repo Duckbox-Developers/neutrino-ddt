@@ -312,15 +312,13 @@ int cDvbSubtitleConverter::Convert(const uchar *Data, int Length, int64_t pts)
 {
 	AVPacket avpkt;
 	int got_subtitle = 0;
-	static cDvbSubtitleBitmaps *Bitmaps = NULL;
 
 	if(!avctx) {
 		dbgconverter("cDvbSubtitleConverter::Convert: no context\n");
 		return -1;
 	}
 
-	if(Bitmaps == NULL)
-		Bitmaps = new cDvbSubtitleBitmaps(pts);
+	cDvbSubtitleBitmaps *Bitmaps = new cDvbSubtitleBitmaps(pts);
 
 	AVSubtitle * sub = Bitmaps->GetSub();
 
