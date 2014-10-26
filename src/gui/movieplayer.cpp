@@ -194,6 +194,7 @@ void CMoviePlayerGui::Init(void)
 	bgThread = 0;
 	info_1 = "";
 	info_2 = "";
+	SetFile_activ = false;
 	filelist_it = filelist.end();
 }
 
@@ -501,8 +502,12 @@ void CMoviePlayerGui::Cleanup()
 	p_movie_info = NULL;
 	autoshot_done = false;
 	currentaudioname = "Unk";
-	info_1 = "";
-	info_2 = "";
+	if (SetFile_activ)
+		SetFile_activ = false;
+	else {
+		info_1 = "";
+		info_2 = "";
+	}
 }
 
 void CMoviePlayerGui::ClearFlags()

@@ -146,6 +146,7 @@ class CMoviePlayerGui : public CMenuTarget
 	cPlayback *playback;
 	static CMoviePlayerGui* instance_mp;
 
+	bool SetFile_activ;
 	void Init(void);
 	void PlayFile();
 	bool PlayFileStart();
@@ -204,7 +205,7 @@ class CMoviePlayerGui : public CMenuTarget
 	int timeshift;
 	int file_prozent;
 	cPlayback *getPlayback() { return playback; }
-	void SetFile(std::string &name, std::string &file, std::string info1="", std::string info2="") { pretty_name = name; file_name = file; info_1 = info1; info_2 = info2; }
+	void SetFile(std::string &name, std::string &file, std::string info1="", std::string info2="") { pretty_name = name; file_name = file; info_1 = info1; info_2 = info2; SetFile_activ = true; }
 	bool PlayBackgroundStart(const std::string &file, const std::string &name, t_channel_id chan);
 	void stopPlayBack(void);
 	void setLastMode(int m) { m_LastMode = m; }
