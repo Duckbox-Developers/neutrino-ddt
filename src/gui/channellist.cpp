@@ -180,6 +180,7 @@ void CChannelList::updateEvents(unsigned int from, unsigned int to)
 		time_t atime = time(NULL);
 		unsigned int count;
 		for (count = from; count < to; count++) {
+			events.clear();
 			CEitManager::getInstance()->getEventsServiceKey((*chanlist)[count]->channel_id, events);
 			(*chanlist)[count]->nextEvent.startTime = (long)0x7fffffff;
 			for ( CChannelEventList::iterator e= events.begin(); e != events.end(); ++e ) {
@@ -213,6 +214,7 @@ void CChannelList::updateEvents(unsigned int from, unsigned int to)
 		}
 		delete[] p_requested_channels;
 	}
+	events.clear();
 }
 
 void CChannelList::SortAlpha(void)
