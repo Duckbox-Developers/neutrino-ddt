@@ -183,9 +183,7 @@ void CZapit::SaveSettings(bool write)
 			configfile.setInt64("lastOTAChannel", last_channel_id);
 		}
 
-#if 0 // unused
-		configfile.setBool("writeChannelsNames", config.writeChannelsNames);
-#endif
+		configfile.setInt32("writeChannelsNames", config.writeChannelsNames);
 		configfile.setBool("makeRemainingChannelsBouquet", config.makeRemainingChannelsBouquet);
 		configfile.setInt32("feTimeout", config.feTimeout);
 		configfile.setInt32("feRetries", config.feRetries);
@@ -330,6 +328,7 @@ void CZapit::LoadSettings()
 	voltageOff				= configfile.getBool("voltageOff", 0);
 #endif
 	config.saveLastChannel			= configfile.getBool("saveLastChannel", true);
+	config.writeChannelsNames		= configfile.getInt32("writeChannelsNames", 3);
 	/* FIXME Channels renum should be done for all channels atm. TODO*/
 	//config.makeRemainingChannelsBouquet	= configfile.getBool("makeRemainingChannelsBouquet", 1);
 	config.makeRemainingChannelsBouquet	= 1;
