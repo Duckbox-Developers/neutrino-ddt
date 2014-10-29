@@ -1070,7 +1070,7 @@ bool CZapit::PrepareChannels()
 void CZapit::PrepareScan()
 {
 	StopPlayBack(true);
-        pmt_stop_update_filter(&pmt_update_fd);
+	pmt_stop_update_filter(&pmt_update_fd);
 	current_channel = 0;
 }
 
@@ -1766,15 +1766,8 @@ bool CZapit::ParseCommand(CBasicMessage::Header &rmsg, int connfd)
 		CZapitMessages::commandBoolean msgBool;
 		CBasicServer::receive_data(connfd, &msgBool, sizeof(msgBool));
 		StopPlayBack(msgBool.truefalse, false);
-#if 0
-		/* hack. if standby true, dont blank video */
-		standby = true;
-		StopPlayBack(true);
-		standby = false;
 		playbackStopForced = true;
 		lock_channel_id = live_channel_id;
-#endif
-		lockPlayBack();
 		SendCmdReady(connfd);
 		break;
 	}
@@ -1782,7 +1775,6 @@ bool CZapit::ParseCommand(CBasicMessage::Header &rmsg, int connfd)
 	{
 		CZapitMessages::commandBoolean msgBool;
 		CBasicServer::receive_data(connfd, &msgBool, sizeof(msgBool));
-#if 0
 		playbackStopForced = false;
 		if (lock_channel_id == live_channel_id) {
 			StartPlayBack(current_channel);
@@ -1794,8 +1786,7 @@ bool CZapit::ParseCommand(CBasicMessage::Header &rmsg, int connfd)
 				SendEvent(CZapitClient::EVT_ZAP_FAILED, &lock_channel_id, sizeof(lock_channel_id));
 			lock_channel_id = 0;
 		}
-#endif
-		unlockPlayBack();
+
 		SendCmdReady(connfd);
 		break;
 	}
@@ -2250,7 +2241,7 @@ bool CZapit::StartPlayBack(CZapitChannel *thisChannel)
 #if HAVE_AZBOX_HARDWARE
 	/* new (> 20130917) AZbox drivers switch to radio mode if audio is started first */
 	/* start video */
-	if (have_video) {
+	if (video_pid) {
 		videoDecoder->Start(0, thisChannel->getPcrPid(), thisChannel->getVideoPid());
 		videoDemux->Start();
 	}
