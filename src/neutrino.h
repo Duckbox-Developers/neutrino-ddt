@@ -220,7 +220,6 @@ public:
 	void showInfo(void);
 	CConfigFile* getConfigFile() {return &configfile;};
 	bool 		SDTreloadChannels;
-	bool 		g_channel_list_changed;
 
 	void saveEpg(bool cvfd_mode);
 	void stopDaemonsForFlash();

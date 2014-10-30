@@ -518,7 +518,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.infobar_progressbar   = configfile.getInt32("infobar_progressbar"  , 1 ); // below channel name
 	g_settings.casystem_display = configfile.getInt32("casystem_display", 1 );//discreet ca mode default
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
-	g_settings.dotmatrix = configfile.getInt32("infobar_dotmatrix", 0 );//default off
+	g_settings.dotmatrix = configfile.getInt32("infobar_dotmatrix", 0 );
 #endif
 	g_settings.scrambled_message = configfile.getBool("scrambled_message", false );
 	g_settings.volume_pos = configfile.getInt32("volume_pos", CVolumeBar::VOLUMEBAR_POS_TOP_RIGHT );
@@ -694,8 +694,8 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.recording_stream_pmt_pid        = configfile.getBool("recordingmenu.stream_pmt_pid"      , false);
 	g_settings.recording_filename_template     = configfile.getString("recordingmenu.filename_template" , "%C_%T%d_%t");
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
-	g_settings.recording_bufsize               = configfile.getInt32("recording_bufsize", 10);
-	g_settings.recording_bufsize_dmx           = configfile.getInt32("recording_bufsize_dmx", 2);
+	g_settings.recording_bufsize               = configfile.getInt32("recording_bufsize", 4);
+	g_settings.recording_bufsize_dmx           = configfile.getInt32("recording_bufsize_dmx", 3);
 #endif
 	g_settings.recording_choose_direct_rec_dir = configfile.getInt32( "recording_choose_direct_rec_dir", 0 );
 	g_settings.recording_epg_for_filename      = configfile.getBool("recording_epg_for_filename"         , true);
@@ -1880,7 +1880,6 @@ void CNeutrinoApp::SendSectionsdConfig(void)
 void CNeutrinoApp::InitZapper()
 {
 	struct stat my_stat;
-	g_channel_list_changed = false;
 
 	g_InfoViewer->start();
 	if (g_settings.epg_save){

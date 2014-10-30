@@ -221,7 +221,7 @@ class CFrameBuffer
 
 
 		void setIconBasePath(const std::string & iconPath);
-		std::string getIconBasePath() {return iconBasePath;};
+		std::string getIconBasePath() {return iconBasePath;}
 
 		void getIconSize(const char * const filename, int* width, int *height);
 		/* h is the height of the target "window", if != 0 the icon gets centered in that window */
