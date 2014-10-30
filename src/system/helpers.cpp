@@ -258,7 +258,7 @@ int safe_mkdir(const char * path)
 	d[l++] = '.';
 	d[l] = 0;
 
-	if(statfs(d, &s) || (s.f_type == 0x72b6 /* jffs2 */))
+	if(statfs(d, &s) || (s.f_type == 0x72b6 /* jffs2 */) || (s.f_type == 0x5941ff53 /* yaffs2 */))
 		return -1;
 	return mkdir(path, 0755);
 }
@@ -276,6 +276,7 @@ int check_dir(const char * dir, bool allow_tmp)
 				if(allow_tmp)
 					ret = 0;//ok
 			case 0x72b6L:		// jffs2
+			case 0x5941ff53L:	// yaffs2
 				break;
 			default:
 				ret = 0;	// ok
