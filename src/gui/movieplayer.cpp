@@ -1058,7 +1058,6 @@ void CMoviePlayerGui::PlayFileLoop(void)
 						break;
 				}
 			}
-			printf("-----> %s\n",pfile->getFileName().c_str());
 		} else if ((filelist.size() > 0 && msg == (neutrino_msg_t) CRCInput::RC_right)) {
 			if (filelist_it < (filelist.end() - 1)) {
 				++filelist_it;
