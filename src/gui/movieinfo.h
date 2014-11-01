@@ -201,6 +201,7 @@ class CMovieInfo
 		bool saveMovieInfo(MI_MOVIE_INFO& movie_info, CFile* file = NULL ); 	// encode the movie_info structure to xml and save it to the given .xml filename. If there is no filename, the filename (ts) from movie_info is converted to xml and used instead
 		void showMovieInfo(MI_MOVIE_INFO& movie_info);									// open a Hintbox and show the movie info
 		void printDebugMovieInfo(MI_MOVIE_INFO& movie_info);							// print movie info on debug channel (RS232)
+		void clearMovieInfo(MI_MOVIE_INFO* movie_info);									// Set movie info structure to initial values
 		bool addNewBookmark(MI_MOVIE_INFO* movie_info,MI_BOOKMARK &new_bookmark);		// add a new bookmark to the given movie info. If there is no space false is returned
 		
 	private:// Functions
