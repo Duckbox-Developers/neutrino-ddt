@@ -36,6 +36,7 @@
 #include <gui/audio_select.h>
 #include <gui/epgview.h>
 #include <gui/eventlist.h>
+#include <gui/filebrowser.h>
 #include <gui/movieplayer.h>
 #include <gui/infoviewer.h>
 #include <gui/timeosd.h>
@@ -884,11 +885,11 @@ bool CMoviePlayerGui::PlayFileStart(void)
 		CVFD::getInstance()->ShowIcon(FP_ICON_FF, false);
 		CVFD::getInstance()->ShowIcon(FP_ICON_PAUSE, false);
 #endif
-		if(timeshift != TSHIFT_MODE_OFF) {
+		if (timeshift != TSHIFT_MODE_OFF) {
 			startposition = -1;
 			int i;
 			int towait = (timeshift == TSHIFT_MODE_ON) ? TIMESHIFT_SECONDS+1 : TIMESHIFT_SECONDS;
-			for(i = 0; i < 500; i++) {
+			for (i = 0; i < 500; i++) {
 				playback->GetPosition(position, duration);
 				startposition = (duration - position);
 
@@ -1030,6 +1031,24 @@ void CMoviePlayerGui::PlayFileLoop(void)
 		} else if (msg == (neutrino_msg_t) g_settings.mpkey_stop) {
 			playstate = CMoviePlayerGui::STOPPED;
 			ClearQueue();
+		} else if ((filelist.size() > 0 && msg == (neutrino_msg_t) CRCInput::RC_ok)) {
+			CFileBrowser playlist;
+			CFile *pfile = NULL;
+			pfile = &(*filelist_it);
+			playlist.filelist = filelist;
+			if (playlist.exec_playlist(std::distance( filelist.begin(), filelist_it )))
+			{
+				playstate = CMoviePlayerGui::STOPPED;
+				CFile *sfile = NULL;
+				for (filelist_it = filelist.begin(); filelist_it != filelist.end(); ++filelist_it)
+				{
+					pfile = &(*filelist_it);
+					sfile = playlist.getSelectedFile();
+					if ( (sfile->getFileName() == pfile->getFileName()) && (sfile->getPath() == pfile->getPath()))
+						break;
+				}
+			}
+			printf("-----> %s\n",pfile->getFileName().c_str());
 		} else if ((filelist.size() > 0 && msg == (neutrino_msg_t) CRCInput::RC_right)) {
 			if (filelist_it < (filelist.end() - 1)) {
 				++filelist_it;
@@ -1060,9 +1079,9 @@ void CMoviePlayerGui::PlayFileLoop(void)
 				repeat_mode = REPEAT_OFF;
 			g_settings.movieplayer_repeat_on = repeat_mode;
 			callInfoViewer();
-		} else if ( msg == (neutrino_msg_t) g_settings.key_next43mode) {
+		} else if (msg == (neutrino_msg_t) g_settings.key_next43mode) {
 			g_videoSettings->next43Mode();
-		} else if ( msg == (neutrino_msg_t) g_settings.key_switchformat) {
+		} else if (msg == (neutrino_msg_t) g_settings.key_switchformat) {
 			g_videoSettings->SwitchFormat();
 		} else if (msg == (neutrino_msg_t) g_settings.mpkey_play) {
 			if (time_forced) {
@@ -1132,7 +1151,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 
 			int newspeed;
 			if (msg == (neutrino_msg_t) g_settings.mpkey_rewind) {
-				newspeed = (speed >= 0) ? -1 : speed - 1;
+				newspeed = (speed >= 0) ? -1 : (speed - 1);
 #if HAVE_DUCKBOX_HARDWARE || BOXMODEL_SPARK7162
 				CVFD::getInstance()->ShowIcon(FP_ICON_PLAY, true);
 				CVFD::getInstance()->ShowIcon(FP_ICON_PAUSE, false);
@@ -1140,7 +1159,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 				CVFD::getInstance()->ShowIcon(FP_ICON_FF, false);
 #endif
 			} else {
-				newspeed = (speed <= 0) ? 2 : speed + 1;
+				newspeed = (speed <= 0) ? 2 : (speed + 1);
 #if HAVE_DUCKBOX_HARDWARE || BOXMODEL_SPARK7162
 				CVFD::getInstance()->ShowIcon(FP_ICON_PLAY, true);
 				CVFD::getInstance()->ShowIcon(FP_ICON_PAUSE, false);
@@ -1163,15 +1182,15 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			}
 			if (timeshift == TSHIFT_MODE_OFF)
 				callInfoViewer();
-		} else if (msg == CRCInput::RC_1) {	// Jump Backwards 1 minute
+		} else if (msg == CRCInput::RC_1) {	// Jump Backward 1 minute
 			SetPosition(-60 * 1000);
 		} else if (msg == CRCInput::RC_3) {	// Jump Forward 1 minute
 			SetPosition(60 * 1000);
-		} else if (msg == CRCInput::RC_4) {	// Jump Backwards 5 minutes
+		} else if (msg == CRCInput::RC_4) {	// Jump Backward 5 minutes
 			SetPosition(-5 * 60 * 1000);
 		} else if (msg == CRCInput::RC_6) {	// Jump Forward 5 minutes
 			SetPosition(5 * 60 * 1000);
-		} else if (msg == CRCInput::RC_7) {	// Jump Backwards 10 minutes
+		} else if (msg == CRCInput::RC_7) {	// Jump Backward 10 minutes
 			SetPosition(-10 * 60 * 1000);
 		} else if (msg == CRCInput::RC_9) {	// Jump Forward 10 minutes
 			SetPosition(10 * 60 * 1000);
@@ -1339,14 +1358,57 @@ void CMoviePlayerGui::callInfoViewer()
 		return;
 	}
 
-	if (isMovieBrowser && p_movie_info) {
-		g_InfoViewer->showMovieTitle(playstate, p_movie_info->epgEpgId >>16, p_movie_info->epgChannel, p_movie_info->epgTitle, p_movie_info->epgInfo1,
+	std::vector<std::string> keys, values;
+	playback->GetMetadata(keys, values);
+	size_t count = keys.size();
+	if (count > 0) {
+		CMovieInfo cmi;
+		cmi.clearMovieInfo(&movie_info);
+		for (size_t i = 0; i < count; i++) {
+			std::string key = trim(keys[i]);
+			if (movie_info.epgTitle.empty() && !strcasecmp("title", key.c_str())) {
+				movie_info.epgTitle = isUTF8(values[i]) ? values[i] : convertLatin1UTF8(values[i]);
+				CVFD::getInstance()->showServicename(movie_info.epgTitle.c_str());
+				continue;
+			}
+			if (movie_info.epgChannel.empty() && !strcasecmp("artist", key.c_str())) {
+				movie_info.epgChannel = isUTF8(values[i]) ? values[i] : convertLatin1UTF8(values[i]);
+				continue;
+			}
+			if (movie_info.epgInfo1.empty() && !strcasecmp("album", key.c_str())) {
+				movie_info.epgInfo1 = isUTF8(values[i]) ? values[i] : convertLatin1UTF8(values[i]);
+				continue;
+			}
+		}
+		if (!movie_info.epgChannel.empty() || !movie_info.epgTitle.empty())
+			p_movie_info = &movie_info;
+#ifdef ENABLE_GRAPHLCD
+		if (p_movie_info)
+			nGLCD::lockChannel(p_movie_info->epgChannel, p_movie_info->epgTitle);
+#endif
+	}
+
+	if (p_movie_info) {
+		std::string channelName = p_movie_info->epgChannel;
+		if (channelName.empty())
+			channelName = pretty_name;
+
+		std::string channelTitle = p_movie_info->epgTitle;
+		if (channelTitle.empty())
+			channelTitle = pretty_name;
+
+		CVFD::getInstance()->ShowText(channelTitle.c_str());
+
+		g_InfoViewer->showMovieTitle(playstate, p_movie_info->epgEpgId >>16, channelName, p_movie_info->epgTitle, p_movie_info->epgInfo1,
 					     duration, position, repeat_mode);
+		unlink("/tmp/cover.jpg");
 		return;
 	}
 
 	/* not moviebrowser => use the filename as title */
+	CVFD::getInstance()->ShowText(pretty_name.c_str());
 	g_InfoViewer->showMovieTitle(playstate, 0, pretty_name, info_1, info_2, duration, position, repeat_mode);
+	unlink("/tmp/cover.jpg");
 }
 
 bool CMoviePlayerGui::getAudioName(int apid, std::string &apidtitle)

@@ -912,6 +912,150 @@ bool CFileBrowser::exec(const char * const dirname)
 	return res;
 }
 
+bool CFileBrowser::exec_playlist(unsigned int playing)
+{
+	neutrino_msg_t      msg;
+	neutrino_msg_data_t data;
+
+	bool res = false;
+	menu_ret = menu_return::RETURN_REPAINT;
+
+	fontInit();
+	paintHead();
+	selected = playing;
+
+	unsigned int oldselected = selected;
+
+	paint();
+
+	uint64_t timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_FILEBROWSER]);
+
+	bool loop=true;
+	while (loop)
+	{
+		frameBuffer->blit();
+		g_RCInput->getMsgAbsoluteTimeout( &msg, &data, &timeoutEnd );
+		neutrino_msg_t msg_repeatok = msg & ~CRCInput::RC_Repeat;
+
+		if (msg <= CRCInput::RC_MaxRC)
+			timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_FILEBROWSER]);
+
+		if(!CRCInput::isNumeric(msg))
+		{
+			m_SMSKeyInput.resetOldKey();
+			paintSMSKey();
+		}
+		if (msg == CRCInput::RC_home)
+		{
+			loop = false;
+		}
+		else if (msg == NeutrinoMessages::STANDBY_ON ||
+				msg == NeutrinoMessages::SHUTDOWN ||
+				msg == NeutrinoMessages::SLEEPTIMER)
+		{
+			menu_ret = menu_return::RETURN_EXIT_ALL;
+			loop = false;
+			g_RCInput->postMsg(msg, data);
+		}
+		else if (msg == CRCInput::RC_timeout)
+		{
+			selected = oldselected;
+			loop = false;
+		}
+		else if (msg > CRCInput::RC_MaxRC)
+		{
+			if (CNeutrinoApp::getInstance()->handleMsg( msg, data ) & messages_return::cancel_all) {
+				menu_ret = menu_return::RETURN_EXIT_ALL;
+				loop = false;
+			}
+		}
+		if ((filelist.empty()))
+			continue;
+
+		if (msg_repeatok == CRCInput::RC_up)
+		{
+			unsigned int prevselected=selected;
+			unsigned int prevliststart = liststart;
+			if (selected)
+				selected --;
+			else
+				selected = filelist.size() - 1;
+			liststart = (selected/listmaxshow)*listmaxshow;
+			if(prevliststart != liststart)
+			{
+				paint();
+			}
+			else
+			{
+				paintItem(prevselected - prevliststart);
+				paintItem(selected - liststart);
+			}
+		}
+		else if (msg_repeatok == CRCInput::RC_down)
+		{
+			unsigned int prevselected=selected;
+			unsigned int prevliststart = liststart;
+			selected = (selected + 1) % filelist.size();
+			liststart = (selected/listmaxshow)*listmaxshow;
+			if(prevliststart != liststart)
+			{
+				paint();
+			}
+			else
+			{
+				paintItem(prevselected - prevliststart);
+				paintItem(selected - liststart);
+			}
+		}
+		else if (msg == (neutrino_msg_t) g_settings.key_pagedown)
+		{
+			unsigned int last = filelist.size() - 1;
+			if (selected != last && selected + listmaxshow >= filelist.size()) {
+				selected = last;
+			} else {
+				selected = (selected == last) ? 0 : selected + listmaxshow;
+				liststart = (selected / listmaxshow) * listmaxshow;
+			}
+			paint();
+		}
+		else if (msg == (neutrino_msg_t) g_settings.key_pageup)
+		{
+			if (selected && selected < listmaxshow) {
+				selected = 0;
+			} else {
+				selected = selected ? selected - listmaxshow : filelist.size() - 1;
+				liststart = (selected/listmaxshow)*listmaxshow;
+			}
+			paint();
+		}
+		else if (msg == CRCInput::RC_ok)
+		{
+			filelist[selected].Marked = true;
+			loop = false;
+			res = true;
+		}
+		else if (msg == CRCInput::RC_help || msg == CRCInput::RC_red)
+		{
+			if (++g_settings.filebrowser_sortmethod >= FILEBROWSER_NUMBER_OF_SORT_VARIANTS)
+				g_settings.filebrowser_sortmethod = 0;
+
+			sort(filelist.begin(), filelist.end(), sortBy[g_settings.filebrowser_sortmethod]);
+
+			paint();
+			paintFoot();
+		}
+		else if (CRCInput::isNumeric(msg_repeatok))
+		{
+			SMSInput(msg_repeatok);
+		}
+	}
+
+	hide();
+	frameBuffer->blit();
+
+	return res;
+}
+
 void CFileBrowser::addRecursiveDir(CFileList * re_filelist, std::string rpath, bool bRootCall, CProgressWindow * progress)
 {
 	neutrino_msg_t      msg;
