@@ -927,6 +927,7 @@ bool CFileBrowser::exec_playlist(unsigned int playing)
 	unsigned int oldselected = selected;
 
 	paint();
+	paintFoot();
 
 	uint64_t timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_FILEBROWSER]);
 
