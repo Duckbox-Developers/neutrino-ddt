@@ -1041,7 +1041,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 		} else if (msg == (neutrino_msg_t) g_settings.mpkey_stop) {
 			playstate = CMoviePlayerGui::STOPPED;
 			ClearQueue();
-		} else if ((filelist.size() > 0 && msg == (neutrino_msg_t) CRCInput::RC_ok)) {
+		} else if ((filelist.size() > 1 && msg == (neutrino_msg_t) CRCInput::RC_ok)) {
 			CFileBrowser playlist;
 			CFile *pfile = NULL;
 			pfile = &(*filelist_it);
