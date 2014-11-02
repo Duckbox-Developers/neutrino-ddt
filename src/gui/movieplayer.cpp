@@ -1029,7 +1029,12 @@ void CMoviePlayerGui::PlayFileLoop(void)
 					eof = 0;
 			}
 #else
-				g_RCInput->postMsg((neutrino_msg_t) g_settings.mpkey_stop, 0);
+				{
+				if (filelist_it == filelist.end() - 1)
+					g_RCInput->postMsg((neutrino_msg_t) g_settings.mpkey_stop, 0);
+				else
+					g_RCInput->postMsg((neutrino_msg_t) CRCInput::RC_right, 0);
+				}
 #endif
 			handleMovieBrowser(0, position);
 			FileTime.update(position, duration);
