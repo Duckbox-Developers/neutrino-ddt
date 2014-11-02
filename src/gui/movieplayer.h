@@ -94,7 +94,6 @@ class CMoviePlayerGui : public CMenuTarget
 	unsigned int ac3flags[REC_MAX_APIDS];
 	int currentapid, currentac3;
 	repeat_mode_enum repeat_mode;
-	bool probePids;
 
 	/* subtitles vars */
 	unsigned short numsubs;
