@@ -704,7 +704,7 @@ bool CHDDMenuHandler::scanDevices()
 		return false;
 	}
 	if (stat("/", &s) != -1)
-		root_dev = (s.st_dev & 0x0ffc0); /* hda = 0x0300, hdb = 0x0340 */
+		root_dev = (s.st_dev & 0x0fff0); /* hda = 0x0300, hdb = 0x0340 */
 	printf("HDD: root_dev: 0x%04x\n", root_dev);
 
 	for(int i = 0; i < n;i++) {
@@ -724,7 +724,7 @@ bool CHDDMenuHandler::scanDevices()
 
 			int ret = fstat(fd, &s);
 			if (ret != -1) {
-				if ((int)(s.st_rdev & 0x0ffc0) == root_dev) {
+				if ((int)(s.st_rdev & 0x0fff0) == root_dev) {
 					isroot = true;
 					/* dev_t is different sized on different architectures :-( */
 					printf("-> root device is on this disk 0x%04x, skipping\n", (int)s.st_rdev);
