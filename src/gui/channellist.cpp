@@ -75,6 +75,9 @@
 #include <eitd/sectionsd.h>
 
 #include <semaphore.h>
+#include <OpenThreads/Thread>
+#include <OpenThreads/Condition>
+#include <OpenThreads/ScopedLock>
 
 extern CBouquetList * bouquetList;       /* neutrino.cpp */
 extern CRemoteControl * g_RemoteControl; /* neutrino.cpp */
@@ -2220,33 +2223,26 @@ void CChannelList::paintPig (int _x, int _y, int w, int h)
 	cc_minitv->paint(false);
 }
 
+static OpenThreads::Mutex paint_events_mutex;
+static sem_t paint_events_sem;
+static pthread_t paint_events_thr;
+
 void CChannelList::paint_events(int index)
 {
+	OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(paint_events_mutex);
 	if (index == -2 && paint_events_index > -2) {
-		pthread_mutex_lock(&paint_events_mutex);
 		paint_events_index = index;
 		sem_post(&paint_events_sem);
 		pthread_join(paint_events_thr, NULL);
 		sem_destroy(&paint_events_sem);
-		pthread_mutex_unlock(&paint_events_mutex);
 	} else if (paint_events_index == -2) {
-		// First paint_event. No need to lock.
-		pthread_mutexattr_t attr;
-		pthread_mutexattr_init(&attr);
-		pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK_NP);
-		pthread_mutex_init(&paint_events_mutex, &attr);
-
 		sem_init(&paint_events_sem, 0, 0);
 		if (!pthread_create(&paint_events_thr, NULL, paint_events, (void *) this)) {
-			pthread_mutex_lock(&paint_events_mutex);
 			paint_events_index = index;
-			pthread_mutex_unlock(&paint_events_mutex);
 			sem_post(&paint_events_sem);
 		}
 	} else {
-		pthread_mutex_lock(&paint_events_mutex);
 		paint_events_index = index;
-		pthread_mutex_unlock(&paint_events_mutex);
 		sem_post(&paint_events_sem);
 	}
 }
@@ -2272,10 +2268,10 @@ void CChannelList::paint_events()
 		CChannelEventList evtlist;
 		readEvents(chanlist[current_index]->channel_id, evtlist);
 		if (current_index == paint_events_index) {
-			pthread_mutex_lock(&paint_events_mutex);
+			paint_events_mutex.lock();
 			if (current_index == paint_events_index)
 				paint_events_index = -1;
-			pthread_mutex_unlock(&paint_events_mutex);
+			paint_events_mutex.unlock();
 			paint_events(evtlist);
 		}
 	}

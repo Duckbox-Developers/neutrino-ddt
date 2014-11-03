@@ -45,8 +45,6 @@
 
 #include <string>
 #include <vector>
-#include <pthread.h>
-#include <semaphore.h>
 
 enum {
 	LIST_MODE_FAV,
@@ -117,11 +115,7 @@ private:
 	int			infozone_width;
 	int			infozone_height;
 	int			previous_channellist_additional;
-
 	int			paint_events_index;
-	sem_t			paint_events_sem;
-	pthread_t		paint_events_thr;
-	pthread_mutex_t		paint_events_mutex;
 
 	const char *		unit_short_minute;
 
