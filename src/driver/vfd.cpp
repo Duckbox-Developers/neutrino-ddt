@@ -64,7 +64,7 @@ extern CRemoteControl * g_RemoteControl; /* neutrino.cpp */
 	#define VFDLENGTH 16
 #endif
 
-#define SCROLL_TIME 350000
+#define SCROLL_TIME 100000
 
 bool invert = false;
 char g_str[64];
@@ -194,6 +194,7 @@ void CVFD::ShowScrollText(char *str)
 	//scroll text thread
 	scrollstr = str;
 	pthread_create(&vfd_scrollText, NULL, ThreadScrollText, (void *)scrollstr);
+	pthread_detach(vfd_scrollText);
 }
 
 void* CVFD::ThreadScrollText(void * arg)
