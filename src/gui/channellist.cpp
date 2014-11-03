@@ -942,7 +942,8 @@ int CChannelList::show()
 		frameBuffer->blit();
 	}
 
-	paint_events(-2); // cancel paint_events thread
+	if (displayList)
+		paint_events(-2); // cancel paint_events thread
 
 	if (move_state == beMoving)
 		cancelMoveChannel();
@@ -2229,8 +2230,6 @@ void CChannelList::paint_events(int index)
 		sem_destroy(&paint_events_sem);
 		pthread_mutex_unlock(&paint_events_mutex);
 	} else if (paint_events_index == -2) {
-		if (index == -2)
-			return;
 		// First paint_event. No need to lock.
 		pthread_mutexattr_t attr;
 		pthread_mutexattr_init(&attr);
