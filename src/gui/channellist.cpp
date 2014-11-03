@@ -956,8 +956,12 @@ int CChannelList::show()
 		printf("CChannelList:: bouquetList->exec res %d\n", res);
 	}
 
-	if (headerClock)
-		headerClock->Stop();
+	if (headerClock != NULL) {
+ 		headerClock->Stop();
+		headerClock->clearSavedScreen();
+		delete headerClock;
+		headerClock = NULL;
+	}
 
 	if(NeutrinoMessages::mode_ts == CNeutrinoApp::getInstance()->getMode())
 		return -1;
@@ -2056,16 +2060,18 @@ void CChannelList::paintHead()
 
 	header.paint(CC_SAVE_SCREEN_NO);
 
+#if0
 	if (headerClock != NULL) {
 		headerClock->clearSavedScreen();
 		delete headerClock;
 		headerClock = NULL;
 	}
+#endif
 
 	if (g_Sectionsd->getIsTimeSet()) {
 		if (headerClock == NULL) {
 			headerClock = new CComponentsFrmClock(0, 0, 0, 0, "%H:%M", true);
-			headerClock->setClockBlink("%H %M");
+			headerClock->setClockBlink("%H.%M");
 			headerClock->setClockIntervall(1);
 			headerClock->doPaintBg(false);
 		}
