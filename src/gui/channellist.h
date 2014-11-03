@@ -144,9 +144,8 @@ private:
 	void calcSize();
 	std::string   MaxChanNr();
 	void paintPig(int x, int y, int w, int h);
-	void paint_events();
 	void paint_events(int index);
-	void paint_events(CChannelEventList &evtlist);
+	void paint_events();
 	static void *paint_events(void *arg);
 	void readEvents(const t_channel_id channel_id, CChannelEventList &evtlist);
 	void showdescription(int index);
