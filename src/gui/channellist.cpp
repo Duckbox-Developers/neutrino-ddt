@@ -2060,7 +2060,7 @@ void CChannelList::paintHead()
 
 	header.paint(CC_SAVE_SCREEN_NO);
 
-#if0
+#if 0
 	if (headerClock != NULL) {
 		headerClock->clearSavedScreen();
 		delete headerClock;
