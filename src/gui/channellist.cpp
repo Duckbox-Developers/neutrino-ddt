@@ -2238,11 +2238,12 @@ void CChannelList::paint_events(int index)
 		pthread_mutex_init(&paint_events_mutex, &attr);
 
 		sem_init(&paint_events_sem, 0, 0);
-		paint_events_index = index;
-		if (!pthread_create(&paint_events_thr, NULL, paint_events, (void *) this))
+		if (!pthread_create(&paint_events_thr, NULL, paint_events, (void *) this)) {
+			pthread_mutex_lock(&paint_events_mutex);
+			paint_events_index = index;
+			pthread_mutex_unlock(&paint_events_mutex);
 			sem_post(&paint_events_sem);
-		else
-			paint_events_index = -2;
+		}
 	} else {
 		pthread_mutex_lock(&paint_events_mutex);
 		paint_events_index = index;
