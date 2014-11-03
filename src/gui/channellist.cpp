@@ -57,7 +57,6 @@
 #include <gui/widget/hintbox.h>
 
 #include <system/settings.h>
-#include <system/set_threadname.h>
 #include <gui/customcolor.h>
 
 #include <gui/bouquetlist.h>
@@ -73,10 +72,6 @@
 #include <zapit/debug.h>
 
 #include <eitd/sectionsd.h>
-
-#include <OpenThreads/Thread>
-#include <OpenThreads/Condition>
-#include <OpenThreads/ScopedLock>
 
 extern CBouquetList * bouquetList;       /* neutrino.cpp */
 extern CRemoteControl * g_RemoteControl; /* neutrino.cpp */
@@ -124,8 +119,6 @@ CChannelList::CChannelList(const char * const pName, bool phistoryMode, bool _vl
 	move_state = beDefault;
 	edit_state = false;
 	channelsChanged = false;
-
-	paint_events_index = -1;
 }
 
 CChannelList::~CChannelList()
@@ -943,9 +936,6 @@ int CChannelList::show()
 		}
 		frameBuffer->blit();
 	}
-
-	if (displayList)
-		paint_events(-1); // cancel pending
 
 	if (move_state == beMoving)
 		cancelMoveChannel();
@@ -2222,44 +2212,10 @@ void CChannelList::paintPig (int _x, int _y, int w, int h)
 	cc_minitv->paint(false);
 }
 
-static OpenThreads::Mutex mutex;
-
 void CChannelList::paint_events(int index)
 {
-	OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(mutex);
-	int old_index = paint_events_index;
-	paint_events_index = index;
-	if (index == old_index || index < 0)
-		return;
-
-	pthread_t thr;
-	if (!pthread_create(&thr, NULL, paint_events, (void *) this))
-		pthread_detach(thr);
-}
-
-void *CChannelList::paint_events(void *arg)
-{
-	CChannelList *me = (CChannelList *) arg;
-	me->paint_events();
-	pthread_exit(NULL);
-}
-
-void CChannelList::paint_events()
-{
-	set_threadname(__func__);
-
-	// slight race condition, but unlikely and not worth locking
-	int index = paint_events_index;
-
 	ffheight = g_Font[eventFont]->getHeight();
-
-	CChannelEventList evtlist;
-	readEvents(chanlist[index]->channel_id, evtlist);
-
-	OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(mutex);
-	if (index != paint_events_index)
-		return;
-	paint_events_index = -1;
+	readEvents((*chanlist)[index]->channel_id);
 	frameBuffer->paintBoxRel(x+ width,y+ theight+pig_height, infozone_width, infozone_height,COL_MENUCONTENT_PLUS_0);
 
 	char startTime[10];
@@ -2321,6 +2277,8 @@ void CChannelList::paint_events()
 		}
 		i++;
 	}
+	if ( !evtlist.empty() )
+		evtlist.clear();
 	frameBuffer->blit();
 }
 
@@ -2329,7 +2287,7 @@ static bool sortByDateTime (const CChannelEvent& a, const CChannelEvent& b)
 	return a.startTime < b.startTime;
 }
 
-void CChannelList::readEvents(const t_channel_id channel_id, CChannelEventList &evtlist)
+void CChannelList::readEvents(const t_channel_id channel_id)
 {
 	CEitManager::getInstance()->getEventsServiceKey(channel_id , evtlist);
 

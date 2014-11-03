@@ -115,7 +115,6 @@ private:
 	int			infozone_width;
 	int			infozone_height;
 	int			previous_channellist_additional;
-	int			paint_events_index;
 
 	const char *		unit_short_minute;
 
@@ -145,9 +144,8 @@ private:
 	std::string   MaxChanNr();
 	void paintPig(int x, int y, int w, int h);
 	void paint_events(int index);
-	void paint_events();
-	static void *paint_events(void *arg);
-	void readEvents(const t_channel_id channel_id, CChannelEventList &evtlist);
+	CChannelEventList	evtlist;
+	void readEvents(const t_channel_id channel_id);
 	void showdescription(int index);
 	typedef std::pair<std::string,int> epg_pair;
 	std::vector<epg_pair> epgText;
