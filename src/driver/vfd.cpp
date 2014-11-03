@@ -53,7 +53,7 @@ extern CRemoteControl * g_RemoteControl; /* neutrino.cpp */
 #define VFD_DEVICE "/dev/vfd"
 
 #if defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_TF7700)
-#define VFDLENGTH 8
+	#define VFDLENGTH 8
 #elif defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500)
 #define VFDLENGTH 12
 #elif defined (BOXMODEL_HS7810A) || defined (BOXMODEL_HS7119) || defined (BOXMODEL_HS7819)
@@ -61,10 +61,10 @@ extern CRemoteControl * g_RemoteControl; /* neutrino.cpp */
 #elif defined (BOXMODEL_HS7110)
 #define VFDLENGTH 0
 #else
-#define VFDLENGTH 16
+	#define VFDLENGTH 16
 #endif
 
-#define SCROLL_TIME 100000
+#define SCROLL_TIME 350000
 
 bool invert = false;
 char g_str[64];

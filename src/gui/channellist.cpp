@@ -1263,7 +1263,6 @@ int CChannelList::numericZap(int key)
 			if ( !channelList->isEmpty()) {
 				channelList->adjustToChannelID(orgList->getActiveChannel_ChannelID());
 				this->frameBuffer->paintBackground();
-				this->frameBuffer->blit();
 				res = channelList->exec();
 				CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
 			}
@@ -1283,7 +1282,6 @@ int CChannelList::numericZap(int key)
 			}
 			if ( !channelList->isEmpty() ) {
 				this->frameBuffer->paintBackground();
-				this->frameBuffer->blit();
 				res = channelList->exec();
 				CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
 			}
@@ -1372,7 +1370,6 @@ int CChannelList::numericZap(int key)
 	}
 
 	frameBuffer->paintBackgroundBoxRel(ox, oy, sx, sy);
-	frameBuffer->blit();
 
 	CZapitChannel* chan = getChannel(chn);
 	if (doZap) {
@@ -1434,8 +1431,8 @@ CZapitChannel* CChannelList::getPrevNextChannel(int key, unsigned int &sl)
 		}
 		sl = cactive;
 		channel = bouquetList->Bouquets[bactive]->channelList->getChannelFromIndex(cactive);
-//		printf("CChannelList::getPrevNextChannel: selected %u total %d active bouquet %d total %d channel %p (%s)\n",
-//				(unsigned int) cactive, (unsigned int) (*chanlist).size(), (int) bactive, (int) bsize, channel, channel ? channel->getName().c_str(): "");
+		printf("CChannelList::getPrevNextChannel: selected %u total %d active bouquet %d total %d channel %p (%s)\n",
+				(unsigned int) cactive, (unsigned int) (*chanlist).size(), (int) bactive, (int) bsize, channel, channel ? channel->getName().c_str(): "");
 	} else {
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 		if ((key == g_settings.key_quickzap_down) || (key == CRCInput::RC_left) || (key == CRCInput::RC_page_down)) {
@@ -2046,13 +2043,11 @@ void CChannelList::paintItem(int pos, const bool firstpaint)
 			g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->RenderString(x+ 5+ numwidth+ 10+prg_offset, ypos+ fheight, width- numwidth- 40- 15-prg_offset, nameAndDescription, color);
 		}
 		if (curr == selected) {
-#if 0
 			if (!(chan->currentEvent.description.empty())) {
 				snprintf(nameAndDescription, sizeof(nameAndDescription), "%s - %s",
 					 chan->getName().c_str(), p_event->description.c_str());
 				CVFD::getInstance()->showMenuText(0, nameAndDescription, -1, true); // UTF-8
 			} else
-#endif
 				CVFD::getInstance()->showMenuText(0, chan->getName().c_str(), -1, true); // UTF-8
 		}
 	}
@@ -2350,8 +2345,6 @@ void CChannelList::paint_events(CChannelEventList &evtlist)
 		}
 		i++;
 	}
-	if ( !evtlist.empty() )
-		evtlist.clear();
 	frameBuffer->blit();
 }
 
