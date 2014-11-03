@@ -219,9 +219,9 @@ void* CVFD::ThreadScrollText(void * arg)
 
 		while(retries--)
 		{
-			usleep(SCROLL_TIME);
+//			usleep(SCROLL_TIME);
 
-			for (i=0; i<=(len-1); i++)
+			for (i = 0; i <= (len-1); i++)
 			{
 				// scroll text until end
 				memcpy(out, buf+i, VFDLENGTH);
