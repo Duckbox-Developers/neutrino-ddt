@@ -82,6 +82,11 @@ int CVfdSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 	} else if (actionKey == "brightness") {
 		return showBrightnessSetup();
 	}
+	else if (actionKey=="vfdreset")
+	{
+		CVFD::getInstance()->Reset();
+		return menu_return::RETURN_EXIT_ALL;
+	}
 
 	int res = showSetup();
 
@@ -165,6 +170,11 @@ int CVfdSetup::showSetup()
 #else
 	oj = new CMenuOptionChooser(LOCALE_LCDMENU_SCROLL, &g_settings.lcd_scroll, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, vfd_enabled);
 	oj->setHint("", LOCALE_MENU_HINT_VFD_SCROLL);
+	vfds->addItem(oj);
+
+	//restart vfd
+	oj = new CMenuForwarder(LOCALE_CI_RESET  , true, NULL, this, "vfdreset");
+	oj->setHint("", "");
 	vfds->addItem(oj);
 #endif
 #ifdef ENABLE_GRAPHLCD

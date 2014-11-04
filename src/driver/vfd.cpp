@@ -177,6 +177,15 @@ static void ShowNormalText(char * str, bool fromScrollThread = false)
 	write_to_vfd(VFDDISPLAYCHARS, &data);
 	return;
 }
+
+void CVFD::Reset()
+{
+	printf("CVFD::Reset\n");
+	ioctl(file_vfd, I_FLUSH, FLUSHRW);
+	close(file_vfd);
+	file_vfd = -1;
+}
+
 void CVFD::ShowScrollText(char *str)
 {
 	printf("CVFD::ShowScrollText: [%s]\n", str);
