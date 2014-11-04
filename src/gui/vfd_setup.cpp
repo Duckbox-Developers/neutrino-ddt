@@ -120,8 +120,8 @@ const CMenuOptionChooser::keyval LCD_INFO_OPTIONS[LCD_INFO_OPTION_COUNT] =
 #define OPTIONS_OFF_ON_OPTION_COUNT 2
 const CMenuOptionChooser::keyval OPTIONS_OFF_ON_OPTIONS[OPTIONS_OFF_ON_OPTION_COUNT] =
 {
-    { 0, LOCALE_OPTIONS_OFF  },
-    { 1, LOCALE_OPTIONS_ON }
+	{ 0, LOCALE_OPTIONS_OFF },
+	{ 1, LOCALE_OPTIONS_ON  }
 };
 #endif
 
@@ -130,52 +130,57 @@ int CVfdSetup::showSetup()
 	CMenuWidget *vfds = new CMenuWidget(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_LCD, width, MN_WIDGET_ID_VFDSETUP);
 	vfds->addIntroItems(LOCALE_LCDMENU_HEAD);
 
-	//vfd brightness menu
-	CMenuForwarder * mf = new CMenuForwarder(LOCALE_LCDMENU_LCDCONTROLER, vfd_enabled, NULL, this, "brightness", CRCInput::RC_red);
-	mf->setHint("", LOCALE_MENU_HINT_VFD_BRIGHTNESS_SETUP);
-	vfds->addItem(mf);
+	CMenuForwarder * mf;
 
 #ifndef HAVE_DUCKBOX_HARDWARE
 	//led menu
-	if(cs_get_revision() > 7)
+	if (cs_get_revision() > 7) // not HD1 and BSE
 	{
  		CMenuWidget * ledMenu = new CMenuWidget(LOCALE_LCDMENU_HEAD, NEUTRINO_ICON_LCD, width, MN_WIDGET_ID_VFDSETUP_LED_SETUP);
 		showLedSetup(ledMenu);
-		mf = new CMenuDForwarder(LOCALE_LEDCONTROLER_MENU, true, NULL, ledMenu, NULL, CRCInput::RC_green);
+		mf = new CMenuDForwarder(LOCALE_LEDCONTROLER_MENU, true, NULL, ledMenu, NULL, CRCInput::RC_red);
 		mf->setHint("", LOCALE_MENU_HINT_POWER_LEDS);
 		vfds->addItem(mf);
 	}
-	if(cs_get_revision() == 9)
-	{
- 		CMenuWidget * blMenu = new CMenuWidget(LOCALE_LCDMENU_HEAD, NEUTRINO_ICON_LCD, width, MN_WIDGET_ID_VFDSETUP_BACKLIGHT);
-		showBacklightSetup(blMenu);
-		mf = new CMenuDForwarder(LOCALE_LEDCONTROLER_BACKLIGHT, true, NULL, blMenu, NULL, CRCInput::RC_yellow);
-		mf->setHint("", LOCALE_MENU_HINT_BACKLIGHT);
-		vfds->addItem(mf);
-	}
 #endif
 
-	vfds->addItem(GenericMenuSeparatorLine);
+	if (CVFD::getInstance()->has_lcd) {
+		//vfd brightness menu
+		mf = new CMenuForwarder(LOCALE_LCDMENU_LCDCONTROLER, vfd_enabled, NULL, this, "brightness", CRCInput::RC_green);
+		mf->setHint("", LOCALE_MENU_HINT_VFD_BRIGHTNESS_SETUP);
+		vfds->addItem(mf);
 
-	//status and info line options
-	CMenuOptionChooser* oj = new CMenuOptionChooser(LOCALE_LCDMENU_STATUSLINE, &g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME], LCDMENU_STATUSLINE_OPTIONS, LCDMENU_STATUSLINE_OPTION_COUNT, vfd_enabled);
-	oj->setHint("", LOCALE_MENU_HINT_VFD_STATUSLINE);
-	CMenuOptionChooser* lcd_clock_channelname_menu = new CMenuOptionChooser(LOCALE_LCD_INFO_LINE, &g_settings.lcd_info_line, LCD_INFO_OPTIONS, LCD_INFO_OPTION_COUNT, vfd_enabled);
-	lcd_clock_channelname_menu->setHint("", LOCALE_MENU_HINT_VFD_INFOLINE);
-	vfds->addItem(oj);
-	vfds->addItem(lcd_clock_channelname_menu);
+		if (cs_get_revision() == 9) // Tank only
+		{
+			//backlight menu
+			CMenuWidget * blMenu = new CMenuWidget(LOCALE_LCDMENU_HEAD, NEUTRINO_ICON_LCD, width, MN_WIDGET_ID_VFDSETUP_BACKLIGHT);
+			showBacklightSetup(blMenu);
+			mf = new CMenuDForwarder(LOCALE_LEDCONTROLER_BACKLIGHT, true, NULL, blMenu, NULL, CRCInput::RC_yellow);
+			mf->setHint("", LOCALE_MENU_HINT_BACKLIGHT);
+			vfds->addItem(mf);
+		}
+
+		vfds->addItem(GenericMenuSeparatorLine);
+
+		//status and info line options
+		CMenuOptionChooser* oj = new CMenuOptionChooser(LOCALE_LCDMENU_STATUSLINE, &g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME], LCDMENU_STATUSLINE_OPTIONS, LCDMENU_STATUSLINE_OPTION_COUNT, vfd_enabled);
+		oj->setHint("", LOCALE_MENU_HINT_VFD_STATUSLINE);
+		CMenuOptionChooser* lcd_clock_channelname_menu = new CMenuOptionChooser(LOCALE_LCD_INFO_LINE, &g_settings.lcd_info_line, LCD_INFO_OPTIONS, LCD_INFO_OPTION_COUNT, vfd_enabled);
+		lcd_clock_channelname_menu->setHint("", LOCALE_MENU_HINT_VFD_INFOLINE);
+		vfds->addItem(oj);
+		vfds->addItem(lcd_clock_channelname_menu);
 
 #if HAVE_DUCKBOX_HARDWARE || BOXMODEL_SPARK7162
-	vfds->addItem(new CMenuOptionNumberChooser(LOCALE_LCDMENU_VFD_SCROLL, &g_settings.lcd_vfd_scroll, true, 0, 999, this, 0, 0, NONEXISTANT_LOCALE, true));
+		vfds->addItem(new CMenuOptionNumberChooser(LOCALE_LCDMENU_VFD_SCROLL, &g_settings.lcd_vfd_scroll, true, 0, 999, this, 0, 0, NONEXISTANT_LOCALE, true));
 
-	//restart vfd
-	vfds->addItem(new CMenuForwarder(LOCALE_CI_RESET  , true, NULL, this, "vfdreset"));
+		//restart vfd
+		vfds->addItem(new CMenuForwarder(LOCALE_CI_RESET, true, NULL, this, "vfdreset"));
 #else
-	oj = new CMenuOptionChooser(LOCALE_LCDMENU_SCROLL, &g_settings.lcd_scroll, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, vfd_enabled);
-	oj->setHint("", LOCALE_MENU_HINT_VFD_SCROLL);
-	vfds->addItem(oj);
-
+		oj = new CMenuOptionChooser(LOCALE_LCDMENU_SCROLL, &g_settings.lcd_scroll, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, vfd_enabled);
+		oj->setHint("", LOCALE_MENU_HINT_VFD_SCROLL);
+		vfds->addItem(oj);
 #endif
+	}
 #ifdef ENABLE_GRAPHLCD
 	vfds->addItem(GenericMenuSeparatorLine);
 	GLCD_Menu glcdMenu;
