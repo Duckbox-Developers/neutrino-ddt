@@ -81,9 +81,7 @@ int CVfdSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 		return menu_return::RETURN_REPAINT;
 	} else if (actionKey == "brightness") {
 		return showBrightnessSetup();
-	}
-	else if (actionKey=="vfdreset")
-	{
+	} else if (actionKey=="vfdreset") {
 		CVFD::getInstance()->Reset();
 		return menu_return::RETURN_EXIT_ALL;
 	}
