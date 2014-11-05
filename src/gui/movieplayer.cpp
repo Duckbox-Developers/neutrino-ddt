@@ -1023,7 +1023,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			}
 #else
 			{
-				if (filelist_it == filelist.end() - 1)
+				if (filelist_it == filelist.end() - 1 || filelist_it == filelist.end())
 					g_RCInput->postMsg((neutrino_msg_t) g_settings.mpkey_stop, 0);
 				else
 					g_RCInput->postMsg((neutrino_msg_t) CRCInput::RC_right, 0);
@@ -1785,7 +1785,7 @@ void CMoviePlayerGui::handleMovieBrowser(neutrino_msg_t msg, int /*position*/)
 					bookStartMenu.addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_MOVIEBROWSER_BOOK_ADD));
 				bookmark_item_offset = bookStartMenu.getItemsCount();
 				bookStartMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_NEW));
-				bookStartMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_TYPE_FORWARD));
+				bookStartMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_TYPE_FORWARD,true,"",NULL,"",CRCInput::RC_blue));
 				bookStartMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_TYPE_BACKWARD));
 				bookStartMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_MOVIESTART));
 				bookStartMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_MOVIEEND));
