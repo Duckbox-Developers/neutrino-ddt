@@ -200,17 +200,20 @@ bool CPlugins::parseCfg(plugin *plugin_data)
 
 	plugin_data->index = sindex++;
 	plugin_data->key = 0; //CRCInput::RC_nokey
+#if 0
 	plugin_data->fb = false;
 	plugin_data->rc = false;
 	plugin_data->lcd = false;
 	plugin_data->vtxtpid = false;
 	plugin_data->showpig = false;
 	plugin_data->needoffset = false;
+#endif
 	plugin_data->shellwindow = false;
 	plugin_data->hide = false;
 	plugin_data->type = CPlugins::P_TYPE_DISABLED;
 	plugin_data->integration = CPlugins::I_TYPE_DISABLED;
 	plugin_data->hinticon = NEUTRINO_ICON_HINT_PLUGIN;
+	plugin_data->description = " "; //FIXME: To show empty desc as a menu hint the string may not be empty
 
 	std::string _hintIcon = plugin_data->plugindir + "/" + plugin_data->filename + "_hint.png";
 	if (access(_hintIcon.c_str(), F_OK) == 0)
@@ -257,6 +260,7 @@ bool CPlugins::parseCfg(plugin *plugin_data)
 		{
 			plugin_data->integration = getPluginIntegration(atoi(parm));
 		}
+#if 0
 		else if (cmd == "needfb")
 		{
 			plugin_data->fb = atoi(parm);
@@ -281,6 +285,7 @@ bool CPlugins::parseCfg(plugin *plugin_data)
 		{
 			plugin_data->needoffset = atoi(parm);
 		}
+#endif
 		else if (cmd == "shellwindow")
 		{
 			plugin_data->shellwindow = atoi(parm);
