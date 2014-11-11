@@ -120,12 +120,6 @@ class CNVODChangeExec : public CMenuTarget
 		int exec(CMenuTarget* parent, const std::string & actionKey);
 };
 
-class CPluginsExec : public CMenuTarget
-{
-	public:
-		int exec(CMenuTarget* parent, const std::string & actionKey);
-};
-
 class CMoviePluginChangeExec : public CMenuTarget
 {
 	public:
