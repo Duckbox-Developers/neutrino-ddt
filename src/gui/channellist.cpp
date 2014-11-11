@@ -907,10 +907,7 @@ int CChannelList::show()
 					calcSize();
 					paint();
 				} else {
-					if(CNeutrinoApp::getInstance()->StartPip((*chanlist)[selected]->getChannelID())) {
-						calcSize();
-						paint();
-					}
+					handleMsg(NeutrinoMessages::EVT_PROGRAMLOCKSTATUS, 0x100, true);
 				}
 			}
 		}
@@ -1005,7 +1002,7 @@ bool CChannelList::showInfo(int number, int epgpos)
 	return true;
 }
 
-int CChannelList::handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t data)
+int CChannelList::handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t data, bool pip)
 {
 	bool startvideo = true;
 
@@ -1042,13 +1039,19 @@ int CChannelList::handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t data)
 	if (g_settings.parentallock_prompt == PARENTALLOCK_PROMPT_CHANGETOLOCKED && data < 0x100)
 		goto out;
 
-	/* if a pre-locked channel is inside the zap time, open it. Hardcoded to one hour for now. */
-	if (data >= 0x100 && (*chanlist)[selected]->last_unlocked_time + 3600 > time_monotonic())
+	/* if a pre-locked channel is inside the zap time, open it. */
+	if (data >= 0x100 && (*chanlist)[selected]->last_unlocked_time + g_settings.parentallock_zaptime * 60 > time_monotonic())
+		goto out;
+
+	if (pip && (*chanlist)[selected]->Locked() == g_settings.parentallock_defaultlocked)
 		goto out;
 
 	/* OK, let's ask for a PIN */
-	g_RemoteControl->stopvideo();
-	//printf("stopped video\n");
+	if (!pip) {
+		g_RemoteControl->is_video_started = true;
+		g_RemoteControl->stopvideo();
+		//printf("stopped video\n");
+	}
 	zapProtection = new CZapProtection(g_settings.parentallock_pincode, data);
 
 	if (zapProtection->check())
@@ -1083,8 +1086,15 @@ int CChannelList::handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t data)
 	zapProtection = NULL;
 
 out:
-	if (startvideo)
-		g_RemoteControl->startvideo();
+	if (startvideo) {
+		if(pip) {
+			if (CNeutrinoApp::getInstance()->StartPip((*chanlist)[selected]->getChannelID())) {
+				calcSize();
+				paint();
+			}
+		} else
+			g_RemoteControl->startvideo();
+	}
 
 	return messages_return::handled;
 }

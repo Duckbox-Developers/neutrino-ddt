@@ -226,8 +226,10 @@ void CMoviePlayerGui::cutNeutrino()
 	g_Zapit->setStandby(true);
 #endif
 
-	m_LastMode = (CNeutrinoApp::getInstance()->getMode() | NeutrinoMessages::norezap);
-printf("%s: save mode %d\n", __func__, m_LastMode & NeutrinoMessages::mode_mask);fflush(stdout);
+	m_LastMode = (CNeutrinoApp::getInstance()->getMode() /*| NeutrinoMessages::norezap*/);
+	if (isWebTV)
+		m_LastMode |= NeutrinoMessages::norezap;
+	printf("%s: save mode %x\n", __func__, m_LastMode);fflush(stdout);
 	int new_mode = NeutrinoMessages::norezap | (isWebTV ? NeutrinoMessages::mode_webtv : NeutrinoMessages::mode_ts);
 	CNeutrinoApp::getInstance()->handleMsg(NeutrinoMessages::CHANGEMODE, new_mode);
 }
@@ -250,10 +252,11 @@ void CMoviePlayerGui::restoreNeutrino()
 	g_Zapit->unlockPlayBack();
 	g_Sectionsd->setPauseScanning(false);
 
-printf("%s: restore mode %d\n", __func__, m_LastMode & NeutrinoMessages::mode_mask);fflush(stdout);
+	printf("%s: restore mode %x\n", __func__, m_LastMode);fflush(stdout);
+#if 0
 	if (m_LastMode == NeutrinoMessages::mode_tv)
 		g_RCInput->postMsg(NeutrinoMessages::EVT_PROGRAMLOCKSTATUS, 0x200, false);
-
+#endif
 	if (m_LastMode != NeutrinoMessages::mode_unknown)
 		CNeutrinoApp::getInstance()->handleMsg(NeutrinoMessages::CHANGEMODE, m_LastMode);
 
@@ -264,7 +267,7 @@ printf("%s: restore mode %d\n", __func__, m_LastMode & NeutrinoMessages::mode_ma
 			CZapit::getInstance()->Rezap();
 	}
 #endif
-printf("%s: restoring done.\n", __func__);fflush(stdout);
+	printf("%s: restoring done.\n", __func__);fflush(stdout);
 }
 
 int CMoviePlayerGui::exec(CMenuTarget * parent, const std::string & actionKey)
@@ -1286,12 +1289,6 @@ void CMoviePlayerGui::PlayFileLoop(void)
 				clearSubtitle();
 			}
 		}
-
-		if (playstate == CMoviePlayerGui::STOPPED) {
-			printf("CMoviePlayerGui::PlayFile: exit, isMovieBrowser %d p_movie_info %p\n", isMovieBrowser, p_movie_info);
-			playstate = CMoviePlayerGui::STOPPED;
-			handleMovieBrowser((neutrino_msg_t) g_settings.mpkey_stop, position);
-		}
 	}
 	printf("CMoviePlayerGui::PlayFile: exit, isMovieBrowser %d p_movie_info %p\n", isMovieBrowser, p_movie_info);
 	playstate = CMoviePlayerGui::STOPPED;
@@ -1545,12 +1542,12 @@ void CMoviePlayerGui::selectAudioPid()
 		APIDSelector.addItem(item, defpid);
 	}
 
+	int percent[numpida];
 	if (p_movie_info && numpida <= p_movie_info->audioPids.size()) {
 		APIDSelector.addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_AUDIOMENU_VOLUME_ADJUST));
 
 		CVolume::getInstance()->SetCurrentChannel(p_movie_info->epgId);
 		CVolume::getInstance()->SetCurrentPid(currentapid);
-		int percent[numpida];
 		for (uint i=0; i < numpida; i++) {
 			percent[i] = CZapit::getInstance()->GetPidVolume(p_movie_info->epgId, apids[i], ac3flags[i]);
 			APIDSelector.addItem(new CMenuOptionNumberChooser(p_movie_info->audioPids[i].epgAudioPidName,

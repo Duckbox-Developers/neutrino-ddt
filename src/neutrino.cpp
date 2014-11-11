@@ -364,11 +364,8 @@ int CNeutrinoApp::loadSetup(const char * fname)
 			configfile.clear();
 		}
 	}
-	std::ifstream checkParentallocked(NEUTRINO_PARENTALLOCKED_FILE);
-	if(checkParentallocked) {
-		parentallocked = true;
-		checkParentallocked.close();
-	}
+	parentallocked = !access(NEUTRINO_PARENTALLOCKED_FILE, R_OK);
+
 	g_settings.softupdate_autocheck = configfile.getBool("softupdate_autocheck" , false);
 
 	// video
@@ -866,6 +863,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	}
 	g_settings.parentallock_defaultlocked = configfile.getInt32("parentallock_defaultlocked", 0);
 	g_settings.parentallock_pincode = configfile.getString( "parentallock_pincode", "0000" );
+	g_settings.parentallock_zaptime = configfile.getInt32( "parentallock_zaptime", 60 );
 
 	for (int i = 0; i < SNeutrinoSettings::TIMING_SETTING_COUNT; i++)
 		g_settings.timing[i] = configfile.getInt32(locale_real_names[timing_setting[i].name], timing_setting[i].default_timing);
@@ -1376,6 +1374,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32( "parentallock_prompt", g_settings.parentallock_prompt );
 	configfile.setInt32( "parentallock_lockage", g_settings.parentallock_lockage );
 	configfile.setString( "parentallock_pincode", g_settings.parentallock_pincode );
+	configfile.setInt32("parentallock_zaptime", g_settings.parentallock_zaptime);
 	configfile.setInt32("parentallock_defaultlocked", g_settings.parentallock_defaultlocked);
 
 	//timing
@@ -4219,8 +4218,10 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 		CMoviePlayerGui::getInstance().exec(NULL, actionKey);
 		if(_mode == NeutrinoMessages::mode_radio )
 			videoDecoder->ShowPicture(DATADIR "/neutrino/icons/radiomode.jpg");
+#if 0
 		else if (_mode == mode_webtv)
 			tvMode(true);
+#endif
 		return menu_return::RETURN_EXIT_ALL;
 	}
 	else if(actionKey=="audioplayer" || actionKey == "inetplayer") {
