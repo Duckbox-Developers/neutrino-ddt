@@ -1087,12 +1087,14 @@ int CChannelList::handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t data, 
 
 out:
 	if (startvideo) {
+#ifdef ENABLE_PIP
 		if(pip) {
 			if (CNeutrinoApp::getInstance()->StartPip((*chanlist)[selected]->getChannelID())) {
 				calcSize();
 				paint();
 			}
 		} else
+#endif
 			g_RemoteControl->startvideo();
 	}
 
