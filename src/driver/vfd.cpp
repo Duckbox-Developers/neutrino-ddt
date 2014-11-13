@@ -105,7 +105,7 @@ static void write_to_vfd(unsigned int DevType, struct vfd_ioctl_data * data, boo
 		}
 		blocked = true;
 		if (file_vfd == -1)
-			file_vfd = open (VFD_DEVICE, O_RDWR);
+			file_vfd = open (VFD_DEVICE, O_RDWR|O_CLOEXEC);
 		if (file_vfd > -1) {
 			ioctl(file_vfd, DevType, data);
 			ioctl(file_vfd, I_FLUSH, FLUSHRW);
@@ -181,8 +181,13 @@ static void ShowNormalText(char * str, bool fromScrollThread = false)
 void CVFD::Reset()
 {
 	printf("CVFD::Reset\n");
+	FILE *force_file_vfd;
+
 	ioctl(file_vfd, I_FLUSH, FLUSHRW);
-	close(file_vfd);
+
+	while ((force_file_vfd = fdopen (file_vfd, "w")) == NULL) 
+    	close(file_vfd);
+
 	file_vfd = -1;
 }
 
