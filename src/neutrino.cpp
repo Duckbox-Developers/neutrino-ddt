@@ -4390,6 +4390,7 @@ void stop_daemons(bool stopall, bool for_flash)
 	}
 
 	if (for_flash) {
+		delete cHddStat::getInstance();
 		delete CRecordManager::getInstance();
 		delete videoDemux;
 		int ret = my_system(4, "mount", "-no", "remount,ro", "/");
@@ -4411,6 +4412,7 @@ void sighandler (int signum)
 	switch (signum) {
 	case SIGTERM:
 	case SIGINT:
+		delete cHddStat::getInstance();
 		delete CRecordManager::getInstance();
 		//CNeutrinoApp::getInstance()->saveSetup(NEUTRINO_SETTINGS_FILE);
 		stop_daemons();
