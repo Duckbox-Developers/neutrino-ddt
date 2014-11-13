@@ -291,6 +291,7 @@ int CMoviePlayerGui::exec(CMenuTarget * parent, const std::string & actionKey)
 	if (actionKey == "tsmoviebrowser") {
 		isMovieBrowser = true;
 		moviebrowser->setMode(MB_SHOW_RECORDS);
+		wakeup_hdd(g_settings.network_nfs_recordingdir.c_str());
 	}
 	else if (actionKey == "ytplayback") {
 		isMovieBrowser = true;
@@ -298,6 +299,7 @@ int CMoviePlayerGui::exec(CMenuTarget * parent, const std::string & actionKey)
 		isYT = true;
 	}
 	else if (actionKey == "fileplayback") {
+		wakeup_hdd(g_settings.network_nfs_moviedir.c_str());
 	}
 	else if (actionKey == "timeshift") {
 		timeshift = TSHIFT_MODE_ON;
@@ -591,7 +593,6 @@ bool CMoviePlayerGui::SelectFile()
 	file_name.clear();
 
 	printf("CMoviePlayerGui::SelectFile: isBookmark %d timeshift %d isMovieBrowser %d\n", isBookmark, timeshift, isMovieBrowser);
-	wakeup_hdd(g_settings.network_nfs_recordingdir.c_str());
 
 	if (timeshift != TSHIFT_MODE_OFF) {
 		t_channel_id live_channel_id = CZapit::getInstance()->GetCurrentChannelID();
