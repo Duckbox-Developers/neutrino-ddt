@@ -285,6 +285,7 @@ class CLCD
 		void UpdateIcons();
 		void ShowDiskLevel();
 #endif
+		void Reset() {};
 		void ShowIcon(fp_icon icon, bool show);
 		void ShowText(const char *s) { showServicename(std::string(s), true); };
 		~CLCD();
