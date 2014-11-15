@@ -53,7 +53,7 @@ extern CRemoteControl * g_RemoteControl; /* neutrino.cpp */
 #define VFD_DEVICE "/dev/vfd"
 
 #if defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_TF7700)
-	#define VFDLENGTH 8
+#define VFDLENGTH 8
 #elif defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500)
 #define VFDLENGTH 12
 #elif defined (BOXMODEL_HS7810A) || defined (BOXMODEL_HS7119) || defined (BOXMODEL_HS7819)
@@ -186,7 +186,7 @@ void CVFD::Reset()
 	ioctl(file_vfd, I_FLUSH, FLUSHRW);
 
 	while ((force_file_vfd = fdopen (file_vfd, "w")) == NULL) 
-    	close(file_vfd);
+		close(file_vfd);
 
 	file_vfd = -1;
 }
@@ -626,11 +626,7 @@ void CVFD::showTime(bool force)
 		return;
 #endif
 	if(fd >= 0 && mode == MODE_SHUTDOWN) {
-#ifdef HAVE_DUCKBOX_HARDWARE
-		ShowIcon(FP_ICON_REC, false);
-#else
 		ShowIcon(FP_ICON_CAM1, false);
-#endif
 		return;
 	}
 	if (fd >= 0 && showclock) {
@@ -681,30 +677,24 @@ void CVFD::showTime(bool force)
 		if(clearClock) {
 			clearClock = 0;
 			if(has_lcd)
-#ifdef HAVE_DUCKBOX_HARDWARE
-				ShowIcon(FP_ICON_REC, false);
-#else
 				ShowIcon(FP_ICON_CAM1, false);
+#if !HAVE_DUCKBOX_HARDWARE
 			setled(false);//off
 #endif
 		} else {
 			clearClock = 1;
 			if(has_lcd)
-#ifdef HAVE_DUCKBOX_HARDWARE
-				ShowIcon(FP_ICON_REC, true);
-#else
 				ShowIcon(FP_ICON_CAM1, true);
+#if !HAVE_DUCKBOX_HARDWARE
 			setled(true);//on
 #endif
 		}
 	} else if(clearClock || (recstatus != tmp_recstatus)) { // in case icon ON after record stopped
 		clearClock = 0;
 		if(has_lcd)
-#ifdef HAVE_DUCKBOX_HARDWARE
-			ShowIcon(FP_ICON_REC, false);
-#else
 			ShowIcon(FP_ICON_CAM1, false);
 
+#if !HAVE_DUCKBOX_HARDWARE
 		setled();
 #endif
 	}

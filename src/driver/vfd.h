@@ -158,7 +158,6 @@ class CVFD
 
 		void setMuted(bool);
 
-
 		void Reset();
 		void resume();
 		void pause();
