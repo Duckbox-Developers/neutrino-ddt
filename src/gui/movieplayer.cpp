@@ -1045,8 +1045,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			CFileBrowser playlist;
 			CFile *pfile = NULL;
 			pfile = &(*filelist_it);
-			playlist.filelist = filelist;
-			if (playlist.exec_playlist(std::distance( filelist.begin(), filelist_it )))
+			if (playlist.playlist_manager(filelist, std::distance( filelist.begin(), filelist_it )))
 			{
 				playstate = CMoviePlayerGui::STOPPED;
 				CFile *sfile = NULL;

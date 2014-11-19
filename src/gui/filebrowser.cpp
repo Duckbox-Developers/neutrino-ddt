@@ -912,13 +912,15 @@ bool CFileBrowser::exec(const char * const dirname)
 	return res;
 }
 
-bool CFileBrowser::exec_playlist(unsigned int playing)
+bool CFileBrowser::playlist_manager(CFileList &playlist, unsigned int playing)
 {
 	neutrino_msg_t      msg;
 	neutrino_msg_data_t data;
 
 	bool res = false;
 	menu_ret = menu_return::RETURN_REPAINT;
+
+	filelist = playlist;
 
 	fontInit();
 	paintHead();
@@ -1029,13 +1031,31 @@ bool CFileBrowser::exec_playlist(unsigned int playing)
 			}
 			paint();
 		}
-		else if (msg == CRCInput::RC_ok)
+		else if (msg == CRCInput::RC_red)
 		{
-			filelist[selected].Marked = true;
-			loop = false;
-			res = true;
+			if (filelist.size() > 1)
+			{
+				filelist.erase(filelist.begin()+selected);
+				if (selected) selected --;
+			}
+			paint();
 		}
-		else if (msg == CRCInput::RC_help || msg == CRCInput::RC_red)
+		else if (msg == CRCInput::RC_green)
+		{
+			CFileBrowser *addfiles = new CFileBrowser;
+			addfiles->Hide_records = true;
+			addfiles->Multi_Select = true;
+			addfiles->Dirs_Selectable = true;
+			addfiles->exec(g_settings.network_nfs_moviedir.c_str());
+			CFileList tmplist = addfiles->getSelectedFiles();
+			filelist.insert( filelist.end(), tmplist.begin(), tmplist.end() );
+			tmplist.clear();
+			delete addfiles;
+			paintHead();
+			paint();
+			paintFoot();
+		}
+		else if (msg == CRCInput::RC_yellow )
 		{
 			if (++g_settings.filebrowser_sortmethod >= FILEBROWSER_NUMBER_OF_SORT_VARIANTS)
 				g_settings.filebrowser_sortmethod = 0;
@@ -1045,6 +1065,12 @@ bool CFileBrowser::exec_playlist(unsigned int playing)
 			paint();
 			paintFoot();
 		}
+		else if (msg == CRCInput::RC_ok)
+		{
+			filelist[selected].Marked = true;
+			loop = false;
+			res = true;
+		}
 		else if (CRCInput::isNumeric(msg_repeatok))
 		{
 			SMSInput(msg_repeatok);
@@ -1053,6 +1079,8 @@ bool CFileBrowser::exec_playlist(unsigned int playing)
 
 	hide();
 	frameBuffer->blit();
+
+	playlist = filelist;
 
 	return res;
 }
