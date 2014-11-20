@@ -579,6 +579,7 @@ const char * locale_real_names[] =
 	"filebrowser.head",
 	"filebrowser.mark",
 	"filebrowser.nextpage",
+	"filebrowser.pm",
 	"filebrowser.prevpage",
 	"filebrowser.scan",
 	"filebrowser.select",

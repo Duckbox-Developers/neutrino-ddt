@@ -1310,7 +1310,7 @@ void CFileBrowser::paintHead()
 		l = asprintf(&l_name, "%s %s", g_Locale->getText(LOCALE_AUDIOPLAYER_ADD_SC), FILESYSTEM_ENCODING_TO_UTF8_STRING(name).c_str());
 	else
 #endif
-		l = asprintf(&l_name, "%s %s", g_Locale->getText(LOCALE_FILEBROWSER_HEAD), FILESYSTEM_ENCODING_TO_UTF8_STRING(name).c_str());
+		l = asprintf(&l_name, "%s %s", g_Locale->getText(playlistmode ? LOCALE_FILEBROWSER_PM : LOCALE_FILEBROWSER_HEAD), FILESYSTEM_ENCODING_TO_UTF8_STRING(name).c_str());
 
 	if (l < 1) /* at least 1 for the " " space */
 	{
