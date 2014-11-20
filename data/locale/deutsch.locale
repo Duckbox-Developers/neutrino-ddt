@@ -543,6 +543,7 @@ favorites.copy Kopiere Bouquet zu Favoriten
 favorites.finalhint \nVersehentlich hinzugefügte Kanäle können mit\nder Bouquetverwaltung korrigiert werden.\n
 favorites.menueadd Kanal Favoriten hinzufügen
 favorites.nobouquets Favoriten sind nur mit aktivierten Bouquets möglich.
+filebrowser.add Hinzufügen
 filebrowser.delete Löschen
 filebrowser.denydirectoryleave Startverzeichnis absolut
 filebrowser.dodelete1 Soll
