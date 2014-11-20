@@ -1067,6 +1067,13 @@ bool CFileBrowser::playlist_manager(CFileList &playlist, unsigned int playing)
 			paint();
 			paintFoot();
 		}
+		else if (msg == CRCInput::RC_epg )
+		{
+			std::random_shuffle ( filelist.begin(), filelist.end() );
+			selected = 0;
+			paint();
+			paintFoot();
+		}
 		else if (msg == CRCInput::RC_ok)
 		{
 			filelist[selected].Marked = true;
