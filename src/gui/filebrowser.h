@@ -186,6 +186,7 @@ class CFileBrowser
 		int  paintFoot(bool show = true);
 		void paintSMSKey();
 		void recursiveDelete(const char* file);
+		bool playlistmode;
 
 	protected:
 		void commonInit();

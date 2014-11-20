@@ -569,6 +569,7 @@ const char * locale_real_names[] =
 	"favorites.finalhint",
 	"favorites.menueadd",
 	"favorites.nobouquets",
+	"filebrowser.add",
 	"filebrowser.delete",
 	"filebrowser.denydirectoryleave",
 	"filebrowser.dodelete1",

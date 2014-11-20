@@ -598,6 +598,7 @@ bool CFileBrowser::exec(const char * const dirname)
 	bool res = false;
 	menu_ret = menu_return::RETURN_REPAINT;
 
+	playlistmode = false;
 #ifdef ENABLE_INTERNETRADIO
 	if (m_Mode == ModeSC) {
 		m_baseurl = base;
@@ -921,6 +922,7 @@ bool CFileBrowser::playlist_manager(CFileList &playlist, unsigned int playing)
 	menu_ret = menu_return::RETURN_REPAINT;
 
 	filelist = playlist;
+	playlistmode = true;
 
 	fontInit();
 	paintHead();
@@ -1369,6 +1371,8 @@ const struct button_label FileBrowserFilterButton[2] =
 
 int CFileBrowser::paintFoot(bool show)
 {
+	int cnt,res;
+
 	std::string sort_text = g_Locale->getText(LOCALE_MOVIEBROWSER_FOOT_SORT);
 	sort_text += g_Locale->getText(sortByNames[g_settings.filebrowser_sortmethod]);
 
@@ -1383,6 +1387,15 @@ int CFileBrowser::paintFoot(bool show)
 	if (Filter != NULL && g_settings.filebrowser_use_filter)
 		f_loc = LOCALE_FILEBROWSER_FILTER_ACTIVE;
 
+	button_label_ext footerButtons_pm[] = {
+		{ NEUTRINO_ICON_BUTTON_RED,		LOCALE_FILEBROWSER_DELETE,	NULL,			0,		false },
+		{ NEUTRINO_ICON_BUTTON_GREEN,		LOCALE_FILEBROWSER_ADD,	NULL,			0,		false },
+		{ NEUTRINO_ICON_BUTTON_YELLOW,		NONEXISTANT_LOCALE,		sort_text.c_str(),	sort_text_len,	false },
+		{ NEUTRINO_ICON_BUTTON_BLUE,		f_loc,				NULL,			0,		false },
+		{ NEUTRINO_ICON_BUTTON_OKAY,		LOCALE_FILEBROWSER_SELECT,	NULL,			0,		false },
+		{ NEUTRINO_ICON_BUTTON_PLAY,		LOCALE_FILEBROWSER_MARK,	NULL,			0,		false },
+	};
+
 	button_label_ext footerButtons[] = {
 		{ NEUTRINO_ICON_BUTTON_RED,		NONEXISTANT_LOCALE,		sort_text.c_str(),	sort_text_len,	false },
 		{ NEUTRINO_ICON_BUTTON_OKAY,		LOCALE_FILEBROWSER_SELECT,	NULL,			0,		false },
@@ -1390,17 +1403,28 @@ int CFileBrowser::paintFoot(bool show)
 		{ NEUTRINO_ICON_BUTTON_PLAY,		LOCALE_FILEBROWSER_MARK,	NULL,			0,		false },
 		{ NEUTRINO_ICON_BUTTON_BLUE,		f_loc,				NULL,			0,		false },
 	};
-	int cnt = sizeof(footerButtons) / sizeof(button_label_ext);
+
+	if (playlistmode) {
+		cnt = sizeof(footerButtons_pm) / sizeof(button_label_ext);
+		if (!show)
+			return paintButtons(footerButtons_pm, cnt, 0, 0, 0, 0, 0, false, NULL, NULL);
+	} else {
+		cnt = sizeof(footerButtons) / sizeof(button_label_ext);
+		if (!show)
+			return paintButtons(footerButtons, cnt, 0, 0, 0, 0, 0, false, NULL, NULL);
+	}
+
 	int fowidth = width - skwidth;
 
-	if (!show)
-		return paintButtons(footerButtons, cnt, 0, 0, 0, 0, 0, false, NULL, NULL);
 
 	if (filelist.empty()) {
 		frameBuffer->paintBoxRel(x, y + height - foheight, width, foheight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
 		return foheight;
 	}
-	int res = paintButtons(footerButtons, Filter ? cnt : cnt - 1, x, y + height - foheight, width, foheight, fowidth);
+	if (playlistmode)
+		res = paintButtons(footerButtons_pm, Filter ? cnt : cnt - 1, x, y + height - foheight, width, foheight, fowidth);
+	else
+		res = paintButtons(footerButtons, Filter ? cnt : cnt - 1, x, y + height - foheight, width, foheight, fowidth);
 	paintSMSKey();
 	return res;
 }
