@@ -1067,7 +1067,7 @@ bool CFileBrowser::playlist_manager(CFileList &playlist, unsigned int playing)
 			paint();
 			paintFoot();
 		}
-		else if (msg == CRCInput::RC_epg )
+		else if (msg == CRCInput::RC_blue )
 		{
 			std::random_shuffle ( filelist.begin(), filelist.end() );
 			selected = 0;
@@ -1398,7 +1398,7 @@ int CFileBrowser::paintFoot(bool show)
 		{ NEUTRINO_ICON_BUTTON_RED,		LOCALE_FILEBROWSER_DELETE,	NULL,			0,		false },
 		{ NEUTRINO_ICON_BUTTON_GREEN,		LOCALE_FILEBROWSER_ADD,	NULL,			0,		false },
 		{ NEUTRINO_ICON_BUTTON_YELLOW,		NONEXISTANT_LOCALE,		sort_text.c_str(),	sort_text_len,	false },
-		{ NEUTRINO_ICON_BUTTON_BLUE,		f_loc,				NULL,			0,		false },
+		{ NEUTRINO_ICON_BUTTON_BLUE,		LOCALE_AUDIOPLAYER_SHUFFLE,				NULL,			0,		false },
 		{ NEUTRINO_ICON_BUTTON_OKAY,		LOCALE_FILEBROWSER_SELECT,	NULL,			0,		false },
 		{ NEUTRINO_ICON_BUTTON_PLAY,		LOCALE_FILEBROWSER_MARK,	NULL,			0,		false },
 	};
