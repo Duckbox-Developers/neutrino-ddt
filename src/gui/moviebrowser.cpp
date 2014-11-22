@@ -3489,7 +3489,7 @@ bool CMovieBrowser::showYTMenu(bool calledExternally)
 	}
 
 	std::string search = m_settings.ytsearch;
-	CKeyboardInput stringInput(LOCALE_MOVIEBROWSER_YT_SEARCH, &search, 20);
+	CKeyboardInput stringInput(LOCALE_MOVIEBROWSER_YT_SEARCH, &search);
 	if (!calledExternally) {
 		mainMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_YT_SEARCH, true, search, &stringInput, NULL, CRCInput::RC_green));
 		mainMenu.addItem(new CMenuOptionChooser(LOCALE_MOVIEBROWSER_YT_ORDERBY, &m_settings.ytorderby, YT_ORDERBY_OPTIONS, YT_ORDERBY_OPTION_COUNT, true, NULL, CRCInput::RC_nokey, "", true));
