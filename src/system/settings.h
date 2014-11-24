@@ -190,8 +190,6 @@ struct SNeutrinoSettings
 	int audio_mixer_volume_spdif;
 	int audio_mixer_volume_hdmi;
 #endif
-	int audio_volume_percent_ac3;
-	int audio_volume_percent_pcm;
 	int auto_lang;
 	int auto_subs;
 	int srs_enable;
