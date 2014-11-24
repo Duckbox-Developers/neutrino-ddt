@@ -403,17 +403,19 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.video_Format = configfile.getInt32("video_Format", DISPLAY_AR_16_9);
 	g_settings.video_43mode = configfile.getInt32("video_43mode", DISPLAY_AR_MODE_LETTERBOX);
 	g_settings.current_volume = configfile.getInt32("current_volume", 50);
+	g_settings.current_volume_step = configfile.getInt32("current_volume_step", 2);
+	g_settings.start_volume = configfile.getInt32("start_volume", -1);
+	if (g_settings.start_volume >= 0)
+		g_settings.current_volume = g_settings.start_volume;
+
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 	g_settings.audio_mixer_volume_analog = configfile.getInt32("audio_mixer_volume_analog", 50);
 	g_settings.audio_mixer_volume_hdmi = configfile.getInt32("audio_mixer_volume_hdmi", 75);
 	g_settings.audio_mixer_volume_spdif = configfile.getInt32("audio_mixer_volume_spdif", 75);
 #endif
+
 	g_settings.audio_volume_percent_ac3 = configfile.getInt32("audio_volume_percent_ac3", 100);
 	g_settings.audio_volume_percent_pcm = configfile.getInt32("audio_volume_percent_pcm", 100);
-	g_settings.current_volume_step = configfile.getInt32("current_volume_step", 2);
-	g_settings.start_volume = configfile.getInt32("start_volume", -1);
-	if (g_settings.start_volume >= 0)
-		g_settings.current_volume = g_settings.start_volume;
 
 	g_settings.channel_mode = configfile.getInt32("channel_mode", LIST_MODE_FAV);
 	g_settings.channel_mode_radio = configfile.getInt32("channel_mode_radio", LIST_MODE_FAV);

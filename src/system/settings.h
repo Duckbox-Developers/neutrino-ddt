@@ -134,6 +134,8 @@ struct SNeutrinoSettings
 
 #ifdef BOXMODEL_APOLLO
 	int brightness;
+	int audio_volume_percent_ac3;
+	int audio_volume_percent_pcm;
 	int contrast;
 	int saturation;
 	int enable_sd_osd;

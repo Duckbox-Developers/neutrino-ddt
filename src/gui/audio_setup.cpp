@@ -202,6 +202,21 @@ int CAudioSetup::showAudioSetup()
 	as_oj_srsonoff->setHint("", LOCALE_MENU_HINT_AUDIO_SRS);
 #endif
 
+	// ac3,pcm and clear volume adjustment
+	CMenuOptionNumberChooser *adj_ac3 = NULL, *adj_pcm = NULL;
+	CMenuForwarder *adj_clear = NULL;
+	adj_ac3 = new CMenuOptionNumberChooser(LOCALE_AUDIOMENU_VOLUME_ADJUSTMENT_AC3,
+	(int *)&g_settings.audio_volume_percent_ac3, true, 0, 100, audioSetupNotifier);
+	adj_ac3->setNumberFormat("%d%%");
+	adj_ac3->setHint("", LOCALE_MENU_HINT_AUDIO_ADJUST_VOL_AC3);
+
+	adj_pcm  = new CMenuOptionNumberChooser(LOCALE_AUDIOMENU_VOLUME_ADJUSTMENT_PCM,
+	(int *)&g_settings.audio_volume_percent_pcm, true, 0, 100, audioSetupNotifier);
+	adj_pcm->setNumberFormat("%d%%");
+	adj_pcm->setHint("", LOCALE_MENU_HINT_AUDIO_ADJUST_VOL_PCM);
+
+	adj_clear = new CMenuForwarder(LOCALE_AUDIOMENU_VOLUME_ADJUSTMENT_CLEAR, true, NULL, this, "clear_vol_map");
+	adj_clear->setHint("", LOCALE_MENU_HINT_AUDIO_ADJUST_VOL_CLEAR);
 	//paint items
 	audioSettings->addIntroItems(LOCALE_MAINSETTINGS_AUDIO);
 	//---------------------------------------------------------
@@ -232,8 +247,8 @@ int CAudioSetup::showAudioSetup()
 #if 0
 	audioSettings->addItem(mf);
 #endif
-	CMenuOptionNumberChooser *ch;
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	CMenuOptionNumberChooser *ch;
 	audioSettings->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_AUDIOMENU_MIXER_VOLUME));
 	ch = new CMenuOptionNumberChooser(LOCALE_AUDIOMENU_MIXER_VOLUME_ANALOG,
 		(int *)&g_settings.audio_mixer_volume_analog, true, 0, 100, audioSetupNotifier);
@@ -249,23 +264,18 @@ int CAudioSetup::showAudioSetup()
 	audioSettings->addItem(ch);
 #endif
 	audioSettings->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_AUDIOMENU_VOLUME_ADJUSTMENT));
-	ch = new CMenuOptionNumberChooser(LOCALE_AUDIOMENU_VOLUME_ADJUSTMENT_AC3,
-		(int *)&g_settings.audio_volume_percent_ac3, true, 0, 100, audioSetupNotifier);
-	ch->setNumberFormat("%d%%");
-	audioSettings->addItem(ch);
-	ch = new CMenuOptionNumberChooser(LOCALE_AUDIOMENU_VOLUME_ADJUSTMENT_PCM,
-		(int *)&g_settings.audio_volume_percent_pcm, true, 0, 100, audioSetupNotifier);
-	ch->setNumberFormat("%d%%");
-	audioSettings->addItem(ch);
-	audioSettings->addItem(new CMenuForwarder(LOCALE_AUDIOMENU_VOLUME_ADJUSTMENT_CLEAR, true, NULL, this, "clear_vol_map"));
+	audioSettings->addItem(adj_ac3);
+	audioSettings->addItem(adj_pcm);
+	audioSettings->addItem(adj_clear);
 
 	int res = audioSettings->exec(NULL, "");
 	selected = audioSettings->getSelected();
-	CZapit::getInstance()->SetVolumePercent(g_settings.audio_volume_percent_ac3, g_settings.audio_volume_percent_pcm);
 	delete audioSettings;
 #ifdef BOXMODEL_APOLLO
 	delete as_oj_noise;
 #endif
+	CZapit::getInstance()->SetVolumePercent(g_settings.audio_volume_percent_ac3, g_settings.audio_volume_percent_pcm);
+
 	return res;
 }
 

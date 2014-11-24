@@ -133,8 +133,8 @@ audiomenu.spdif_dd Dolby Digital über S/PDIF
 audiomenu.stereo stereo
 audiomenu.volume_adjust Lautstärke ändern, in %
 audiomenu.volume_adjustment Lautstärkeanpassung pro Kanal
-audiomenu.volume_adjustment_ac3 AC-3-Tonspuren
-audiomenu.volume_adjustment_clear Gemerkte Werte löschen
+audiomenu.volume_adjustment_ac3 AC3-Tonspuren
+audiomenu.volume_adjustment_clear Gespeicherte Werte löschen
 audiomenu.volume_adjustment_pcm PCM-Tonspuren
 audiomenu.volume_start Einschaltlautstärke
 audiomenu.volume_step Lautstärke Schrittweite
@@ -939,6 +939,9 @@ menu.hint_accept_other_remotes Deaktivieren um andere Fernbedienungen zu ignorie
 menu.hint_aplay Audioplayer
 menu.hint_aplay_setup Ändern Sie Audioplayer-Einstellungen wie Titel-Anzeige, Startverzeichnis oder Bildschirmschoner.
 menu.hint_audio Audio-Ausgang, Dolby Digital und SRS TruVolume Optionen und mehr
+menu.hint_audio_adjust_vol_ac3 Lautstärkeanpassung für AC3-Tonspuren
+menu.hint_audio_adjust_vol_clear Alle gespeicherten Werte für AC3- und PCM-Tonspuren löschen
+menu.hint_audio_adjust_vol_pcm Lautstärkeanpassung für PCM-Tonspuren
 menu.hint_audio_analog_mode Wählen Sie den Modus des Ausgangssignals für den CINCH-Anschluss
 menu.hint_audio_avsync Diese Funktion synchronisiert Bild und Ton
 menu.hint_audio_dd Ist diese Option aktiviert, wird automatisch auf Dolby Digital Ton geschalten, sobald dieser verfügbar ist
@@ -1020,7 +1023,7 @@ menu.hint_fade Bei aktivierter Funktion werden die GUI-Fenster 'weich' ein- bzw.
 menu.hint_fan_speed Steuerung der Lüftergeschwindigkeit für die CPU
 menu.hint_filebrowser_denydirectoryleave Verhindert das Verlassen des Startverzeichnisses
 menu.hint_filebrowser_showrights Anzeige der Dateirechte der Dateien im Filebrowser
-menu.hint_fileplay Abspielen von Video-Dateien
+menu.hint_fileplay Abspielen verschiedener Video-Dateien
 menu.hint_filesystem_is_utf8 Kodierung für Unicode-Zeichen im Filebrowser
 menu.hint_font_gui Wählen Sie die Schriftart für die Menüs
 menu.hint_font_scaling Legen Sie die vertikale und horizontale Skalierung der Menüschrift fest

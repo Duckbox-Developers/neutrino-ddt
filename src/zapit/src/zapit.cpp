@@ -72,10 +72,10 @@
 #include <audio_td.h>
 #endif
 #include <driver/rcinput.h>
-#include <OpenThreads/ScopedLock>
 
 #include <driver/abstime.h>
 #include <libdvbsub/dvbsub.h>
+#include <OpenThreads/ScopedLock>
 #include <libtuxtxt/teletext.h>
 #include <OpenThreads/ScopedLock>
 
@@ -852,7 +852,6 @@ void CZapit::SetPidVolume(t_channel_id channel_id, int pid, int percent)
 	if ((pid < 0) && (channel_id == live_channel_id) && current_channel)
 		pid = current_channel->getAudioPid();
 	OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(vol_map_mutex);
-
 INFO("############################### channel %" PRIx64 " pid %x map size %d percent %d", channel_id, pid, (int)vol_map.size(), percent);
 	volume_map_range_t pids = vol_map.equal_range(channel_id);
 	for (volume_map_iterator_t it = pids.first; it != pids.second; ++it) {
@@ -2488,7 +2487,6 @@ bool CZapit::Start(Z_start_arg *ZapStart_arg)
 
 	volume_percent_ac3 = 100;
 	volume_percent_pcm = 100;
-	/* set initial volume with 100% */
 	SetVolumePercent(100);
 #ifdef USE_VBI
 	videoDecoder->OpenVBI(1);
