@@ -1397,7 +1397,7 @@ int CLuaInstance::MenuAddItem(lua_State *L)
 			m->targets.push_back(stringinput);
 		} else if (type == "keyboardinput") {
 			b->str_val = value;
-			int size = 0;		tableLookup(L, "size", size);
+			lua_Integer size = 0;	tableLookup(L, "size", size);
 			std::string help = "";	tableLookup(L, "help", help);
 			std::string help2 = "";	tableLookup(L, "help2", help2);
 			CLuaMenuKeyboardinput *keyboardinput = new CLuaMenuKeyboardinput(L, action, id, b->name.c_str(), &b->str_val, size, m->observ, icon, help, help2);
