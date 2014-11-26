@@ -769,7 +769,7 @@ int CLuaInstance::strSub(lua_State *L)
 		return 1;
 	}
 	const char *s1;
-	int pos=0, len=std::string::npos;
+	lua_Integer pos=0, len=std::string::npos;
 	std::string ret="";
 	s1 = luaL_checkstring(L, 2);
 	pos = luaL_checkint(L, 3);
@@ -1254,9 +1254,9 @@ int CLuaInstance::MenuAddKey(lua_State *L)
 
 	std::string action;	tableLookup(L, "action", action);
 	std::string id;		tableLookup(L, "id", id);
-	lua_Integer directkey = CRCInput::RC_nokey;
+	lua_Unsigned directkey = CRCInput::RC_nokey;
 	tableLookup(L, "directkey", directkey);
-	if (action != "" && directkey != (int) CRCInput::RC_nokey) {
+	if ((action != "") && (directkey != CRCInput::RC_nokey)) {
 		CLuaMenuForwarder *forwarder = new CLuaMenuForwarder(L, action, id);
 		m->m->addKey(directkey, forwarder, action);
 		m->targets.push_back(forwarder);
@@ -1316,9 +1316,8 @@ int CLuaInstance::MenuAddItem(lua_State *L)
 			m->tofree.push_back(icon);
 		}
 
-		lua_Integer directkey = CRCInput::RC_nokey, pulldown = false;
-		tableLookup(L, "directkey", directkey);
-		tableLookup(L, "pulldown", pulldown);
+		lua_Unsigned directkey = CRCInput::RC_nokey; tableLookup(L, "directkey", directkey);
+		lua_Integer pulldown = false; 	tableLookup(L, "pulldown", pulldown);
 
 		bool enabled = true;
 		if (!(tableLookup(L, "enabled", enabled) || tableLookup(L, "active", enabled)))
@@ -1389,9 +1388,8 @@ int CLuaInstance::MenuAddItem(lua_State *L)
 			b->str_val = value;
 			std::string valid_chars = "abcdefghijklmnopqrstuvwxyz0123456789!\"§$%&/()=?-. ";
 			tableLookup(L, "valid_chars", valid_chars);
-			lua_Integer sms = 0, size = 30;
-			tableLookup(L, "sms", sms);
-			tableLookup(L, "size", size);
+			lua_Integer sms = 0;	tableLookup(L, "sms", sms);
+			lua_Integer size = 30;	tableLookup(L, "size", size);
 			CLuaMenuStringinput *stringinput = new CLuaMenuStringinput(L, action, id, b->name.c_str(), &b->str_val, size, valid_chars, m->observ, icon, sms);
 			mi = new CMenuForwarder(b->name, enabled, b->str_val, stringinput, NULL/*ActionKey*/, directkey, icon, right_icon);
 			m->targets.push_back(stringinput);
@@ -1616,8 +1614,7 @@ int CLuaInstance::MessageboxExec(lua_State *L)
 	tableLookup(L, "name", name) || tableLookup(L, "title", name) || tableLookup(L, "caption", name);
 	tableLookup(L, "text", text);
 	tableLookup(L, "icon", icon);
-	lua_Integer timeout = -1, width = 450, return_default_on_timeout = 0;
-	int show_buttons = 0, default_button = 0;
+	lua_Integer timeout = -1, width = 450, return_default_on_timeout = 0, show_buttons = 0, default_button = 0;
 	tableLookup(L, "timeout", timeout);
 	tableLookup(L, "width", width);
 	tableLookup(L, "return_default_on_timeout", return_default_on_timeout);
@@ -2071,7 +2068,7 @@ int CLuaInstance::ComponentsTextNew(lua_State *L)
 	lua_Integer x = 10, y = 10, dx = 100, dy = 100;
 	std::string text         = "";
 	std::string tmpMode      = "";
-	int         mode         = CTextBox::AUTO_WIDTH;
+	lua_Integer mode         = CTextBox::AUTO_WIDTH;
 	lua_Integer font_text    = SNeutrinoSettings::FONT_TYPE_MENU;
 	lua_Unsigned color_text   = (lua_Unsigned)COL_MENUCONTENT_TEXT;
 	lua_Unsigned color_frame  = (lua_Unsigned)COL_MENUCONTENT_PLUS_6;
