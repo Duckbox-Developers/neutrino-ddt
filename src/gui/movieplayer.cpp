@@ -1042,6 +1042,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			playstate = CMoviePlayerGui::STOPPED;
 			ClearQueue();
 		} else if ((filelist.size() > 0 && msg == (neutrino_msg_t) CRCInput::RC_ok)) {
+			EnableClockAndMute(false);
 			CFileBrowser playlist;
 			CFile *pfile = NULL;
 			pfile = &(*filelist_it);
@@ -1057,6 +1058,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 						break;
 				}
 			}
+			EnableClockAndMute(true);
 		} else if ((filelist.size() > 0 && msg == (neutrino_msg_t) CRCInput::RC_right)) {
 			if (filelist_it < (filelist.end() - 1)) {
 				++filelist_it;
@@ -1109,24 +1111,6 @@ void CMoviePlayerGui::PlayFileLoop(void)
 				updateLcd();
 				if (timeshift == TSHIFT_MODE_OFF)
 					callInfoViewer();
-			} else if (filelist.size() > 0) {
-				EnableClockAndMute(false);
-				CFileBrowser playlist;
-				CFile *pfile = NULL;
-				pfile = &(*filelist_it);
-				if (playlist.playlist_manager(filelist, std::distance( filelist.begin(), filelist_it )))
-				{
-					playstate = CMoviePlayerGui::STOPPED;
-					CFile *sfile = NULL;
-					for (filelist_it = filelist.begin(); filelist_it != filelist.end(); ++filelist_it)
-					{
-						pfile = &(*filelist_it);
-						sfile = playlist.getSelectedFile();
-						if ( (sfile->getFileName() == pfile->getFileName()) && (sfile->getPath() == pfile->getPath()))
-							break;
-					}
-				}
-				EnableClockAndMute(true);
 			}
 		} else if (msg == (neutrino_msg_t) g_settings.mpkey_pause) {
 			if (playstate == CMoviePlayerGui::PAUSE) {
