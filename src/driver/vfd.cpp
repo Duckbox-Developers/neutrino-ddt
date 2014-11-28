@@ -135,6 +135,12 @@ static void writeCG (unsigned char adress, unsigned char pixeldata[5])
 
 static void ShowNormalText(char * str, bool fromScrollThread = false)
 {
+	if (blocked)
+	{
+		printf("[CVFD] - blocked\n");
+		usleep(SCROLL_TIME);
+	}
+
 	int ws = 0; // needed whitespace for centering
 	struct vfd_ioctl_data data;
 
@@ -194,6 +200,12 @@ void CVFD::Reset()
 void CVFD::ShowScrollText(char *str)
 {
 	printf("CVFD::ShowScrollText: [%s]\n", str);
+
+	if (blocked)
+	{
+		printf("[CVFD] - blocked\n");
+		usleep(SCROLL_TIME);
+	}
 
 	//stop scrolltextthread
 	if(vfd_scrollText != 0)
