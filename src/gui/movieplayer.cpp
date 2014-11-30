@@ -249,8 +249,8 @@ void CMoviePlayerGui::restoreNeutrino()
 	if (isUPNP)
 		return;
 
-	//g_Zapit->unlockPlayBack();
-	CZapit::getInstance()->EnablePlayback(true);
+	g_Zapit->unlockPlayBack();
+	//CZapit::getInstance()->EnablePlayback(true);
 	g_Sectionsd->setPauseScanning(false);
 
 	printf("%s: restore mode %x\n", __func__, m_LastMode);fflush(stdout);
