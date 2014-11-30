@@ -81,9 +81,6 @@ int CVfdSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 		return menu_return::RETURN_REPAINT;
 	} else if (actionKey == "brightness") {
 		return showBrightnessSetup();
-	} else if (actionKey=="vfdreset") {
-		CVFD::getInstance()->Reset();
-		return menu_return::RETURN_EXIT_ALL;
 	}
 
 	int res = showSetup();
@@ -170,9 +167,6 @@ int CVfdSetup::showSetup()
 
 #if HAVE_DUCKBOX_HARDWARE || BOXMODEL_SPARK7162
 		vfds->addItem(new CMenuOptionNumberChooser(LOCALE_LCDMENU_VFD_SCROLL, &g_settings.lcd_vfd_scroll, true, 0, 999, this, 0, 0, NONEXISTANT_LOCALE, true));
-
-		//restart vfd
-		vfds->addItem(new CMenuForwarder(LOCALE_CI_RESET, true, NULL, this, "vfdreset"));
 #else
 		oj = new CMenuOptionChooser(LOCALE_LCDMENU_SCROLL, &g_settings.lcd_scroll, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, vfd_enabled);
 		oj->setHint("", LOCALE_MENU_HINT_VFD_SCROLL);
