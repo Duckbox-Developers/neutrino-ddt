@@ -830,14 +830,15 @@ printf("CVFD::showVolume: %d, bar %d\n", (int) vol, pp);
 
 void CVFD::showPercentOver(const unsigned char perc, const bool /*perform_update*/)
 {
+#if HAVE_DUCKBOX_HARDWARE
+	return;
+#else
 	if(!has_lcd) return;
 
 	if (((mode == MODE_TVRADIO) || (mode == MODE_MENU_UTF8)) && !(g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME])) {
 		//if (g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME] == 0)
 		{
-#if !HAVE_DUCKBOX_HARDWARE
 			ShowIcon(FP_ICON_FRAME, true);
-#endif
 			int pp;
 			if(perc == 255)
 				pp = 0;
@@ -860,6 +861,7 @@ void CVFD::showPercentOver(const unsigned char perc, const bool /*perform_update
 			}
 		}
 	}
+#endif
 }
 
 void CVFD::showMenuText(const int /*position*/, const char * ptext, const int /*highlight*/, const bool /*utf_encoded*/)
