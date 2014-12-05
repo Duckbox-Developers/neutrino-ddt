@@ -978,6 +978,7 @@ static void commandserviceStopped(int connfd, char * /* data */, const unsigned 
 	threadCN.unlock();
 	threadEIT.unlock();
 	threadCN.stopUpdate();
+	current_channel_id = 0;
 	xprintf("[sectionsd] commandserviceStopped done\n");
 }
 
