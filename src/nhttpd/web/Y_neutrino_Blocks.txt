@@ -30,6 +30,15 @@ start-block~neutrino_form_helpbox
 </div>
 end-block~neutrino_form_helpbox
 
+# ------- Neutrino form submit buttons
+start-block~neutrino_form_submit
+	<button type="button" ytype="save" title="{=L:save_values_desc=}" onclick="do_submit()">{=L:save=}</button>
+	&nbsp;
+	<button type="button" ytype="refresh" title="{=L:apply_desc=}" onclick="reload_neutrino_conf()">{=L:apply=}</button>
+	&nbsp;
+	<a href="javascript:top.top_main.prim_menu.nav('info', 'Y_Info_Help.yhtm');" class="inlink">{=L:help=}</a>
+end-block~neutrino_form_submit
+
 # ------- Neutrino form-data: record -------------------------------
 start-block~neutrino_form-data_record
 <div class="work_box">
@@ -139,9 +148,7 @@ start-block~neutrino_form-data_record
 		<input type="hidden" name="tmpl" value="Y_Settings_neutrino_forms.yhtm"/>
 		<input type="hidden" name="execute" value="include-block:Y_neutrino_Blocks.txt;neutrino_record_save_settings;nix"/>
 		<input type="hidden" name="form" value="{=form=}"/>
-		<button type="button" ytype="save" title="{=L:save_values_desc=}s" onclick="do_submit()">{=L:save=}</button>
-		&nbsp;<button type="button" ytype="refresh" onclick="dbox_reload_neutrino()">{=L:set.reload_neutrino=}</button>
-		&nbsp;<a href="javascript:top.top_main.prim_menu.nav('info', 'Y_Info_Help.yhtm');" class="inlink">{=L:help=}</a>
+		{=include-block:Y_neutrino_Blocks.txt;neutrino_form_submit;nothing=}
 	</form>
 	</div>
 </div>
@@ -225,9 +232,7 @@ start-block~neutrino_form-data_movieplayer
 		<input type="hidden" name="tmpl" value="Y_Settings_neutrino_forms.yhtm"/>
 		<input type="hidden" name="execute" value="include-block:Y_neutrino_Blocks.txt;neutrino_movieplayer_save_settings;nix"/>
 		<input type="hidden" name="form" value="{=form=}"/>
-		<button type="button" ytype="save" title="{=L:save_values_desc=}" onclick="do_submit()">{=L:save=}</button>
-		&nbsp;<button type="button" ytype="refresh" onclick="dbox_reload_neutrino()">{=L:set.reload_neutrino=}</button>
-		&nbsp;<a href="javascript:top.top_main.prim_menu.nav('info', 'Y_Info_Help.yhtm');" class="inlink">{=L:help=}</a>
+		{=include-block:Y_neutrino_Blocks.txt;neutrino_form_submit;nothing=}
 	</form>
 	</div>
 </div>
@@ -292,9 +297,7 @@ start-block~neutrino_form-data_parental
 		<input type="hidden" name="tmpl" value="Y_Settings_neutrino_forms.yhtm"/>
 		<input type="hidden" name="execute" value="include-block:Y_neutrino_Blocks.txt;neutrino_parental_save_settings;nix"/>
 		<input type="hidden" name="form" value="{=form=}"/>
-		<button type="button" ytype="save" title="{=L:save_values_desc=}s" onclick="do_submit()">{=L:save=}</button>
-		&nbsp;<button type="button" ytype="refresh" onclick="dbox_reload_neutrino()">{=L:set.reload_neutrino=}</button>
-		&nbsp;<a href="javascript:top.top_main.prim_menu.nav('info', 'Y_Info_Help.yhtm');" class="inlink">{=L:help=}</a>
+		{=include-block:Y_neutrino_Blocks.txt;neutrino_form_submit;nothing=}
 	</form>
 	</div>
 </div>
@@ -424,8 +427,7 @@ start-block~neutrino_form-data_epg
 		<input type="hidden" name="tmpl" value="Y_Settings_neutrino_forms.yhtm"/>
 		<input type="hidden" name="execute" value="include-block:Y_neutrino_Blocks.txt;neutrino_epg_save_settings;nix"/>
 		<input type="hidden" name="form" value="{=form=}"/>
-		<button type="button" ytype="save" title="{=L:save_values_desc=}" onclick="do_submit()">{=L:save=}</button>
-		&nbsp;<button type="button" ytype="refresh" onclick="reload_neutrino_conf()">{=L:apply=}</button>
+		{=include-block:Y_neutrino_Blocks.txt;neutrino_form_submit;nothing=}
 	</form>
 	</div>
 </div>
@@ -697,9 +699,7 @@ start-block~neutrino_form-data_diverse
 		<input type="hidden" name="tmpl" value="Y_Settings_neutrino_forms.yhtm"/>
 		<input type="hidden" name="execute" value="include-block:Y_neutrino_Blocks.txt;neutrino_diverse_save_settings;nix"/>
 		<input type="hidden" name="form" value="{=form=}"/>
-		<button type="button" ytype="save" title="{=L:save_values_desc=}s" onclick="do_submit()">{=L:save=}</button>
-		&nbsp;<button type="button" ytype="refresh" onclick="dbox_reload_neutrino()">reload Neutrino</button>
-		&nbsp;<a href="javascript:top.top_main.prim_menu.nav('info', 'Y_Info_Help.yhtm');" class="inlink">{=L:help=}</a>
+		{=include-block:Y_neutrino_Blocks.txt;neutrino_form_submit;nothing=}
 	</form>
 	</div>
 </div>
@@ -789,167 +789,6 @@ start-block~neutrino_diverse_save_settings
 {=ini-set:/var/tuxbox/config/zapit/zapit.conf;makeRemainingChannelsBouquet;{=bouquet_others=}~save=}
 end-block~neutrino_diverse_save_settings
 
-
-# ------- Neutrino form-data: bootoptions -------------------------------
-start-block~neutrino_form-data_bootoptions
-<div class="work_box">
-	<div class="work_box_head"><div class="work_box_head_h2">
-	{=var-set:help_url=Help-Settings-Bootoptionen=}{=var-set:menu=Treiber- und Bootoptionen=}{=include-block:Y_Blocks.txt;work_menu=}</div></div>
-	<div class="work_box_body">
-	<form name="f" class="y_form" action="/y/cgi">
-		<table cellspacing="0" border="0" cellpadding="2" width="100%">
-			<tr title="SPTS mode: off/on">
-				<td width="35%">SPTS-Mode Treiber laden</td>
-				<td>
-					<input type="radio" name="misc_spts" value="false"/>{=L:off=}&nbsp;
-					<input type="radio" name="misc_spts" value="true"/>{=L:on=}
-				</td>
-			</tr>
-			<tr title="Bootinfo: off/on">
-				<td>Infos beim Booten anzeigen</td>
-				<td>
-					<input type="radio" name="bootinfo" value="0"/>{=L:off=}&nbsp;
-					<input type="radio" name="bootinfo" value="1"/>{=L:on=}
-				</td>
-			</tr>
-			<tr title="HW Sections: off/on">
-				<td>HW-Sections verwenden</td>
-				<td>
-					<input type="radio" name="hwsections" value="0"/>{=L:off=}&nbsp;
-					<input type="radio" name="hwsections" value="1"/>{=L:on=}
-				</td>
-			</tr>
-			<tr title="AVIA-Watchdog: off/on">
-				<td>AVIA-Watchdog aktivieren</td>
-				<td>
-					<input type="radio" name="no_watchdog" value="0"/>{=L:off=}&nbsp;
-					<input type="radio" name="no_watchdog" value="1"/>{=L:on=}
-				</td>
-			</tr>
-			<tr title="eNX-Watchdog: off/on">
-				<td>eNX-Watchdog aktivieren</td>
-				<td>
-					<input type="radio" name="no_enxwatchdog" value="0"/>{=L:off=}&nbsp;
-					<input type="radio" name="no_enxwatchdog" value="1"/>{=L:on=}
-				</td>
-			</tr>
-			<tr title="philips rc patch: off/on">
-				<td>Philips/Sagem FB Workaround</td>
-				<td>
-					<input type="radio" name="philips_rc_patch" value="0"/>{=L:off=}&nbsp;
-					<input type="radio" name="philips_rc_patch" value="1"/>{=L:on=}
-				</td>
-			</tr>
-			<tr title="AVIA spts-fix: off/on">
-				<td>SPTS-Fix AVIA500</td>
-				<td>
-					<input type="radio" name="sptsfix" value="0"/>{=L:off=}&nbsp;
-					<input type="radio" name="sptsfix" value="1"/>{=L:on=}
-				</td>
-			</tr>
-			<tr title="RTC: off/on">
-				<td>Realtime Clock (RTC) aktivieren</td>
-				<td>
-					<input type="radio" name="rtc" value="0"/>{=L:off=}&nbsp;
-					<input type="radio" name="rtc" value="1"/>{=L:on=}
-				</td>
-			</tr>
-			<tr title="PMT Update: off/on">
-				<td>PMT Update verwenden</td>
-				<td>
-					<input type="radio" name="no_pmt_update" value="0"/>{=L:off=}&nbsp;
-					<input type="radio" name="no_pmt_update" value="1"/>{=L:on=}
-				</td>
-			</tr>
-			<tr>
-				<td>EXPERT! Boot-Konsole</td>
-				<td>
-					<select name="console" title="expert boot-console">
-					<option value="null" selected="selected">null</option>
-					<option value="ttyS0">seriell</option>
-					<option value="tty">framebuffer</option>
-					</select>
-				</td>
-			</tr>
-			<tr title="Fullduplex: off/on">
-				<td>FullDuplex Mode</td>
-				<td>
-					<input type="radio" name="dbox_duplex" value="0"/>{=L:off=}&nbsp;
-					<input type="radio" name="dbox_duplex" value="1"/>{=L:on=}
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2" width="35%" class="y_form_header">Diverses</td>
-			</tr>
-			<tr title="Bootmenu: off/on">
-				<td>Bootmen&uuml; anzeigen</td>
-				<td>
-					<input type="radio" name="bootmenu" value="0"/>{=L:off=}&nbsp;
-					<input type="radio" name="bootmenu" value="1"/>{=L:on=}
-				</td>
-			</tr>
-		</table>
-		<br/>
-		<input type="hidden" name="tmpl" value="Y_Settings_neutrino_forms.yhtm"/>
-		<input type="hidden" name="execute" value="include-block:Y_neutrino_Blocks.txt;neutrino_bootoptions_save_settings;nix"/>
-		<input type="hidden" name="form" value="{=form=}"/>
-		<button type="button" ytype="save" title="{=L:save_values_desc=}s" onclick="do_submit()">{=L:save=}</button>
-		&nbsp;<button type="button" ytype="refresh" onclick="dbox_reload_neutrino()">reload Neutrino</button>
-		&nbsp;<a href="javascript:top.top_main.prim_menu.nav('info', 'Y_Info_Help.yhtm');" class="inlink">{=L:help=}</a>
-	</form>
-	</div>
-</div>
-<script type="text/javascript">
-//<![CDATA[
-function form_init()
-{
-	var val = "{=ini-get:/var/tuxbox/boot/boot.conf;console~open=}";
-	var sel = 0;
-	if(val=="ttyS0") sel=1;
-	if(val=="tty") sel=2;
-		document.f.console.selectedIndex = sel;
-	
-	obj_set_radio_value('dbox_duplex', "{=ini-get:/var/tuxbox/boot/boot.conf;dbox_duplex~cache=}");
-	obj_set_radio_value('misc_spts', "{=ini-get:/var/tuxbox/config/neutrino.conf;misc_spts~open=}");
-	obj_set_radio_value('bootmenu', "{=if-file-exists:/var/etc/.neutrino~0~1=}");
-	obj_set_radio_value('bootinfo', "{=if-file-exists:/var/etc/.boot_info~1~0=}");
-	obj_set_radio_value('hwsections', "{=if-file-exists:/var/etc/.hw_sections~0~1=}");
-	obj_set_radio_value('no_watchdog', "{=if-file-exists:/var/etc/.no_watchdog~0~1=}");
-	obj_set_radio_value('no_enxwatchdog', "{=if-file-exists:/var/etc/.no_enxwatchdog~0~1=}");
-	obj_set_radio_value('philips_rc_patch', "{=if-file-exists:/var/etc/.philips_rc_patch~1~0=}");
-	obj_set_radio_value('sptsfix', "{=if-file-exists:/var/etc/.sptsfix~1~0=}");
-	obj_set_radio_value('rtc', "{=if-file-exists:/var/etc/.rtc~1~0=}");
-	obj_set_radio_value('no_pmt_update', "{=if-file-exists:/var/etc/.no_pmt_update~0~1=}");
-}
-
-function do_submit()
-{
-	show_waitbox(true);
-	document.f.submit();
-}
-form_init();
-//]]>
-</script>
-end-block~neutrino_form-data_bootoptions
-
-# ------- yWeb save Settings
-start-block~neutrino_bootoptions_save_settings
-{=ini-set:/var/tuxbox/config/neutrino.conf;misc_spts;{=misc_spts=}=}
-{=file-action:/var/etc/.neutrino;{=if-equal:{=bootmenu=}~0~add~delete=}=}
-{=file-action:/var/etc/.boot_info;{=if-equal:{=bootinfo=}~1~add~delete=}=}
-{=file-action:/var/etc/.hw_sections;{=if-equal:{=hwsections=}~0~add~delete=}=}
-{=file-action:/var/etc/.no_watchdog;{=if-equal:{=no_watchdog=}~0~add~delete=}=}
-{=file-action:/var/etc/.no_enxwatchdog;{=if-equal:{=no_enxwatchdog=}~0~add~delete=}=}
-{=file-action:/var/etc/.philips_rc_patch;{=if-equal:{=philips_rc_patch=}~1~add~delete=}=}
-{=file-action:/var/etc/.sptsfix;{=if-equal:{=sptsfix=}~1~add~delete=}=}
-{=file-action:/var/etc/.rtc;{=if-equal:{=rtc=}~1~add~delete=}=}
-{=file-action:/var/etc/.no_pmt_update;{=if-equal:{=no_pmt_update=}~0~add~delete=}=}
-{=ini-set:/var/tuxbox/boot/boot.conf;console;{=console=}=}
-{=ini-set:/var/tuxbox/boot/boot.conf;dbox_duplex;{=dbox_duplex=}=}
-
-#{=file-action:/var/etc/.test;add;moin\nduu=}
-end-block~neutrino_bootoptions_save_settings
-
 # ------- Neutrino form-data: pictureviewer -------------------------------
 start-block~neutrino_form-data_pictureviewer
 <div class="work_box">
@@ -981,9 +820,7 @@ start-block~neutrino_form-data_pictureviewer
 		<input type="hidden" name="tmpl" value="Y_Settings_neutrino_forms.yhtm"/>
 		<input type="hidden" name="execute" value="include-block:Y_neutrino_Blocks.txt;neutrino_pictureviewer_save_settings;nix"/>
 		<input type="hidden" name="form" value="{=form=}"/>
-		<button type="button" ytype="save" title="{=L:save_values_desc=}s" onclick="do_submit()">{=L:save=}</button>
-		&nbsp;<button type="button" ytype="refresh" onclick="dbox_reload_neutrino()">{=L:set.reload_neutrino=}</button>
-		&nbsp;<a href="javascript:top.top_main.prim_menu.nav('info', 'Y_Info_Help.yhtm');" class="inlink">{=L:help=}</a>
+		{=include-block:Y_neutrino_Blocks.txt;neutrino_form_submit;nothing=}
 	</form>
 	</div>
 </div>
@@ -1086,9 +923,7 @@ start-block~neutrino_form-data_audioplayer
 		<input type="hidden" name="tmpl" value="Y_Settings_neutrino_forms.yhtm"/>
 		<input type="hidden" name="execute" value="include-block:Y_neutrino_Blocks.txt;neutrino_audioplayer_save_settings;nix"/>
 		<input type="hidden" name="form" value="{=form=}"/>
-		<button type="button" ytype="save" title="{=L:save_values_desc=}s" onclick="do_submit()">{=L:save=}</button>
-		&nbsp;<button type="button" ytype="refresh" onclick="dbox_reload_neutrino()">{=L:set.reload_neutrino=}</button>
-		&nbsp;<a href="javascript:top.top_main.prim_menu.nav('info', 'Y_Info_Help.yhtm');" class="inlink">{=L:help=}</a>
+		{=include-block:Y_neutrino_Blocks.txt;neutrino_form_submit;nothing=}
 	</form>
 	</div>
 </div>
@@ -1257,9 +1092,7 @@ start-block~neutrino_form-data_direct_recording
 		<input type="hidden" name="tmpl" value="Y_Settings_neutrino_forms.yhtm"/>
 		<input type="hidden" name="execute" value="include-block:Y_neutrino_Blocks.txt;neutrino_direct_recording_save_settings;nix"/>
 		<input type="hidden" name="form" value="{=form=}"/>
-		<button type="button" ytype="save" title="{=L:save_values_desc=}s" onclick="do_submit()">{=L:save=}</button>
-		&nbsp;<button type="button" ytype="refresh" onclick="dbox_reload_neutrino()">reload Neutrino</button>
-		&nbsp;<a href="javascript:top.top_main.prim_menu.nav('info', 'Y_Info_Help.yhtm');" class="inlink">{=L:help=}</a>
+		{=include-block:Y_neutrino_Blocks.txt;neutrino_form_submit;nothing=}
 	</form>
 	</div>
 </div>
@@ -1312,51 +1145,6 @@ start-block~neutrino_direct_recording_save_settings
 {=ini-set:/var/tuxbox/config/neutrino.conf;recording_dir_9;{=recording_dir_9=}~cache=}
 {=ini-set:/var/tuxbox/config/neutrino.conf;recording_dir_permissions_0;{=recording_dir_permissions_0=}~save=}
 end-block~neutrino_direct_recording_save_settings
-
-# ------- Neutrino form-data: esound -------------------------------
-start-block~neutrino_form-data_esound
-<div class="work_box">
-	<div class="work_box_head"><div class="work_box_head_h2">
-	{=var-set:help_url=Help-Settings-Esound_Soundserver=}{=var-set:menu=Esound Soundserver=}{=include-block:Y_Blocks.txt;work_menu=}</div></div>
-	<div class="work_box_body">
-	<form name="f" action="/y/cgi">
-		<table cellspacing="0" border="0" cellpadding="2" width="100%">
-			<tr>
-				<td width="35%">Esound Port</td>
-				<td><input type="text" name="esound_port" size="5" maxlength="5" value="{=ini-get:/var/tuxbox/config/neutrino.conf;esound_port~open=}" title="esound port"/>&nbsp;default: 16001</td>
-			</tr>
-		</table>
-		<br/>
-		<input type="hidden" name="tmpl" value="Y_Settings_neutrino_forms.yhtm"/>
-		<input type="hidden" name="execute" value="include-block:Y_neutrino_Blocks.txt;neutrino_esound_save_settings;nix"/>
-		<input type="hidden" name="form" value="{=form=}"/>
-		<button type="button" ytype="save" title="{=L:save_values_desc=}s" onclick="do_submit()">{=L:save=}</button>
-		&nbsp;<button type="button" ytype="refresh" onclick="dbox_reload_neutrino()">reload Neutrino</button>
-		&nbsp;<a href="javascript:top.top_main.prim_menu.nav('info', 'Y_Info_Help.yhtm');" class="inlink">{=L:help=}</a>
-	</form>
-	</div>
-</div>
-
-<script type="text/javascript">
-//<![CDATA[
-function form_init()
-{
-}
-
-function do_submit()
-{
-	show_waitbox(true);
-	document.f.submit();
-}
-form_init();
-//]]>
-</script>
-end-block~neutrino_form-data_esound
-
-# ------- yWeb save Settings
-start-block~neutrino_esound_save_settings
-{=ini-set:/var/tuxbox/config/neutrino.conf;esound_port;{=esound_port=}=}
-end-block~neutrino_esound_save_settings
 
 # ------- list possible directorys for records
 start-block~neutrino_list_record_dirs
