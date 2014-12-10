@@ -109,14 +109,14 @@ static int64_t seek_packet(void *opaque, int64_t offset, int whence)
 	return ((CFfmpegDec *) opaque)->Seek(offset, whence);
 }
 
-bool CFfmpegDec::Init(void *_in, const CFile::FileType /* ft */)
+bool CFfmpegDec::Init(void *_in, const CFile::FileType ft)
 {
-        title = "";
-        artist = "";
-        date = "";
-        album = "";
-        genre = "";
-        type_info = "";
+	title = "";
+	artist = "";
+	date = "";
+	album = "";
+	genre = "";
+	type_info = "";
 	total_time = 0;
 	bitrate = 0;
 
@@ -152,7 +152,6 @@ bool CFfmpegDec::Init(void *_in, const CFile::FileType /* ft */)
 
 	AVInputFormat *input_format = NULL;
 
-#if 0
 	switch (ft) {
 	case CFile::FILE_OGG:
 		input_format = av_find_input_format("ogg");
@@ -172,7 +171,6 @@ bool CFfmpegDec::Init(void *_in, const CFile::FileType /* ft */)
 	default:
 		break;
 	}
-#endif
 
 	int r = avformat_open_input(&avc, "", input_format, NULL);
 	if (r) {
