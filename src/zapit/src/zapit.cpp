@@ -71,6 +71,7 @@
 #include <video_td.h>
 #include <audio_td.h>
 #endif
+#include <system/set_threadname.h>
 #include <driver/rcinput.h>
 
 #include <driver/abstime.h>
@@ -2581,6 +2582,7 @@ static bool zapit_parse_command(CBasicMessage::Header &rmsg, int connfd)
 
 void CZapit::run()
 {
+	set_threadname("CZapit::run");
 	printf("[zapit] starting... tid %ld\n", syscall(__NR_gettid));
 
 	abort_zapit = 0;
@@ -2747,6 +2749,7 @@ bool CZapitSdtMonitor::Stop()
 
 void CZapitSdtMonitor::run()
 {
+	set_threadname("CZapitSdtMonitor::run");
 	time_t /*tstart,*/ tcur, wtime = 0;
 	t_transport_stream_id           transport_stream_id = 0;
 	t_original_network_id           original_network_id = 0;

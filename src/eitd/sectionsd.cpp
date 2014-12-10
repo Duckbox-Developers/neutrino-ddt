@@ -46,6 +46,7 @@
 #include <sectionsdclient/sectionsdclient.h>
 #include <eventserver.h>
 #include <driver/abstime.h>
+#include <system/set_threadname.h>
 #include <system/helpers.h>
 
 #include "eitd.h"
@@ -1414,6 +1415,7 @@ void CTimeThread::addFilters()
 
 void CTimeThread::run()
 {
+	set_threadname(name.c_str());
 	time_t dvb_time = 0;
 	xprintf("%s::run:: starting, pid %d (%lu)\n", name.c_str(), getpid(), pthread_self());
 
@@ -1552,6 +1554,7 @@ int CSectionThread::Sleep()
 /* common thread main function */
 void CSectionThread::run()
 {
+	set_threadname(name.c_str());
 	xprintf("%s::run:: starting, pid %d (%lu)\n", name.c_str(), getpid(), pthread_self());
 	if (sections_debug)
 		dump_sched_info(name);
@@ -2197,6 +2200,7 @@ bool CEitManager::Stop()
 
 void CEitManager::run()
 {
+	set_threadname("CEitManager::run");
 	pthread_t /*threadTOT,*/ threadHouseKeeping;
 	int rc;
 

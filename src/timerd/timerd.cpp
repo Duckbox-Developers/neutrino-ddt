@@ -36,6 +36,7 @@
 
 #include "debug.h"
 #include "timermanager.h"
+#include <system/set_threadname.h>
 
 int timerd_debug = 0;
 
@@ -471,6 +472,7 @@ bool timerd_parse_command(CBasicMessage::Header &rmsg, int connfd)
 
 int timerd_main_thread(void *data)
 {
+	set_threadname(__func__);
 	pthread_setcanceltype (PTHREAD_CANCEL_ASYNCHRONOUS, 0);
 
 	printf("timerd startup, tid %ld\n", syscall(__NR_gettid));

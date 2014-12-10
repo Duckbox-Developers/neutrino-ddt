@@ -36,6 +36,7 @@
 #include <zapit/scansdt.h>
 #include <zapit/scannit.h>
 #include <zapit/scanbat.h>
+#include <system/set_threadname.h>
 
 //#define USE_BAT
 
@@ -98,6 +99,7 @@ bool CServiceScan::Stop()
 
 void CServiceScan::run()
 {
+	set_threadname("CServiceScan::run");
 	running = true;
 
 	CleanAllMaps();

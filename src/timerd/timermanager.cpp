@@ -36,6 +36,7 @@
 #include <timerdclient/timerdmsg.h>
 #include <sectionsdclient/sectionsdclient.h>
 #include <eitd/sectionsd.h>
+#include <system/set_threadname.h>
 
 #include <vector>
 #include <cstdlib>
@@ -86,6 +87,7 @@ CTimerManager* CTimerManager::getInstance()
 //------------------------------------------------------------
 void* CTimerManager::timerThread(void *arg)
 {
+	set_threadname(__func__);
 	pthread_mutex_t dummy_mutex = PTHREAD_MUTEX_INITIALIZER;
 	pthread_cond_t dummy_cond = PTHREAD_COND_INITIALIZER;
 	struct timespec wait;

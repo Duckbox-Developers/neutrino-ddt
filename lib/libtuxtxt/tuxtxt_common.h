@@ -15,6 +15,7 @@
 #include <zlib.h>
 #endif
 
+#include <system/set_threadname.h>
 #include <zapit/include/dmx.h>
 
 tuxtxt_cache_struct tuxtxt_cache;
@@ -685,6 +686,7 @@ void *tuxtxt_CacheThread(void * /*arg*/)
 	tstPageinfo *pageinfo_thread;
 
 	printf("TuxTxt running thread...(%04x)\n",tuxtxt_cache.vtxtpid);
+	set_threadname("tuxtxt_CacheThread");
 	tuxtxt_cache.receiving = 1;
 	nice(3);
 	while (!stop_cache)

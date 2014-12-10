@@ -106,6 +106,7 @@
 #endif
 #include "gui/themes.h"
 
+#include <system/set_threadname.h>
 #include <system/ytcache.h>
 
 #include <audio.h>
@@ -2037,6 +2038,7 @@ void wake_up(bool &wakeup)
 
 int CNeutrinoApp::run(int argc, char **argv)
 {
+	set_threadname("CNeutrinoApp::run");
 	CmdParser(argc, argv);
 
 TIMER_START();

@@ -56,6 +56,7 @@
 #include <driver/streamts.h>
 #include <driver/record.h>
 #include <driver/genpsi.h>
+#include <system/set_threadname.h>
 
 /* experimental mode:
  * stream not possible, if record running
@@ -162,6 +163,7 @@ void CStreamInstance::RemoveClient(int clientfd)
 
 void CStreamInstance::run()
 {
+	set_threadname("CStreamInstance::run");
 	printf("CStreamInstance::run: %" PRIx64 "\n", channel_id);
 
 	CZapitChannel * tmpchan = CServiceManager::getInstance()->FindChannel(channel_id);
@@ -531,6 +533,7 @@ void CStreamManager::RemoveClient(int fd)
 
 void CStreamManager::run()
 {
+	set_threadname("CStreamManager::run");
 	struct sockaddr_in servaddr;
 	int clilen = sizeof(servaddr);
 

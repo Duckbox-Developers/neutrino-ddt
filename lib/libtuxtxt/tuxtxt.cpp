@@ -22,6 +22,7 @@
 #include <video.h>
 #include <sys/stat.h>
 #include <global.h>
+#include <system/set_threadname.h>
 
 /* same as in rcinput.h... */
 #define KEY_TTTV	KEY_FN_1
@@ -1544,6 +1545,7 @@ static void cleanup_fb_pan()
 static void* reader_thread(void * /*arg*/)
 {
 	printf("TuxTxt subtitle thread started\n");
+	set_threadname("ttx_reader_thread");
 	reader_running = 1;
 	//ttx_paused = 0;
 	while(reader_running) {
