@@ -2068,7 +2068,7 @@ TIMER_START();
 	CLocaleManager::loadLocale_ret_t loadLocale_ret = g_Locale->loadLocale(g_settings.language.c_str());
 	if (loadLocale_ret == CLocaleManager::NO_SUCH_LOCALE)
 	{
-		g_settings.language = "english";
+		g_settings.language = "deutsch";
 		loadLocale_ret = g_Locale->loadLocale(g_settings.language.c_str());
 		show_startwizard = true;
 	}
