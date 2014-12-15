@@ -153,6 +153,7 @@ install_DATA += \
 	hint_video.png \
 	hint_ytplay.png \
 	home.png \
+	icon_blue.png \
 	icon_green.png \
 	icon_movieplayer.png \
 	icon_red.png \
