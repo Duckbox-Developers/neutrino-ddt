@@ -190,6 +190,11 @@ void CStreamInstance::run()
 
 	CCamManager::getInstance()->Start(channel_id, CCamManager::STREAM);
 
+#if HAVE_DUCKBOX_HARDWARE || HAVE_SPARK_HARDWARE
+	CFrontend *fe = CFEManager::getInstance()->allocateFE(tmpchan, true);
+	CFEManager::getInstance()->lockFrontend(fe);
+	CZapit::getInstance()->SetRecordMode(true);
+#endif
 	while (running) {
 		ssize_t r = dmx->Read(buf, IN_SIZE, 100);
 		if (r > 0)
@@ -198,6 +203,10 @@ void CStreamInstance::run()
 
 	CCamManager::getInstance()->Stop(channel_id, CCamManager::STREAM);
 
+#if HAVE_DUCKBOX_HARDWARE || HAVE_SPARK_HARDWARE
+	CFEManager::getInstance()->unlockFrontend(fe);
+	CZapit::getInstance()->SetRecordMode(false);
+#endif
 	printf("CStreamInstance::run: exiting %" PRIx64 " (%d fds)\n", channel_id, (int)fds.size());
 
 	Close();
