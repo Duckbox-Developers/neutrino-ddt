@@ -503,6 +503,9 @@ extra.tp_mod_4_nr QAM/4-NR
 extra.tp_mod_64 QAM/64
 extra.tp_mod_8 8PSK
 extra.tp_mod_auto QAM/AUTO
+extra.tp_pilot Pilot
+extra.tp_pilot_auto Auto (HW)
+extra.tp_pilot_auto_sw Auto (SW)
 extra.tp_pol Polarization
 extra.tp_pol_h H
 extra.tp_pol_l L
@@ -1321,6 +1324,7 @@ menu.hint_scan_motorpos Select stored position number for this satellite,\nignor
 menu.hint_scan_nid Enter decimal network ID
 menu.hint_scan_nit Add transpoders from network information
 menu.hint_scan_pids Scan and save audio/video/PMT PIDs
+menu.hint_scan_pilot Select pilot parameter
 menu.hint_scan_pol Select transponder polarization
 menu.hint_scan_rate Enter transponder symbol rate
 menu.hint_scan_reset_numbers Reset exising channel numbers\nand re-number channels after scan
@@ -1414,6 +1418,7 @@ menu.hint_video_format TV aspect ratio
 menu.hint_video_mixer_color This color will be used for the background if there is no signal available.
 menu.hint_video_mode HDMI output video mode
 menu.hint_video_modes VF key will cycle between enabled modes 
+menu.hint_video_modes_auto Enable modes to auto-select based on content
 menu.hint_video_pip Picture in picture size and position
 menu.hint_video_psi On-screen menu for changing color, contrast and more
 menu.hint_video_psi_step Set the increment for the on-screen menu
@@ -2356,6 +2361,7 @@ videomenu.dbdr_both de-block+de-ring
 videomenu.dbdr_deblock de-block
 videomenu.dbdr_none none
 videomenu.enabled_modes VF key enabled modes
+videomenu.enabled_modes_auto Auto-select enabled modes
 videomenu.fullscreen Full screen
 videomenu.hdmi_cec HDMI-CEC
 videomenu.hdmi_cec_broadcast Send to all devices

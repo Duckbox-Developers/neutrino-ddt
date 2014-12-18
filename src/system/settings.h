@@ -211,6 +211,7 @@ struct SNeutrinoSettings
 	int hdmi_cec_broadcast;
 #endif
 	int enabled_video_modes[VIDEOMENU_VIDEOMODE_OPTION_COUNT];
+	int enabled_auto_modes[VIDEOMENU_VIDEOMODE_OPTION_COUNT];
 	int cpufreq;
 	int standby_cpufreq;
 	int make_hd_list;
@@ -930,6 +931,7 @@ class CScanSettings
 		std::string	sat_TP_rate;
 		int		sat_TP_delsys;
 		int		sat_TP_mod;
+		int		sat_TP_pilot;
 
 		std::string	cableName;
 		int		cable_TP_mod;
