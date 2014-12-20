@@ -1234,7 +1234,8 @@ int CHDDDestExec::exec(CMenuTarget* /*parent*/, const std::string&)
 
 	const char hdparm[] = "/sbin/hdparm";
 	bool have_hdparm = !access(hdparm, X_OK);
-	if (!have_hdparm)
+
+	if (!have_hdparm || !have_hdidle)
 		return menu_return::RETURN_NONE;
 
 	struct stat stat_buf;
@@ -1264,20 +1265,20 @@ int CHDDDestExec::exec(CMenuTarget* /*parent*/, const std::string&)
 #if HAVE_DUCKBOX_HARDWARE
 			CVFD::getInstance()->ShowIcon(FP_ICON_HDD, true);
 #endif
-		printf("CHDDDestExec: noise %d sleep %d /dev/%s\n",
-			 g_settings.hdd_noise, g_settings.hdd_sleep, namelist[i]->d_name);
+			if (!have_hdidle && have_hdparm) {
+				printf("CHDDDestExec: noise %d sleep %d /dev/%s\n",
+					 g_settings.hdd_noise, g_settings.hdd_sleep, namelist[i]->d_name);
 
-		char M_opt[50],S_opt[50], opt[100];
-		snprintf(S_opt, sizeof(S_opt), "-S%d", g_settings.hdd_sleep);
-		snprintf(M_opt, sizeof(M_opt), "-M%d", g_settings.hdd_noise);
-		snprintf(opt, sizeof(opt), "/dev/%s",namelist[i]->d_name);
+				char M_opt[50],S_opt[50], opt[100];
+				snprintf(S_opt, sizeof(S_opt), "-S%d", g_settings.hdd_sleep);
+				snprintf(M_opt, sizeof(M_opt), "-M%d", g_settings.hdd_noise);
+				snprintf(opt, sizeof(opt), "/dev/%s",namelist[i]->d_name);
 
-		if (have_hdidle)
-			my_system(3, hdparm, M_opt, opt);
-		else if (have_nonbb_hdparm)
-			my_system(4, hdparm, M_opt, S_opt, opt);
-		else // busybox hdparm doesn't support "-M"
-			my_system(3, hdparm, S_opt, opt);
+				if (have_nonbb_hdparm)
+					my_system(4, hdparm, M_opt, S_opt, opt);
+				else // busybox hdparm doesn't support "-M"
+					my_system(3, hdparm, S_opt, opt);
+			}
 		}
 		free(namelist[i]);
 	}
