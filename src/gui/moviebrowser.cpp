@@ -1889,9 +1889,9 @@ bool CMovieBrowser::onButtonPressBrowserList(neutrino_msg_t msg)
 		scrollBrowserItem(false, false);
 	else if (msg == CRCInput::RC_down)
 		scrollBrowserItem(true, false);
-	else if (msg == (neutrino_msg_t)g_settings.key_pageup)
+	else if ((msg == (neutrino_msg_t)g_settings.key_pageup) || (msg == CRCInput::RC_left))
 		scrollBrowserItem(false, true);
-	else if (msg == (neutrino_msg_t)g_settings.key_pagedown)
+	else if ((msg == (neutrino_msg_t)g_settings.key_pagedown) || (msg == CRCInput::RC_right))
 		scrollBrowserItem(true, true);
 	else if (msg == CRCInput::RC_play)
 		markItem(m_pcBrowser);
