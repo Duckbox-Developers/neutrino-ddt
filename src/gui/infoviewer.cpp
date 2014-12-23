@@ -1149,6 +1149,8 @@ void CInfoViewer::showRadiotext()
 	if (g_Radiotext == NULL) return;
 	infoViewerBB->showIcon_RadioText(g_Radiotext->haveRadiotext());
 
+	bool blit = false;
+
 	if (g_Radiotext->S_RtOsd) {
 		InfoClock->enableInfoClock(false);
 		// dimensions of radiotext window
@@ -1165,10 +1167,7 @@ void CInfoViewer::showRadiotext()
 			if (g_Radiotext->RT_Text[i][0] != '\0') lines++;
 		}
 		if (lines == 0)
-		{
 			frameBuffer->paintBackgroundBox(rt_x, rt_y, rt_w, rt_h);
-			frameBuffer->blit();
-		}
 
 		if (g_Radiotext->RT_MsgShow) {
 
@@ -1184,7 +1183,7 @@ void CInfoViewer::showRadiotext()
 					frameBuffer->paintBoxRel(rt_x+SHADOW_OFFSET, rt_y+SHADOW_OFFSET, rt_dx, rt_dy, COL_INFOBAR_SHADOW_PLUS_0, RADIUS_LARGE, CORNER_TOP);
 					frameBuffer->paintBoxRel(rt_x, rt_y, rt_dx, rt_dy, COL_INFOBAR_PLUS_0, RADIUS_LARGE, CORNER_TOP);
 					g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(rt_x+10, rt_y+ 30, rt_dx-20, stext[0], COL_INFOBAR_TEXT, 0, RTisIsUTF);
-					frameBuffer->blit();
+					blit = true;
 				}
 //				yoff = 17;
 				ii = 1;
@@ -1231,7 +1230,7 @@ void CInfoViewer::showRadiotext()
 					for (int i = g_Radiotext->S_RtOsdRows-1; i > ind; i--)
 						g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(rts_x, rts_y + (ii++)*rt_dy, rts_dx, g_Radiotext->RT_Text[i], COL_INFOBAR_TEXT, 0, RTisIsUTF);
 				}
-				frameBuffer->blit();
+				blit = true;
 			}
 #if 0
 			// + RT-Plus or PS-Text = 2 rows
@@ -1277,6 +1276,8 @@ void CInfoViewer::showRadiotext()
 #endif
 	}
 	g_Radiotext->RT_MsgShow = false;
+	if (blit)
+		frameBuffer->blit();
 
 }
 

@@ -762,6 +762,7 @@ void CInfoViewerBB::showIcon_CA_Status(int notfirst)
 	const char * green = (char *) "green";
 	int icon_space_offset = 0;
 	const char *ecm_info_f = "/tmp/ecm.info";
+
 	if(!g_InfoViewer->chanready) {
 		if (g_settings.casystem_display == 2) {
 			fta = true;
