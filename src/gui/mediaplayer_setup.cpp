@@ -34,7 +34,6 @@
 #include <config.h>
 #endif
 
-
 #include "mediaplayer_setup.h"
 
 #include <global.h>
@@ -43,18 +42,14 @@
 #include <gui/widget/icons.h>
 #include <gui/widget/stringinput.h>
 
-
 #include <gui/audioplayer_setup.h>
 #include <gui/pictureviewer_setup.h>
-#include <gui/moviebrowser.h>
 #include <gui/webtv_setup.h>
-
+#include <gui/moviebrowser.h>
 
 #include <driver/screen_max.h>
 
 #include <system/debug.h>
-
-
 
 CMediaPlayerSetup::CMediaPlayerSetup()
 {
@@ -64,7 +59,6 @@ CMediaPlayerSetup::CMediaPlayerSetup()
 
 CMediaPlayerSetup::~CMediaPlayerSetup()
 {
-
 }
 
 int CMediaPlayerSetup::exec(CMenuTarget* parent, const std::string & /*actionKey*/)
@@ -98,8 +92,13 @@ int CMediaPlayerSetup::showMediaPlayerSetup()
 	mediaSetup->addItem(mf);
 
 	CPictureViewerSetup psetup;
-	mf = new CMenuForwarder(LOCALE_PICTUREVIEWER_HEAD, true, NULL, &psetup, "", CRCInput::RC_blue);
+	mf = new CMenuForwarder(LOCALE_PICTUREVIEWER_HEAD, true, NULL, &psetup, "", CRCInput::RC_green);
 	mf->setHint(NEUTRINO_ICON_HINT_PICVIEW, LOCALE_MENU_HINT_PICTUREVIEWER_SETUP);
+	mediaSetup->addItem(mf);
+
+	CWebTVSetup wsetup;
+	mf = new CMenuForwarder(LOCALE_WEBTV_HEAD, true, NULL, &wsetup, "show_menu", CRCInput::RC_yellow);
+	mf->setHint(NEUTRINO_ICON_HINT_TVMODE /* FIXME */, LOCALE_MENU_HINT_WEBTV_SETUP);
 	mediaSetup->addItem(mf);
 
 	mediaSetup->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_MAINMENU_MOVIEPLAYER));
@@ -114,10 +113,6 @@ int CMediaPlayerSetup::showMediaPlayerSetup()
 	mf->setHint(NEUTRINO_ICON_HINT_YTPLAY, LOCALE_MENU_HINT_YTPLAY_SETUP);
 	mediaSetup->addItem(mf);
 
-	CWebTVSetup wsetup;
-	mf = new CMenuForwarder(LOCALE_WEBTV_HEAD, true, NULL, &wsetup, "show_menu", CRCInput::convertDigitToKey(shortcut++));
-	mf->setHint(NEUTRINO_ICON_HINT_TVMODE /* FIXME */, LOCALE_MENU_HINT_WEBTV_SETUP);
-	mediaSetup->addItem(mf);
 
 	int res = mediaSetup->exec (NULL, "");
 	selected = mediaSetup->getSelected();

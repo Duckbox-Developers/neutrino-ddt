@@ -430,7 +430,7 @@ class CMovieBrowser : public CMenuTarget
 		void getStorageInfo(void); // P3
 
 		///// Menu ////////////////////////////////////
-		bool showMenu(MI_MOVIE_INFO* movie_info, bool calledExternally = false); // P2
+		bool showMenu(bool calledExternally = false);
 		int showMovieInfoMenu(MI_MOVIE_INFO* movie_info); // P2
 		int  showStartPosSelectionMenu(void); // P2
 
