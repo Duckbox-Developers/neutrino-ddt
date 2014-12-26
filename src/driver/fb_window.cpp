@@ -42,6 +42,7 @@ CFBWindow::CFBWindow(const int _x, const int _y, const int _dx, const int _dy)
 	if (Background != NULL)
 		frameBuffer->SaveScreen(_x, _y, _dx, _dy, Background);
 	mayBlit = true;
+
 }
 
 CFBWindow::~CFBWindow(void)

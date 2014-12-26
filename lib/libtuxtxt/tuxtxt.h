@@ -98,6 +98,7 @@ int tv_pip_y;
 //#define TV169FULLWIDTH  (ex - sx)/2
 #define TV169FULLWIDTH  (screen_w / 2)
 #define TV169FULLHEIGHT (ey - sy)
+
 #define TOPMENUSTARTX (TV43STARTX+2)
 //#define TOPMENUENDX TVENDX
 #define TOPMENUSTARTY StartY

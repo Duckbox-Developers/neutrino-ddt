@@ -76,7 +76,7 @@ static bool isEplayer = false;
 
 cDvbSubtitleConverter *dvbSubtitleConverter;
 static void* reader_thread(void *arg);
-static void* dvbsub_thread(void *arg);
+static void* dvbsub_thread(void* arg);
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 static void* ass_reader_thread(void *arg);
 #endif

@@ -274,8 +274,7 @@ void ClearFB(int /*color*/)
 //never used
 void ClearB(int color)
 {
-	FillRect(0,                   0, var_screeninfo.xres, var_screeninfo.yres, color); /* framebuffer */
-	FillRect(0, var_screeninfo.yres, var_screeninfo.xres, var_screeninfo.yres, color); /* backbuffer */
+	FillRect(0,0,var_screeninfo.xres,var_screeninfo.yres*2,color);
 }
 #endif
 int  GetCurFontWidth()
@@ -283,7 +282,6 @@ int  GetCurFontWidth()
 	int mx = (displaywidth)%(40-nofirst); // # of unused pixels
 	int abx = (mx == 0 ? displaywidth+1 : (displaywidth)/(mx+1));// distance between 'inserted' pixels
 	int nx= abx+1-((PosX-sx) % (abx+1)); // # of pixels to next insert
-
 	return fontwidth+(((PosX+fontwidth+1-sx) <= displaywidth && nx <= fontwidth+1) ? 1 : 0);
 }
 
@@ -1689,6 +1687,7 @@ int tuxtx_main(int /*_rc*/, int pid, int page, int source)
 		perror("TuxTxt <FBIOGET_VSCREENINFO>");
 		return 0;
 	}
+
 #else
 	struct fb_var_screeninfo *var;
 	var = fbp->getScreenInfo();
@@ -4007,8 +4006,7 @@ void SwitchScreenMode(int newscreenmode)
 		setfontwidth(fw);
 
 		CFrameBuffer *f = CFrameBuffer::getInstance();
-		videoDecoder->Pig(tx, ty, tw, th,
-				  f->getScreenWidth(true), f->getScreenHeight(true));
+		videoDecoder->Pig(tx, ty, tw, th, f->getScreenWidth(true), f->getScreenHeight(true));
 #if 0
 		int sm = 0;
 		ioctl(pig, VIDIOC_OVERLAY, &sm);

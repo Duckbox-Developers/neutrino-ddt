@@ -56,7 +56,6 @@
 #include <zapit/include/audio.h>
 #include "mp3dec.h"
 #include <driver/netfile.h>
-#include <driver/display.h>
 
 extern cAudio * audioDecoder;
 
