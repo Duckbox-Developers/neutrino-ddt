@@ -1556,12 +1556,11 @@ void CMoviePlayerGui::getCurrentAudioName(bool file_player, std::string &audiona
 
 void CMoviePlayerGui::selectAudioPid()
 {
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 	CAudioSelectMenuHandler APIDSelector;
 	StopSubtitles(true);
 	APIDSelector.exec(NULL, "-1");
 	StartSubtitles(true);
-#else
+#if 0
 	CMenuWidget APIDSelector(LOCALE_APIDSELECTOR_HEAD, NEUTRINO_ICON_AUDIO);
 	APIDSelector.addIntroItems();
 
@@ -1628,9 +1627,6 @@ void CMoviePlayerGui::selectAudioPid()
 		currentapid = apids[select];
 		currentac3 = ac3flags[select];
 		playback->SetAPid(currentapid, currentac3);
-#if HAVE_DUCKBOX_HARDWARE || BOXMODEL_SPARK7162
-		CVFD::getInstance()->ShowIcon(FP_ICON_DD, currentac3);
-#endif
 		getCurrentAudioName(is_file_player, currentaudioname);
 		printf("[movieplayer] apid changed to %d type %d\n", currentapid, currentac3);
 	}
