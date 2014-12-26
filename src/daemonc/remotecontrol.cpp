@@ -741,8 +741,8 @@ void CRemoteControl::stopvideo()
 		is_video_started= false;
 		/* we need stopPlayback to blank video,
 		   lockPlayback prevents it from being inadvertently starting */
-		g_Zapit->stopPlayBack();
-		g_Zapit->lockPlayBack();
+		g_Zapit->stopPlayBack(false);
+		g_Zapit->lockPlayBack(false);
 	}
 }
 
