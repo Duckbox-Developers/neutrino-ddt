@@ -742,6 +742,8 @@ hdd_fast Fast
 hdd_format Format device
 hdd_format_failed Formating failed! Make sure device not in use, reboot and try again
 hdd_format_warn All data on device will be lost ! Continue with format ?
+hdd_fmt_label HDD label
+hdd_fmt_mountpoint Directory for mountpoint
 hdd_fs Filesystem used to format
 hdd_fs_unknown unknown
 hdd_manage Manage device

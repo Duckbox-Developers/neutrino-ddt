@@ -768,6 +768,8 @@ const char * locale_real_names[] =
 	"hdd_format",
 	"hdd_format_failed",
 	"hdd_format_warn",
+	"hdd_fmt_label",
+	"hdd_fmt_mountpoint",
 	"hdd_fs",
 	"hdd_fs_unknown",
 	"hdd_manage",

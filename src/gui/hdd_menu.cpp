@@ -69,6 +69,9 @@
 #define MDEV_MOUNT	"/lib/mdev/fs/mount"
 #define MOUNT_BASE	"/media/"
 
+std::string fmt_label = "RECORD";
+std::string fmt_mpoint = "/hdd";
+
 #define HDD_NOISE_OPTION_COUNT 4
 const CMenuOptionChooser::keyval HDD_NOISE_OPTIONS[HDD_NOISE_OPTION_COUNT] =
 {
@@ -406,7 +409,11 @@ bool CHDDMenuHandler::umount_all(std::string dev)
 		std::string mdev = it->devname.substr(0, dev.size());
 		if (mdev == dev) {
 			if (is_mounted(it->devname.c_str()))
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+				ret &= umount_dev(it->mountpoint);
+#else
 				ret &= umount_dev(it->devname);
+#endif
 		}
 	}
 	return ret;
@@ -689,6 +696,12 @@ int CHDDMenuHandler::showDeviceMenu(std::string dev)
 	mc->setHint("", LOCALE_MENU_HINT_HDD_FMT);
 	hddmenu->addItem(mc);
 
+	CMenuForwarder * lmf = new CMenuForwarder(LOCALE_HDD_FMT_LABEL, true, fmt_label.c_str(), this, "choseLabel");
+	hddmenu->addItem(lmf);
+
+	CMenuForwarder * mpmf = new CMenuForwarder(LOCALE_HDD_FMT_MOUNTPOINT, true, fmt_mpoint.c_str(), this, "choseMpoint");
+	hddmenu->addItem(mpmf);
+
 	std::string key = "f" + dev;
 	mf = new CMenuForwarder(LOCALE_HDD_FORMAT, true, "", this, key.c_str());
 	mf->setHint("", LOCALE_MENU_HINT_HDD_FORMAT);
@@ -920,7 +933,7 @@ int CHDDMenuHandler::formatDevice(std::string dev)
 	std::string devpart = dev + part;
 	std::string partname = devname + part;
 
-	std::string mkfscmd = devtool->mkfs + " " + devtool->mkfs_options + " " + partname;
+	std::string mkfscmd = devtool->mkfs + " " + "-L " + fmt_label + " " + devtool->mkfs_options + " " + partname;
 	printf("mkfs cmd: [%s]\n", mkfscmd.c_str());
 
 	res = ShowMsg(LOCALE_HDD_FORMAT, g_Locale->getText(LOCALE_HDD_FORMAT_WARN), CMessageBox::mbrNo, CMessageBox::mbYes | CMessageBox::mbNo );
@@ -1088,10 +1101,27 @@ _remount:
 	}
 #endif
 	if (!res) {
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+		for (std::vector<hdd_s>::iterator it = hdd_list.begin(); it != hdd_list.end(); ++it) {
+			if (it->devname == devpart) {
+				it->fmt = devtool->fmt;
+				it->mountpoint = fmt_mpoint;
+			}
+		}
+#endif
 		res = mount_dev(devpart);
 
 		if(res) {
-			std::string dst = MOUNT_BASE + devpart;
+			std::string dst;
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+			for (std::vector<hdd_s>::iterator it = hdd_list.begin(); it != hdd_list.end(); ++it) {
+				if (it->devname == devpart) {
+					dst = it->mountpoint;
+				}
+			}
+#else
+			dst = MOUNT_BASE + devpart;
+#endif
 			snprintf(cmd, sizeof(cmd), "%s/movie", dst.c_str());
 			safe_mkdir(cmd);
 			snprintf(cmd, sizeof(cmd), "%s/pictures", dst.c_str());
