@@ -162,78 +162,85 @@ bool CHDDMenuHandler::is_mounted(const char *dev)
 void CHDDMenuHandler::getBlkIds()
 {
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
-		FILE *          mountFile;
-		struct mntent * mnt;
-		struct dirent **namelist;
-		blkid_cache c;
+	FILE *          mountFile;
+	struct mntent * mnt;
+	struct dirent **namelist;
+	blkid_cache c;
 
-		blkid_get_cache(&c, "/dev/null");
+	blkid_get_cache(&c, "/dev/null");
 
-		hdd_list.clear();
+	hdd_list.clear();
 
-		if ((mountFile = setmntent("/proc/mounts", "r")) == NULL)
+	if ((mountFile = setmntent("/proc/mounts", "r")) == NULL)
+	{
+		perror("/proc/mounts");
+	}
+	else
+	{
+		while ((mnt = getmntent(mountFile)) != NULL)
 		{
-			perror("/proc/mounts");
+			if (strncmp(mnt->mnt_fsname, "/dev/sd", 7) && strncmp(mnt->mnt_fsname, "/dev/hd", 7))
+				continue;
+			hdd_s hdd;
+			hdd.devname = std::string(mnt->mnt_fsname +5 );
+			hdd.label = blkid_get_tag_value(c,"LABEL",mnt->mnt_fsname);
+			if (hdd.label == NULL)
+				hdd.label = "unknown";
+			hdd.fmt = std::string(blkid_get_tag_value(c,"TYPE",mnt->mnt_fsname));
+			if (hdd.fmt == "")
+				hdd.fmt = "unknown";
+			hdd.mounted = true;
+			hdd.mountpoint = mnt->mnt_dir;
+			hdd.desc = hdd.devname + " ("+std::string(hdd.label)+"," + hdd.fmt + ") " + hdd.mountpoint;
+			hdd_list.push_back(hdd);
 		}
-		else {
-			while ((mnt = getmntent(mountFile)) != NULL)
-			{
-				if (strncmp(mnt->mnt_fsname, "/dev/sd", 7) && strncmp(mnt->mnt_fsname, "/dev/hd", 7))
-					continue;
-				hdd_s hdd;
-				hdd.devname = std::string(mnt->mnt_fsname +5 );
-				hdd.label = blkid_get_tag_value(c,"LABEL",mnt->mnt_fsname);
-				if (hdd.label == NULL) hdd.label = "unknown";
-				hdd.fmt = std::string(blkid_get_tag_value(c,"TYPE",mnt->mnt_fsname));
-				if (hdd.fmt == "") hdd.fmt = "unknown";
-				hdd.mounted = true;
-				hdd.mountpoint = mnt->mnt_dir;
-				hdd.desc = hdd.devname + " ("+std::string(hdd.label)+"," + hdd.fmt + ") " + hdd.mountpoint;
-				hdd_list.push_back(hdd);
-			}
-			endmntent(mountFile);
-		}
+		endmntent(mountFile);
+	}
 
-		int n = scandir("/sys/block", &namelist, my_filter, alphasort);
-		for(int i = 0; i < n; i++)
+	int n = scandir("/sys/block", &namelist, my_filter, alphasort);
+	for(int i = 0; i < n; i++)
+	{
+		struct dirent **namelist_part;
+		char blockdir[256];
+		sprintf(blockdir, "/sys/block/%s", namelist[i]->d_name);
+		int p = scandir(blockdir, &namelist_part, my_filter, alphasort);
+
+		for (int j = 0; j < p; j++)
 		{
-			struct dirent **namelist_part;
-			char blockdir[256];
-			sprintf(blockdir, "/sys/block/%s", namelist[i]->d_name);
-			int p = scandir(blockdir, &namelist_part, my_filter, alphasort);
+			char buf[255];
+			sprintf(buf, "/dev/%s", namelist_part[j]->d_name);
+			if (is_mounted(buf))
+				continue;
+			const char *label;
+			const char *type;
 
-			for (int j = 0; j < p; j++)
-			{
-				char buf[255];
-				sprintf(buf, "/dev/%s", namelist_part[j]->d_name);
-				if (is_mounted(buf)) continue;
-				const char *label;
-				const char *type;
+			label = blkid_get_tag_value(c,"LABEL",buf);
+			if (label == NULL)
+				label = "unknown";
 
-				label = blkid_get_tag_value(c,"LABEL",buf);
-				if (label == NULL) label = "unknown";
+			type = blkid_get_tag_value(c,"TYPE",buf);
+			if (type == NULL)
+				type = "unknown";
 
-				type = blkid_get_tag_value(c,"TYPE",buf);
-				if (type == NULL) type = "unknown";
-
-				//do not show logical partition or swap partition
-				if (((!strncmp(label, "unknown", 7)) && (!strncmp(type, "unknown", 7))) || (!strncmp(type, "swap", 4))) continue;
-				hdd_s hdd;
-				hdd.devname = std::string(buf +5 );
-				hdd.fmt = type;
-				hdd.label = label;
-				hdd.mounted = is_mounted(buf + 5 );
-				hdd.mountpoint = "no mountpoint";
-				hdd.desc = hdd.devname + " ("+std::string(hdd.label)+"," + hdd.fmt + ") " + hdd.mountpoint;
-				hdd_list.push_back(hdd);
-			}
-			if (p >= 0)
+			//do not show logical partition or swap partition
+			if (((!strncmp(label, "unknown", 7)) && (!strncmp(type, "unknown", 7))) || (!strncmp(type, "swap", 4)))
+				continue;
+			hdd_s hdd;
+			hdd.devname = std::string(buf + 5);
+			hdd.fmt = type;
+			hdd.label = label;
+			hdd.mounted = is_mounted(buf + 5);
+			hdd.mountpoint = "no mountpoint";
+			hdd.desc = hdd.devname + " ("+ std::string(hdd.label)+"," + hdd.fmt + ") " + hdd.mountpoint;
+			hdd_list.push_back(hdd);
+		}
+		if (p >= 0)
 			free(namelist_part);
-		}
-		if (n >= 0)
+	}
+	if (n >= 0)
 		free(namelist);
 
-		blkid_put_cache(c);
+	blkid_put_cache(c);
 #else
 	pid_t pid;
 	std::string pcmd = BLKID_BIN + (std::string)" -s TYPE";
