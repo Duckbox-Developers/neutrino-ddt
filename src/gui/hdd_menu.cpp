@@ -372,7 +372,7 @@ bool CHDDMenuHandler::umount_dev(std::string name)
 		if (it->mountpoint == name) {
 			if (umount2(it->mountpoint.c_str(), MNT_FORCE) == 0)
 			{
-				it->mountpoint == "no mountpoint";
+				it->mountpoint = "no mountpoint";
 				it->mounted=false;
 			}
 		}
