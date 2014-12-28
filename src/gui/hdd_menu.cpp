@@ -1172,6 +1172,7 @@ int CHDDMenuHandler::checkDevice(std::string dev)
 	char buf[256] = { 0 };
 
 	std::string devname = "/dev/" + dev;
+	std::string tmp_mpoint = "";
 
 	printf("CHDDMenuHandler::checkDevice: dev %s\n", dev.c_str());
 
@@ -1187,7 +1188,16 @@ int CHDDMenuHandler::checkDevice(std::string dev)
 
 	res = true;
 	if (is_mounted(dev.c_str()))
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+		for (std::vector<hdd_s>::iterator it = hdd_list.begin(); it != hdd_list.end(); ++it) {
+			if (it->devname == dev) {
+				tmp_mpoint = it->mountpoint;
+				res = umount_dev(it->mountpoint);
+			}
+		}
+#else
 		res = umount_dev(dev);
+#endif
 
 	printf("CHDDMenuHandler::checkDevice: umount res %d\n", res);
 	if(!res) {
@@ -1245,6 +1255,12 @@ int CHDDMenuHandler::checkDevice(std::string dev)
 	delete progress;
 
 ret1:
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	for (std::vector<hdd_s>::iterator it = hdd_list.begin(); it != hdd_list.end(); ++it) {
+		if (it->devname == dev)
+			it->mountpoint = tmp_mpoint;
+	}
+#endif
 	res = mount_dev(dev);
 	printf("CHDDMenuHandler::checkDevice: mount res %d\n", res);
 
@@ -1288,7 +1304,6 @@ int CHDDDestExec::exec(CMenuTarget* /*parent*/, const std::string&)
 
 	const char hdparm[] = "/sbin/hdparm";
 	bool have_hdparm = !access(hdparm, X_OK);
-
 	if (!have_hdparm || !have_hdidle)
 		return menu_return::RETURN_NONE;
 
