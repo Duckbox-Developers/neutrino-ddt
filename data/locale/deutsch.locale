@@ -744,6 +744,8 @@ hdd_fmt_label HDD Bezeichnung
 hdd_fmt_mountpoint Verzeichnis zum einhängen
 hdd_fs Dateisystem zum formatieren
 hdd_fs_unknown unbekannt
+hdd_label_hint1 Datenträger Bezeichnung eingeben und mit Speichern übernehmen
+hdd_label_hint2 Nur bei RECORD (Standard Aufnahme HDD) werden die nötigen Verzeichnisse auf den Datenträger geschrieben
 hdd_manage Laufwerke verwalten
 hdd_middle Mittel
 hdd_mount einhängen
@@ -1040,6 +1042,8 @@ menu.hint_hdd_apply Die veränderten Einstellungen zum Sleep- und Akustik-Modus 
 menu.hint_hdd_check Überprüft das Dateisystem und führt gegebenfalls eine Reparatur durch (fsck)
 menu.hint_hdd_fmt Wählen Sie das Datenträgerformat aus
 menu.hint_hdd_format Erstellt eine Partition auf dem Datenträger und formatiert diesen
+menu.hint_hdd_label Geben Sie die HDD Bezeichnung ein
+menu.hint_hdd_mountpoint Wählen Sie das Einhängeverzeichnis
 menu.hint_hdd_noise Setzen Sie Parameter für das Automatic Acoustic Management.\nNicht alle Laufwerke unterstützen diese Funktion
 menu.hint_hdd_sleep Dieser Wert definiert, nach wieviel Minuten die Festplatte bei Inaktivität in den Sleep-Modus geschaltet wird
 menu.hint_hdd_statfs Legen Sie fest, wann die Aufnahmeverzeichnis-Füllstandsanzeige im InfoViewer (und ggf. am VFD-Display) aktualisiert werden darf

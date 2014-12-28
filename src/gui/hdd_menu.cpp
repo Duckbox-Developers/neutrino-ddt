@@ -54,6 +54,7 @@
 #include <gui/widget/messagebox.h>
 #include <gui/widget/hintbox.h>
 #include <gui/widget/progresswindow.h>
+#include <gui/widget/keyboard_input.h>
 
 #include <system/helpers.h>
 #include <system/settings.h>
@@ -636,6 +637,14 @@ int CHDDMenuHandler::exec(CMenuTarget* parent, const std::string &actionkey)
 #endif
 		return ret;
 	}
+	else if (actionkey[0] == 'g') {
+		CFileBrowser b;
+		b.Dir_Mode=true;
+		int res = b.exec(fmt_mpoint.c_str());
+		if (res)
+			fmt_mpoint = b.getSelectedFile()->Name.c_str();
+		return menu_return::RETURN_REPAINT;
+	}
 	return menu_return::RETURN_REPAINT;
 }
 
@@ -696,11 +705,15 @@ int CHDDMenuHandler::showDeviceMenu(std::string dev)
 	mc->setHint("", LOCALE_MENU_HINT_HDD_FMT);
 	hddmenu->addItem(mc);
 
-	CMenuForwarder * lmf = new CMenuForwarder(LOCALE_HDD_FMT_LABEL, true, fmt_label.c_str(), this, "choseLabel");
-	hddmenu->addItem(lmf);
+	CKeyboardInput choseLabel(LOCALE_HDD_FMT_LABEL, &fmt_label, 0, NULL, NULL, LOCALE_HDD_LABEL_HINT1, LOCALE_HDD_LABEL_HINT2);
+	mf = new CMenuForwarder(LOCALE_HDD_FMT_LABEL, true, fmt_label, &choseLabel);
+	mf->setHint("", LOCALE_MENU_HINT_HDD_LABEL);
+	hddmenu->addItem(mf);
 
-	CMenuForwarder * mpmf = new CMenuForwarder(LOCALE_HDD_FMT_MOUNTPOINT, true, fmt_mpoint.c_str(), this, "choseMpoint");
-	hddmenu->addItem(mpmf);
+	std::string cmd = "g" + dev;
+	mf = new CMenuForwarder(LOCALE_HDD_FMT_MOUNTPOINT, true, fmt_mpoint, this, cmd.c_str());
+	mf->setHint("", LOCALE_MENU_HINT_HDD_MOUNTPOINT);
+	hddmenu->addItem(mf);
 
 	std::string key = "f" + dev;
 	mf = new CMenuForwarder(LOCALE_HDD_FORMAT, true, "", this, key.c_str());
@@ -933,7 +946,11 @@ int CHDDMenuHandler::formatDevice(std::string dev)
 	std::string devpart = dev + part;
 	std::string partname = devname + part;
 
-	std::string mkfscmd = devtool->mkfs + " " + "-L " + fmt_label + " " + devtool->mkfs_options + " " + partname;
+	std::string mkfscmd;
+	if (fmt_label == "")
+		mkfscmd = devtool->mkfs + " " + devtool->mkfs_options + " " + partname;
+	else
+		mkfscmd = devtool->mkfs + " " + "-L " + fmt_label + " " + devtool->mkfs_options + " " + partname;
 	printf("mkfs cmd: [%s]\n", mkfscmd.c_str());
 
 	res = ShowMsg(LOCALE_HDD_FORMAT, g_Locale->getText(LOCALE_HDD_FORMAT_WARN), CMessageBox::mbrNo, CMessageBox::mbYes | CMessageBox::mbNo );
@@ -1111,7 +1128,7 @@ _remount:
 #endif
 		res = mount_dev(devpart);
 
-		if(res) {
+		if(res && fmt_label == "RECORD") {
 			std::string dst;
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 			for (std::vector<hdd_s>::iterator it = hdd_list.begin(); it != hdd_list.end(); ++it) {

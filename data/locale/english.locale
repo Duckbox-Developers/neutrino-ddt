@@ -746,6 +746,8 @@ hdd_fmt_label HDD label
 hdd_fmt_mountpoint Directory for mountpoint
 hdd_fs Filesystem used to format
 hdd_fs_unknown unknown
+hdd_label_hint1 Put in disc label and press save
+hdd_label_hint2 Only if RECORD (default disc label for recording) the necassary folders were written to disc
 hdd_manage Manage device
 hdd_middle Mid
 hdd_mount Mount
@@ -1042,6 +1044,8 @@ menu.hint_hdd_apply Apply sleep/noise parameters
 menu.hint_hdd_check Check filesystem (fsck)
 menu.hint_hdd_fmt Select the data storage format
 menu.hint_hdd_format Create HDD partition and format it
+menu.hint_hdd_label Type in your HDD label
+menu.hint_hdd_mountpoint Choose the HDD mountpoint
 menu.hint_hdd_noise Set Automatic Acoustic Management\nnot all drives support this
 menu.hint_hdd_sleep Select time to stop hdd on inactivity
 menu.hint_hdd_statfs Specify when the recording directory fill level in infoviewer and, if available, on VFD, may be updated
