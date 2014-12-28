@@ -68,9 +68,6 @@
 #define MDEV_MOUNT	"/lib/mdev/fs/mount"
 #define MOUNT_BASE	"/media/"
 
-std::string fmt_label = "RECORD";
-std::string fmt_mpoint = "/hdd";
-
 #define HDD_NOISE_OPTION_COUNT 4
 const CMenuOptionChooser::keyval HDD_NOISE_OPTIONS[HDD_NOISE_OPTION_COUNT] =
 {
@@ -114,6 +111,8 @@ CHDDMenuHandler::CHDDMenuHandler()
 	show_menu = false;
 	in_menu = false;
 	lock_refresh = false;
+	fmt_label = "RECORD";
+	fmt_mpoint = "/hdd";
 }
 
 CHDDMenuHandler::~CHDDMenuHandler()
@@ -261,7 +260,7 @@ std::string CHDDMenuHandler::getDefaultPart(std::string dev)
 
 std::string CHDDMenuHandler::getFmtType(std::string name, std::string part)
 {
-	std::string ret = "";
+	std::string ret;
 	std::string dev = name + part;
 	for (std::vector<hdd_s>::iterator it = hdd_list.begin(); it != hdd_list.end(); ++it) {
 		if (it->devname == dev) {
@@ -750,7 +749,6 @@ bool CHDDMenuHandler::scanDevices()
 			hdd_s hdd;
 			hdd.devname = namelist[i]->d_name;
 			hdd.mounted = false;
-			hdd.fmt = "";
 			hdd.desc = hdd.devname;
 			hdd_list.push_back(hdd);
 		}
@@ -884,7 +882,7 @@ int CHDDMenuHandler::formatDevice(std::string dev)
 	std::string partname = devname + part;
 
 	std::string mkfscmd;
-	if (fmt_label == "")
+	if (fmt_label.empty())
 		mkfscmd = devtool->mkfs + " " + devtool->mkfs_options + " " + partname;
 	else
 		mkfscmd = devtool->mkfs + " " + "-L " + fmt_label + " " + devtool->mkfs_options + " " + partname;
@@ -1106,7 +1104,7 @@ int CHDDMenuHandler::checkDevice(std::string dev)
 	char buf[256] = { 0 };
 
 	std::string devname = "/dev/" + dev;
-	std::string tmp_mpoint = "";
+	std::string tmp_mpoint;
 
 	printf("CHDDMenuHandler::checkDevice: dev %s\n", dev.c_str());
 

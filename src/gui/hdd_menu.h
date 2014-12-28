@@ -53,6 +53,8 @@ class CHDDMenuHandler : public CMenuTarget
 		bool show_menu;
 		bool in_menu;
 		bool lock_refresh;
+		std::string fmt_label;
+		std::string fmt_mpoint;
 		std::map<std::string, std::string> devtitle;
 		struct hdd_s {
 			std::string devname;
