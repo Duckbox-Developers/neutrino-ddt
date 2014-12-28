@@ -59,10 +59,8 @@ class CHDDMenuHandler : public CMenuTarget
 			std::string fmt;
 			std::string desc;
 			CMenuForwarder *cmf;
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 			std::string mountpoint;
 			const char *label;
-#endif
 			bool mounted;
 		};
 		std::vector<hdd_s> hdd_list;
