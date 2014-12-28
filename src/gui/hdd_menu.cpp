@@ -168,6 +168,10 @@ void CHDDMenuHandler::getBlkIds()
 	struct dirent **namelist;
 	blkid_cache c;
 
+	const char *label;
+	const char *type;
+
+
 	blkid_get_cache(&c, "/dev/null");
 
 	hdd_list.clear();
@@ -184,12 +188,17 @@ void CHDDMenuHandler::getBlkIds()
 				continue;
 			hdd_s hdd;
 			hdd.devname = std::string(mnt->mnt_fsname +5 );
-			hdd.label = blkid_get_tag_value(c,"LABEL",mnt->mnt_fsname);
-			if (hdd.label == NULL)
-				hdd.label = "unknown";
-			hdd.fmt = std::string(blkid_get_tag_value(c,"TYPE",mnt->mnt_fsname));
-			if (hdd.fmt == "")
-				hdd.fmt = "unknown";
+
+			label = blkid_get_tag_value(c,"LABEL",mnt->mnt_fsname);
+			if (label == NULL)
+				label = "unknown";
+
+			type = blkid_get_tag_value(c,"TYPE",mnt->mnt_fsname);
+			if (type == NULL)
+				type = "unknown";
+
+			hdd.fmt = type;
+			hdd.label = label;
 			hdd.mounted = true;
 			hdd.mountpoint = mnt->mnt_dir;
 			hdd.desc = hdd.devname + " ("+std::string(hdd.label)+"," + hdd.fmt + ") " + hdd.mountpoint;
@@ -212,8 +221,6 @@ void CHDDMenuHandler::getBlkIds()
 			sprintf(buf, "/dev/%s", namelist_part[j]->d_name);
 			if (is_mounted(buf))
 				continue;
-			const char *label;
-			const char *type;
 
 			label = blkid_get_tag_value(c,"LABEL",buf);
 			if (label == NULL)
