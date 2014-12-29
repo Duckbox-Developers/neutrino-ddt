@@ -165,7 +165,6 @@ CAudioPlayerGui::CAudioPlayerGui(bool inetmode)
 	m_frameBuffer = CFrameBuffer::getInstance();
 	m_visible = false;
 	m_inetmode = inetmode;
-	screenSaver = new CScreensaver();
 	dline = NULL;
 	ibox = NULL;
 
@@ -174,6 +173,7 @@ CAudioPlayerGui::CAudioPlayerGui(bool inetmode)
 
 void CAudioPlayerGui::Init(void)
 {
+	stimer = 0;
 	m_selected = 0;
 	m_metainfo.clear();
 
@@ -219,8 +219,6 @@ CAudioPlayerGui::~CAudioPlayerGui()
 	m_title2Pos.clear();
 	delete dline;
 	delete ibox;
-	if(screenSaver != NULL)
-		delete screenSaver;
 }
 
 int CAudioPlayerGui::exec(CMenuTarget* parent, const std::string &actionKey)
@@ -332,6 +330,8 @@ int CAudioPlayerGui::show()
 	neutrino_msg_t      msg;
 	neutrino_msg_data_t data;
 
+	int pic_index = 0;
+
 	int ret = menu_return::RETURN_REPAINT;
 
 	// clear whole screen
@@ -381,6 +381,26 @@ int CAudioPlayerGui::show()
 			int screensaver_timeout = g_settings.audioplayer_screensaver;
 			if (screensaver_timeout !=0 && timeout > screensaver_timeout*60 && !m_screensaver)
 				screensaver(true);
+
+			if (msg == NeutrinoMessages::EVT_TIMER && data == stimer) {
+				if (m_screensaver) {
+					char fname[255];
+
+					sprintf(fname, "%s/mp3-%d.jpg", DATADIR "/neutrino/icons", pic_index);
+
+					int lret = access(fname, F_OK);
+					printf("CAudioPlayerGui::show: new pic %s: %s\n", fname, lret ? "not found" : "found");
+					if (lret == 0) {
+						pic_index++;
+						videoDecoder->StopPicture();
+						videoDecoder->ShowPicture(fname);
+					} else if (pic_index) {
+						pic_index = 0;
+					}
+				} else
+					pic_index = 0;
+			}
+
 		}
 		else
 		{
@@ -2233,11 +2253,12 @@ void CAudioPlayerGui::screensaver(bool on)
 	if (on)
 	{
 		m_screensaver = true;
-		screenSaver->start();
+		m_frameBuffer->Clear();
+		stimer = g_RCInput->addTimer(10*1000*1000, false);
 	}
 	else
 	{
-		screenSaver->stop();
+		g_RCInput->killTimer(stimer);
 		m_screensaver = false;
 		videoDecoder->StopPicture();
 		videoDecoder->ShowPicture(DATADIR "/neutrino/icons/mp3.jpg");

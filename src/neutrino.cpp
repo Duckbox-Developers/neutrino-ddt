@@ -895,7 +895,6 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.audioplayer_display = configfile.getInt32("audioplayer_display",(int)CAudioPlayerGui::ARTIST_TITLE);
 	g_settings.audioplayer_follow  = configfile.getInt32("audioplayer_follow",0);
 	g_settings.audioplayer_screensaver = configfile.getInt32("audioplayer_screensaver", 1);
-	g_settings.audioplayer_screensaver_dir = configfile.getString( "audioplayer_screensaver_dir", "/hdd/pictures/screensaver" );
 	g_settings.audioplayer_highprio  = configfile.getInt32("audioplayer_highprio",0);
 	g_settings.audioplayer_select_title_by_name = configfile.getInt32("audioplayer_select_title_by_name",0);
 	g_settings.audioplayer_repeat_on = configfile.getInt32("audioplayer_repeat_on",0);
@@ -1414,9 +1413,6 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32( "audioplayer_display", g_settings.audioplayer_display );
 	configfile.setInt32( "audioplayer_follow", g_settings.audioplayer_follow );
 	configfile.setInt32( "audioplayer_screensaver", g_settings.audioplayer_screensaver );
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
-	configfile.setString( "audioplayer_screensaver_dir", g_settings.audioplayer_screensaver_dir);
-#endif
 	configfile.setInt32( "audioplayer_highprio", g_settings.audioplayer_highprio );
 	configfile.setInt32( "audioplayer_select_title_by_name", g_settings.audioplayer_select_title_by_name );
 	configfile.setInt32( "audioplayer_repeat_on", g_settings.audioplayer_repeat_on );

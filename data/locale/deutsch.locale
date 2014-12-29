@@ -177,7 +177,6 @@ audioplayer.receiving_list Liste wird empfangen, bitte warten...
 audioplayer.repeat_on Repeatmodus aktivieren
 audioplayer.rewind schneller Rückl.
 audioplayer.save_playlist Playlist speichern
-audioplayer.screensaver_dir Bildschirmschoner-Verzeichnis
 audioplayer.screensaver_timeout Bildschirmschoner
 audioplayer.select_title_by_name Titelsuche nach Name (SMS)
 audioplayer.show_playlist Playlist anzeigen
@@ -965,7 +964,6 @@ menu.hint_audioplayer_playlist Aktiviert die Anzeige der Titel in der Wiedergabe
 menu.hint_audioplayer_repeat Aktiviert das Wiederholen der Wiedergabeliste, wenn das Ende erreicht ist
 menu.hint_audioplayer_sc_metadata Aktiviert das Anzeigen der Audio-Metadaten
 menu.hint_audioplayer_screensaver Aktiviert den Bildschirmschoner nach dieser Zeit (Minuten)
-menu.hint_audioplayer_screensaver_dir Hier wählen Sie das Verzeichniss des Bildschirmschoners
 menu.hint_audioplayer_title Aktivieren Sie die Titelsuche (SMS-Stil) in der Playliste
 menu.hint_auto_lang Wählen Sie, ob automatisch ihre bevorzugte Tonspur ausgewählt wird, wenn sie vorhanden ist
 menu.hint_auto_subs Automatische Anzeige der Untertitel in Ihrer bevorzugten Sprache
