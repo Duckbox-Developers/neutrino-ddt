@@ -2446,11 +2446,9 @@ void CNeutrinoApp::RealRun(CMenuWidget &mainMenu)
 		if (luaServer->Block(msg, data))
 			continue;
 
-<<<<<<< HEAD
 #if HAVE_DUCKBOX_HARDWARE || BOXMODEL_SPARK7162
 		check_timer();
 #endif
-=======
 		if (mode == mode_radio) {
 			if ( msg == CRCInput::RC_timeout  || msg == NeutrinoMessages::EVT_TIMER)
 			{
@@ -2478,7 +2476,6 @@ void CNeutrinoApp::RealRun(CMenuWidget &mainMenu)
 			}
 		}
 
->>>>>>> cool-cst-next/cst-next
 		if( ( mode == mode_tv ) ||  ( mode == mode_radio )  || ( mode == mode_webtv ) ) {
 			if( (msg == NeutrinoMessages::SHOW_EPG) /* || (msg == CRCInput::RC_info) */ ) {
 				InfoClock->enableInfoClock(false);
