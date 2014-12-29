@@ -88,6 +88,7 @@
 #include "gui/plugins.h"
 #include "gui/rc_lock.h"
 #include "gui/scan_setup.h"
+#include "gui/screensaver.h"
 #include "gui/sleeptimer.h"
 #include "gui/start_wizard.h"
 #include "gui/update_ext.h"
@@ -556,6 +557,11 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.subs_charset = configfile.getString("subs_charset", "CP1252");
 	g_settings.zap_cycle = configfile.getInt32( "zap_cycle", 0 );
 
+	//screen saver
+	g_settings.screensaver_delay = configfile.getInt32("screensaver_delay", 1);
+	g_settings.screensaver_dir = configfile.getString("screensaver_dir", DATADIR "/neutrino/icons/");
+	g_settings.screensaver_timeout = configfile.getInt32("screensaver_timeout", 10);
+
 	//vcr
 	g_settings.vcr_AutoSwitch = configfile.getBool("vcr_AutoSwitch"       , true );
 
@@ -894,7 +900,6 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	//Audio-Player
 	g_settings.audioplayer_display = configfile.getInt32("audioplayer_display",(int)CAudioPlayerGui::ARTIST_TITLE);
 	g_settings.audioplayer_follow  = configfile.getInt32("audioplayer_follow",0);
-	g_settings.audioplayer_screensaver = configfile.getInt32("audioplayer_screensaver", 1);
 	g_settings.audioplayer_highprio  = configfile.getInt32("audioplayer_highprio",0);
 	g_settings.audioplayer_select_title_by_name = configfile.getInt32("audioplayer_select_title_by_name",0);
 	g_settings.audioplayer_repeat_on = configfile.getInt32("audioplayer_repeat_on",0);
@@ -1161,6 +1166,11 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	}
 	configfile.setString("subs_charset", g_settings.subs_charset);
 
+	//screen saver
+	configfile.setInt32("screensaver_delay", g_settings.screensaver_delay);
+	configfile.setString("screensaver_dir", g_settings.screensaver_dir);
+	configfile.setInt32("screensaver_timeout", g_settings.screensaver_timeout);
+
 	//vcr
 	configfile.setBool("vcr_AutoSwitch"       , g_settings.vcr_AutoSwitch       );
 
@@ -1412,7 +1422,6 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	//Audio-Player
 	configfile.setInt32( "audioplayer_display", g_settings.audioplayer_display );
 	configfile.setInt32( "audioplayer_follow", g_settings.audioplayer_follow );
-	configfile.setInt32( "audioplayer_screensaver", g_settings.audioplayer_screensaver );
 	configfile.setInt32( "audioplayer_highprio", g_settings.audioplayer_highprio );
 	configfile.setInt32( "audioplayer_select_title_by_name", g_settings.audioplayer_select_title_by_name );
 	configfile.setInt32( "audioplayer_repeat_on", g_settings.audioplayer_repeat_on );
@@ -2389,6 +2398,21 @@ static void check_timer()
 }
 #endif
 
+void CNeutrinoApp::screensaver(bool on)
+{
+	if (on)
+	{
+		m_screensaver = true;
+		CScreenSaver::getInstance()->Start();
+	}
+	else
+	{
+		CScreenSaver::getInstance()->Stop();
+		m_screensaver = false;
+		m_idletime = time(NULL);
+	}
+}
+
 void CNeutrinoApp::RealRun(CMenuWidget &mainMenu)
 {
 	neutrino_msg_t      msg;
@@ -2413,15 +2437,48 @@ void CNeutrinoApp::RealRun(CMenuWidget &mainMenu)
 
 	CLuaServer *luaServer = CLuaServer::getInstance();
 
+	m_idletime	= time(NULL);
+	m_screensaver	= false;
+
 	while( true ) {
 		luaServer->UnBlock();
 		g_RCInput->getMsg(&msg, &data, 100, ((g_settings.mode_left_right_key_tv == SNeutrinoSettings::VOLUME) && (g_RemoteControl->subChannels.size() < 1)) ? true : false);	// 10 secs..
 		if (luaServer->Block(msg, data))
 			continue;
 
+<<<<<<< HEAD
 #if HAVE_DUCKBOX_HARDWARE || BOXMODEL_SPARK7162
 		check_timer();
 #endif
+=======
+		if (mode == mode_radio) {
+			if ( msg == CRCInput::RC_timeout  || msg == NeutrinoMessages::EVT_TIMER)
+			{
+				int delay = time(NULL) - m_idletime;
+				int screensaver_delay = g_settings.screensaver_delay;
+				if (screensaver_delay !=0 && delay > screensaver_delay*60 && !m_screensaver)
+					screensaver(true);
+			}
+			else
+			{
+				m_idletime = time(NULL);
+				if (m_screensaver)
+				{
+					screensaver(false);
+
+					videoDecoder->StopPicture();
+					videoDecoder->ShowPicture(DATADIR "/neutrino/icons/radiomode.jpg");
+
+					if (msg <= CRCInput::RC_MaxRC) {
+						// ignore first keypress - just quit the screensaver
+						g_RCInput->clearRCMsg();
+						continue;
+					}
+				}
+			}
+		}
+
+>>>>>>> cool-cst-next/cst-next
 		if( ( mode == mode_tv ) ||  ( mode == mode_radio )  || ( mode == mode_webtv ) ) {
 			if( (msg == NeutrinoMessages::SHOW_EPG) /* || (msg == CRCInput::RC_info) */ ) {
 				InfoClock->enableInfoClock(false);

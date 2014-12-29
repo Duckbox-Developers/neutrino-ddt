@@ -229,6 +229,11 @@ struct SNeutrinoSettings
 	int radiotext_enable;
 	std::string radiotext_rass_dir;
 
+	//screen saver
+	int screensaver_delay;
+	std::string screensaver_dir;
+	int screensaver_timeout;
+
 	//vcr
 	int vcr_AutoSwitch;
 
@@ -723,7 +728,6 @@ struct SNeutrinoSettings
 	//audioplayer
 	int   audioplayer_display;
 	int   audioplayer_follow;
-	int   audioplayer_screensaver;
 	int   audioplayer_highprio;
 	int   audioplayer_select_title_by_name;
 	int   audioplayer_repeat_on;

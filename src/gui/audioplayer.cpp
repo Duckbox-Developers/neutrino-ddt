@@ -66,7 +66,7 @@
 #include <gui/widget/stringinput.h>
 #include <gui/widget/stringinput_ext.h>
 #include <gui/widget/keyboard_input.h>
-
+#include <gui/screensaver.h>
 #include "gui/pictureviewer.h"
 extern CPictureViewer * g_PicViewer;
 
@@ -173,7 +173,6 @@ CAudioPlayerGui::CAudioPlayerGui(bool inetmode)
 
 void CAudioPlayerGui::Init(void)
 {
-	stimer = 0;
 	m_selected = 0;
 	m_metainfo.clear();
 
@@ -330,8 +329,6 @@ int CAudioPlayerGui::show()
 	neutrino_msg_t      msg;
 	neutrino_msg_data_t data;
 
-	int pic_index = 0;
-
 	int ret = menu_return::RETURN_REPAINT;
 
 	// clear whole screen
@@ -347,7 +344,7 @@ int CAudioPlayerGui::show()
 
 	while (loop)
 	{
-		updateMetaData(m_screensaver);
+		updateMetaData();
 
 		updateTimes();
 
@@ -377,30 +374,10 @@ int CAudioPlayerGui::show()
 
 		if ( msg == CRCInput::RC_timeout  || msg == NeutrinoMessages::EVT_TIMER)
 		{
-			int timeout = time(NULL) - m_idletime;
-			int screensaver_timeout = g_settings.audioplayer_screensaver;
-			if (screensaver_timeout !=0 && timeout > screensaver_timeout*60 && !m_screensaver)
+			int delay = time(NULL) - m_idletime;
+			int screensaver_delay = g_settings.screensaver_delay;
+			if (screensaver_delay != 0 && delay > screensaver_delay*60 && !m_screensaver)
 				screensaver(true);
-
-			if (msg == NeutrinoMessages::EVT_TIMER && data == stimer) {
-				if (m_screensaver) {
-					char fname[255];
-
-					sprintf(fname, "%s/mp3-%d.jpg", DATADIR "/neutrino/icons", pic_index);
-
-					int lret = access(fname, F_OK);
-					printf("CAudioPlayerGui::show: new pic %s: %s\n", fname, lret ? "not found" : "found");
-					if (lret == 0) {
-						pic_index++;
-						videoDecoder->StopPicture();
-						videoDecoder->ShowPicture(fname);
-					} else if (pic_index) {
-						pic_index = 0;
-					}
-				} else
-					pic_index = 0;
-			}
-
 		}
 		else
 		{
@@ -408,6 +385,11 @@ int CAudioPlayerGui::show()
 			if (m_screensaver)
 			{
 				screensaver(false);
+
+				videoDecoder->StopPicture();
+				videoDecoder->ShowPicture(DATADIR "/neutrino/icons/mp3.jpg");
+				paint();
+
 				if (msg <= CRCInput::RC_MaxRC) {
 					// ignore first keypress - just quit the screensaver
 					g_RCInput->clearRCMsg();
@@ -743,11 +725,11 @@ int CAudioPlayerGui::show()
 			picture->exec(this, "audio");
 			delete picture;
 			pictureviewer = false;
+			screensaver(false);
 			videoDecoder->setBlank(true);
 			videoDecoder->ShowPicture(DATADIR "/neutrino/icons/mp3.jpg");
 			CVFD::getInstance()->setMode(CVFD::MODE_AUDIO);
 			paintLCD();
-			screensaver(false);
 		}
 		else if (msg == CRCInput::RC_help)
 		{
@@ -2065,7 +2047,7 @@ int CAudioPlayerGui::getNext()
 	return ret;
 }
 
-void CAudioPlayerGui::updateMetaData(bool screen_saver)
+void CAudioPlayerGui::updateMetaData()
 {
 	bool updateMeta = false;
 	bool updateLcd = false;
@@ -2095,13 +2077,13 @@ void CAudioPlayerGui::updateMetaData(bool screen_saver)
 			info << " / " << meta.samplerate/1000 << "." << (meta.samplerate/100)%10 <<"kHz";
 
 		m_metainfo = meta.type_info + info.str();
-		updateMeta = !screen_saver;
+		updateMeta = !m_screensaver;
 
 		if (!meta.artist.empty() && meta.artist != m_curr_audiofile.MetaData.artist)
 		{
 			m_curr_audiofile.MetaData.artist = meta.artist;
 
-			if ( !screen_saver)
+			if (!m_screensaver)
 				updateScreen = true;
 			updateLcd = true;
 		}
@@ -2110,7 +2092,7 @@ void CAudioPlayerGui::updateMetaData(bool screen_saver)
 		{
 			m_curr_audiofile.MetaData.title = meta.title;
 
-			if ( !screen_saver)
+			if (!m_screensaver)
 				updateScreen = true;
 			updateLcd = true;
 		}
@@ -2121,7 +2103,8 @@ void CAudioPlayerGui::updateMetaData(bool screen_saver)
 			updateLcd = true;
 		}
 
-		paintCover();
+		if (!m_screensaver)
+			paintCover();
 	}
 	if (CAudioPlayer::getInstance()->hasMetaDataChanged() != 0)
 		updateLcd = true;
@@ -2247,22 +2230,17 @@ void CAudioPlayerGui::paintLCD()
 		break;
 	}
 }
-
 void CAudioPlayerGui::screensaver(bool on)
 {
 	if (on)
 	{
 		m_screensaver = true;
-		m_frameBuffer->Clear();
-		stimer = g_RCInput->addTimer(10*1000*1000, false);
+		CScreenSaver::getInstance()->Start();
 	}
 	else
 	{
-		g_RCInput->killTimer(stimer);
+		CScreenSaver::getInstance()->Stop();
 		m_screensaver = false;
-		videoDecoder->StopPicture();
-		videoDecoder->ShowPicture(DATADIR "/neutrino/icons/mp3.jpg");
-		paint();
 		m_idletime = time(NULL);
 	}
 }
