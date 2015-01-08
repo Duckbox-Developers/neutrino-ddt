@@ -2450,6 +2450,17 @@ void CNeutrinoApp::RealRun(CMenuWidget &mainMenu)
 		check_timer();
 #endif
 		if (mode == mode_radio) {
+			bool ignored_msg = (
+				/* radio screensaver will ignore this msgs */
+				   msg == NeutrinoMessages::EVT_CURRENTEPG
+				|| msg == NeutrinoMessages::EVT_NEXTEPG
+				|| msg == NeutrinoMessages::EVT_CURRENTNEXT_EPG
+				|| msg == NeutrinoMessages::EVT_TIMESET
+				|| msg == NeutrinoMessages::EVT_PROGRAMLOCKSTATUS
+				|| msg == NeutrinoMessages::EVT_ZAP_GOT_SUBSERVICES
+				|| msg == NeutrinoMessages::EVT_ZAP_GOTAPIDS
+				|| msg == NeutrinoMessages::EVT_ZAP_GOTPIDS
+			);
 			if ( msg == CRCInput::RC_timeout  || msg == NeutrinoMessages::EVT_TIMER)
 			{
 				int delay = time(NULL) - m_idletime;
@@ -2457,11 +2468,12 @@ void CNeutrinoApp::RealRun(CMenuWidget &mainMenu)
 				if (screensaver_delay !=0 && delay > screensaver_delay*60 && !m_screensaver)
 					screensaver(true);
 			}
-			else
+			else if (!ignored_msg)
 			{
 				m_idletime = time(NULL);
 				if (m_screensaver)
 				{
+					printf("[neutrino] CSreenSaver stop; msg: %X\n", msg);
 					screensaver(false);
 
 					videoDecoder->StopPicture();
@@ -4371,8 +4383,24 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 	else if(actionKey == "channels")
 		return showChannelList(CRCInput::RC_ok, true);
 	else if(actionKey == "standby")
+	{
 		g_RCInput->postMsg(NeutrinoMessages::STANDBY_ON, 0);
+		return menu_return::RETURN_EXIT_ALL;
+	}
+	else if(actionKey == "easyswitch") {
+		INFO("easyswitch\n");
+		CParentalSetup pin;
+		if (pin.checkPin()) {
+			if (parent)
+				parent->hide();
 
+			g_settings.easymenu = (g_settings.easymenu == 0) ? 1 : 0;
+			INFO("change easymenu to %d\n", g_settings.easymenu);
+			const char * text = g_settings.easymenu ? "Easy menu switched ON, restart box ?" : "Easy menu switched OFF, restart box ?";
+			if (ShowMsg(LOCALE_MESSAGEBOX_INFO, text, CMessageBox::mbrNo, CMessageBox::mbYes | CMessageBox::mbNo, NEUTRINO_ICON_INFO, 0) == CMessageBox::mbrYes)
+				g_RCInput->postMsg(NeutrinoMessages::REBOOT, 0);
+		}
+	}
 
 	return returnval;
 }
