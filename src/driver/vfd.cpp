@@ -835,7 +835,7 @@ void CVFD::showPercentOver(const unsigned char perc, const bool /*perform_update
 #else
 	if(!has_lcd) return;
 
-	if (((mode == MODE_TVRADIO) || (mode == MODE_MENU_UTF8)) && !(g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME])) {
+	if (((mode == MODE_TVRADIO) || (mode == MODE_AUDIO) || (mode == MODE_MENU_UTF8)) && !(g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME])) {
 		//if (g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME] == 0)
 		{
 			ShowIcon(FP_ICON_FRAME, true);
@@ -893,6 +893,8 @@ printf("CVFD::showAudioTrack: %s\n", title.c_str());
 void CVFD::showAudioPlayMode(AUDIOMODES m)
 {
 	if(fd < 0) return;
+	if (mode != MODE_AUDIO)
+		return;
 
 	switch(m) {
 		case AUDIO_MODE_PLAY:
@@ -935,22 +937,13 @@ void CVFD::showAudioPlayMode(AUDIOMODES m)
 	wake_up();
 }
 
-void CVFD::showAudioProgress(const char /*perc*/, bool /*isMuted*/)
+void CVFD::showAudioProgress(const unsigned char perc)
 {
-	if(!has_lcd) return;
-#if 0 // what is this ? FIXME
-	if (mode == MODE_AUDIO) {
-		int dp = int( perc/100.0*61.0+12.0);
-		if(isMuted) {
-			if(dp > 12) {
-				display.draw_line(12, 56, dp-1, 56, CLCDDisplay::PIXEL_OFF);
-				display.draw_line(12, 58, dp-1, 58, CLCDDisplay::PIXEL_OFF);
-			}
-			else
-				display.draw_line (12,55,72,59, CLCDDisplay::PIXEL_ON);
-		}
-	}
-#endif
+	if(fd < 0) return;
+	if (mode != MODE_AUDIO)
+		return;
+
+	showPercentOver(perc, false);
 }
 
 void CVFD::setMode(const MODES m, const char * const title)
