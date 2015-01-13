@@ -730,16 +730,17 @@ void CVFD::showVolume(const char vol, const bool force_update)
 	if(!has_lcd) return;
 
 	ShowIcon(FP_ICON_MUTE, muted);
+
 	if(!force_update && vol == volume)
 		return;
-
 	volume = vol;
-	wake_up();
-#if !HAVE_DUCKBOX_HARDWARE
-	ShowIcon(FP_ICON_FRAME, true);
-#endif
 
-	if ((mode == MODE_TVRADIO) && g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME]) {
+	bool allowed_mode = (mode == MODE_TVRADIO || mode == MODE_AUDIO || mode == MODE_MENU_UTF8);
+	if (!allowed_mode)
+		return;
+
+	if (g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME] == 1) {
+		wake_up();
 #if HAVE_DUCKBOX_HARDWARE
 		int pp = (int) round((double) vol / (double) 2);
 		if(oldpp != pp)
@@ -807,6 +808,7 @@ void CVFD::showVolume(const char vol, const bool force_update)
 			oldpp = pp;
 		}
 #else
+		ShowIcon(FP_ICON_FRAME, true);
 		int pp = (int) round((double) vol * (double) 8 / (double) 100);
 		if(pp > 8) pp = 8;
 
@@ -828,25 +830,35 @@ printf("CVFD::showVolume: %d, bar %d\n", (int) vol, pp);
 	}
 }
 
-void CVFD::showPercentOver(const unsigned char perc, const bool /*perform_update*/)
+void CVFD::showPercentOver(const unsigned char perc, const bool /*perform_update*/, const MODES origin)
 {
 #if HAVE_DUCKBOX_HARDWARE
 	return;
 #else
+
+	static int ppold = 0;
 	if(!has_lcd) return;
 
-	if (((mode == MODE_TVRADIO) || (mode == MODE_AUDIO) || (mode == MODE_MENU_UTF8)) && !(g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME])) {
-		//if (g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME] == 0)
-		{
-			ShowIcon(FP_ICON_FRAME, true);
-			int pp;
-			if(perc == 255)
-				pp = 0;
-			else
-				pp = (int) round((double) perc * (double) 8 / (double) 100);
+	percentOver = perc;
+
+	if (mode == MODE_AUDIO && origin != MODE_AUDIO) // exclusive access for audio mode
+		return;
+
+	bool allowed_mode = (mode == MODE_TVRADIO || mode == MODE_AUDIO || mode == MODE_MENU_UTF8);
+	if (!allowed_mode)
+		return;
+
+	if (g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME] == 0) {
+		ShowIcon(FP_ICON_FRAME, true);
+		int pp;
+		if(perc == 255)
+			pp = 0;
+		else
+			pp = (int) round((double) perc * (double) 8 / (double) 100);
+		if(pp > 8) pp = 8;
+
+		if(pp != ppold) {
 //printf("CVFD::showPercentOver: %d, bar %d\n", (int) perc, pp);
-			if(pp > 8) pp = 8;
-			if(pp != percentOver) {
 			int i;
 			int j = 0x00000200;
 			for(i = 0; i < pp; i++) {
@@ -857,8 +869,7 @@ void CVFD::showPercentOver(const unsigned char perc, const bool /*perform_update
 				ShowIcon((fp_icon) j, false);
 				j /= 2;
 			}
-			percentOver = pp;
-			}
+			ppold = pp;
 		}
 	}
 #endif
@@ -943,7 +954,7 @@ void CVFD::showAudioProgress(const unsigned char perc)
 	if (mode != MODE_AUDIO)
 		return;
 
-	showPercentOver(perc, false);
+	showPercentOver(perc, true, MODE_AUDIO);
 }
 
 void CVFD::setMode(const MODES m, const char * const title)
