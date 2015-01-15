@@ -1641,9 +1641,9 @@ int CRCInput::translate(int code)
 {
 	switch(code)
 	{
-		case 0x100:
+		case 0x100: // FIXME -- needed?
 			return RC_up;
-		case 0x101:
+		case 0x101: // FIXME -- needed?
 			return RC_down;
 #ifdef HAVE_AZBOX_HARDWARE
 		case KEY_HOME:

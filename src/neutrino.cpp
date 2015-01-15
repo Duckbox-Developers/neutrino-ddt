@@ -127,6 +127,7 @@
 #endif
 
 #include <timerdclient/timerdclient.h>
+#include <timerd/timermanager.h>
 
 #include <zapit/debug.h>
 #include <zapit/zapit.h>
@@ -3080,8 +3081,14 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 			/*       shuts down the system even if !g_settings.shutdown_real_rcdelay (see below)  */
 			gettimeofday(&standby_pressed_at, NULL);
 
-			if ((mode != mode_standby) && (g_settings.shutdown_real) && !recordingstatus) {
-				new_msg = NeutrinoMessages::SHUTDOWN;
+			if ((mode != mode_standby) && (g_settings.shutdown_real)) {
+				CRecordManager::getInstance()->StopAutoRecord();
+				if(CRecordManager::getInstance()->RecordingStatus()) {
+					new_msg = NeutrinoMessages::STANDBY_ON;
+					CTimerManager::getInstance()->wakeup = true;
+					g_RCInput->firstKey = false;
+				} else
+					new_msg = NeutrinoMessages::SHUTDOWN;
 			}
 			else {
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
