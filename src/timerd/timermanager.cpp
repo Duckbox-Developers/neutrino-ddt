@@ -781,7 +781,7 @@ void CTimerManager::shutdownOnWakeup(int currEventID)
 	time_t nextAnnounceTime=0;
 
 	pthread_mutex_lock(&tm_eventsMutex);
-	if(!*wakeup) {
+	if(!wakeup) {
 		pthread_mutex_unlock(&tm_eventsMutex);
 		return;
 	}
@@ -810,7 +810,7 @@ void CTimerManager::shutdownOnWakeup(int currEventID)
 		dprintf("Programming shutdown event\n");
 		CTimerEvent_Shutdown* event = new CTimerEvent_Shutdown(now+120, now+180);
 		shutdown_eventID = addEvent(event);
-		*wakeup = false;
+		wakeup = false;
 	}
 	pthread_mutex_unlock(&tm_eventsMutex);
 }
@@ -822,7 +822,7 @@ void CTimerManager::cancelShutdownOnWakeup()
 		removeEvent(shutdown_eventID);
 		shutdown_eventID = -1;
 	}
-	*wakeup = false;
+	wakeup = false;
 	pthread_mutex_unlock(&tm_eventsMutex);
 }
 

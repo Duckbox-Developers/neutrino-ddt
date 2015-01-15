@@ -228,7 +228,7 @@ private:
 	CTimerEvent			*nextEvent();
 public:
 
-	bool 		  *wakeup;
+	bool 		  wakeup;
 
 	static CTimerManager* getInstance();
 
