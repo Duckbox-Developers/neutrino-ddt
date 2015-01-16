@@ -456,18 +456,17 @@ void CMoviePlayerGui::fillPids()
 
 	vpid = p_movie_info->epgVideoPid;
 	vtype = p_movie_info->VideoType;
-	/* FIXME: better way to detect TS recording */
-	if (!vpid) {
-		is_file_player = true;
-		return;
-	}
 	numpida = 0; currentapid = 0;
 	numpids = 0;
 	numpidt = 0;
 	currentttxsub = "";
+	/* FIXME: better way to detect TS recording */
 	if (!p_movie_info->audioPids.empty()) {
 		currentapid = p_movie_info->audioPids[0].epgAudioPid;
 		currentac3 = p_movie_info->audioPids[0].atype;
+	} else if (!vpid) {
+		is_file_player = true;
+		return;
 	}
 	for (unsigned int i = 0; i < p_movie_info->audioPids.size(); i++) {
 		unsigned int j;
