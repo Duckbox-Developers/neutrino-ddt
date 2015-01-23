@@ -4737,9 +4737,14 @@ void CNeutrinoApp::saveKeys(const char * fname)
 		tconfig.saveConfig(fname);
 }
 
-void CNeutrinoApp::StopSubtitles()
+void CNeutrinoApp::StopSubtitles(bool enable_glcd_mirroring)
 {
 	printf("[neutrino] %s\n", __FUNCTION__);
+	if (CMoviePlayerGui::getInstance().Playing()) {
+		CMoviePlayerGui::getInstance().StopSubtitles(enable_glcd_mirroring);
+		return;
+	}
+
 	int ttx, dvbpid, ttxpid, ttxpage;
 
 	dvbpid = dvbsub_getpid();
@@ -4751,11 +4756,24 @@ void CNeutrinoApp::StopSubtitles()
 		tuxtx_pause_subtitle(true);
 		frameBuffer->paintBackground();
 	}
+#ifdef ENABLE_GRAPHLCD
+	if (enable_glcd_mirroring)
+		nGLCD::MirrorOSD(g_settings.glcd_mirror_osd);
+#endif
 }
 
 void CNeutrinoApp::StartSubtitles(bool show)
 {
 	printf("%s: %s\n", __FUNCTION__, show ? "Show" : "Not show");
+
+	if (CMoviePlayerGui::getInstance().Playing()) {
+		CMoviePlayerGui::getInstance().StartSubtitles(show);
+		return;
+	}
+		
+#ifdef ENABLE_GRAPHLCD
+	nGLCD::MirrorOSD(false);
+#endif
 	if(!show)
 		return;
 	dvbsub_start(0);
