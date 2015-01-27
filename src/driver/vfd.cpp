@@ -56,12 +56,12 @@ extern CRemoteControl * g_RemoteControl; /* neutrino.cpp */
 #define VFDLENGTH 8
 #elif defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500)
 #define VFDLENGTH 12
-#elif defined (BOXMODEL_HS7810A) || defined (BOXMODEL_HS7119) || defined (BOXMODEL_HS7819)
+#elif defined (BOXMODEL_HS7810A) || defined (BOXMODEL_HS7119) || defined (BOXMODEL_HS7819) || defined (BOXMODEL_CUBEREVO_250HD)
 #define VFDLENGTH 4
 #elif defined (BOXMODEL_HS7110)
 #define VFDLENGTH 0
 #else
-	#define VFDLENGTH 16
+#define VFDLENGTH 16
 #endif
 
 #define SCROLL_TIME 100000
@@ -642,7 +642,7 @@ void CVFD::showTime(bool force)
 #if !defined (BOXMODEL_HS7810A) && !defined (BOXMODEL_HS7819)
 #if defined (BOXMODEL_OCTAGON1008)
 				ShowIcon(ICON_COLON2, true);
-#elif defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_HS7119)
+#elif defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_HS7119) || defined (BOXMODEL_CUBEREVO_250HD)
 				strftime(timestr, 5, "%H%M", t);
 #else
 				strftime(timestr, 6, "%H:%M", t);
@@ -796,11 +796,11 @@ void CVFD::showVolume(const char vol, const bool force_update)
 			char vol_chr[64] = "";
 			snprintf(vol_chr, sizeof(vol_chr)-1, "VOL=%3d", (int)vol);
 			ShowText(vol_chr);
-#elif defined (BOXMODEL_HS7119) || defined (BOXMODEL_HS7810A) || defined (BOXMODEL_HS7819)
+#elif defined (BOXMODEL_HS7119) || defined (BOXMODEL_HS7810A) || defined (BOXMODEL_HS7819) || defined (BOXMODEL_CUBEREVO_250HD)
 			char vol_chr[64] = "";
 			snprintf(vol_chr, sizeof(vol_chr)-1, "v%3d", (int)vol);
 			ShowText(vol_chr);
-#elif defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500) || defined (BOXMODEL_UFS912) || defined (BOXMODEL_UFS913) || defined (BOXMODEL_CUBEREVO) || defined (BOXMODEL_CUBEREVO_MINI2) || defined (BOXMODEL_CUBEREVO_2000HD)
+#elif defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500) || defined (BOXMODEL_UFS912) || defined (BOXMODEL_UFS913) || defined (BOXMODEL_CUBEREVO) || defined (BOXMODEL_CUBEREVO_MINI) || defined (BOXMODEL_CUBEREVO_MINI2) || defined (BOXMODEL_CUBEREVO_2000HD)
 			char vol_chr[64] = "";
 			snprintf(vol_chr, sizeof(vol_chr)-1, "Volume: %d%%", (int)vol);
 			ShowText(vol_chr);
@@ -1190,7 +1190,7 @@ void CVFD::Clear()
 	else
 		text[0] = 0;
 #else
-#if defined (BOXMODEL_HS7810A) || defined (BOXMODEL_HS7119) || defined (BOXMODEL_HS7819)
+#if defined (BOXMODEL_HS7810A) || defined (BOXMODEL_HS7119) || defined (BOXMODEL_HS7819) || defined (BOXMODEL_CUBEREVO_250HD)
 	ShowText("    ");
 #elif defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_TF7700)
 	ShowText("        ");
