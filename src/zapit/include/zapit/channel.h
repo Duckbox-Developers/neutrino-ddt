@@ -174,6 +174,7 @@ class CZapitChannel
 
 		void				Init();
 		friend class CChannelList;
+		t_channel_id			channel_id;
 
 	public:
 		typedef enum channel_flags {
@@ -194,7 +195,6 @@ class CZapitChannel
 		int				number;
 		CChannelEvent			currentEvent,nextEvent;
 		int				type;
-		t_channel_id			channel_id;
 		unsigned char			scrambled;
 		char *				pname;
 		bool				has_bouquet;
