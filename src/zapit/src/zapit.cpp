@@ -67,14 +67,14 @@
 #include <video_cs.h>
 #include <ca_cs.h>
 #endif
-#if HAVE_TRIPLEDRAGON || USE_STB_HAL
-#include <video_td.h>
-#include <audio_td.h>
+#if USE_STB_HAL
+#include <video_hal.h>
+#include <audio_hal.h>
 #endif
-#include <system/set_threadname.h>
-#include <driver/rcinput.h>
 
 #include <driver/abstime.h>
+#include <driver/rcinput.h>
+#include <system/set_threadname.h>
 #include <libdvbsub/dvbsub.h>
 #include <OpenThreads/ScopedLock>
 #include <libtuxtxt/teletext.h>

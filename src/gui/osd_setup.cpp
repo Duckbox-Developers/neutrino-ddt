@@ -61,6 +61,7 @@
 #include <zapit/femanager.h>
 #include <system/debug.h>
 #include <system/helpers.h>
+#include "cs_api.h"
 
 extern CRemoteControl * g_RemoteControl;
 
@@ -613,9 +614,12 @@ int COsdSetup::showOsdSetup()
 	osd_menu->addItem(GenericMenuSeparatorLine);
 
 	//monitor
-	CMenuOptionChooser * mc = new CMenuOptionChooser(LOCALE_COLORMENU_OSD_PRESET, &g_settings.screen_preset, OSD_PRESET_OPTIONS, OSD_PRESET_OPTIONS_COUNT, true, this);
-	mc->setHint("", LOCALE_MENU_HINT_OSD_PRESET);
-	osd_menu->addItem(mc);
+	CMenuOptionChooser * mc;
+	if (cs_get_revision() != 1) { /* 1 == Tripledragon */
+		mc = new CMenuOptionChooser(LOCALE_COLORMENU_OSD_PRESET, &g_settings.screen_preset, OSD_PRESET_OPTIONS, OSD_PRESET_OPTIONS_COUNT, true, this);
+		mc->setHint("", LOCALE_MENU_HINT_OSD_PRESET);
+		osd_menu->addItem(mc);
+	}
 
 	// round corners
 	int rounded_corners = g_settings.rounded_corners;
