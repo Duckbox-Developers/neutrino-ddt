@@ -7,6 +7,7 @@
 	Implementation:
 	Copyright (C) 2013 martii
 	gitorious.org/neutrino-mp/martiis-neutrino-mp
+	Copyright (C) 2015 Stefan Seyfried
 
 	License: GPL
 
@@ -33,13 +34,18 @@
 
 #include <global.h>
 #include <neutrino.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <driver/framebuffer.h>
 #include <gui/widget/textbox.h>
 #include <stdio.h>
 #include <poll.h>
 #include <fcntl.h>
+#include <system/helpers.h>
+#include <errno.h>
 
 CShellWindow::CShellWindow(const std::string &command, const int _mode, int *res) {
+	pid_t pid;
 	textBox = NULL;
 	std::string cmd;
 	mode = _mode;
@@ -56,7 +62,7 @@ CShellWindow::CShellWindow(const std::string &command, const int _mode, int *res
 	}
 
 	cmd = command + " 2>&1";
-	FILE *f = popen(cmd.c_str(), "r");
+	FILE *f = my_popen(pid, cmd.c_str(), "r");
 	if (!f) {
 		if (res)
 			*res = -1;
@@ -76,27 +82,26 @@ CShellWindow::CShellWindow(const std::string &command, const int _mode, int *res
 	struct timeval tv;
 	gettimeofday(&tv,NULL);
 	uint64_t lastPaint = (uint64_t) tv.tv_usec + (uint64_t)((uint64_t) tv.tv_sec * (uint64_t) 1000000);
-	bool ok = true, nlseen = false, dirty = false, pushed = false;
+	bool ok = true, nlseen = false, dirty = false, incomplete = false;
 	char output[1024];
-	int off = 0;
 	std::string txt = "";
+	std::string line = "";
 
 	do {
 		uint64_t now;
 		fds.revents = 0;
 		int r = poll(&fds, 1, 300);
-
 		if (r > 0) {
 			if (!feof(f)) {
 				gettimeofday(&tv,NULL);
 				now = (uint64_t) tv.tv_usec + (uint64_t)((uint64_t) tv.tv_sec * (uint64_t) 1000000);
 
 				unsigned int lines_read = 0;
-				while (fgets(output + off, sizeof(output) - off, f)) {
-					char *outputp = output + off;
+				while (fgets(output, sizeof(output), f)) {
+					char *outputp = output;
 					dirty = true;
 
-					for (int i = off; output[i] && !nlseen; i++)
+					for (int i = 0; output[i] && !nlseen; i++)
 						switch (output[i]) {
 							case '\b':
 								if (outputp > output)
@@ -118,26 +123,26 @@ CShellWindow::CShellWindow(const std::string &command, const int _mode, int *res
 
 					if (outputp < output + sizeof(output))
 						*outputp = 0;
+					line += std::string(output);
+					if (incomplete)
+						lines.pop_back();
 					if (nlseen) {
-						pushed = false;
+						lines.push_back(line);
+						line.clear();
 						nlseen = false;
-						off = 0;
+						incomplete = false;
 					} else {
-						off = strlen(output);
-						if (pushed)
-							lines.pop_back();
+						lines.push_back(line);
+						incomplete = true;
 					}
-					lines.push_back(std::string((output)));
-					pushed = true;
 					if (lines.size() > lines_max)
 						lines.pop_front();
 					txt = "";
 					bool first = true;
 					for (std::list<std::string>::const_iterator it = lines.begin(), end = lines.end(); it != end; ++it) {
-						if (first)
-							first = false;
-						else
+						if (!first)
 							txt += '\n';
+						first = false;
 						txt += *it;
 					}
 					if (((lines_read == lines_max) && (lastPaint + 100000 < now)) || (lastPaint + 250000 < now)) {
@@ -155,7 +160,7 @@ CShellWindow::CShellWindow(const std::string &command, const int _mode, int *res
 
 		gettimeofday(&tv,NULL);
 		now = (uint64_t) tv.tv_usec + (uint64_t)((uint64_t) tv.tv_sec * (uint64_t) 1000000);
-		if (r < 1 || dirty || lastPaint + 250000 < now) {
+		if (!ok || (r < 1 && dirty && lastPaint + 250000 < now)) {
 			textBox->setText(&txt);
 			textBox->paint();
 			lastPaint = now;
@@ -163,13 +168,16 @@ CShellWindow::CShellWindow(const std::string &command, const int _mode, int *res
 		}
 	} while(ok);
 
-	int r = pclose(f);
+	fclose(f);
+	int s;
+	errno = 0;
+	int r = waitpid(pid, &s, 0);
 
 	if (res) {
 		if (r == -1)
-			*res = r;
+			*res = errno;
 		else
-			*res = WEXITSTATUS(r);
+			*res = WEXITSTATUS(s);
 	}
 }
 

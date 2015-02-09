@@ -2,7 +2,7 @@
 	Neutrino-GUI  -   DBoxII-Project
 
 	Copyright (C) 2001 Steffen Hehn 'McClean'
-	Copyright (C) 2007-2012 Stefan Seyfried
+	Copyright (C) 2007-2015 Stefan Seyfried
 
 	Kommentar:
 
@@ -347,16 +347,17 @@ int CChannelList::doChannelMenu(void)
 		switch(select) {
 		case 0: // edit mode
 			if (g_settings.parentallock_prompt == PARENTALLOCK_PROMPT_CHANGETOLOCKED) {
+				int pl_z = g_settings.parentallock_zaptime * 60;
 				if (g_settings.personalize[SNeutrinoSettings::P_MSER_BOUQUET_EDIT] == CPersonalizeGui::PERSONALIZE_MODE_PIN) {
 					unlocked = false;
 				} else if (bouquet && bouquet->zapitBouquet && bouquet->zapitBouquet->bLocked) {
 					/* on locked bouquet, enough to check any channel */
-					unlocked = ((*chanlist)[selected]->last_unlocked_time + 3600 > time_monotonic());
+					unlocked = ((*chanlist)[selected]->last_unlocked_time + pl_z > time_monotonic());
 				} else {
 					/* check all locked channels for last_unlocked_time, overwrite only if already unlocked */
 					for (unsigned int j = 0 ; j < (*chanlist).size(); j++) {
 						if ((*chanlist)[j]->bLocked)
-							unlocked = unlocked && ((*chanlist)[j]->last_unlocked_time + 3600 > time_monotonic());
+							unlocked = unlocked && ((*chanlist)[j]->last_unlocked_time + pl_z > time_monotonic());
 					}
 				}
 				if (!unlocked) {
@@ -1080,7 +1081,8 @@ int CChannelList::handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t data, 
 			(*chanlist)[selected]->last_unlocked_time = time_monotonic();
 			int bnum = bouquetList->getActiveBouquetNumber();
 			/* unlock only real locked bouquet, not whole satellite or all channels! */
-			if (bnum >= 0 && bouquetList->Bouquets[bnum]->zapitBouquet && bouquetList->Bouquets[bnum]->zapitBouquet->bLocked)
+			if (bnum >= 0 && bouquetList->Bouquets[bnum]->zapitBouquet &&
+			    bouquetList->Bouquets[bnum]->zapitBouquet->bLocked != g_settings.parentallock_defaultlocked)
 			{
 				/* unlock the whole bouquet */
 				int i;

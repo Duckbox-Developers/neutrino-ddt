@@ -2,7 +2,7 @@
 	Neutrino-GUI  -   DBoxII-Project
 
 	Copyright (C) 2001 Steffen Hehn 'McClean'
-	Copyright (C) 2010-2014 Stefan Seyfried
+	Copyright (C) 2010-2015 Stefan Seyfried
 	Copyright (C) 2013-2014 martii
 	Copyright (C) 2009-2014 CoolStream International Ltd
 
@@ -37,6 +37,7 @@
 #include <dirent.h>
 #include <dlfcn.h>
 #include <sys/mount.h>
+#include <sys/wait.h>
 
 #include <global.h>
 #include <neutrino.h>
@@ -146,14 +147,25 @@ bool CHDDMenuHandler::is_mounted(const char *dev)
 	else
 		snprintf(devpath, sizeof(devpath), "/dev/%s", dev);
 
-	int devpathlen = strlen(devpath);
 	char buffer[255];
+	string realdev = backtick("readlink -f " + string(devpath));
+	realdev = trim(realdev);
 	FILE *f = fopen("/proc/mounts", "r");
 	if(f) {
-		while (!res && fgets(buffer, sizeof(buffer), f))
-			if (!strncmp(buffer, devpath, devpathlen)
-					&& (buffer[devpathlen] == ' ' || buffer[devpathlen] == '\t'))
+		while (!res && fgets(buffer, sizeof(buffer), f)) {
+			if (buffer[0] != '/')
+				continue; /* only "real" devices are interesting */
+			char *p = strchr(buffer, ' ');
+			if (p)
+				*p = 0; /* terminate at first space, kernel-user ABI is fixed */
+			if (!strcmp(buffer, devpath)) /* default '/dev/sda1' mount */
 				res = true;
+			else {	/* now the case of '/dev/disk/by-label/myharddrive' mounts */
+				string realmount = backtick("readlink -f " + string(buffer));
+				if (realdev == trim(realmount))
+					res = true;
+			}
+		}
 		fclose(f);
 	}
 	printf("CHDDMenuHandler::is_mounted: dev [%s] is %s\n", devpath, res ? "mounted" : "not mounted");
@@ -169,7 +181,6 @@ void CHDDMenuHandler::getBlkIds()
 
 	const char *label;
 	const char *type;
-
 
 	blkid_get_cache(&c, "/dev/null");
 
@@ -272,9 +283,36 @@ std::string CHDDMenuHandler::getFmtType(std::string name, std::string part)
 	return ret;
 }
 
+void CHDDMenuHandler::check_kernel_fs()
+{
+	char line[128]; /* /proc/filesystems lines are shorter */
+	kernel_fs_list.clear();
+	FILE *f = fopen("/proc/filesystems", "r");
+	if (! f) {
+		fprintf(stderr, "CHDDMenuHandler::%s: opening /proc/filesystems failed: %m\n", __func__);
+		return;
+	}
+	while (fgets(line, sizeof(line), f)) {
+		size_t l = strlen(line);
+		if (l > 0)
+			line[l - 1] = 0; /* remove \n */
+		char *tab = strchr(line, '\t');
+		if (! tab)	/* should not happen in any kernel I have seen */
+			continue;
+		tab++;
+		kernel_fs_list.insert(string(tab));
+	}
+	fclose(f);
+}
+
 void CHDDMenuHandler::check_dev_tools()
 {
 	for (unsigned i = 0; i < FS_MAX; i++) {
+		if (kernel_fs_list.find(devtools[i].fmt) == kernel_fs_list.end()) {
+			printf("%s: filesystem '%s' not supported by kernel\n",
+				__func__, devtools[i].fmt.c_str());
+			continue;
+		}
 		if (!access(devtools[i].fsck.c_str(), X_OK))
 			devtools[i].fsck_supported = true;
 		if (!access(devtools[i].mkfs.c_str(), X_OK))
@@ -439,6 +477,14 @@ void CHDDMenuHandler::setRecordPath(std::string &dev)
 		printf("CHDDMenuHandler::setRecordPath: recordingdir already set to %s\n", newpath.c_str());
 		return;
 	}
+	/* don't annoy if the recordingdir is a symlink pointing to the 'right' location */
+	string readl = backtick("readlink -f " + g_settings.network_nfs_recordingdir);
+	readl = trim(readl);
+	if (newpath.compare(readl) == 0) {
+		printf("CHDDMenuHandler::%s: recordingdir is a symlink to %s\n",
+					__func__, newpath.c_str());
+		return;
+	}
 	bool old_menu = in_menu;
 	in_menu = false;
 	int res = ShowMsg(LOCALE_RECORDINGMENU_DEFDIR, LOCALE_HDD_SET_RECDIR, CMessageBox::mbrNo, CMessageBox::mbYes | CMessageBox::mbNo);
@@ -465,11 +511,18 @@ int CHDDMenuHandler::handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t dat
 		if (!split_config_string(str, smap))
 			return messages_return::handled;
 
+		std::string dev;
 		std::map<std::string,std::string>::iterator it = smap.find("MDEV");
-		if (it == smap.end())
-			return messages_return::handled;
-
-		std::string dev = it->second;
+		if (it != smap.end())
+			dev = it->second;
+		else {
+			it = smap.find("DEVNAME");
+			if (it == smap.end())
+				return messages_return::handled;
+			dev = it->second;
+			if (dev.length() > 5)
+				dev = dev.substr(5); /* strip off /dev/ */
+		}
 		printf("CHDDMenuHandler::handleMsg: MDEV=%s\n", dev.c_str());
 		if (!filterDevName(dev.c_str()))
 			return messages_return::handled;
@@ -769,6 +822,7 @@ int CHDDMenuHandler::doMenu()
 	show_menu = false;
 	in_menu = true;
 
+	check_kernel_fs();
 	check_dev_tools();
 
 _show_menu:
@@ -816,9 +870,11 @@ _show_menu:
 	}
 
 	if (!hdd_list.empty()) {
-		struct stat rec_st;
+		struct stat rec_st, root_st, dev_st;
 		memset(&rec_st, 0, sizeof(rec_st));
+		memset(&root_st, 0, sizeof(root_st));
 		stat(g_settings.network_nfs_recordingdir.c_str(), &rec_st);
+		stat("/", &root_st);
 
 		sort(hdd_list.begin(), hdd_list.end(), cmp_hdd_by_name());
 		int shortcut = 1;
@@ -832,6 +888,13 @@ _show_menu:
 			}
 			std::string key = "m" + it->devname;
 			bool enabled = !rec_icon || !CNeutrinoApp::getInstance()->recordingstatus;
+			/* do not allow to unmount the rootfs, and skip filesystems without kernel support */
+			memset(&dev_st, 0, sizeof(dev_st));
+			if (stat(("/dev/" + it->devname).c_str(), &dev_st) != -1
+			    && dev_st.st_rdev == root_st.st_dev)
+				enabled = false;
+			else if (kernel_fs_list.find(it->fmt) == kernel_fs_list.end())
+				enabled = false;
 			it->cmf = new CMenuForwarder(it->desc, enabled, g_Locale->getText(it->mounted ? LOCALE_HDD_UMOUNT : LOCALE_HDD_MOUNT) , this,
 					key.c_str(), CRCInput::convertDigitToKey(shortcut++), NULL, rec_icon);
 			hddmenu->addItem(it->cmf);
