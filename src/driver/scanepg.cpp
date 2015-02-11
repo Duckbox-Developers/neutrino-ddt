@@ -341,7 +341,6 @@ void CEpgScan::Next()
 #ifdef ENABLE_PIP
 	bool plocked = false;
 #endif
-
 	next_chid = 0;
 
 	if (!standby && CNeutrinoApp::getInstance()->getMode() == NeutrinoMessages::mode_standby)
