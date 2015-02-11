@@ -106,6 +106,7 @@
 #include "gui/pipsetup.h"
 #endif
 #include "gui/themes.h"
+#include "gui/timerlist.h"
 
 #include <system/set_threadname.h>
 #include <system/ytcache.h>
