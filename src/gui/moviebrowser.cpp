@@ -1265,6 +1265,7 @@ void CMovieBrowser::refreshMovieInfo(void)
 		else
 			CChannelLogo->hide();
 		delete CChannelLogo;
+		CChannelLogo = NULL;
 	}
 	if (old_EpgId != m_movieSelectionHandler->epgEpgId >>16) {
 		CChannelLogo = new CComponentsChannelLogo(0, 0, logo_w_max, m_cBoxFrameTitleRel.iHeight,
