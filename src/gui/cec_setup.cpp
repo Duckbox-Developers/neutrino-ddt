@@ -82,6 +82,7 @@ int CCECSetup::exec(CMenuTarget* parent, const std::string &/*actionKey*/)
 	return res;
 }
 
+
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 #define VIDEOMENU_HDMI_CEC_STANDBY_OPTION_COUNT 3
 const CMenuOptionChooser::keyval VIDEOMENU_HDMI_CEC_STANDBY_OPTIONS[VIDEOMENU_HDMI_CEC_STANDBY_OPTION_COUNT] =
@@ -184,6 +185,7 @@ bool CCECSetup::changeNotify(const neutrino_locale_t OptionName, void * /*data*/
 		g_settings.hdmi_cec_mode = ko.isEnabled("cec");
 	}
 #else
+
 	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_VIDEOMENU_HDMI_CEC_MODE))
 	{
 		printf("[neutrino CEC Settings] %s set CEC settings...\n", __FUNCTION__);

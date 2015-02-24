@@ -33,6 +33,7 @@
 #include <gui/infoclock.h>
 #include <gui/volumebar.h>
 #include <gui/audiomute.h>
+
 #include <driver/display.h>
 
 CAudioMute::CAudioMute():CComponentsPicture(0, 0, NEUTRINO_ICON_BUTTON_MUTE)

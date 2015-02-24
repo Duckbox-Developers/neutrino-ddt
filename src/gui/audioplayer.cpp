@@ -5,6 +5,7 @@
 
   (C) 2002-2008 the tuxbox project contributors
   (C) 2008 Novell, Inc. Author: Stefan Seyfried
+  (C) 2011-2013 Stefan Seyfried
 
   Homepage: http://dbox.cyberphoria.org/
 

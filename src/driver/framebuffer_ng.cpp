@@ -437,8 +437,8 @@ void CFrameBuffer::setBlendLevel(int level)
 	if (ioctl(fd, FBIO_SETOPACITY, value))
 		printf("FBIO_SETOPACITY failed.\n");
 #ifndef BOXMODEL_APOLLO
-		if(level == 100) // TODO: sucks.
-			usleep(20000);
+	if(level == 100) // TODO: sucks.
+		usleep(20000);
 #endif
 #endif
 }
@@ -471,15 +471,6 @@ void CFrameBuffer::setBlendLevel(int level)
 }
 #endif
 
-#if 0 
-//never used
-void CFrameBuffer::setAlphaFade(int in, int num, int tr)
-{
-	for (int i=0; i<num; i++) {
-		cmap.transp[in+i]=tr;
-	}
-}
-#endif
 void CFrameBuffer::paletteFade(int i, __u32 rgb1, __u32 rgb2, int level)
 {
 	__u16 *r = cmap.red+i;
@@ -1232,9 +1223,9 @@ void * CFrameBuffer::int_convertRGB2FB(unsigned char *rgbbuff, unsigned long x, 
 	if (alpha) {
 		for(i = 0; i < count ; i++)
 			fbbuff[i] = ((rgbbuff[i*4+3] << 24) & 0xFF000000) | 
-					    ((rgbbuff[i*4]   << 16) & 0x00FF0000) | 
-					    ((rgbbuff[i*4+1] <<  8) & 0x0000FF00) | 
-					    ((rgbbuff[i*4+2])       & 0x000000FF);
+				    ((rgbbuff[i*4]   << 16) & 0x00FF0000) | 
+				    ((rgbbuff[i*4+1] <<  8) & 0x0000FF00) | 
+				    ((rgbbuff[i*4+2])       & 0x000000FF);
 	} else {
 		switch (m_transparent) {
 			case CFrameBuffer::TM_BLACK:

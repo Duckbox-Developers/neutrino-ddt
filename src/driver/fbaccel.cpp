@@ -448,7 +448,6 @@ void CFbAccel::paintRect(const int x, const int y, const int dx, const int dy, c
 	OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(mutex);
 	if (ioctl(fb->fd, STMFBIO_BLT, &bltData ) < 0)
 		fprintf(stderr, "blitRect FBIO_BLIT: %m x:%d y:%d w:%d h:%d s:%d\n", xx,yy,width,height,fb->stride);
-	// update_dirty(xx, yy, bltData.dst_right, bltData.dst_bottom);
 #else
 	int line = 0;
 	int swidth = fb->stride / sizeof(fb_pixel_t);
@@ -663,7 +662,6 @@ void CFbAccel::blit2FB(void *fbbuff, uint32_t width, uint32_t height, uint32_t x
 
 	if (ioctl(fb->fd, STMFBIO_BLT_EXTERN, &blt_data) < 0)
 		perror("CFbAccel blit2FB STMFBIO_BLT_EXTERN");
-	//update_dirty(x, y, blt_data.dst_right, blt_data.dst_bottom);
 	return;
 #else
 	fb_pixel_t *data = (fb_pixel_t *) fbbuff;
@@ -693,11 +691,6 @@ void CFbAccel::blit2FB(void *fbbuff, uint32_t width, uint32_t height, uint32_t x
 		}
 		d += fb->stride;
 	}
-#if 0
-	for(int i = 0; i < yc; i++){
-		memmove(clfb + (i + yoff)*stride + xoff*4, ip + (i + yp)*width + xp, xc*4);
-	}
-#endif
 #endif
 }
 #else

@@ -248,7 +248,6 @@ void CFileBrowser::commonInit()
 	sc_init_dir = "/legacy/genrelist?k="  + g_settings.shoutcast_dev_id;
 
 	Filter = NULL;
-
 	Multi_Select = false;
 	Dirs_Selectable = false;
 	Dir_Mode = false;
@@ -609,7 +608,6 @@ bool CFileBrowser::exec(const char * const dirname)
 		name = "/";
 	else
 		name = dirname;
-
 	std::replace(name.begin(), name.end(), '\\', '/');
 
 	fontInit();

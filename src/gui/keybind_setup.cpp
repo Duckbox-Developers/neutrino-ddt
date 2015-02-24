@@ -152,10 +152,10 @@ const CMenuOptionChooser::keyval KEYBINDINGMENU_BOUQUETHANDLING_OPTIONS[KEYBINDI
 #define KEYBINDINGMENU_PLAYBUTTON_OPTIONS_COUNT 4
 const CMenuOptionChooser::keyval KEYBINDINGMENU_PLAYBUTTON_OPTIONS[KEYBINDINGMENU_PLAYBUTTON_OPTIONS_COUNT] =
 {
-	{ 0, LOCALE_MOVIEPLAYER_TSPLAYBACK	},
-	{ 1, LOCALE_MOVIEPLAYER_FILEPLAYBACK},
-	{ 2, LOCALE_AUDIOPLAYER_NAME		},
-	{ 3, LOCALE_INETRADIO_NAME			}
+	{ 0, LOCALE_MOVIEPLAYER_TSPLAYBACK   },
+	{ 1, LOCALE_MOVIEPLAYER_FILEPLAYBACK },
+	{ 2, LOCALE_AUDIOPLAYER_NAME         },
+	{ 3, LOCALE_INETRADIO_NAME           }
 };
 
 typedef struct key_settings_t
@@ -198,7 +198,7 @@ const key_settings_struct_t key_settings[CKeybindSetup::KEYBINDS_COUNT] =
 	{LOCALE_MPKEY_SUBTITLE,			&g_settings.mpkey_subtitle,		LOCALE_MENU_HINT_KEY_MPSUBTITLE },
 	{LOCALE_MPKEY_TIME,			&g_settings.mpkey_time,			LOCALE_MENU_HINT_KEY_MPTIME },
 	{LOCALE_MPKEY_BOOKMARK,			&g_settings.mpkey_bookmark, 		LOCALE_MENU_HINT_KEY_MPBOOKMARK },
-	{LOCALE_MPKEY_GOTO,				&g_settings.mpkey_goto,				NONEXISTANT_LOCALE},
+	{LOCALE_MPKEY_GOTO,			&g_settings.mpkey_goto,			NONEXISTANT_LOCALE},
 	{LOCALE_MPKEY_NEXT3DMODE,		&g_settings.mpkey_next3dmode,		NONEXISTANT_LOCALE},
 	{LOCALE_MPKEY_NEXT_REPEAT_MODE,		&g_settings.mpkey_next_repeat_mode,	NONEXISTANT_LOCALE},
 	//{LOCALE_MPKEY_VTXT,			&g_settings.mpkey_vtxt,	 		NONEXISTANT_LOCALE},
@@ -207,7 +207,7 @@ const key_settings_struct_t key_settings[CKeybindSetup::KEYBINDS_COUNT] =
 	{LOCALE_EXTRA_KEY_UNLOCK,		&g_settings.key_unlock,			LOCALE_MENU_HINT_KEY_UNLOCK},
 	{LOCALE_EXTRA_KEY_HELP,			&g_settings.key_help,			NONEXISTANT_LOCALE},
 	{LOCALE_EXTRA_KEY_NEXT43MODE,		&g_settings.key_next43mode,		NONEXISTANT_LOCALE},
-	{LOCALE_EXTRA_KEY_SWITCHFORMAT,		&g_settings.key_switchformat,	NONEXISTANT_LOCALE},
+	{LOCALE_EXTRA_KEY_SWITCHFORMAT,		&g_settings.key_switchformat,		NONEXISTANT_LOCALE},
 	{LOCALE_EXTRA_KEY_SCREENSHOT,		&g_settings.key_screenshot,		LOCALE_MENU_HINT_KEY_SCREENSHOT },
 	{LOCALE_EXTRA_KEY_PIP_CLOSE,		&g_settings.key_pip_close,		LOCALE_MENU_HINT_KEY_PIP_CLOSE },
 	{LOCALE_EXTRA_KEY_PIP_SETUP,		&g_settings.key_pip_setup,		LOCALE_MENU_HINT_KEY_PIP_SETUP },
