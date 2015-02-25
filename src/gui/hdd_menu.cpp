@@ -1098,7 +1098,7 @@ _remount:
 			safe_mkdir(cmd);
 			snprintf(cmd, sizeof(cmd), "%s/plugins", dst.c_str());
 			safe_mkdir(cmd);
-			sync();
+			// sync();
 		}
 	}
 _return:

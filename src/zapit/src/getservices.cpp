@@ -1017,7 +1017,7 @@ void CServiceManager::CopyFile(char * from, char * to)
         strcat(cmd, " ");
         strcat(cmd, to);
         system(cmd);
-	sync();
+	// sync();
 }
 
 void CServiceManager::WriteSatHeader(FILE * fd, sat_config_t &config)
