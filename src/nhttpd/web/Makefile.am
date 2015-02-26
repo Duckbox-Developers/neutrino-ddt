@@ -85,9 +85,18 @@ install_DATA =	channels.js \
 		Y_Tools_Timer_Sync.js \
 		Y_Tools_Timer_Sync.yhtm \
 		Y_Tools_tvshot.yhtm \
+		Y_User.css \
 		Y_Version.txt \
 		Y_VLC.js \
 		Y_Wait.yhtm \
 		ywidget.css \
 		ywidget.js \
 		Y_yweb.js
+
+# file manager
+install_DATA +=	accordion.js \
+		effects.js \
+		Y_Filemgr.css \
+		Y_Filemgr.yhtm \
+		Y_Filemgr_Edit.yhtm \
+		Y_Filemgr_blocks.txt
