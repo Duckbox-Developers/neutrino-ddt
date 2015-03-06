@@ -62,7 +62,7 @@ CComponentsText::CComponentsText(	const int x_pos, const int y_pos, const int w,
 
 CComponentsText::~CComponentsText()
 {
-	hide();
+	//hide();
 	clearCCText();
 }
 
@@ -146,6 +146,7 @@ void CComponentsText::initCCText()
 	ct_textbox->setTextColor(ct_col_text);
 	ct_textbox->setWindowMaxDimensions(iWidth, iHeight);
 	ct_textbox->setWindowMinDimensions(iWidth, iHeight);
+	ct_textbox->enableSaveScreen(save_tbox_screen);
 	ct_textbox->blit(false);
 
 	//observe behavior of parent form if available

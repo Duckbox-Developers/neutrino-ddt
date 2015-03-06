@@ -317,7 +317,7 @@ void CBEChannelSelectWidget::initItem2DetailsLine (int pos, int /*ch_index*/)
 
 void CBEChannelSelectWidget::hide()
 {
-  	if (dline)
-		dline->kill(); //kill details line
+	dline->kill(); //kill details line
+	ibox->kill();
 	CListBox::hide();
 }

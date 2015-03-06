@@ -192,6 +192,9 @@ void CComponentsFrmClock::initCCLockItems()
 		lbl->setColorAll(col_frame, col_body, col_shadow);
 		lbl->setText(stmp, CTextBox::CENTER, *getClockFont());
 
+		lbl->doPaintTextBoxBg(paint_bg);
+		lbl->enableTboxSaveScreen(save_tbox_screen);
+
 		//use matching height for digits for better vertical centerring into form
 		CTextBox* ctb = lbl->getCTextBoxObject();
 		if (ctb)
@@ -286,6 +289,7 @@ bool CComponentsFrmClock::startThread()
 			printf("[CComponentsFrmClock]    [%s]  pthread_create  %s\n", __func__, strerror(errno));
 			return false;
 		}
+		pthread_detach(cl_thread);
 	}
 	return  true;
 }
@@ -299,19 +303,20 @@ bool CComponentsFrmClock::stopThread()
 			printf("[CComponentsFrmClock]    [%s] pthread_cancel  %s\n", __func__, strerror(errno));
 			return false;
 		}
-
+#if 0
 		res = pthread_join(cl_thread, NULL);
 		if (res != 0){
 			printf("[CComponentsFrmClock]    [%s] pthread_join  %s\n", __func__, strerror(errno));
 			return false;
 		}
+#endif
 	}
 	hide();
 	cl_thread = 0;
 	return true;
 }
 
-bool CComponentsFrmClock::Start()
+bool CComponentsFrmClock::Start(bool do_save_bg)
 {
 	if (!activeClock)
 		return false;
@@ -319,7 +324,7 @@ bool CComponentsFrmClock::Start()
 		startThread();
 	if (cl_thread) {
 		//ensure paint of segements on first paint
-		paint();
+		paint(do_save_bg);
 		paintClock = true;
 	}
 	return cl_thread == 0 ? false : true;
