@@ -427,7 +427,7 @@ void CStreamInfo2::paint (int /*mode*/)
 
 		if (pip == NULL)
 			pip = new CComponentsPIP(width-width/3-10, y+10, 33);
-		pip->paint();
+		pip->paint(CC_SAVE_SCREEN_NO);
 
 		paint_techinfo (xpos, ypos);
 		paint_signal_fe_box (width - width/3 - 10, (y + 10 + height/3 + hheight), width/3, height/3 + hheight);
@@ -711,7 +711,7 @@ void CStreamInfo2::paintCASystem(int xpos, int ypos)
 {
 	unsigned short i;
 	int box_width = width*2/3-10;
-	if (box_h2 > 0)
+	if (box_h2 > ypos+(iheight*2))
 		frameBuffer->paintBox(0, ypos+(iheight*2), box_width, box_h2, COL_MENUHEAD_PLUS_0);
 
 	std::string casys[NUM_CAIDS]={"Irdeto:","Betacrypt:","Seca:","Viaccess:","Nagra:","Conax: ","Cryptoworks:","Videoguard:","EBU:","XCrypt:","PowerVU:"};

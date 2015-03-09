@@ -277,7 +277,7 @@ std::string CBEChannelSelectWidget::getInfoText(int index)
 void CBEChannelSelectWidget::paintDetails(int index)
 {
 	//details line
-	dline->paint();
+	dline->paint(CC_SAVE_SCREEN_NO);
 	
 	std::string str = getInfoText(index);
 	

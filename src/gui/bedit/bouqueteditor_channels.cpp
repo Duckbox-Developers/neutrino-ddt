@@ -167,11 +167,14 @@ void CBEChannelWidget::paint()
 	frameBuffer->paintBoxRel(x+ width- 15,ypos, 15, sb,  COL_MENUCONTENT_PLUS_1);
 
 	int sbc= ((Channels->size()- 1)/ listmaxshow)+ 1;
-	int sbs= (selected/listmaxshow);
 	if (sbc < 1)
 		sbc = 1;
 
-	frameBuffer->paintBoxRel(x+ width- 13, ypos+ 2+ sbs * (sb-4)/sbc, 11, (sb-4)/sbc,  COL_MENUCONTENT_PLUS_3);
+	int sbh= (sb- 4)/ sbc;
+	int sbs= (selected/listmaxshow);
+
+	if (sbh)
+		frameBuffer->paintBoxRel(x+ width- 13, ypos+ 2+ int(sbs* sbh) , 11, int(sbh),  COL_MENUCONTENT_PLUS_3);
 }
 
 void CBEChannelWidget::paintHead()
@@ -217,14 +220,14 @@ std::string CBEChannelWidget::getInfoText(int index)
 void CBEChannelWidget::paintDetails(int index)
 {
 	//details line
-	dline->paint();
+	dline->paint(CC_SAVE_SCREEN_NO);
 	
 	std::string str = getInfoText(index);
 	
 	//info box
 	ibox->setText(str, CTextBox::AUTO_WIDTH | CTextBox::NO_AUTO_LINEBREAK, g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]);
 	ibox->setColorBody(COL_MENUCONTENTDARK_PLUS_0);
-	ibox->paint(CC_SAVE_SCREEN_YES);
+	ibox->paint(CC_SAVE_SCREEN_NO);
 }
 
 void CBEChannelWidget::initItem2DetailsLine (int pos, int /*ch_index*/)
@@ -273,7 +276,7 @@ void CBEChannelWidget::clearItem2DetailsLine()
 void CBEChannelWidget::hide()
 {
 	frameBuffer->paintBackgroundBoxRel(x,y, width,height+footerHeight);
-	clearItem2DetailsLine ();
+ 	clearItem2DetailsLine ();
 	frameBuffer->blit();
 }
 
