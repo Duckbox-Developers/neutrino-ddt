@@ -129,14 +129,10 @@ class CFrameBuffer
 		bool locked;
 		std::map<std::string, rawIcon> icon_cache;
 		int cache_size;
-
-		bool corner_tl, corner_tr, corner_bl, corner_br;
-
 		void * int_convertRGB2FB(unsigned char *rgbbuff, unsigned long x, unsigned long y, int transp, bool alpha);
 		int m_transparent_default, m_transparent;
 
 		inline void paintHLineRelInternal2Buf(const int& x, const int& dx, const int& y, const int& box_dx, const fb_pixel_t& col, fb_pixel_t* buf);
-		void setCornerFlags(const int& type);
 
 		CFbAccel *accel;
 
@@ -169,7 +165,7 @@ class CFrameBuffer
 		int getFileHandle() const; //only used for plugins (games) !!
 		t_fb_var_screeninfo *getScreenInfo();
 
-		fb_pixel_t * getFrameBufferPointer(bool real = false); // pointer to framebuffer
+		fb_pixel_t * getFrameBufferPointer() const; // pointer to framebuffer
 		fb_pixel_t * getBackBufferPointer() const;  // pointer to backbuffer
 		unsigned int getStride() const;             // size of a single line in the framebuffer (in bytes)
 		unsigned int getScreenWidth(bool real = false);
@@ -221,7 +217,7 @@ class CFrameBuffer
 
 
 		void setIconBasePath(const std::string & iconPath);
-		std::string getIconBasePath() {return iconBasePath;}
+		std::string getIconBasePath(){return iconBasePath;}
 
 		void getIconSize(const char * const filename, int* width, int *height);
 		/* h is the height of the target "window", if != 0 the icon gets centered in that window */
@@ -266,7 +262,6 @@ class CFrameBuffer
 		void blitBox2FB(const fb_pixel_t* boxBuf, uint32_t width, uint32_t height, uint32_t xoff, uint32_t yoff);
 
 		void mark(int x, int y, int dx, int dy);
-		void blit();
 
 		enum 
 			{
@@ -336,6 +331,8 @@ class CFrameBuffer
 		void setFbArea(int element, int _x=0, int _y=0, int _dx=0, int _dy=0);
 		void fbNoCheck(bool noCheck) { fb_no_check = noCheck; }
 		void doPaintMuteIcon(bool mode) { do_paint_mute_icon = mode; }
+
+		void blit();
 };
 
 #endif

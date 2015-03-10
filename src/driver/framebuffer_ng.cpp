@@ -181,10 +181,6 @@ CFrameBuffer::CFrameBuffer()
 							// TM_NONE:  No 'pseudo' transparency
 							// TM_INI:   Transparency depends on g_settings.infobar_alpha ???
 	m_transparent = m_transparent_default;
-	corner_tl = false;
-	corner_tr = false;
-	corner_bl = false;
-	corner_br = false;
 //FIXME: test
 	memset(red, 0, 256*sizeof(__u16));
 	memset(green, 0, 256*sizeof(__u16));
@@ -219,7 +215,6 @@ void CFrameBuffer::setupGXA(void)
 void CFrameBuffer::init(const char * const)
 {
 	int tr = 0xFF;
-	accel = new CFbAccel(this);
 	cache_size = 0;
 
 	/* Windows Colors */
@@ -246,6 +241,7 @@ void CFrameBuffer::init(const char * const)
 
 	useBackground(false);
 	m_transparent = m_transparent_default;
+	accel = new CFbAccel(this);
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 	setMixerColor(g_settings.video_mixer_color);
 #endif
@@ -255,6 +251,9 @@ void CFrameBuffer::init(const char * const)
 
 CFrameBuffer::~CFrameBuffer()
 {
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	autoBlit(false);
+#endif
 	active = false; /* keep people/infoclocks from accessing */
 	std::map<std::string, rawIcon>::iterator it;
 
@@ -331,10 +330,8 @@ unsigned int CFrameBuffer::getScreenY()
 	return g_settings.screen_StartY;
 }
 
-fb_pixel_t * CFrameBuffer::getFrameBufferPointer(bool real)
+fb_pixel_t * CFrameBuffer::getFrameBufferPointer() const
 {
-	if (real)
-		return lfb;
 	if (active || (virtual_fb == NULL))
 		return accel->lbb;
 	else
@@ -514,6 +511,7 @@ void CFrameBuffer::paletteSet(struct fb_cmap *map)
 		//printf("Set palette for %dbit\n", bpp);
 		ioctl(fd, FBIOPUTCMAP, map);
 	}
+
 	uint32_t  rl, ro, gl, go, bl, bo, tl, to;
 
 	rl = screeninfo.red.length;
@@ -567,8 +565,12 @@ fb_pixel_t* CFrameBuffer::paintBoxRel2Buf(const int dx, const int dy, const fb_p
 	memset((void*)pixBuf, '\0', dx*dy*sizeof(fb_pixel_t));
 
 	if (type && radius) {
-		setCornerFlags(type);
 		radius = limitRadius(dx, dy, radius);
+
+		bool corner_tl = !!(type & CORNER_TOP_LEFT);
+		bool corner_tr = !!(type & CORNER_TOP_RIGHT);
+		bool corner_bl = !!(type & CORNER_BOTTOM_LEFT);
+		bool corner_br = !!(type & CORNER_BOTTOM_RIGHT);
 
 		int line = 0;
 		while (line < dy) {
@@ -653,10 +655,14 @@ fb_pixel_t* CFrameBuffer::paintBoxRel(const int x, const int y, const int dx, co
 void CFrameBuffer::paintBoxRel(const int x, const int y, const int dx, const int dy, const fb_pixel_t col, int radius, int type)
 {
 	/* draw a filled rectangle (with additional round corners) */
+
 	if (!getActive())
 		return;
 
-	setCornerFlags(type);
+	bool corner_tl = !!(type & CORNER_TOP_LEFT);
+	bool corner_tr = !!(type & CORNER_TOP_RIGHT);
+	bool corner_bl = !!(type & CORNER_BOTTOM_LEFT);
+	bool corner_br = !!(type & CORNER_BOTTOM_RIGHT);
 
 	checkFbArea(x, y, dx, dy, true);
 
@@ -835,9 +841,11 @@ bool CFrameBuffer::paintIcon(const std::string & filename, const int x, const in
 {
 	struct rawHeader header;
 	int         width, height;
+	int              lfd;
 	fb_pixel_t * data;
 	struct rawIcon tmpIcon;
 	std::map<std::string, rawIcon>::iterator it;
+	int dsize;
 
 	if (!getActive())
 		return false;
@@ -858,7 +866,7 @@ bool CFrameBuffer::paintIcon(const std::string & filename, const int x, const in
 		data = g_PicViewer->getIcon(newname, &width, &height);
 
 		if(data) {
-			int dsize = width*height*sizeof(fb_pixel_t);
+			dsize = width*height*sizeof(fb_pixel_t);
 			//printf("CFrameBuffer::paintIcon: %s found, data %x size %d x %d\n", newname.c_str(), data, width, height);fflush(stdout);
 			if(cache_size+dsize < ICON_CACHE_SIZE) {
 				cache_size += dsize;
@@ -875,18 +883,33 @@ bool CFrameBuffer::paintIcon(const std::string & filename, const int x, const in
 		if (access(newname.c_str(), F_OK))
 			newname = iconBasePath + filename + ".raw";
 
-		int lfd = open(newname.c_str(), O_RDONLY);
+		lfd = open(newname.c_str(), O_RDONLY);
 
 		if (lfd == -1) {
 			//printf("paintIcon: error while loading icon: %s\n", newname.c_str());
 			return false;
 		}
-		read(lfd, &header, sizeof(struct rawHeader));
+
+		ssize_t s = read(lfd, &header, sizeof(struct rawHeader));
+		if (s < 0) {
+			perror("read");
+			return false;
+		}
+
+		if (s < (ssize_t) sizeof(rawHeader)){
+			printf("paintIcon: error while loading icon: %s, header too small\n", newname.c_str());
+			return false;
+		}
+
 
 		tmpIcon.width = width  = (header.width_hi  << 8) | header.width_lo;
 		tmpIcon.height = height = (header.height_hi << 8) | header.height_lo;
+		if (!width || !height) {
+			printf("paintIcon: error while loading icon: %s, wrong dimensions (%dHx%dW)\n", newname.c_str(), height, width);
+			return false;
+		}
 
-		int dsize = width*height*sizeof(fb_pixel_t);
+		dsize = width*height*sizeof(fb_pixel_t);
 
 		tmpIcon.data = (fb_pixel_t*) cs_malloc_uncached(dsize);
 		data = tmpIcon.data;
@@ -973,22 +996,16 @@ void CFrameBuffer::loadPal(const std::string & filename, const unsigned char off
 	close(lfd);
 }
 
-
-void CFrameBuffer::setCornerFlags(const int& type)
-{
-	corner_tl = (type & CORNER_TOP_LEFT)     == CORNER_TOP_LEFT;
-	corner_tr = (type & CORNER_TOP_RIGHT)    == CORNER_TOP_RIGHT;
-	corner_bl = (type & CORNER_BOTTOM_LEFT)  == CORNER_BOTTOM_LEFT;
-	corner_br = (type & CORNER_BOTTOM_RIGHT) == CORNER_BOTTOM_RIGHT;
-}
-
 void CFrameBuffer::paintBoxFrame(const int x, const int y, const int dx, const int dy, const int px, const fb_pixel_t col, const int rad, int type)
 {
 	if (!getActive())
 		return;
 
 	int radius = rad;
-	setCornerFlags(type);
+	bool corner_tl = !!(type & CORNER_TOP_LEFT);
+	bool corner_tr = !!(type & CORNER_TOP_RIGHT);
+	bool corner_bl = !!(type & CORNER_BOTTOM_LEFT);
+	bool corner_br = !!(type & CORNER_BOTTOM_RIGHT);
 
 	int r_tl = 0, r_tr = 0, r_bl = 0, r_br = 0;
 	if (type && radius) {
@@ -1212,7 +1229,15 @@ void * CFrameBuffer::int_convertRGB2FB(unsigned char *rgbbuff, unsigned long x, 
 {
 	unsigned long i;
 	unsigned int *fbbuff;
-	unsigned long count = x * y;
+	unsigned long count;
+
+	if (!x || !y) {
+		printf("convertRGB2FB%s: Error: invalid dimensions (%luX x %luY)\n",
+		       ((alpha) ? " (Alpha)" : ""), x, y);
+		return NULL;
+	}
+
+	count = x * y;
 
 	fbbuff = (unsigned int *) cs_malloc_uncached(count * sizeof(unsigned int));
 	if(fbbuff == NULL) {
@@ -1398,6 +1423,19 @@ void CFrameBuffer::ClearFB(void)
 {
 	accel->ClearFB();
 }
+
+void CFrameBuffer::setMixerColor(uint32_t mixer_background)
+{
+	struct stmfbio_output_configuration outputConfig;
+	memset(&outputConfig, 0, sizeof(outputConfig));
+	outputConfig.outputid = STMFBIO_OUTPUTID_MAIN;
+	outputConfig.activate = STMFBIO_ACTIVATE_IMMEDIATE;
+	outputConfig.caps = STMFBIO_OUTPUT_CAPS_MIXER_BACKGROUND;
+	outputConfig.mixer_background = mixer_background;
+	if(ioctl(fd, STMFBIO_SET_OUTPUT_CONFIG, &outputConfig) < 0)
+		perror("setting output configuration failed");
+}
+
 void *CFrameBuffer::autoBlitThread(void *arg)
 {
 	set_threadname("autoblit");
@@ -1425,18 +1463,6 @@ void CFrameBuffer::autoBlit(bool b)
 		pthread_join(autoBlitThreadId, NULL);
 		autoBlitThreadId = 0;
 	}
-}
-
-void CFrameBuffer::setMixerColor(uint32_t mixer_background)
-{
-	struct stmfbio_output_configuration outputConfig;
-	memset(&outputConfig, 0, sizeof(outputConfig));
-	outputConfig.outputid = STMFBIO_OUTPUTID_MAIN;
-	outputConfig.activate = STMFBIO_ACTIVATE_IMMEDIATE;
-	outputConfig.caps = STMFBIO_OUTPUT_CAPS_MIXER_BACKGROUND;
-	outputConfig.mixer_background = mixer_background;
-	if(ioctl(fd, STMFBIO_SET_OUTPUT_CONFIG, &outputConfig) < 0)
-		perror("setting output configuration failed");
 }
 #endif
 
@@ -1535,4 +1561,3 @@ void CFrameBuffer::blit()
 {
 	accel->blit();
 };
-
