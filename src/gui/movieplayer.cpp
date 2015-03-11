@@ -388,7 +388,10 @@ void CMoviePlayerGui::updateLcd()
  && !defined(BOXMODEL_HS7110) \
  && !defined(BOXMODEL_HS7810A) \
  && !defined(BOXMODEL_HS7119) \
- && !defined(BOXMODEL_HS7819)
+ && !defined(BOXMODEL_HS7819) \
+ && !defined(BOXMODEL_IPBOX9900) \
+ && !defined(BOXMODEL_IPBOX99) \
+ && !defined(BOXMODEL_IPBOX55)
 			lcd = "|| ";
 #else
 			lcd = "";
@@ -407,7 +410,10 @@ void CMoviePlayerGui::updateLcd()
  && !defined(BOXMODEL_HS7110) \
  && !defined(BOXMODEL_HS7810A) \
  && !defined(BOXMODEL_HS7119) \
- && !defined(BOXMODEL_HS7819)
+ && !defined(BOXMODEL_HS7819) \
+ && !defined(BOXMODEL_IPBOX9900) \
+ && !defined(BOXMODEL_IPBOX99) \
+ && !defined(BOXMODEL_IPBOX55)
 			} else
 				lcd = "|| ";
 #else
@@ -436,7 +442,10 @@ void CMoviePlayerGui::updateLcd()
  && !defined(BOXMODEL_HS7810A) \
  && !defined(BOXMODEL_HS7119) \
  && !defined(BOXMODEL_HS7819) \
- && !defined(BOXMODEL_CUBEREVO_MINI2)
+ && !defined(BOXMODEL_CUBEREVO_MINI2) \
+ && !defined(BOXMODEL_IPBOX9900) \
+ && !defined(BOXMODEL_IPBOX99) \
+ && !defined(BOXMODEL_IPBOX55)
 			lcd = "> ";
 #endif
 			break;
