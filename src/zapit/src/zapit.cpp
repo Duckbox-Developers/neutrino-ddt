@@ -1300,6 +1300,7 @@ bool CZapit::ParseCommand(CBasicMessage::Header &rmsg, int connfd)
 
 	case CZapitMessages::CMD_GET_DELIVERY_SYSTEM: {
 		CZapitMessages::responseDeliverySystem response;
+		VALGRIND_PARANOIA(response);
 		response.system = live_fe->getCurrentDeliverySystem();
 		CBasicServer::send_data(connfd, &response, sizeof(response));
 		break;
@@ -1938,6 +1939,17 @@ bool CZapit::ParseCommand(CBasicMessage::Header &rmsg, int connfd)
 			audioDecoder->mute();
 		else
 			audioDecoder->unmute();
+		break;
+	}
+
+	case CZapitMessages::CMD_LOCKRC: {
+		CZapitMessages::commandBoolean msgBoolean;
+		CBasicServer::receive_data(connfd, &msgBoolean, sizeof(msgBoolean));
+		extern CRCInput *g_RCInput;
+		if (msgBoolean.truefalse)
+			g_RCInput->stopInput();
+		else
+			g_RCInput->restartInput();
 		break;
 	}
 

@@ -1270,6 +1270,7 @@ void CRCInput::getMsg_us(neutrino_msg_t * msg, neutrino_msg_data_t * data, uint6
 					firstKey = false;
 					CTimerManager::getInstance()->cancelShutdownOnWakeup();
 				}
+
 				uint32_t trkey = translate(ev.code);
 #ifdef _DEBUG
 				printf("%d key: %04x value %d, translate: %04x -%s-\n", ev.value, ev.code, ev.value, trkey, getKeyName(trkey).c_str());
@@ -1357,12 +1358,6 @@ void CRCInput::getMsg_us(neutrino_msg_t * msg, neutrino_msg_data_t * data, uint6
 						{
 							last_keypress = now_pressed;
 
-							FILE* rclocked = fopen("/tmp/rc.locked", "r");
-							if (rclocked)
-							{
-								fclose(rclocked);
-								continue;
-							}
 							*msg = trkey;
 							*data = 0; /* <- button pressed */
 							if(g_settings.key_click)
