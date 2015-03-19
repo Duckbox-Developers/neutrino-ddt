@@ -226,6 +226,7 @@ bool CPictureViewer::DecodeImage (const std::string & _name, bool showBusySign, 
 		printf ("Unable to read file or format not recognized!\n");
 		if (m_NextPic_Buffer != NULL) {
 			free (m_NextPic_Buffer);
+			m_NextPic_Buffer = NULL;
 		}
 		m_NextPic_Buffer = (unsigned char *) malloc (3);
 		if (m_NextPic_Buffer == NULL) {
