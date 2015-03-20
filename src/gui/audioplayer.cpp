@@ -1149,9 +1149,9 @@ void CAudioPlayerGui::scanXmlData(xmlDocPtr answer_parser, const char *nametag, 
 			neutrino_msg_data_t data;
 			g_RCInput->getMsg(&msg, &data, 0);
 			while (element && msg != CRCInput::RC_home) {
-				char *ptr = NULL;
-				char *name = NULL;
-				char *url = NULL;
+				const char *ptr = NULL;
+				const char *name = NULL;
+				const char *url = NULL;
 				time_t bitrate = 0;
 				bool skip = true;
 				listPos++;
@@ -1164,7 +1164,7 @@ void CAudioPlayerGui::scanXmlData(xmlDocPtr answer_parser, const char *nametag, 
 #endif // LCD_UPDATE
 
 				if (usechild) {
-					char *type = NULL;
+					const char *type = NULL;
 					xmlNodePtr child = element->xmlChildrenNode;
 					while (child) {
 						if (strcmp(xmlGetName(child), nametag) == 0)
@@ -1180,10 +1180,12 @@ void CAudioPlayerGui::scanXmlData(xmlDocPtr answer_parser, const char *nametag, 
 						}
 						child = child->xmlNextNode;
 					}
-					if 	(strcmp("audio/mpeg", type) == 0) 	skip = false;
-					else if (strcmp("application/ogg", type) == 0) 	skip = false;
-					else if (strcmp("mp3", type) == 0) 		skip = false;
-					else if (strcmp("application/mp3", type) == 0) 	skip = false;
+					if(type){
+						if 	(strcmp("audio/mpeg", type) == 0) 	skip = false;
+						else if (strcmp("application/ogg", type) == 0) 	skip = false;
+						else if (strcmp("mp3", type) == 0) 		skip = false;
+						else if (strcmp("application/mp3", type) == 0) 	skip = false;
+					}
 				} else {
 					url = xmlGetAttribute(element, urltag);
 					name = xmlGetAttribute(element, nametag);
