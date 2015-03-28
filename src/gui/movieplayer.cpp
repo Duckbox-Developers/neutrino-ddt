@@ -611,6 +611,11 @@ bool CMoviePlayerGui::SelectFile()
 	info_2 = "";
 	pretty_name.clear();
 	file_name.clear();
+	//reinit Path_local for webif reloadsetup
+	if (g_settings.network_nfs_moviedir.empty())
+		Path_local = "/";
+	else
+		Path_local = g_settings.network_nfs_moviedir;
 
 	printf("CMoviePlayerGui::SelectFile: isBookmark %d timeshift %d isMovieBrowser %d\n", isBookmark, timeshift, isMovieBrowser);
 
