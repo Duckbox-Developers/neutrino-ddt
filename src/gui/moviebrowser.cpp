@@ -1294,6 +1294,7 @@ void CMovieBrowser::info_hdd_level(bool paint_hdd)
 	if (show_mode == MB_SHOW_YT)
 		return;
 
+/*
 	struct statfs s;
 	long	blocks_percent_used =0;
 	static long tmp_blocks_percent_used = 0;
@@ -1306,11 +1307,13 @@ void CMovieBrowser::info_hdd_level(bool paint_hdd)
 
 	if (tmp_blocks_percent_used != blocks_percent_used || paint_hdd) {
 		tmp_blocks_percent_used = blocks_percent_used;
+*/
+	if (g_settings.infobar_show_sysfs_hdd) {
 		const short pbw = 100;
 		const short border = m_cBoxFrameTitleRel.iHeight/4;
 		CProgressBar pb(m_cBoxFrame.iX+ m_cBoxFrameFootRel.iWidth - pbw - border, m_cBoxFrame.iY+m_cBoxFrameTitleRel.iY + border, pbw, m_cBoxFrameTitleRel.iHeight/2);
 		pb.setType(CProgressBar::PB_REDRIGHT);
-		pb.setValues(blocks_percent_used, 100);
+		pb.setValues(cHddStat::getInstance()->getPercent(), 100);
 		pb.paint(false);
 	}
 
