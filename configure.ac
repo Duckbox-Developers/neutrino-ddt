@@ -140,7 +140,11 @@ AC_ARG_ENABLE(freesatepg,
 AC_ARG_ENABLE(fastscan,
 	AS_HELP_STRING(--enable-fastscan,include FASTSCAN support),
 	,[enable_fastscan=no])
+
 AM_CONDITIONAL(ENABLE_FASTSCAN,test "$enable_fastscan" = "yes")
+if test "$enable_fastscan" = "yes"; then
+	AC_DEFINE(ENABLE_FASTSCAN,1,[include FASTSCAN support])
+fi
 
 AC_ARG_ENABLE(graphlcd,
 	[  --enable-graphlcd                    enable GraphLCD support],
