@@ -51,9 +51,8 @@ function do_snapshot() {
 		dbox_exec_tools("{=var-get:fbshot=} fb /tmp/"+filename+".png");
 	else
 		loadSyncURL("/control/screenshot?name="+filename+"&osd="+enableOSD+"&video="+enableVideo);
-		do_showshot_bmp(filename);
-	}
 
+	do_showshot(filename);	
 }
 function do_showshot(_filename) {
 	if (_filename == "")
