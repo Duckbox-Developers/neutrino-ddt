@@ -47,12 +47,13 @@ function do_snapshot() {
 		filename = id("filename").value;
 	}
 
-	if ("{=var-get:fbshot=}" != "" && enableVideo == 0)
+	if ("{=var-get:fbshot=}" != "" && enableVideo == 0) {
 		dbox_exec_tools("fbshot fb /tmp/"+filename+".png");
-	else
+		do_showshot(filename);
+	} else {
 		loadSyncURL("/control/screenshot?name="+filename+"&osd="+enableOSD+"&video="+enableVideo);
-
-	do_showshot(filename);	
+		do_showshot_bmp(filename);
+	}
 }
 function do_showshot(_filename) {
 	if (_filename == "")
