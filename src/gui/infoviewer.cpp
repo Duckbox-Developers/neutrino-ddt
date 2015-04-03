@@ -926,11 +926,7 @@ void CInfoViewer::loop(bool show_dot)
 			res = CNeutrinoApp::getInstance()->handleMsg(msg, data);
 		} else if (!fileplay && !CMoviePlayerGui::getInstance().timeshift) {
 			CNeutrinoApp *neutrino = CNeutrinoApp::getInstance ();
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
-			if ((msg == (neutrino_msg_t) g_settings.key_quickzap_up) || (msg == (neutrino_msg_t) g_settings.key_quickzap_down) || (msg == CRCInput::RC_left)  || (msg == CRCInput::RC_right) || (msg == CRCInput::RC_page_up) || (msg == CRCInput::RC_page_down) || (msg == CRCInput::RC_0) || (msg == NeutrinoMessages::SHOW_INFOBAR)) {
-#else
 			if ((msg == (neutrino_msg_t) g_settings.key_quickzap_up) || (msg == (neutrino_msg_t) g_settings.key_quickzap_down) || (msg == CRCInput::RC_0) || (msg == NeutrinoMessages::SHOW_INFOBAR)) {
-#endif
 				hideIt = false; // default
 				if ((g_settings.radiotext_enable) && (neutrino->getMode() == NeutrinoMessages::mode_radio))
 					hideIt =  true;
