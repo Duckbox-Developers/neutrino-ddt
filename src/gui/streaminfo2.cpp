@@ -633,6 +633,13 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 	// paint labels
 	int fontW = g_Font[font_small]->getWidth();
 	spaceoffset = 7 * fontW;
+
+	//iconname
+	ypos+= sheight;
+	sprintf(buf, "%llx.png", channel->getChannelID() & 0xFFFFFFFFFFFFULL);
+	g_Font[font_small]->RenderString(xpos, ypos, box_width, "Iconname:" , COL_INFOBAR_TEXT);
+	g_Font[font_small]->RenderString(xpos+spaceoffset, ypos, box_width, buf, COL_INFOBAR_TEXT);
+
 	//onid
 	ypos+= sheight;
 	sprintf(buf, "0x%04X (%i)", channel->getOriginalNetworkId(), channel->getOriginalNetworkId());
