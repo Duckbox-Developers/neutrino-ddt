@@ -33,6 +33,7 @@
 #include <connection/basicclient.h>
 
 #include <timerdclient/timerdtypes.h>
+#include <system/helpers.h>
 
 class CTimerdClient:private CBasicClient
 {

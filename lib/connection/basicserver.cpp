@@ -26,6 +26,8 @@
 #include "basicserver.h"
 #include "basicsocket.h"
 
+#include <system/helpers.h>
+
 #include <cstdio>
 #include <cstdlib>
 
@@ -88,7 +90,7 @@ bool CBasicServer::prepare(const char* socketname)
 
 	memset(&servaddr, 0, sizeof(struct sockaddr_un));
 	servaddr.sun_family = AF_UNIX;
-	strcpy(servaddr.sun_path, socketname);
+	cstrncpy(servaddr.sun_path, socketname, sizeof(servaddr.sun_path));
 	clilen = sizeof(servaddr.sun_family) + strlen(servaddr.sun_path);
 
 	unlink(socketname);

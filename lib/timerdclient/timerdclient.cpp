@@ -55,7 +55,7 @@ void CTimerdClient::registerEvent(unsigned int eventID, unsigned int clientID, c
 	msg2.eventID = eventID;
 	msg2.clientID = clientID;
 
-	strcpy(msg2.udsName, udsName);
+	cstrncpy(msg2.udsName, udsName, sizeof(msg2.udsName));
 
 	send(CTimerdMsg::CMD_REGISTEREVENT, (char*)&msg2, sizeof(msg2));
 

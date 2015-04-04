@@ -279,7 +279,7 @@ int CRemoteControl::handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t data
 		if ( !is_video_started )
 			g_RCInput->postMsg( NeutrinoMessages::EVT_PROGRAMLOCKSTATUS, 0x100, false );
 
-	    return messages_return::handled;
+		return messages_return::handled;
 	}
 	else if (msg == NeutrinoMessages::EVT_NOEPG_YET)
 	{

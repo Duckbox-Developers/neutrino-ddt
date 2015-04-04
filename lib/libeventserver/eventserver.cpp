@@ -28,12 +28,13 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <unistd.h>
+#include <system/helpers.h>
 
 #include "eventserver.h"
 
 void CEventServer::registerEvent2(const unsigned int eventID, const unsigned int ClientID, const std::string &udsName)
 {
-	strcpy(eventData[eventID][ClientID].udsName, udsName.c_str());
+	cstrncpy(eventData[eventID][ClientID].udsName, udsName.c_str(), sizeof(eventData[eventID][ClientID].udsName));
 }
 
 void CEventServer::registerEvent(const int fd)
@@ -80,7 +81,7 @@ bool CEventServer::sendEvent2Client(const unsigned int eventID, const initiators
 
 	memset(&servaddr, 0, sizeof(struct sockaddr_un));
 	servaddr.sun_family = AF_UNIX;
-	strcpy(servaddr.sun_path, ClientData->udsName);
+	cstrncpy(servaddr.sun_path, ClientData->udsName, sizeof(servaddr.sun_path));
 	clilen = sizeof(servaddr.sun_family) + strlen(servaddr.sun_path);
 
 	if ((sock_fd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0)

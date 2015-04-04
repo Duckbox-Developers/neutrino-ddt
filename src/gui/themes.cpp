@@ -51,7 +51,7 @@
 #include "themes.h"
 
 #define THEMEDIR DATADIR "/neutrino/themes/"
-#define THEMEDIR_VAR "/var/tuxbox/themes/"
+#define THEMEDIR_VAR CONFIGDIR "/themes/"
 #define USERDIR CONFIGDIR "/themes/"
 #define FILE_PREFIX ".theme"
 

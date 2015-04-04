@@ -312,8 +312,8 @@ int CAudioPlayerGui::exec(CMenuTarget* parent, const std::string &actionKey)
 	if (my_system(AUDIOPLAYER_END_SCRIPT) != 0)
 		perror(AUDIOPLAYER_END_SCRIPT " failed");
 
-	g_Zapit->unlockPlayBack();
-	//CZapit::getInstance()->EnablePlayback(true);
+	//g_Zapit->unlockPlayBack();
+	CZapit::getInstance()->EnablePlayback(true);
 	// Start Sectionsd
 	g_Sectionsd->setPauseScanning(false);
 	videoDecoder->StopPicture();
