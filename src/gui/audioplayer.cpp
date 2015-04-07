@@ -669,7 +669,6 @@ int CAudioPlayerGui::show()
 						old_select = select;
 					switch (select) {
 					case 0:
-						m_playlist.clear();
 						scanXmlFile(RADIO_STATION_XML_FILE);
 						CVFD::getInstance()->setMode(CVFD::MODE_AUDIO);
 						paintLCD();

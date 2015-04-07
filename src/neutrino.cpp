@@ -751,9 +751,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 
 	loadKeys();
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 	g_settings.key_playbutton = configfile.getInt32("key_playbutton", 0);
-#endif
 	g_settings.timeshift_pause = configfile.getInt32( "timeshift_pause", 1 );
 
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
@@ -785,9 +783,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.channellist_progressbar_design = configfile.getInt32("channellist_progressbar_design", g_settings.progressbar_design);
 	g_settings.channellist_foot	= configfile.getInt32("channellist_foot"          , 1);//default next Event
 	g_settings.channellist_new_zap_mode = configfile.getInt32("channellist_new_zap_mode", 1);
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 	g_settings.channellist_hdicon = configfile.getInt32("channellist_hdicon", 0); //default off
-#endif
 	g_settings.channellist_sort_mode  = configfile.getInt32("channellist_sort_mode", 0);//sort mode: alpha, freq, sat
 	g_settings.channellist_numeric_adjust  = configfile.getInt32("channellist_numeric_adjust", 0);
 	g_settings.channellist_show_channellogo = configfile.getInt32("channellist_show_channellogo", 1);
@@ -1315,9 +1311,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 
 	saveKeys();
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 	configfile.setInt32 ("key_playbutton", g_settings.key_playbutton );
-#endif
 	configfile.setInt32( "timeshift_pause", g_settings.timeshift_pause );
 	configfile.setInt32( "temp_timeshift", g_settings.temp_timeshift );
 	configfile.setInt32( "auto_timeshift", g_settings.auto_timeshift );
@@ -2728,11 +2722,7 @@ void CNeutrinoApp::RealRun(CMenuWidget &mainMenu)
 				media->setUsageMode(CMediaPlayerMenu::MODE_AUDIO);
 				media->exec(NULL, "");
 			}
-#if HAVE_DUCKBOX_HARDWARE || BOXMODEL_SPARK7162
 			else if( msg == CRCInput::RC_video ) {
-#else
-			else if( msg == CRCInput::RC_video || msg == CRCInput::RC_play ) {
-#endif
 				//open moviebrowser via media player menu object
 				if (g_settings.recording_type != CNeutrinoApp::RECORDING_OFF)
 					CMediaPlayerMenu::getInstance()->exec(NULL,"movieplayer");

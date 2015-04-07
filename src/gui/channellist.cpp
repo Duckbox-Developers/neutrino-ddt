@@ -479,11 +479,9 @@ void CChannelList::calcSize()
 
 	// calculate height (the infobox below mainbox is handled outside height)
 	info_height = 2*fheight + fdescrheight + 10;
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 	if (g_settings.channellist_additional != 0)
 		if (g_settings.channellist_foot != 0)
 			info_height = 2*fheight + 10; 
-#endif
 	height = pig_on_win ?  frameBuffer->getScreenHeight(): frameBuffer->getScreenHeightRel();
 	height = height - info_height;
 
@@ -602,13 +600,11 @@ int CChannelList::show()
 
 	new_zap_mode = g_settings.channellist_new_zap_mode;
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 	if (CNeutrinoApp::getInstance()->getMode() == NeutrinoMessages::mode_radio)
 		if (g_settings.channellist_additional == 2) {
 			previous_channellist_additional = g_settings.channellist_additional;
 			g_settings.channellist_additional = 1;
 		}
-#endif
 	calcSize();
 	displayNext = false;
 
@@ -971,11 +967,9 @@ int CChannelList::show()
 
 void CChannelList::hide()
 {
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 	if (CNeutrinoApp::getInstance()->getMode() == NeutrinoMessages::mode_radio)
 		if (g_settings.channellist_additional == 1 && previous_channellist_additional == 2)
 			g_settings.channellist_additional = 2;
-#endif
 	if ((g_settings.channellist_additional == 2) || (previous_channellist_additional == 2)) // with miniTV
 	{
 		if (cc_minitv)
@@ -1952,7 +1946,7 @@ void CChannelList::paintItem(int pos, const bool firstpaint)
 		if (paintbuttons)
 			paintButtonBar(iscurrent);
 
-		int icon_space = r_icon_w+s_icon_w+h_icon_w+8; //+8 to be sure
+		int icon_space = r_icon_w+s_icon_w+h_icon_w+8;
 
 		//channel numbers
 		int icon_w = 0, icon_h = 0;
