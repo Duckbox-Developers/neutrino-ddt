@@ -29,11 +29,7 @@
 #include "controlapi.h"
 #include "lcdapi.h"
 
-#if HAVE_DUCKBOX_HARDWARE
-#define EVENTDEV "/dev/event0"
-#else
 #define EVENTDEV "/dev/input/event0"
-#endif
 //-----------------------------------------------------------------------------
 enum {	// not defined in input.h but used like that, at least in 2.4.22
 	KEY_RELEASED = 0,
