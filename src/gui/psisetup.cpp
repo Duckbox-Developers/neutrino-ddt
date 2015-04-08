@@ -189,65 +189,65 @@ int CPSISetup::exec (CMenuTarget * parent, const std::string &)
 	int direction = 1; // down
 	switch (msg)
 	{
-	case CRCInput::RC_up:
-		direction = -1;
-	case CRCInput::RC_down:
-		if (selected + direction > -1 && selected + direction < PSI_SCALE_COUNT)
-		{
-			psi_list[selected].selected = false;
-			paintSlider (selected);
-			selected += direction;
-			psi_list[selected].selected = true;
-			paintSlider (selected);
-		}
-		break;
-	case CRCInput::RC_right:
-		if (selected < PSI_RESET && psi_list[selected].value < 255)
-		{
-			int val = psi_list[selected].value + g_settings.psi_step;
-			psi_list[selected].value = (val > 255) ? 255 : val;
-			paintSlider (selected);
-			videoDecoder->SetControl(psi_list[selected].control, psi_list[selected].value);
-		}
-		break;
-	case CRCInput::RC_left:
-		if (selected < PSI_RESET && psi_list[selected].value > 0)
-		{
-			int val = psi_list[selected].value - g_settings.psi_step;
-			psi_list[selected].value = (val < 0) ? 0 : val;
-			paintSlider (selected);
-			videoDecoder->SetControl(psi_list[selected].control, psi_list[selected].value);
-		}
-		break;
-	case CRCInput::RC_home:	// exit -> revert changes
-		for (i = 0; (i < PSI_RESET) && (psi_list[i].value == psi_list[i].value_old); i++);
-		if (ShowMsg(name, LOCALE_MESSAGEBOX_ACCEPT, CMessageBox::mbrYes, CMessageBox::mbYes | CMessageBox::mbCancel) == CMessageBox::mbrCancel)
-			for (i = 0; i < PSI_RESET; i++)
+		case CRCInput::RC_up:
+			direction = -1;
+		case CRCInput::RC_down:
+			if (selected + direction > -1 && selected + direction < PSI_SCALE_COUNT)
 			{
-				psi_list[i].value = psi_list[i].value_old;
+				psi_list[selected].selected = false;
+				paintSlider (selected);
+				selected += direction;
+				psi_list[selected].selected = true;
+				paintSlider (selected);
+			}
+			break;
+		case CRCInput::RC_right:
+			if (selected < PSI_RESET && psi_list[selected].value < 255)
+			{
+				int val = psi_list[selected].value + g_settings.psi_step;
+				psi_list[selected].value = (val > 255) ? 255 : val;
+				paintSlider (selected);
 				videoDecoder->SetControl(psi_list[selected].control, psi_list[selected].value);
 			}
-	case CRCInput::RC_ok:
-		if (selected != PSI_RESET)
-		{
-			loop = false;
-			g_settings.psi_contrast = psi_list[PSI_CONTRAST].value;
-			g_settings.psi_saturation = psi_list[PSI_SATURATION].value;
-			g_settings.psi_brightness = psi_list[PSI_BRIGHTNESS].value;
-			g_settings.psi_tint = psi_list[PSI_TINT].value;
 			break;
+		case CRCInput::RC_left:
+			if (selected < PSI_RESET && psi_list[selected].value > 0)
+			{
+				int val = psi_list[selected].value - g_settings.psi_step;
+				psi_list[selected].value = (val < 0) ? 0 : val;
+				paintSlider (selected);
+				videoDecoder->SetControl(psi_list[selected].control, psi_list[selected].value);
+			}
+			break;
+		case CRCInput::RC_home:	// exit -> revert changes
+			for (i = 0; (i < PSI_RESET) && (psi_list[i].value == psi_list[i].value_old); i++);
+			if (ShowMsg(name, LOCALE_MESSAGEBOX_ACCEPT, CMessageBox::mbrYes, CMessageBox::mbYes | CMessageBox::mbCancel) == CMessageBox::mbrCancel)
+				for (i = 0; i < PSI_RESET; i++)
+				{
+					psi_list[i].value = psi_list[i].value_old;
+					videoDecoder->SetControl(psi_list[selected].control, psi_list[selected].value);
+				}
+		case CRCInput::RC_ok:
+			if (selected != PSI_RESET)
+			{
+				loop = false;
+				g_settings.psi_contrast = psi_list[PSI_CONTRAST].value;
+				g_settings.psi_saturation = psi_list[PSI_SATURATION].value;
+				g_settings.psi_brightness = psi_list[PSI_BRIGHTNESS].value;
+				g_settings.psi_tint = psi_list[PSI_TINT].value;
+				break;
+			}
+		case CRCInput::RC_red:
+			for (i = 0; i < PSI_RESET; i++)
+			{
+				psi_list[i].value = 128;
+				videoDecoder->SetControl(psi_list[i].control, psi_list[i].value);
+				paintSlider (i);
+			}
+			break;
+		default:
+			;
 		}
-	case CRCInput::RC_red:
-		for (i = 0; i < PSI_RESET; i++)
-		{
-			psi_list[i].value = 128;
-			videoDecoder->SetControl(psi_list[i].control, psi_list[i].value);
-			paintSlider (i);
-		}
-		break;
-	default:
-		;
-	}
 	}
 
 	hide ();
