@@ -479,9 +479,12 @@ void CChannelList::calcSize()
 
 	// calculate height (the infobox below mainbox is handled outside height)
 	info_height = 2*fheight + fdescrheight + 10;
-	if (g_settings.channellist_additional != 0)
-		if (g_settings.channellist_foot != 0)
-			info_height = 2*fheight + 10; 
+	if (g_settings.channellist_additional != 0) {
+		if (g_settings.channellist_foot == 2) //j00zek, disabled footer fix
+			info_height = 0; 
+		 else if (g_settings.channellist_foot != 0)
+			info_height = 2*fheight + 10;
+	}
 	height = pig_on_win ?  frameBuffer->getScreenHeight(): frameBuffer->getScreenHeightRel();
 	height = height - info_height;
 
@@ -1547,6 +1550,7 @@ void CChannelList::paintDetails(int index)
 	//colored_events init
 	bool colored_event_C = false;
 	bool colored_event_N = false;
+  if (g_settings.channellist_foot != 2) { //j00zek disabled footer fix
 	if (g_settings.colored_events_channellist == 1)
 		colored_event_C = true;
 	if (g_settings.colored_events_channellist == 2)
@@ -1658,6 +1662,7 @@ void CChannelList::paintDetails(int index)
 			g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_DESCR]->RenderString(x+ full_width- 10- from_len, y+ height+ 5+ 2*fheight+ fdescrheight, from_len, cFrom, colored_event_N ? COL_COLORED_EVENTS_TEXT : COL_MENUCONTENTDARK_TEXT);
 		}
 	}
+  }
 	if ((g_settings.channellist_additional) && (p_event != NULL))
 	{
 		if (displayList)
@@ -1863,7 +1868,8 @@ void CChannelList::paintItem(int pos, const bool firstpaint)
 	if (curr == selected) {
 		color   = COL_MENUCONTENTSELECTED_TEXT;
 		bgcolor = COL_MENUCONTENTSELECTED_PLUS_0;
-		paintItem2DetailsLine (pos);
+		if (g_settings.channellist_foot != 2) //j00zek disabled footer fix
+			paintItem2DetailsLine (pos);
 		paintDetails(curr);
 		c_rad_small = RADIUS_LARGE;
 		paintbuttons = true;
