@@ -1550,12 +1550,26 @@ void CChannelList::paintDetails(int index)
 	//colored_events init
 	bool colored_event_C = false;
 	bool colored_event_N = false;
-  if (g_settings.channellist_foot != 2) { //j00zek disabled footer fix
 	if (g_settings.colored_events_channellist == 1)
 		colored_event_C = true;
 	if (g_settings.colored_events_channellist == 2)
 		colored_event_N = true;
 
+	if (g_settings.channellist_foot == 2) { //j00zek disabled footer fix
+		if (displayNext)
+			p_event = &(*chanlist)[index]->nextEvent;
+		else
+			p_event = &(*chanlist)[index]->currentEvent;
+		if ((g_settings.channellist_additional) && (p_event != NULL))
+		{
+			if (displayList)
+				paint_events(index);
+			else
+			      showdescription(selected);
+		}
+		return;
+	}
+	
 	frameBuffer->paintBoxRel(x+1, y + height + 1, full_width-2, info_height - 2, COL_MENUCONTENTDARK_PLUS_0, RADIUS_LARGE);//round
 	frameBuffer->paintBoxFrame(x, y + height, full_width, info_height, 2, COL_MENUCONTENT_PLUS_6, RADIUS_LARGE);
 
@@ -1662,7 +1676,6 @@ void CChannelList::paintDetails(int index)
 			g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_DESCR]->RenderString(x+ full_width- 10- from_len, y+ height+ 5+ 2*fheight+ fdescrheight, from_len, cFrom, colored_event_N ? COL_COLORED_EVENTS_TEXT : COL_MENUCONTENTDARK_TEXT);
 		}
 	}
-  }
 	if ((g_settings.channellist_additional) && (p_event != NULL))
 	{
 		if (displayList)
