@@ -44,6 +44,9 @@ static int ttx_req_pause;
 static int sub_pid, sub_page;
 static bool use_gui;
 static int cfg_national_subset;
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+bool isTtxEplayer = false;
+#endif
 
 static int screen_x, screen_y, screen_w, screen_h;
 
@@ -1070,34 +1073,34 @@ int eval_triplet(int iOData, tstCachedPage *pstCachedPage,
 
 int setnational(unsigned char sec)
 {
-        switch (sec)
-        {
-                case 0x08:
-                        return NAT_PL; //polish
-                case 0x16:
-                case 0x36:
-                        return NAT_TR; //turkish
-                case 0x1d:
-                        return NAT_SR; //serbian, croatian, slovenian
-                case 0x20:
-                        return NAT_SC; // serbian, croatian
-                case 0x24:
-                        return NAT_RB; // russian, bulgarian
-                case 0x25:
-                        return NAT_UA; // ukrainian
-                case 0x22:
-                        return NAT_ET; // estonian
-                case 0x23:
-                        return NAT_LV; // latvian, lithuanian
-                case 0x37:
-                        return NAT_GR; // greek
-                case 0x55:
-                        return NAT_HB; // hebrew
-                case 0x47:
-                case 0x57:
-                        return NAT_AR; // arabic
-        }
-        return countryconversiontable[sec & 0x07];
+	switch (sec)
+	{
+		case 0x08:
+			return NAT_PL; //polish
+		case 0x16:
+		case 0x36:
+			return NAT_TR; //turkish
+		case 0x1d:
+			return NAT_SR; //serbian, croatian, slovenian
+		case 0x20:
+			return NAT_SC; // serbian, croatian
+		case 0x24:
+			return NAT_RB; // russian, bulgarian
+		case 0x25:
+			return NAT_UA; // ukrainian
+		case 0x22:
+			return NAT_ET; // estonian
+		case 0x23:
+			return NAT_LV; // latvian, lithuanian
+		case 0x37:
+			return NAT_GR; // greek
+		case 0x55:
+			return NAT_HB; // hebrew
+		case 0x47:
+		case 0x57:
+			return NAT_AR; // arabic
+	}
+	return countryconversiontable[sec & 0x07];
 }
 
 /* evaluate level 2.5 information */
@@ -1629,10 +1632,21 @@ int tuxtx_subtitle_running(int *pid, int *page, int *running)
 	return ret;
 }
 
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+int tuxtx_main(int /*_rc*/, int pid, int page, int source, bool isEplayer)
+#else
 int tuxtx_main(int /*_rc*/, int pid, int page, int source)
+#endif
 {
 	char cvs_revision[] = "$Revision: 1.95 $";
 
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	if (isTtxEplayer != isEplayer) {
+		tuxtxt_stop();
+		tuxtxt_clear_cache();
+		isTtxEplayer = isEplayer;
+	}
+#endif
 	use_gui = 1;
 	boxed = 0;
 //printf("to init tuxtxt\n");fflush(stdout);
@@ -1655,11 +1669,11 @@ int tuxtx_main(int /*_rc*/, int pid, int page, int source)
 
 	fb = -1;
 #ifdef USE_FBPAN
-        if ((fb=open("/dev/fb/0", O_RDWR)) == -1)
-        {
-                perror("TuxTxt <open /dev/fb/0>");
-                return 0;
-        }
+	if ((fb=open("/dev/fb/0", O_RDWR)) == -1)
+	{
+		perror("TuxTxt <open /dev/fb/0>");
+		return 0;
+	}
 #endif
 
 	CFrameBuffer *fbp = CFrameBuffer::getInstance();
@@ -1673,27 +1687,11 @@ int tuxtx_main(int /*_rc*/, int pid, int page, int source)
 	else
 		printf("[tuxtxt] using PID %x page %d\n", tuxtxt_cache.vtxtpid, tuxtxt_cache.page);
 
-#if 0 /* just get it from the framebuffer class */
-	/* get fixed screeninfo */
-	if (ioctl(fb, FBIOGET_FSCREENINFO, &fix_screeninfo) == -1)
-	{
-		perror("TuxTxt <FBIOGET_FSCREENINFO>");
-		return 0;
-	}
-
-	/* get variable screeninfo */
-	if (ioctl(fb, FBIOGET_VSCREENINFO, &var_screeninfo) == -1)
-	{
-		perror("TuxTxt <FBIOGET_VSCREENINFO>");
-		return 0;
-	}
-
-#else
 	struct fb_var_screeninfo *var;
 	var = fbp->getScreenInfo();
 	memcpy(&var_screeninfo, var, sizeof(struct fb_var_screeninfo));
 	fix_screeninfo.line_length = var_screeninfo.xres * sizeof(fb_pixel_t);
-#endif
+
 	/* set variable screeninfo for double buffering */
 	var_screeninfo.yoffset      = 0;
 #if 0
@@ -1797,7 +1795,7 @@ int tuxtx_main(int /*_rc*/, int pid, int page, int source)
 				if (boxed)
 				{
 				    subtitledelay++;
-		    		    // display subtitledelay
+				    // display subtitledelay
 				    PosY = StartY;
 				    char ns[10];
 				    SetPosX(1);
@@ -1808,14 +1806,14 @@ int tuxtx_main(int /*_rc*/, int pid, int page, int source)
 				    RenderCharFB(ns[4],&atrtable[ATR_WB]);
 				}
 				else
-    				    GetNextSubPage(1);
+				    GetNextSubPage(1);
 				break;
 			case RC_LEFT:
 				if (boxed)
 				{
 				    subtitledelay--;
 				    if (subtitledelay < 0) subtitledelay = 0;
-		    		    // display subtitledelay
+				    // display subtitledelay
 				    PosY = StartY;
 				    char ns[10];
 				    SetPosX(1);
@@ -1968,9 +1966,6 @@ int Init(int source)
 
 	subtitledelay = 0;
 	delaystarted = 0;
-
-	/* init lcd */
-	UpdateLCD();
 
 	/* create TUXTXTDIR if necessary */
 	if (!access(TUXTXTDIR, F_OK) == 0)
@@ -2344,6 +2339,10 @@ void CleanUp()
  ******************************************************************************/
 int GetTeletextPIDs()
 {
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	if (isTtxEplayer)
+		return 0;
+#endif
 	int pat_scan, pmt_scan, sdt_scan, desc_scan, pid_test, byte, diff, first_sdt_sec;
 
 	unsigned char bufPAT[1024];
@@ -3424,7 +3423,6 @@ void ConfigMenu(int Init)
 			}
 		}
 		CFrameBuffer::getInstance()->blit();
-		UpdateLCD(); /* update number of cached pages */
 	} while ((RCCode != RC_HOME) && (RCCode != RC_DBOX) && (RCCode != RC_MUTE));
 
 	ClearBB(transp);
@@ -3717,7 +3715,6 @@ void PageCatching()
 			return;
 		}
 		CFrameBuffer::getInstance()->blit();
-		UpdateLCD();
 	} while (RCCode != RC_OK);
 
 	/* set new page */
@@ -4278,26 +4275,26 @@ int ShapeCoord(int param, int curfontwidth, int curfontheight)
 {
 	switch (param)
 	{
-	case S_W13:
-		return curfontwidth/3;
-	case S_W12:
-		return curfontwidth/2;
-	case S_W23:
-		return curfontwidth*2/3;
-	case S_W11:
-		return curfontwidth;
-	case S_WM3:
-		return curfontwidth-3;
-	case S_H13:
-		return curfontheight/3;
-	case S_H12:
-		return curfontheight/2;
-	case S_H23:
-		return curfontheight*2/3;
-	case S_H11:
-		return curfontheight;
-	default:
-		return param;
+		case S_W13:
+			return curfontwidth/3;
+		case S_W12:
+			return curfontwidth/2;
+		case S_W23:
+			return curfontwidth*2/3;
+		case S_W11:
+			return curfontwidth;
+		case S_WM3:
+			return curfontwidth-3;
+		case S_H13:
+			return curfontheight/3;
+		case S_H12:
+			return curfontheight/2;
+		case S_H23:
+			return curfontheight*2/3;
+		case S_H11:
+			return curfontheight;
+		default:
+			return param;
 	}
 }
 
@@ -4321,63 +4318,63 @@ void DrawShape(int x, int y, int shapenumber, int curfontwidth, int curfontheigh
 	while (*p != S_END)
 		switch (*p++)
 		{
-		case S_FHL:
-		{
-			int offset = ShapeCoord(*p++, curfontwidth, curfontheight);
-			DrawHLine(x, y + offset, curfontwidth, fgcolor);
-			break;
-		}
-		case S_FVL:
-		{
-			int offset = ShapeCoord(*p++, curfontwidth, curfontheight);
-			DrawVLine(x + offset, y, fontheight, fgcolor);
-			break;
-		}
-		case S_FLH:
-			FlipHorz(x,y,curfontwidth, fontheight);
-			break;
-		case S_FLV:
-			FlipVert(x,y,curfontwidth, fontheight);
-			break;
-		case S_BOX:
-		{
-			int xo = ShapeCoord(*p++, curfontwidth, curfontheight);
-			int yo = ShapeCoord(*p++, curfontwidth, curfontheight);
-			int w = ShapeCoord(*p++, curfontwidth, curfontheight);
-			int h = ShapeCoord(*p++, curfontwidth, curfontheight);
-			FillRect(x + xo, y + yo, w, h, fgcolor);
-			break;
-		}
-		case S_TRA:
-		{
-			int x0 = ShapeCoord(*p++, curfontwidth, curfontheight);
-			int y0 = ShapeCoord(*p++, curfontwidth, curfontheight);
-			int l0 = ShapeCoord(*p++, curfontwidth, curfontheight);
-			int x1 = ShapeCoord(*p++, curfontwidth, curfontheight);
-			int y1 = ShapeCoord(*p++, curfontwidth, curfontheight);
-			int l1 = ShapeCoord(*p++, curfontwidth, curfontheight);
-			FillTrapez(x + x0, y + y0, l0, x1-x0, y1-y0, l1, fgcolor);
-			break;
-		}
-		case S_BTR:
-		{
-			int x0 = ShapeCoord(*p++, curfontwidth, curfontheight);
-			int y0 = ShapeCoord(*p++, curfontwidth, curfontheight);
-			int l0 = ShapeCoord(*p++, curfontwidth, curfontheight);
-			int x1 = ShapeCoord(*p++, curfontwidth, curfontheight);
-			int y1 = ShapeCoord(*p++, curfontwidth, curfontheight);
-			int l1 = ShapeCoord(*p++, curfontwidth, curfontheight);
-			FillTrapez(x + x0, y + y0, l0, x1-x0, y1-y0, l1, bgcolor);
-			break;
-		}
-		case S_LNK:
-		{
-			DrawShape(x, y, ShapeCoord(*p, curfontwidth, curfontheight), curfontwidth, curfontheight, fgcolor, bgcolor, 0);
-			//p = aShapes[ShapeCoord(*p, curfontwidth, curfontheight) - 0x20];
-			break;
-		}
-		default:
-			break;
+			case S_FHL:
+			{
+				int offset = ShapeCoord(*p++, curfontwidth, curfontheight);
+				DrawHLine(x, y + offset, curfontwidth, fgcolor);
+				break;
+			}
+			case S_FVL:
+			{
+				int offset = ShapeCoord(*p++, curfontwidth, curfontheight);
+				DrawVLine(x + offset, y, fontheight, fgcolor);
+				break;
+			}
+			case S_FLH:
+				FlipHorz(x,y,curfontwidth, fontheight);
+				break;
+			case S_FLV:
+				FlipVert(x,y,curfontwidth, fontheight);
+				break;
+			case S_BOX:
+			{
+				int xo = ShapeCoord(*p++, curfontwidth, curfontheight);
+				int yo = ShapeCoord(*p++, curfontwidth, curfontheight);
+				int w = ShapeCoord(*p++, curfontwidth, curfontheight);
+				int h = ShapeCoord(*p++, curfontwidth, curfontheight);
+				FillRect(x + xo, y + yo, w, h, fgcolor);
+				break;
+			}
+			case S_TRA:
+			{
+				int x0 = ShapeCoord(*p++, curfontwidth, curfontheight);
+				int y0 = ShapeCoord(*p++, curfontwidth, curfontheight);
+				int l0 = ShapeCoord(*p++, curfontwidth, curfontheight);
+				int x1 = ShapeCoord(*p++, curfontwidth, curfontheight);
+				int y1 = ShapeCoord(*p++, curfontwidth, curfontheight);
+				int l1 = ShapeCoord(*p++, curfontwidth, curfontheight);
+				FillTrapez(x + x0, y + y0, l0, x1-x0, y1-y0, l1, fgcolor);
+				break;
+			}
+			case S_BTR:
+			{
+				int x0 = ShapeCoord(*p++, curfontwidth, curfontheight);
+				int y0 = ShapeCoord(*p++, curfontwidth, curfontheight);
+				int l0 = ShapeCoord(*p++, curfontwidth, curfontheight);
+				int x1 = ShapeCoord(*p++, curfontwidth, curfontheight);
+				int y1 = ShapeCoord(*p++, curfontwidth, curfontheight);
+				int l1 = ShapeCoord(*p++, curfontwidth, curfontheight);
+				FillTrapez(x + x0, y + y0, l0, x1-x0, y1-y0, l1, bgcolor);
+				break;
+			}
+			case S_LNK:
+			{
+				DrawShape(x, y, ShapeCoord(*p, curfontwidth, curfontheight), curfontwidth, curfontheight, fgcolor, bgcolor, 0);
+				//p = aShapes[ShapeCoord(*p, curfontwidth, curfontheight) - 0x20];
+				break;
+			}
+			default:
+				break;
 		}
 }
 
@@ -5071,6 +5068,9 @@ void RenderMessage(int Message)
 	for (byte = 0; byte < 38; byte++)
 		RenderCharFB(message_6[byte], &atrtable[imenuatr + 2]);
 	national_subset = national_subset_back;
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	CFrameBuffer::getInstance()->blit();
+#endif
 }
 
 /******************************************************************************
@@ -5188,9 +5188,6 @@ void RenderPage()
 	int row, col, byte, startrow = 0;;
 	int national_subset_bak = national_subset;
 
-	/* update lcd */
-	UpdateLCD();
-
 	if (transpmode != 2 && delaystarted)
 	{
 	    struct timeval tv;
@@ -5198,7 +5195,6 @@ void RenderPage()
 	    if (tv.tv_sec - tv_delay.tv_sec < subtitledelay)
 		return;
 	}
-
 
 	/* update page or timestring */
 	if (transpmode != 2 && tuxtxt_cache.pageupdate && tuxtxt_cache.page_receiving != tuxtxt_cache.page && inputcounter == 2)
@@ -5651,6 +5647,9 @@ void CopyBB2FB()
 			FillBorder(*lbb);
 //			 ClearBB(*(lfb + var_screeninfo.xres * var_screeninfo.yoffset));
 		}
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+		f->blit();
+#endif
 
 		if (clearbbcolor >= 0)
 		{
@@ -5701,6 +5700,7 @@ void CopyBB2FB()
 
 		topsrc += screenwidth;
 		topdst += screenwidth;
+
 		for (i=0; i < 24*fontheight; i++)
 		{
 			memmove(topdst, topsrc, width);
@@ -5741,174 +5741,6 @@ void CopyBB2FB()
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 	f->mark(0, 0, var_screeninfo.xres, var_screeninfo.yres);
 	f->blit();
-#endif
-}
-
-/******************************************************************************
- * UpdateLCD                                                                  *
- ******************************************************************************/
-
-void UpdateLCD()
-{
-#if 0
-	static int init_lcd = 1, old_cached_pages = -1, old_page = -1, old_subpage = -1, old_subpage_max = -1, old_hintmode = -1;
-	int  x, y, subpage_max = 0, update_lcd = 0;
-
-	if (lcd == -1) return; // for Dreamboxes without LCD-Display (5xxx)
-	/* init or update lcd */
-	if (init_lcd)
-	{
-		init_lcd = 0;
-
-		for (y = 0; y < 64; y++)
-		{
-			int lcdbase = (y/8)*120;
-			int lcdmask = 1 << (y%8);
-
-			for (x = 0; x < 120; )
-			{
-				int rommask;
-				int rombyte = lcd_layout[x/8 + y*120/8];
-
-				for (rommask = 0x80; rommask; rommask >>= 1)
-				{
-					if (rombyte & rommask)
-						lcd_backbuffer[x + lcdbase] |= lcdmask;
-					else
-						lcd_backbuffer[x + lcdbase] &= ~lcdmask;
-					x++;
-				}
-			}
-		}
-
-		write(lcd, &lcd_backbuffer, sizeof(lcd_backbuffer));
-
-		for (y = 16; y < 56; y += 8)	/* clear rectangle in backbuffer */
-			for (x = 1; x < 118; x++)
-				lcd_backbuffer[x + (y/8)*120] = 0;
-
-		for (x = 3; x <= 116; x++)
-			lcd_backbuffer[x + (39/8)*120] |= 1 << (39%8);
-
-		for (y = 42; y <= 60; y++)
-			lcd_backbuffer[35 + (y/8)*120] |= 1 << (y%8);
-
-		for (y = 42; y <= 60; y++)
-			lcd_backbuffer[60 + (y/8)*120] |= 1 << (y%8);
-
-		RenderCharLCD(10, 43, 20);
-		RenderCharLCD(11, 79, 20);
-
-		return;
-	}
-	else
-	{
-		int p;
-
-		if (inputcounter == 2)
-			p = tuxtxt_cache.page;
-		else
-			p = temp_page + (0xDD >> 4*(1-inputcounter)); /* partial pageinput (filled with spaces) */
-
-		/* page */
-		if (old_page != p)
-		{
-			RenderCharLCD(p>>8,  7, 20);
-			RenderCharLCD((p&0x0F0)>>4, 19, 20);
-			RenderCharLCD(p&0x00F, 31, 20);
-
-			old_page = p;
-			update_lcd = 1;
-		}
-
-		/* current subpage */
-		if (old_subpage != tuxtxt_cache.subpage)
-		{
-			if (!tuxtxt_cache.subpage)
-			{
-				RenderCharLCD(0, 55, 20);
-				RenderCharLCD(1, 67, 20);
-			}
-			else
-			{
-				if (tuxtxt_cache.subpage >= 0xFF)
-					tuxtxt_cache.subpage = 1;
-				else if (tuxtxt_cache.subpage > 99)
-					tuxtxt_cache.subpage = 0;
-
-				RenderCharLCD(tuxtxt_cache.subpage>>4, 55, 20);
-				RenderCharLCD(tuxtxt_cache.subpage&0x0F, 67, 20);
-			}
-
-			old_subpage = tuxtxt_cache.subpage;
-			update_lcd = 1;
-		}
-
-		/* max subpage */
-		for (x = 0; x <= 0x79; x++)
-		{
-			if (tuxtxt_cache.astCachetable[tuxtxt_cache.page][x])
-				subpage_max = x;
-		}
-
-		if (old_subpage_max != subpage_max)
-		{
-			if (!subpage_max)
-			{
-				RenderCharLCD(0,  91, 20);
-				RenderCharLCD(1, 103, 20);
-			}
-			else
-			{
-				RenderCharLCD(subpage_max>>4,  91, 20);
-				RenderCharLCD(subpage_max&0x0F, 103, 20);
-			}
-
-			old_subpage_max = subpage_max;
-			update_lcd = 1;
-		}
-
-		/* cachestatus */
-		if (old_cached_pages != tuxtxt_cache.cached_pages)
-		{
-			#if 0
-			int s;
-			int p = tuxtxt_cache.cached_pages;
-			for (s=107; s >= 107-4*fontwidth_small_lcd; s -= fontwidth_small_lcd)
-			{
-				int c = p % 10;
-				if (p)
-					RenderCharLCDsmall('0'+c, s, 44);
-				else
-					RenderCharLCDsmall(' ', s, 44);
-				p /= 10;
-			}
-			#else
-			RenderCharLCD(tuxtxt_cache.cached_pages/1000, 67, 44);
-			RenderCharLCD(tuxtxt_cache.cached_pages%1000/100, 79, 44);
-			RenderCharLCD(tuxtxt_cache.cached_pages%100/10, 91, 44);
-			RenderCharLCD(tuxtxt_cache.cached_pages%10, 103, 44);
-			#endif
-
-			old_cached_pages = tuxtxt_cache.cached_pages;
-			update_lcd = 1;
-		}
-
-		/* mode */
-		if (old_hintmode != hintmode)
-		{
-			if (hintmode)
-				RenderCharLCD(12, 43, 44);
-			else
-				RenderCharLCD(13, 43, 44);
-
-			old_hintmode = hintmode;
-			update_lcd = 1;
-		}
-	}
-
-	if (update_lcd)
-		write(lcd, &lcd_backbuffer, sizeof(lcd_backbuffer));
 #endif
 }
 
@@ -6373,8 +6205,6 @@ void DecodePage()
 		int o = 0;
 		char bitmask ;
 
-
-
 		for (r = 0; r < 25; r++)
 		{
 			for (c = 0; c < 40; c++)
@@ -6444,151 +6274,3 @@ int GetRCCode()
 	}
 	return 0;
 }
-
-#if 0
-#if 1
-int GetRCCode()
-{
-	struct input_event ev;
-	static __u16 rc_last_key = KEY_RESERVED;
-
-	int val = fcntl(rc, F_GETFL);
-	if(!(val & O_NONBLOCK))
-		printf("[tuxtxt] GetRCCode in blocking mode.\n");
-
-	/* get code */
-	if (read(rc, &ev, sizeof(ev)) == sizeof(ev))
-	{
-		if (ev.value)
-		{
-			if (ev.code != rc_last_key ||
-			    ev.code == KEY_DOWN || ev.code == KEY_UP ||  /* allow direction keys */
-			    ev.code == KEY_LEFT || ev.code == KEY_RIGHT) /* to autorepeat...     */
-			{
-				rc_last_key = ev.code;
-				switch (ev.code)
-				{
-				case KEY_UP:		RCCode = RC_UP;		break;
-				case KEY_DOWN:		RCCode = RC_DOWN;	break;
-				case KEY_LEFT:		RCCode = RC_LEFT;	break;
-				case KEY_RIGHT:		RCCode = RC_RIGHT;	break;
-				case KEY_OK:		RCCode = RC_OK;		break;
-				case KEY_0:		RCCode = RC_0;		break;
-				case KEY_1:		RCCode = RC_1;		break;
-				case KEY_2:		RCCode = RC_2;		break;
-				case KEY_3:		RCCode = RC_3;		break;
-				case KEY_4:		RCCode = RC_4;		break;
-				case KEY_5:		RCCode = RC_5;		break;
-				case KEY_6:		RCCode = RC_6;		break;
-				case KEY_7:		RCCode = RC_7;		break;
-				case KEY_8:		RCCode = RC_8;		break;
-				case KEY_9:		RCCode = RC_9;		break;
-				case KEY_RED:		RCCode = RC_RED;	break;
-				case KEY_GREEN:		RCCode = RC_GREEN;	break;
-				case KEY_YELLOW:	RCCode = RC_YELLOW;	break;
-				case KEY_BLUE:		RCCode = RC_BLUE;	break;
-				case KEY_VOLUMEUP:	RCCode = RC_PLUS;	break;
-				case KEY_VOLUMEDOWN:	RCCode = RC_MINUS;	break;
-				case KEY_MUTE:		RCCode = RC_MUTE;	break;
-#if !HAVE_TRIPLEDRAGON
-				/* on CS, change transparent mode with TEXT key */
-				case KEY_TEXT:		RCCode = RC_TEXT;	break;
-#else
-				/* on TD, cycle split screen mode with TTX key
-				 * - the TD has a special key for transparent mode */
-				case KEY_TEXT:		RCCode = RC_MINUS;	break;
-#endif
-				case KEY_TTTV:		RCCode = RC_MUTE;	break;
-				case KEY_TTZOOM:	RCCode = RC_PLUS;	break;
-				case KEY_REVEAL:	RCCode = RC_HELP;	break;
-				//case KEY_HELP:		RCCode = RC_HELP;	break;
-				case KEY_INFO:		RCCode = RC_HELP;	break;
-				case KEY_MENU:		RCCode = RC_DBOX;	break;
-				case KEY_EXIT:		RCCode = RC_HOME;	break;
-				case KEY_POWER:		RCCode = RC_STANDBY;	break;
-				}
-printf("[tuxtxt] new key, code %X\n", RCCode);
-				return 1;
-			}
-		}
-		else
-		{
-			RCCode = -1;
-			rc_last_key = KEY_RESERVED;
-		}
-	}
-
-	RCCode = -1;
-	usleep(1000000/25);
-
-	return 0;
-}
-#else
-/* this is obsolete and can soon be removed */
-int GetRCCode()
-{
-	static unsigned short LastKey = -1;
-	int count;
-	if ((count = read(rc, &RCCode, 2)) != 2)
-	{
-		RCCode = -1;
-		usleep(1000000/100);
-		return 0;
-	}
-
-	fprintf(stderr, "rccode: %04x\n", RCCode);
-	if (RCCode == LastKey &&
-	    RCCode != 0x18 && RCCode != 0x19 && /* allow direction keys */
-	    RCCode != 0x1b && RCCode != 0x1c)   /* to autorepeat...     */
-	{
-		RCCode = -1;
-		return 1;
-	}
-
-	LastKey = RCCode;
-	if ((RCCode & 0xFF00) == 0x0000)
-	{
-		switch (RCCode)
-		{
-		case 0x18:	RCCode = RC_UP;		break;
-		case 0x1c:	RCCode = RC_DOWN;	break;
-		case 0x19:	RCCode = RC_LEFT;	break;
-		case 0x1b:	RCCode = RC_RIGHT;	break;
-		case 0x1a:	RCCode = RC_OK;		break;
-		case 0x0e:	RCCode = RC_0;		break;
-		case 0x02:	RCCode = RC_1;		break;
-		case 0x03:	RCCode = RC_2;		break;
-		case 0x04:	RCCode = RC_3;		break;
-		case 0x05:	RCCode = RC_4;		break;
-		case 0x06:	RCCode = RC_5;		break;
-		case 0x07:	RCCode = RC_6;		break;
-		case 0x09:	RCCode = RC_7;		break;
-		case 0x0a:	RCCode = RC_8;		break;
-		case 0x0b:	RCCode = RC_9;		break;
-		case 0x1f:	RCCode = RC_RED;	break;
-		case 0x20:	RCCode = RC_GREEN;	break;
-		case 0x21:	RCCode = RC_YELLOW;	break;
-		case 0x22:	RCCode = RC_BLUE;	break;
-		case 0x29:	RCCode = RC_PLUS;	break; // [=X=] key -> double height
-		case 0x27:	RCCode = RC_MINUS;	break; // [txt] key -> split mode
-		case 0x11:	RCCode = RC_MUTE;	break;
-		case 0x28:	RCCode = RC_MUTE;	break; // [ /=] key
-		case 0x14:	RCCode = RC_HELP;	break;
-		case 0x2a:	RCCode = RC_HELP;	break; // [==?] key
-		case 0x12:	RCCode = RC_DBOX;	break;
-		case 0x15:	RCCode = RC_HOME;	break;
-		case 0x01:	RCCode = RC_STANDBY;	break;
-		}
-		return 1;
-	}
-	return 1;
-}
-#endif
-#endif
-/* Local Variables: */
-/* indent-tabs-mode:t */
-/* tab-width:3 */
-/* c-basic-offset:3 */
-/* comment-column:0 */
-/* fill-column:120 */
-/* End: */

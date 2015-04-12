@@ -62,6 +62,7 @@ extern void tuxtxt_decode_adip(); /* additional information table */
 extern void tuxtxt_compress_page(int p, int sp, unsigned char* buffer);
 extern void tuxtxt_decompress_page(int p, int sp, unsigned char* buffer);
 extern void tuxtxt_clear_p26(tstExtData* extData);
+extern void tuxtxt_clear_cache(void);
 #if TUXTXT_DEBUG
 extern int tuxtxt_get_zipsize(int p, int sp);
 #endif
@@ -1773,7 +1774,6 @@ void RenderCharLCD(int Digit, int XPos, int YPos);
 void RenderMessage(int Message);
 void RenderPage();
 void DecodePage();
-void UpdateLCD();
 int  Init(int source);
 int  GetNationalSubset(const char *country_code);
 int  GetTeletextPIDs();
