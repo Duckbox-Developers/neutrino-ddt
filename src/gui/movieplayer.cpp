@@ -2608,7 +2608,7 @@ void CMoviePlayerGui::showFileInfos()
 			CMenuForwarder * mf = new CMenuForwarder(key.c_str(), false, isUTF8(values[i]) ? values[i].c_str() : convertLatin1UTF8(values[i]).c_str(), NULL);
 			sfimenu->addItem(mf);
 		}
-		int ret = sfimenu->exec(NULL, "");
+		sfimenu->exec(NULL, "");
 		sfimenu=NULL;
 		delete sfimenu;
 	}
