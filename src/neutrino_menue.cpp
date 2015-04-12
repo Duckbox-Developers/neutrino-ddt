@@ -152,8 +152,6 @@ void CNeutrinoApp::InitMenuMain()
 	// Dynamic renumbering
 	personalize.setShortcut();
 
-	CMenuWidget &menu = personalize.getWidget(MENU_MAIN)/**main**/;
-
 	//top
 	personalize.addItem(MENU_MAIN, GenericMenuSeparator, NULL, false, CPersonalizeGui::PERSONALIZE_SHOW_NO);
 
