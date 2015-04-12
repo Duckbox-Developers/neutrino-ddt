@@ -73,6 +73,7 @@ char g_str[64];
 bool blocked = false;
 int blocked_counter = 0;
 int file_vfd = -1;
+bool active_icon[16] = { false };
 
 pthread_t vfd_scrollText;
 
@@ -1220,6 +1221,13 @@ void CVFD::ShowIcon(fp_icon icon, bool show)
 #endif
 	if (icon == 0)
 		return;
+
+	if (active_icon[icon & 0x0F] == show)
+		return;
+	else
+		active_icon[icon & 0x0F] = show;
+
+	//printf("CVFD::ShowIcon %s %x\n", show ? "show" : "hide", (int) icon);
 	struct vfd_ioctl_data data;
 	memset(&data, 0, sizeof(struct vfd_ioctl_data));
 	data.start = 0x00;
