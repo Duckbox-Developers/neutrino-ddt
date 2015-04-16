@@ -471,20 +471,13 @@ void CChannelList::calcSize()
 	if (g_settings.channellist_additional)
 		width = full_width / 3 * 2;
 	else
-	{
-		/* don't use 100% of screen if additional info / minitv is not used */
-		full_width = full_width * 76 / 99; /* same width as the old code with my settings :-) */
 		width = full_width;
-	}
 
 	// calculate height (the infobox below mainbox is handled outside height)
-	info_height = 2*fheight + fdescrheight + 10;
-	if (g_settings.channellist_additional != 0) {
-		if (g_settings.channellist_foot == 2) //j00zek, disabled footer fix
-			info_height = 0; 
-		 else if (g_settings.channellist_foot != 0)
-			info_height = 2*fheight + 10;
-	}
+	if (g_settings.channellist_show_infobox)
+		info_height = 2*fheight + fdescrheight + 10;
+	else
+		info_height = 0;
 	height = pig_on_win ?  frameBuffer->getScreenHeight(): frameBuffer->getScreenHeightRel();
 	height = height - info_height;
 
@@ -603,11 +596,6 @@ int CChannelList::show()
 
 	new_zap_mode = g_settings.channellist_new_zap_mode;
 
-	if (CNeutrinoApp::getInstance()->getMode() == NeutrinoMessages::mode_radio)
-		if (g_settings.channellist_additional == 2) {
-			previous_channellist_additional = g_settings.channellist_additional;
-			g_settings.channellist_additional = 1;
-		}
 	calcSize();
 	displayNext = false;
 
@@ -970,9 +958,6 @@ int CChannelList::show()
 
 void CChannelList::hide()
 {
-	if (CNeutrinoApp::getInstance()->getMode() == NeutrinoMessages::mode_radio)
-		if (g_settings.channellist_additional == 1 && previous_channellist_additional == 2)
-			g_settings.channellist_additional = 2;
 	if ((g_settings.channellist_additional == 2) || (previous_channellist_additional == 2)) // with miniTV
 	{
 		if (cc_minitv)
@@ -1545,6 +1530,9 @@ bool CChannelList::quickZap(int key, bool /* cycle */)
 
 void CChannelList::paintDetails(int index)
 {
+	if (!g_settings.channellist_show_infobox)
+		return;
+
 	CChannelEvent *p_event = NULL;
 
 	//colored_events init
@@ -1555,21 +1543,6 @@ void CChannelList::paintDetails(int index)
 	if (g_settings.colored_events_channellist == 2)
 		colored_event_N = true;
 
-	if (g_settings.channellist_foot == 2) { //j00zek disabled footer fix
-		if (displayNext)
-			p_event = &(*chanlist)[index]->nextEvent;
-		else
-			p_event = &(*chanlist)[index]->currentEvent;
-		if ((g_settings.channellist_additional) && (p_event != NULL))
-		{
-			if (displayList)
-				paint_events(index);
-			else
-			      showdescription(selected);
-		}
-		return;
-	}
-	
 	frameBuffer->paintBoxRel(x+1, y + height + 1, full_width-2, info_height - 2, COL_MENUCONTENTDARK_PLUS_0, RADIUS_LARGE);//round
 	frameBuffer->paintBoxFrame(x, y + height, full_width, info_height, 2, COL_MENUCONTENT_PLUS_6, RADIUS_LARGE);
 
@@ -1660,7 +1633,7 @@ void CChannelList::paintDetails(int index)
 
 		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->RenderString(x+ 10, y+ height+ 5+ 2*fheight +fdescrheight, full_width - 30, desc.c_str(), COL_MENUCONTENTDARK_TEXT);
 	}
-	else if( !displayNext && g_settings.channellist_foot == 1 && g_settings.channellist_additional == 0) { // next Event
+	else if( !displayNext && g_settings.channellist_foot == 1) { // next Event
 
 		CSectionsdClient::CurrentNextInfo CurrentNext;
 		CEitManager::getInstance()->getCurrentNextServiceKey((*chanlist)[index]->channel_id, CurrentNext);
@@ -1676,13 +1649,6 @@ void CChannelList::paintDetails(int index)
 			g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_DESCR]->RenderString(x+ full_width- 10- from_len, y+ height+ 5+ 2*fheight+ fdescrheight, from_len, cFrom, colored_event_N ? COL_COLORED_EVENTS_TEXT : COL_MENUCONTENTDARK_TEXT);
 		}
 	}
-	if ((g_settings.channellist_additional) && (p_event != NULL))
-	{
-		if (displayList)
-			paint_events(index);
-		else
-			showdescription(selected);
-	}
 }
 
 void CChannelList::clearItem2DetailsLine()
@@ -1692,6 +1658,9 @@ void CChannelList::clearItem2DetailsLine()
 
 void CChannelList::paintItem2DetailsLine (int pos)
 {
+	if (!g_settings.channellist_show_infobox)
+		return;
+
 	int xpos  = x - ConnectLineBox_Width;
 	int ypos1 = y + theight + pos*fheight + (fheight/2)-2;
 	int ypos2 = y + height + (info_height/2)-2;
@@ -1707,6 +1676,17 @@ void CChannelList::paintItem2DetailsLine (int pos)
 		if (dline == NULL)
 			dline = new CComponentsDetailLine(xpos, ypos1, ypos2, fheight/2+1, info_height-RADIUS_LARGE*2);
 		dline->paint(false);
+	}
+}
+
+void CChannelList::paintAdditionals(int index)
+{
+	if (g_settings.channellist_additional)
+	{
+		if (displayList)
+			paint_events(index);
+		else
+			showdescription(selected);
 	}
 }
 
@@ -1881,9 +1861,9 @@ void CChannelList::paintItem(int pos, const bool firstpaint)
 	if (curr == selected) {
 		color   = COL_MENUCONTENTSELECTED_TEXT;
 		bgcolor = COL_MENUCONTENTSELECTED_PLUS_0;
-		if (g_settings.channellist_foot != 2) //j00zek disabled footer fix
-			paintItem2DetailsLine (pos);
+		paintItem2DetailsLine (pos);
 		paintDetails(curr);
+		paintAdditionals(curr);
 		c_rad_small = RADIUS_LARGE;
 		paintbuttons = true;
 	}

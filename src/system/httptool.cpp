@@ -30,7 +30,6 @@
 
 #include <global.h>
 
-
 CHTTPTool::CHTTPTool()
 {
 	statusViewer = NULL;

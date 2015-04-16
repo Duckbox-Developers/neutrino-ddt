@@ -41,6 +41,7 @@
 
 #include <daemonc/remotecontrol.h>
 
+#include <driver/display.h>
 #include <driver/fontrenderer.h>
 #include <driver/rcinput.h>
 
@@ -63,7 +64,6 @@
 #include <gui/widget/helpbox.h>
 #include <gui/widget/stringinput.h>
 #include <driver/screen_max.h>
-#include <driver/display.h>
 
 
 #include <system/settings.h>

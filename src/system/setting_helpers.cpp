@@ -56,8 +56,8 @@
 #include <gui/infoclock.h>
 #include <gui/infoviewer.h>
 #include <gui/movieplayer.h>
-#include <driver/volume.h>
 #include <driver/display.h>
+#include <driver/volume.h>
 #include <system/helpers.h>
 // obsolete #include <gui/streaminfo.h>
 

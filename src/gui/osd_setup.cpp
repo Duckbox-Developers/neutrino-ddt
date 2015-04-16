@@ -57,11 +57,9 @@
 #include <driver/screenshot.h>
 #include <driver/volume.h>
 #include <driver/radiotext.h>
-#include <system/helpers.h>
 
 #include <zapit/femanager.h>
 #include <system/debug.h>
-#include <cs_api.h>
 #include <system/helpers.h>
 
 extern CRemoteControl * g_RemoteControl;
@@ -78,6 +76,7 @@ COsdSetup::COsdSetup(bool wizard_mode)
 	fontsizenotifier = new CFontSizeNotifier;
 	colorInfoclockNotifier = NULL;
 	screensaverNotifier = NULL;
+	channellistNotifier = NULL;
 	osd_menu = NULL;
 	submenu_menus = NULL;
 	mfFontFile = NULL;
@@ -614,12 +613,9 @@ int COsdSetup::showOsdSetup()
 	osd_menu->addItem(GenericMenuSeparatorLine);
 
 	//monitor
-	CMenuOptionChooser *mc;
-	if (cs_get_revision() != 1) { /* 1 == Tripledragon */
-		mc = new CMenuOptionChooser(LOCALE_COLORMENU_OSD_PRESET, &g_settings.screen_preset, OSD_PRESET_OPTIONS, OSD_PRESET_OPTIONS_COUNT, true, this);
-		mc->setHint("", LOCALE_MENU_HINT_OSD_PRESET);
-		osd_menu->addItem(mc);
-	}
+	CMenuOptionChooser * mc = new CMenuOptionChooser(LOCALE_COLORMENU_OSD_PRESET, &g_settings.screen_preset, OSD_PRESET_OPTIONS, OSD_PRESET_OPTIONS_COUNT, true, this);
+	mc->setHint("", LOCALE_MENU_HINT_OSD_PRESET);
+	osd_menu->addItem(mc);
 
 	// round corners
 	int rounded_corners = g_settings.rounded_corners;
@@ -680,6 +676,7 @@ int COsdSetup::showOsdSetup()
 
 	delete colorInfoclockNotifier;
 	delete screensaverNotifier;
+	delete channellistNotifier;
 	delete osd_menu;
 	return res;
 }
@@ -1050,6 +1047,7 @@ void COsdSetup::showOsdChanlistSetup(CMenuWidget *menu_chanlist)
 	CMenuOptionChooser * mc;
 
 	menu_chanlist->addIntroItems(LOCALE_MISCSETTINGS_CHANNELLIST);
+	channellistNotifier = new COnOffNotifier();
 
 	// channellist additional
 	mc = new CMenuOptionChooser(LOCALE_CHANNELLIST_ADDITIONAL, &g_settings.channellist_additional, CHANNELLIST_ADDITIONAL_OPTIONS, CHANNELLIST_ADDITIONAL_OPTION_COUNT, true);
@@ -1066,15 +1064,22 @@ void COsdSetup::showOsdChanlistSetup(CMenuWidget *menu_chanlist)
 	mc->setHint("", LOCALE_MENU_HINT_CHANNELLIST_EXTENDED);
 	menu_chanlist->addItem(mc);
 
+<<<<<<< HEAD
 	// hd-icon
 	mc = new CMenuOptionChooser(LOCALE_CHANNELLIST_HDICON, &g_settings.channellist_hdicon, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
 	mc->setHint("", LOCALE_MENU_HINT_CHANNELLIST_HDICON);
+=======
+	// show infobox
+	mc = new CMenuOptionChooser(LOCALE_CHANNELLIST_SHOW_INFOBOX, &g_settings.channellist_show_infobox, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, channellistNotifier);
+	mc->setHint("", LOCALE_MENU_HINT_CHANNELLIST_SHOW_INFOBOX);
+>>>>>>> cool-cst-next/cst-next
 	menu_chanlist->addItem(mc);
 
 	// foot
-	mc = new CMenuOptionChooser(LOCALE_CHANNELLIST_FOOT, &g_settings.channellist_foot, CHANNELLIST_FOOT_OPTIONS, CHANNELLIST_FOOT_OPTIONS_COUNT, true);
+	mc = new CMenuOptionChooser(LOCALE_CHANNELLIST_FOOT, &g_settings.channellist_foot, CHANNELLIST_FOOT_OPTIONS, CHANNELLIST_FOOT_OPTIONS_COUNT, g_settings.channellist_show_infobox);
 	mc->setHint("", LOCALE_MENU_HINT_CHANNELLIST_FOOT);
 	menu_chanlist->addItem(mc);
+	channellistNotifier->addItem(mc);
 
 	// colored event
 	mc = new CMenuOptionChooser(LOCALE_MISCSETTINGS_CHANNELLIST_COLORED_EVENTS, &g_settings.colored_events_channellist, OPTIONS_COLORED_EVENTS_OPTIONS, OPTIONS_COLORED_EVENTS_OPTION_COUNT, true);

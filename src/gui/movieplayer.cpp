@@ -36,7 +36,6 @@
 #include <gui/audio_select.h>
 #include <gui/epgview.h>
 #include <gui/eventlist.h>
-#include <gui/filebrowser.h>
 #include <gui/movieplayer.h>
 #include <gui/infoviewer.h>
 #include <gui/timeosd.h>
@@ -44,7 +43,6 @@
 #include <gui/infoclock.h>
 #include <gui/plugins.h>
 #include <gui/videosettings.h>
-#include <gui/widget/messagebox.h>
 #include <driver/screenshot.h>
 #include <driver/volume.h>
 #include <driver/display.h>
@@ -68,15 +66,15 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <iconv.h>
 #include <libdvbsub/dvbsub.h>
 #include <audio.h>
 #ifdef ENABLE_GRAPHLCD
 #include <driver/nglcd.h>
 bool glcd_play = false;
 #endif
-#include <iconv.h>
 #include <gui/widget/stringinput_ext.h>
-
+#include <gui/widget/messagebox.h>
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 #include <libavcodec/avcodec.h>
 #endif

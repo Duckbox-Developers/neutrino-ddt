@@ -51,8 +51,8 @@
 #include <gui/widget/colorchooser.h>
 #endif
 
-#include <driver/screen_max.h>
 #include <driver/display.h>
+#include <driver/screen_max.h>
 
 #include <daemonc/remotecontrol.h>
 
