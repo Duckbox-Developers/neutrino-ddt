@@ -1428,8 +1428,6 @@ void CMoviePlayerGui::PlayFileEnd(bool restore)
 	if (restore)
 		restoreNeutrino();
 
-	CAudioMute::getInstance()->enableMuteIcon(false);
-	InfoClock->enableInfoClock(false);
 	stopped = true;
 	printf("%s: stopped\n", __func__);
 	if (!filelist.empty() && filelist_it != filelist.end()) {
