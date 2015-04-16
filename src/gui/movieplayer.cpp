@@ -1551,7 +1551,7 @@ void CMoviePlayerGui::addAudioFormat(int count, std::string &apidtitle, bool& en
 	}
 }
 
-void CMoviePlayerGui::getCurrentAudioName(bool file_player, std::string &audioname)
+void CMoviePlayerGui::getCurrentAudioName(bool /* file_player */, std::string &audioname)
 {
 	numpida = REC_MAX_APIDS;
 	playback->FindAllPids(apids, ac3flags, &numpida, language);
