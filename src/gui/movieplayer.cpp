@@ -342,6 +342,7 @@ int CMoviePlayerGui::exec(CMenuTarget * parent, const std::string & actionKey)
 			break;
 		}
 		do {
+			is_file_player = true;
 			PlayFile();
 		}
 		while (repeat_mode || filelist_it != filelist.end());
