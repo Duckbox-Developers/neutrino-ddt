@@ -62,6 +62,7 @@
 #include <mymenu.h>
 #include <driver/screen_max.h>
 #include <driver/record.h>
+#include <driver/display.h>
 
 #define BLKID_BIN    "/sbin/blkid"
 #define EJECT_BIN    "/bin/eject"
