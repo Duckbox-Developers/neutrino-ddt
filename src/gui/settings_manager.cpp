@@ -103,27 +103,33 @@ int CSettingsManager::exec(CMenuTarget* parent, const std::string &actionKey)
 	}
 	else if(actionKey == "backup")
 	{
-		fileBrowser.Dir_Mode = true;
-		if (fileBrowser.exec("/media") == true)
+		struct statfs s;
+		int result = ShowMsg(LOCALE_SETTINGS_BACKUP, (std::string)g_Locale->getText(LOCALE_MOVIEBROWSER_INFO_PATH) + " : " + g_settings.image_settings_backup_path, \
+		CMessageBox::mbrYes, CMessageBox::mbYes | CMessageBox::mbNo);
+		if(result == CMessageBox::mbrNo)
 		{
-			struct statfs s;
-			int ret = ::statfs(fileBrowser.getSelectedFile()->Name.c_str(), &s);
-			if(ret == 0 && s.f_type != 0x72b6L) /*jffs2*/
-			{
-				const char backup_sh[] = "/bin/backup.sh";
-				printf("backup: executing [%s %s]\n",backup_sh, fileBrowser.getSelectedFile()->Name.c_str());
-				my_system(2, backup_sh, fileBrowser.getSelectedFile()->Name.c_str());
-			}
+			fileBrowser.Dir_Mode = true;
+			if (fileBrowser.exec("/media") == true)
+				g_settings.image_settings_backup_path = fileBrowser.getSelectedFile()->Name; 
 			else
-				ShowMsg(LOCALE_MESSAGEBOX_ERROR, g_Locale->getText(LOCALE_SETTINGS_BACKUP_FAILED),CMessageBox::mbrBack, CMessageBox::mbBack, NEUTRINO_ICON_ERROR);
+				return res;
 		}
+		int ret = ::statfs(g_settings.image_settings_backup_path.c_str(), &s);
+		if(ret == 0 /*&& s.f_type != 0x72b6L*/) /*jffs2*/
+		{
+			const char backup_sh[] = "/bin/backup.sh";
+			printf("backup: executing [%s %s]\n",backup_sh, g_settings.image_settings_backup_path.c_str());
+			my_system(2, backup_sh, g_settings.image_settings_backup_path.c_str());
+		}
+		else
+			ShowMsg(LOCALE_MESSAGEBOX_ERROR, g_Locale->getText(LOCALE_SETTINGS_BACKUP_FAILED),CMessageBox::mbrBack, CMessageBox::mbBack, NEUTRINO_ICON_ERROR);
 		return res;
 	}
 	else if(actionKey == "restore")
 	{
 		fileFilter.addFilter("tar");
 		fileBrowser.Filter = &fileFilter;
-		if (fileBrowser.exec("/media") == true)
+		if (fileBrowser.exec(g_settings.image_settings_backup_path.c_str()) == true)
 		{
 			int result = ShowMsg(LOCALE_SETTINGS_RESTORE, g_Locale->getText(LOCALE_SETTINGS_RESTORE_WARN), CMessageBox::mbrNo, CMessageBox::mbYes | CMessageBox::mbNo);
 			if(result == CMessageBox::mbrYes)
