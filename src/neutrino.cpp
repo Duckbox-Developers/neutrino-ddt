@@ -2664,7 +2664,13 @@ void CNeutrinoApp::RealRun(CMenuWidget &mainMenu)
 				StopSubtitles();
 				tuxtx_stop_subtitle();
 
-				tuxtx_main(g_RCInput->getFileHandle(), g_RemoteControl->current_PIDs.PIDs.vtxtpid);
+				tuxtx_main(g_RemoteControl->current_PIDs.PIDs.vtxtpid);
+#if 1 // FIXME, needed? --martii
+				//purge input queue
+				do
+					g_RCInput->getMsg(&msg, &data, 1);
+				while (msg != CRCInput::RC_timeout);
+#endif
 
 				frameBuffer->paintBackground();
 				//if(!g_settings.cacheTXT)

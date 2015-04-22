@@ -205,7 +205,7 @@ record_error_msg_t CRecordInstance::Start(CZapitChannel * channel)
 		for (int i = 0 ; i < (int)channel->getSubtitleCount() ; ++i) {
 			CZapitAbsSub* s = channel->getChannelSub(i);
 			if (s->thisSubType == CZapitAbsSub::DVB) {
-				if(i>9)//max sub pids
+				if(i>REC_MAX_DPIDS - 1)//max sub pids
 					break;
 				if (numpids >= REC_MAX_APIDS)
 					break;

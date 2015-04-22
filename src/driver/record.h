@@ -88,7 +88,7 @@ class CRecordInstance
 		bool		StreamVTxtPid;
 		bool		StreamSubtitlePids;
 		bool		StreamPmtPid;
-		unsigned short	apids[REC_MAX_APIDS];
+		unsigned short	apids[REC_MAX_APIDS + REC_MAX_DPIDS];
 		unsigned int	numpids;
 		CZapitClient::responseGetPIDs allpids;
 		int		recording_id;
