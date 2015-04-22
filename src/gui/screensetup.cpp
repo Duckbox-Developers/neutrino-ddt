@@ -42,23 +42,175 @@
 
 #include <driver/fontrenderer.h>
 #include <driver/rcinput.h>
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#include <driver/screen_max.h>
+#endif
 #include <system/settings.h>
+#include <system/helpers.h>
 
 #include <global.h>
 #include <neutrino.h>
 
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+struct borderFrame { int sx, sy, ex, ey; };
+static map<t_channel_id, borderFrame> borderMap;
+#define BORDER_CONFIG_FILE CONFIGDIR "/zapit/borders.conf"
+#else
 //int x_box = 15 * 5;
 
 inline unsigned int make16color(__u32 rgb)
 {
 	return 0xFF000000 | rgb;
 }
+#endif
 
 CScreenSetup::CScreenSetup()
 {
 	frameBuffer = CFrameBuffer::getInstance();
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	screenheight = frameBuffer->getScreenHeight(true);
+	screenwidth = frameBuffer->getScreenWidth(true);
+	startX = g_settings.screen_StartX_int;
+	startY = g_settings.screen_StartY_int;
+	endX = g_settings.screen_EndX_int;
+	endY = g_settings.screen_EndY_int;
+	channel_id = 0;
+	coord_abs = true;
+	m = NULL;
+#endif
 }
 
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+int CScreenSetup::exec(CMenuTarget* parent, const std::string &action)
+{
+	if (!m) {
+		selected = 0;
+		x_coord[0] = startX;
+		x_coord[1] = endX;
+		y_coord[0] = startY;
+		y_coord[1] = endY;
+		if (!channel_id) {
+			color_bak = frameBuffer->getBorderColor();
+			frameBuffer->getBorder(x_coord_bak[0], y_coord_bak[0], x_coord_bak[1], y_coord_bak[1]);
+		}
+		updateCoords();
+		frameBuffer->setBorder(x_coord[0], y_coord[0], x_coord[1], y_coord[1]);
+		frameBuffer->setBorderColor(channel_id ? 0x44444444 : 0x88888888);
+		frameBuffer->paintIcon(NEUTRINO_ICON_BORDER_UL, 0, 0);
+		frameBuffer->paintIcon(NEUTRINO_ICON_BORDER_LR, screenwidth - 1 - 96, screenheight - 1 - 96 );
+
+		m = new CMenuWidget(channel_id ? LOCALE_VIDEOMENU_MASKSETUP : LOCALE_VIDEOMENU_SCREENSETUP, NEUTRINO_ICON_SETTINGS, w_max (40, 10));
+		m->addItem(new CMenuForwarder(LOCALE_SCREENSETUP_UPPERLEFT, true, coord[0], this, "ul", CRCInput::RC_red));
+		m->addItem(new CMenuForwarder(LOCALE_SCREENSETUP_LOWERRIGHT, true, coord[1], this, "lr", CRCInput::RC_green));
+		if (channel_id)
+			m->addItem(new CMenuForwarder(LOCALE_SCREENSETUP_REMOVE, true, NULL, this, "rm", CRCInput::RC_yellow));
+		m->addKey(CRCInput::RC_home, this, "ex");
+		m->addKey(CRCInput::RC_timeout, this, "ti");
+		m->addKey(CRCInput::RC_ok, this, "ok");
+		m->addKey(CRCInput::RC_up, this, "u");
+		m->addKey(CRCInput::RC_down, this, "d");
+		m->addKey(CRCInput::RC_left, this, "l");
+		m->addKey(CRCInput::RC_right, this, "r");
+		m->addKey(CRCInput::RC_setup, this, "se");
+		m->setSelected(selected);
+		m->exec(parent, "");
+		delete m;
+		m = NULL;
+		hide();
+		return menu_return::RETURN_REPAINT;
+	}
+	if (action == "ex" || action == "ti") {
+		if (action == "ex" && ((startX != x_coord[0] ) || ( endX != x_coord[1] ) || ( startY != y_coord[0] ) || ( endY != y_coord[1] ) ) &&
+			(ShowMsg(LOCALE_VIDEOMENU_SCREENSETUP, LOCALE_MESSAGEBOX_DISCARD, CMessageBox::mbrYes, CMessageBox::mbYes | CMessageBox::mbCancel) == CMessageBox::mbrCancel))
+			return menu_return::RETURN_NONE;
+		loadBorder(channel_id);
+		return (action == "ex") ? menu_return::RETURN_EXIT : menu_return::RETURN_EXIT_ALL;
+	}
+	if (action == "ok") {
+		startX = x_coord[0];
+		endX = x_coord[1];
+		startY = y_coord[0];
+		endY = y_coord[1];
+		if (channel_id) {
+			borderFrame b;
+			b.sx = startX;
+			b.sy = startY;
+			b.ex = endX;
+			b.ey = endY;
+			borderMap[channel_id] = b;
+			showBorder(channel_id);
+			saveBorders();
+		} else {
+			x_coord_bak[0] = x_coord[0];
+			y_coord_bak[0] = y_coord[0];
+			x_coord_bak[1] = x_coord[1];
+			y_coord_bak[1] = y_coord[1];
+			g_settings.screen_StartX_int = x_coord[0];
+			g_settings.screen_EndX_int = x_coord[1];
+			g_settings.screen_StartY_int = y_coord[0];
+			g_settings.screen_EndY_int = y_coord[1];
+			showBorder(channel_id);
+
+			if(g_settings.screen_preset) {
+				g_settings.screen_StartX_lcd = g_settings.screen_StartX_int;
+				g_settings.screen_StartY_lcd = g_settings.screen_StartY_int;
+				g_settings.screen_EndX_lcd = g_settings.screen_EndX_int;
+				g_settings.screen_EndY_lcd = g_settings.screen_EndY_int;
+			} else {
+				g_settings.screen_StartX_crt = g_settings.screen_StartX_int;
+				g_settings.screen_StartY_crt = g_settings.screen_StartY_int;
+				g_settings.screen_EndX_crt = g_settings.screen_EndX_int;
+				g_settings.screen_EndY_crt = g_settings.screen_EndY_int;
+			}
+		}
+		return menu_return::RETURN_EXIT;
+	}
+	if (action == "se") {
+		coord_abs = !coord_abs;
+		updateCoords();
+		return menu_return::RETURN_REPAINT;
+	}
+	if (action == "ul") {
+		selected = 0;
+		return menu_return::RETURN_REPAINT;
+	}
+	if (action == "lr") {
+		selected = 1;
+		return menu_return::RETURN_REPAINT;
+	}
+	if (action == "rm") {
+		if (channel_id) {
+			startX = g_settings.screen_StartX;
+			startY = g_settings.screen_StartY;
+			endX = g_settings.screen_EndX;
+			endY = g_settings.screen_EndY;
+			resetBorder(channel_id);
+			saveBorders();
+			if (g_InfoViewer)
+				g_InfoViewer->start();
+			return menu_return::RETURN_EXIT;
+		}
+		return menu_return::RETURN_NONE;
+	}
+	if (action == "u" || action == "d" || action == "l" || action == "r") {
+		if ((action == "u") && (((selected == 0) && (y_coord[0] > 0)) || ((selected == 1) && (y_coord[1] > y_coord[0] - 100))))
+			y_coord[selected]--;
+		else if ((action == "d") && (((selected == 0) && (y_coord[0] < y_coord[1] - 100)) || ((selected == 1) && (y_coord[1] < screenheight))))
+			y_coord[selected]++;
+		else if ((action == "l") && (((selected == 0) && (x_coord[0] > 0)) || ((selected == 1) && (x_coord[1] > x_coord[0] - 100))))
+			x_coord[selected]--;
+		else if ((action == "r") && (((selected == 0) && (x_coord[0] < x_coord[1] - 100)) || ((selected == 1) && (x_coord[1] < screenwidth))))
+			x_coord[selected]++;
+		else
+			return menu_return::RETURN_NONE;
+
+		frameBuffer->setBorder(x_coord[0], y_coord[0], x_coord[1], y_coord[1]);
+		updateCoords();
+		return menu_return::RETURN_REPAINT;
+	}
+	return menu_return::RETURN_NONE;
+}
+#else
 int CScreenSetup::exec(CMenuTarget* parent, const std::string &)
 {
 	neutrino_msg_t      msg;
@@ -228,15 +380,123 @@ int CScreenSetup::exec(CMenuTarget* parent, const std::string &)
 	hide();
 	return res;
 }
+#endif
 
 void CScreenSetup::hide()
 {
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	frameBuffer->paintBackgroundBox(0, 0, screenwidth, screenheight);
+	if (channel_id)
+		showBorder(channel_id);
+	else {
+		frameBuffer->setBorderColor(color_bak);
+		frameBuffer->setBorder(x_coord_bak[0], y_coord_bak[0], x_coord_bak[1], y_coord_bak[1]);
+	}
+#else
 	int w = (int) frameBuffer->getScreenWidth(true);
 	int h = (int) frameBuffer->getScreenHeight(true);
 	frameBuffer->paintBackgroundBox(0, 0, w, h);
+#endif
 	frameBuffer->blit();
 }
 
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+bool CScreenSetup::loadBorder(t_channel_id cid)
+{
+	loadBorders();
+	channel_id = cid;
+	std::map<t_channel_id, borderFrame>::iterator it = borderMap.find(cid);
+	if (it != borderMap.end()) {
+		startX = it->second.sx;
+		startY = it->second.sy;
+		endX = it->second.ex;
+		endY = it->second.ey;
+	} else {
+		startX = g_settings.screen_StartX_int;
+		startY = g_settings.screen_StartY_int;
+		endX = g_settings.screen_EndX_int;
+		endY = g_settings.screen_EndY_int;
+	}
+	return (it != borderMap.end());
+}
+
+void CScreenSetup::showBorder(t_channel_id cid)
+{
+	if (loadBorder(cid)) {
+		frameBuffer->setBorderColor(0xFF000000);
+		frameBuffer->setBorder(startX, startY, endX, endY);
+	} else
+		hideBorder();
+}
+
+void CScreenSetup::hideBorder()
+{
+	frameBuffer->setBorderColor();
+	frameBuffer->setBorder(startX, startY, endX, endY);
+}
+
+void CScreenSetup::resetBorder(t_channel_id cid)
+{
+	loadBorder(cid);
+	frameBuffer->setBorderColor();
+	std::map<t_channel_id, borderFrame>::iterator it = borderMap.find(cid);
+	if (it != borderMap.end())
+		borderMap.erase(cid);
+	startX = g_settings.screen_StartX_int;
+	startY = g_settings.screen_StartY_int;
+	endX = g_settings.screen_EndX_int;
+	endY = g_settings.screen_EndY_int;
+	frameBuffer->setBorder(startX, startY, endX, endY);
+}
+
+
+void CScreenSetup::loadBorders()
+{
+	if (borderMap.empty()) {
+		FILE *f = fopen(BORDER_CONFIG_FILE, "r");
+		borderMap.clear();
+		if (f) {
+			char s[1000];
+			while (fgets(s, sizeof(s), f)) {
+				t_channel_id chan;
+				long long unsigned _chan;
+				borderFrame b;
+				if (5 == sscanf(s, "%llx %d %d %d %d", &_chan, &b.sx, &b.sy, &b.ex, &b.ey)) {
+					chan = _chan;
+					borderMap[chan] = b;
+				}
+			}
+			fclose(f);
+		}
+	}
+}
+
+void CScreenSetup::saveBorders()
+{
+	if (borderMap.empty())
+		unlink(BORDER_CONFIG_FILE);
+	else {
+		FILE *f = fopen(BORDER_CONFIG_FILE, "w");
+		if (f) {
+			std::map<t_channel_id, borderFrame>::iterator it;
+			for (it = borderMap.begin(); it != borderMap.end(); it++)
+				fprintf(f, "%llx %d %d %d %d\n", (long long unsigned) it->first, it->second.sx, it->second.sy, it->second.ex, it->second.ey);
+			fflush(f);
+			fdatasync(fileno(f));
+			fclose(f);
+		}
+	}
+}
+
+void CScreenSetup::updateCoords()
+{
+	coord[0] = "(" + to_string(x_coord[0]) + "," + to_string(y_coord[0]) + ")";
+	if (coord_abs)
+		coord[1] = "(" + to_string(x_coord[1]) + "," + to_string(y_coord[1]) + ")";
+	else
+		coord[1] = "(" + to_string(screenwidth - x_coord[1]) + "," + to_string(screenheight - y_coord[1]) + ")";
+}
+#else
 void CScreenSetup::paintBorder( int pselected )
 {
 	if ( pselected == 0 )
@@ -332,3 +592,4 @@ void CScreenSetup::paint()
 	paintBorderLR();
 	paintCoords();
 }
+#endif

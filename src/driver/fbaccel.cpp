@@ -51,23 +51,12 @@
 #include <cs_api.h>
 #include <cnxtfb.h>
 #endif
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
-#include <linux/stmfb.h>
-#include <bpamem.h>
-#endif
 #if HAVE_GENERIC_HARDWARE
 #include <glfb.h>
 extern GLFramebuffer *glfb;
 #endif
 
 #include <driver/abstime.h>
-#include <system/set_threadname.h>
-
-#if HAVE_COOL_HARDWARE || HAVE_TRIPLEDRAGON
-#define NEED_BLIT_THREAD 0
-#else
-#define NEED_BLIT_THREAD 1
-#endif
 
 /* note that it is *not* enough to just change those values */
 #define DEFAULT_XRES 1280
@@ -261,6 +250,8 @@ CFbAccel::CFbAccel(CFrameBuffer *_fb)
 	startY = 0;
 	endX = DEFAULT_XRES - 1;
 	endY = DEFAULT_YRES - 1;
+	borderColor = 0;
+	borderColorOld = 0x01010101;
 	resChange();
 #endif
 
@@ -826,6 +817,38 @@ void CFbAccel::blit()
 #endif
 	msync(lbb, DEFAULT_XRES * 4 * DEFAULT_YRES, MS_SYNC);
 
+	if (borderColor != borderColorOld || (borderColor != 0x00000000 && borderColor != 0xFF000000)) {
+		borderColorOld = borderColor;
+		switch(fb->mode3D) {
+		case CFrameBuffer::Mode3D_off:
+		default:
+			blitBoxFB(0, 0, s.xres, sY, borderColor);		// top
+			blitBoxFB(0, 0, sX, s.yres, borderColor);	// left
+			blitBoxFB(eX, 0, s.xres, s.yres, borderColor);	// right
+			blitBoxFB(0, eY, s.xres, s.yres, borderColor);	// bottom
+			break;
+		case CFrameBuffer::Mode3D_SideBySide:
+			blitBoxFB(0, 0, s.xres, sY, borderColor);			// top
+			blitBoxFB(0, 0, sX/2, s.yres, borderColor);			// left
+			blitBoxFB(eX/2 + 1, 0, s.xres/2 + sX/2, s.yres, borderColor);	// middle
+			blitBoxFB(s.xres/2 + eX/2 + 1, 0, s.xres, s.yres, borderColor);	// right
+			blitBoxFB(0, eY, s.xres, s.yres, borderColor);			// bottom
+			break;
+		case CFrameBuffer::Mode3D_TopAndBottom:
+			blitBoxFB(0, 0, s.xres, sY/2, borderColor); 			// top
+			blitBoxFB(0, eY/2 + 1, s.xres, s.yres/2 + sY/2, borderColor); 	// middle
+			blitBoxFB(0, s.yres/2 + eY/2 + 1, s.xres, s.yres, borderColor); // bottom
+			blitBoxFB(0, 0, sX, s.yres, borderColor);			// left
+			blitBoxFB(eX, 0, s.xres, s.yres, borderColor);			// right
+			break;
+		case CFrameBuffer::Mode3D_Tile:
+			blitBoxFB(0, 0, (s.xres * 2)/3, (sY * 2)/3, borderColor);		// top
+			blitBoxFB(0, 0, (sX * 2)/3, (s.yres * 2)/3, borderColor);		// left
+			blitBoxFB((eX * 2)/3, 0, (s.xres * 2)/3, (s.yres * 2)/3, borderColor);	// right
+			blitBoxFB(0, (eY * 2)/3, (s.xres * 2)/3, (s.yres * 2)/3, borderColor);	// bottom
+			break;
+		}
+	}
 	switch(fb->mode3D) {
 	case CFrameBuffer::Mode3D_off:
 	default:
@@ -995,6 +1018,60 @@ void CFbAccel::mark(int, int, int, int)
 #endif
 
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+void CFbAccel::blitBPA2FB(unsigned char *mem, SURF_FMT fmt, int w, int h, int x, int y, int pan_x, int pan_y, int fb_x, int fb_y, int fb_w, int fb_h, bool transp)
+{
+	if (w < 1 || h < 1)
+		return;
+	if (fb_x < 0)
+		fb_x = x;
+	if (fb_y < 0)
+		fb_y = y;
+	if (pan_x < 0 || pan_x > w - x)
+		pan_x = w - x;
+	if (pan_y < 0 || pan_y > h - y)
+		pan_y = h - y;
+	if (fb_w < 0)
+		fb_w = pan_x;
+	if (fb_h < 0)
+		fb_h = pan_y;
+
+	STMFBIO_BLT_EXTERN_DATA blt_data;
+	memset(&blt_data, 0, sizeof(STMFBIO_BLT_EXTERN_DATA));
+	blt_data.operation  = BLT_OP_COPY;
+	if (!transp) /* transp == false (default): use transparency from source alphachannel */
+		blt_data.ulFlags = BLT_OP_FLAGS_BLEND_SRC_ALPHA|BLT_OP_FLAGS_BLEND_DST_MEMORY; // we need alpha blending
+//	blt_data.srcOffset  = 0;
+	switch (fmt) {
+	case SURF_RGB888:
+	case SURF_BGR888:
+		blt_data.srcPitch   = w * 3;
+		break;
+	default: // FIXME, this is wrong for quite a couple of formats which are currently not in use
+		blt_data.srcPitch   = w * 4;
+	}
+	blt_data.dstOffset  = lbb_off;
+	blt_data.dstPitch   = fb->stride;
+	blt_data.src_left   = x;
+	blt_data.src_top    = y;
+	blt_data.src_right  = x + pan_x;
+	blt_data.src_bottom = y + pan_y;
+	blt_data.dst_left   = fb_x;
+	blt_data.dst_top    = fb_y;
+	blt_data.dst_right  = fb_x + fb_w;
+	blt_data.dst_bottom = fb_y + fb_h;
+	blt_data.srcFormat  = fmt;
+	blt_data.dstFormat  = SURF_ARGB8888;
+	blt_data.srcMemBase = (char *)mem;
+	blt_data.dstMemBase = (char *)fb->lfb;
+	blt_data.srcMemSize = blt_data.srcPitch * h;
+	blt_data.dstMemSize = fb->stride * DEFAULT_YRES + lbb_off;
+
+	msync(mem, blt_data.srcPitch * h, MS_SYNC);
+
+	if(ioctl(fb->fd, STMFBIO_BLT_EXTERN, &blt_data) < 0)
+		perror("blitBPA2FB FBIO_BLIT");
+}
+
 void CFbAccel::blitArea(int src_width, int src_height, int fb_x, int fb_y, int width, int height)
 {
 	if (!src_width || !src_height)
@@ -1027,7 +1104,14 @@ void CFbAccel::blitArea(int src_width, int src_height, int fb_x, int fb_y, int w
 	if(ioctl(fb->fd, STMFBIO_BLT_EXTERN, &blt_data) < 0)
 		perror("blitArea FBIO_BLIT");
 }
+#else
+void CFbAccel::blitArea(int /*src_width*/, int /*src_height*/, int /*fb_x*/, int /*fb_y*/, int /*width*/, int /*height*/)
+{
+	fprintf(stderr, "%s not implemented\n", __func__);
+}
+#endif
 
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 void CFbAccel::resChange(void)
 {
 	if (ioctl(fb->fd, FBIOGET_VSCREENINFO, &s) == -1)
@@ -1037,11 +1121,52 @@ void CFbAccel::resChange(void)
 	sY = (startY * s.yres)/DEFAULT_YRES;
 	eX = (endX * s.xres)/DEFAULT_XRES;
 	eY = (endY * s.yres)/DEFAULT_YRES;
+	borderColorOld = 0x01010101;
+}
+
+void CFbAccel::setBorder(int sx, int sy, int ex, int ey)
+{
+	startX = sx;
+	startY = sy;
+	endX = ex;
+	endY = ey;
+	sX = (startX * s.xres)/DEFAULT_XRES;
+	sY = (startY * s.yres)/DEFAULT_YRES;
+	eX = (endX * s.xres)/DEFAULT_XRES;
+	eY = (endY * s.yres)/DEFAULT_YRES;
+	borderColorOld = 0x01010101;
+}
+
+void CFbAccel::setBorderColor(fb_pixel_t col)
+{
+	if (!col && borderColor)
+		blitBoxFB(0, 0, s.xres, s.yres, 0);
+	borderColor = col;
 }
 
 void CFbAccel::ClearFB(void)
 {
 	blitBoxFB(0, 0, s.xres, s.yres, 0);
+}
+#else
+void CFbAccel::resChange(void)
+{
+	fprintf(stderr, "%s not implemented\n", __func__);
+}
+
+void CFbAccel::setBorder(int /*sx*/, int /*sy*/, int /*ex*/, int /*ey*/)
+{
+	fprintf(stderr, "%s not implemented\n", __func__);
+}
+
+void CFbAccel::setBorderColor(fb_pixel_t /*col*/)
+{
+	fprintf(stderr, "%s not implemented\n", __func__);
+}
+
+void CFbAccel::ClearFB(void)
+{
+	fprintf(stderr, "%s not implemented\n", __func__);
 }
 #endif
 

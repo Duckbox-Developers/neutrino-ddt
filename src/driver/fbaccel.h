@@ -35,6 +35,10 @@
 #include <OpenThreads/ScopedLock>
 #include <OpenThreads/Thread>
 #include <OpenThreads/Condition>
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#include <linux/stmfb.h>
+#include <bpamem.h>
+#endif
 
 class CFrameBuffer;
 class CFbAccel
@@ -69,16 +73,22 @@ class CFbAccel
 #ifdef USE_NEVIS_GXA
 		void setupGXA(void);
 #endif
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 		int sX, sY, eX, eY;
 		int startX, startY, endX, endY;
 		t_fb_var_screeninfo s;
+		fb_pixel_t borderColor, borderColorOld;
 		void blitArea(int src_width, int src_height, int fb_x, int fb_y, int width, int height);
 		void resChange(void);
 		void blitBB2FB(int fx0, int fy0, int fx1, int fy1, int tx0, int ty0, int tx1, int ty2);
 		void blitFB2FB(int fx0, int fy0, int fx1, int fy1, int tx0, int ty0, int tx1, int ty2);
 		void blitBoxFB(int x0, int y0, int x1, int y1, fb_pixel_t color);
+		void setBorder(int sx, int sy, int ex, int ey);
+		void getBorder(int &sx, int &sy, int &ex, int &ey) { sx = startX, sy = startY, ex = endX, ey = endY;};
+		void setBorderColor(fb_pixel_t col = 0);
+		fb_pixel_t getBorderColor(void) { return borderColor; };
 		void ClearFB(void);
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+		void blitBPA2FB(unsigned char *mem, SURF_FMT fmt, int w, int h, int x = 0, int y = 0, int pan_x = -1, int pan_y = -1, int fb_x = -1, int fb_y = -1, int fb_w = -1, int fb_h = -1, bool transp = false);
 #endif
 };
 

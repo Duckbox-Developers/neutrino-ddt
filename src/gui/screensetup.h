@@ -44,6 +44,7 @@ class CScreenSetup : public CMenuTarget
 {
  private:
     CFrameBuffer * frameBuffer;
+    CMenuWidget *m;
     int	selected;
     int x_box;
     int y_box;
@@ -51,17 +52,43 @@ class CScreenSetup : public CMenuTarget
     int BoxWidth;
     int x_coord[2];
     int y_coord[2];
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+    std::string coord[2];
+    int x_coord_bak[2];
+    int y_coord_bak[2];
+    int startX;
+    int startY;
+    int endX;
+    int endY;
+    int screenwidth;
+    int screenheight;
+    bool coord_abs;
+    fb_pixel_t color_bak;
+    t_channel_id channel_id;
+#endif
 
     void paint();
     void paintBorderUL();
     void paintBorderLR();
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+    void updateCoords();
+#else
     void paintCoords();
+#endif
     void paintBorder(int selected);
     void unpaintBorder(int selected);
     void paintIcons(int pselected);
 	
  public:
     CScreenSetup();
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+    void showBorder(t_channel_id cid);
+    void hideBorder();
+    void resetBorder(t_channel_id cid);
+    bool loadBorder(t_channel_id cid);
+    void loadBorders(void);
+    void saveBorders(void);
+#endif
     void hide();
     int exec(CMenuTarget* parent, const std::string & actionKey);
 

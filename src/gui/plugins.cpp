@@ -448,13 +448,29 @@ void CPlugins::startPlugin(int number)
 	delScriptOutput();
 	/* export neutrino settings to the environment */
 	char tmp[32];
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	sprintf(tmp, "%d", g_settings.screen_StartX_int);
+#else
 	sprintf(tmp, "%d", g_settings.screen_StartX);
+#endif
 	setenv("SCREEN_OFF_X", tmp, 1);
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	sprintf(tmp, "%d", g_settings.screen_StartY_int);
+#else
 	sprintf(tmp, "%d", g_settings.screen_StartY);
+#endif
 	setenv("SCREEN_OFF_Y", tmp, 1);
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	sprintf(tmp, "%d", g_settings.screen_EndX_int);
+#else
 	sprintf(tmp, "%d", g_settings.screen_EndX);
+#endif
 	setenv("SCREEN_END_X", tmp, 1);
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	sprintf(tmp, "%d", g_settings.screen_EndY_int);
+#else
 	sprintf(tmp, "%d", g_settings.screen_EndY);
+#endif
 	setenv("SCREEN_END_Y", tmp, 1);
 
 	bool ispip  = strstr(plugin_list[number].pluginfile.c_str(), "pip") != 0;

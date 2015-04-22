@@ -97,7 +97,15 @@ void CComponentsPIP::paint(bool do_save_bg)
 	
 	int mode = CNeutrinoApp::getInstance()->getMode();
 	if(mode == NeutrinoMessages::mode_tv || mode == NeutrinoMessages::mode_webtv) {
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+		videoDecoder->Pig(pig_x, pig_y, pig_w, pig_h, screen_w, screen_h,
+			g_settings.screen_StartX_int,
+			g_settings.screen_StartY_int,
+			g_settings.screen_EndX_int,
+			g_settings.screen_EndY_int);
+#else
 		videoDecoder->Pig(pig_x, pig_y, pig_w, pig_h, screen_w, screen_h);
+#endif
 	}
 	else{ //paint an alternate image if no tv mode available
 		CComponentsPicture pic = CComponentsPicture (pig_x, pig_y, pig_w, pig_h, pic_name, NULL, false, col_frame, col_frame);

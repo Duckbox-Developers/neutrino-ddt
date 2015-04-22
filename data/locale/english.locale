@@ -1425,6 +1425,7 @@ menu.hint_video_colorformat_hdmi Select color space for digital output (HDMI)
 menu.hint_video_contrast Change picture contrast
 menu.hint_video_dbdr MPEG2 enhancement filters
 menu.hint_video_format TV aspect ratio
+menu.hint_video_mask Define a channel-specific border to hide unwanted screen content
 menu.hint_video_mixer_color This color will be used for the background if there is no signal available.
 menu.hint_video_mode HDMI output video mode
 menu.hint_video_modes VF key will cycle between enabled modes 
@@ -2147,6 +2148,7 @@ screensaver.menu Screensaver
 screensaver.off Screensaver off
 screensaver.timeout Change pictures
 screensetup.lowerright green = setup lower right
+screensetup.remove remove mask
 screensetup.upperleft red = setup upper left
 screenshot.backbuffer Secondary buffer (back buffer)
 screenshot.count Screenshot count
@@ -2403,6 +2405,7 @@ videomenu.hdmi_cec_standby_not_timer unless timer-wakeup
 videomenu.hdmi_cec_view_on Enable CEC View on
 videomenu.hue Hue
 videomenu.letterbox Letterbox
+videomenu.masksetup Mask Setup
 videomenu.mixer_color Background color
 videomenu.panscan Pan&Scan
 videomenu.panscan2 14:9 Pan&Scan

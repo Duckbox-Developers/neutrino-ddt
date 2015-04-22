@@ -291,6 +291,40 @@ unsigned int CFrameBuffer::getStride() const
 	return stride;
 }
 
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+unsigned int CFrameBuffer::getScreenWidth(bool)
+{
+	return DEFAULT_XRES;
+}
+
+unsigned int CFrameBuffer::getScreenHeight(bool)
+{
+	return DEFAULT_YRES;
+}
+
+unsigned int CFrameBuffer::getScreenWidthRel(bool force_small)
+{
+	int percent = force_small ? WINDOW_SIZE_MIN_FORCED : g_settings.window_width;
+	// always reduce a possible detailline
+	return (DEFAULT_XRES - 2*ConnectLineBox_Width) * percent / 100;
+}
+
+unsigned int CFrameBuffer::getScreenHeightRel(bool force_small)
+{
+	int percent = force_small ? WINDOW_SIZE_MIN_FORCED : g_settings.window_height;
+	return DEFAULT_YRES * percent / 100;
+}
+
+unsigned int CFrameBuffer::getScreenX()
+{
+	return 0;
+}
+
+unsigned int CFrameBuffer::getScreenY()
+{
+	return 0;
+}
+#else
 unsigned int CFrameBuffer::getScreenWidth(bool real)
 {
 	if(real)
@@ -329,9 +363,12 @@ unsigned int CFrameBuffer::getScreenY()
 {
 	return g_settings.screen_StartY;
 }
+#endif
 
-fb_pixel_t * CFrameBuffer::getFrameBufferPointer() const
+fb_pixel_t * CFrameBuffer::getFrameBufferPointer(bool real)
 {
+	if (real)
+		return lfb;
 	if (active || (virtual_fb == NULL))
 		return accel->lbb;
 	else
@@ -1354,6 +1391,7 @@ void CFrameBuffer::set3DMode(Mode3D m)
 	if (mode3D != m) {
 		accel->ClearFB();
 		mode3D = m;
+		accel->borderColorOld = 0x01010101;
 		accel->blit();
 	}
 }
@@ -1417,6 +1455,26 @@ void CFrameBuffer::blitArea(int src_width, int src_height, int fb_x, int fb_y, i
 void CFrameBuffer::resChange(void)
 {
 	accel->resChange();
+}
+
+void CFrameBuffer::setBorder(int sx, int sy, int ex, int ey)
+{
+	accel->setBorder(sx, sy, ex, ey);
+}
+
+void CFrameBuffer::getBorder(int &sx, int &sy, int &ex, int &ey)
+{
+	accel->getBorder(sx, sy, ex, ey);
+}
+
+void CFrameBuffer::setBorderColor(fb_pixel_t col)
+{
+	accel->setBorderColor(col);
+}
+
+fb_pixel_t CFrameBuffer::getBorderColor(void)
+{
+	return accel->getBorderColor();
 }
 
 void CFrameBuffer::ClearFB(void)
@@ -1555,9 +1613,16 @@ bool CFrameBuffer::_checkFbArea(int _x, int _y, int _dx, int _dy, bool prev)
 void CFrameBuffer::mark(int x, int y, int dx, int dy)
 {
 	accel->mark(x, y, dx, dy);
-};
+}
 
 void CFrameBuffer::blit()
 {
 	accel->blit();
-};
+}
+
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+void CFrameBuffer::blitBPA2FB(unsigned char *mem, SURF_FMT fmt, int w, int h, int x, int y, int pan_x, int pan_y, int fb_x, int fb_y, int fb_w, int fb_h, int transp)
+{
+	accel->blitBPA2FB(mem, fmt, w, h, x, y, pan_x, pan_y, fb_x, fb_y, fb_w, fb_h, transp);
+}
+#endif

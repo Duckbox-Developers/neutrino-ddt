@@ -108,6 +108,9 @@
 #include "gui/themes.h"
 #include "gui/timerlist.h"
 
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#include "gui/screensetup.h"
+#endif
 #include <system/set_threadname.h>
 #include <system/ytcache.h>
 
@@ -706,8 +709,8 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.recording_zap_on_announce       = configfile.getBool("recording_zap_on_announce"      , false);
 	g_settings.shutdown_timer_record_type      = configfile.getBool("shutdown_timer_record_type"      , false);
 
-	g_settings.recording_stream_vtxt_pid       = configfile.getBool("recordingmenu.stream_vtxt_pid"      , false);
-	g_settings.recording_stream_subtitle_pids  = configfile.getBool("recordingmenu.stream_subtitle_pids", false);
+	g_settings.recording_stream_vtxt_pid       = configfile.getBool("recordingmenu.stream_vtxt_pid"      , true);
+	g_settings.recording_stream_subtitle_pids  = configfile.getBool("recordingmenu.stream_subtitle_pids", true);
 	g_settings.recording_stream_pmt_pid        = configfile.getBool("recordingmenu.stream_pmt_pid"      , false);
 	g_settings.recording_filename_template     = configfile.getString("recordingmenu.filename_template" , "%C_%T%d_%t");
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
@@ -812,6 +815,16 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.screen_StartY = g_settings.screen_preset ? g_settings.screen_StartY_lcd : g_settings.screen_StartY_crt;
 	g_settings.screen_EndX = g_settings.screen_preset ? g_settings.screen_EndX_lcd : g_settings.screen_EndX_crt;
 	g_settings.screen_EndY = g_settings.screen_preset ? g_settings.screen_EndY_lcd : g_settings.screen_EndY_crt;
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	g_settings.screen_StartX_int = g_settings.screen_StartX;
+	g_settings.screen_StartY_int = g_settings.screen_StartY;
+	g_settings.screen_EndX_int = g_settings.screen_EndX;
+	g_settings.screen_EndY_int = g_settings.screen_EndY;
+	g_settings.screen_StartX = 0;
+	g_settings.screen_StartY = 0;
+	g_settings.screen_EndX = frameBuffer->getScreenWidth() - 1;
+	g_settings.screen_EndY = frameBuffer->getScreenHeight() - 1;
+#endif
 
 	g_settings.screen_width = configfile.getInt32("screen_width", 0);
 	g_settings.screen_height = configfile.getInt32("screen_height", 0);
@@ -3000,6 +3013,12 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 #endif
 #ifdef ENABLE_GRAPHLCD
 		nGLCD::Update();
+#endif
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+		{
+			CScreenSetup cSS;
+			cSS.showBorder(CZapit::getInstance()->GetCurrentChannelID());
+		}
 #endif
 		g_RCInput->killTimer(scrambled_timer);
 		if (mode != mode_webtv) {

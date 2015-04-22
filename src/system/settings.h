@@ -535,9 +535,9 @@ struct SNeutrinoSettings
 	int screenshot_cover;
 	int screenshot_mode;
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	int screenshot_res;
 	int screenshot_png_compression;
 	int screenshot_backbuffer;
-	int screenshot_res;
 #else
 	int screenshot_video;
 	int screenshot_scale;
@@ -614,6 +614,12 @@ struct SNeutrinoSettings
 	int screen_StartY_lcd;
 	int screen_EndX_lcd;
 	int screen_EndY_lcd;
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	int screen_StartX_int;
+	int screen_StartY_int;
+	int screen_EndX_int;
+	int screen_EndY_int;
+#endif
 	int screen_preset;
 	int screen_width;
 	int screen_height;

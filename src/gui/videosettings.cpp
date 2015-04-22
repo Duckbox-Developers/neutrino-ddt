@@ -528,6 +528,11 @@ int CVideoSettings::showVideoSetup()
 	mf->setHint("", LOCALE_MENU_HINT_VIDEO_THREE_D);
 	videosetup->addItem(mf);
 
+	CScreenSetup channelScreenSetup;
+	channelScreenSetup.loadBorder(CZapit::getInstance()->GetCurrentChannelID());
+	mf = new CMenuForwarder(LOCALE_VIDEOMENU_MASKSETUP, true, NULL, &channelScreenSetup, NULL, CRCInput::RC_yellow);
+	mf->setHint("", LOCALE_MENU_HINT_VIDEO_MASK);
+	videosetup->addItem(mf);
 #endif
 #ifdef BOXMODEL_APOLLO
 	/* values are from -128 to 127, but brightness really no sense after +/- 40. changeNotify multiply contrast and saturation to 3 */

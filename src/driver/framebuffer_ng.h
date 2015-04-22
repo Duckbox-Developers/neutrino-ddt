@@ -71,6 +71,9 @@ typedef struct gradientData_t
 #if HAVE_GENERIC_HARDWARE
 #define USE_OPENGL 1
 #endif
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#include <linux/stmfb.h>
+#endif
 
 class CFbAccel;
 /** Ausfuehrung als Singleton */
@@ -165,7 +168,7 @@ class CFrameBuffer
 		int getFileHandle() const; //only used for plugins (games) !!
 		t_fb_var_screeninfo *getScreenInfo();
 
-		fb_pixel_t * getFrameBufferPointer() const; // pointer to framebuffer
+		fb_pixel_t * getFrameBufferPointer(bool real = false); // pointer to framebuffer
 		fb_pixel_t * getBackBufferPointer() const;  // pointer to backbuffer
 		unsigned int getStride() const;             // size of a single line in the framebuffer (in bytes)
 		unsigned int getScreenWidth(bool real = false);
@@ -262,6 +265,7 @@ class CFrameBuffer
 		void blitBox2FB(const fb_pixel_t* boxBuf, uint32_t width, uint32_t height, uint32_t xoff, uint32_t yoff);
 
 		void mark(int x, int y, int dx, int dy);
+		void blit();
 
 		enum 
 			{
@@ -272,23 +276,32 @@ class CFrameBuffer
 			};
 		void SetTransparent(int t){ m_transparent = t; }
 		void SetTransparentDefault(){ m_transparent = m_transparent_default; }
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 		bool OSDShot(const std::string &name);
 		enum Mode3D { Mode3D_off = 0, Mode3D_SideBySide, Mode3D_TopAndBottom, Mode3D_Tile, Mode3D_SIZE };
 		void set3DMode(Mode3D);
 		Mode3D get3DMode(void);
 	private:
-		bool autoBlitStatus;
-		pthread_t autoBlitThreadId;
-		static void *autoBlitThread(void *arg);
-		void autoBlitThread();
 		enum Mode3D mode3D;
 
 	public:
 		void blitArea(int src_width, int src_height, int fb_x, int fb_y, int width, int height);
-		void autoBlit(bool b = true);
 		void ClearFB(void);
 		void resChange(void);
+		void setBorder(int sx, int sy, int ex, int ey);
+		void getBorder(int &sx, int &sy, int &ex, int &ey);
+		void setBorderColor(fb_pixel_t col = 0);
+		fb_pixel_t getBorderColor(void);
+
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	private:
+		bool autoBlitStatus;
+		pthread_t autoBlitThreadId;
+		static void *autoBlitThread(void *arg);
+		void autoBlitThread();
+
+	public:
+		void autoBlit(bool b = true);
+		void blitBPA2FB(unsigned char *mem, SURF_FMT fmt, int w, int h, int x = 0, int y = 0, int pan_x = -1, int pan_y = -1, int fb_x = -1, int fb_y = -1, int fb_w = -1, int fb_h = -1, int transp = false);
 #endif
 
 // ## AudioMute / Clock ######################################
@@ -331,8 +344,6 @@ class CFrameBuffer
 		void setFbArea(int element, int _x=0, int _y=0, int _dx=0, int _dy=0);
 		void fbNoCheck(bool noCheck) { fb_no_check = noCheck; }
 		void doPaintMuteIcon(bool mode) { do_paint_mute_icon = mode; }
-
-		void blit();
 };
 
 #endif
