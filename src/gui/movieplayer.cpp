@@ -869,12 +869,12 @@ bool CMoviePlayerGui::PlayFileStart(void)
 		duration = p_movie_info->length * 60 * 1000;
 		int percent = CZapit::getInstance()->GetPidVolume(p_movie_info->epgId, currentapid, currentac3 == 1);
 		CZapit::getInstance()->SetVolumePercent(percent);
-#if HAVE_SPARK_HARDWARE
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 		CScreenSetup cSS;
 		cSS.showBorder(p_movie_info->epgId);
 #endif
 	} else {
-#if HAVE_SPARK_HARDWARE
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 		CScreenSetup cSS;
 		cSS.showBorder(0);
 #endif
