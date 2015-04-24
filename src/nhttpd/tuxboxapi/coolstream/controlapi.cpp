@@ -871,6 +871,7 @@ void CControlAPI::LogolistCGI(CyhookHandler *hh)
 
 		result += "\n";
 	}
+	hh->SetHeader(HTTP_OK, "text/plain; charset=UTF-8");
 	hh->WriteLn(result);
 }
 //-----------------------------------------------------------------------------
