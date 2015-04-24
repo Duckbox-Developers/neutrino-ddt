@@ -52,7 +52,7 @@ extern CCAMMenuHandler * g_CamHandler;
 
 CInfoMenu::CInfoMenu()
 {
-	width = w_max (40, 10);
+	width = 40;
 }
 
 CInfoMenu::~CInfoMenu()

@@ -59,7 +59,7 @@ extern CAudioSetupNotifier	* audioSetupNotifier;
 CAudioSelectMenuHandler::CAudioSelectMenuHandler()
 {
 	AudioSelector = NULL;
-	width = w_max (40, 10);
+	width = 40;
 	mp = &CMoviePlayerGui::getInstance();
 }
 
