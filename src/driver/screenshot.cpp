@@ -112,7 +112,7 @@ bool CScreenShot::GetData()
 #endif
 
 /* start ::run in new thread to save file in selected format */
-bool CScreenShot::Start()
+bool CScreenShot::Start(const std::string custom_cmd)
 {
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 	std::string cmd = "/bin/grab ";
@@ -136,6 +136,9 @@ bool CScreenShot::Start()
 		snprintf(tmp, sizeof(tmp), "%d", xres);
 		cmd += "-w " + std::string(tmp);
 	}
+
+	if !custom_cmd.empty()
+		cmd = "/bin/grab " + custom_cmd;
 		
 	cmd += " '";
 	cmd += filename;

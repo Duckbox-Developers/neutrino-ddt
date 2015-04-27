@@ -68,7 +68,7 @@ class CScreenShot : public OpenThreads::Thread
 		void EnableVideo(bool enable) { get_video = enable; }
 		void EnableOSD(bool enable) { get_osd = enable; }
 		void ScaleToVideo(bool enable) { scale_to_video = enable; }
-		bool Start();
+		bool Start(const std::string custom_cmd = "");
 		bool StartSync();
 };
 

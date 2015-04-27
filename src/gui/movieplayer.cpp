@@ -2602,7 +2602,7 @@ void CMoviePlayerGui::makeScreenShot(bool autoshot, bool forcover)
 			sc->SetSize(w, h);
 		}
 	}
-	sc->Start();
+	sc->Start("-r 320 -j 75");
 }
 
 void CMoviePlayerGui::showFileInfos()
