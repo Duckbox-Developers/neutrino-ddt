@@ -137,7 +137,7 @@ bool CScreenShot::Start(const std::string custom_cmd)
 		cmd += "-w " + std::string(tmp);
 	}
 
-	if !custom_cmd.empty()
+	if (!custom_cmd.empty())
 		cmd = "/bin/grab " + custom_cmd;
 		
 	cmd += " '";
