@@ -1843,6 +1843,15 @@ bool CMovieBrowser::onButtonPressMainFrame(neutrino_msg_t msg)
 				refresh();
 			}
 		}
+	} else if (msg == (neutrino_msg_t) g_settings.key_screenshot) {
+		if (m_movieSelectionHandler != NULL) {
+			if(ShowMsg(LOCALE_MESSAGEBOX_INFO, "Remove screenshot ?", CMessageBox::mbrNo, CMessageBox:: mbYes | CMessageBox::mbNo) == CMessageBox::mbrYes) {
+				std::string fname = m_movieSelectionHandler->file.Name;
+				strReplace(fname, ".ts", ".jpg");
+				unlink(fname.c_str());
+				refresh();
+			}
+		}
 	}
 	else
 	{
