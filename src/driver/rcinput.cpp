@@ -1362,6 +1362,12 @@ void CRCInput::getMsg_us(neutrino_msg_t * msg, neutrino_msg_data_t * data, uint6
 						{
 							last_keypress = now_pressed;
 
+							FILE* rclocked = fopen("/tmp/rc.locked", "r");
+							if (rclocked)
+							{
+								fclose(rclocked);
+								continue;
+							}
 							*msg = trkey;
 							*data = 0; /* <- button pressed */
 							if(g_settings.key_click)
