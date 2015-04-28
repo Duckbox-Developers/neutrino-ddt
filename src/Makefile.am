@@ -28,6 +28,10 @@ if BOXTYPE_TRIPLE
 SUBDIRS += lcddisplay
 endif
 
+if USE_PUGIXML
+PUGIXML_LIBS = -lpugixml
+endif
+
 if USE_TREMOR
 VORBISLIBS = @VORBISIDEC_LIBS@
 else
@@ -106,6 +110,7 @@ neutrino_LDADD = \
 	@LIBCS_LIBS@ \
 	$(ADEC_LIBS) \
 	@SIGC_LIBS@ \
+	$(PUGIXML_LIBS) \
 	-ldvbsi++ \
 	-ljpeg \
 	-lOpenThreads \

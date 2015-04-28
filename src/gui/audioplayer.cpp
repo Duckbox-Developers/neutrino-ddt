@@ -1128,7 +1128,7 @@ void CAudioPlayerGui::scanXmlData(xmlDocPtr answer_parser, const char *nametag, 
 
 	if (answer_parser != NULL) {
 		xmlNodePtr element = xmlDocGetRootElement(answer_parser);
-		element = element->xmlChildrenNode;
+		element = xmlChildrenNode(element);
 		xmlNodePtr element_tmp = element;
 		if (element == NULL) {
 			printf("[openFilebrowser] No valid XML File.\n");
@@ -1138,7 +1138,7 @@ void CAudioPlayerGui::scanXmlData(xmlDocPtr answer_parser, const char *nametag, 
 			// count # of entries
 			while (element) {
 				maxProgress++;
-				element = element->xmlNextNode;
+				element = xmlNextNode(element);
 			}
 			element = element_tmp;
 			long listPos = -1;
@@ -1164,7 +1164,7 @@ void CAudioPlayerGui::scanXmlData(xmlDocPtr answer_parser, const char *nametag, 
 
 				if (usechild) {
 					const char *type = NULL;
-					xmlNodePtr child = element->xmlChildrenNode;
+					xmlNodePtr child = xmlChildrenNode(element);
 					while (child) {
 						if (strcmp(xmlGetName(child), nametag) == 0)
 							name = xmlGetData(child);
@@ -1177,7 +1177,7 @@ void CAudioPlayerGui::scanXmlData(xmlDocPtr answer_parser, const char *nametag, 
 							if (ptr)
 								bitrate = atoi(ptr);
 						}
-						child = child->xmlNextNode;
+						child = xmlNextNode(child);
 					}
 					if(type){
 						if 	(strcmp("audio/mpeg", type) == 0) 	skip = false;
@@ -1204,7 +1204,7 @@ void CAudioPlayerGui::scanXmlData(xmlDocPtr answer_parser, const char *nametag, 
 					else
 						addUrl2Playlist(url, name, bitrate);
 				}
-				element = element->xmlNextNode;
+				element = xmlNextNode(element);
 				g_RCInput->getMsg(&msg, &data, 0);
 
 			}

@@ -447,7 +447,7 @@ printf("CFileBrowser::readDir_sc: read done, size %d\n", (int)answer.size());
 				xml_decode = 1;
 			else if (strcmp(xmlGetName(element), "stationlist") == 0)
 				xml_decode = 2;
-			element = element->xmlChildrenNode;
+			element = xmlChildrenNode(element);
 
 			if (element == NULL) {
 				printf("[FileBrowser] SC: Directory cannot be read.\n");
@@ -522,7 +522,7 @@ printf("CFileBrowser::readDir_sc: read done, size %d\n", (int)answer.size());
 							}
 						}
 					}
-					element = element->xmlNextNode;
+					element = xmlNextNode(element);
 				}
 			}
 			xmlFreeDoc(answer_parser);
