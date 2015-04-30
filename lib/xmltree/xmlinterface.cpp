@@ -206,10 +206,12 @@ xmlDocPtr parseXmlFile(const char * filename, bool warning_by_nonexistence /* = 
 }
 
 #elif  (defined( USE_PUGIXML ) )
+
+#include <fstream>
+
 xmlDocPtr parseXml(const char * data,const char* /*encoding*/)
 {
 	pugi::xml_document* tree_parser = new pugi::xml_document();
-
 	if (!tree_parser->load_string(data))
 	{
 		delete tree_parser;
@@ -225,11 +227,27 @@ xmlDocPtr parseXml(const char * data,const char* /*encoding*/)
 	return tree_parser;
 }
 
-xmlDocPtr parseXmlFile(const char * filename, bool,const char* /*encoding*/)
+xmlDocPtr parseXmlFile(const char * filename, bool,const char* encoding)
 {
+	pugi::xml_encoding enc = pugi::encoding_auto;
+	if(encoding==NULL){
+		std::ifstream in;
+		in.open(filename);
+		if (in.is_open()) {
+			std::string line;
+			getline(in, line);
+			for (std::string::iterator it = line.begin(); it != line.end(); ++ it)
+				*it = toupper(*it);
+			if (line.find("ISO-8859-1",0)!= std::string::npos){
+				enc = pugi::encoding_latin1;
+			}
+			in.close();
+		}
+	}
+
 	pugi::xml_document* tree_parser = new pugi::xml_document();
 
-	if (!tree_parser->load_file(filename))
+	if (!tree_parser->load_file(filename, pugi::parse_default, enc))
 	{
 		delete tree_parser;
 		return NULL;

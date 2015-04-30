@@ -348,7 +348,7 @@ void CFrontend::Close(void)
 	if(standby)
 		return;
 
-	INFO("[fe%d] close frontend\n", fenumber);
+	INFO("[fe%d] close frontend fd %d", fenumber, fd);
 
 	if (!slave && config.diseqcType > MINI_DISEQC)
 		sendDiseqcStandby();
