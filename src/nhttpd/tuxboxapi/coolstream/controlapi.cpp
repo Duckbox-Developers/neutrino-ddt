@@ -2799,6 +2799,7 @@ void CControlAPI::updateBouquetCGI(CyhookHandler *hh)
 	hh->SendOk();
 }
 //-------------------------------------------------------------------------
+#if 0
 // audio_no : (optional) audio channel
 // host : (optional) ip of dbox
 void CControlAPI::build_live_url(CyhookHandler *hh)
@@ -2864,6 +2865,46 @@ void CControlAPI::build_live_url(CyhookHandler *hh)
 		hh->Write(url);
 	}
 }
+#else
+void CControlAPI::build_live_url(CyhookHandler *hh)
+{
+	int mode = NeutrinoAPI->Zapit->getMode();
+	// build url
+	std::string url = "";
+	if(!hh->ParamList["host"].empty())
+		url = "http://"+hh->ParamList["host"];
+	else
+		url = "http://"+hh->HeaderList["Host"];
+	/* strip off optional custom port */
+	if (url.rfind(":") != 4)
+		url = url.substr(0, url.rfind(":"));
+
+	url += ":31339/id=";
+
+	// response url
+	if(!hh->ParamList["vlc_link"].empty())
+	{
+		write_to_file("/tmp/vlc.m3u", "#EXTM3U\n");
+		for (int i = 0; i < (int) g_bouquetManager->Bouquets.size(); i++) {
+			ZapitChannelList chanlist;
+			if (mode == CZapitClient::MODE_RADIO)
+				g_bouquetManager->Bouquets[i]->getRadioChannels(chanlist);
+			else
+				g_bouquetManager->Bouquets[i]->getTvChannels(chanlist);
+			if(!chanlist.empty() && !g_bouquetManager->Bouquets[i]->bHidden && g_bouquetManager->Bouquets[i]->bUser) {
+				for(int j = 0; j < (int) chanlist.size(); j++) {
+					CZapitChannel * channel = chanlist[j];
+					printf("---> %s/n",channel->getName().c_str());
+					write_to_file("/tmp/vlc.m3u", "#EXTINF:-1,"+channel->getName()+"\n",true);
+					write_to_file("/tmp/vlc.m3u", url+string_printf(PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS, channel->getChannelID())+"\n",true);
+				}
+			}
+		}
+		hh->SendRedirect("/tmp/vlc.m3u");
+	} else
+		hh->SendError();
+}
+#endif
 //-------------------------------------------------------------------------
 void CControlAPI::build_playlist(CyhookHandler *hh)
 {
