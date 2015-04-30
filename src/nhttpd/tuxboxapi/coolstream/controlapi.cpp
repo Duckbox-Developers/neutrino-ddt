@@ -2894,7 +2894,7 @@ void CControlAPI::build_live_url(CyhookHandler *hh)
 			if(!chanlist.empty() && !g_bouquetManager->Bouquets[i]->bHidden && g_bouquetManager->Bouquets[i]->bUser) {
 				for(int j = 0; j < (int) chanlist.size(); j++) {
 					CZapitChannel * channel = chanlist[j];
-					printf("---> %s/n",channel->getName().c_str());
+					//printf("---> %s/n",channel->getName().c_str());
 					write_to_file("/tmp/vlc.m3u", "#EXTINF:-1,"+channel->getName()+"\n",true);
 					write_to_file("/tmp/vlc.m3u", url+string_printf(PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS, channel->getChannelID())+"\n",true);
 				}
