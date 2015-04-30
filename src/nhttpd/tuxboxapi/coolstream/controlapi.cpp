@@ -218,6 +218,7 @@ const CControlAPI::TyCgiCall CControlAPI::yCgiCallList[]=
 	{"updatebouquet",	&CControlAPI::updateBouquetCGI,	"text/plain"},
 	// utils
 	{"build_live_url",	&CControlAPI::build_live_url,	""},
+	{"build_playlist",	&CControlAPI::build_playlist,	""},
 	{"get_logo",		&CControlAPI::logoCGI,	"text/plain"},
 	// settings
 	{"config",			&CControlAPI::ConfigCGI,	"text/plain"},
@@ -2862,6 +2863,40 @@ void CControlAPI::build_live_url(CyhookHandler *hh)
 		hh->SetHeader(HTTP_OK, "text/html; charset=UTF-8");
 		hh->Write(url);
 	}
+}
+//-------------------------------------------------------------------------
+void CControlAPI::build_playlist(CyhookHandler *hh)
+{
+	// build url
+	std::string url = "";
+	if(!hh->ParamList["host"].empty())
+		url = "http://"+hh->ParamList["host"];
+	else
+		url = "http://"+hh->HeaderList["Host"];
+	/* strip off optional custom port */
+	if (url.rfind(":") != 4)
+		url = url.substr(0, url.rfind(":"));
+
+	url += ":31339/id=";
+
+	if(!hh->ParamList["id"].empty()) {
+		url += hh->ParamList["id"];
+		t_channel_id channel_id;
+		sscanf(hh->ParamList["id"].c_str(), SCANF_CHANNEL_ID_TYPE, &channel_id);
+		std::string chan_name = NeutrinoAPI->Zapit->getChannelName(channel_id);
+		std::string illegalChars = "\\/:?\"<>| ";
+		std::string::iterator it;
+		for (it = chan_name.begin() ; it < chan_name.end() ; ++it){
+		    bool found = illegalChars.find(*it) != string::npos;
+	    	if(found){
+	        	*it = '_';
+	    	}
+		}
+		std::string m3u = "/tmp/" + chan_name + ".m3u";
+		write_to_file(m3u, url);
+		hh->SendRedirect(m3u);
+	} else
+		hh->SendError();
 }
 //-------------------------------------------------------------------------
 void CControlAPI::logoCGI(CyhookHandler *hh)

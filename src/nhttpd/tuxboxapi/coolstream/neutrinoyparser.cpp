@@ -449,6 +449,8 @@ std::string CNeutrinoYParser::func_get_bouquets_with_epg(CyhookHandler *hh, std:
 		if (channel->getChannelID() == current_channel)
 			yresult += string_printf("\n&nbsp;&nbsp;<a href=\"javascript:do_streaminfo()\"><img src=\"/images/streaminfo.png\" alt=\"Streaminfo\" style=\"border: 0px\" /></a>");
 
+		yresult += string_printf("\n&nbsp;&nbsp;<a href=\"/control/build_playlist?id="PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS"\"><img src=\"/images/vlc.png\" alt=\"VLC-Link\" style=\"border: 0px\" /></a>",channel->getChannelID());
+
 		yresult += string_printf("</td></tr></table>\n</td>\n</tr>\n");
 
 		if (channel->getServiceType() == ST_NVOD_REFERENCE_SERVICE)
