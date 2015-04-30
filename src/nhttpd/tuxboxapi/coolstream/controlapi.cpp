@@ -2934,7 +2934,9 @@ void CControlAPI::build_playlist(CyhookHandler *hh)
 	    	}
 		}
 		std::string m3u = "/tmp/" + chan_name + ".m3u";
-		write_to_file(m3u, url);
+		write_to_file(m3u, "#EXTM3U\n");
+		write_to_file(m3u, "#EXTINF:-1,"+NeutrinoAPI->Zapit->getChannelName(channel_id)+"\n",true);
+		write_to_file(m3u, url, true);
 		hh->SendRedirect(m3u);
 	} else
 		hh->SendError();
