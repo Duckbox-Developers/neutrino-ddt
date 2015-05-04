@@ -457,7 +457,7 @@ void CInfoViewerBB::paintFoot(int w)
 
 	CComponentsShapeSquare foot(g_InfoViewer->ChanInfoX, BBarY, width, InfoHeightY_Info);
 
-	foot.setColorBody(COL_INFOBAR_BUTTONS_BACKGROUND);
+	foot.setColorBody(g_settings.theme.infobar_gradient_bottom ? COL_MENUHEAD_PLUS_0 : COL_INFOBAR_BUTTONS_BACKGROUND);
 	foot.enableColBodyGradient(g_settings.theme.infobar_gradient_bottom);
 	foot.setColBodyGradient(CColorGradient::gradientDark2Light, CFrameBuffer::gradientVertical);
 	foot.setCorner(RADIUS_LARGE, CORNER_BOTTOM);
