@@ -1249,6 +1249,22 @@ void CFrameBuffer::Clear()
 	//memset(getFrameBufferPointer(), 0, stride * yRes);
 }
 
+void CFrameBuffer::showFrame(const std::string & filename)
+{
+	std::string picture = std::string(ICONDIR_VAR) + filename;
+	if (access(picture.c_str(), F_OK))
+		picture = iconBasePath + filename;
+	if (filename.find("/", 0) != std::string::npos)
+		picture = filename;
+
+	videoDecoder->ShowPicture(picture.c_str());
+}
+
+void CFrameBuffer::stopFrame()
+{
+	videoDecoder->StopPicture();
+}
+
 bool CFrameBuffer::Lock()
 {
 	if(locked)

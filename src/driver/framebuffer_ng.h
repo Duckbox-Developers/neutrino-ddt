@@ -218,7 +218,6 @@ class CFrameBuffer
 		void paintHLine(int xa, int xb, int y, const fb_pixel_t col);
 		void paintHLineRel(int x, int dx, int y, const fb_pixel_t col);
 
-
 		void setIconBasePath(const std::string & iconPath);
 		std::string getIconBasePath(){return iconBasePath;}
 
@@ -253,6 +252,7 @@ class CFrameBuffer
 
 		void Clear();
 		void showFrame(const std::string & filename);
+		void stopFrame();
 		bool loadBackgroundPic(const std::string & filename, bool show = true);
 		bool Lock(void);
 		void Unlock(void);
@@ -340,7 +340,6 @@ class CFrameBuffer
 		};
 
 		inline bool checkFbArea(int _x, int _y, int _dx, int _dy, bool prev) { return (fbAreaActiv && !fb_no_check) ? _checkFbArea(_x, _y, _dx, _dy, prev) : true; }
-
 		void setFbArea(int element, int _x=0, int _y=0, int _dx=0, int _dy=0);
 		void fbNoCheck(bool noCheck) { fb_no_check = noCheck; }
 		void doPaintMuteIcon(bool mode) { do_paint_mute_icon = mode; }
