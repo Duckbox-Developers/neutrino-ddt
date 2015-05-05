@@ -62,6 +62,8 @@ extern int gfxfd;
 #endif
 #include <system/set_threadname.h>
 
+extern cVideo * videoDecoder;
+
 extern CPictureViewer * g_PicViewer;
 #define ICON_CACHE_SIZE 1024*1024*2 // 2mb
 #define ICONDIR_VAR "/var/tuxbox/icons/"
