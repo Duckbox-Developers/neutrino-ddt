@@ -81,7 +81,7 @@ uint32_t GLCD_Menu::index2color(int i) {
 
 GLCD_Menu::GLCD_Menu()
 {
-	width = w_max (40, 10);
+	width = 40;
 	selected = -1;
 }
 

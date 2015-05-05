@@ -63,7 +63,7 @@ static C3DSetup::threeDList tdl[THREE_D_OPTIONS_COUNT] =
 
 C3DSetup::C3DSetup(void)
 {
-	width = w_max (40, 10);
+	width = 40;
 	selected = -1;
 	frameBuffer = CFrameBuffer::getInstance();
 }

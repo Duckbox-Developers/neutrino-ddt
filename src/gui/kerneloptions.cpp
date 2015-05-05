@@ -39,7 +39,7 @@ static const CMenuOptionChooser::keyval ONOFF_OPTIONS[ONOFF_OPTION_COUNT] = {
 
 CKernelOptions::CKernelOptions()
 {
-	width = w_max(40, 10);
+	width = 40;
 }
 
 void CKernelOptions::loadModule(int i)
