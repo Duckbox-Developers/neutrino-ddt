@@ -287,7 +287,7 @@ int CAudioPlayerGui::exec(CMenuTarget* parent, const std::string &actionKey)
 	// set zapit in lock mode
 	CNeutrinoApp::getInstance()->stopPlayBack(true);
 
-	videoDecoder->ShowPicture(DATADIR "/neutrino/icons/mp3.jpg");
+	m_frameBuffer->showFrame("mp3.jpg");
 
 	// tell neutrino we're in audio mode
 	m_LastMode = CNeutrinoApp::getInstance()->getMode();
@@ -316,7 +316,7 @@ int CAudioPlayerGui::exec(CMenuTarget* parent, const std::string &actionKey)
 	CZapit::getInstance()->EnablePlayback(true);
 	// Start Sectionsd
 	g_Sectionsd->setPauseScanning(false);
-	videoDecoder->StopPicture();
+	m_frameBuffer->stopFrame();
 	CNeutrinoApp::getInstance()->handleMsg( NeutrinoMessages::CHANGEMODE , m_LastMode );
 	g_RCInput->postMsg( NeutrinoMessages::SHOW_INFOBAR, 0 );
 
@@ -387,8 +387,8 @@ int CAudioPlayerGui::show()
 			{
 				screensaver(false);
 
-				videoDecoder->StopPicture();
-				videoDecoder->ShowPicture(DATADIR "/neutrino/icons/mp3.jpg");
+				m_frameBuffer->stopFrame();
+				m_frameBuffer->showFrame("mp3.jpg");
 				paint();
 
 				if (msg <= CRCInput::RC_MaxRC) {
@@ -719,7 +719,7 @@ int CAudioPlayerGui::show()
 		{
 			pictureviewer = true;
 			m_frameBuffer->Clear();
-			videoDecoder->StopPicture();
+			m_frameBuffer->stopFrame();
 			CPictureViewerGui * picture = new CPictureViewerGui();
 			picture->m_audioPlayer = this;
 			picture->exec(this, "audio");
@@ -727,7 +727,7 @@ int CAudioPlayerGui::show()
 			pictureviewer = false;
 			screensaver(false);
 			videoDecoder->setBlank(true);
-			videoDecoder->ShowPicture(DATADIR "/neutrino/icons/mp3.jpg");
+			m_frameBuffer->showFrame("mp3.jpg");
 			CVFD::getInstance()->setMode(CVFD::MODE_AUDIO);
 			paintLCD();
 			update = true;

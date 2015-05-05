@@ -99,7 +99,7 @@ int CUpnpBrowserGui::exec(CMenuTarget* parent, const std::string & /*actionKey*/
 
 	/* stop playback, disable playback start */
 	CNeutrinoApp::getInstance()->stopPlayBack(true);
-	videoDecoder->ShowPicture(DATADIR "/neutrino/icons/mp3.jpg");
+	m_frameBuffer->showFrame("mp3.jpg");
 
 	// tell neutrino we're in audio mode
 	CNeutrinoApp::getInstance()->handleMsg(NeutrinoMessages::CHANGEMODE , NeutrinoMessages::mode_audio);
@@ -139,7 +139,7 @@ int CUpnpBrowserGui::exec(CMenuTarget* parent, const std::string & /*actionKey*/
 
 	// Start Sectionsd
 	g_Sectionsd->setPauseScanning(false);
-	videoDecoder->StopPicture();
+	m_frameBuffer->stopFrame();
 	m_frameBuffer->Clear();
 	g_Zapit->startPlayBack();
 
@@ -775,7 +775,7 @@ bool CUpnpBrowserGui::selectItem(std::string id)
 					{
 						m_frameBuffer->Clear();
 						playVideo((*entries)[selected - liststart].title, (*entries)[selected - liststart].resources[preferred].url);
-						videoDecoder->ShowPicture(DATADIR "/neutrino/icons/mp3.jpg");
+						m_frameBuffer->showFrame("mp3.jpg");
 						refresh = true;
 					}
 					else if (mime.substr(0,6) == "image/")
@@ -1285,7 +1285,7 @@ void CUpnpBrowserGui::playVideo(std::string name, std::string url)
 	if (CAudioPlayer::getInstance()->getState() != CBaseDec::STOP)
 		CAudioPlayer::getInstance()->stop();
 
-	videoDecoder->StopPicture();
+	m_frameBuffer->stopFrame();
 	CMoviePlayerGui::getInstance().SetFile(name, url);
 	CMoviePlayerGui::getInstance().exec(NULL, "upnp");
 }
