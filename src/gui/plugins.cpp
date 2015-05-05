@@ -75,7 +75,7 @@ extern CPlugins       * g_PluginList;    /* neutrino.cpp */
 extern CRemoteControl * g_RemoteControl; /* neutrino.cpp */
 
 #define PLUGINDIR_VAR "/var/tuxbox/plugins"
-#define PLUGINDIR_USB "/mnt/usb/tuxbox/plugins"
+#define PLUGINDIR_MNT "/mnt/plugins"
 
 CPlugins::CPlugins()
 {
@@ -158,8 +158,9 @@ void CPlugins::loadPlugins()
 	number_of_plugins = 0;
 	plugin_list.clear();
 	sindex = 100;
+	scanDir(GAMESDIR);
 	scanDir(g_settings.plugin_hdd_dir.c_str());
-	scanDir(PLUGINDIR_USB);
+	scanDir(PLUGINDIR_MNT);
 	scanDir(PLUGINDIR_VAR);
 	scanDir(PLUGINDIR);
 
