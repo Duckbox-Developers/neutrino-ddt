@@ -78,6 +78,7 @@ COsdSetup::COsdSetup(bool wizard_mode)
 	colorInfoclockNotifier = NULL;
 	screensaverNotifier = NULL;
 	channellistNotifier = NULL;
+	infobarHddNotifier = NULL;
 	osd_menu = NULL;
 	submenu_menus = NULL;
 	mfFontFile = NULL;
@@ -676,6 +677,7 @@ int COsdSetup::showOsdSetup()
 	delete colorInfoclockNotifier;
 	delete screensaverNotifier;
 	delete channellistNotifier;
+	delete infobarHddNotifier;
 	delete osd_menu;
 	return res;
 }
@@ -791,10 +793,21 @@ void COsdSetup::showOsdMenueColorSetup(CMenuWidget *menu_colors)
 	CColorChooser* chColored_Events = new CColorChooser(LOCALE_COLORMENU_TEXTCOLOR,	&t.colored_events_red,
 			&t.colored_events_green, &t.colored_events_blue, NULL, colorSetupNotifier);
 
-	menu_colors->addItem( new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_MISCSETTINGS_INFOBAR_COLORED_EVENTS));
+	menu_colors->addItem( new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_MISCSETTINGS_COLORED_EVENTS));
+
 	mf = new CMenuDForwarder(LOCALE_COLORMENU_TEXTCOLOR, true, NULL, chColored_Events );
-	mf->setHint("", LOCALE_MENU_HINT_EVENT_TEXTCOLOR);
+	mf->setHint("", LOCALE_MENU_HINT_COLORED_EVENTS_TEXTCOLOR);
 	menu_colors->addItem(mf);
+
+	// colored events channellist
+	oj = new CMenuOptionChooser(LOCALE_MISCSETTINGS_COLORED_EVENTS_CHANNELLIST, &t.colored_events_channellist, OPTIONS_COLORED_EVENTS_OPTIONS, OPTIONS_COLORED_EVENTS_OPTION_COUNT, true);
+	oj->setHint("", LOCALE_MENU_HINT_COLORED_EVENTS);
+	menu_colors->addItem(oj);
+
+	// colored events infobar
+	oj = new CMenuOptionChooser(LOCALE_MISCSETTINGS_COLORED_EVENTS_INFOBAR, &t.colored_events_infobar, OPTIONS_COLORED_EVENTS_OPTIONS, OPTIONS_COLORED_EVENTS_OPTION_COUNT, true);
+	oj->setHint("", LOCALE_MENU_HINT_COLORED_EVENTS);
+	menu_colors->addItem(oj);
 }
 
 /* for font size setup */
@@ -984,11 +997,19 @@ void COsdSetup::showOsdInfobarSetup(CMenuWidget *menu_infobar)
 {
 	menu_infobar->addIntroItems(LOCALE_MISCSETTINGS_INFOBAR);
 
-	CMenuOptionChooser * mc;
+	infobarHddNotifier = new COnOffNotifier();
 
-	// CA system
-	mc = new CMenuOptionChooser(LOCALE_MISCSETTINGS_INFOBAR_CASYSTEM_DISPLAY, &g_settings.casystem_display, INFOBAR_CASYSTEM_MODE_OPTIONS, INFOBAR_CASYSTEM_MODE_OPTION_COUNT, true, this);
-	mc->setHint("", LOCALE_MENU_HINT_INFOBAR_CASYS);
+	CMenuOptionChooser * mc;
+	CMenuForwarder * mf;
+
+	// show on epg change
+	mc = new CMenuOptionChooser(LOCALE_MISCSETTINGS_INFOBAR_SHOW, &g_settings.infobar_show, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
+	mc->setHint("", LOCALE_MENU_HINT_INFOBAR_ON_EPG);
+	menu_infobar->addItem(mc);
+
+	// radiotext
+	mc = new CMenuOptionChooser(LOCALE_MISCSETTINGS_RADIOTEXT, &g_settings.radiotext_enable, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this);
+	mc->setHint("", LOCALE_MENU_HINT_INFOBAR_RADIOTEXT);
 	menu_infobar->addItem(mc);
 
 	// CA system frame
@@ -1003,46 +1024,40 @@ void COsdSetup::showOsdInfobarSetup(CMenuWidget *menu_infobar)
 	menu_infobar->addItem(mc);
 #endif
 
-	// logo
-	mc = new CMenuOptionChooser(LOCALE_MISCSETTINGS_INFOBAR_DISP_LOG, &g_settings.infobar_show_channellogo, LOCALE_MISCSETTINGS_INFOBAR_DISP_OPTIONS, LOCALE_MISCSETTINGS_INFOBAR_DISP_OPTIONS_COUNT, true);
+	menu_infobar->addItem(GenericMenuSeparator);
+
+	// display options
+	mc = new CMenuOptionChooser(LOCALE_MISCSETTINGS_INFOBAR_DISP, &g_settings.infobar_show_channellogo, LOCALE_MISCSETTINGS_INFOBAR_DISP_OPTIONS, LOCALE_MISCSETTINGS_INFOBAR_DISP_OPTIONS_COUNT, true);
 	mc->setHint("", LOCALE_MENU_HINT_INFOBAR_LOGO);
 	menu_infobar->addItem(mc);
 
 	// logo directory
-	CMenuForwarder * mf = new CMenuForwarder(LOCALE_MISCSETTINGS_INFOBAR_LOGO_HDD_DIR, true, g_settings.logo_hdd_dir, this, "logo_dir");
+	mf = new CMenuForwarder(LOCALE_MISCSETTINGS_INFOBAR_LOGO_HDD_DIR, true, g_settings.logo_hdd_dir, this, "logo_dir");
 	mf->setHint("", LOCALE_MENU_HINT_INFOBAR_LOGO_DIR);
 	menu_infobar->addItem(mf);
 
-	// satellite
+	// satellite/cable provider
 	mc = new CMenuOptionChooser(LOCALE_MISCSETTINGS_INFOBAR_SAT_DISPLAY, &g_settings.infobar_sat_display, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
 	mc->setHint("", LOCALE_MENU_HINT_INFOBAR_SAT);
 	menu_infobar->addItem(mc);
 
-	//infobar position
-	CMenuOptionChooser *infobar_position;
-	infobar_position = new CMenuOptionChooser(LOCALE_MISCSETTINGS_PROGRESSBAR_INFOBAR_POSITION, &g_settings.infobar_progressbar, PROGRESSBAR_INFOBAR_POSITION_OPTIONS, PROGRESSBAR_INFOBAR_POSITION_COUNT, true);
-	infobar_position->setHint("", LOCALE_MENU_HINT_PROGRESSBAR_INFOBAR_POSITION);
-	menu_infobar->addItem(infobar_position);
+	menu_infobar->addItem(GenericMenuSeparator);
 
-	// flash/hdd progress
-	mc = new CMenuOptionChooser(LOCALE_MISCSETTINGS_INFOBAR_SHOW_SYSFS_HDD, &g_settings.infobar_show_sysfs_hdd, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
+	// CA system
+	mc = new CMenuOptionChooser(LOCALE_MISCSETTINGS_INFOBAR_CASYSTEM_DISPLAY, &g_settings.casystem_display, INFOBAR_CASYSTEM_MODE_OPTIONS, INFOBAR_CASYSTEM_MODE_OPTION_COUNT, true, this);
+	mc->setHint("", LOCALE_MENU_HINT_INFOBAR_CASYS);
+	menu_infobar->addItem(mc);
+
+	// flash/hdd statfs
+	mc = new CMenuOptionChooser(LOCALE_MISCSETTINGS_INFOBAR_SHOW_SYSFS_HDD, &g_settings.infobar_show_sysfs_hdd, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, infobarHddNotifier);
 	mc->setHint("", LOCALE_MENU_HINT_INFOBAR_FILESYS);
 	menu_infobar->addItem(mc);
 
-	// hdd update
-	mc = new CMenuOptionChooser(LOCALE_HDD_STATFS, &g_settings.hdd_statfs_mode, HDD_STATFS_OPTIONS, HDD_STATFS_OPTION_COUNT, true);
+	// hdd statfs update
+	mc = new CMenuOptionChooser(LOCALE_HDD_STATFS, &g_settings.hdd_statfs_mode, HDD_STATFS_OPTIONS, HDD_STATFS_OPTION_COUNT, g_settings.infobar_show_sysfs_hdd);
 	mc->setHint("", LOCALE_MENU_HINT_HDD_STATFS);
 	menu_infobar->addItem(mc);
-
-	// resolution
-	mc = new CMenuOptionChooser(LOCALE_MISCSETTINGS_INFOBAR_SHOW_RES, &g_settings.infobar_show_res, INFOBAR_SHOW_RES_MODE_OPTIONS, INFOBAR_SHOW_RES_MODE_OPTION_COUNT, true);
-	mc->setHint("", LOCALE_MENU_HINT_INFOBAR_RES);
-	menu_infobar->addItem(mc);
-
-	// DD icon
-	mc = new CMenuOptionChooser(LOCALE_MISCSETTINGS_INFOBAR_SHOW_DD_AVAILABLE, &g_settings.infobar_show_dd_available, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
-	mc->setHint("", LOCALE_MENU_HINT_INFOBAR_DD);
-	menu_infobar->addItem(mc);
+	infobarHddNotifier->addItem(mc);
 
 	// tuner icon
 	bool mc_active = false;
@@ -1058,19 +1073,20 @@ void COsdSetup::showOsdInfobarSetup(CMenuWidget *menu_infobar)
 	mc->setHint("", LOCALE_MENU_HINT_INFOBAR_TUNER);
 	menu_infobar->addItem(mc);
 
-	// show on epg change
-	mc = new CMenuOptionChooser(LOCALE_MISCSETTINGS_INFOBAR_SHOW, &g_settings.infobar_show, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
-	mc->setHint("", LOCALE_MENU_HINT_INFOBAR_ON_EPG);
+	// resolution
+	mc = new CMenuOptionChooser(LOCALE_MISCSETTINGS_INFOBAR_SHOW_RES, &g_settings.infobar_show_res, INFOBAR_SHOW_RES_MODE_OPTIONS, INFOBAR_SHOW_RES_MODE_OPTION_COUNT, true);
+	mc->setHint("", LOCALE_MENU_HINT_INFOBAR_RES);
 	menu_infobar->addItem(mc);
 
-	// colored event
-	mc = new CMenuOptionChooser(LOCALE_MISCSETTINGS_INFOBAR_COLORED_EVENTS, &g_settings.colored_events_infobar, OPTIONS_COLORED_EVENTS_OPTIONS, OPTIONS_COLORED_EVENTS_OPTION_COUNT, true);
-	mc->setHint("", LOCALE_MENU_HINT_INFOBAR_COLORED_EVENT);
+	// DD icon
+	mc = new CMenuOptionChooser(LOCALE_MISCSETTINGS_INFOBAR_SHOW_DD_AVAILABLE, &g_settings.infobar_show_dd_available, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
+	mc->setHint("", LOCALE_MENU_HINT_INFOBAR_DD);
 	menu_infobar->addItem(mc);
 
-	// radiotext
-	mc = new CMenuOptionChooser(LOCALE_MISCSETTINGS_RADIOTEXT, &g_settings.radiotext_enable, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this);
-	mc->setHint("", LOCALE_MENU_HINT_INFOBAR_RADIOTEXT);
+	menu_infobar->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_MISCSETTINGS_PROGRESSBAR));
+	// progressbar position
+	mc = new CMenuOptionChooser(LOCALE_MISCSETTINGS_PROGRESSBAR_INFOBAR_POSITION, &g_settings.infobar_progressbar, PROGRESSBAR_INFOBAR_POSITION_OPTIONS, PROGRESSBAR_INFOBAR_POSITION_COUNT, true);
+	mc->setHint("", LOCALE_MENU_HINT_PROGRESSBAR_INFOBAR_POSITION);
 	menu_infobar->addItem(mc);
 }
 
@@ -1112,11 +1128,6 @@ void COsdSetup::showOsdChanlistSetup(CMenuWidget *menu_chanlist)
 	mc->setHint("", LOCALE_MENU_HINT_CHANNELLIST_FOOT);
 	menu_chanlist->addItem(mc);
 	channellistNotifier->addItem(mc);
-
-	// colored event
-	mc = new CMenuOptionChooser(LOCALE_MISCSETTINGS_CHANNELLIST_COLORED_EVENTS, &g_settings.colored_events_channellist, OPTIONS_COLORED_EVENTS_OPTIONS, OPTIONS_COLORED_EVENTS_OPTION_COUNT, true);
-	mc->setHint("", LOCALE_MENU_HINT_CHANNELLIST_COLORED);
-	menu_chanlist->addItem(mc);
 
 	//show channel logo
 	mc = new CMenuOptionChooser(LOCALE_CHANNELLIST_SHOW_CHANNELLOGO, &g_settings.channellist_show_channellogo, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
