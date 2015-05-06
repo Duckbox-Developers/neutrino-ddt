@@ -183,7 +183,6 @@ audioplayer.shuffle shuffle
 audioplayer.spectrum lcd a-spectrum
 audioplayer.stop Stop
 audioplayer.title_artist Title, Artist
-audioplayerpicsettings.general Audioplayer/Picviewer/Movieplayer
 bookmarkmanager.delete delete
 bookmarkmanager.name bookmarks
 bookmarkmanager.rename rename
@@ -966,7 +965,6 @@ menu.hint_audioplayer_order Change playlist sort order
 menu.hint_audioplayer_playlist Show playlist items
 menu.hint_audioplayer_repeat Enable playlist repeat when end of list reached
 menu.hint_audioplayer_sc_metadata Enable streaming audio metadata parsing
-menu.hint_audioplayer_screensaver Set screensaver timeout, in minutes
 menu.hint_audioplayer_title Enable SMS-style title search in playlist
 menu.hint_auto_lang Auto-switch audio to preferred language
 menu.hint_auto_subs Auto-start subtitles for preferred language

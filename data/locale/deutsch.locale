@@ -183,7 +183,6 @@ audioplayer.shuffle Zufällig
 audioplayer.spectrum LCD Skala
 audioplayer.stop Stopp
 audioplayer.title_artist Titel, Interpret
-audioplayerpicsettings.general Audioplayer/Bildbetrachter/Movieplayer
 bookmarkmanager.delete Löschen
 bookmarkmanager.name Bookmarks
 bookmarkmanager.rename Umbenennen
@@ -719,7 +718,6 @@ glcd.select.bar Fortschrittsbalken-Farbe
 glcd.select.bg Hintergrund-Farbe
 glcd.select.fg Vordergrund-Farbe
 glcd.show_logo Sender-Logo anzeigen
-glcd.show_numbers Kanalnummern anzeigen
 glcd.size_bar Fortschrittsbalken-Größe
 glcd.size_channel Sender-Größe
 glcd.size_epg EPG-Größe
