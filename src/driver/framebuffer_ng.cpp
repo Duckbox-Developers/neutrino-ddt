@@ -835,10 +835,10 @@ bool CFrameBuffer::paintIcon8(const std::string & filename, const int x, const i
 	uint16_t         width, height;
 	int              lfd;
 
-	lfd = open((iconBasePath + filename).c_str(), O_RDONLY);
+	lfd = open((iconBasePath + "/" + filename).c_str(), O_RDONLY);
 
 	if (lfd == -1) {
-		printf("paintIcon8: error while loading icon: %s%s\n", iconBasePath.c_str(), filename.c_str());
+		printf("paintIcon8: error while loading icon: %s/%s\n", iconBasePath.c_str(), filename.c_str());
 		return false;
 	}
 
@@ -1009,10 +1009,10 @@ void CFrameBuffer::loadPal(const std::string & filename, const unsigned char off
 	struct rgbData rgbdata;
 	int	    lfd;
 
-	lfd = open((iconBasePath + filename).c_str(), O_RDONLY);
+	lfd = open((iconBasePath + "/" + filename).c_str(), O_RDONLY);
 
 	if (lfd == -1) {
-		printf("error while loading palette: %s%s\n", iconBasePath.c_str(), filename.c_str());
+		printf("error while loading palette: %s/%s\n", iconBasePath.c_str(), filename.c_str());
 		return;
 	}
 
