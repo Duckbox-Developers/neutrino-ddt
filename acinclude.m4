@@ -284,7 +284,7 @@ if test "$$1_CONFIG" != "no"; then
 			$1_LIBS=$($$1_CONFIG --libs)
 		else
 			if test "$1" = "FREETYPE"; then
-			$1_CFLAGS=$($$1_CONFIG --cflags)
+				$1_CFLAGS=$($$1_CONFIG --cflags)
 				$1_LIBS=$($$1_CONFIG --libs)
 			else
 				$1_CFLAGS=$($$1_CONFIG --prefix=$TARGET_PREFIX --cflags)
@@ -455,10 +455,10 @@ AC_DEFUN([TUXBOX_BOXTYPE],[
 AC_ARG_WITH(boxtype,
 	[  --with-boxtype          valid values: dbox2,tripledragon,dreambox,ipbox,coolstream,spark,azbox,generic,duckbox,spark7162],
 	[case "${withval}" in
-		dbox2|dreambox|ipbox|tripledragon|coolstream|spark|azbox|generic)
+		dbox2|dreambox|ipbox|tripledragon|coolstream|azbox|generic)
 			BOXTYPE="$withval"
 			;;
-		spark7162)
+		spark|spark7162)
 			BOXTYPE="spark"
 			BOXMODEL="$withval"
 			;;
@@ -498,6 +498,10 @@ AC_ARG_WITH(boxtype,
 			BOXTYPE="duckbox"
 			BOXMODEL="$withval"
 			;;
+		arivalink200)
+			BOXTYPE="duckbox"
+			BOXMODEL="$withval"
+			;;
 		tf*)
 			BOXTYPE="duckbox"
 			BOXMODEL="$withval"
@@ -510,7 +514,8 @@ AC_ARG_WITH(boxmodel,
 	[  --with-boxmodel         valid for coolstream: nevis, apollo
                           valid for dreambox: dm500, dm500plus, dm600pvr, dm56x0, dm7000, dm7020, dm7025
                           valid for ipbox: ip200, ip250, ip350, ip400
-                          valid for duckbox: ufs910, ufs912, ufs913, ufs922, atevio7500, fortis_hdbox, octagon1008, hs7110, hs7810a, hs7119, hs7819, dp7000, cuberevo, cuberevo_mini, cuberevo_mini2, cuberevo_250hd, cuberevo_2000hd, ipbox9900, ipbox99, ipbox55, tf7700],
+                          valid for duckbox: ufs910, ufs912, ufs913, ufs922, atevio7500, fortis_hdbox, octagon1008, hs7110, hs7810a, hs7119, hs7819, dp7000, cuberevo, cuberevo_mini, cuberevo_mini2, cuberevo_250hd, cuberevo_2000hd, ipbox9900, ipbox99, ipbox55, arivalink200, tf7700
+                          valid for spark: spark, spark7162],
 	[case "${withval}" in
 		nevis|apollo)
 			if test "$BOXTYPE" = "coolstream"; then
@@ -533,8 +538,22 @@ AC_ARG_WITH(boxmodel,
 				AC_MSG_ERROR([unknown model $withval for boxtype $BOXTYPE])
 			fi
 			;;
-		ufs910|ufs912|ufs913|ufs922|atevio7500|fortis_hdbox|octagon1008|hs7110|hs7810a|hs7119|hs7819|dp7000|cuberevo|cuberevo_mini|cuberevo_mini2|cuberevo_250hd|cuberevo_2000hd|ipbox9900|ipbox99|ipbox55|tf7700)
+		ufs910|ufs912|ufs913|ufs922|atevio7500|fortis_hdbox|octagon1008|hs7110|hs7810a|hs7119|hs7819|dp7000|cuberevo|cuberevo_mini|cuberevo_mini2|cuberevo_250hd|cuberevo_2000hd|ipbox9900|ipbox99|ipbox55|arivalink200|tf7700)
 			if test "$BOXTYPE" = "duckbox"; then
+				BOXMODEL="$withval"
+			else
+				AC_MSG_ERROR([unknown model $withval for boxtype $BOXTYPE])
+			fi
+			;;
+		spark|spark7162)
+			if test "$BOXTYPE" = "spark"; then
+				BOXMODEL="$withval"
+			else
+				AC_MSG_ERROR([unknown model $withval for boxtype $BOXTYPE])
+			fi
+			;;
+		raspi)
+			if test "$BOXTYPE" = "generic"; then
 				BOXMODEL="$withval"
 			else
 				AC_MSG_ERROR([unknown model $withval for boxtype $BOXTYPE])
@@ -579,6 +598,7 @@ AM_CONDITIONAL(BOXMODEL_UFS910,test "$BOXMODEL" = "ufs910")
 AM_CONDITIONAL(BOXMODEL_UFS912,test "$BOXMODEL" = "ufs912")
 AM_CONDITIONAL(BOXMODEL_UFS913,test "$BOXMODEL" = "ufs913")
 AM_CONDITIONAL(BOXMODEL_UFS922,test "$BOXMODEL" = "ufs922")
+AM_CONDITIONAL(BOXMODEL_SPARK,test "$BOXMODEL" = "spark")
 AM_CONDITIONAL(BOXMODEL_SPARK7162,test "$BOXMODEL" = "spark7162")
 AM_CONDITIONAL(BOXMODEL_ATEVIO7500,test "$BOXMODEL" = "atevio7500")
 AM_CONDITIONAL(BOXMODEL_FORTIS_HDBOX,test "$BOXMODEL" = "fortis_hdbox")
@@ -597,7 +617,10 @@ AM_CONDITIONAL(BOXMODEL_CUBEREVO_2000HD,test "$BOXMODEL" = "cuberevo_2000hd")
 AM_CONDITIONAL(BOXMODEL_IPBOX9900,test "$BOXMODEL" = "ipbox9900")
 AM_CONDITIONAL(BOXMODEL_IPBOX99,test "$BOXMODEL" = "ipbox99")
 AM_CONDITIONAL(BOXMODEL_IPBOX55,test "$BOXMODEL" = "ipbox55")
+AM_CONDITIONAL(BOXMODEL_ARIVALINK200,test "$BOXMODEL" = "arivalink200")
 AM_CONDITIONAL(BOXMODEL_TF7700,test "$BOXMODEL" = "tf7700")
+
+AM_CONDITIONAL(BOXMODEL_RASPI,test "$BOXMODEL" = "raspi")
 
 if test "$BOXTYPE" = "dbox2"; then
 	AC_DEFINE(HAVE_DBOX_HARDWARE, 1, [building for a dbox2])
@@ -642,6 +665,8 @@ elif test "$BOXMODEL" = "ufs913"; then
 	AC_DEFINE(BOXMODEL_UFS913, 1, [ufs913])
 elif test "$BOXMODEL" = "ufs922"; then
 	AC_DEFINE(BOXMODEL_UFS922, 1, [ufs922])
+elif test "$BOXMODEL" = "spark"; then
+	AC_DEFINE(BOXMODEL_SPARK, 1, [spark])
 elif test "$BOXMODEL" = "spark7162"; then
 	AC_DEFINE(BOXMODEL_SPARK7162, 1, [spark7162])
 elif test "$BOXMODEL" = "atevio7500"; then
@@ -676,8 +701,12 @@ elif test "$BOXMODEL" = "ipbox99"; then
 	AC_DEFINE(BOXMODEL_IPBOX99, 1, [ipbox99])
 elif test "$BOXMODEL" = "ipbox55"; then
 	AC_DEFINE(BOXMODEL_IPBOX55, 1, [ipbox55])
+elif test "$BOXMODEL" = "arivalink200"; then
+	AC_DEFINE(BOXMODEL_ARIVALINK200, 1, [arivalink200])
 elif test "$BOXMODEL" = "tf7700"; then
 	AC_DEFINE(BOXMODEL_TF7700, 1, [tf7700])
+elif test "$BOXMODEL" = "raspi"; then
+	AC_DEFINE(BOXMODEL_RASPI, 1, [Raspberry pi])
 fi
 ])
 
