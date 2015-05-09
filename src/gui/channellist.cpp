@@ -2097,7 +2097,8 @@ void CChannelList::paint()
 
 void CChannelList::paintHead()
 {
-	static int gradient = g_settings.theme.menu_Head_gradient;
+	static int gradient_head = g_settings.theme.menu_Head_gradient;
+	static int gradient_c2c  = g_settings.theme.gradient_c2c;
 
 	CComponentsHeader header(x, y, full_width, theight, name /*no header icon*/);
 	if (bouquet && bouquet->zapitBouquet && bouquet->zapitBouquet->bLocked != g_settings.parentallock_defaultlocked)
@@ -2107,8 +2108,9 @@ void CChannelList::paintHead()
 
 	header.paint(CC_SAVE_SCREEN_NO);
 
-	if (gradient != g_settings.theme.menu_Head_gradient && headerClock != NULL) {
-		gradient = g_settings.theme.menu_Head_gradient;
+	if ((gradient_head != g_settings.theme.menu_Head_gradient || gradient_c2c != g_settings.theme.gradient_c2c) && headerClock != NULL) {
+		gradient_head = g_settings.theme.menu_Head_gradient;
+		gradient_c2c  = g_settings.theme.gradient_c2c;
 		headerClock->clearSavedScreen();
 		delete headerClock;
 		headerClock = NULL;
@@ -2119,8 +2121,8 @@ void CChannelList::paintHead()
 			headerClock = new CComponentsFrmClock(0, 0, 0, 0, "%H:%M", true);
 			headerClock->setClockBlink("%H %M");
 			headerClock->setClockIntervall(1);
-			headerClock->doPaintBg(!gradient);
-			headerClock->enableTboxSaveScreen(gradient);
+			headerClock->doPaintBg(!gradient_head);
+			headerClock->enableTboxSaveScreen(gradient_head);
 			headerClock->setCorner(RADIUS_LARGE, CORNER_TOP_RIGHT);
 		}
 		headerClock->setClockFont(SNeutrinoSettings::FONT_TYPE_MENU_TITLE);
