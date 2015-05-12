@@ -648,7 +648,7 @@ void CNetworkSetup::restoreNetworkSettings()
 	changeNotify(LOCALE_NETWORKMENU_SELECT_IF, NULL);
 }
 
-bool CNetworkSetup::changeNotify(const neutrino_locale_t locale, void * Data)
+bool CNetworkSetup::changeNotify(const neutrino_locale_t locale, void * /*Data*/)
 {
 	if(locale == LOCALE_NETWORKMENU_IPADDRESS) {
 		setBroadcast();
