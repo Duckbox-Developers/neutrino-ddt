@@ -263,6 +263,8 @@ void CInfoViewer::initClock()
 
 	if (clock == NULL){
 		clock = new CComponentsFrmClock();
+		clock->setClockBlink("%H.%M");
+		clock->setClockIntervall(1);
 		clock->doPaintBg(!gradient_top);
 		clock->enableTboxSaveScreen(gradient_top);
 		if (time_width)
