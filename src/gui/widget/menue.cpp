@@ -493,7 +493,7 @@ CMenuWidget::CMenuWidget()
 	selected 	= -1;
 	iconOffset 	= 0;
 	offx = offy 	= 0;
-	from_wizard 	= false;
+	from_wizard 	= SNeutrinoSettings::WIZARD_OFF;
 	fade 		= true;
 	sb_width	= 0;
 	savescreen	= false;
@@ -562,7 +562,7 @@ void CMenuWidget::Init(const std::string &Icon, const int mwidth, const mn_widge
 
 	current_page	= 0;
 	offx = offy 	= 0;
-	from_wizard 	= false;
+	from_wizard 	= SNeutrinoSettings::WIZARD_OFF;
 	fade 		= true;
 	savescreen	= false;
 	background	= NULL;
@@ -1011,14 +1011,18 @@ void CMenuWidget::hide()
 void CMenuWidget::checkHints()
 {
 	GenericMenuBack->setHint("", NONEXISTANT_LOCALE);
+	GenericMenuNext->setHint("", NONEXISTANT_LOCALE);
 	for (unsigned int i= 0; i< items.size(); i++) {
 		if(items[i]->hintIcon || items[i]->hint != NONEXISTANT_LOCALE || !items[i]->hintText.empty()) {
 			has_hints = true;
 			break;
 		}
 	}
-	if (has_hints)
+	if (has_hints) {
 		GenericMenuBack->setHint(NEUTRINO_ICON_HINT_BACK, LOCALE_MENU_HINT_BACK);
+		bool brief = (from_wizard == SNeutrinoSettings::WIZARD_START);
+		GenericMenuNext->setHint(NEUTRINO_ICON_HINT_NEXT, brief ? LOCALE_MENU_HINT_NEXT_BRIEF : LOCALE_MENU_HINT_NEXT);
+	}
 }
 
 void CMenuWidget::calcSize()

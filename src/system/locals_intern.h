@@ -1232,6 +1232,8 @@ const char * locale_real_names[] =
 	"menu.hint_net_xupnpd",
 	"menu.hint_network",
 	"menu.hint_new_zap_mode",
+	"menu.hint_next",
+	"menu.hint_next_brief",
 	"menu.hint_numeric_adjust",
 	"menu.hint_opkg",
 	"menu.hint_opkg_upgrade",

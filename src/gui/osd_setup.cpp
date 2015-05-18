@@ -70,7 +70,7 @@ extern std::string ttx_font_file;
 extern std::string sub_font_file;
 extern int sub_font_size;
 
-COsdSetup::COsdSetup(bool wizard_mode)
+COsdSetup::COsdSetup(int wizard_mode)
 {
 	frameBuffer = CFrameBuffer::getInstance();
 	colorSetupNotifier = new CColorSetupNotifier();
