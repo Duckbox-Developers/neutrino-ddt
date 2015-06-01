@@ -131,6 +131,7 @@ class CMoviePlayerGui : public CMenuTarget
 	int min_x, min_y, max_x, max_y;
 	time_t end_time;
 	bool ext_subs;
+	bool lock_subs;
 #endif
 
 	/* playback from MB */
@@ -195,8 +196,6 @@ class CMoviePlayerGui : public CMenuTarget
 #if 0
 	void selectSubtitle();
 	bool convertSubtitle(std::string &text);
-	void showSubtitle(neutrino_msg_data_t data);
-	void clearSubtitle();
 	void selectChapter();
 #endif
 	void selectAutoLang();
@@ -256,6 +255,11 @@ class CMoviePlayerGui : public CMenuTarget
 	void selectAudioPid(void);
 	bool SetPosition(int pos, bool absolute = false);
 	std::string GetFile() { return file_name; }
+#if 0
+	void selectSubtitle();
+	void showSubtitle(neutrino_msg_data_t data);
+	void clearSubtitle(bool lock = false);
+#endif
 };
 
 #endif
