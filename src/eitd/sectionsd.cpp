@@ -2800,9 +2800,6 @@ showProfiling("sectionsd_getChannelEvents start");
 	for (MySIeventsOrderServiceUniqueKeyFirstStartTimeEventUniqueKey::iterator e = mySIeventsOrderServiceUniqueKeyFirstStartTimeEventUniqueKey.begin(); e != mySIeventsOrderServiceUniqueKeyFirstStartTimeEventUniqueKey.end(); ++e)
 	{
 		uniqueNow = (*e)->get_channel_id();
-		if (IS_WEBTV(uniqueNow))
-			continue;
-
 
 		if (uniqueNow != uniqueOld)
 		{
