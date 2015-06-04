@@ -4593,10 +4593,8 @@ void sighandler (int signum)
 
 int main(int argc, char **argv)
 {
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 	/* build date */
 	printf(">>> Neutrino (compiled %s %s) <<<\n", __DATE__, __TIME__);
-#endif
 	g_Timerd = NULL;
 	g_Radiotext = NULL;
 	g_Zapit = NULL;
@@ -4626,8 +4624,6 @@ void CNeutrinoApp::loadKeys(const char * fname)
 	}
 
 	//rc-key configuration
-	g_settings.key_switchformat = tconfig.getInt32("key_switchformat", CRCInput::RC_prev);
-	g_settings.key_next43mode = tconfig.getInt32("key_next43mode", CRCInput::RC_next);
 	g_settings.key_tvradio_mode = tconfig.getInt32( "key_tvradio_mode", (unsigned int)CRCInput::RC_nokey );
 	g_settings.key_power_off = tconfig.getInt32( "key_power_off", CRCInput::RC_standby );
 
@@ -4710,8 +4706,6 @@ void CNeutrinoApp::saveKeys(const char * fname)
 		tconfig = newconfig;
 	}
 	//rc-key configuration
-	tconfig.setInt32( "key_switchformat", g_settings.key_switchformat );
-	tconfig.setInt32( "key_next43mode", g_settings.key_next43mode );
 	tconfig.setInt32( "key_tvradio_mode", g_settings.key_tvradio_mode );
 	tconfig.setInt32( "key_power_off", g_settings.key_power_off );
 
@@ -4824,7 +4818,7 @@ void CNeutrinoApp::StartSubtitles(bool show)
 		CMoviePlayerGui::getInstance().StartSubtitles(show);
 		return;
 	}
-		
+
 #ifdef ENABLE_GRAPHLCD
 	nGLCD::MirrorOSD(false);
 #endif
