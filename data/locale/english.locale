@@ -1062,7 +1062,6 @@ menu.hint_info Information about image, box cpu and storage,\nstream information
 menu.hint_infobar_back Change infobar background color
 menu.hint_infobar_casys On: display all with colored active, mini: single\nlocked icon, descreet: all active ca-sys
 menu.hint_infobar_dd Show DD icon
-menu.hint_infobar_dotmatrix Show dotmatrix
 menu.hint_infobar_filesys Show flash and HDD used space levels
 menu.hint_infobar_fonts Change infobar font sizes
 menu.hint_infobar_logo Logo, channelnumber and signal display; Options in [brackets] will be displayed in small infobox
@@ -1510,7 +1509,6 @@ miscsettings.infobar_disp_3 Logo, Channelname [Signal]
 miscsettings.infobar_disp_4 Logo, Channelname [Channelnumber]
 miscsettings.infobar_disp_5 Logo [Signal]
 miscsettings.infobar_disp_6 Channelnumber, Logo [Signal]
-miscsettings.infobar_dotmatrix_display Dotmatrix show
 miscsettings.infobar_gradient_bottom Gradient bottom
 miscsettings.infobar_gradient_top Gradient top
 miscsettings.infobar_logo_hdd_dir Logo directory
