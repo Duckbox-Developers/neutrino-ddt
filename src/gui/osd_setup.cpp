@@ -87,6 +87,9 @@ COsdSetup::COsdSetup(int wizard_mode)
 	mfWindowSize = NULL;
 	win_demo = NULL;
 
+	ca_dotmatrix = NULL;
+	ca_frame = NULL;
+
 	is_wizard = wizard_mode;
 
 	width = 40;
@@ -775,6 +778,8 @@ void COsdSetup::showOsdMenueColorSetup(CMenuWidget *menu_colors)
 			&t.infobar_green, &t.infobar_blue, &t.infobar_alpha, colorSetupNotifier);
 	CColorChooser* chInfobarTextcolor = new CColorChooser(LOCALE_COLORMENU_TEXTCOLOR, &t.infobar_Text_red,
 			&t.infobar_Text_green, &t.infobar_Text_blue, NULL, colorSetupNotifier);
+	CColorChooser* chInfobarCASystem = new CColorChooser(LOCALE_COLORMENU_BACKGROUND, &t.infobar_casystem_red,
+			&t.infobar_casystem_green, &t.infobar_casystem_blue, &t.infobar_casystem_alpha, colorSetupNotifier);
 
 	menu_colors->addItem( new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_COLORSTATUSBAR_TEXT));
 	mf = new CMenuDForwarder(LOCALE_COLORMENU_BACKGROUND, true, NULL, chInfobarcolor );
@@ -783,6 +788,10 @@ void COsdSetup::showOsdMenueColorSetup(CMenuWidget *menu_colors)
 
 	mf = new CMenuDForwarder(LOCALE_COLORMENU_TEXTCOLOR, true, NULL, chInfobarTextcolor );
 	mf->setHint("", LOCALE_MENU_HINT_INFOBAR_TEXTCOLOR);
+	menu_colors->addItem(mf);
+
+	mf = new CMenuDForwarder(LOCALE_MISCSETTINGS_INFOBAR_CASYSTEM_DISPLAY, g_settings.casystem_display < 2, NULL, chInfobarCASystem );
+	mf->setHint("", LOCALE_MENU_HINT_INFOBAR_CASYS_COLOR);
 	menu_colors->addItem(mf);
 
 	// infoviewer gradient top
@@ -1042,6 +1051,18 @@ void COsdSetup::showOsdInfobarSetup(CMenuWidget *menu_infobar)
 	mc->setHint("", LOCALE_MENU_HINT_INFOBAR_CASYS);
 	menu_infobar->addItem(mc);
 
+	// CA system dotmatrix
+	ca_dotmatrix = new CMenuOptionChooser(LOCALE_MISCSETTINGS_INFOBAR_CASYSTEM_DOTMATRIX, &g_settings.casystem_dotmatrix, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, g_settings.casystem_display < 2);
+	ca_dotmatrix->setHint("", LOCALE_MENU_HINT_INFOBAR_CASYS_DOTMATRIX);
+	menu_infobar->addItem(ca_dotmatrix);
+
+	// CA system frame
+	ca_frame = new CMenuOptionChooser(LOCALE_MISCSETTINGS_INFOBAR_CASYSTEM_FRAME, &g_settings.casystem_frame, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, g_settings.casystem_display < 2);
+	ca_frame->setHint("", LOCALE_MENU_HINT_INFOBAR_CASYS_FRAME);
+	menu_infobar->addItem(ca_frame);
+
+	menu_infobar->addItem(GenericMenuSeparator);
+
 	// flash/hdd statfs
 	mc = new CMenuOptionChooser(LOCALE_MISCSETTINGS_INFOBAR_SHOW_SYSFS_HDD, &g_settings.infobar_show_sysfs_hdd, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, infobarHddNotifier);
 	mc->setHint("", LOCALE_MENU_HINT_INFOBAR_FILESYS);
@@ -1233,6 +1254,12 @@ bool COsdSetup::changeNotify(const neutrino_locale_t OptionName, void * data)
 		if (g_InfoViewer == NULL)
 			g_InfoViewer = new CInfoViewer;
 		g_InfoViewer->changePB();
+		if (ARE_LOCALES_EQUAL(OptionName, LOCALE_MISCSETTINGS_INFOBAR_CASYSTEM_DISPLAY))
+		{
+			ca_dotmatrix->setActive(g_settings.casystem_display < 2);
+			ca_frame->setActive(g_settings.casystem_display < 2);
+			return true;
+		}
 		return false;
 	}
 	else if(ARE_LOCALES_EQUAL(OptionName, LOCALE_COLORMENU_OSD_PRESET)) {

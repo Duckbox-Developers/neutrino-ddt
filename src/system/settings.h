@@ -101,6 +101,11 @@ struct SNeutrinoTheme
 	unsigned char infobar_green;
 	unsigned char infobar_blue;
 
+	unsigned char infobar_casystem_alpha;
+	unsigned char infobar_casystem_red;
+	unsigned char infobar_casystem_green;
+	unsigned char infobar_casystem_blue;
+
 	unsigned char infobar_Text_alpha;
 	unsigned char infobar_Text_red;
 	unsigned char infobar_Text_green;
@@ -180,6 +185,8 @@ struct SNeutrinoSettings
 	int progressbar_timescale_yellow;
 	int progressbar_timescale_invert;
 	int casystem_display;
+	int casystem_dotmatrix;
+	int casystem_frame;
 	int scrambled_message;
 	int volume_pos;
 	int volume_digits;
