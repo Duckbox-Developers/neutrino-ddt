@@ -2346,7 +2346,7 @@ printf("SIevent size: %d\n", (int)sizeof(SIevent));
 }
 
 /* was: commandAllEventsChannelID sendAllEvents */
-void CEitManager::getEventsServiceKey(t_channel_id serviceUniqueKey, CChannelEventList &eList, char search, std::string search_text,bool all_chann)
+void CEitManager::getEventsServiceKey(t_channel_id serviceUniqueKey, CChannelEventList &eList, char search, std::string search_text,bool all_chann, int genre,int fsk)
 {
 	dprintf("sendAllEvents for " PRINTF_CHANNEL_ID_TYPE "\n", serviceUniqueKey);
 	if(!eList.empty() && search == 0)//skip on search mode
@@ -2386,6 +2386,22 @@ void CEitManager::getEventsServiceKey(t_channel_id serviceUniqueKey, CChannelEve
 					std::string eExtendedText = (*e)->getExtendedText();
 					std::transform(eExtendedText.begin(), eExtendedText.end(), eExtendedText.begin(), tolower);
 					copy = (eExtendedText.find(search_text) != std::string::npos);
+				}
+				if(copy && genre != 0xFF)
+				{
+					if((*e)->classifications.content==0)
+						copy=false;
+					if(copy && ((*e)->classifications.content < (genre & 0xf0 ) || (*e)->classifications.content > genre))
+						copy=false;
+				}
+				if(copy && fsk != 0)
+				{
+					if(fsk<0)
+					{
+						if( (*e)->getFSK() > abs(fsk))
+							copy=false;
+					}else if( (*e)->getFSK() < fsk)
+						copy=false;
 				}
 			}
 			if(copy) {
