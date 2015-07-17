@@ -1704,6 +1704,7 @@ void CLuaInstance::CWindowRegister(lua_State *L)
 		{ "footerHeight", CLuaInstance::CWindowGetFooterHeight },
 		{ "header_height", CLuaInstance::CWindowGetHeaderHeight_dep }, /* function 'header_height' is deprecated */
 		{ "footer_height", CLuaInstance::CWindowGetFooterHeight_dep }, /* function 'footer_height' is deprecated */
+		{ "setCenterPos", CLuaInstance::CWindowSetCenterPos },
 		{ "__gc", CLuaInstance::CWindowDelete },
 		{ NULL, NULL }
 	};
@@ -1954,6 +1955,21 @@ int CLuaInstance::CWindowGetFooterHeight(lua_State *L)
 	return 1;
 }
 
+int CLuaInstance::CWindowSetCenterPos(lua_State *L)
+{
+	lua_assert(lua_istable(L,1));
+	CLuaCWindow *m = CWindowCheck(L, 1);
+	if (!m) return 0;
+	lua_Integer  tmp_along_mode, along_mode = CC_ALONG_X | CC_ALONG_Y;
+	tableLookup(L, "along_mode", tmp_along_mode);
+
+	if(tmp_along_mode & CC_ALONG_X || tmp_along_mode & CC_ALONG_Y)
+		along_mode=tmp_along_mode;
+
+	m->w->setCenterPos(along_mode);
+	return 0;
+}
+
 int CLuaInstance::CWindowDelete(lua_State *L)
 {
 	DBG("CLuaInstance::%s %d\n", __func__, lua_gettop(L));
@@ -1977,6 +1993,7 @@ void CLuaInstance::SignalBoxRegister(lua_State *L)
 	luaL_Reg meth[] = {
 		{ "new", CLuaInstance::SignalBoxNew },
 		{ "paint", CLuaInstance::SignalBoxPaint },
+		{ "setCenterPos", CLuaInstance::SignalBoxSetCenterPos },
 		{ "__gc", CLuaInstance::SignalBoxDelete },
 		{ NULL, NULL }
 	};
@@ -2031,6 +2048,20 @@ int CLuaInstance::SignalBoxPaint(lua_State *L)
 	m->s->paint(do_save_bg);
 	return 0;
 }
+int CLuaInstance::SignalBoxSetCenterPos(lua_State *L)
+{
+	lua_assert(lua_istable(L,1));
+	CLuaSignalBox *m = SignalBoxCheck(L, 1);
+	if (!m) return 0;
+	lua_Integer  tmp_along_mode, along_mode = CC_ALONG_X | CC_ALONG_Y;
+	tableLookup(L, "along_mode", tmp_along_mode);
+
+	if(tmp_along_mode & CC_ALONG_X || tmp_along_mode & CC_ALONG_Y)
+		along_mode=tmp_along_mode;
+
+	m->s->setCenterPos(along_mode);
+	return 0;
+}
 
 int CLuaInstance::SignalBoxDelete(lua_State *L)
 {
@@ -2057,6 +2088,8 @@ void CLuaInstance::ComponentsTextRegister(lua_State *L)
 		{ "hide", CLuaInstance::ComponentsTextHide },
 		{ "setText", CLuaInstance::ComponentsTextSetText },
 		{ "scroll", CLuaInstance::ComponentsTextScroll },
+		{ "setCenterPos", CLuaInstance::ComponentsTextSetCenterPos },
+		{ "enableUTF8", CLuaInstance::ComponentsTextEnableUTF8 },
 		{ "__gc", CLuaInstance::ComponentsTextDelete },
 		{ NULL, NULL }
 	};
@@ -2228,6 +2261,39 @@ int CLuaInstance::ComponentsTextScroll(lua_State *L)
 	return 0;
 }
 
+int CLuaInstance::ComponentsTextSetCenterPos(lua_State *L)
+{
+	lua_assert(lua_istable(L,1));
+	CLuaComponentsText *m = ComponentsTextCheck(L, 1);
+	if (!m) return 0;
+	lua_Integer  tmp_along_mode, along_mode = CC_ALONG_X | CC_ALONG_Y;
+	tableLookup(L, "along_mode", tmp_along_mode);
+
+	if(tmp_along_mode & CC_ALONG_X || tmp_along_mode & CC_ALONG_Y)
+		along_mode=tmp_along_mode;
+
+	m->ct->setCenterPos(along_mode);
+	return 0;
+}
+
+int CLuaInstance::ComponentsTextEnableUTF8(lua_State *L)
+{
+	lua_assert(lua_istable(L,1));
+	CLuaComponentsText *m = ComponentsTextCheck(L, 1);
+	if (!m) return 0;
+
+	bool utf8_encoded = true;
+	if (!tableLookup(L, "utf8_encoded", utf8_encoded))
+	{
+		std::string tmp = "true";
+		if (tableLookup(L, "utf8_encoded", tmp))
+			paramBoolDeprecated(L, tmp.c_str());
+		utf8_encoded = (tmp == "true" || tmp == "1" || tmp == "yes");
+	}
+	m->ct->enableUTF8(utf8_encoded);
+	return 0;
+}
+
 int CLuaInstance::ComponentsTextDelete(lua_State *L)
 {
 	DBG("CLuaInstance::%s %d\n", __func__, lua_gettop(L));
@@ -2253,6 +2319,7 @@ void CLuaInstance::CPictureRegister(lua_State *L)
 		{ "paint", CLuaInstance::CPicturePaint },
 		{ "hide", CLuaInstance::CPictureHide },
 		{ "setPicture", CLuaInstance::CPictureSetPicture },
+		{ "setCenterPos", CLuaInstance::CPictureSetCenterPos },
 		{ "__gc", CLuaInstance::CPictureDelete },
 		{ NULL, NULL }
 	};
@@ -2371,6 +2438,21 @@ int CLuaInstance::CPictureSetPicture(lua_State *L)
 	tableLookup(L, "image", image_name);
 
 	m->cp->setPicture(image_name);
+	return 0;
+}
+
+int CLuaInstance::CPictureSetCenterPos(lua_State *L)
+{
+	lua_assert(lua_istable(L,1));
+	CLuaPicture *m = CPictureCheck(L, 1);
+	if (!m) return 0;
+	lua_Integer  tmp_along_mode, along_mode = CC_ALONG_X | CC_ALONG_Y;
+	tableLookup(L, "along_mode", tmp_along_mode);
+
+	if(tmp_along_mode & CC_ALONG_X || tmp_along_mode & CC_ALONG_Y)
+		along_mode=tmp_along_mode;
+
+	m->cp->setCenterPos(along_mode);
 	return 0;
 }
 

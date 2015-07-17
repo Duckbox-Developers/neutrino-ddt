@@ -1690,7 +1690,7 @@ void CChannelList::paintAdditionals(int index)
 	}
 }
 
-void CChannelList::showChannelLogo()
+void CChannelList::showChannelLogo() //TODO: move into an own handler, eg. header, channel logo should be paint inside header object
 {
 	if ((*chanlist).empty())
 		return;
@@ -1706,13 +1706,9 @@ void CChannelList::showChannelLogo()
 		CChannelLogo = new CComponentsChannelLogoScalable(0, 0, (*chanlist)[selected]->getName(), (*chanlist)[selected]->getChannelID());
 
 		if (CChannelLogo->hasLogo()){
-			int h_logo = CChannelLogo->getHeight();
-			if (h_logo > theight){ //scale image if required, TODO: move into an own handler, eg. header, so channel logo should be paint in header object
-				uint8_t h_ratio = uint8_t(theight*100/h_logo);
-				CChannelLogo->setHeight(theight);
-				int w_logo = h_ratio*CChannelLogo->getWidth()/100;
-				CChannelLogo->setWidth(min(w_logo, logo_w_max));
-			}
+			CChannelLogo->setWidth(min(CChannelLogo->getWidth(), logo_w_max), true);
+			if (CChannelLogo->getHeight() > theight) //scale image if required
+				CChannelLogo->setHeight(theight, true);
 			CChannelLogo->setXPos(x + full_width - logo_off - CChannelLogo->getWidth());
 			CChannelLogo->setYPos(y + (theight - CChannelLogo->getHeight()) / 2);
 			CChannelLogo->paint();
@@ -2360,17 +2356,46 @@ void CChannelList::readEvents(const t_channel_id channel_id)
 
 void CChannelList::showdescription(int index)
 {
+	std::string strEpisode = "";	// Episode title in case info1 gets stripped
 	ffheight = g_Font[eventFont]->getHeight();
 	CZapitChannel* chan = (*chanlist)[index];
 	CChannelEvent *p_event = &chan->currentEvent;
+	epgData.info1.clear();
 	epgData.info2.clear();
 	epgText.clear();
 	CEitManager::getInstance()->getEPGid(p_event->eventID, p_event->startTime, &epgData);
 
-	if (!(epgData.info2.empty()))
-		processTextToArray(epgData.info2);
+	if (!epgData.info1.empty()) {
+		bool bHide = false;
+		if (false == epgData.info2.empty()) {
+			// Look for the first . in info1, usually this is the title of an episode.
+			std::string::size_type nPosDot = epgData.info1.find('.');
+			if (std::string::npos != nPosDot) {
+				nPosDot += 2; // Skip dot and first blank
+				if (nPosDot < epgData.info2.length() && nPosDot < epgData.info1.length()) {   // Make sure we don't overrun the buffer
+
+					// Check if the stuff after the dot equals the beginning of info2
+					if (0 == epgData.info2.find(epgData.info1.substr(nPosDot, epgData.info1.length() - nPosDot))) {
+						strEpisode = epgData.info1.substr(0, nPosDot) + "\n";
+						bHide = true;
+					}
+				}
+			}
+			// Compare strings normally if not positively found to be equal before
+			if (false == bHide && 0 == epgData.info2.find(epgData.info1)) {
+				bHide = true;
+			}
+		}
+		if (false == bHide) {
+			processTextToArray(epgData.info1);
+		}
+	}
+
+	//scan epg-data - sort to list
+	if (((epgData.info2.empty())) && (!(strEpisode.empty())))
+		processTextToArray(g_Locale->getText(LOCALE_EPGVIEWER_NODETAILED)); // UTF-8
 	else
-		processTextToArray(g_Locale->getText(LOCALE_EPGVIEWER_NODETAILED));
+		processTextToArray(strEpisode + epgData.info2); // UTF-8
 
 	frameBuffer->paintBoxRel(x+ width,y+ theight+pig_height, infozone_width, infozone_height,COL_MENUCONTENT_PLUS_0);
 	for (int i = 1; (i < (int)epgText.size()+1) && ((y+ theight+ pig_height + i*ffheight) < (y+ theight+ pig_height + infozone_height)); i++)
