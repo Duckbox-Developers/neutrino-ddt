@@ -386,7 +386,7 @@ void CServiceManager::ParseTransponders(xmlNodePtr node, t_satellite_position sa
 			else
 				feparams.frequency = (int) 1000 * (int) round ((double) feparams.frequency / (double) 1000);
 			/* TODO: add xml tag ? */
-			feparams.pilot = ZPILOT_AUTO;
+			feparams.pilot = ZPILOT_AUTO_SW;
 		}
 		else if (CFrontend::isTerr(delsys)) {
 			//<TS id="0001" on="7ffd" frq="650000" inv="2" bw="3" hp="9" lp="9" con="6" tm="2" gi="0" hi="4" sys="6">
@@ -616,7 +616,7 @@ void CServiceManager::ParseSatTransponders(delivery_system_t delsys, xmlNodePtr 
 			const char *rolloff = xmlGetAttribute(tps, "rolloff");
 
 			/* TODO: add xml tag ? */
-			feparams.pilot = ZPILOT_AUTO;
+			feparams.pilot = ZPILOT_AUTO_SW;
 			if (system) {
 				uint32_t s = xmlGetNumericAttribute(tps, "system", 0);
 				switch (s) {
