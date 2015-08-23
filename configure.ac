@@ -77,6 +77,7 @@ TUXBOX_APPS_LIB_PKGCONFIG_CHECK(OGG,ogg)
 if test -z "$OGG_CFLAGS" ; then
 	TUXBOX_APPS_LIB_PKGCONFIG(OGG,ogg)
 fi
+TUXBOX_APPS_LIB_PKGCONFIG(SWRESAMPLE,libswresample)
 else
 TUXBOX_APPS_LIB_PKGCONFIG(SWRESAMPLE,libswresample)
 fi
@@ -154,6 +155,10 @@ AM_CONDITIONAL(ENABLE_GRAPHLCD,test "$enable_graphlcd" = "yes")
 if test "$enable_graphlcd" = "yes"; then
 	AC_DEFINE(ENABLE_GRAPHLCD,1,[include GraphLCD support])
 fi
+
+AC_ARG_ENABLE(viasatepg,
+	[  --enable-viasatepg                  enable ViaSat EPG code (experimental)],
+	[AC_DEFINE(ENABLE_VIASATEPG,1,[enable ViaSat EPG code])])
 
 AC_ARG_ENABLE(giflib,
 	AS_HELP_STRING(--enable-giflib,use giflib instead of libungif),

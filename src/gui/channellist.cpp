@@ -661,17 +661,23 @@ int CChannelList::show()
 			}
 		}
 		else if(!edit_state && !empty && msg == CRCInput::RC_stop ) { //stop recording
-			//if(CRecordManager::getInstance()->RecordingStatus((*chanlist)[selected]->getChannelID()))
-			int recmode = CRecordManager::getInstance()->GetRecordMode((*chanlist)[selected]->getChannelID());
-			bool timeshift = recmode & CRecordManager::RECMODE_TSHIFT;
-			bool tsplay = CMoviePlayerGui::getInstance().timeshift;
-			if (recmode && !(timeshift && tsplay))
-			{
-				if (CRecordManager::getInstance()->AskToStop((*chanlist)[selected]->getChannelID()))
+			if(CRecordManager::getInstance()->RecordingStatus((*chanlist)[selected]->getChannelID())){
+				int recmode = CRecordManager::getInstance()->GetRecordMode((*chanlist)[selected]->getChannelID());
+				bool timeshift = recmode & CRecordManager::RECMODE_TSHIFT;
+				bool tsplay = CMoviePlayerGui::getInstance().timeshift;
+				if (recmode && !(timeshift && tsplay))
 				{
-					CRecordManager::getInstance()->Stop((*chanlist)[selected]->getChannelID());
-					calcSize();
-					paintBody();
+					if (CRecordManager::getInstance()->AskToStop((*chanlist)[selected]->getChannelID()))
+					{
+						CRecordManager::getInstance()->Stop((*chanlist)[selected]->getChannelID());
+						calcSize();
+						paintBody();
+					}
+				}else{
+					// stop TSHIFT: go to play mode
+					g_RCInput->postMsg (msg, data);
+					res = CHANLIST_CANCEL_ALL;
+					loop = false;
 				}
 			}
 		}
@@ -1846,6 +1852,9 @@ void CChannelList::paintButtonBar(bool is_current)
 
 void CChannelList::paintItem(int pos, const bool firstpaint)
 {
+	if( (*chanlist).empty() ){
+		return;
+	}
 	int ypos = y+ theight + pos*fheight;
 	fb_pixel_t color;
 	fb_pixel_t bgcolor;

@@ -134,8 +134,11 @@ OpenThreads::Mutex filter_mutex;
 static CTimeThread threadTIME;
 static CEitThread threadEIT;
 static CCNThread threadCN;
+
+#ifdef ENABLE_VIASATEPG
 // ViaSAT uses pid 0x39 instead of 0x12
 static CEitThread threadVSEIT("viasatThread", 0x39);
+#endif
 
 #ifdef ENABLE_FREESATEPG
 static CFreeSatThread threadFSEIT;
@@ -837,7 +840,10 @@ static void wakeupAll()
 {
 	threadCN.change(0);
 	threadEIT.change(0);
+#ifdef ENABLE_VIASATEPG
 	threadVSEIT.change(0);
+#endif
+
 #ifdef ENABLE_FREESATEPG
 	threadFSEIT.change(0);
 #endif
@@ -960,7 +966,9 @@ static void commandserviceChanged(int connfd, char *data, const unsigned dataLen
 		threadCN.setCurrentService(messaging_current_servicekey);
 		threadEIT.setDemux(cmd->dnum);
 		threadEIT.setCurrentService(uniqueServiceKey /*messaging_current_servicekey*/);
+#ifdef ENABLE_VIASATEPG
 		threadVSEIT.setCurrentService(messaging_current_servicekey);
+#endif
 #ifdef ENABLE_FREESATEPG
 		threadFSEIT.setCurrentService(messaging_current_servicekey);
 #endif
@@ -2256,7 +2264,9 @@ printf("SIevent size: %d\n", (int)sizeof(SIevent));
 	threadTIME.Start();
 	threadEIT.Start();
 	threadCN.Start();
+#ifdef ENABLE_VIASATEPG
 	threadVSEIT.Start();
+#endif
 
 #ifdef ENABLE_FREESATEPG
 	threadFSEIT.Start();
@@ -2295,7 +2305,9 @@ printf("SIevent size: %d\n", (int)sizeof(SIevent));
 	threadEIT.StopRun();
 	threadCN.StopRun();
 	threadTIME.StopRun();
+#ifdef ENABLE_VIASATEPG
 	threadVSEIT.StopRun();
+#endif
 #ifdef ENABLE_SDT
 	threadSDT.StopRun();
 #endif
@@ -2324,9 +2336,10 @@ printf("SIevent size: %d\n", (int)sizeof(SIevent));
 
 	xprintf("join CN\n");
 	threadCN.Stop();
-
+#ifdef ENABLE_VIASATEPG
 	xprintf("join VSEIT\n");
 	threadVSEIT.Stop();
+#endif
 
 #ifdef ENABLE_SDT
 	xprintf("join SDT\n");

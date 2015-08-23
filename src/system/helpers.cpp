@@ -284,6 +284,8 @@ int check_dir(const char * dir, bool allow_tmp)
 			default:
 				ret = 0;	// ok
 		}
+		if(ret == -1)
+			printf("Wrong Filessystem Type: 0x%x\n",s.f_type);
 	}
 	return ret;
 }
