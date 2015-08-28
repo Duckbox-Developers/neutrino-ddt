@@ -3677,6 +3677,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 //		ShowHint(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_EXTRA_ZAPIT_SDT_CHANGED),
 //				CMessageBox::mbrBack,CMessageBox::mbBack, NEUTRINO_ICON_INFO);
 	}
+#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
 	else if (msg == NeutrinoMessages::EVT_HDMI_CEC_VIEW_ON) {
 		if(g_settings.hdmi_cec_view_on)
 			videoDecoder->SetCECAutoView(g_settings.hdmi_cec_view_on);
@@ -3689,6 +3690,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 
 		return messages_return::handled;
 	}
+#endif
 	else if (msg == NeutrinoMessages::EVT_SET_MUTE) {
 		g_audioMute->AudioMute((int)data, true);
 		return messages_return::handled;
@@ -3855,13 +3857,13 @@ void CNeutrinoApp::ExitRun(const bool /*write_si*/, int retcode)
 			stop_video();
 
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
-			if (retcode == 1) {
+			if (retcode == SHUTDOWN) {
 				CCECSetup cecsetup;
 				cecsetup.setCECSettings(false);
 			}
 #endif
 #ifdef ENABLE_GRAPHLCD
-			if (retcode == 1)
+			if (retcode == SHUTDOWN)
 				nGLCD::SetBrightness(0);
 #endif
 
