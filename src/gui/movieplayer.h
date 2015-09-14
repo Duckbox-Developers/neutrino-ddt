@@ -68,6 +68,14 @@ class CMoviePlayerGui : public CMenuTarget
 		    REW         =  6
 		};
 
+	enum
+		{
+		    PLUGIN_PLAYSTATE_NORMAL = 0,
+		    PLUGIN_PLAYSTATE_STOP   = 1,
+		    PLUGIN_PLAYSTATE_NEXT   = 2,
+		    PLUGIN_PLAYSTATE_PREV   = 3
+		};
+
 	enum repeat_mode_enum { REPEAT_OFF = 0, REPEAT_TRACK = 1, REPEAT_ALL = 2 };
 
  private:
@@ -81,6 +89,8 @@ class CMoviePlayerGui : public CMenuTarget
 	bool		playing;
 	bool		time_forced;
 	CMoviePlayerGui::state playstate;
+	int keyPressed;
+	bool isLuaPlay;
 	int speed;
 	int startposition;
 	int position;
@@ -260,6 +270,7 @@ class CMoviePlayerGui : public CMenuTarget
 	void showSubtitle(neutrino_msg_data_t data);
 	void clearSubtitle(bool lock = false);
 #endif
+	int getKeyPressed() { return keyPressed; };
 };
 
 #endif

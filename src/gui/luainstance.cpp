@@ -277,6 +277,21 @@ static void set_lua_variables(lua_State *L)
 		{ "EXIT_REPAINT", menu_return::RETURN_EXIT_REPAINT },
 		{ NULL, 0 }
 	};
+	table_key apiversion[] =
+	{
+		{ "MAJOR", LUA_API_VERSION_MAJOR },
+		{ "MINOR", LUA_API_VERSION_MINOR },
+		{ NULL, 0 }
+	};
+
+	table_key playstate[] =
+	{
+		{ "NORMAL", CMoviePlayerGui::PLUGIN_PLAYSTATE_NORMAL },
+		{ "STOP",   CMoviePlayerGui::PLUGIN_PLAYSTATE_STOP },
+		{ "NEXT",   CMoviePlayerGui::PLUGIN_PLAYSTATE_NEXT },
+		{ "PREV",   CMoviePlayerGui::PLUGIN_PLAYSTATE_PREV },
+		{ NULL, 0 }
+	};
 
 	/* list of environment variable arrays to be exported */
 	lua_envexport e[] =
@@ -286,6 +301,8 @@ static void set_lua_variables(lua_State *L)
 		{ "FONT",	fontlist },
 		{ "CORNER",	corners },
 		{ "MENU_RETURN", menureturn },
+		{ "APIVERSION",  apiversion },
+		{ "PLAYSTATE",   playstate },
 		{ NULL, NULL }
 	};
 
@@ -517,6 +534,7 @@ const luaL_Reg CLuaInstance::methods[] =
 	{ "PlayFile", CLuaInstance::PlayFile },
 	{ "strFind", CLuaInstance::strFind },
 	{ "strSub", CLuaInstance::strSub },
+	{ "checkVersion", CLuaInstance::checkVersion },
 	{ NULL, NULL }
 };
 
@@ -724,8 +742,10 @@ int CLuaInstance::PlayFile(lua_State *L)
 	std::string si2(info2);
 	std::string sf(fname);
 	CMoviePlayerGui::getInstance().SetFile(st, sf, si1, si2);
-	CMoviePlayerGui::getInstance().exec(NULL, "http");
-	return 0;
+	CMoviePlayerGui::getInstance().exec(NULL, "http_lua");
+	int ret = CMoviePlayerGui::getInstance().getKeyPressed();
+	lua_pushinteger(L, ret);
+	return 1;
 }
 
 int CLuaInstance::strFind(lua_State *L)
@@ -1042,6 +1062,7 @@ void CLuaInstance::MenuRegister(lua_State *L)
 		{ "addItem", CLuaInstance::MenuAddItem },
 		{ "exec", CLuaInstance::MenuExec },
 		{ "hide", CLuaInstance::MenuHide },
+		{ "setActive", CLuaInstance::MenuSetActive },
 		{ "__gc", CLuaInstance::MenuDelete },
 		{ NULL, NULL }
 	};
@@ -1073,6 +1094,7 @@ CLuaMenu::CLuaMenu()
 
 CLuaMenu::~CLuaMenu()
 {
+	itemmap.clear();
 	delete m;
 	delete observ;
 }
@@ -1264,13 +1286,38 @@ int CLuaInstance::MenuAddKey(lua_State *L)
 	return 0;
 }
 
-int CLuaInstance::MenuAddItem(lua_State *L)
+int CLuaInstance::MenuSetActive(lua_State *L)
 {
 	CLuaMenu *m = MenuCheck(L, 1);
 	if (!m)
 		return 0;
 	lua_assert(lua_istable(L, 2));
 
+	lua_Integer id;	tableLookup(L, "item", id);
+	bool activ;	tableLookup(L, "activ", activ);
+
+	CMenuItem* item = NULL;
+	for (itemmap_iterator_t it = m->itemmap.begin(); it != m->itemmap.end(); ++it) {
+		if (it->first == id) {
+			item = it->second;
+			break;
+		}
+	}
+	if (item)
+		item->setActive(activ);
+	return 0;
+}
+
+int CLuaInstance::MenuAddItem(lua_State *L)
+{
+	CLuaMenu *m = MenuCheck(L, 1);
+	if (!m) {
+		lua_pushnil(L);
+		return 1;
+	}
+	lua_assert(lua_istable(L, 2));
+
+	CMenuItem *mi = NULL;
 	CLuaMenuItem i;
 	m->items.push_back(i);
 	CLuaMenuItem *b = &m->items.back();
@@ -1332,8 +1379,6 @@ int CLuaInstance::MenuAddItem(lua_State *L)
 		int range_from = 0, range_to = 99;
 		sscanf(tmp.c_str(), "%d,%d", &range_from, &range_to);
 
-		CMenuItem *mi = NULL;
-
 		if (type == "forwarder") {
 			b->str_val = value;
 			CLuaMenuForwarder *forwarder = new CLuaMenuForwarder(L, action, id);
@@ -1353,7 +1398,8 @@ int CLuaInstance::MenuAddItem(lua_State *L)
 			lua_pop(L, 1);
 			if (options_count == 0) {
 				m->m->addItem(new CMenuSeparator(CMenuSeparator::STRING | CMenuSeparator::LINE, "ERROR! (options_count)", NONEXISTANT_LOCALE));
-				return 0;
+				lua_pushnil(L);
+				return 1;
 			}
 
 			CMenuOptionChooser::keyval_ext *kext = (CMenuOptionChooser::keyval_ext *)calloc(options_count, sizeof(CMenuOptionChooser::keyval_ext));
@@ -1426,7 +1472,16 @@ int CLuaInstance::MenuAddItem(lua_State *L)
 			m->m->addItem(mi);
 		}
 	}
-	return 0;
+
+	if (mi) {
+		lua_Integer id = m->itemmap.size() + 1;
+		m->itemmap.insert(itemmap_pair_t(id, mi));
+		lua_pushinteger(L, id);
+	}
+	else
+		lua_pushnil(L);
+
+	return 1;
 }
 
 int CLuaInstance::MenuHide(lua_State *L)
@@ -2625,6 +2680,33 @@ int CLuaInstance::LuaConfigFileDelete(lua_State *L)
 	if (!c) return 0;
 	delete c;
 	return 0;
+}
+
+// --------------------------------------------------------------------------------
+
+int CLuaInstance::checkVersion(lua_State *L)
+{
+	int numargs = lua_gettop(L);
+	if (numargs < 3) {
+		printf("CLuaInstance::%s: not enough arguments (%d, expected 2)\n", __func__, numargs);
+		lua_pushnil(L);
+		return 1;
+	}
+	int major=0, minor=0, ret=1;
+	major = luaL_checkint(L, 2);
+	minor = luaL_checkint(L, 3);
+	if ((major > LUA_API_VERSION_MAJOR) || ((major == LUA_API_VERSION_MAJOR) && (minor > LUA_API_VERSION_MINOR))) {
+		ret = 0;
+		char msg[1024];
+		snprintf(msg, sizeof(msg)-1, "%s (v%d.%d)\n%s v%d.%d",
+				g_Locale->getText(LOCALE_LUA_VERSIONSCHECK1),
+				LUA_API_VERSION_MAJOR, LUA_API_VERSION_MINOR,
+				g_Locale->getText(LOCALE_LUA_VERSIONSCHECK2),
+				major, minor);
+		ShowMsg(LOCALE_MESSAGEBOX_ERROR, msg, CMessageBox::mbrBack, CMessageBox::mbBack, NEUTRINO_ICON_ERROR);
+	}
+	lua_pushinteger(L, ret);
+	return 1;
 }
 
 // --------------------------------------------------------------------------------

@@ -33,6 +33,9 @@ extern "C" {
 #include <configfile.h>
 #include <vector>
 
+#define LUA_API_VERSION_MAJOR 1
+#define LUA_API_VERSION_MINOR 2
+
 /* this is stored as userdata in the lua_State */
 struct CLuaData
 {
@@ -53,6 +56,10 @@ class CLuaMenuChangeObserver : public CChangeObserver
 		bool changeNotify(lua_State *, const std::string &, const std::string &, void *);
 };
 
+typedef std::pair<lua_Integer, CMenuItem*> itemmap_pair_t;
+typedef std::map<lua_Integer, CMenuItem*> itemmap_t;
+typedef itemmap_t::iterator itemmap_iterator_t;
+
 class CLuaMenu
 {
 	public:
@@ -61,6 +68,7 @@ class CLuaMenu
 		std::list<CLuaMenuItem> items;
 		std::list<CMenuTarget *> targets;
 		std::list<void *> tofree;
+		itemmap_t itemmap;
 		CLuaMenu();
 		~CLuaMenu();
 };
@@ -235,6 +243,7 @@ private:
 	static int MenuHide(lua_State *L);
 	static int MenuExec(lua_State *L);
 	static CLuaMenu *MenuCheck(lua_State *L, int n);
+	static int MenuSetActive(lua_State *L);
 
 	void HintboxRegister(lua_State *L);
 	static int HintboxNew(lua_State *L);
@@ -308,6 +317,8 @@ private:
 	static bool tableLookup(lua_State*, const char*, lua_Unsigned&);
 	static bool tableLookup(lua_State*, const char*, void**);
 	static bool tableLookup(lua_State*, const char*, bool &value);
+
+	static int checkVersion(lua_State *L);
 };
 
 #endif /* _LUAINSTANCE_H */
