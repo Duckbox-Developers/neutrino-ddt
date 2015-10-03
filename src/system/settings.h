@@ -243,6 +243,8 @@ struct SNeutrinoSettings
 	int ci_standby_reset;
 	int ci_clock;
 	int ci_ignore_messages;
+	int ci_save_pincode;
+	std::string ci_pincode;
 	int radiotext_enable;
 	std::string radiotext_rass_dir;
 
@@ -654,6 +656,8 @@ struct SNeutrinoSettings
 	int apply_settings;
 	int apply_kernel;
 
+	int flashupdate_createimage_add_var;
+	int flashupdate_createimage_add_root1;
 	int flashupdate_createimage_add_uldr;
 	int flashupdate_createimage_add_u_boot;
 	int flashupdate_createimage_add_env;

@@ -46,6 +46,7 @@
 #include <driver/record.h>
 
 #include <zapit/femanager.h>
+#include <cs_api.h>
 
 #include <sys/sysinfo.h>
 #include <sys/vfs.h>
@@ -326,8 +327,37 @@ void CDBoxInfoWidget::paint()
 
 	//paint head
 	std::string title(g_Locale->getText(LOCALE_EXTRA_DBOXINFO));
+#ifdef HAVE_DUCKBOX_HARDWARE || HAVE_SPARK_HARDWARE
 	title += ": ";
 	title += g_info.hw_caps->boxname;
+#else
+	std::map<std::string,std::string> cpuinfo;
+	in.open("/proc/cpuinfo");
+	if (in.is_open()) {
+		std::string line;
+		while (getline(in, line)) {
+			size_t colon = line.find_first_of(':');
+			if (colon != string::npos && colon > 1) {
+				std::string key = line.substr(0, colon - 1);
+				std::string val = line.substr(colon + 1);
+				cpuinfo[trim(key)] = trim(val);
+			}
+		}
+		in.close();
+	}
+	if (!cpuinfo["Hardware"].empty()) {
+		title += ": ";
+		title += cpuinfo["Hardware"];
+	} else if (!cpuinfo["machine"].empty()) {
+		title += ": ";
+		title + cpuinfo["machine"];
+	}
+	char ss[17];
+	sprintf(ss, "%016llx", cs_get_serial());
+	title += ", S/N ";
+	title += ss;
+	width = max(width, g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getRenderWidth(title, true));
+#endif
 
 	CComponentsHeader header(x, ypos, width, hheight, title, NEUTRINO_ICON_SHELL);
 	header.paint(CC_SAVE_SCREEN_NO);

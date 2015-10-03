@@ -283,6 +283,7 @@ ci.inserted CAM inserted in slot
 ci.removed CAM removed from slot
 ci.reset Reset
 ci.reset_standby Reset after standby
+ci.save_pincode Save pincode
 ci.settings Conditional access
 ci.timeout Timeout waiting CI menu ready
 ci.waiting Waiting for CI answer
@@ -593,9 +594,11 @@ flashupdate.copy_image Copy Image to main memory
 flashupdate.createimage Save image
 flashupdate.createimage_add_env Add 'env' to image
 flashupdate.createimage_add_kernel Add 'kernel' to image
+flashupdate.createimage_add_root1 Add 'root1' to image
 flashupdate.createimage_add_spare Add 'spare' to image
 flashupdate.createimage_add_u_boot Add 'u-boot' to image
 flashupdate.createimage_add_uldr Add 'uldr' to image
+flashupdate.createimage_add_var Add 'var' to image
 flashupdate.createimage_menu Save current software
 flashupdate.createimage_options Options
 flashupdate.createimage_other Create image for %s STB
@@ -620,7 +623,7 @@ flashupdate.md5check checking image
 flashupdate.md5sumerror image has errors
 flashupdate.menu_apply_kernel Flashing kernel
 flashupdate.menu_apply_settings Allow apply settings
-flashupdate.mkfs_create_image Create image
+flashupdate.mkfs_create_image Create backup
 flashupdate.mkfs_preparing_files Preparing files and directories
 flashupdate.mkfs_using_sumtool Using sumtool
 flashupdate.msgbox Found the following new file:\nDate: %s, %s\nBaseImage: %s\nType: %s\n\nDo you want to download and install this version now?
@@ -1644,6 +1647,7 @@ moviebrowser.copying Coping, please wait ...
 moviebrowser.cut Cut jumps from movie?
 moviebrowser.cut_failed Cut failed, are there jump bookmarks and enough free space?
 moviebrowser.cutting Cutting movie, please wait ...
+moviebrowser.delete_all Delete all selected movies without any questions?
 moviebrowser.delete_info Delete files, please wait...
 moviebrowser.delete_screenshot Delete screenshot?
 moviebrowser.dir Path

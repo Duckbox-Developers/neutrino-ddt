@@ -435,7 +435,7 @@ void CLuaInstance::runScript(const char *fileName, std::vector<std::string> *arg
 	int status = luaL_loadfile(lua, fileName);
 	if (status) {
 		fprintf(stderr, "[CLuaInstance::%s] Can't load file: %s\n", __func__, lua_tostring(lua, -1));
-		ShowMsg2UTF("Lua script error:", lua_tostring(lua, -1), CMsgBox::mbrBack, CMsgBox::mbBack);
+		DisplayErrorMessage(lua_tostring(lua, -1), "Lua Script Error:");
 		if (error_string)
 			*error_string = std::string(lua_tostring(lua, -1));
 		return;
@@ -472,7 +472,7 @@ void CLuaInstance::runScript(const char *fileName, std::vector<std::string> *arg
 	if (status)
 	{
 		fprintf(stderr, "[CLuaInstance::%s] error in script: %s\n", __func__, lua_tostring(lua, -1));
-		ShowMsg2UTF("Lua script error:", lua_tostring(lua, -1), CMsgBox::mbrBack, CMsgBox::mbBack);
+		DisplayErrorMessage(lua_tostring(lua, -1), "Lua Script Error:");
 		if (error_string)
 			*error_string = std::string(lua_tostring(lua, -1));
 	}
@@ -1049,7 +1049,11 @@ bool CLuaMenuChangeObserver::changeNotify(lua_State *L, const std::string &luaAc
 	lua_remove(L, -2);
 	lua_pushstring(L, luaId.c_str());
 	lua_pushstring(L, optionValue);
-	lua_pcall(L, 2 /* two args */, 1 /* one result */, 0);
+	int status = lua_pcall(L, 2 /* two args */, 1 /* one result */, 0);
+	if (status) {
+		fprintf(stderr, "[CLuaMenuChangeObserver::%s:%d] error in script: %s\n", __func__, __LINE__, lua_tostring(L, -1));
+		luaL_error(L, " => %s", lua_tostring(L, -1));
+	}
 	double res = lua_isnumber(L, -1) ? lua_tonumber(L, -1) : 0;
 	return (((int)res == menu_return::RETURN_REPAINT) || ((int)res == menu_return::RETURN_EXIT_REPAINT));
 }
@@ -1120,8 +1124,8 @@ int CLuaMenuForwarder::exec(CMenuTarget* /*parent*/, const std::string & /*actio
 		lua_pushstring(L, luaId.c_str());
 		int status = lua_pcall(L, 1 /* one arg */, 1 /* one result */, 0);
 		if (status) {
-			fprintf(stderr, "[CLuaMenuForwarder::%s] error in script: %s\n", __func__, lua_tostring(L, -1));
-			ShowMsg2UTF("Lua script error:", lua_tostring(L, -1), CMsgBox::mbrBack, CMsgBox::mbBack);
+			fprintf(stderr, "[CLuaMenuForwarder::%s:%d] error in script: %s\n", __func__, __LINE__, lua_tostring(L, -1));
+			luaL_error(L, " => %s", lua_tostring(L, -1));
 		}
 		if (lua_isnumber(L, -1))
 			res = (int) lua_tonumber(L, -1);
@@ -1155,7 +1159,11 @@ int CLuaMenuFilebrowser::exec(CMenuTarget* /*parent*/, const std::string& /*acti
 		lua_getfield(L, -1, luaAction.c_str());
 		lua_remove(L, -2);
 		lua_pushstring(L, value->c_str());
-		lua_pcall(L, 1 /* one arg */, 1 /* one result */, 0);
+		int status = lua_pcall(L, 1 /* one arg */, 1 /* one result */, 0);
+		if (status) {
+			fprintf(stderr, "[CLuaMenuFilebrowser::%s:%d] error in script: %s\n", __func__, __LINE__, lua_tostring(L, -1));
+			luaL_error(L, " => %s", lua_tostring(L, -1));
+		}
 		lua_pop(L, 1);
 	}
 	return menu_return::RETURN_REPAINT;
@@ -1189,7 +1197,11 @@ int CLuaMenuStringinput::exec(CMenuTarget* /*parent*/, const std::string & /*act
 		lua_remove(L, -2);
 		lua_pushstring(L, luaId.c_str());
 		lua_pushstring(L, value->c_str());
-		lua_pcall(L, 2 /* two args */, 1 /* one result */, 0);
+		int status = lua_pcall(L, 2 /* two arg */, 1 /* one result */, 0);
+		if (status) {
+			fprintf(stderr, "[CLuaMenuStringinput::%s:%d] error in script: %s\n", __func__, __LINE__, lua_tostring(L, -1));
+			luaL_error(L, " => %s", lua_tostring(L, -1));
+		}
 		lua_pop(L, 2);
 	}
 	return menu_return::RETURN_REPAINT;
@@ -1218,7 +1230,11 @@ int CLuaMenuKeyboardinput::exec(CMenuTarget* /*parent*/, const std::string & /*a
 		lua_remove(L, -2);
 		lua_pushstring(L, luaId.c_str());
 		lua_pushstring(L, value->c_str());
-		lua_pcall(L, 2 /* two args */, 1 /* one result */, 0);
+		int status = lua_pcall(L, 2 /* two arg */, 1 /* one result */, 0);
+		if (status) {
+			fprintf(stderr, "[CLuaMenuKeyboardinput::%s:%d] error in script: %s\n", __func__, __LINE__, lua_tostring(L, -1));
+			luaL_error(L, " => %s", lua_tostring(L, -1));
+		}
 		lua_pop(L, 2);
 	}
 	return menu_return::RETURN_REPAINT;
@@ -2692,20 +2708,19 @@ int CLuaInstance::checkVersion(lua_State *L)
 		lua_pushnil(L);
 		return 1;
 	}
-	int major=0, minor=0, ret=1;
+	int major=0, minor=0;
 	major = luaL_checkint(L, 2);
 	minor = luaL_checkint(L, 3);
 	if ((major > LUA_API_VERSION_MAJOR) || ((major == LUA_API_VERSION_MAJOR) && (minor > LUA_API_VERSION_MINOR))) {
-		ret = 0;
 		char msg[1024];
 		snprintf(msg, sizeof(msg)-1, "%s (v%d.%d)\n%s v%d.%d",
 				g_Locale->getText(LOCALE_LUA_VERSIONSCHECK1),
 				LUA_API_VERSION_MAJOR, LUA_API_VERSION_MINOR,
 				g_Locale->getText(LOCALE_LUA_VERSIONSCHECK2),
 				major, minor);
-		ShowMsg(LOCALE_MESSAGEBOX_ERROR, msg, CMessageBox::mbrBack, CMessageBox::mbBack, NEUTRINO_ICON_ERROR);
+		luaL_error(L, msg);
 	}
-	lua_pushinteger(L, ret);
+	lua_pushinteger(L, 1); /* for backward compatibility */
 	return 1;
 }
 

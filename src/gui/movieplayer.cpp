@@ -764,8 +764,8 @@ void* CMoviePlayerGui::bgPlayThread(void *arg)
 				eof = 0;
 			if (eof > 5) {
 				printf("CMoviePlayerGui::bgPlayThread: playback stopped, try to rezap...\n");
-				t_channel_id * chid = new t_channel_id;
-				*chid = mp->movie_info.epgId;
+				unsigned char *chid = new unsigned char[sizeof(t_channel_id)];
+				*(t_channel_id*)chid = mp->movie_info.epgId;
 				g_RCInput->postMsg(NeutrinoMessages::EVT_WEBTV_ZAP_COMPLETE, (neutrino_msg_data_t) chid);
 				break;
 			}
@@ -1436,6 +1436,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 				menu_ret = menu_return::RETURN_EXIT_ALL;
 
 			playstate = CMoviePlayerGui::STOPPED;
+			keyPressed = CMoviePlayerGui::PLUGIN_PLAYSTATE_STOP;
 			ClearQueue();
 			g_RCInput->postMsg(msg, data);
 		} else if (msg == CRCInput::RC_timeout || msg == NeutrinoMessages::EVT_TIMER) {
@@ -1452,6 +1453,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 				printf("CMoviePlayerGui::PlayFile: neutrino handleMsg messages_return::cancel_all\n");
 				menu_ret = menu_return::RETURN_EXIT_ALL;
 				playstate = CMoviePlayerGui::STOPPED;
+				keyPressed = CMoviePlayerGui::PLUGIN_PLAYSTATE_STOP;
 				ClearQueue();
 			}
 			else if (msg <= CRCInput::RC_MaxRC) {
@@ -1526,10 +1528,7 @@ void CMoviePlayerGui::PlayFileEnd(bool restore)
 void CMoviePlayerGui::callInfoViewer()
 {
 	if (timeshift != TSHIFT_MODE_OFF) {
-		g_InfoViewer->showTitle(CNeutrinoApp::getInstance()->channelList->getActiveChannelNumber(),
-				CNeutrinoApp::getInstance()->channelList->getActiveChannelName(),
-				CNeutrinoApp::getInstance()->channelList->getActiveSatellitePosition(),
-				CNeutrinoApp::getInstance()->channelList->getActiveChannel_ChannelID());
+		g_InfoViewer->showTitle(CNeutrinoApp::getInstance()->channelList->getActiveChannel());
 		return;
 	}
 
@@ -2702,6 +2701,8 @@ void CMoviePlayerGui::makeScreenShot(bool autoshot, bool forcover)
 		}
 	}
 	sc->Start("-r 320 -j 75");
+	if (autoshot)
+		autoshot_done = true;
 }
 
 void CMoviePlayerGui::showFileInfos()
