@@ -327,7 +327,7 @@ void CDBoxInfoWidget::paint()
 
 	//paint head
 	std::string title(g_Locale->getText(LOCALE_EXTRA_DBOXINFO));
-#ifdef HAVE_DUCKBOX_HARDWARE || HAVE_SPARK_HARDWARE
+#if 1
 	title += ": ";
 	title += g_info.hw_caps->boxname;
 #else
