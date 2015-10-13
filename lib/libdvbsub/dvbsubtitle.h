@@ -12,9 +12,6 @@
 #ifndef __DVBSUBTITLE_H
 #define __DVBSUBTITLE_H
 
-// Workaround for C++
-#define __STDC_CONSTANT_MACROS
-
 #include <config.h>
 extern "C" {
 #include <unistd.h>
