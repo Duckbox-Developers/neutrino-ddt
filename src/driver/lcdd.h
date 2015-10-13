@@ -217,6 +217,14 @@ class CLCD
 		static void	*TimeThread(void *);
 		pthread_t	thrTime;
 		bool		thread_running;
+#ifdef BOXMODEL_SPARK7162
+		int			last_toggle_state_power;
+		int			brightness;
+		unsigned int	timeout_cnt;
+		unsigned int	switch_name_time_cnt;
+		void		setlcdparameter(int dimm, int power);
+		void		count_down();
+#endif
 #endif
 
 	public:

@@ -129,6 +129,9 @@ CLCD::CLCD()
 	/* do not show menu in neutrino...,at spark7162 true, because there is th GLCD Menu */
 #ifdef BOXMODEL_SPARK7162
 	has_lcd = true;
+	mode = MODE_TVRADIO;
+	switch_name_time_cnt = 0;
+	timeout_cnt = 0;
 #else
 	has_lcd = false;
 #endif
@@ -156,13 +159,34 @@ CLCD* CLCD::getInstance()
 
 void CLCD::wake_up()
 {
+#ifdef BOXMODEL_SPARK7162
+	if (atoi(g_settings.lcd_setting_dim_time.c_str()) > 0) {
+		timeout_cnt = atoi(g_settings.lcd_setting_dim_time.c_str());
+		g_settings.lcd_setting_dim_brightness > -1 ?
+			setBrightness(g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS]) : setPower(1);
+	}
+	else
+		setPower(1);
+	if(g_settings.lcd_info_line){
+		switch_name_time_cnt = g_settings.timing[SNeutrinoSettings::TIMING_INFOBAR] + 10;
+	}
+#endif
 }
 
 void* CLCD::TimeThread(void *)
 {
 	while (CLCD::getInstance()->thread_running) {
 		sleep(1);
+#ifdef BOXMODEL_SPARK7162
+		struct stat buf;
+                if (stat("/tmp/vfd.locked", &buf) == -1) {
+                        CLCD::getInstance()->showTime();
+                        CLCD::getInstance()->count_down();
+                } else
+                        CLCD::getInstance()->wake_up();
+#else
 		CLCD::getInstance()->showTime();
+#endif
 		/* hack, just if we missed the blit() somewhere
 		 * this will update the framebuffer once per second */
 		if (getenv("SPARK_NOBLIT") == NULL) {
@@ -188,6 +212,11 @@ void CLCD::init(const char *, const char *, const char *, const char *, const ch
 
 void CLCD::setlcdparameter(void)
 {
+#ifdef BOXMODEL_SPARK7162
+	last_toggle_state_power = g_settings.lcd_setting[SNeutrinoSettings::LCD_POWER];
+	setlcdparameter((mode == MODE_STANDBY) ? g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] : (mode == MODE_SHUTDOWN) ? g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] : g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS],
+			last_toggle_state_power);
+#endif
 }
 
 void CLCD::showServicename(std::string name, bool)
@@ -438,22 +467,74 @@ void CLCD::setMode(const MODES m, const char * const)
 	}
 }
 
-void CLCD::setBrightness(int)
+void CLCD::setBrightness(int dimm)
 {
+#ifdef BOXMODEL_SPARK7162
+    switch(dimm) {
+	case 15:
+	case 14: dimm = 7; break;
+	case 13:
+	case 12: dimm = 6; break;
+	case 11:
+	case 10: dimm = 5; break;
+	case  9:
+	case  8: dimm = 4; break;
+	case  7:
+	case  6: dimm = 3; break;
+	case  5:
+	case  4: dimm = 2; break;
+	case  3:
+	case  2: dimm = 1; break;
+	case  1:
+	case  0: dimm = 0; break;
+	}
+
+	struct aotom_ioctl_data d;
+
+    if (dimm < 0 || dimm > 7)
+		return;
+
+	int fd = dev_open();
+	if (fd < 0)
+		return;
+
+    d.u.brightness.level = dimm;
+
+	if (ioctl(fd, VFDBRIGHTNESS, &d) < 0)
+		fprintf(stderr, "[neutrino] %s set brightness VFDBRIGHTNESS: %m\n", __func__);
+
+	close(fd);
+#endif
 }
 
 int CLCD::getBrightness()
 {
+#ifdef BOXMODEL_SPARK7162
+	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] > 15)
+		g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] = 15;
+	return g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS];
+#else
 	return 0;
+#endif
 }
 
-void CLCD::setBrightnessStandby(int)
+void CLCD::setBrightnessStandby(int bright)
 {
+#ifdef BOXMODEL_SPARK7162
+	g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] = bright;
+	setlcdparameter();
+#endif
 }
 
 int CLCD::getBrightnessStandby()
 {
+#ifdef BOXMODEL_SPARK7162
+	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] > 15)
+		g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] = 15;
+	return g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS];
+#else
 	return 0;
+#endif
 }
 
 void CLCD::setPower(int)
@@ -462,7 +543,11 @@ void CLCD::setPower(int)
 
 int CLCD::getPower()
 {
+#ifdef BOXMODEL_SPARK7162
+	return g_settings.lcd_setting[SNeutrinoSettings::LCD_POWER];
+#else
 	return 0;
+#endif
 }
 
 void CLCD::togglePower(void)
@@ -472,6 +557,11 @@ void CLCD::togglePower(void)
 		Clear();
 	else
 		showTime(true);
+#ifdef BOXMODEL_SPARK7162
+	last_toggle_state_power = 1 - last_toggle_state_power;
+	setlcdparameter((mode == MODE_STANDBY) ? g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] : (mode == MODE_SHUTDOWN) ? g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] : g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS],
+			last_toggle_state_power);
+#endif
 }
 
 void CLCD::setMuted(bool mu)
@@ -522,6 +612,49 @@ void CLCD::Clear()
 #endif
 
 #ifdef BOXMODEL_SPARK7162
+void CLCD::count_down() {
+	if (timeout_cnt > 0) {
+		timeout_cnt--;
+		if (timeout_cnt == 0 ) {
+			if (g_settings.lcd_setting_dim_brightness > -1) {
+				// save lcd brightness, setBrightness() changes global setting
+				int b = g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS];
+				setBrightness(g_settings.lcd_setting_dim_brightness);
+				g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] = b;
+			} else {
+				setPower(0);
+			}
+		}
+	}
+	if (g_settings.lcd_info_line && switch_name_time_cnt > 0) {
+	  switch_name_time_cnt--;
+		if (switch_name_time_cnt == 0) {
+			if (g_settings.lcd_setting_dim_brightness > -1) {
+				CLCD::getInstance()->showTime(true);
+			}
+		}
+	}
+}
+
+void CLCD::setlcdparameter(int dimm, const int power)
+{
+	if(dimm < 0)
+		dimm = 0;
+	else if(dimm > 15)
+		dimm = 15;
+
+	if(!power)
+		dimm = 0;
+
+	if(brightness == dimm)
+		return;
+
+	brightness = dimm;
+
+printf("CLCD::setlcdparameter dimm %d power %d\n", dimm, power);
+	setBrightness(dimm);
+}
+
 void CLCD::SetIcons(int icon, bool on)
 {
 	struct aotom_ioctl_data d;
