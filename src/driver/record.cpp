@@ -121,7 +121,7 @@ bool CRecordInstance::SaveXml()
 	int fd;
 	std::string xmlfile = std::string(filename) + ".xml";
 
-	if ((fd = open(xmlfile.c_str(), O_SYNC | O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)) >= 0) {
+	if ((fd = open(xmlfile.c_str(), O_CREAT | O_TRUNC | O_SYNC | O_WRONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)) >= 0) {
 		std::string extMessage;
 		cMovieInfo->encodeMovieInfoXml(&extMessage, recMovieInfo);
 		write(fd, extMessage.c_str(), extMessage.size() /*strlen(info)*/);
@@ -171,7 +171,7 @@ record_error_msg_t CRecordInstance::Start(CZapitChannel * channel)
 	std::string tsfile = std::string(filename) + ".ts";
 	printf("%s: file %s vpid %x apid %x\n", __FUNCTION__, tsfile.c_str(), allpids.PIDs.vpid, apids[0]);
 
-	int fd = open(tsfile.c_str(), O_CREAT | O_RDWR | O_LARGEFILE | O_TRUNC , S_IRWXO | S_IRWXG | S_IRWXU);
+	int fd = open(tsfile.c_str(), O_CREAT | O_TRUNC | O_SYNC | O_RDWR | O_LARGEFILE | O_CLOEXEC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 	if(fd < 0) {
 		perror(tsfile.c_str());
 		hintBox.hide();
@@ -1944,16 +1944,16 @@ void CStreamRec::FillMovieInfo(CZapitChannel * channel, APIDList & apid_list)
 				desc += title->value;
 			}
 			switch(codec->codec_id) {
-				case CODEC_ID_AC3:
+				case AV_CODEC_ID_AC3:
 					audio_pids.atype = 1;
 					break;
-				case CODEC_ID_AAC:
+				case AV_CODEC_ID_AAC:
 					audio_pids.atype = 5;
 					break;
-				case CODEC_ID_EAC3:
+				case AV_CODEC_ID_EAC3:
 					audio_pids.atype = 7;
 					break;
-				case CODEC_ID_MP2:
+				case AV_CODEC_ID_MP2:
 				default:
 					audio_pids.atype = 0;
 					break;
@@ -1967,7 +1967,7 @@ void CStreamRec::FillMovieInfo(CZapitChannel * channel, APIDList & apid_list)
 
 		} else if (codec->codec_type == AVMEDIA_TYPE_VIDEO) {
 			recMovieInfo->epgVideoPid = st->id;
-			if (codec->codec_id == CODEC_ID_H264)
+			if (codec->codec_id == AV_CODEC_ID_H264)
 				recMovieInfo->VideoType = 1;
 			printf("%s: [VIDEO] 0x%x \n", __FUNCTION__, recMovieInfo->epgVideoPid);
 		}

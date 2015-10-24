@@ -230,7 +230,7 @@ class CMoviePlayerGui : public CMenuTarget
  public:
 	~CMoviePlayerGui();
 
-	static CMoviePlayerGui& getInstance();
+	static CMoviePlayerGui& getInstance(bool background = false);
 
 	int exec(CMenuTarget* parent, const std::string & actionKey);
 	bool Playing() { return playing; };

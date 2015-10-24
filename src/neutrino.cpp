@@ -714,7 +714,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.recording_stream_vtxt_pid       = configfile.getBool("recordingmenu.stream_vtxt_pid"      , true);
 	g_settings.recording_stream_subtitle_pids  = configfile.getBool("recordingmenu.stream_subtitle_pids", true);
 	g_settings.recording_stream_pmt_pid        = configfile.getBool("recordingmenu.stream_pmt_pid"      , false);
-	g_settings.recording_filename_template     = configfile.getString("recordingmenu.filename_template" , "%C_%T%d_%t");
+	g_settings.recording_filename_template     = configfile.getString("recordingmenu.filename_template" , "%C_%T_%d_%t");
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 	g_settings.recording_bufsize               = configfile.getInt32("recording_bufsize", 4);
 	g_settings.recording_bufsize_dmx           = configfile.getInt32("recording_bufsize_dmx", 2);
@@ -4458,6 +4458,23 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 		g_RCInput->postMsg(NeutrinoMessages::STANDBY_ON, 0);
 		return menu_return::RETURN_EXIT_ALL;
 	}
+#if 0
+	else if(actionKey == "easyswitch") {
+		INFO("easyswitch\n");
+		CParentalSetup pin;
+		if (pin.checkPin()) {
+			if (parent)
+				parent->hide();
+
+			std::string text = "Easy menu switched " + string(g_settings.easymenu?"OFF":"ON") + string(", when restart box.\nRestart now?");
+			if (ShowMsg(LOCALE_MESSAGEBOX_INFO, text, CMessageBox::mbrNo, CMessageBox::mbYes | CMessageBox::mbNo, NEUTRINO_ICON_INFO, 0) == CMessageBox::mbrYes) {
+				g_settings.easymenu = (g_settings.easymenu == 0) ? 1 : 0;
+				INFO("change easymenu to %d\n", g_settings.easymenu);
+				g_RCInput->postMsg(NeutrinoMessages::REBOOT, 0);
+			}
+		}
+	}
+#endif
 
 	return returnval;
 }
@@ -4809,7 +4826,7 @@ void CNeutrinoApp::StopSubtitles(bool enable_glcd_mirroring)
 #endif
 #if 0
 	if (mode == mode_webtv)
-		CMoviePlayerGui::getInstance().clearSubtitle(true);
+		CMoviePlayerGui::getInstance(true).clearSubtitle(true);
 #endif
 }
 
@@ -4831,7 +4848,7 @@ void CNeutrinoApp::StartSubtitles(bool show)
 	tuxtx_pause_subtitle(false);
 #if 0
 	if (mode == mode_webtv)
-		CMoviePlayerGui::getInstance().clearSubtitle(false);
+		CMoviePlayerGui::getInstance(true).clearSubtitle(false);
 #endif 
 }
 
