@@ -192,6 +192,7 @@ class CZapitChannel
 
 		unsigned int			bLockCount;
 		bool				bLocked;
+		bool				bUseCI;
 
 		int				number;
 		CChannelEvent			currentEvent,nextEvent;

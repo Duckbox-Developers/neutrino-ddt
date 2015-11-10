@@ -315,7 +315,7 @@ int CChannelList::doChannelMenu(void)
 	CMenuSelectorTarget * selector = new CMenuSelectorTarget(&select);
 
 	bool empty = (*chanlist).empty();
-	bool allow_edit = (bouquet && bouquet->zapitBouquet && !bouquet->zapitBouquet->bOther);
+	bool allow_edit = (bouquet && bouquet->zapitBouquet && !bouquet->zapitBouquet->bOther && !bouquet->zapitBouquet->bWebtv);
 
 	int i = 0;
 	snprintf(cnt, sizeof(cnt), "%d", i);
@@ -753,7 +753,7 @@ int CChannelList::show()
 			int step =  ((int) msg == g_settings.key_pagedown) ? listmaxshow : 1;  // browse or step 1
 			int new_selected = selected + step;
 			if (new_selected >= (int) (*chanlist).size()) {
-				if (((*chanlist).size() - listmaxshow -1 < selected) && (selected != ((*chanlist).size() - 1)) && (step != 1))
+				if ((((*chanlist).size() - listmaxshow -1 < selected) && (step != 1)) || (selected != ((*chanlist).size() - 1)))
 					new_selected = (*chanlist).size() - 1;
 				else if ((((*chanlist).size() / listmaxshow) + 1) * listmaxshow == (*chanlist).size() + listmaxshow) // last page has full entries
 					new_selected = 0;
@@ -995,13 +995,17 @@ bool CChannelList::showInfo(int number, int epgpos)
 
 int CChannelList::handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t data, bool pip)
 {
-	bool startvideo = true;
-
 	if (msg != NeutrinoMessages::EVT_PROGRAMLOCKSTATUS) // right now the only message handled here.
 		return messages_return::unhandled;
+	checkLockStatus(data, pip);
+	return messages_return::handled;
 
+}
+
+bool CChannelList::checkLockStatus(neutrino_msg_data_t data, bool pip)
+{
+	bool startvideo = true;
 	//printf("===> program-lock-status: %d zp: %d\n", data, zapProtection != NULL);
-
 	if (g_settings.parentallock_prompt == PARENTALLOCK_PROMPT_NEVER)
 		goto out;
 
@@ -1088,9 +1092,9 @@ out:
 		} else
 #endif
 			g_RemoteControl->startvideo();
+		return true;
 	}
-
-	return messages_return::handled;
+	return false;
 }
 
 bool CChannelList::adjustToChannelID(const t_channel_id channel_id)

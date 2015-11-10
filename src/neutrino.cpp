@@ -139,6 +139,7 @@
 #include <zapit/getservices.h>
 #include <zapit/satconfig.h>
 #include <zapit/scan.h>
+#include <zapit/capmt.h>
 #include <zapit/client/zapitclient.h>
 
 #include <linux/reboot.h>
@@ -477,6 +478,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.ci_ignore_messages = configfile.getInt32("ci_ignore_messages", 0);
 	g_settings.ci_save_pincode = configfile.getInt32("ci_save_pincode", 0);
 	g_settings.ci_pincode = configfile.getString("ci_pincode", "");
+	g_settings.ci_tuner = configfile.getInt32("ci_tuner", -1);
 
 #ifndef CPU_FREQ
 	g_settings.cpufreq = 0;
@@ -1117,6 +1119,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32("ci_ignore_messages", g_settings.ci_ignore_messages);
 	configfile.setInt32("ci_save_pincode", g_settings.ci_save_pincode);
 	configfile.setString("ci_pincode", g_settings.ci_pincode);
+	configfile.setInt32("ci_tuner", g_settings.ci_tuner);
 
 	configfile.setInt32( "make_hd_list", g_settings.make_hd_list);
 	configfile.setInt32( "make_webtv_list", g_settings.make_webtv_list);
@@ -2160,6 +2163,7 @@ TIMER_START();
 	ZapStart_arg.volume = g_settings.current_volume;
 	ZapStart_arg.webtv_xml = &g_settings.webtv_xml;
 
+	CCamManager::getInstance()->SetCITuner(g_settings.ci_tuner);
 	/* create decoders, read channels */
 	bool zapit_init = CZapit::getInstance()->Start(&ZapStart_arg);
 	//get zapit config for writeChannelsNames
@@ -2658,7 +2662,7 @@ void CNeutrinoApp::RealRun(CMenuWidget &mainMenu)
 			}
 #if 0
 			else if ((mode == mode_webtv) && msg == (neutrino_msg_t) g_settings.mpkey_subtitle) {
-				CMoviePlayerGui::getInstance().selectSubtitle();
+				CMoviePlayerGui::getInstance(true).selectSubtitle();
 			}
 #endif
 			/* after sensitive key bind, check user menu */
@@ -2872,6 +2876,8 @@ int CNeutrinoApp::showChannelList(const neutrino_msg_t _msg, bool from_menu)
 		nNewChannel = bouquetList->exec(true);
 	} else if(msg == CRCInput::RC_favorites) {
 		SetChannelMode(LIST_MODE_FAV);
+		if (bouquetList->Bouquets.empty())
+			SetChannelMode(LIST_MODE_PROV);
 		nNewChannel = bouquetList->exec(true);
 	}
 _repeat:
