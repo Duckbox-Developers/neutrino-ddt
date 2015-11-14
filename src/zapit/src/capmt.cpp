@@ -341,14 +341,16 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 			cam->makeCaPmt(channel, false, list, caids);
 			int len;
 			unsigned char * buffer = channel->getRawPmt(len);
-			cam->sendCaPmt(channel->getChannelID(), buffer, len, CA_SLOT_TYPE_SMARTCARD, channel->scrambled, channel->camap, 0, true);
-
+			cam->sendCaPmt(channel->getChannelID(), buffer, len, CA_SLOT_TYPE_CI, channel->scrambled, channel->camap, 0, true);
+			/* out commented: causes a double send of capmt, the second without needed parameters */ 
+#ifdef BOXMODEL_APOLLO
 			if (tunerno >= 0 && tunerno != cDemux::GetSource(cam->getSource()))
 				INFO("CI: configured tuner %d do not match %d, skip...\n", tunerno, cam->getSource());
 			else if (filter_channels && !channel->bUseCI)
 				INFO("CI: filter enabled, CI not used\n");
 			else
 				cam->sendCaPmt(channel->getChannelID(), buffer, len, CA_SLOT_TYPE_CI);
+#endif
 			//list = CCam::CAPMT_MORE;
 		}
 	}
