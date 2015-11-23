@@ -34,7 +34,7 @@ extern "C" {
 #include <vector>
 
 #define LUA_API_VERSION_MAJOR 1
-#define LUA_API_VERSION_MINOR 6
+#define LUA_API_VERSION_MINOR 11
 
 /* this is stored as userdata in the lua_State */
 struct CLuaData
@@ -212,6 +212,7 @@ private:
 	static bool _luaL_checkbool(lua_State *L, int numArg);
 	static void paramBoolDeprecated(lua_State *L, const char* val);
 	static void functionDeprecated(lua_State *L, const char* oldFunc, const char* newFunc);
+	static void paramDeprecated(lua_State *L, const char* oldParam, const char* newParam);
 	static lua_Unsigned checkMagicMask(lua_Unsigned &col);
 
 	static int NewWindow(lua_State *L);
@@ -230,6 +231,7 @@ private:
 	static int setBlank(lua_State *L);
 	static int ShowPicture(lua_State *L);
 	static int StopPicture(lua_State *L);
+	static int zapitSetStandby(lua_State *L);
 	static int PlayFile(lua_State *L);
 
 	static int strFind(lua_State *L);
@@ -320,6 +322,7 @@ private:
 
 	static int checkVersion(lua_State *L);
 	static int createChannelIDfromUrl(lua_State *L);
+	static int enableInfoClock(lua_State *L);
 };
 
 #endif /* _LUAINSTANCE_H */
