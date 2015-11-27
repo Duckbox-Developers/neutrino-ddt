@@ -34,13 +34,23 @@ extern "C" {
 #include <vector>
 
 #define LUA_API_VERSION_MAJOR 1
-#define LUA_API_VERSION_MINOR 11
+#define LUA_API_VERSION_MINOR 16
+
+typedef std::pair<lua_Integer, Font*> fontmap_pair_t;
+typedef std::map<lua_Integer, Font*> fontmap_t;
+typedef fontmap_t::iterator fontmap_iterator_t;
+
+typedef std::pair<lua_Integer, fb_pixel_t*> screenmap_pair_t;
+typedef std::map<lua_Integer, fb_pixel_t*> screenmap_t;
+typedef screenmap_t::iterator screenmap_iterator_t;
 
 /* this is stored as userdata in the lua_State */
 struct CLuaData
 {
 	CFBWindow *fbwin;
 	CRCInput *rcinput;
+	fontmap_t fontmap;
+	screenmap_t screenmap;
 };
 
 struct CLuaMenuItem
@@ -200,6 +210,13 @@ public:
 	void runScript(const char *fileName, std::vector<std::string> *argv = NULL, std::string *result_code = NULL, std::string *result_string = NULL, std::string *error_string = NULL);
 	void abortScript();
 
+	enum {
+		DYNFONT_NO_ERROR      = 0,
+		DYNFONT_MAXIMUM_FONTS = 1,
+		DYNFONT_TO_WIDE       = 2,
+		DYNFONT_TOO_HIGH      = 3
+	};
+
 	// Example: runScript(fileName, "Arg1", "Arg2", "Arg3", ..., NULL);
 	//	Type of all parameters: const char*
 	//	The last parameter to NULL is imperative.
@@ -215,8 +232,14 @@ private:
 	static void paramDeprecated(lua_State *L, const char* oldParam, const char* newParam);
 	static lua_Unsigned checkMagicMask(lua_Unsigned &col);
 
+	static int GetRevision(lua_State *L);
 	static int NewWindow(lua_State *L);
+	static int saveScreen(lua_State *L);
+	static int restoreScreen(lua_State *L);
+	static int deleteSavedScreen(lua_State *L);
 	static int PaintBox(lua_State *L);
+	static int paintHLineRel(lua_State *L);
+	static int paintVLineRel(lua_State *L);
 	static int PaintIcon(lua_State *L);
 	static int RenderString(lua_State *L);
 	static int getRenderWidth(lua_State *L);
@@ -323,6 +346,7 @@ private:
 	static int checkVersion(lua_State *L);
 	static int createChannelIDfromUrl(lua_State *L);
 	static int enableInfoClock(lua_State *L);
+	static int getDynFont(lua_State *L);
 };
 
 #endif /* _LUAINSTANCE_H */
