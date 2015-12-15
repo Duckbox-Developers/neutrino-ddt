@@ -16,15 +16,8 @@ AM_CPPFLAGS += \
 	@SIGC_CFLAGS@ \
 	@CURL_CFLAGS@ \
 	@FREETYPE_CFLAGS@ \
-	@LUA_CFLAGS@
-
-if BOXTYPE_COOL
-if BOXMODEL_APOLLO
-AM_CPPFLAGS += -I$(top_srcdir)/lib/libcoolstream2
-else
-AM_CPPFLAGS += -I$(top_srcdir)/lib/libcoolstream
-endif
-endif
+	@LUA_CFLAGS@ \
+	@HWLIB_CFLAGS@
 
 noinst_LIBRARIES = libneutrino_gui_lua.a
 
