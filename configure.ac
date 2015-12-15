@@ -225,6 +225,13 @@ if test "$BOXTYPE" != coolstream; then
 	HWLIB_CFLAGS="-I$STB_HAL_INC"
 fi
 
+# Lua - embeddable scripting language
+AC_ARG_ENABLE(lua,
+	AS_HELP_STRING(--enable-lua,include Lua support),
+	,[enable_lua=no])
+
+AM_CONDITIONAL(ENABLE_LUA,test "$enable_lua" = "yes")
+
 # either use dynamic lualib in package lua (openSUSE)
 # ... or in package lua5.2 (debian-derivates)
 # ... and if all fails, assume it is in the linker path (cross build)
