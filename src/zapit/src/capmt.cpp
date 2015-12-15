@@ -315,6 +315,7 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 		//channel->setRawPmt(NULL);//FIXME
 		StopCam(channel_id, cam);
 	}
+
 	// CI
 	if (mode && !start) {
 		CaIdVector caids;
@@ -323,6 +324,30 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 		uint8_t list = CCam::CAPMT_ONLY;
 		if (channel_map.size() > 1)
 			list = CCam::CAPMT_ADD;
+
+#ifdef BOXMODEL_APOLLO
+		int ci_use_count = 0;
+		for (it = channel_map.begin(); it != channel_map.end(); ++it)
+		{
+			cam = it->second;
+			channel = CServiceManager::getInstance()->FindChannel(it->first);
+
+			if (tunerno >= 0 && tunerno == cDemux::GetSource(cam->getSource())) {
+				cCA::GetInstance()->SetTS((CA_DVBCI_TS_INPUT)tunerno);
+				ci_use_count++;
+				break;
+			} else if (filter_channels) {
+				if (channel && channel->bUseCI)
+					ci_use_count++;
+			} else
+				ci_use_count++;
+		}
+		if (ci_use_count == 0) {
+			INFO("CI: not used, disabling TS\n");
+			cCA::GetInstance()->SetTS(CA_DVBCI_TS_INPUT_DISABLED);
+		}
+#endif
+
 		for (it = channel_map.begin(); it != channel_map.end(); /*++it*/)
 		{
 			cam = it->second;
@@ -341,28 +366,20 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 			cam->makeCaPmt(channel, false, list, caids);
 			int len;
 			unsigned char * buffer = channel->getRawPmt(len);
-#if HAVE_COOL_HARDWARE
-			cam->sendCaPmt(channel->getChannelID(), buffer, len, CA_SLOT_TYPE_SMARTCARD);
+			cam->sendCaPmt(channel->getChannelID(), buffer, len, CA_SLOT_TYPE_CI, channel->scrambled, channel->camap, 0, true);
 
+			/* out commented: causes a double send of capmt, the second without needed parameters */ 
+#ifdef HAVE_COOLSTREAM
 			if (tunerno >= 0 && tunerno != cDemux::GetSource(cam->getSource())) {
-				INFO("CI: configured tuner %d do not match %d, skip...\n", tunerno, cam->getSource());
+			INFO("CI: configured tuner %d do not match %d, skip [%s]\n", tunerno, cam->getSource(), channel->getName().c_str());
 			} else if (filter_channels && !channel->bUseCI) {
-				INFO("CI: filter enabled, CI not used, disabling TS\n");
-#ifdef BOXMODEL_APOLLO
-				cCA::GetInstance()->SetTS(CA_DVBCI_TS_INPUT_DISABLED);
-#endif
+			INFO("CI: filter enabled, CI not used for [%s]\n", channel->getName().c_str());
 			} else {
-#ifdef BOXMODEL_APOLLO
-				if (tunerno >= 0)
-					cCA::GetInstance()->SetTS((CA_DVBCI_TS_INPUT)tunerno);
-#endif
 				cam->sendCaPmt(channel->getChannelID(), buffer, len, CA_SLOT_TYPE_CI);
 			}
-#else
-			cam->sendCaPmt(channel->getChannelID(), buffer, len, CA_SLOT_TYPE_CI, channel->scrambled, channel->camap, 0, true);
+			//list = CCam::CAPMT_MORE;
 #endif
 		}
-		//list = CCam::CAPMT_MORE;
 	}
 
 	return true;

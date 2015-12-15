@@ -19,6 +19,10 @@ noinst_HEADERS = version.h
 
 SUBDIRS = bedit components widget
 
+if ENABLE_LUA
+SUBDIRS += lua
+endif
+
 AM_CPPFLAGS += \
 	-I$(top_builddir) \
 	-I$(top_srcdir) \
@@ -132,9 +136,6 @@ if ENABLE_TESTING
 libneutrino_gui_a_SOURCES += \
 	test_menu.cpp
 endif
-
-libneutrino_gui_a_SOURCES += \
-	luainstance.cpp
 
 libneutrino_gui2_a_SOURCES = \
 	color.cpp \

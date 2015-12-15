@@ -186,7 +186,7 @@ int CStreamInfo2::doSignalStrengthLoop ()
 				g_Font[font_info]->RenderString(dx1 , average_bitrate_pos, offset+10, tmp_str, COL_INFOBAR_TEXT);
 
 				sprintf(currate, "%5llu.%02llu", rate.short_average / 1000ULL, rate.short_average % 1000ULL);
-				frameBuffer->paintBoxRel (dx1 + average_bitrate_offset , average_bitrate_pos -dheight, sw, dheight, COL_MENUHEAD_PLUS_0);
+				frameBuffer->paintBoxRel (dx1 + average_bitrate_offset , average_bitrate_pos -dheight, sw, dheight, COL_MENUCONTENT_PLUS_0);
 
 				g_Font[font_info]->RenderString (dx1 + average_bitrate_offset , average_bitrate_pos, sw - 10, currate, COL_INFOBAR_TEXT);
 
@@ -279,7 +279,12 @@ void CStreamInfo2::paint_signal_fe_box(int _x, int _y, int w, int h)
 	std::string tname(g_Locale->getText(LOCALE_STREAMINFO_SIGNAL));
 	tname += ": ";
 	if (mp)
-		tname += g_Locale->getText(LOCALE_WEBTV_HEAD);
+	{
+		if (CNeutrinoApp::getInstance()->getMode() == NeutrinoMessages::mode_webtv)
+			tname += g_Locale->getText(LOCALE_WEBTV_HEAD);
+		else
+			tname += g_Locale->getText(LOCALE_MAINMENU_MOVIEPLAYER);
+	}
 	else
 		tname += to_string(1 + frontend->getNumber()) + ": " + frontend->getName();
 
@@ -427,7 +432,7 @@ void CStreamInfo2::SignalRenderStr(unsigned int value, int _x, int _y)
 	char str[30];
 	int fw = g_Font[font_small]->getWidth();
 	fw *=(fw>17)?5:6;
-	frameBuffer->paintBoxRel(_x, _y - sheight + 5, fw, sheight -1, COL_MENUHEAD_PLUS_0);
+	frameBuffer->paintBoxRel(_x, _y - sheight + 5, fw, sheight -1, COL_MENUCONTENT_PLUS_0);
 	sprintf(str,"%6u",value);
 	g_Font[font_small]->RenderString(_x, _y + 5, fw, str, COL_INFOBAR_TEXT);
 }
@@ -456,7 +461,7 @@ void CStreamInfo2::paint (int /*mode*/)
 		CVFD::getInstance ()->setMode (CVFD::MODE_MENU_UTF8, head_string);
 
 		// paint backround, title pig, etc.
-		frameBuffer->paintBoxRel (0, 0, max_width, max_height, COL_MENUHEAD_PLUS_0);
+		frameBuffer->paintBoxRel (0, 0, max_width, max_height, COL_MENUCONTENT_PLUS_0);
 		g_Font[font_head]->RenderString (xpos, ypos + hheight + 1, width, head_string, COL_MENUHEAD_TEXT);
 		ypos += hheight;
 
@@ -469,7 +474,7 @@ void CStreamInfo2::paint (int /*mode*/)
 	} else {
 		// --  small PIG, small signal graph
 		// -- paint backround, title pig, etc.
-		frameBuffer->paintBoxRel (0, 0, max_width, max_height, COL_MENUHEAD_PLUS_0);
+		frameBuffer->paintBoxRel (0, 0, max_width, max_height, COL_MENUCONTENT_PLUS_0);
 
 		// -- paint large signal graph
 		paint_signal_fe_box (x, y, width, height-100);
@@ -487,7 +492,7 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 
 	yypos = ypos;
 	if(box_h > 0)
-		frameBuffer->paintBoxRel (0, ypos, box_width, box_h, COL_MENUHEAD_PLUS_0);
+		frameBuffer->paintBoxRel (0, ypos, box_width, box_h, COL_MENUCONTENT_PLUS_0);
 
 	CZapitChannel * channel = CZapit::getInstance()->GetCurrentChannel();
 	if(!channel)
@@ -733,7 +738,7 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 			sprintf(buf, "%s", g_Locale->getText(LOCALE_STREAMINFO_NOT_AVAILABLE));
 		} else {
 			unsigned int sw=spaceoffset;
-			for (unsigned int li= 0; (li<g_RemoteControl->current_PIDs.APIDs.size()) && (li<10); li++)
+			for (unsigned int li= 0; (li<g_RemoteControl->current_PIDs.APIDs.size()) && (li<16); li++)
 			{
 				sprintf(buf, "0x%04X (%i)", g_RemoteControl->current_PIDs.APIDs[li].pid, g_RemoteControl->current_PIDs.APIDs[li].pid );
 				if (li == g_RemoteControl->current_PIDs.PIDs.selected_apid){
@@ -743,7 +748,7 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 					g_Font[font_small]->RenderString(xpos+sw, ypos, box_width, buf, COL_INFOBAR_TEXT);
 				}
 				sw = g_Font[font_small]->getRenderWidth(buf)+sw+10;
-				if (((li+1)%3 == 0) &&(g_RemoteControl->current_PIDs.APIDs.size()-1 > li)){ // if we have lots of apids, put "intermediate" line with pids
+				if (((li+1)%4 == 0) &&(g_RemoteControl->current_PIDs.APIDs.size()-1 > li)){ // if we have lots of apids, put "intermediate" line with pids
 					ypos+= sheight;
 					sw=spaceoffset;
 				}
@@ -771,7 +776,7 @@ void CStreamInfo2::paintCASystem(int xpos, int ypos)
 	unsigned short i;
 	int box_width = width*2/3-10;
 	if (box_h2 > ypos+(iheight*2))
-		frameBuffer->paintBox(0, ypos+(iheight*2), box_width, box_h2, COL_MENUHEAD_PLUS_0);
+		frameBuffer->paintBox(0, ypos+(iheight*2), box_width, box_h2, COL_MENUCONTENT_PLUS_0);
 
 	std::string casys[NUM_CAIDS]={"Irdeto:","Betacrypt:","Seca:","Viaccess:","Nagra:","Conax: ","Cryptoworks:","Videoguard:","EBU:","XCrypt:","PowerVU:"};
 	bool caids[NUM_CAIDS];
@@ -1024,7 +1029,7 @@ void CStreamInfo2::showSNR ()
 	if (signalbox == NULL)
 	{
 		signalbox = new CSignalBox(x + 10, yypos, 240, 50, frontend);
-		signalbox->setColorBody(COL_MENUHEAD_PLUS_0);
+		signalbox->setColorBody(COL_MENUCONTENT_PLUS_0);
 		signalbox->setTextColor(COL_INFOBAR_TEXT);
 		signalbox->doPaintBg(true);
 	}

@@ -40,7 +40,6 @@ CFBWindow::CFBWindow(const int _x, const int _y, const int _dx, const int _dy)
 	frameBuffer = CFrameBuffer::getInstance();
 	Background = saveScreen(_x, _y, _dx, _dy);
 	mayBlit = true;
-
 }
 
 CFBWindow::~CFBWindow(void)

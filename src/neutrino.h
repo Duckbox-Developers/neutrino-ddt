@@ -73,10 +73,10 @@ public:
 private:
 	CFrameBuffer * frameBuffer;
 
+	CMenuWidget			*mainMenu;
 	CConfigFile			configfile;
 	CScanSettings			scanSettings;
 	CPersonalizeGui			personalize;
-	CUserMenu 			usermenu;
 	int                             network_dhcp;
 	int                             network_automatic_start;
 
@@ -156,6 +156,8 @@ public:
 		norezap = 0x100
 	};
 
+	CUserMenu usermenu;
+
 	void saveSetup(const char * fname);
 	int loadSetup(const char * fname);
 	void loadKeys(const char * fname = NULL);
@@ -216,6 +218,7 @@ public:
 	bool StartPip(const t_channel_id channel_id);
 	void SelectSubtitles();
 	void showInfo(void);
+	void showMainMenu(void);
 	CConfigFile* getConfigFile() {return &configfile;};
 	bool 		SDTreloadChannels;
 
@@ -241,6 +244,7 @@ public:
 	void screensaver(bool);
 	//signal/event handler before restart of neutrino gui
 	sigc::signal<bool> OnBeforeRestart;
+	void channelRezap();
 };
 #endif
 
