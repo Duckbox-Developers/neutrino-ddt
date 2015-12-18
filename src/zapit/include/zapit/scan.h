@@ -43,7 +43,7 @@ class CServiceScan : public OpenThreads::Thread
 		typedef enum scan_type {
 			SCAN_PROVIDER,
 			SCAN_TRANSPONDER
-#ifdef ENABLE_FASTSCAN
+#if ENABLE_FASTSCAN
 			, SCAN_FAST
 #endif
 		} scan_type_t;
@@ -103,6 +103,7 @@ class CServiceScan : public OpenThreads::Thread
 		void CleanAllMaps();
 		//bool ReplaceTransponderParams(freq_id_t freq, t_satellite_position satellitePosition, FrontendParameters *feparams);
 
+#if ENABLE_FASTSCAN
 		/* fast scan */
 		std::map <t_channel_id, t_satellite_position> fast_services_sat;
 		std::map <t_channel_id, freq_id_t> fast_services_freq;
@@ -122,6 +123,7 @@ class CServiceScan : public OpenThreads::Thread
 		void process_satellite_delivery_system_descriptor(const unsigned char * const buffer, FrontendParameters * feparams, t_satellite_position * satellitePosition);
 		bool ScanFast();
 		void ReportFastScan(FrontendParameters &feparams, t_satellite_position satellitePosition);
+#endif
 
 		void run();
 
@@ -153,12 +155,14 @@ class CServiceScan : public OpenThreads::Thread
 		bool isFtaOnly() { return flags & SCAN_FTA; }
 		int GetFlags() { return flags; }
 		bool SatHaveChannels() { return satHaveChannels; }
+#if ENABLE_FASTSCAN
 		/* fast-scan */
 		bool TestDiseqcConfig(int num);
 		bool ReadFstVersion(int num);
 		unsigned char GetFstVersion() { return fst_version; }
 		void QuietFastScan(bool enable) { quiet_fastscan = enable; }
 		bool ScanFast(int num, bool reload = true);
+#endif
 };
 
 #endif /* __scan_h__ */
