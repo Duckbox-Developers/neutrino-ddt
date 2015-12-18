@@ -139,6 +139,12 @@ int CMiscMenue::exec(CMenuTarget* parent, const std::string &actionKey)
 	{
 		return showMiscSettingsMenuChanlist();
 	}
+	else if(actionKey == "filebrowserdir")
+	{
+		const char *action_str = "filebrowserdir";
+		chooserDir(g_settings.network_nfs_moviedir, true, action_str);
+		return menu_return::RETURN_REPAINT;
+	}
 
 	return showMiscSettingsMenu();
 }
@@ -526,6 +532,11 @@ void CMiscMenue::showMiscSettingsMenuFBrowser(CMenuWidget *ms_fbrowser)
 	mc = new CMenuOptionChooser(LOCALE_FILEBROWSER_DENYDIRECTORYLEAVE, &g_settings.filebrowser_denydirectoryleave, MESSAGEBOX_NO_YES_OPTIONS              , MESSAGEBOX_NO_YES_OPTION_COUNT              , true );
 	mc->setHint("", LOCALE_MENU_HINT_FILEBROWSER_DENYDIRECTORYLEAVE);
 	ms_fbrowser->addItem(mc);
+
+	CMenuForwarder* fileDir = new CMenuForwarder(LOCALE_FILEBROWSER_START_DIR, true, g_settings.network_nfs_moviedir, this, "filebrowserdir");
+	fileDir->setHint("", LOCALE_MENU_HINT_FILEBROWSER_STARTDIR);
+	ms_fbrowser->addItem(fileDir);
+
 }
 
 //channellist

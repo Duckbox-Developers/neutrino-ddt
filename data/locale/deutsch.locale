@@ -576,6 +576,7 @@ filebrowser.prevpage Seite zurück
 filebrowser.scan Durchsuche Verzeichnisse
 filebrowser.select Auswählen
 filebrowser.showrights Dateirechte anzeigen
+filebrowser.start.dir Start Verzeichnis
 filebrowser.sort.date (Datum)
 filebrowser.sort.name (Dateiname)
 filebrowser.sort.namedirsfirst (Dateiname2)
@@ -1059,6 +1060,7 @@ menu.hint_fade Bei aktivierter Funktion werden die GUI-Fenster 'weich' ein- bzw.
 menu.hint_fan_speed Steuerung der Lüftergeschwindigkeit für die CPU
 menu.hint_filebrowser_denydirectoryleave Verhindert das Verlassen des Startverzeichnisses
 menu.hint_filebrowser_showrights Anzeige der Dateirechte der Dateien im Filebrowser
+menu.hint_filebrowser_startdir Start Verzeichnis einstellen
 menu.hint_fileplay Abspielen verschiedener Video-Dateien
 menu.hint_filesystem_is_utf8 Kodierung für Unicode-Zeichen im Filebrowser
 menu.hint_font_gui Wählen Sie die Schriftart für die Menüs

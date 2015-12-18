@@ -577,6 +577,7 @@ filebrowser.prevpage Prev. Page
 filebrowser.scan Scaning folder
 filebrowser.select Select
 filebrowser.showrights Show file rights
+filebrowser.start.dir Start directory
 filebrowser.sort.date (date)
 filebrowser.sort.name (name)
 filebrowser.sort.namedirsfirst (name, dir first)
@@ -1061,6 +1062,7 @@ menu.hint_fade Fade GUI windows
 menu.hint_fan_speed Control fan speed
 menu.hint_filebrowser_denydirectoryleave Deny filebrowser to leave initial directory
 menu.hint_filebrowser_showrights Show file permissions in file browser
+menu.hint_filebrowser_startdir Adjust start directory
 menu.hint_fileplay Play video files
 menu.hint_filesystem_is_utf8 Filebrowser filesystem encoding
 menu.hint_font_gui Select font file to use for GUI
