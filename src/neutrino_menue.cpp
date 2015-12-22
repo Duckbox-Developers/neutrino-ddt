@@ -215,12 +215,12 @@ void CNeutrinoApp::InitMenuMain()
 	// settings, also as pin protected option in personalize menu, as a result of parameter value CPersonalizeGui::PERSONALIZE_SHOW_AS_ACCESS_OPTION
 	mf = new CMenuForwarder(LOCALE_MAINMENU_SETTINGS, true, NULL, &personalize.getWidget(MENU_SETTINGS)/**settings**/);
 	mf->setHint(NEUTRINO_ICON_HINT_SETTINGS, LOCALE_MENU_HINT_SETTINGS);
-	personalize.addItem(MENU_MAIN, mf, &g_settings.personalize[SNeutrinoSettings::P_MAIN_SETTINGS], false, CPersonalizeGui::PERSONALIZE_SHOW_AS_ACCESS_OPTION);
+	personalize.addItem(MENU_MAIN, mf, &g_settings.personalize[SNeutrinoSettings::P_MAIN_SETTINGS], false, CPersonalizeGui::PERSONALIZE_SHOW_AS_ACCESS_OPTION, NULL, DCOND_MODE_TS);
 
 	// service, also as pin protected option in personalize menu, as a result of parameter value CPersonalizeGui::PERSONALIZE_SHOW_AS_ACCESS_OPTION
 	mf = new CMenuForwarder(LOCALE_MAINMENU_SERVICE, true, NULL, &personalize.getWidget(MENU_SERVICE));
 	mf->setHint(NEUTRINO_ICON_HINT_SERVICE, LOCALE_MENU_HINT_SERVICE);
-	personalize.addItem(MENU_MAIN, mf, &g_settings.personalize[SNeutrinoSettings::P_MAIN_SERVICE], false, CPersonalizeGui::PERSONALIZE_SHOW_AS_ACCESS_OPTION);
+	personalize.addItem(MENU_MAIN, mf, &g_settings.personalize[SNeutrinoSettings::P_MAIN_SERVICE], false, CPersonalizeGui::PERSONALIZE_SHOW_AS_ACCESS_OPTION, NULL, DCOND_MODE_TS);
 
 	//separator
 	personalize.addSeparator(MENU_MAIN);
