@@ -26,7 +26,12 @@ extern "C" {
 #include <lualib.h>
 }
 #include <driver/fb_window.h>
+#if HAVE_COOL_HARDWARE
 #include <video_cs.h>
+#endif
+#if USE_STB_HAL
+#include <video_hal.h>
+#endif
 #include <vector>
 
 #include "luainstance_helpers.h"
