@@ -135,7 +135,7 @@ CTextBox::~CTextBox()
 	//TRACE("[CTextBox] del\r\n");
 	m_cLineArray.clear();
 	//hide();
-	delete[] m_bgpixbuf;
+	clearScreenBuffer();
 }
 
 void CTextBox::initVar(void)
@@ -518,10 +518,8 @@ void CTextBox::refreshScroll(void)
 //first init is done in initVar() and reinit done in reInitToCompareVar()
 bool CTextBox::hasChanged(int* x, int* y, int* dx, int* dy)
 {
-	if (	   m_old_x != *x
-		|| m_old_y != *y
-		|| m_old_dx != *dx
-		|| m_old_dy != *dy
+	if (	   hasChangedPos(x, y)
+		|| hasChangedDim(dx, dy)
 		|| m_old_textBackgroundColor != m_textBackgroundColor
 		|| m_old_textColor != m_textColor
 		|| m_old_nBgRadius != m_nBgRadius
@@ -531,6 +529,17 @@ bool CTextBox::hasChanged(int* x, int* y, int* dx, int* dy)
 	}
 	return false;
 }
+
+bool CTextBox::hasChangedPos(int* x, int* y)
+{
+	return  (m_old_x != *x || m_old_y != *y);
+}
+
+bool CTextBox::hasChangedDim(int* dx, int* dy)
+{
+	return (m_old_dx != *dx || m_old_dy != *dy);
+}
+
 void CTextBox::reInitToCompareVar(int* x, int* y, int* dx, int* dy)
 {
 	m_old_x = *x;
@@ -563,13 +572,14 @@ void CTextBox::refreshText(void)
 	//find changes
 	bool has_changed = hasChanged(&ax, &ay, &dx, &dy);
 
-	//destroy pixel buffer on changed property values
-	if (has_changed){
-		if (m_bgpixbuf){
-			//TRACE("[CTextBox] %s destroy ol pixel buffer, has changes %d\r\n", __FUNCTION__, __LINE__);
-			delete[] m_bgpixbuf;
-			m_bgpixbuf = NULL;
-		}
+	//clean up possible screen on any changes
+	if (has_changed && m_bgpixbuf){
+		/*TODO/FIXME: in some cases could be required, that we must restore old saved screen. eg. if a text without bg was painted
+		 * and another text should be painted as next on the same position like current text, but new text will be overpaint and is
+		 * not visible. It's currently solvable only with appropriate order of text items
+		*/
+		frameBuffer->RestoreScreen(m_old_x, m_old_y, m_old_dx, m_old_dy, m_bgpixbuf);
+		clearScreenBuffer();
 	}
 
 #if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
@@ -594,11 +604,7 @@ void CTextBox::refreshText(void)
 	//Paint Text Background
 	bool allow_paint_bg = (m_old_cText != m_cText || has_changed || m_has_scrolled);
 	if (m_nPaintBackground){
-		if (m_bgpixbuf){
-			//TRACE("[CTextBox] %s destroy bg %d\r\n", __FUNCTION__, __LINE__);
-			delete[] m_bgpixbuf;
-			m_bgpixbuf = NULL;
-		}
+		clearScreenBuffer();
 		if (allow_paint_bg){
 			//TRACE("[CTextBox] %s paint bg %d\r\n", __FUNCTION__, __LINE__);
 			frameBuffer->paintBoxRel(ax, ay, dx, dy,  m_textBackgroundColor, m_nBgRadius, m_nBgRadiusType);
@@ -723,6 +729,7 @@ void CTextBox::refresh(void)
 	refreshScroll();
 	m_blit = _m_blit;
 	refreshText();
+	OnAfterRefresh();
 }
 
 
@@ -784,3 +791,28 @@ void CTextBox::hide (void)
 
 	frameBuffer = NULL;
 }
+
+bool CTextBox::clearScreenBuffer()
+{
+	if(m_bgpixbuf){
+		//TRACE("[CTextBox] %s destroy bg %d\r\n", __FUNCTION__, __LINE__);
+		delete[] m_bgpixbuf;
+		m_bgpixbuf = NULL;
+		return true;
+	}
+	return false;
+}
+
+bool CTextBox::enableSaveScreen(bool mode)
+{
+	if (m_SaveScreen == mode)
+		return false;
+
+	if (!m_SaveScreen || m_SaveScreen != mode)
+		clearScreenBuffer();
+
+	m_SaveScreen = mode;
+
+	return true;
+}
+

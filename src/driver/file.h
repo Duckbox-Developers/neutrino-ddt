@@ -78,7 +78,9 @@ class CFile
 			STREAM_PICTURE,
 			FILE_VOB,
 			FILE_MPG,
-			FILE_TS
+			FILE_TS,
+			FILE_BIN_PACKAGE,
+			FILE_PKG_PACKAGE
 		};
 
 		FileType	getType(void) const;

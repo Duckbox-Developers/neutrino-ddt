@@ -588,7 +588,7 @@ fb_pixel_t* CFrameBuffer::paintBoxRel2Buf(const int dx, const int dy, const fb_p
 	if (!getActive())
 		return buf;
 	if (dx == 0 || dy == 0) {
-		dprintf(DEBUG_INFO, "[%s - %d]: radius %d, dx %d dy %d\n", __func__, __LINE__, radius, dx, dy);
+		dprintf(DEBUG_INFO, "[CFrameBuffer] [%s - %d]: radius %d, dx %d dy %d\n", __func__, __LINE__, radius, dx, dy);
 		return buf;
 	}
 
@@ -1610,7 +1610,7 @@ bool CFrameBuffer::_checkFbArea(int _x, int _y, int _dx, int _dy, bool prev)
 						break;
 					fb_no_check = true;
 					if (prev)
-						CAudioMute::getInstance()->hide(true);
+						CAudioMute::getInstance()->hide();
 					else
 						CAudioMute::getInstance()->paint();
 					fb_no_check = false;

@@ -33,7 +33,7 @@
 #include <driver/display.h>
 
 CProgressWindow::CProgressWindow(CComponentsForm *parent) 
-: CComponentsWindow(0, 0, 700, 200, string(), NEUTRINO_ICON_INFO, NULL, parent)
+: CComponentsWindow(0, 0, 700, 200, string(), NEUTRINO_ICON_INFO, parent, CC_SHADOW_ON)
 {
 	Init();
 }
@@ -189,9 +189,9 @@ unsigned int CProgressWindow::getGlobalStatus(void)
 	return global_progress;
 }
 
-void CProgressWindow::hide(bool no_restore)
+void CProgressWindow::hide()
 {
-	CComponentsWindow::hide(no_restore);
+	CComponentsWindow::hide();
 	frameBuffer->blit();
 }
 

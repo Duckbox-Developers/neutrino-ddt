@@ -249,14 +249,6 @@ void CVolumeBar::paintVolScale()
 }
 
 
-//final paint
-void CVolumeBar::paint(bool do_save_bg)
-{
-	//paint form
-	paintForm(do_save_bg);
-	frameBuffer->blit();
-}
-
 
 // CVolumeHelper ####################################################################################################
 
@@ -272,7 +264,7 @@ CVolumeHelper::CVolumeHelper()
 	Init();
 }
 
-void CVolumeHelper::Init(Font** font)
+void CVolumeHelper::Init(Font* font)
 {
 
 	x  = frameBuffer->getScreenX() + h_spacer;
@@ -285,11 +277,11 @@ void CVolumeHelper::Init(Font** font)
 	initInfoClock(font);
 }
 
-void CVolumeHelper::initInfoClock(Font** font)
+void CVolumeHelper::initInfoClock(Font* font)
 {
 	if (clock_font == NULL){
 		if (font == NULL) {
-			clock_font = &g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE];
+			clock_font = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE];
 		}
 		else
 			clock_font = font;
@@ -298,10 +290,10 @@ void CVolumeHelper::initInfoClock(Font** font)
 		if (font != NULL)
 			clock_font = font;
 	}
-	digit_offset = (*clock_font)->getDigitOffset();
-	digit_h      = (*clock_font)->getDigitHeight();
-	int t1       = (*clock_font)->getMaxDigitWidth();
-	int t2       = (*clock_font)->getRenderWidth(":");
+	digit_offset = (clock_font)->getDigitOffset();
+	digit_h      = (clock_font)->getDigitHeight();
+	int t1       = (clock_font)->getMaxDigitWidth();
+	int t2       = (clock_font)->getRenderWidth(":");
 	clock_dy     = digit_h + (int)((float)digit_offset * 1.3);
 	if (g_settings.infoClockSeconds)
 		clock_dx     = t1*7 + t2*2;
@@ -367,7 +359,7 @@ int CVolumeHelper::getInfoClockX()
 		return clock_ax;
 }
 
-void CVolumeHelper::refresh(Font** font)
+void CVolumeHelper::refresh(Font* font)
 {
 	Init(font);
 }
