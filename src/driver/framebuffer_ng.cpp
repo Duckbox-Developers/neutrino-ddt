@@ -564,6 +564,7 @@ void CFrameBuffer::paletteSet(struct fb_cmap *map)
 		realcolor[i] = make16color(cmap.red[i], cmap.green[i], cmap.blue[i], cmap.transp[i],
 					   rl, ro, gl, go, bl, bo, tl, to);
 	}
+	OnAfterSetPallette();
 	realcolor[(COL_BACKGROUND + 0)] = 0; // background, no alpha
 }
 
@@ -701,6 +702,11 @@ void CFrameBuffer::paintBoxRel(const int x, const int y, const int dx, const int
 	bool corner_tr = !!(type & CORNER_TOP_RIGHT);
 	bool corner_bl = !!(type & CORNER_BOTTOM_LEFT);
 	bool corner_br = !!(type & CORNER_BOTTOM_RIGHT);
+
+	if (dx == 0 || dy == 0) {
+		dprintf(DEBUG_NORMAL, "[CFrameBuffer] [%s - %d]: radius %d, start x %d y %d end x %d y %d\n", __FUNCTION__, __LINE__, radius, x, y, x+dx, y+dy);
+		return;
+	}
 
 	checkFbArea(x, y, dx, dy, true);
 

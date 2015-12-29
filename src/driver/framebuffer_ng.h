@@ -34,6 +34,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <sigc++/signal.h>
 #include <pthread.h>
 
 #define fb_pixel_t uint32_t
@@ -77,7 +78,7 @@ typedef struct gradientData_t
 
 class CFbAccel;
 /** Ausfuehrung als Singleton */
-class CFrameBuffer
+class CFrameBuffer : public sigc::trackable
 {
 	friend class CFbAccel;
 	private:
@@ -343,6 +344,7 @@ class CFrameBuffer
 		void setFbArea(int element, int _x=0, int _y=0, int _dx=0, int _dy=0);
 		void fbNoCheck(bool noCheck) { fb_no_check = noCheck; }
 		void doPaintMuteIcon(bool mode) { do_paint_mute_icon = mode; }
+		sigc::signal<void> OnAfterSetPallette;
 };
 
 #endif
