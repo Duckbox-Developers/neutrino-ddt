@@ -541,15 +541,14 @@ int COsdSetup::showOsdSetup()
 	osd_menu = new CMenuWidget(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_COLORS, width, MN_WIDGET_ID_OSDSETUP);
 	osd_menu->setWizardMode(is_wizard);
 
-	//menu colors
-	if (osd_menu_colors == NULL)
-		osd_menu_colors = new CMenuWidget(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_COLORS, width, MN_WIDGET_ID_OSDSETUP_MENUCOLORS);
-
 	//intro with subhead and back button
 	osd_menu->addIntroItems(LOCALE_MAINSETTINGS_OSD);
 
 	//item menu colors
-	showOsdMenueColorSetup(osd_menu_colors);
+	if (osd_menu_colors == NULL){
+		osd_menu_colors = new CMenuWidget(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_COLORS, width, MN_WIDGET_ID_OSDSETUP_MENUCOLORS);
+		showOsdMenueColorSetup(osd_menu_colors);
+	}
 	CMenuForwarder * mf = new CMenuForwarder(LOCALE_COLORMENU_MENUCOLORS, true, NULL, osd_menu_colors, NULL, CRCInput::RC_red);
 	mf->setHint("", LOCALE_MENU_HINT_COLORS);
 	osd_menu->addItem(mf);
@@ -688,10 +687,8 @@ int COsdSetup::showOsdSetup()
 	if (oldInfoClockSize != g_settings.infoClockFontSize) {
 		CInfoClock::getInstance()->setHeight(g_settings.infoClockFontSize);
 		CVolumeHelper::getInstance()->refresh();
-		if (CNeutrinoApp::getInstance()->isMuted()) {
-			CAudioMute::getInstance()->enableMuteIcon(false);
+		if (CNeutrinoApp::getInstance()->isMuted())
 			CAudioMute::getInstance()->enableMuteIcon(true);
-		}
 	}
 
 	sub_font_size = CNeutrinoApp::getInstance()->getConfigFile()->getInt32("fontsize.subtitles", 24);
@@ -1092,6 +1089,11 @@ void COsdSetup::showOsdInfobarSetup(CMenuWidget *menu_infobar)
 	// radiotext
 	mc = new CMenuOptionChooser(LOCALE_MISCSETTINGS_RADIOTEXT, &g_settings.radiotext_enable, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this);
 	mc->setHint("", LOCALE_MENU_HINT_INFOBAR_RADIOTEXT);
+	menu_infobar->addItem(mc);
+
+	// buttons usertitle
+	mc = new CMenuOptionChooser(LOCALE_MISCSETTINGS_INFOBAR_BUTTONS_USERTITLE, &g_settings.infobar_buttons_usertitle, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this);
+	mc->setHint("", LOCALE_MENU_HINT_INFOBAR_BUTTONS_USERTITLE);
 	menu_infobar->addItem(mc);
 
 	menu_infobar->addItem(GenericMenuSeparator);
