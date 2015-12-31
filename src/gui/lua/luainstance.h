@@ -26,18 +26,14 @@ extern "C" {
 #include <lualib.h>
 }
 #include <driver/fb_window.h>
-#if HAVE_COOL_HARDWARE
-#include <video_cs.h>
-#endif
-#if USE_STB_HAL
-#include <video_hal.h>
-#endif
 #include <vector>
 
 #include "luainstance_helpers.h"
 
+#if 0
 #define LUA_API_VERSION_MAJOR 1
 #define LUA_API_VERSION_MINOR 35
+#endif
 
 void LuaInstRegisterFunctions(lua_State *L, bool fromThreads=false);
 
