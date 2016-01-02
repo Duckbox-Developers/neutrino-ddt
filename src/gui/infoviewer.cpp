@@ -2227,8 +2227,22 @@ int CInfoViewerHandler::exec (CMenuTarget * parent, const std::string & /*action
 }
 #endif
 
-void CInfoViewer::ResetModules()
+void CInfoViewer::ResetModules(bool kill)
 {
+	if (kill) {
+		if (txt_cur_event)
+			txt_cur_event->clearSavedScreen();
+		if (txt_cur_event_rest)
+			txt_cur_event_rest->clearSavedScreen();
+		if (txt_cur_start)
+			txt_cur_start->clearSavedScreen();
+		if (txt_next_event)
+			txt_next_event->clearSavedScreen();
+		if (txt_next_in)
+			txt_next_in->clearSavedScreen();
+		if (txt_next_start)
+			txt_next_start->clearSavedScreen();
+	}
 	delete header;
 	header = NULL;
 	delete body;
