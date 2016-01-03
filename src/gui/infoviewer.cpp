@@ -235,6 +235,8 @@ void CInfoViewer::ResetPB()
 	}
 
 	if (timescale){
+		if (g_settings.infobar_progressbar == SNeutrinoSettings::INFOBAR_PROGRESSBAR_ARRANGEMENT_DEFAULT)
+			timescale->kill();
 		delete timescale;
 		timescale = NULL;
 	}
@@ -1635,7 +1637,13 @@ void CInfoViewer::display_Info(const char *current, const char *next,
 		else
 			txt_cur_event->setDimensionsAll(xStart, CurrInfoY - height, currTimeX - xStart - 5, height);
 		txt_cur_event->setText(current, CTextBox::NO_AUTO_LINEBREAK, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO], colored_event_C ? COL_COLORED_EVENTS_TEXT : COL_INFOBAR_TEXT);
-		txt_cur_event->paint(CC_SAVE_SCREEN_NO);
+
+		if (txt_cur_event_rest && txt_cur_event_rest->isPainted())
+			txt_cur_event_rest->hide();
+		if (txt_cur_event && txt_cur_event->isPainted())
+			txt_cur_event->hide();
+
+		txt_cur_event->paint(CC_SAVE_SCREEN_YES);
 		if (runningStart){
 			if (txt_cur_start == NULL)
 				txt_cur_start = new CComponentsTextTransp(NULL, InfoX, CurrInfoY - height, info_time_width, height);
@@ -1651,7 +1659,7 @@ void CInfoViewer::display_Info(const char *current, const char *next,
 			else
 				txt_cur_event_rest->setDimensionsAll(currTimeX, CurrInfoY - height, currTimeW, height);
 			txt_cur_event_rest->setText(runningRest, CTextBox::RIGHT, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO], colored_event_C ? COL_COLORED_EVENTS_TEXT : COL_INFOBAR_TEXT);
-			txt_cur_event_rest->paint(CC_SAVE_SCREEN_NO);
+			txt_cur_event_rest->paint(CC_SAVE_SCREEN_YES);
 		}
 	}
 
@@ -1991,8 +1999,30 @@ void CInfoViewer::killTitle()
 		if (infobar_txt)
 			infobar_txt->kill();
 		numbox->kill();
+#if 0 //not really required to kill sigbox, numbox does this
+		if (sigbox)
+			sigbox->kill();
+#endif
 		header->kill();
+#if 0 //not really required to kill clock, header does this
+		if (clock)
+			clock->kill();
+#endif
 		body->kill();
+		if (txt_cur_event)
+			txt_cur_event->kill();
+		if (txt_cur_event_rest)
+			txt_cur_event_rest->kill();
+#if 0 //not really required to kill epg infos, body does this
+		if (txt_cur_start)
+			txt_cur_start->kill();
+		if (txt_next_start)
+			txt_next_start->kill();
+		if (txt_next_event)
+			txt_next_event->kill();
+		if (txt_next_in)
+			txt_next_in->kill();
+#endif
 		if (timescale)
 			if (g_settings.infobar_progressbar == SNeutrinoSettings::INFOBAR_PROGRESSBAR_ARRANGEMENT_DEFAULT)
 				timescale->kill();
