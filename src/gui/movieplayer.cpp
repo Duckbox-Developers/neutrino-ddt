@@ -45,6 +45,7 @@
 #include <gui/plugins.h>
 #include <gui/videosettings.h>
 #include <gui/streaminfo2.h>
+#include <gui/screensaver.h>
 #include <driver/screenshot.h>
 #include <driver/volume.h>
 #include <driver/display.h>
@@ -223,6 +224,7 @@ void CMoviePlayerGui::Init(void)
 	keyPressed = CMoviePlayerGui::PLUGIN_PLAYSTATE_NORMAL;
 	isLuaPlay = false;
 	blockedFromPlugin = false;
+	m_screensaver=false;
 }
 
 void CMoviePlayerGui::cutNeutrino()
@@ -1190,6 +1192,32 @@ void CMoviePlayerGui::PlayFileLoop(void)
 #if 0
 		showSubtitle(0);
 #endif
+
+		if (playstate == CMoviePlayerGui::PAUSE && (msg == CRCInput::RC_timeout || msg == NeutrinoMessages::EVT_TIMER))
+		{
+			int delay = time(NULL) - m_idletime;
+			int screensaver_delay = g_settings.screensaver_delay;
+			if (screensaver_delay != 0 && delay > screensaver_delay*60 && !m_screensaver) {
+				videoDecoder->setBlank(true);
+				screensaver(true);
+			}
+		}
+		else
+		{
+			m_idletime = time(NULL);
+			if (m_screensaver)
+			{
+				videoDecoder->setBlank(false);
+				screensaver(false);
+				//ignore first keypress stop - just quit the screensaver and call infoviewer
+				if (msg == CRCInput::RC_stop) {
+					g_RCInput->clearRCMsg();
+					callInfoViewer();
+					continue;
+				}
+
+			}
+		}
 
 		if (msg == (neutrino_msg_t) g_settings.mpkey_plugin) {
 			g_PluginList->startPlugin_by_name(g_settings.movieplayer_plugin.c_str ());
@@ -2790,4 +2818,19 @@ size_t CMoviePlayerGui::GetReadCount()
 		res = this_read - last_read;
 	last_read = this_read;
 	return (size_t) res;
+}
+
+void CMoviePlayerGui::screensaver(bool on)
+{
+	if (on)
+	{
+		m_screensaver = true;
+		CScreenSaver::getInstance()->Start();
+	}
+	else
+	{
+		CScreenSaver::getInstance()->Stop();
+		m_screensaver = false;
+		m_idletime = time(NULL);
+	}
 }
