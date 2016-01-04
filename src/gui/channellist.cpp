@@ -1396,6 +1396,9 @@ int CChannelList::numericZap(int key)
 
 CZapitChannel* CChannelList::getPrevNextChannel(int key, unsigned int &sl)
 {
+	if(sl >= (*chanlist).size())
+		sl = (*chanlist).size()-1;
+
 	CZapitChannel* channel = (*chanlist)[sl];
 	int bsize = bouquetList->Bouquets.size();
 	int bactive = bouquetList->getActiveBouquetNumber();

@@ -125,6 +125,9 @@ CInfoViewer::CInfoViewer ()
 	oldinfo.current_uniqueKey = 0;
 	oldinfo.next_uniqueKey = 0;
 	isVolscale = false;
+	info_time_width = 0;
+	timeoutEnd = 0;
+	sec_timer_id = 0;
 }
 
 CInfoViewer::~CInfoViewer()
@@ -647,7 +650,10 @@ void CInfoViewer::reset_allScala()
 {
 	changePB();
 	lastsig = lastsnr = -1;
+	infoViewerBB->changePB();
 	infoViewerBB->reset_allScala();
+	if(!clock)
+		initClock();
 }
 
 void CInfoViewer::check_channellogo_ca_SettingsChange()
