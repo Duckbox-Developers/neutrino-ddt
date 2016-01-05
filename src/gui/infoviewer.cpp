@@ -137,8 +137,8 @@ CInfoViewer::~CInfoViewer()
 
 void CInfoViewer::Init()
 {
-	initClock();
 	BoxStartX = BoxStartY = BoxEndX = BoxEndY = 0;
+	initClock();
 	recordModeActive = false;
 	is_visible = false;
 	showButtonBar = false;

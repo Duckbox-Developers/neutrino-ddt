@@ -80,7 +80,7 @@ void CShellWindow::exec()
 		if (!f) {
 			if (res)
 				*res = -1;
-			dprintf(DEBUG_NORMAL,  "[CShellWindow] [%s - %d]  Error! my_popen returns: %d command: %s\n", __func__, __LINE__, *res, cmd.c_str());
+			dprintf(DEBUG_NORMAL, "[CShellWindow] [%s:%d]  Error! my_popen errno: %d command: %s\n", __func__, __LINE__, errno, cmd.c_str());
 			return;
 		}
 
@@ -159,7 +159,10 @@ void CShellWindow::exec()
 						//callback for line handler
 						std::string s_output = std::string((output));
 						OnShellOutputLoop(&s_output, res, &ok);
-						dprintf(DEBUG_NORMAL,  "[CShellWindow] [%s - %d]  res=%d ok=%d\n", __func__, __LINE__, *res, ok);
+						if (res)
+							dprintf(DEBUG_NORMAL, "[CShellWindow] [%s:%d] res=%d ok=%d\n", __func__, __LINE__, *res, ok);
+						else
+							dprintf(DEBUG_NORMAL, "[CShellWindow] [%s:%d] res=NULL ok=%d\n", __func__, __LINE__, ok);
 
 						if (lines.size() > lines_max)
 							lines.pop_front();
@@ -248,7 +251,8 @@ void CShellWindow::showResult()
 				int xpos = frameBuffer->getScreenWidth() - b_width;
 				int ypos = frameBuffer->getScreenHeight() - b_height;
 				CComponentsButton btn(xpos, ypos, b_width, b_height, LOCALE_MESSAGEBOX_BACK, NEUTRINO_ICON_BUTTON_OKAY, NULL, true, true);
-				btn.paint();
+				btn.setColorBody(COL_MENUCONTENT_PLUS_0);
+				btn.paint(false);
 			}
 
 			neutrino_msg_t msg;

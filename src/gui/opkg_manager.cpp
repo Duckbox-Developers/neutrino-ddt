@@ -11,7 +11,7 @@
 	Adaptions:
 	Copyright (C) 2013 martii
 	gitorious.org/neutrino-mp/martiis-neutrino-mp
-	Copyright (C) 2015 Stefan Seyfried
+	Copyright (C) 2015-2016 Stefan Seyfried
 
 	License: GPL
 
@@ -43,6 +43,7 @@
 #include <gui/widget/messagebox.h>
 
 #include <gui/widget/progresswindow.h>
+#include <gui/widget/hintbox.h>
 #include <gui/widget/keyboard_input.h>
 #include <driver/screen_max.h>
 #include <gui/filebrowser.h>
@@ -67,7 +68,7 @@
 #define OPKG_TEST_DIR OPKG_TMP_DIR "/test"
 #define OPKG_CL_CONFIG_OPTIONS " -V2 --tmp-dir=/tmp --cache=" OPKG_TMP_DIR
 
-#define OPKG_BAD_PATTERN_LIST_FILE "/var/tuxbox/config/bad_package_pattern.list"
+#define OPKG_BAD_PATTERN_LIST_FILE CONFIGDIR "/bad_package_pattern.list"
 #define OPKG_CONFIG_FILE "/etc/opkg/opkg.conf"
 
 using namespace std;
@@ -133,6 +134,7 @@ void COPKGManager::init()
 
 COPKGManager::~COPKGManager()
 {
+	pkg_map.clear();
 	CFileHelpers::removeDir(OPKG_TMP_DIR);
 }
 
@@ -212,7 +214,9 @@ int COPKGManager::exec(CMenuTarget* parent, const string &actionKey)
 		} else
 			installed = true;
 		refreshMenu();
+		/* I don't think ending up at the last package in the list is a good idea...
 		g_RCInput->postMsg((neutrino_msg_t) CRCInput::RC_up, 0);
+		 */
 		return res;
 	}
 
@@ -247,6 +251,13 @@ bool COPKGManager::checkSize(const string& pkg_name)
 	if (isInstalled(plain_pkg))
 		return true;
 
+	/* this is pretty broken right now for several reasons:
+	   * space in /tmp is limited (/tmp being ramfs usually, but wasted
+	     by unpacking the archive and then untaring it instead of using a pipe
+	   * the file is downloaded for this test, then discarded and later
+	     downloaded again for installation
+	   so until a better solution is found, simply disable it.  */
+#if 0
 	//get available root fs size
 	//TODO: Check writability!
 	struct statfs root_fs;
@@ -301,6 +312,7 @@ bool COPKGManager::checkSize(const string& pkg_name)
 		dprintf(DEBUG_NORMAL,  "[COPKGManager] [%s - %d]  WARNING: size check freesize=%lld (recommended: %lld)\n", __func__, __LINE__, free_size, req_size);
 		return false;
 	}
+#endif
 	return true;
 }
 
@@ -355,13 +367,14 @@ bool COPKGManager::badpackage(std::string &s)
 		bool res = false;
 		/* poor man's regex :-) only supported are "^" and "$" */
 		if (p.substr(patlen, 1) == "$") { /* match at end */
-			if (s.rfind(p.substr(0, patlen)) == (s.length() - patlen))
+			size_t pos = s.rfind(p.substr(0, patlen)); /* s.len-patlen can be -1 == npos */
+			if (pos != string::npos && pos == (s.length() - patlen))
 				res = true;
 		} else if (p.substr(0, 1) == "^") { /* match at beginning */
 			if (s.find(p.substr(1)) == 0)
 				res = true;
 		} else { /* match everywhere */
-			if (s.find(p) != std::string::npos)
+			if (s.find(p) != string::npos)
 				res = true;
 		}
 		if (res)
@@ -369,7 +382,7 @@ bool COPKGManager::badpackage(std::string &s)
 	}
 
 	if (!st.empty()){
-		dprintf(DEBUG_NORMAL,  "[COPKGManager] [%s - %d] found bad package => %s [filtered with %s]\n", __func__, __LINE__, s.c_str(), st.c_str());
+		dprintf(DEBUG_INFO, "[%s] filtered '%s' pattern(s) '%s'\n", __func__, s.c_str(), st.c_str());
 		return true;
 	}
 
@@ -382,6 +395,7 @@ void COPKGManager::updateMenu()
 	getPkgData(OM_LIST_INSTALLED);
 	getPkgData(OM_LIST_UPGRADEABLE);
 	for (map<string, struct pkg>::iterator it = pkg_map.begin(); it != pkg_map.end(); it++) {
+		/* this should no longer trigger at all */
 		if (badpackage(it->second.name))
 			continue;
 		it->second.forwarder->iconName_Info_right = "";
@@ -415,23 +429,30 @@ bool COPKGManager::checkUpdates(const std::string & package_name, bool show_prog
 
 	bool ret = false;
 
-	getPkgData(OM_LIST);
-	getPkgData(OM_LIST_UPGRADEABLE);
-
 	size_t i = 0;
 	CProgressWindow status;
 	status.showHeader(false);
 
 	if (show_progress){
 		status.paint();
-		status.showStatus(i);
+		status.showStatusMessageUTF(g_Locale->getText(LOCALE_OPKG_UPDATE_READING_LISTS));
+		status.showStatus(25); /* after do_update, we have actually done the hardest work already */
 	}
+
+	getPkgData(OM_LIST);
+	if (show_progress)
+		status.showStatus(50);
+	getPkgData(OM_LIST_UPGRADEABLE);
+	if (show_progress)
+		status.showStatus(75);
 
 	for (map<string, struct pkg>::iterator it = pkg_map.begin(); it != pkg_map.end(); it++){
 		dprintf(DEBUG_INFO,  "[COPKGManager] [%s - %d]  Update check for...%s\n", __func__, __LINE__, it->second.name.c_str());
 		if (show_progress){
+			/* showing the names only makes things *much* slower...
 			status.showStatusMessageUTF(it->second.name);
-			status.showStatus(100*i /  pkg_map.size());
+			 */
+			status.showStatus(75 + 25*i /  pkg_map.size());
 		}
 
 		if (it->second.upgradable){
@@ -451,14 +472,19 @@ bool COPKGManager::checkUpdates(const std::string & package_name, bool show_prog
 		status.hide();
 	}
 
+#if 0
 	pkg_map.clear();
+#endif
 
 	return ret;
 }
 
 int COPKGManager::doUpdate()
 {
+	CHintBox *hb = new CHintBox(LOCALE_MESSAGEBOX_INFO, LOCALE_OPKG_UPDATE_CHECK);
+	hb->paint();
 	int r = execCmd(pkg_types[OM_UPDATE], CShellWindow::QUIET);
+	delete hb;
 	if (r) {
 		string msg = string(g_Locale->getText(LOCALE_OPKG_FAILURE_UPDATE));
 		msg += '\n' + tmp_str;
@@ -480,8 +506,10 @@ int COPKGManager::showMenu()
 	if (checkUpdates())
 		DisplayInfoMessage(g_Locale->getText(LOCALE_OPKG_MESSAGEBOX_UPDATES_AVAILABLE));
 
+#if 0
 	getPkgData(OM_LIST);
 	getPkgData(OM_LIST_UPGRADEABLE);
+#endif
 
 	menu = new CMenuWidget(g_Locale->getText(LOCALE_SERVICEMENU_UPDATE), NEUTRINO_ICON_UPDATE, width, MN_WIDGET_ID_SOFTWAREUPDATE);
 	menu->addIntroItems(LOCALE_OPKG_TITLE, NONEXISTANT_LOCALE, CMenuWidget::BTN_TYPE_BACK, CMenuWidget::BRIEF_HINT_YES);
@@ -514,6 +542,7 @@ int COPKGManager::showMenu()
 
 	pkg_vec.clear();
 	for (map<string, struct pkg>::iterator it = pkg_map.begin(); it != pkg_map.end(); it++) {
+		/* this should no longer trigger at all */
 		if (badpackage(it->second.name))
 			continue;
 		it->second.forwarder = new CMenuForwarder(it->second.desc, true, NULL , this, it->second.name.c_str());
@@ -555,6 +584,10 @@ int COPKGManager::showMenu()
 			res = menu_return::RETURN_EXIT_ALL;
 		}
 	}
+	/* remove the package-generated files... */
+	unlink("/tmp/.restart");
+	unlink("/tmp/.force_restart");
+	unlink("/tmp/.reboot");
 
 	delete menu;
 
@@ -629,10 +662,12 @@ void COPKGManager::getPkgData(const int pkg_content_id)
 			continue;
 
 		switch (pkg_content_id) {
-			case OM_LIST: {
+			case OM_LIST:
+				/* do not even put "bad" packages into the list to save memory */
+				if (badpackage(name))
+					continue;
 				pkg_map[name] = pkg(name, line, line);
 				break;
-			}
 			case OM_LIST_INSTALLED: {
 				map<string, struct pkg>::iterator it = pkg_map.find(name);
 				if (it != pkg_map.end())
