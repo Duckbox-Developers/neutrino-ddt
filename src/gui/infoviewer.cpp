@@ -409,7 +409,7 @@ void CInfoViewer::paintBackground(int col_NumBox)
 
 void CInfoViewer::paintHead()
 {
-	int head_x = BoxStartX+ChanWidth;
+	int head_x = BoxStartX+ChanWidth -1; /*Ugly: -1 to avoid background shine through round borders*/
 	int head_w = BoxEndX-head_x;
 	if (header == NULL){
 		header = new CComponentsShapeSquare(head_x, ChanNameY, head_w, time_height, NULL, CC_SHADOW_RIGHT);
@@ -780,10 +780,19 @@ void CInfoViewer::showTitle(CZapitChannel * channel, const bool calledFromNumZap
 		if ((!logo_ok && g_settings.infobar_show_channellogo < 2) || g_settings.infobar_show_channellogo == 2 || g_settings.infobar_show_channellogo == 4) // no logo in numberbox
 		{
 			// show number in numberbox
-			int tmpwidth = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_NUMBER]->getRenderWidth(strChanNum);
-			g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_NUMBER]->RenderString(
-				BoxStartX + (ChanWidth - tmpwidth) / 2, ChanNumYPos,
-				ChanWidth, strChanNum, col_NumBoxText);
+			int h_tmp 	= numbox->getHeight();
+			int y_tmp 	= numbox->getYPos() + 5*100/h_tmp; //5%
+			if (g_settings.infobar_sat_display){
+				int h_sfont = g_SignalFont->getHeight();
+				h_tmp -= h_sfont;
+				y_tmp += h_sfont;
+			}
+			y_tmp += h_tmp/2 + g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_NUMBER]->getHeight()/2;
+			g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_NUMBER]->RenderString(BoxStartX + (ChanWidth-g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_NUMBER]->getRenderWidth(strChanNum))/2,
+											y_tmp,
+											ChanWidth,
+											strChanNum,
+											col_NumBoxText);
 		}
 		if (ChannelLogoMode == 1 || ( g_settings.infobar_show_channellogo == 3 && !logo_ok) || g_settings.infobar_show_channellogo == 6 ) /* channel number besides channel name */
 		{
