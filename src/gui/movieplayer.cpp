@@ -224,7 +224,8 @@ void CMoviePlayerGui::Init(void)
 	keyPressed = CMoviePlayerGui::PLUGIN_PLAYSTATE_NORMAL;
 	isLuaPlay = false;
 	blockedFromPlugin = false;
-	m_screensaver=false;
+	m_screensaver = false;
+	m_idletime = time(NULL);
 }
 
 void CMoviePlayerGui::cutNeutrino()
