@@ -1487,7 +1487,7 @@ void CChannelList::virtual_zap_mode(bool up)
 			break;
 		}
 	}
-	g_InfoViewer->clearVirtualZapMode();
+	g_InfoViewer->resetSwitchMode(); //disable virtual_zap_mode
 
 	if (doZap) {
 		if(g_settings.timing[SNeutrinoSettings::TIMING_INFOBAR] == 0)
@@ -2093,8 +2093,10 @@ void CChannelList::paint()
 
 void CChannelList::paintHead()
 {
-	if (header == NULL)
+	if (header == NULL){
 		header = new CComponentsHeader();
+		header->getTextObject()->enableTboxSaveScreen(g_settings.theme.menu_Head_gradient);//enable screen save for title text if color gradient is in use
+	}
 
 	header->setDimensionsAll(x, y, full_width, theight);
 
@@ -2131,7 +2133,7 @@ void CChannelList::paintHead()
 	else
 		logo_off = 10;
 
-	header->paint(CC_SAVE_SCREEN_NO);
+	header->paint(CC_SAVE_SCREEN_NO); //TODO: paint title only, currently paint() does paint all enabled header items at once and causes flicker effects in unchanged items (e.g. clock)
 }
 
 CComponentsHeader* CChannelList::getHeaderObject()

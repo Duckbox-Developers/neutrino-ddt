@@ -2385,6 +2385,7 @@ void CNeutrinoApp::quickZap(int msg)
 void CNeutrinoApp::numericZap(int msg)
 {
 	StopSubtitles();
+	g_InfoViewer->setSwitchMode(CInfoViewer::IV_MODE_NUMBER_ZAP);
 	int res = channelList->numericZap( msg );
 	StartSubtitles(res < 0);
 	if (res >= 0 && CRCInput::isNumeric(msg)) {
@@ -3124,7 +3125,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 #endif
 
 	/* ================================== KEYS ================================================ */
-	if( msg == CRCInput::RC_ok || (!g_InfoViewer->virtual_zap_mode && (msg == CRCInput::RC_sat || msg == CRCInput::RC_favorites))) {
+	if( msg == CRCInput::RC_ok || (!g_InfoViewer->getSwitchMode() && (msg == CRCInput::RC_sat || msg == CRCInput::RC_favorites))) {
 		if( (mode == mode_tv) || (mode == mode_radio) || (mode == mode_ts) || (mode == mode_webtv)) {
 			showChannelList(msg);
 			return messages_return::handled;
