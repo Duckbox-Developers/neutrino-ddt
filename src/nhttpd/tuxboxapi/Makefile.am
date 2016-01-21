@@ -15,6 +15,7 @@ AM_CPPFLAGS += \
 	-I$(top_srcdir)/lib/xmltree \
 	@SIGC_CFLAGS@ \
 	@FREETYPE_CFLAGS@ \
+	@AVFORMAT_CFLAGS@ \
 	@HWLIB_CFLAGS@
 
 noinst_LIBRARIES = libnhttpd_tuxboxapi.a

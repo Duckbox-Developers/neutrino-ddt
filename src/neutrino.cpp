@@ -2869,14 +2869,10 @@ int CNeutrinoApp::showChannelList(const neutrino_msg_t _msg, bool from_menu)
 	//_show:
 	if(msg == CRCInput::RC_ok)
 	{
-		if (g_settings.channellist_new_zap_mode > 0) /* allow or active */
-			g_audioMute->enableMuteIcon(false);
 		if( !bouquetList->Bouquets.empty() && bouquetList->Bouquets[old_b]->channelList->getSize() > 0)
 			nNewChannel = bouquetList->Bouquets[old_b]->channelList->exec();//with ZAP!
 		else
 			nNewChannel = bouquetList->exec(true);
-		if (g_settings.channellist_new_zap_mode > 0) /* allow or active */
-			g_audioMute->enableMuteIcon(true);
 	} else if(msg == CRCInput::RC_sat) {
 		SetChannelMode(LIST_MODE_SAT);
 		nNewChannel = bouquetList->exec(true);
@@ -3626,8 +3622,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 	}
 	else if (msg == NeutrinoMessages::LOCK_RC)
 	{
-		CRCLock rcLock;
-		rcLock.exec(NULL,CRCLock::NO_USER_INPUT);
+		CRCLock::getInstance()->exec(NULL, CRCLock::NO_USER_INPUT);
 		return messages_return::handled;
 	}
 	else if( msg == NeutrinoMessages::CHANGEMODE ) {

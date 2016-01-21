@@ -152,6 +152,18 @@ void CComponentsPicture::initCCItem()
 	if (!do_scale){
 		//use image/icon size as object dimension values
 		frameBuffer->getIconSize(pic_name.c_str(), &width, &height);
+
+		/*if we have an image with full path => fallback to pv methode.
+		 * That's always a cramp, why we don't have an unified solution in render classes?
+		*/
+		if (width == 0 || height == 0){
+			int dx_tmp, dy_tmp;
+			g_PicViewer->getSize(pic_name.c_str(), &dx_tmp, &dy_tmp);
+			if (width == 0)
+				width = dx_tmp;
+			if (height == 0)
+				height = dy_tmp;
+		}
 		return;
 	}
 	else{ //initialized scaled size
@@ -169,10 +181,10 @@ void CComponentsPicture::initCCItem()
 	//check dimensions, leave if dimensions are equal
 	if (width == dx && height == dy)
 		return;
-
+#if 0
 	//clean up possible cache on changed dimensions
 	clearCache();
-
+#endif
 	//temporarily vars
 	int w_2scale = width;
 	int h_2scale = height;
@@ -263,7 +275,7 @@ void CComponentsPicture::paintPicture()
 		gettimeofday(&t2, NULL);
 		uint64_t duration = ((t2.tv_sec * 1000000ULL + t2.tv_usec) - (t1.tv_sec * 1000000ULL + t1.tv_usec)) / 1000ULL;
 		if (duration)
-			fprintf(stderr, "\033[33m[CComponentsPicture] %s: %llu ms to paint image \033[0m\n",	__func__, duration);
+			fprintf(stderr, "\033[33m[CComponentsPicture] %s: %" PRIu64 " ms to paint image \033[0m\n",	__func__, duration);
 	}
 }
 
@@ -293,7 +305,6 @@ bool CComponentsPicture::hasChanges()
 
 	return ret;
 }
-
 
 CComponentsChannelLogo::CComponentsChannelLogo( const int &x_pos, const int &y_pos, const int &w, const int &h,
 						const std::string& channelName,

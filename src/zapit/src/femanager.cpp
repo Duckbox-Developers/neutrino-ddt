@@ -47,7 +47,9 @@ static int unused_demux;
 #define FEDEBUG(fmt, args...)					\
         do {							\
                 if (fedebug)					\
-			INFO(fmt, ##args);			\
+                        fprintf(stdout, "[%s:%s:%d] " fmt "\n",	\
+                                __file__, __func__,		\
+                                __LINE__ , ## args);		\
         } while (0)
 
 CFeDmx::CFeDmx(int i)

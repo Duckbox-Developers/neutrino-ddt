@@ -22,6 +22,8 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib/libupnpclient \
 	@SIGC_CFLAGS@ \
 	@FREETYPE_CFLAGS@ \
+	@LIBCS_CFLAGS@ \
+	@AVFORMAT_CFLAGS@ \
 	@HWLIB_CFLAGS@
 
 if BOXTYPE_TRIPLE

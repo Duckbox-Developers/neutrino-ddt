@@ -2,16 +2,7 @@
   Neutrino-GUI  -   DBoxII-Project
 
   UPnP Browser (c) 2007 by Jochen Friedrich
-
-  Homepage: http://dbox.cyberphoria.org/
-
-  Kommentar:
-
-  Diese GUI wurde von Grund auf neu programmiert und sollte nun vom
-  Aufbau und auch den Ausbaumoeglichkeiten gut aussehen. Neutrino basiert
-  auf der Client-Server Idee, diese GUI ist also von der direkten DBox-
-  Steuerung getrennt. Diese wird dann von Daemons uebernommen.
-
+               (c) 2009-2011,2016 Stefan Seyfried
 
   License: GPL
 
@@ -437,6 +428,8 @@ std::vector<UPnPEntry> *CUpnpBrowserGui::decodeResult(std::string result)
 
 void CUpnpBrowserGui::updateDeviceSelection(int newpos)
 {
+	if (newpos < 0) /* do not explode if called with -1 arg... */
+		return;
 	if((int) m_selecteddevice != newpos) {
 		int prev_selected = m_selecteddevice;
 		unsigned int oldliststart = m_deviceliststart;
@@ -490,30 +483,10 @@ void CUpnpBrowserGui::selectDevice()
 		else if (msg_repeatok == (neutrino_msg_t) g_settings.key_list_end) {
 			updateDeviceSelection(m_devices.size()-1);
 		}
-		else if (msg_repeatok == CRCInput::RC_up || (int) msg == g_settings.key_pageup)
+		else if (msg_repeatok == CRCInput::RC_up || (int)msg == g_settings.key_pageup ||
+			 msg_repeatok == CRCInput::RC_down || (int)msg == g_settings.key_pagedown)
 		{
-			int step = ((int) msg == g_settings.key_pageup) ? m_listmaxshow : 1;  // browse or step 1
-			int new_selected = m_selecteddevice - step;
-			if (new_selected < 0) {
-				if (m_selecteddevice != 0 && step != 1)
-					new_selected = 0;
-				else
-					new_selected = m_devices.size() - 1;
-			}
-			updateDeviceSelection(new_selected);
-		}
-		else if (msg_repeatok == CRCInput::RC_down || (int) msg == g_settings.key_pagedown)
-		{
-			int step =  ((int) msg == g_settings.key_pagedown) ? m_listmaxshow : 1;  // browse or step 1
-			int new_selected = m_selecteddevice + step;
-			if (new_selected >= (int) m_devices.size()) {
-				if (((m_devices.size() - m_listmaxshow -1 < m_selecteddevice) && (step != 1)) || (m_selecteddevice != (m_devices.size() - 1)))
-					new_selected = m_devices.size() - 1;
-				else if (((m_devices.size() / m_listmaxshow) + 1) * m_listmaxshow == m_devices.size() + m_listmaxshow) // last page has full entries
-					new_selected = 0;
-				else
-					new_selected = ((step == (int) m_listmaxshow) && (new_selected < (int) (((m_devices.size() / m_listmaxshow)+1) * m_listmaxshow))) ? (m_devices.size() - 1) : 0;
-			}
+			int new_selected = UpDownKey(m_devices, msg_repeatok, m_listmaxshow, m_selecteddevice);
 			updateDeviceSelection(new_selected);
 		}
 		else if (msg == CRCInput::RC_right || msg == CRCInput::RC_ok)
