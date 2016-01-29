@@ -386,11 +386,12 @@ int CCAMMenuHandler::handleCamMsg(const neutrino_msg_t msg, neutrino_msg_data_t 
 				slen += snprintf(&lstr[slen], 255-slen, "%s\n", pMenu->title);
 			if(strlen(pMenu->subtitle))
 				slen += snprintf(&lstr[slen], 255-slen, "%s\n", pMenu->subtitle);
-			if(strlen(pMenu->bottom))
-				slen += snprintf(&lstr[slen], 255-slen, "%s\n", pMenu->bottom);
 
 			for(i = 0; (i < pMenu->choice_nb) && (i < MAX_MMI_ITEMS); i++)
 				slen += snprintf(&lstr[slen], 255-slen, "%s\n", pMenu->choice_item[i]);
+
+			if(strlen(pMenu->bottom))
+				slen += snprintf(&lstr[slen], 255-slen, "%s\n", pMenu->bottom);
 
 			ShowHint(LOCALE_MESSAGEBOX_INFO, convertDVBUTF8(lstr, slen, 0).c_str());
 			return 0;
@@ -455,7 +456,7 @@ int CCAMMenuHandler::handleCamMsg(const neutrino_msg_t msg, neutrino_msg_data_t 
 		if (Msg.Flags & CA_MESSAGE_HAS_PARAM1_INT)
 			timeout = Msg.Msg.Param[0];
 		printf("CCAMMenuHandler::handleCamMsg: close request slot: %d (timeout %d)\n", curslot, timeout);
-		//ca->MenuClose(SlotType, curslot);
+		ca->MenuClose(SlotType, curslot);
 		if (timeout)
 			close_timer = g_RCInput->addTimer(timeout*1000*1000, true);
 		else
