@@ -48,6 +48,7 @@
 #include "debug.h"
 #include <system/helpers.h>
 #include <gui/update_ext.h>
+#include <driver/framebuffer.h>
 using namespace std;
 
 int mySleep(int sec) {
