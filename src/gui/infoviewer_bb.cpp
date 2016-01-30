@@ -221,8 +221,8 @@ void CInfoViewerBB::getBBButtonInfo()
 			icon = NEUTRINO_ICON_BUTTON_RED;
 			frameBuffer->getIconSize(icon.c_str(), &w, &h);
 			mode = CNeutrinoApp::getInstance()->getMode();
-			if (mode == NeutrinoMessages::mode_ts || mode == NeutrinoMessages::mode_webtv || mode == NeutrinoMessages::mode_audio) {
-				text = CKeybindSetup::getMoviePlayerButtonName(CRCInput::RC_red, active);
+			if (mode == NeutrinoMessages::mode_ts) {
+				text = CKeybindSetup::getMoviePlayerButtonName(CRCInput::RC_red, active, g_settings.infobar_buttons_usertitle);
 				if (!text.empty())
 					break;
 			}
@@ -236,8 +236,8 @@ void CInfoViewerBB::getBBButtonInfo()
 			icon = NEUTRINO_ICON_BUTTON_GREEN;
 			frameBuffer->getIconSize(icon.c_str(), &w, &h);
 			mode = CNeutrinoApp::getInstance()->getMode();
-			if (mode == NeutrinoMessages::mode_ts || mode == NeutrinoMessages::mode_webtv || mode == NeutrinoMessages::mode_audio) {
-				text = CKeybindSetup::getMoviePlayerButtonName(CRCInput::RC_green, active);
+			if (mode == NeutrinoMessages::mode_ts) {
+				text = CKeybindSetup::getMoviePlayerButtonName(CRCInput::RC_green, active, g_settings.infobar_buttons_usertitle);
 				if (!text.empty())
 					break;
 			}
@@ -251,8 +251,8 @@ void CInfoViewerBB::getBBButtonInfo()
 			icon = NEUTRINO_ICON_BUTTON_YELLOW;
 			frameBuffer->getIconSize(icon.c_str(), &w, &h);
 			mode = CNeutrinoApp::getInstance()->getMode();
-			if (mode == NeutrinoMessages::mode_ts || mode == NeutrinoMessages::mode_webtv || mode == NeutrinoMessages::mode_audio) {
-				text = CKeybindSetup::getMoviePlayerButtonName(CRCInput::RC_yellow, active);
+			if (mode == NeutrinoMessages::mode_ts) {
+				text = CKeybindSetup::getMoviePlayerButtonName(CRCInput::RC_yellow, active, g_settings.infobar_buttons_usertitle);
 				if (!text.empty())
 					break;
 			}
@@ -266,8 +266,8 @@ void CInfoViewerBB::getBBButtonInfo()
 			icon = NEUTRINO_ICON_BUTTON_BLUE;
 			frameBuffer->getIconSize(icon.c_str(), &w, &h);
 			mode = CNeutrinoApp::getInstance()->getMode();
-			if (mode == NeutrinoMessages::mode_ts || mode == NeutrinoMessages::mode_webtv || mode == NeutrinoMessages::mode_audio) {
-				text = CKeybindSetup::getMoviePlayerButtonName(CRCInput::RC_blue, active);
+			if (mode == NeutrinoMessages::mode_ts) {
+				text = CKeybindSetup::getMoviePlayerButtonName(CRCInput::RC_blue, active, g_settings.infobar_buttons_usertitle);
 				if (!text.empty())
 					break;
 			}
@@ -279,16 +279,11 @@ void CInfoViewerBB::getBBButtonInfo()
 		default:
 			break;
 		}
-		//label audio control button in movieplayer/upnp mode
-		if (mode == NeutrinoMessages::mode_ts || mode == NeutrinoMessages::mode_webtv || mode == NeutrinoMessages::mode_audio)
+		//label audio control button in movieplayer mode
+		if (mode == NeutrinoMessages::mode_ts && !CMoviePlayerGui::getInstance().timeshift)
 		{
-			if (!CMoviePlayerGui::getInstance().timeshift)
-			{
-				if (text == g_Locale->getText(LOCALE_MPKEY_AUDIO) && !g_settings.infobar_buttons_usertitle)
-				{
-					text = CMoviePlayerGui::getInstance(mode == NeutrinoMessages::mode_webtv).CurrentAudioName();
-				}
-			}
+			if (text == g_Locale->getText(LOCALE_MPKEY_AUDIO) && !g_settings.infobar_buttons_usertitle)
+				text = CMoviePlayerGui::getInstance(false).CurrentAudioName(); // use instance_mp
 		}
 		bbButtonInfo[i].w = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getRenderWidth(text) + w + 10;
 		bbButtonInfo[i].cx = w + 5;
@@ -377,7 +372,7 @@ void CInfoViewerBB::getBBButtonInfo()
 	}
 }
 
-void CInfoViewerBB::showBBButtons(const int modus)
+void CInfoViewerBB::showBBButtons(bool paintFooter)
 {
 	if (!is_visible)
 		return;
@@ -406,12 +401,14 @@ void CInfoViewerBB::showBBButtons(const int modus)
 		int buf_y = BBarY;
 		int buf_w = g_InfoViewer->BoxEndX-buf_x;
 		int buf_h = InfoHeightY_Info;
-		if (modus != -1) {
+		if (paintFooter) {
 			pixbuf = new fb_pixel_t[buf_w * buf_h];
 //printf("\nbuf_x: %d, buf_y: %d, buf_w: %d, buf_h: %d, pixbuf: %p\n \n", buf_x, buf_y, buf_w, buf_h, pixbuf);
 			frameBuffer->SaveScreen(buf_x, buf_y, buf_w, buf_h, pixbuf);
 			paintFoot();
 			if (pixbuf != NULL) {
+				if (g_settings.theme.infobar_gradient_bottom)
+					frameBuffer->waitForIdle("CInfoViewerBB::showBBButtons");
 				frameBuffer->RestoreScreen(buf_x, buf_y, buf_w, buf_h, pixbuf);
 				delete [] pixbuf;
 			}

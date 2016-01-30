@@ -172,6 +172,10 @@ int CVfdSetup::showSetup()
 		oj->setHint("", LOCALE_MENU_HINT_VFD_SCROLL);
 		vfds->addItem(oj);
 #endif
+
+		oj = new CMenuOptionChooser(LOCALE_LCDMENU_NOTIFY_RCLOCK, &g_settings.lcd_notify_rclock, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, vfd_enabled);
+		oj->setHint("", LOCALE_MENU_HINT_VFD_NOTIFY_RCLOCK);
+		vfds->addItem(oj);
 	}
 #ifdef ENABLE_GRAPHLCD
 	vfds->addItem(GenericMenuSeparatorLine);

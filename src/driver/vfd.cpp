@@ -719,7 +719,7 @@ void CVFD::UpdateIcons()
 
 void CVFD::showRCLock(int duration)
 {
-	if (!has_lcd)
+	if (!has_lcd || !g_settings.lcd_notify_rclock)
 	{
 		sleep(duration);
 		return;

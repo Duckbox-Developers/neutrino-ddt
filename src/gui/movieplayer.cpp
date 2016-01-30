@@ -2264,7 +2264,7 @@ void CMoviePlayerGui::selectSubtitle()
 	if (!numsubs)
 		playback->FindAllSubs(spids, sub_supported, &numsubs, slanguage);
 
-	CMenuOptionStringChooser * sc = new CMenuOptionStringChooser(LOCALE_SUBTITLES_CHARSET, &g_settings.subs_charset, true, NULL, CRCInput::RC_red, NULL, true);
+	CMenuOptionStringChooser * sc = new CMenuOptionStringChooser(LOCALE_SUBTITLES_CHARSET, &g_settings.subs_charset, currentspid == -1, NULL, CRCInput::RC_red, NULL, true);
 	sc->addOption("UTF-8");
 	sc->addOption("UCS-2");
 	sc->addOption("CP1250");
@@ -2292,7 +2292,7 @@ void CMoviePlayerGui::selectSubtitle()
 		APIDSelector.addItem(item);
 	}
 	sprintf(cnt, "%d", count);
-	APIDSelector.addItem(new CMenuForwarder(LOCALE_SUBTITLES_STOP, true, NULL, selector, cnt, CRCInput::RC_stop), currentspid > 0);
+	APIDSelector.addItem(new CMenuForwarder(LOCALE_SUBTITLES_STOP, currentspid != -1, NULL, selector, cnt, CRCInput::RC_stop), currentspid > 0);
 
 	APIDSelector.exec(NULL, "");
 	delete selector;
@@ -2301,12 +2301,12 @@ void CMoviePlayerGui::selectSubtitle()
 		currentspid = spids[select];
 		/* external subtitles pid is 0x1FFF */
 		ext_subs = (currentspid == 0x1FFF);
-		playback->SelectSubtitles(currentspid);
+		playback->SelectSubtitles(currentspid, g_settings.subs_charset);
 		printf("[movieplayer] spid changed to %d\n", currentspid);
 	} else if (select > 0) {
 		ext_subs = false;
 		currentspid = -1;
-		playback->SelectSubtitles(currentspid);
+		playback->SelectSubtitles(currentspid, g_settings.subs_charset);
 		printf("[movieplayer] spid changed to %d\n", currentspid);
 	}
 }
@@ -2660,7 +2660,7 @@ void CMoviePlayerGui::selectAutoLang()
 		for (unsigned count = 0; count < numsubs; count++) {
 			if (spids[count] == 0x1FFF) {
 				currentspid = spids[count];
-				playback->SelectSubtitles(currentspid);
+				playback->SelectSubtitles(currentspid, g_settings.subs_charset);
 			}
 		}
 	}

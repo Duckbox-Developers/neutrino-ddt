@@ -356,7 +356,7 @@ void CDBoxInfoWidget::paint()
 	sprintf(ss, "%016llx", cs_get_serial());
 	title += ", S/N ";
 	title += ss;
-	width = max(width, g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getRenderWidth(title, true));
+	width = max(width, g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getRenderWidth(title, true) + 50);
 #endif
 
 	CComponentsHeader header(x, ypos, width, hheight, title, NEUTRINO_ICON_SHELL);

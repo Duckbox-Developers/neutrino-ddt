@@ -71,6 +71,8 @@ CCDraw::CCDraw() : COSDFader(g_settings.theme.menu_Content_alpha)
 	cc_body_gradient_saturation 				= 0xC0;
 	cc_body_gradient_direction = cc_body_gradient_direction_old	= CFrameBuffer::gradientVertical;
 
+	cc_gradient_bg_cleanup = true;
+
 	v_fbdata.clear();
 }
 
@@ -534,16 +536,19 @@ void CCDraw::paintFbItems(bool do_save_bg)
 		*/
 		if (cc_enable_frame){
 			if (fbtype == CC_FBDATA_TYPE_FRAME) {
-				if (fbdata.frame_thickness > 0 && cc_allow_paint)
+				if (fbdata.frame_thickness > 0 && cc_allow_paint){
 					frameBuffer->paintBoxFrame(fbdata.x, fbdata.y, fbdata.dx, fbdata.dy, fbdata.frame_thickness, fbdata.color, fbdata.r, fbdata.rtype);
+					v_fbdata[i].is_painted = true;
+				}
 			}
 		}
 		if (paint_bg){
 			if (fbtype == CC_FBDATA_TYPE_BACKGROUND){
 				frameBuffer->paintBackgroundBoxRel(x, y, fbdata.dx, fbdata.dy);
+				v_fbdata[i].is_painted = true;
 			}
 		}
-		if (fbtype == CC_FBDATA_TYPE_SHADOW_BOX && (!is_painted || shadow_force)) {
+		if (fbtype == CC_FBDATA_TYPE_SHADOW_BOX && ((!is_painted || !fbdata.is_painted)|| shadow_force)) {
 			if (fbdata.enabled) {
 				/* here we paint the shadow around the body
 					* on 1st step we check for already cached screen buffer, if true
@@ -560,6 +565,7 @@ void CCDraw::paintFbItems(bool do_save_bg)
 					//if is paint cache enabled
 					if (cc_paint_cache && fbdata.pixbuf == NULL)
 						fbdata.pixbuf = getScreen(fbdata.x, fbdata.y, fbdata.dx, fbdata.dy);
+					fbdata.is_painted = true;
 				}
 			}
 		}
@@ -591,6 +597,8 @@ void CCDraw::paintFbItems(bool do_save_bg)
 							}
 
 							// if found empty gradient buffer, create it, otherwise paint from cache
+							if (cc_gradient_bg_cleanup)
+								frameBuffer->paintBoxRel(fbdata.x, fbdata.y, fbdata.dx, fbdata.dy, 0, fbdata.r, fbdata.rtype);
 							if (fbdata.gradient_data->boxBuf == NULL){
 								dprintf(DEBUG_INFO, "\033[33m[CCDraw]\t[%s - %d], paint new gradient)...\033[0m\n", __func__, __LINE__);
 								fbdata.gradient_data->boxBuf = frameBuffer->paintBoxRel(fbdata.x, fbdata.y, fbdata.dx, fbdata.dy, 0, fbdata.gradient_data, fbdata.r, fbdata.rtype);
@@ -598,7 +606,7 @@ void CCDraw::paintFbItems(bool do_save_bg)
 									fbdata.pixbuf = getScreen(fbdata.x, fbdata.y, fbdata.dx, fbdata.dy);
 							}else{
 								dprintf(DEBUG_INFO, "\033[33m[CCDraw]\t[%s - %d], paint cached gradient)...\033[0m\n", __func__, __LINE__);
-								frameBuffer->blitBox2FB(fbdata.gradient_data->boxBuf, fbdata.dx, fbdata.dy, fbdata.x, fbdata.y);
+								frameBuffer->blitBox2FB(fbdata.gradient_data->boxBuf, fbdata.gradient_data->dx, fbdata.dy, fbdata.gradient_data->x, fbdata.y);
 							}
 						}else{
 							dprintf(DEBUG_INFO, "\033[33m[CCDraw]\t[%s - %d], paint default box)...\033[0m\n", __func__, __LINE__);
@@ -607,7 +615,7 @@ void CCDraw::paintFbItems(bool do_save_bg)
 								fbdata.pixbuf = getScreen(fbdata.x, fbdata.y, fbdata.dx, fbdata.dy);
 						}
 					}
-					is_painted = true;
+					is_painted = v_fbdata[i].is_painted = true;
 				}
 			}
 		}
@@ -615,8 +623,6 @@ void CCDraw::paintFbItems(bool do_save_bg)
 	//pick up signal if filled
 	OnAfterPaintLayers();
 }
-
-
 
 void CCDraw::hide()
 {
@@ -627,6 +633,7 @@ void CCDraw::hide()
 				//restore screen from backround layer
 				frameBuffer->waitForIdle("CCDraw::hide()");
 				frameBuffer->RestoreScreen(v_fbdata[i].x, v_fbdata[i].y, v_fbdata[i].dx, v_fbdata[i].dy, v_fbdata[i].pixbuf);
+				v_fbdata[i].is_painted = false;
 			}
 		}
 	}
@@ -635,9 +642,10 @@ void CCDraw::hide()
 }
 
 //erase or paint over rendered objects
-void CCDraw::kill(const fb_pixel_t& bg_color, const int& corner_radius)
+void CCDraw::kill(const fb_pixel_t& bg_color, const int& corner_radius, const int& fblayer_type /*fbdata_type*/)
 {
 	for(size_t i =0; i< v_fbdata.size() ;i++){
+		if (fblayer_type == CC_FBDATA_TYPES || v_fbdata[i].fbdata_type & fblayer_type){
 #if 0
 		if (bg_color != COL_BACKGROUND_PLUS_0)
 #endif
@@ -660,15 +668,23 @@ void CCDraw::kill(const fb_pixel_t& bg_color, const int& corner_radius)
 								   bg_color,
 								   r,
 								   corner_type);
-
+			v_fbdata[i].is_painted = false;
 #if 0
 		else
 			frameBuffer->paintBackgroundBoxRel(v_fbdata[i].x, v_fbdata[i].y, v_fbdata[i].dx, v_fbdata[i].dy);
 #endif
+		}
 	}
 
-	firstPaint = true;
-	is_painted = false;
+	if (fblayer_type == CC_FBDATA_TYPES){
+		firstPaint = true;
+		is_painted = false;
+	}
+}
+
+void CCDraw::killShadow(const fb_pixel_t& bg_color, const int& corner_radius)
+{
+	kill(bg_color, corner_radius, CC_FBDATA_TYPE_SHADOW_BOX);
 }
 
 bool CCDraw::doPaintBg(bool do_paint)
@@ -683,8 +699,10 @@ bool CCDraw::doPaintBg(bool do_paint)
 
 void CCDraw::enableShadow(int mode, const int& shadow_width, bool force_paint)
 {
-	if (shadow != mode)
+	if (shadow != mode){
+		killShadow();
 		shadow = mode;
+	}
 	if (shadow != CC_SHADOW_OFF)
 		if (shadow_width != -1)
 			setShadowWidth(shadow_width);

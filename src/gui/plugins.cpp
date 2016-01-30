@@ -350,11 +350,11 @@ PluginParam * CPlugins::makeParam(const char * const id, const int value, Plugin
 }
 #endif
 
-void CPlugins::startPlugin_by_name(const std::string & filename)
+void CPlugins::startPlugin_by_name(const std::string & name)
 {
 	for (int i = 0; i <  (int) plugin_list.size(); i++)
 	{
-		if (!filename.compare(g_PluginList->getFileName(i)))
+		if (name.compare(g_PluginList->getName(i)) == 0)
 		{
 			startPlugin(i);
 			return;
@@ -362,13 +362,13 @@ void CPlugins::startPlugin_by_name(const std::string & filename)
 	}
 }
 
-void CPlugins::startPlugin(const char * const name)
+void CPlugins::startPlugin(const char * const filename)
 {
-	int pluginnr = find_plugin(name);
+	int pluginnr = find_plugin(filename);
 	if (pluginnr > -1)
 		startPlugin(pluginnr);
 	else
-		printf("[CPlugins] could not find %s\n", name);
+		printf("[CPlugins] could not find %s\n", filename);
 
 }
 

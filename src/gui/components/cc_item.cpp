@@ -65,8 +65,10 @@ void CComponentsItem::initParent(CComponentsForm* parent)
 // If backround is not required, it's possible to override this with variable paint_bg=false, use doPaintBg(true/false) to set this!
 void CComponentsItem::paintInit(bool do_save_bg)
 {
-	if (hasChanges())
+	if (hasChanges()){
 		clearFbData();
+		is_painted = false; //force repaint if required
+	}
 
 	if (v_fbdata.empty()){
 		int th = fr_thickness;
@@ -125,15 +127,15 @@ void CComponentsItem::paintInit(bool do_save_bg)
 }
 
 //erase or paint over rendered objects
-void CComponentsItem::kill(const fb_pixel_t& bg_color, bool ignore_parent)
+void CComponentsItem::kill(const fb_pixel_t& bg_color, bool ignore_parent, const int& fblayer_type)
 {
 	if(cc_parent == NULL){
-		CComponents::kill(bg_color, this->corner_rad);
+		CComponents::kill(bg_color, this->corner_rad, fblayer_type);
 	}else{
 		if(ignore_parent)
-			CComponents::kill(bg_color, this->corner_rad);
+			CComponents::kill(bg_color, this->corner_rad, fblayer_type);
 		else
-			CComponents::kill(cc_parent->getColorBody(), cc_parent->getCornerRadius());
+			CComponents::kill(cc_parent->getColorBody(), cc_parent->getCornerRadius(), fblayer_type);
 	}
 }
 

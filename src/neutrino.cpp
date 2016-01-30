@@ -246,6 +246,7 @@ CNeutrinoApp::CNeutrinoApp()
 	SetupFrameBuffer();
 
 	mode 			= mode_unknown;
+	lastMode		= mode_unknown;
 	channelList		= NULL;
 	TVchannelList		= NULL;
 	RADIOchannelList	= NULL;
@@ -493,6 +494,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.backlight_standby = configfile.getInt32( "backlight_standby", 0);
 	g_settings.backlight_deepstandby = configfile.getInt32( "backlight_deepstandby", 0);
 	g_settings.lcd_scroll = configfile.getInt32( "lcd_scroll", 1);
+	g_settings.lcd_notify_rclock = configfile.getInt32("lcd_notify_rclock", 1);
 
 	g_settings.hdd_fs = configfile.getInt32( "hdd_fs", 0);
 	g_settings.hdd_sleep = configfile.getInt32( "hdd_sleep", 0);
@@ -1129,6 +1131,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32( "backlight_standby", g_settings.backlight_standby);
 	configfile.setInt32( "backlight_deepstandby", g_settings.backlight_deepstandby);
 	configfile.setInt32( "lcd_scroll", g_settings.lcd_scroll);
+	configfile.setInt32( "lcd_notify_rclock", g_settings.lcd_notify_rclock);
 
 	//misc
 	configfile.setInt32( "power_standby", g_settings.power_standby);
@@ -1938,6 +1941,7 @@ void CNeutrinoApp::InitZapper()
 	int tvmode = CZapit::getInstance()->getMode() & CZapitClient::MODE_TV;
 	lastChannelMode = tvmode ? g_settings.channel_mode : g_settings.channel_mode_radio;
 	mode = tvmode ? mode_tv : mode_radio;
+	lastMode = mode;
 
 	SDTreloadChannels = false;
 	channelsInit();
@@ -3642,6 +3646,10 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 			if(mode != mode_standby)
 				standbyMode( true );
 		}
+		if((data & mode_mask)== mode_upnp) {
+			lastMode=mode;
+			mode=mode_upnp;
+		}
 		if((data & mode_mask)== mode_audio) {
 			lastMode=mode;
 			mode=mode_audio;
@@ -3650,7 +3658,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 			lastMode=mode;
 			mode=mode_pic;
 		}
-		if((data & mode_mask)== mode_ts && CMoviePlayerGui::getInstance().Playing()) {
+		if((data & mode_mask)== mode_ts) {
 			if(mode == mode_radio)
 				frameBuffer->stopFrame();
 			lastMode=mode;
