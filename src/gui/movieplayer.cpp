@@ -2758,7 +2758,6 @@ bool CMoviePlayerGui::getAPID(unsigned int i, int &apid, unsigned int &is_ac3)
 
 void CMoviePlayerGui::selectAutoLang()
 {
-#if 0
 	if (!numsubs)
 		playback->FindAllSubs(spids, sub_supported, &numsubs, slanguage);
 
@@ -2770,7 +2769,6 @@ void CMoviePlayerGui::selectAutoLang()
 			}
 		}
 	}
-#endif
 	if (g_settings.auto_lang &&  (numpida > 1)) {
 		int pref_idx = -1;
 
