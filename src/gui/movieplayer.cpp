@@ -52,6 +52,7 @@
 #include <driver/display.h>
 #include <driver/abstime.h>
 #include <driver/record.h>
+#include <driver/volume.h>
 #include <eitd/edvbstring.h>
 #include <system/helpers.h>
 
@@ -87,6 +88,7 @@ bool glcd_play = false;
 extern cVideo * videoDecoder;
 extern CRemoteControl *g_RemoteControl;	/* neutrino.cpp */
 extern CInfoClock *InfoClock;
+extern CVolume* g_volume;
 
 #define TIMESHIFT_SECONDS 3
 #define ISO_MOUNT_POINT "/media/iso"
@@ -222,6 +224,8 @@ void CMoviePlayerGui::Init(void)
 	info_1 = "";
 	info_2 = "";
 	filelist_it = filelist.end();
+	vzap_it = filelist_it;
+	fromInfoviewer = false;
 	keyPressed = CMoviePlayerGui::PLUGIN_PLAYSTATE_NORMAL;
 	isLuaPlay = false;
 	haveLuaInfoFunc = false;
@@ -1103,6 +1107,55 @@ bool CMoviePlayerGui::SetPosition(int pos, bool absolute)
 	return res;
 }
 
+void CMoviePlayerGui::quickZap(neutrino_msg_t msg)
+{
+	if ((msg == CRCInput::RC_right) || msg == (neutrino_msg_t) g_settings.key_quickzap_up)
+	{
+		//printf("CMoviePlayerGui::%s: CRCInput::RC_right or g_settings.key_quickzap_up\n", __func__);
+		if (isLuaPlay)
+		{
+			playstate = CMoviePlayerGui::STOPPED;
+			keyPressed = CMoviePlayerGui::PLUGIN_PLAYSTATE_NEXT;
+			ClearQueue();
+		}
+		else if (!filelist.empty())
+		{
+			if (filelist_it < (filelist.end() - 1))
+			{
+				playstate = CMoviePlayerGui::STOPPED;
+				++filelist_it;
+			}
+			else if (repeat_mode == REPEAT_ALL)
+			{
+				playstate = CMoviePlayerGui::STOPPED;
+				++filelist_it;
+				if (filelist_it == filelist.end())
+				{
+					filelist_it = filelist.begin();
+				}
+			}
+		}
+	}
+	else if ((msg == CRCInput::RC_left) || msg == (neutrino_msg_t) g_settings.key_quickzap_down)
+	{
+		//printf("CMoviePlayerGui::%s: CRCInput::RC_left or g_settings.key_quickzap_down\n", __func__);
+		if (isLuaPlay)
+		{
+			playstate = CMoviePlayerGui::STOPPED;
+			keyPressed = CMoviePlayerGui::PLUGIN_PLAYSTATE_PREV;
+			ClearQueue();
+		}
+		else if (filelist.size() > 1)
+		{
+			if (filelist_it != filelist.begin())
+			{
+				playstate = CMoviePlayerGui::STOPPED;
+				--filelist_it;
+			}
+		}
+	}
+}
+
 void CMoviePlayerGui::PlayFileLoop(void)
 {
 	bool first_start = true;
@@ -1191,6 +1244,9 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			}
 #endif
 			handleMovieBrowser(0, position);
+			if (playstate == CMoviePlayerGui::STOPPED)
+				at_eof = true;
+
 			FileTime.update(position, duration);
 		}
 #if 0
@@ -1229,14 +1285,6 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			playstate = CMoviePlayerGui::STOPPED;
 			keyPressed = CMoviePlayerGui::PLUGIN_PLAYSTATE_STOP;
 			ClearQueue();
-		} else if (isLuaPlay && (msg == (neutrino_msg_t) CRCInput::RC_right)) {
-			playstate = CMoviePlayerGui::STOPPED;
-			keyPressed = CMoviePlayerGui::PLUGIN_PLAYSTATE_NEXT;
-			ClearQueue();
-		} else if (isLuaPlay && (msg == (neutrino_msg_t) CRCInput::RC_left)) {
-			playstate = CMoviePlayerGui::STOPPED;
-			keyPressed = CMoviePlayerGui::PLUGIN_PLAYSTATE_PREV;
-			ClearQueue();
 		} else if ((!filelist.empty() && msg == (neutrino_msg_t) CRCInput::RC_ok)) {
 			EnableClockAndMute(false);
 			CFileBrowser *playlist = new CFileBrowser();
@@ -1262,21 +1310,36 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			}
 			delete playlist;
 			EnableClockAndMute(true);
-		} else if ((!filelist.empty() && msg == (neutrino_msg_t) CRCInput::RC_right)) {
-			if (filelist_it < (filelist.end() - 1)) {
-				++filelist_it;
-				playstate = CMoviePlayerGui::STOPPED;
-			} else if (repeat_mode == REPEAT_ALL) {
-				++filelist_it;
-				if (filelist_it == filelist.end())
-					filelist_it = filelist.begin();
-				playstate = CMoviePlayerGui::STOPPED;
+		} else if (msg == CRCInput::RC_left || msg == CRCInput::RC_right) {
+			bool reset_vzap_it = true;
+			switch (g_settings.mode_left_right_key_tv)
+			{
+				case SNeutrinoSettings::INFOBAR:
+					callInfoViewer();
+					break;
+				case SNeutrinoSettings::VZAP:
+					if (fromInfoviewer)
+					{
+						set_vzap_it(msg == CRCInput::RC_right);
+						reset_vzap_it = false;
+						fromInfoviewer = false;
+					}
+					callInfoViewer(reset_vzap_it);
+					break;
+				case SNeutrinoSettings::VOLUME:
+					g_volume->setVolume(msg);
+					break;
+				default: /* SNeutrinoSettings::ZAP */
+					quickZap(msg);
+					break;
 			}
-		} else if (filelist.size() > 1 && msg == (neutrino_msg_t) CRCInput::RC_left) {
-			if (filelist_it != filelist.begin()) {
-				playstate = CMoviePlayerGui::STOPPED;
-				--filelist_it;
-			}
+		} else if (msg == (neutrino_msg_t) g_settings.key_quickzap_up || msg == (neutrino_msg_t) g_settings.key_quickzap_down) {
+			quickZap(msg);
+		} else if (fromInfoviewer && msg == CRCInput::RC_ok && !filelist.empty()) {
+			printf("CMoviePlayerGui::%s: start playlist movie #%d\n", __func__, vzap_it - filelist.begin());
+			fromInfoviewer = false;
+			playstate = CMoviePlayerGui::STOPPED;
+			filelist_it = vzap_it;
 		} else if (timeshift == TSHIFT_MODE_OFF && !isWebTV /* && !isYT */ && (msg == (neutrino_msg_t) g_settings.mpkey_next_repeat_mode)) {
 			repeat_mode = (repeat_mode_enum)((int)repeat_mode + 1);
 			if (repeat_mode > (int) REPEAT_ALL)
@@ -1618,8 +1681,30 @@ void CMoviePlayerGui::PlayFileEnd(bool restore)
 	}
 }
 
-void CMoviePlayerGui::callInfoViewer()
+void CMoviePlayerGui::set_vzap_it(bool up)
 {
+	//printf("CMoviePlayerGui::%s: vzap_it: %d count %s\n", __func__, vzap_it - filelist.begin(), up ? "up" : "down");
+	if (up)
+	{
+		if (vzap_it < (filelist.end() - 1))
+			++vzap_it;
+	}
+	else
+	{
+		if (vzap_it > filelist.begin())
+			--vzap_it;
+	}
+	//printf("CMoviePlayerGui::%s: vzap_it: %d\n", __func__, vzap_it - filelist.begin());
+}
+
+void CMoviePlayerGui::callInfoViewer(bool init_vzap_it)
+{
+	if (init_vzap_it)
+	{
+		//printf("CMoviePlayerGui::%s: init_vzap_it\n", __func__);
+		vzap_it = filelist_it;
+	}
+
 	if (timeshift != TSHIFT_MODE_OFF) {
 		g_InfoViewer->showTitle(CNeutrinoApp::getInstance()->channelList->getActiveChannel());
 		return;
@@ -1656,17 +1741,29 @@ void CMoviePlayerGui::callInfoViewer()
 	}
 
 	if (p_movie_info) {
-		std::string channelName = p_movie_info->epgChannel;
+
+		MI_MOVIE_INFO *mi;
+		mi = p_movie_info;
+		if (!filelist.empty() && g_settings.mode_left_right_key_tv == SNeutrinoSettings::VZAP)
+		{
+			if (vzap_it <= filelist.end()) {
+				unsigned idx = vzap_it - filelist.begin();
+				//printf("CMoviePlayerGui::%s: idx: %d\n", __func__, idx);
+				mi = milist[idx];
+			}
+		}
+
+		std::string channelName = mi->epgChannel;
 		if (channelName.empty())
 			channelName = pretty_name;
 
-		std::string channelTitle = p_movie_info->epgTitle;
+		std::string channelTitle = mi->epgTitle;
 		if (channelTitle.empty())
 			channelTitle = pretty_name;
 
 		CVFD::getInstance()->ShowText(channelTitle.c_str());
 
-		g_InfoViewer->showMovieTitle(playstate, p_movie_info->epgEpgId >>16, channelName, p_movie_info->epgTitle, p_movie_info->epgInfo1,
+		g_InfoViewer->showMovieTitle(playstate, mi->epgEpgId >>16, channelName, mi->epgTitle, mi->epgInfo1,
 					     duration, position, repeat_mode);
 		unlink("/tmp/cover.jpg");
 		return;
@@ -2391,18 +2488,25 @@ void CMoviePlayerGui::showSubtitle(neutrino_msg_data_t data)
 		int xres = 0, yres = 0, framerate;
 		videoDecoder->getPictureInfo(xres, yres, framerate);
 
-		double xc = (double) CFrameBuffer::getInstance()->getScreenWidth(/*true*/)/(double) xres;
-		double yc = (double) CFrameBuffer::getInstance()->getScreenHeight(/*true*/)/(double) yres;
+		double xc, yc;
+		if (sub->num_rects && (sub->rects[0]->x + sub->rects[0]->w) <= 720 &&
+				sub->rects[0]->y + sub->rects[0]->h <= 576) {
+			xc = (double) CFrameBuffer::getInstance()->getScreenWidth(/*true*/)/(double) 720;
+			yc = (double) CFrameBuffer::getInstance()->getScreenHeight(/*true*/)/(double) 576;
+		} else {
+			xc = (double) CFrameBuffer::getInstance()->getScreenWidth(/*true*/)/(double) xres;
+			yc = (double) CFrameBuffer::getInstance()->getScreenHeight(/*true*/)/(double) yres;
+		}
 
 		clearSubtitle();
 
 		for (unsigned i = 0; i < sub->num_rects; i++) {
 			uint32_t * colors = (uint32_t *) sub->rects[i]->pict.data[1];
 
-			int nw = (double) sub->rects[i]->w * xc;
-			int nh = (double) sub->rects[i]->h * yc;
 			int xoff = (double) sub->rects[i]->x * xc;
 			int yoff = (double) sub->rects[i]->y * yc;
+			int nw = GetWidth4FB_HW_ACC(xoff, (double) sub->rects[i]->w * xc);
+			int nh = (double) sub->rects[i]->h * yc;
 
 			printf("Draw: #%d at %d,%d size %dx%d colors %d (x=%d y=%d w=%d h=%d) \n", i+1,
 					sub->rects[i]->x, sub->rects[i]->y, sub->rects[i]->w, sub->rects[i]->h,
@@ -2655,8 +2759,10 @@ bool CMoviePlayerGui::getAPID(unsigned int i, int &apid, unsigned int &is_ac3)
 void CMoviePlayerGui::selectAutoLang()
 {
 #if 0
-	if (ext_subs) {
+	if (!numsubs)
 		playback->FindAllSubs(spids, sub_supported, &numsubs, slanguage);
+
+	if (ext_subs) {
 		for (unsigned count = 0; count < numsubs; count++) {
 			if (spids[count] == 0x1FFF) {
 				currentspid = spids[count];
@@ -2694,6 +2800,34 @@ void CMoviePlayerGui::selectAutoLang()
 			currentac3 = ac3flags[pref_idx];
 			playback->SetAPid(currentapid, currentac3);
 			getCurrentAudioName(is_file_player, currentaudioname);
+		}
+	}
+	if (isWebTV && g_settings.auto_subs && numsubs > 0) {
+		for(int i = 0; i < 3; i++) {
+			if(g_settings.pref_subs[i].empty() || g_settings.pref_subs[i] == "none")
+				continue;
+
+			std::string temp(g_settings.pref_subs[i]);
+			std::string slang;
+			for (int j = 0 ; j < numsubs; j++) {
+				if (!sub_supported[j])
+					continue;
+				slang = slanguage[j].substr(0, 3);
+				std::map<std::string, std::string>::const_iterator it;
+				for(it = iso639.begin(); it != iso639.end(); ++it) {
+					if(temp == it->second && slang == it->first) {
+						currentspid = spids[j];
+						break;
+					}
+				}
+				if (currentspid > 0)
+					break;
+			}
+			if (currentspid > 0) {
+				playback->SelectSubtitles(currentspid, g_settings.subs_charset);
+				printf("[movieplayer] spid changed to %d %s (%s)\n", currentspid, temp.c_str(), slang.c_str());
+				break;
+			}
 		}
 	}
 }
