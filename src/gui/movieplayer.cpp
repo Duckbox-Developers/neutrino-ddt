@@ -1764,7 +1764,7 @@ void CMoviePlayerGui::callInfoViewer(bool init_vzap_it)
 		CVFD::getInstance()->ShowText(channelTitle.c_str());
 
 		g_InfoViewer->showMovieTitle(playstate, mi->epgEpgId >>16, channelName, mi->epgTitle, mi->epgInfo1,
-					     duration, position, repeat_mode);
+			duration, position, repeat_mode, init_vzap_it ? 0 /*IV_MODE_DEFAULT*/ : 1 /*IV_MODE_VIRTUAL_ZAP*/);
 		unlink("/tmp/cover.jpg");
 		return;
 	}
