@@ -472,7 +472,8 @@ extra.saveconfig Neutrino Einstellungen: Sichern als
 extra.savekeys Speichere Tastenbelegung als
 extra.scrambled_message Verschlüsselung melden
 extra.show_mute_icon Mute-Icon bei Lautstärke 0
-extra.sms_channel SMS-Modus Kanal
+extra.sms_channel SMS-Modus bei Kanalsuche
+extra.sms_movie SMS-Modus bei Filmsuche
 extra.south Süden
 extra.start_tostandby Standby nach Boxstart
 extra.temp_timeshift Temporäres Timeshift
@@ -979,6 +980,11 @@ mainsettings.savesettingsnow Einstellungen jetzt speichern
 mainsettings.savesettingsnow_hint Einstellungen werden jetzt gespeichert,\nbitte warten...
 mainsettings.timezone Zeitzone
 mainsettings.video Video
+mbkey.copy_onefile Film kopieren
+mbkey.copy_several Film kopieren und teilen
+mbkey.cover Filmcover erzeugen/löschen
+mbkey.cut Film schneiden
+mbkey.truncate Film kürzen
 menu.back Zurück
 menu.cancel Abbrechen
 menu.hint_a_pic Konfigurieren Sie den Audioplayer, den Bildbetrachter, den Movieplayer und mehr
@@ -1129,7 +1135,6 @@ menu.hint_key_binding In diesem Menü können Einstellungen für die Tasten der 
 menu.hint_key_bouquetdown Weisen Sie eine Taste für das Zurückblättern in den Bouquets zu
 menu.hint_key_bouquetup Weisen Sie eine Taste für das Vorblättern in den Bouquets zu
 menu.hint_key_cancel Weisen Sie eine Taste für das Schließen der Menüs zu
-menu.hint_key_channel_sms Wenn es aktiviert ist, können Sie die Nummern-Tasten in der Kanalliste nutzen, um im SMS-Style zu suchen
 menu.hint_key_channeldown Weisen Sie eine Taste für das Herunterschalten in der Kanalliste zu
 menu.hint_key_channellist Konfigurieren Sie die Tastenbelegung für die Kanalliste
 menu.hint_key_channelup Weisen Sie eine Taste für das Hochschalten in der Kanalliste zu
@@ -1142,6 +1147,7 @@ menu.hint_key_list_end Weisen Sie eine Taste für den Wechsel zum Listenende zu
 menu.hint_key_list_start Weisen Sie eine Taste für den Wechsel zum Listenanfang zu
 menu.hint_key_load Laden Sie Ihre Tastenbelegungen aus einer Datei
 menu.hint_key_modechange Wählen Sie eine Taste für den Wechsel in den TV/Radio-Modus und für den Standby
+menu.hint_key_moviebrowser Konfigurieren Sie die Tastenbelegung für den Moviebrowser
 menu.hint_key_movieplayer Konfigurieren Sie die Tastenbelegung für den Movieplayer
 menu.hint_key_mpaudio Weisen Sie eine Taste zu, um die Tonspuren in ihren Aufnahmen zu wechseln
 menu.hint_key_mpbookmark Weisen Sie eine Taste zu, um Merker in ihren Aufnahmen für den Neustart zu setzen
@@ -1198,7 +1204,8 @@ menu.hint_make_newlist Nach einer Kanalsuche wird ein Bouquet namens 'neue Kanä
 menu.hint_make_removedlist Nach einer Kanalsuche wird ein Bouquet namens 'gelöschte Kanäle' erzeugt
 menu.hint_make_webtvlist Bei aktiver Option wird ein Bouquet namens 'WebTV' erzeugt, in dem alle WebTV-Sender zusammengefasst sind
 menu.hint_manage_settings Sichern, Wiederherstellen und Auslieferungszustand wiederherstellen
-menu.hint_mb Hier spielen Sie Ihre Aufnahmen und andere vorhandene Filme ab.
+menu.hint_mb Ihre Aufnahmen
+menu.hint_mbkey_cover Weisen Sie eine Taste zu, um Filmcover während der Wiedergabe zu erzeugen oder sie im Moviebrowser zu löschen
 menu.hint_media Abspielen von Musik, Internetradio und Filmen; Betrachten Sie Bilder
 menu.hint_menu_fonts Ändern Sie die Schriftgrößen im Menü
 menu.hint_menu_hints Zeigt Ihnen Hinweise zu den Menüpunkten an. Sie erreichen das auch jederzeit mit der Taste 'Hilfe'
@@ -1435,6 +1442,8 @@ menu.hint_shutdown_rcdelay Aktiviert den Deep-Standby, wenn die Power-Taste län
 menu.hint_shutdown_real Aktiviert den Standby-Modus. Ist diese Option deaktiviert, fährt die Box in den Deep-Standby
 menu.hint_sleeptimer Zeitschaltuhr auf Ihrer Box aktivieren\nDie Box fährt dann in den Standby-Modus
 menu.hint_sleeptimer_min Voreinstellung der Zeitschaltuhr auf Ihrer Box
+menu.hint_sms_channel Wenn es aktiviert ist, können Sie die Nummern-Tasten in der Kanalliste nutzen, um im SMS-Style zu suchen
+menu.hint_sms_movie Wenn es aktiviert ist, können Sie die Nummern-Tasten im Moviebrowser nutzen, um im SMS-Style zu suchen
 menu.hint_soft_restart Neustarten von Neutrino, ohne die Box neu zu starten
 menu.hint_softupdate_check Im Internet nach verfügbaren Updates suchen, herunterladen und installieren
 menu.hint_softupdate_check_local Lokal nach verfügbaren Updates suchen und installieren

@@ -542,6 +542,12 @@ struct SNeutrinoSettings
 	int key_volumeup;
 	int key_volumedown;
 
+	int mbkey_copy_onefile;
+	int mbkey_copy_several;
+	int mbkey_cut;
+	int mbkey_truncate;
+	int mbkey_cover;
+
 	int mpkey_rewind;
 	int mpkey_forward;
 	int mpkey_pause;
@@ -806,6 +812,7 @@ struct SNeutrinoSettings
 	int	hdd_statfs_mode;
 	int	zap_cycle;
 	int	sms_channel;
+	int	sms_movie;
 	std::string	font_file;
 	std::string	ttx_font_file;
 	std::string	sub_font_file;

@@ -83,6 +83,7 @@ typedef struct dirent64 dirent_struct;
 #define TRACE  printf
 
 #define NUMBER_OF_MOVIES_LAST 40 // This is the number of movies shown in last recored and last played list
+#define MOVIE_SMSKEY_TIMEOUT 800
 
 #define MESSAGEBOX_BROWSER_ROW_ITEM_COUNT 20
 const CMenuOptionChooser::keyval MESSAGEBOX_BROWSER_ROW_ITEM[MESSAGEBOX_BROWSER_ROW_ITEM_COUNT] =
@@ -899,7 +900,7 @@ int CMovieBrowser::exec(CMenuTarget* parent, const std::string & actionKey)
 			delete hintBox;
 			framebuffer->paintBackground(); // clear screen
 			CMovieCut mc;
-			bool res = mc.copyMovie(m_movieSelectionHandler, &m_movieInfo, onefile);
+			bool res = mc.copyMovie(m_movieSelectionHandler, onefile);
 			//g_RCInput->clearRCMsg();
 			if (res == 0)
 				ShowMsg(LOCALE_MESSAGEBOX_ERROR, LOCALE_MOVIEBROWSER_COPY_FAILED, CMessageBox::mbrCancel, CMessageBox::mbCancel, NEUTRINO_ICON_ERROR);
@@ -924,7 +925,7 @@ int CMovieBrowser::exec(CMenuTarget* parent, const std::string & actionKey)
 			delete hintBox;
 			framebuffer->paintBackground(); // clear screen
 			CMovieCut mc;
-			bool res = mc.cutMovie(m_movieSelectionHandler, &m_movieInfo);
+			bool res = mc.cutMovie(m_movieSelectionHandler);
 			//g_RCInput->clearRCMsg();
 			if (!res)
 				ShowMsg(LOCALE_MESSAGEBOX_ERROR, LOCALE_MOVIEBROWSER_CUT_FAILED, CMessageBox::mbrCancel, CMessageBox::mbCancel, NEUTRINO_ICON_ERROR);
@@ -955,11 +956,7 @@ int CMovieBrowser::exec(CMenuTarget* parent, const std::string & actionKey)
 					if (!res)
 						ShowMsg(LOCALE_MESSAGEBOX_ERROR, LOCALE_MOVIEBROWSER_TRUNCATE_FAILED, CMessageBox::mbrCancel, CMessageBox::mbCancel, NEUTRINO_ICON_ERROR);
 					else
-					{
-						//printf("New movie info: size %lld len %d\n", res, m_movieSelectionHandler->bookmarks.end/60);
-						m_movieInfo.saveMovieInfo(*m_movieSelectionHandler);
 						m_doLoadMovies = true;
-					}
 					m_doRefresh = true;
 				}
 			}
@@ -1741,16 +1738,16 @@ int CMovieBrowser::refreshFoot(bool show)
 	//TRACE("[mb]->refreshButtonLine\n");
 	int offset = (m_settings.gui != MB_GUI_LAST_PLAY && m_settings.gui != MB_GUI_LAST_RECORD) ? 0 : 2;
 	neutrino_locale_t ok_loc = (m_settings.gui == MB_GUI_FILTER && m_windowFocus == MB_FOCUS_FILTER) ?  LOCALE_BOOKMARKMANAGER_SELECT : LOCALE_MOVIEBROWSER_FOOT_PLAY;
-	int ok_loc_len = std::max(g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getRenderWidth(g_Locale->getText(LOCALE_BOOKMARKMANAGER_SELECT), true),
-				  g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getRenderWidth(g_Locale->getText(LOCALE_MOVIEBROWSER_FOOT_PLAY), true));
+	int ok_loc_len = std::max(FOOT_FONT->getRenderWidth(g_Locale->getText(LOCALE_BOOKMARKMANAGER_SELECT), true),
+				  FOOT_FONT->getRenderWidth(g_Locale->getText(LOCALE_MOVIEBROWSER_FOOT_PLAY), true));
 	std::string filter_text = g_Locale->getText(LOCALE_MOVIEBROWSER_FOOT_FILTER);
 	filter_text += m_settings.filter.optionString;
 	std::string sort_text = g_Locale->getText(LOCALE_MOVIEBROWSER_FOOT_SORT);
 	sort_text += g_Locale->getText(m_localizedItemName[m_settings.sorting.item]);
-	int sort_text_len = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getRenderWidth(g_Locale->getText(LOCALE_MOVIEBROWSER_FOOT_SORT), true);
+	int sort_text_len = FOOT_FONT->getRenderWidth(g_Locale->getText(LOCALE_MOVIEBROWSER_FOOT_SORT), true);
 	int len = 0;
 	for (int i = 0; m_localizedItemName[i] != NONEXISTANT_LOCALE; i++)
-		len = std::max(len, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getRenderWidth(g_Locale->getText(m_localizedItemName[i]), true));
+		len = std::max(len, FOOT_FONT->getRenderWidth(g_Locale->getText(m_localizedItemName[i]), true));
 	sort_text_len += len;
 
 	button_label_ext footerButtons[] = {
@@ -1796,8 +1793,42 @@ bool CMovieBrowser::onButtonPressMainFrame(neutrino_msg_t msg)
 {
 	//TRACE("[mb]->onButtonPressMainFrame: %d\n",msg);
 	bool result = true;
+	neutrino_msg_data_t data;
 
-	if (msg == CRCInput::RC_home)
+	if (msg == (neutrino_msg_t) g_settings.mbkey_copy_onefile
+	 || msg == (neutrino_msg_t) g_settings.mbkey_copy_several
+	 || msg == (neutrino_msg_t) g_settings.mbkey_cut
+	 || msg == (neutrino_msg_t) g_settings.mbkey_truncate)
+	{
+		if (msg == (neutrino_msg_t) g_settings.mbkey_copy_onefile)
+			exec(NULL, "copy_onefile");
+		else
+		if (msg == (neutrino_msg_t) g_settings.mbkey_copy_several)
+			exec(NULL, "copy_several");
+		else
+		if (msg == (neutrino_msg_t) g_settings.mbkey_cut)
+			exec(NULL, "cut");
+		else
+		if (msg == (neutrino_msg_t) g_settings.mbkey_truncate)
+			exec(NULL, "truncate");
+
+		if (m_doLoadMovies)
+			loadMovies();
+		if (m_doRefresh)
+			refresh();
+	}
+	else if (msg == (neutrino_msg_t) g_settings.mbkey_cover)
+	{
+		if (m_movieSelectionHandler != NULL) {
+			if (ShowMsg(LOCALE_MESSAGEBOX_INFO, LOCALE_MOVIEBROWSER_DELETE_SCREENSHOT, CMessageBox::mbrNo, CMessageBox:: mbYes | CMessageBox::mbNo) == CMessageBox::mbrYes) {
+				std::string fname = getScreenshotName(m_movieSelectionHandler->file.Name, S_ISDIR(m_movieSelectionHandler->file.Mode));
+				if (!fname.empty())
+					unlink(fname.c_str());
+				refresh();
+			}
+		}
+	}
+	else if (msg == CRCInput::RC_home)
 	{
 		if (m_settings.gui == MB_GUI_FILTER)
 			onSetGUIWindow(MB_GUI_MOVIE_INFO);
@@ -1806,11 +1837,13 @@ bool CMovieBrowser::onButtonPressMainFrame(neutrino_msg_t msg)
 	}
 	else if (msg == CRCInput::RC_left)
 	{
-		onSetGUIWindowPrev();
+		if (show_mode != MB_SHOW_YT)
+			onSetGUIWindowPrev();
 	}
 	else if (msg == CRCInput::RC_right)
 	{
-		onSetGUIWindowNext();
+		if (show_mode != MB_SHOW_YT)
+			onSetGUIWindowNext();
 	}
 	else if (msg == CRCInput::RC_green)
 	{
@@ -1879,48 +1912,66 @@ bool CMovieBrowser::onButtonPressMainFrame(neutrino_msg_t msg)
 		}
 
 	}
-	// just here to stay backward compatible with these horrible key assignments
-	else if (msg == CRCInput::RC_radio)
+	else if (g_settings.sms_movie && (msg >= CRCInput::RC_1) && (msg <= CRCInput::RC_9))
 	{
-		exec(NULL, "copy_onefile");
-		if (m_doLoadMovies)
-			loadMovies();
-		if (m_doRefresh)
-			refresh();
-	}
-	else if (msg == CRCInput::RC_text)
-	{
-		exec(NULL, "copy_several");
-		if (m_doLoadMovies)
-			loadMovies();
-		if (m_doRefresh)
-			refresh();
-	}
-	else if (msg == CRCInput::RC_audio)
-	{
-		exec(NULL, "cut");
-		if (m_doLoadMovies)
-			loadMovies();
-		if (m_doRefresh)
-			refresh();
-	}
-	else if (msg == CRCInput::RC_games)
-	{
-		exec(NULL, "truncate");
-		if (m_doLoadMovies)
-			loadMovies();
-		if (m_doRefresh)
-			refresh();
-	}
-	else if (msg == (neutrino_msg_t) g_settings.key_screenshot)
-	{
-		if (m_movieSelectionHandler != NULL) {
-			if (ShowMsg(LOCALE_MESSAGEBOX_INFO, LOCALE_MOVIEBROWSER_DELETE_SCREENSHOT, CMessageBox::mbrNo, CMessageBox:: mbYes | CMessageBox::mbNo) == CMessageBox::mbrYes) {
-				std::string fname = getScreenshotName(m_movieSelectionHandler->file.Name, S_ISDIR(m_movieSelectionHandler->file.Mode));
-				if (!fname.empty())
-					unlink(fname.c_str());
-				refresh();
+		unsigned char smsKey = 0;
+		SMSKeyInput smsInput;
+		smsInput.setTimeout(MOVIE_SMSKEY_TIMEOUT);
+
+		std::vector<MI_MOVIE_INFO*> *current_list = NULL;
+		CListFrame *current_frame = NULL;
+
+		if (m_windowFocus == MB_FOCUS_BROWSER)
+		{
+			current_list = &m_vHandleBrowserList;
+			current_frame = m_pcBrowser;
+		}
+		else if (m_windowFocus == MB_FOCUS_LAST_PLAY)
+		{
+			current_list = &m_vHandlePlayList;
+			current_frame = m_pcLastPlay;
+		}
+		else if (m_windowFocus == MB_FOCUS_LAST_RECORD)
+		{
+			current_list = &m_vHandleRecordList;
+			current_frame = m_pcLastRecord;
+		}
+
+		if (current_list == NULL || current_frame == NULL)
+			return result;
+
+		do {
+			smsKey = smsInput.handleMsg(msg);
+			printf("SMS new key: %c\n", smsKey);
+			g_RCInput->getMsg_ms(&msg, &data, MOVIE_SMSKEY_TIMEOUT-100);
+		} while ((msg >= CRCInput::RC_1) && (msg <= CRCInput::RC_9));
+
+		int selected = current_frame->getSelectedLine();
+		if (msg == CRCInput::RC_timeout || msg == CRCInput::RC_nokey) {
+			uint32_t i;
+			for (i = selected+1; i < (*current_list).size(); i++) {
+
+				char firstCharOfTitle = (*current_list)[i]->epgTitle.c_str()[0];
+				if (tolower(firstCharOfTitle) == smsKey) {
+					printf("SMS found selected=%d i=%d \"%s\"\n", selected, i, (*current_list)[i]->epgTitle.c_str());
+					break;
+				}
 			}
+			if (i >= (*current_list).size()) {
+				for (i = 0; i < (*current_list).size(); i++) {
+					char firstCharOfTitle = (*current_list)[i]->epgTitle.c_str()[0];
+					if (tolower(firstCharOfTitle) == smsKey) {
+						printf("SMS found selected=%d i=%d \"%s\"\n", selected, i, (*current_list)[i]->epgTitle.c_str());
+						break;
+					}
+				}
+			}
+			if (i < (*current_list).size()) {
+				current_frame->setSelectedLine(i);
+				updateMovieSelection();
+			}
+
+			smsInput.resetOldKey();
 		}
 	}
 	else

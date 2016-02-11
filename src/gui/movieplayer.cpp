@@ -1423,9 +1423,12 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			update_lcd = true;
 		} else if (msg == (neutrino_msg_t) g_settings.mpkey_time) {
 			FileTime.switchMode(position, duration);
-		} else if (/*!is_file_player &&*/ ((msg == (neutrino_msg_t) g_settings.mpkey_rewind) ||
-				(msg == (neutrino_msg_t) g_settings.mpkey_forward))) {
-
+		} else if (msg == (neutrino_msg_t) g_settings.mbkey_cover) {
+			makeScreenShot(false, true);
+		} else if (msg == (neutrino_msg_t) g_settings.key_screenshot) {
+			makeScreenShot();
+		} else if ((msg == (neutrino_msg_t) g_settings.mpkey_rewind) ||
+				(msg == (neutrino_msg_t) g_settings.mpkey_forward)) {
 			int newspeed;
 			if (msg == (neutrino_msg_t) g_settings.mpkey_rewind) {
 				newspeed = (speed >= 0) ? -1 : (speed - 1);
@@ -1563,8 +1566,6 @@ void CMoviePlayerGui::PlayFileLoop(void)
 #endif
 		} else if (msg == NeutrinoMessages::SHOW_EPG) {
 			handleMovieBrowser(NeutrinoMessages::SHOW_EPG, position);
-		} else if (msg == (neutrino_msg_t) g_settings.key_screenshot) {
-			makeScreenShot();
 		} else if (msg == NeutrinoMessages::EVT_SUBT_MESSAGE) {
 #if 0
 			showSubtitle(data);
@@ -1588,11 +1589,9 @@ void CMoviePlayerGui::PlayFileLoop(void)
 		} else if (msg == CRCInput::RC_timeout || msg == NeutrinoMessages::EVT_TIMER) {
 			if (playstate == CMoviePlayerGui::PLAY && (position >= 300000 || (duration < 300000 && (position > (duration /2)))))
 				makeScreenShot(true);
-		} else if (msg == CRCInput::RC_favorites) {
-			makeScreenShot(false, true);
 		} else if (msg == CRCInput::RC_yellow) {
 			showFileInfos();
-		} else if (msg == CRCInput::RC_sat) {
+		} else if (msg == CRCInput::RC_sat || msg == CRCInput::RC_favorites) {
 			//FIXME do nothing ?
 		} else if (msg == (neutrino_msg_t) CRCInput::RC_setup) {
 			CNeutrinoApp::getInstance()->handleMsg(NeutrinoMessages::SHOW_MAINMENU, 0);

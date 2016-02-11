@@ -4686,6 +4686,11 @@ void CNeutrinoApp::loadKeys(const char * fname)
 	g_settings.key_bouquet_up = tconfig.getInt32( "key_bouquet_up",  CRCInput::RC_right);
 	g_settings.key_bouquet_down = tconfig.getInt32( "key_bouquet_down",  CRCInput::RC_left);
 
+	g_settings.mbkey_copy_onefile = tconfig.getInt32( "mbkey.copy_onefile", CRCInput::RC_radio );
+	g_settings.mbkey_copy_several = tconfig.getInt32( "mbkey.copy_several", CRCInput::RC_text );
+	g_settings.mbkey_cut = tconfig.getInt32( "mbkey.cut", CRCInput::RC_audio );
+	g_settings.mbkey_truncate = tconfig.getInt32( "mbkey.truncate", CRCInput::RC_games );
+	g_settings.mbkey_cover = tconfig.getInt32( "mbkey.cover", CRCInput::RC_favorites );
 
 	g_settings.mpkey_rewind = tconfig.getInt32( "mpkey.rewind", CRCInput::RC_rewind );
 	g_settings.mpkey_forward = tconfig.getInt32( "mpkey.forward", CRCInput::RC_forward );
@@ -4718,6 +4723,7 @@ void CNeutrinoApp::loadKeys(const char * fname)
 
 	g_settings.bouquetlist_mode = tconfig.getInt32( "bouquetlist_mode", 0 );
 	g_settings.sms_channel = tconfig.getInt32( "sms_channel", 0 );
+	g_settings.sms_movie = tconfig.getInt32( "sms_movie", 0 );
 	g_settings.mode_left_right_key_tv = tconfig.getInt32( "mode_left_right_key_tv",  SNeutrinoSettings::ZAP);
 
 	g_settings.key_help = tconfig.getInt32( "key_help", CRCInput::RC_help );
@@ -4768,6 +4774,12 @@ void CNeutrinoApp::saveKeys(const char * fname)
 	tconfig.setInt32( "key_bouquet_up", g_settings.key_bouquet_up );
 	tconfig.setInt32( "key_bouquet_down", g_settings.key_bouquet_down );
 
+	tconfig.setInt32( "mbkey.copy_onefile", g_settings.mbkey_copy_onefile );
+	tconfig.setInt32( "mbkey.copy_several", g_settings.mbkey_copy_several );
+	tconfig.setInt32( "mbkey.cut", g_settings.mbkey_cut );
+	tconfig.setInt32( "mbkey.truncate", g_settings.mbkey_truncate );
+	tconfig.setInt32( "mbkey.cover", g_settings.mbkey_cover );
+
 	tconfig.setInt32( "mpkey.rewind", g_settings.mpkey_rewind );
 	tconfig.setInt32( "mpkey.forward", g_settings.mpkey_forward );
 	tconfig.setInt32( "mpkey.pause", g_settings.mpkey_pause );
@@ -4798,6 +4810,7 @@ void CNeutrinoApp::saveKeys(const char * fname)
 
 	tconfig.setInt32( "bouquetlist_mode", g_settings.bouquetlist_mode );
 	tconfig.setInt32( "sms_channel", g_settings.sms_channel );
+	tconfig.setInt32( "sms_movie", g_settings.sms_movie );
 	tconfig.setInt32( "mode_left_right_key_tv", g_settings.mode_left_right_key_tv );
 
 	tconfig.setInt32( "key_help", g_settings.key_help );
