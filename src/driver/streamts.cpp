@@ -195,7 +195,7 @@ void CStreamInstance::run()
 	CCamManager::getInstance()->Start(channel_id, CCamManager::STREAM);
 
 #if HAVE_DUCKBOX_HARDWARE || HAVE_SPARK_HARDWARE
-	CFrontend *fe = CFEManager::getInstance()->allocateFE(tmpchan, true);
+	CFrontend *fe = CFEManager::getInstance()->allocateFE(CServiceManager::getInstance()->FindChannel(channel_id), true);
 	CFEManager::getInstance()->lockFrontend(fe);
 	CZapit::getInstance()->SetRecordMode(true);
 #endif
