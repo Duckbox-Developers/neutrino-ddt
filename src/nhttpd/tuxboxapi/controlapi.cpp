@@ -3063,6 +3063,8 @@ void CControlAPI::ConfigCGI(CyhookHandler *hh) {
 	// Para "config" describes the config type
 	if (configFileName == "neutrino")
 		config_filename = NEUTRINO_CONFIGFILE;
+	else if (configFileName == "moviebrowser")
+		config_filename = MOVIEBROWSER_CONFIGFILE;
 	else if (configFileName == "nhttpd")
 		config_filename = HTTPD_CONFIGFILE;
 	else if (configFileName == "yweb")
