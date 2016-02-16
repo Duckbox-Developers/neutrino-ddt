@@ -1146,7 +1146,7 @@ bool CEventList::findEvents(void)
 		if(!m_search_keyword.empty()){
 			g_settings.epg_search_history.push_front(m_search_keyword);
 			std::list<std::string>::iterator it = g_settings.epg_search_history.begin();
-			it++;
+			++it;
 			while (it != g_settings.epg_search_history.end()) {
 				if (*it == m_search_keyword)
 					it = g_settings.epg_search_history.erase(it);

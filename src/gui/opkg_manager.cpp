@@ -394,7 +394,7 @@ void COPKGManager::updateMenu()
 	bool upgradesAvailable = false;
 	getPkgData(OM_LIST_INSTALLED);
 	getPkgData(OM_LIST_UPGRADEABLE);
-	for (map<string, struct pkg>::iterator it = pkg_map.begin(); it != pkg_map.end(); it++) {
+	for (map<string, struct pkg>::iterator it = pkg_map.begin(); it != pkg_map.end(); ++it) {
 		/* this should no longer trigger at all */
 		if (badpackage(it->second.name))
 			continue;
@@ -446,7 +446,7 @@ bool COPKGManager::checkUpdates(const std::string & package_name, bool show_prog
 	if (show_progress)
 		status.showStatus(75);
 
-	for (map<string, struct pkg>::iterator it = pkg_map.begin(); it != pkg_map.end(); it++){
+	for (map<string, struct pkg>::iterator it = pkg_map.begin(); it != pkg_map.end(); ++it){
 		dprintf(DEBUG_INFO,  "[COPKGManager] [%s - %d]  Update check for...%s\n", __func__, __LINE__, it->second.name.c_str());
 		if (show_progress){
 			/* showing the names only makes things *much* slower...
@@ -524,14 +524,14 @@ int COPKGManager::showMenu()
 	fw = new CMenuForwarder(LOCALE_OPKG_INSTALL_LOCAL_PACKAGE, true, NULL, this, "local_package", CRCInput::RC_green);
 	fw->setHint(NEUTRINO_ICON_HINT_SW_UPDATE, LOCALE_MENU_HINT_OPKG_INSTALL_LOCAL_PACKAGE);
 	menu->addItem(fw);
-
+#if ENABLE_OPKG_GUI_FEED_SETUP
 	//feed setup
 	CMenuWidget feeds_menu(LOCALE_OPKG_TITLE, NEUTRINO_ICON_UPDATE, w_max (100, 10));
 	showMenuConfigFeed(&feeds_menu);
 	fw = new CMenuForwarder(LOCALE_OPKG_FEED_ADDRESSES, true, NULL, &feeds_menu, NULL, CRCInput::RC_www);
 	fw->setHint(NEUTRINO_ICON_HINT_SW_UPDATE, LOCALE_MENU_HINT_OPKG_FEED_ADDRESSES_EDIT);
 	menu->addItem(fw);
-
+#endif
 	menu->addItem(GenericMenuSeparatorLine);
 
 	menu_offset = menu->getItemsCount();
@@ -541,7 +541,7 @@ int COPKGManager::showMenu()
 	menu->addKey(CRCInput::RC_yellow, this, "rc_yellow");
 
 	pkg_vec.clear();
-	for (map<string, struct pkg>::iterator it = pkg_map.begin(); it != pkg_map.end(); it++) {
+	for (map<string, struct pkg>::iterator it = pkg_map.begin(); it != pkg_map.end(); ++it) {
 		/* this should no longer trigger at all */
 		if (badpackage(it->second.name))
 			continue;
@@ -629,14 +629,14 @@ void COPKGManager::getPkgData(const int pkg_content_id)
 			if (list_installed_done)
 				return;
 			list_installed_done = true;
-			for (map<string, struct pkg>::iterator it = pkg_map.begin(); it != pkg_map.end(); it++)
+			for (map<string, struct pkg>::iterator it = pkg_map.begin(); it != pkg_map.end(); ++it)
 				it->second.installed = false;
 			break;
 		case OM_LIST_UPGRADEABLE:
 			if (list_upgradeable_done)
 				return;
 			list_upgradeable_done = true;
-			for (map<string, struct pkg>::iterator it = pkg_map.begin(); it != pkg_map.end(); it++)
+			for (map<string, struct pkg>::iterator it = pkg_map.begin(); it != pkg_map.end(); ++it)
 				it->second.upgradable = false;
 			break;
 	}
