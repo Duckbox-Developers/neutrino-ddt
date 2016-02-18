@@ -566,7 +566,7 @@ void CTextBox::refreshText(void)
 	//bg variables
 	int ax = m_cFrameTextRel.iX+m_cFrame.iX;
 	int ay = m_cFrameTextRel.iY+m_cFrame.iY;
-	int dx = m_old_cText != m_cText ? m_cFrameTextRel.iWidth : m_nMaxTextWidth;
+	int dx = m_cFrameTextRel.iWidth;
 	int dy = m_cFrameTextRel.iHeight;
 	
 	//find changes
@@ -607,7 +607,6 @@ void CTextBox::refreshText(void)
 		clearScreenBuffer();
 		if (allow_paint_bg){
 			//TRACE("[CTextBox] %s paint bg %d\r\n", __FUNCTION__, __LINE__);
-			//paint full background only on new text, otherwise paint required background
 			frameBuffer->paintBoxRel(ax, ay, dx, dy, m_textBackgroundColor, m_nBgRadius, m_nBgRadiusType);
 		}
 	}
