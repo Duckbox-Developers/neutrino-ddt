@@ -129,6 +129,8 @@ private:
 	void ConfigCGI(CyhookHandler *hh);
 	void FileCGI(CyhookHandler *hh);
 	void SignalInfoCGI(CyhookHandler *hh);
+	void getDirCGI(CyhookHandler *hh);
+	std::string getSubdirectories(CyhookHandler *hh, std::string path, std::string result);
 
 
 protected:
