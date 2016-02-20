@@ -14,6 +14,29 @@
 #include "helper.h"
 
 //=============================================================================
+// Constructor & Ceconstructor
+//=============================================================================
+CyhookHandler::CyhookHandler()
+{
+	ContentLength = 0;
+	RangeStart = 0;
+	RangeEnd = -1;
+	cached = false;
+	keep_alive = 0;
+	_outIndent = 0;
+	status = HANDLED_NONE;
+	Method = M_UNKNOWN;
+	httpStatus = HTTP_NIL;
+	outType = plain;
+	outSingle = false;
+	LastModified=0;
+}
+
+CyhookHandler::~CyhookHandler()
+{
+}
+
+//=============================================================================
 // Initialization of static variables
 //=============================================================================
 THookList CyhookHandler::HookList;
@@ -383,7 +406,8 @@ TOutType CyhookHandler::checkOutput() {
 	return outType;
 }
 //-----------------------------------------------------------------------------
-TOutType CyhookHandler::outStart() {
+TOutType CyhookHandler::outStart(bool single) {
+	outSingle = single; // for compatibility
 	// get outType
 	outType = plain; // plain
 	if (ParamList["format"] == "json")
@@ -418,7 +442,13 @@ std::string CyhookHandler::outPair(std::string _key, std::string _content, bool 
 		result += "\n";
 		break;
 	default:
-		result = _content;
+		if (outSingle)
+			result = _content;
+		else
+		{
+			result = _key + "=" + _content;
+			result += "\n";
+		}
 		break;
 	}
 	return result;
