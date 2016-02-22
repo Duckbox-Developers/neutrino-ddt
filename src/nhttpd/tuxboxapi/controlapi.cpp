@@ -2451,7 +2451,6 @@ void CControlAPI::YWeb_SendRadioStreamingPid(CyhookHandler *hh)
 }
 
 //-----------------------------------------------------------------------------
-<<<<<<< HEAD
 std::string CControlAPI::YexecuteScript(CyhookHandler *, std::string cmd)
 {
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
@@ -2511,8 +2510,6 @@ std::string CControlAPI::YexecuteScript(CyhookHandler *, std::string cmd)
 	return result;
 }
 //-------------------------------------------------------------------------
-=======
->>>>>>> a4bd8cc5a80e1e55e3f7561cab918a6b9d9c7d1a
 void CControlAPI::doModifyTimer(CyhookHandler *hh)
 {
 	hh->ParamList["update"]="1";
