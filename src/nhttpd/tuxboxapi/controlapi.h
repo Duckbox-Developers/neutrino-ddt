@@ -55,8 +55,7 @@ private:
 	void SendTimersXML(CyhookHandler *hh);
 	void epgDetailList(CyhookHandler *hh);
 	void EpgSearchXMLCGI(CyhookHandler *hh);
-	void EpgSearchTXTCGI(CyhookHandler *hh);
-	void EpgSearchCGI(CyhookHandler *hh, bool xml_format = false);
+	void EpgSearchCGI(CyhookHandler *hh);
 	// subs
 	friend class CNeutrinoWebserver; // for timer /fb/ compatibility
 	void doModifyTimer(CyhookHandler *hh);
@@ -70,7 +69,6 @@ private:
 	void YWeb_SendVideoStreamingPids(CyhookHandler *hh, int apid_no);
 	void YWeb_SendRadioStreamingPid(CyhookHandler *hh);
 	void compatibility_Timer(CyhookHandler *hh);
-	std::string YexecuteScript(CyhookHandler *hh, std::string cmd);
 
 	// CGI functions for ExecuteCGI
 	void TimerCGI(CyhookHandler *hh);
@@ -135,14 +133,15 @@ private:
 
 
 protected:
-	static const unsigned int PLUGIN_DIR_COUNT = 9;
-	static std::string PLUGIN_DIRS[PLUGIN_DIR_COUNT];
 	CNeutrinoAPI	*NeutrinoAPI;
 
 	void init(CyhookHandler *hh);
 	void Execute(CyhookHandler *hh);
 
 public:
+	static const unsigned int PLUGIN_DIR_COUNT = 9;
+	static std::string PLUGIN_DIRS[PLUGIN_DIR_COUNT];
+
 	// constructor & deconstructor
 	CControlAPI(CNeutrinoAPI *_NeutrinoAPI);
 
