@@ -13,10 +13,6 @@
 
 #include <unistd.h>
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
-#include <driver/framebuffer.h>
-#endif
-
 // yhttpd
 #include <yconfig.h>
 #include <tuxboxapi/controlapi.h>

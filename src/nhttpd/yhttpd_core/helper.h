@@ -13,6 +13,10 @@
 #include <vector>
 #include "ytypes_globals.h"
 
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#include <driver/framebuffer.h>
+#endif
+
 //-----------------------------------------------------------------------------
 int minmax(int value,int min, int max);
 void correctTime(struct tm *zt);
