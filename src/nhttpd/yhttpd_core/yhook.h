@@ -139,7 +139,7 @@ public:
 	std::string	Sendfile;		// Path & Name (local os style) of file to send
 	bool		keep_alive;
 	bool		cached;			// cached by mod_cache
-	bool		outSingle;
+	bool		nonPair;
 
 	// Input
 	CStringList 	ParamList;		// local copy of ParamList (Request)
@@ -204,10 +204,11 @@ public:
 	TOutType outStart(bool single = false);
 	TOutType getOutType();
 	std::string outIndent();
+	std::string outSingle(std::string _content);
 	std::string outPair(std::string _key, std::string _content, bool _next);
 	std::string outArray(std::string _key, std::string _content);
 	std::string outArrayItem(std::string _key, std::string _content, bool _next);
-	std::string outCollection(std::string _key,std::string  _content);
+	std::string outObject(std::string _key,std::string  _content, bool _next = false);
 	std::string outValue(std::string _content);
 	std::string outNext();
 	friend class CyParser;

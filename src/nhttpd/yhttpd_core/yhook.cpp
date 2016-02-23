@@ -28,7 +28,7 @@ CyhookHandler::CyhookHandler()
 	Method = M_UNKNOWN;
 	httpStatus = HTTP_NIL;
 	outType = plain;
-	outSingle = false;
+	nonPair = false;
 	LastModified=0;
 }
 
@@ -407,7 +407,7 @@ TOutType CyhookHandler::getOutType() {
 //-----------------------------------------------------------------------------
 TOutType CyhookHandler::outStart(bool single) {
 	// for compatibility
-	outSingle = single;
+	nonPair = single;
 	// get outType
 	outType = getOutType();
 	// set response header
@@ -425,6 +425,11 @@ std::string CyhookHandler::outIndent() {
 }
 
 //-----------------------------------------------------------------------------
+std::string CyhookHandler::outSingle(std::string _content) {
+	return _content + "\n";
+}
+
+//-----------------------------------------------------------------------------
 std::string CyhookHandler::outPair(std::string _key, std::string _content, bool _next) {
 	std::string result = "";
 	switch (outType) {
@@ -437,7 +442,7 @@ std::string CyhookHandler::outPair(std::string _key, std::string _content, bool 
 			result += ",";
 		break;
 	default:
-		if (outSingle)
+		if (nonPair)
 			result = _content;
 		else
 			result = _key + "=" + _content;
@@ -490,7 +495,7 @@ std::string CyhookHandler::outArrayItem(std::string _key, std::string _content, 
 	return result;
 }
 //-----------------------------------------------------------------------------
-std::string CyhookHandler::outCollection(std::string _key, std::string _content) {
+std::string CyhookHandler::outObject(std::string _key, std::string _content, bool _next) {
 	std::string result = "";
 	switch (outType) {
 	case xml:
@@ -501,6 +506,8 @@ std::string CyhookHandler::outCollection(std::string _key, std::string _content)
 	case json:
 		//TODO: json check
 		result = outIndent() + "\"" + _key + "\": {" + _content + "}";
+		if(_next)
+			result += ",";
 		result += "\n";
 		break;
 	default:
