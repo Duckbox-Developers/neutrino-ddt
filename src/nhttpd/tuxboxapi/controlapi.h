@@ -19,6 +19,7 @@ class CControlAPI : public Cyhook
 private:
 	// Dispatcher Array
 	typedef void (CControlAPI::*TyFunc)(CyhookHandler *hh);
+	std::string func_req;
 	typedef struct
 	{
 		const char *func_name;
@@ -51,8 +52,8 @@ private:
 	void SendBouquets(CyhookHandler *hh);
 	void SendBouquet(CyhookHandler *hh,int BouquetNr);
 	void SendChannelList(CyhookHandler *hh,  bool currentTP = false);
+	void SendTimersPlain(CyhookHandler *hh);
 	void SendTimers(CyhookHandler *hh);
-	void SendTimersXML(CyhookHandler *hh);
 	void epgDetailList(CyhookHandler *hh);
 	void EpgSearchXMLCGI(CyhookHandler *hh);
 	void EpgSearchCGI(CyhookHandler *hh);
@@ -60,8 +61,8 @@ private:
 	friend class CNeutrinoWebserver; // for timer /fb/ compatibility
 	void doModifyTimer(CyhookHandler *hh);
 	void doNewTimer(CyhookHandler *hh);
-	void _SendTime(CyhookHandler *hh, struct tm *Time, int digits);
-	std::string _GetBouquetWriteItem(CyhookHandler *hh, CZapitChannel * channel, int bouquetNr, int nr);
+	std::string _SendTime(CyhookHandler *hh, struct tm *Time, int digits);
+	std::string _GetBouquetWriteItem(CyhookHandler *hh, CZapitChannel * channel, int bouquetNr, int channelNr);
 	std::string channelEPGformated(CyhookHandler *hh, int bouquetnr, t_channel_id channel_id, int max, long stoptime);
 	std::string _GetBouquetActualEPGItem(CyhookHandler *hh, CZapitChannel * channel);
 
@@ -83,7 +84,7 @@ private:
 	void GetServicesxmlCGI(CyhookHandler *hh);
 	void GetBouquetsxmlCGI(CyhookHandler *hh);
 	void GetUBouquetsxmlCGI(CyhookHandler *hh);
-	void GetChannel_IDCGI(CyhookHandler *hh);
+	void GetChannelIDCGI(CyhookHandler *hh);
 	void GetTPChannel_IDCGI(CyhookHandler *hh);
 	void MessageCGI(CyhookHandler *hh);
 	void InfoCGI(CyhookHandler *hh);
@@ -93,6 +94,7 @@ private:
 	void ChannellistCGI(CyhookHandler *hh);
 	void LogolistCGI(CyhookHandler *hh);
 	void GetBouquetCGI(CyhookHandler *hh);
+	void GetChannelCGI(CyhookHandler *hh);
 	void GetBouquetsCGI(CyhookHandler *hh);
 	void EpgCGI(CyhookHandler *hh);
 	void VersionCGI(CyhookHandler *hh);
