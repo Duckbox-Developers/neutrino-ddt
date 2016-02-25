@@ -3138,7 +3138,7 @@ void CControlAPI::build_playlist(CyhookHandler *hh)
 		t_channel_id channel_id;
 		sscanf(hh->ParamList["id"].c_str(), SCANF_CHANNEL_ID_TYPE, &channel_id);
 		std::string chan_name = NeutrinoAPI->Zapit->getChannelName(channel_id);
-		std::string illegalChars = "\\/:?\"<>| ";
+		std::string illegalChars = "\\/:?\"<>|+ ";
 		std::string::iterator it;
 		for (it = chan_name.begin() ; it < chan_name.end() ; ++it){
 		    bool found = illegalChars.find(*it) != string::npos;

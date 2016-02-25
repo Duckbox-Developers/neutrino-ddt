@@ -80,6 +80,7 @@ CStreamInstance::CStreamInstance(int clientfd, t_channel_id chid, stream_pids_t 
 	running = false;
 	dmx = NULL;
 	buf = NULL;
+	frontend = NULL;
 }
 
 CStreamInstance::~CStreamInstance()
@@ -195,9 +196,12 @@ void CStreamInstance::run()
 	CCamManager::getInstance()->Start(channel_id, CCamManager::STREAM);
 
 #if HAVE_DUCKBOX_HARDWARE || HAVE_SPARK_HARDWARE
-	CFrontend *fe = CFEManager::getInstance()->allocateFE(CServiceManager::getInstance()->FindChannel(channel_id), true);
-	CFEManager::getInstance()->lockFrontend(fe);
-	CZapit::getInstance()->SetRecordMode(true);
+	CFrontend *live_fe = CZapit::getInstance()->GetLiveFrontend();
+	if(live_fe)
+		CFEManager::getInstance()->unlockFrontend(live_fe);
+	if(frontend)
+		CFEManager::getInstance()->lockFrontend(frontend);
+	//CZapit::getInstance()->SetRecordMode(true);
 #endif
 	while (running) {
 		ssize_t r = dmx->Read(buf, IN_SIZE, 100);
@@ -205,12 +209,13 @@ void CStreamInstance::run()
 			Send(r);
 	}
 
+#if HAVE_DUCKBOX_HARDWARE || HAVE_SPARK_HARDWARE
+	if(frontend)
+		CFEManager::getInstance()->unlockFrontend(frontend);
+	//CZapit::getInstance()->SetRecordMode(false);
+#endif
 	CCamManager::getInstance()->Stop(channel_id, CCamManager::STREAM);
 
-#if HAVE_DUCKBOX_HARDWARE || HAVE_SPARK_HARDWARE
-	CFEManager::getInstance()->unlockFrontend(fe);
-	CZapit::getInstance()->SetRecordMode(false);
-#endif
 	printf("CStreamInstance::run: exiting %" PRIx64 " (%d fds)\n", channel_id, (int)fds.size());
 
 	Close();
@@ -356,7 +361,11 @@ CFrontend * CStreamManager::FindFrontend(CZapitChannel * channel)
 	for (std::set<CFrontend*>::iterator ft = frontends.begin(); ft != frontends.end(); ++ft)
 		CFEManager::getInstance()->unlockFrontend(*ft);
 
+#if HAVE_DUCKBOX_HARDWARE || HAVE_SPARK_HARDWARE
+	if (unlock && !frontend)
+#else
 	if (unlock)
+#endif
 		CFEManager::getInstance()->unlockFrontend(live_fe);
 
 	CFEManager::getInstance()->Unlock();
