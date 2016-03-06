@@ -54,7 +54,7 @@
 #include <system/debug.h>
 #include <video.h>
 extern cVideo * videoDecoder;
-extern CInfoClock *InfoClock;
+
 
 CMediaPlayerMenu::CMediaPlayerMenu()
 {
@@ -109,7 +109,7 @@ int CMediaPlayerMenu::exec(CMenuTarget* parent, const std::string &actionKey)
 	else if (actionKey == "movieplayer")
 	{
 		audiomute->enableMuteIcon(false);
-		InfoClock->enableInfoClock(false);
+		CInfoClock::getInstance()->enableInfoClock(false);
 		int mode = CNeutrinoApp::getInstance()->getMode();
 		if( mode == NeutrinoMessages::mode_radio )
 			CFrameBuffer::getInstance()->stopFrame();
@@ -117,7 +117,7 @@ int CMediaPlayerMenu::exec(CMenuTarget* parent, const std::string &actionKey)
 		if( mode == NeutrinoMessages::mode_radio )
 			CFrameBuffer::getInstance()->showFrame("radiomode.jpg");
 		audiomute->enableMuteIcon(true);
-		InfoClock->enableInfoClock(true);
+		CInfoClock::getInstance()->enableInfoClock(true);
 		return res;
 	}
 	
@@ -153,20 +153,20 @@ int CMediaPlayerMenu::initMenuMedia(CMenuWidget *m, CPersonalizeGui *p)
 	CMenuForwarder *fw_upnp = NULL;
 #endif
 
+	bool enabled = !CMoviePlayerGui::getInstance().Playing();
 	if (usage_mode != MODE_VIDEO)
 	{
 		//audio player
 		neutrino_msg_t audio_rc = usage_mode == MODE_AUDIO ? CRCInput::RC_audio : CRCInput::RC_red;
-		fw_audio = new CMenuForwarder(LOCALE_MAINMENU_AUDIOPLAYER, true, NULL, this, "audioplayer", audio_rc);
+		fw_audio = new CMenuForwarder(LOCALE_MAINMENU_AUDIOPLAYER, enabled, NULL, this, "audioplayer", audio_rc);
 		fw_audio->setHint(NEUTRINO_ICON_HINT_APLAY, LOCALE_MENU_HINT_APLAY);
 
 		//internet player
 		neutrino_msg_t inet_rc = usage_mode == MODE_AUDIO ? CRCInput::RC_www : CRCInput::RC_green;
-		fw_inet = new CMenuForwarder(LOCALE_INETRADIO_NAME, true, NULL, this, "inetplayer", inet_rc);
+		fw_inet = new CMenuForwarder(LOCALE_INETRADIO_NAME, enabled, NULL, this, "inetplayer", inet_rc);
 		fw_inet->setHint(NEUTRINO_ICON_HINT_INET_RADIO, LOCALE_MENU_HINT_INET_RADIO);
 	}
 
-	bool enabled = !CMoviePlayerGui::getInstance().Playing();
 	if (usage_mode == MODE_DEFAULT)
 	{
 		//pictureviewer

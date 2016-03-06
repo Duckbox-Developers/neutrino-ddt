@@ -109,6 +109,15 @@ GENRE.TRAVEL_HOBBIES.6 Einkauf
 GENRE.TRAVEL_HOBBIES.7 Garten
 GENRE.UNKNOWN Unbekannt
 adzap Werbezapper
+adzap.announce In %d Sekunden wird umgeschaltet auf\n%s
+adzap.cancel Deaktiviert
+adzap.disable Aus
+adzap.enable Ein (einmalig)
+adzap.minute Minute
+adzap.minutes Minuten
+adzap.monitor Ein (dauerhaft)
+adzap.switchback Zurückschalten nach
+adzap.writedata Schreibe Status-Daten
 apidselector.head Sprachauswahl
 audio.srs_algo Art
 audio.srs_algo_heavy stark
@@ -931,6 +940,10 @@ ledcontroler.off LED1 & LED2 aus
 ledcontroler.on.all LED1 & LED2 an
 ledcontroler.on.led1 LED1 an
 ledcontroler.on.led2 LED2 an
+livestream.head Livestreams
+livestream.read_data Lese Daten...
+livestream.resolution Auflösung
+livestream.scriptpath Script Verzeichnis
 lua.boolparam_deprecated1 Achtung!
 lua.boolparam_deprecated2 Die Verwendung von Zahl oder String
 lua.boolparam_deprecated3 für einen Boolean Parameter ist veraltet.\n                      Bitte nutzen Sie native Bool Werte zB:
@@ -989,6 +1002,10 @@ menu.back Zurück
 menu.cancel Abbrechen
 menu.hint_a_pic Konfigurieren Sie den Audioplayer, den Bildbetrachter, den Movieplayer und mehr
 menu.hint_accept_other_remotes Deaktivieren um andere Fernbedienungen zu ignorieren
+menu.hint_adzap Der Werbezapper schaltet nach der eingestellten Zeit wieder auf den ursprünglichen Kanal zurück
+menu.hint_adzap_active Der Werbezapper ist aktiv. Mit einem erneuten Aufruf wird er deaktiviert.
+menu.hint_adzap_setup Einstellungen für den Werbezapper
+menu.hint_adzap_writedata Schreibe Daten über den Status des Werbezappers nach /tmp/adzap.data
 menu.hint_aplay Audioplayer
 menu.hint_aplay_setup Ändern Sie Audioplayer-Einstellungen wie Titel-Anzeige, Startverzeichnis oder Bildschirmschoner.
 menu.hint_audio Audio-Ausgang, Dolby Digital und SRS TruVolume Optionen und mehr
@@ -1847,9 +1864,9 @@ movieplayer.bookmarkname Bookmark Name
 movieplayer.bookmarkname_hint1 Geben Sie den Namen für das neue Lesezeichen ein
 movieplayer.bookmarkname_hint2 
 movieplayer.chapters Kapitel
-movieplayer.plugin Movieplayer-Plugin
 movieplayer.fileplayback Abspielen (Multiformat)
 movieplayer.head Movieplayer
+movieplayer.plugin Movieplayer-Plugin
 movieplayer.starting Wiedergabe starten...
 movieplayer.titles Titel
 movieplayer.toomanybookmarks Sie haben bereits zu viele Lesezeichen angelegt.\nEs muß erst ein anderes gelöscht werden.
@@ -2433,6 +2450,7 @@ timing.infobar_radio Infobar (Radiobetrieb)
 timing.menu Menü
 timing.numericzap Umschalten mit Zifferntasten
 timing.volumebar Lautstärkeanzeige
+tmdb.read_data Suche TMDB Daten...
 unicable.lnb Unicable Eingang
 unicable.qrg Unicable Frequenz
 unicable.scr Unicable SCR
@@ -2451,6 +2469,7 @@ usermenu.button_green Benutzermenü 'grün'
 usermenu.button_red Benutzermenü 'rot'
 usermenu.button_yellow Benutzermenü 'gelb'
 usermenu.head Benutzermenü
+usermenu.item_adzap Werbezapper
 usermenu.item_bar ---- Trennung ----
 usermenu.item_epg_misc EPG Funktionen
 usermenu.item_none (frei)
@@ -2466,7 +2485,7 @@ usermenu.name Name
 usermenu.title_blue Erweiterungen
 usermenu.title_green Tonwahl
 usermenu.title_red EPG
-usermenu.title_yellow Bildregie
+usermenu.title_yellow Bildoptionen
 video_mode_ok Video-Einstellungen OK?
 videomenu.43mode 4:3 Anzeigeverhalten
 videomenu.analog_auto AUTO

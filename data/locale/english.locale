@@ -109,6 +109,15 @@ GENRE.TRAVEL_HOBBIES.6 advertisement/shopping
 GENRE.TRAVEL_HOBBIES.7 gardening
 GENRE.UNKNOWN unknown
 adzap AdZap
+adzap.announce In %d seconds, the channel will be switched to\n%s
+adzap.cancel Timer was cancelled
+adzap.disable Off
+adzap.enable On (once)
+adzap.minute minute
+adzap.minutes minutes
+adzap.monitor On (durable)
+adzap.switchback Switch back after
+adzap.writedata Write status data
 apidselector.head Select language
 audio.srs_algo Type
 audio.srs_algo_heavy Heavy
@@ -931,6 +940,10 @@ ledcontroler.off Led1 & Led2 off
 ledcontroler.on.all Led1 & Led2 on
 ledcontroler.on.led1 Led1 on
 ledcontroler.on.led2 Led2 on
+livestream.head Live streams
+livestream.read_data Read data...
+livestream.resolution Resolution
+livestream.scriptpath Script path
 lua.boolparam_deprecated1 Caution!
 lua.boolparam_deprecated2 The use of number or string
 lua.boolparam_deprecated3 for a Boolean parameter is deprecated.\n                      Please use native bool values eg.
@@ -989,6 +1002,10 @@ menu.back Back
 menu.cancel Cancel
 menu.hint_a_pic Configure audio player, picture viewer, movie player and more
 menu.hint_accept_other_remotes Disable to ignore other remote controls
+menu.hint_adzap AdZap will switch back to the current channel when the selected time is up
+menu.hint_adzap_active AdZap is active. With a new call it will be deactivated.
+menu.hint_adzap_setup Settings for the AdZap service
+menu.hint_adzap_writedata Write data according to adzap status to /tmp/adzap.data
 menu.hint_aplay Audio player
 menu.hint_aplay_setup Change title display, start directory, screen saver and more
 menu.hint_audio Audio output, DD\nSRS True volume options
@@ -1847,9 +1864,9 @@ movieplayer.bookmarkname Bookmarkname
 movieplayer.bookmarkname_hint1 Enter a name for your new bookmark
 movieplayer.bookmarkname_hint2 
 movieplayer.chapters Chapters
-movieplayer.plugin Movieplayer plugin
 movieplayer.fileplayback File play
 movieplayer.head Movieplayer
+movieplayer.plugin Movieplayer plugin
 movieplayer.starting Starting playback...
 movieplayer.titles Titles
 movieplayer.toomanybookmarks There are too many bookmarks.\nYou need to delete one of them first.
@@ -2433,6 +2450,7 @@ timing.infobar_radio Infobar (radio mode)
 timing.menu Menu
 timing.numericzap Numeric Zap
 timing.volumebar Volume bar
+tmdb.read_data Search TMDB Data...
 unicable.lnb Unicable Input
 unicable.qrg Unicable Frequency
 unicable.scr Unicable SCR
@@ -2451,6 +2469,7 @@ usermenu.button_green User menu green
 usermenu.button_red User menu red
 usermenu.button_yellow User menu yellow
 usermenu.head User menu
+usermenu.item_adzap Adzap
 usermenu.item_bar ---- Border ----
 usermenu.item_epg_misc EPG functions
 usermenu.item_none (empty)
@@ -2466,7 +2485,7 @@ usermenu.name Name
 usermenu.title_blue Features
 usermenu.title_green Audio
 usermenu.title_red Event-List
-usermenu.title_yellow Subservices
+usermenu.title_yellow Video
 video_mode_ok Is this video mode working ok ?
 videomenu.43mode 4:3 Content mode
 videomenu.analog_auto AUTO

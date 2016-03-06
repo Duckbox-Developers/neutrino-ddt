@@ -86,6 +86,18 @@ class CMoviePlayerGui : public CMenuTarget
 	enum repeat_mode_enum { REPEAT_OFF = 0, REPEAT_TRACK = 1, REPEAT_ALL = 2 };
 
  private:
+	typedef struct livestream_info_t
+	{
+		std::string url;
+		std::string name;
+		std::string resolution;
+		int res1;
+		int bandwidth;
+	} livestream_info_struct_t;
+
+	std::string livestreamInfo1;
+	std::string livestreamInfo2;
+
 	CFrameBuffer * frameBuffer;
 	int            m_LastMode;	
 
@@ -189,6 +201,7 @@ class CMoviePlayerGui : public CMenuTarget
 	std::string Path_local;
 	int menu_ret;
 	bool autoshot_done;
+	//std::vector<livestream_info_t> liveStreamList;
 
 	/* playback from bookmark */
 	static CBookmarkManager * bookmarkmanager;
@@ -241,6 +254,9 @@ class CMoviePlayerGui : public CMenuTarget
 	void EnableClockAndMute(bool enable);
 	static void *ShowStartHint(void *arg);
 	static void* bgPlayThread(void *arg);
+	static bool sortStreamList(livestream_info_t info1, livestream_info_t info2);
+	bool selectLivestream(std::vector<livestream_info_t> &streamList, int res, livestream_info_t* info);
+	bool luaGetUrl(const std::string &script, const std::string &file, std::vector<livestream_info_t> &streamList);
 
 	CMoviePlayerGui(const CMoviePlayerGui&) {};
 	CMoviePlayerGui();
@@ -274,7 +290,7 @@ class CMoviePlayerGui : public CMenuTarget
 	int getCurrentSubPid(CZapitAbsSub::ZapitSubtitleType st);
 	void setCurrentTTXSub(const char *s) { currentttxsub = s; }
 	t_channel_id getChannelId(void);
-	bool PlayBackgroundStart(const std::string &file, const std::string &name, t_channel_id chan);
+	bool PlayBackgroundStart(const std::string &file, const std::string &name, t_channel_id chan, const std::string &script="");
 	void stopPlayBack(void);
 	void StopSubtitles(bool enable_glcd_mirroring);
 	void StartSubtitles(bool show = true);
@@ -295,6 +311,8 @@ class CMoviePlayerGui : public CMenuTarget
 	void setBlockedFromPlugin(bool b) { blockedFromPlugin = b; };
 	bool getBlockedFromPlugin() { return blockedFromPlugin; };
 	void setLuaInfoFunc(lua_State* L, bool func) { luaState = L; haveLuaInfoFunc = func; };
+	void getLivestreamInfo(std::string *i1, std::string *i2) { *i1=livestreamInfo1; *i2=livestreamInfo2; };
+	bool getLiveUrl(const t_channel_id chan, const std::string &url, const std::string &script, std::string &realUrl, std::string &_pretty_name, std::string &info1, std::string &info2);
 };
 
 #endif

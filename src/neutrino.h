@@ -127,6 +127,8 @@ private:
 	void InitZapitClient();
 	void InitSectiondClient();
 
+	void migrateConfig(const char *fname);
+
 	//menues
 	void InitMenu();
  	void InitMenuMain();
@@ -161,6 +163,7 @@ public:
 
 	void saveSetup(const char * fname);
 	int loadSetup(const char * fname);
+	void upgradeSetup(const char * fname);
 	void loadKeys(const char * fname = NULL);
 	void saveKeys(const char * fname = NULL);
 	void SetupTiming();
@@ -245,6 +248,7 @@ public:
 	void screensaver(bool);
 	//signal/event handler before restart of neutrino gui
 	sigc::signal<bool> OnBeforeRestart;
+	sigc::signal<void> OnAfterSetupFonts;
 	void channelRezap();
 };
 #endif

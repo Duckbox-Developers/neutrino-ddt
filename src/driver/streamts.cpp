@@ -56,7 +56,10 @@
 #include <driver/streamts.h>
 #include <driver/record.h>
 #include <driver/genpsi.h>
+#include <gui/movieplayer.h>
+
 #include <system/set_threadname.h>
+
 #include <cs_api.h>
 
 /* experimental mode:
@@ -784,6 +787,12 @@ bool CStreamStream::Open()
 
 	if (url.empty())
 		return false;
+
+	std::string pretty_name, livestreamInfo1, livestreamInfo2;
+	if (!CMoviePlayerGui::getInstance(true).getLiveUrl(channel->getChannelID(), channel->getUrl(), channel->getScriptName(), url, pretty_name, livestreamInfo1, livestreamInfo2)) {
+		printf("%s: getLiveUrl() [%s] failed!\n", __FUNCTION__, url.c_str());
+		return false;
+	}
 
 	//av_log_set_level(AV_LOG_VERBOSE);
 	av_register_all();

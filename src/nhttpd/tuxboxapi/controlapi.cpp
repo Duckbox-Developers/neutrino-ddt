@@ -358,8 +358,8 @@ void CControlAPI::SetModeCGI(CyhookHandler *hh)
 		if (hh->ParamList["1"] == "radio")	// switch to radio mode
 		{
 			if(CNeutrinoApp::getInstance()->getMode() != NeutrinoMessages::mode_standby){
-				int mode = NeutrinoMessages::mode_radio;
-				NeutrinoAPI->EventServer->sendEvent(NeutrinoMessages::CHANGEMODE, CEventServer::INITID_HTTPD, (void *)&mode,sizeof(int));
+				neutrino_msg_data_t mode = NeutrinoMessages::mode_radio;
+				NeutrinoAPI->EventServer->sendEvent(NeutrinoMessages::CHANGEMODE, CEventServer::INITID_HTTPD, (void *)&mode,sizeof(neutrino_msg_data_t));
 				sleep(1);
 				NeutrinoAPI->UpdateBouquets();
 			}else{
@@ -370,8 +370,8 @@ void CControlAPI::SetModeCGI(CyhookHandler *hh)
 		else if (hh->ParamList["1"] == "tv")	// switch to tv mode
 		{
 			if(CNeutrinoApp::getInstance()->getMode() != NeutrinoMessages::mode_standby){
-				int mode = NeutrinoMessages::mode_tv;
-				NeutrinoAPI->EventServer->sendEvent(NeutrinoMessages::CHANGEMODE, CEventServer::INITID_HTTPD, (void *)&mode,sizeof(int));
+				neutrino_msg_data_t mode = NeutrinoMessages::mode_tv;
+				NeutrinoAPI->EventServer->sendEvent(NeutrinoMessages::CHANGEMODE, CEventServer::INITID_HTTPD, (void *)&mode,sizeof(neutrino_msg_data_t));
 				sleep(1);
 				NeutrinoAPI->UpdateBouquets();
 			}else{
@@ -381,17 +381,27 @@ void CControlAPI::SetModeCGI(CyhookHandler *hh)
 		}
 		else if (hh->ParamList["record"] == "start")	// start record mode
 		{
+#if 0
 			if(hh->ParamList["stopplayback"] == "true")
 				NeutrinoAPI->Zapit->stopPlayBack();
 			NeutrinoAPI->Sectionsd->setPauseScanning(true);
 			NeutrinoAPI->Zapit->setRecordMode(true);
+#endif
+			CTimerd::RecordingInfo recinfo;
+			recinfo.eventID = 0;
+			NeutrinoAPI->EventServer->sendEvent(NeutrinoMessages::RECORD_START, CEventServer::INITID_HTTPD, (void *)&recinfo, sizeof(CTimerd::RecordingInfo));
 		}
 		else if (hh->ParamList["record"] == "stop")	// stop record mode
 		{
+#if 0
 			NeutrinoAPI->Zapit->setRecordMode(false);
 			NeutrinoAPI->Sectionsd->setPauseScanning(false);
 			if (!NeutrinoAPI->Zapit->isPlayBackActive())
 				NeutrinoAPI->Zapit->startPlayBack();
+#endif
+			CTimerd::RecordingInfo recinfo;
+			recinfo.eventID = 0; // FIXME must present
+			NeutrinoAPI->EventServer->sendEvent(NeutrinoMessages::RECORD_STOP, CEventServer::INITID_HTTPD, (void *)&recinfo, sizeof(CTimerd::RecordingInfo));
 		}
 		hh->SendOk();
 	}
@@ -403,36 +413,56 @@ void CControlAPI::SetModeCGI(CyhookHandler *hh)
 void CControlAPI::GetModeCGI(CyhookHandler *hh)
 {
 	hh->outStart();
-
 	std::string result = "";
-	int mode = CNeutrinoApp::getInstance()->getMode();
-	if (mode == NeutrinoMessages::mode_tv)
-		result = "tv";
-	else if (mode == NeutrinoMessages::mode_radio)
-		result = "radio";
-	else if (mode == NeutrinoMessages::mode_scart)
-		result = "scart";
-	else if (mode == NeutrinoMessages::mode_standby)
-		result = "standby";
-	else if (mode == NeutrinoMessages::mode_audio)
-		result = "audio";
-	else if (mode == NeutrinoMessages::mode_pic)
-		result = "pic";
-	else if (mode == NeutrinoMessages::mode_ts)
-		result = "ts";
-	else if (mode == NeutrinoMessages::mode_webtv)
-		result = "webtv";
-	else if (mode == NeutrinoMessages::mode_upnp)
-		result = "upnp";
-	else
-		result = "unknown";
+	std::string key = "mode";
 
-	if (hh->getOutType() != plain)
+	if (hh->ParamList_exist("channelsmode") && hh->ParamList["channelsmode"] != "false")
 	{
-		result = hh->outPair("mode", result, false);
-		result = hh->outObject("getmode", result);
+		key = "channelsmode";
+		int mode = NeutrinoAPI->Zapit->getMode();
+		if (mode == CZapitClient::MODE_TV)
+			result = "tv";
+		else if (mode == CZapitClient::MODE_RADIO)
+			result = "radio";
+		else
+			result = "unknown";
 	}
-	hh->SendResult(result);
+	else
+	{
+		int mode = CNeutrinoApp::getInstance()->getMode();
+		if (mode == NeutrinoMessages::mode_tv)
+			result = "tv";
+		else if (mode == NeutrinoMessages::mode_radio)
+			result = "radio";
+		else if (mode == NeutrinoMessages::mode_scart)
+			result = "scart";
+		else if (mode == NeutrinoMessages::mode_standby)
+			result = "standby";
+		else if (mode == NeutrinoMessages::mode_audio)
+			result = "audio";
+		else if (mode == NeutrinoMessages::mode_pic)
+			result = "pic";
+		else if (mode == NeutrinoMessages::mode_ts)
+			result = "ts";
+		else if (mode == NeutrinoMessages::mode_webtv)
+			result = "webtv";
+		else if (mode == NeutrinoMessages::mode_upnp)
+			result = "upnp";
+		else
+			result = "unknown";
+	}
+
+	if (!result.empty())
+	{
+		if (hh->getOutType() != plain)
+		{
+			result = hh->outPair(key, result, false);
+			result = hh->outObject("getmode", result);
+		}
+		hh->SendResult(result);
+	}
+	else
+		hh->SendError();
 }
 
 //-----------------------------------------------------------------------------
@@ -1480,14 +1510,8 @@ std::string CControlAPI::channelEPGformated(CyhookHandler *hh, int bouquetnr, t_
 		if (hh->outType == plain)
 			prog += hh->outSingle("");
 
-		prog += hh->outPair("description", hh->outValue(eventIterator->description), true);
-		if (!(hh->ParamList["details"].empty())) {
-			CShortEPGData epg;
-			if (CEitManager::getInstance()->getEPGidShort(eventIterator->eventID, &epg)) {
-				prog += hh->outPair("info1", hh->outValue(epg.info1), true);
-				prog += hh->outPair("info2", hh->outValue(epg.info2), true);
-			}
-		}
+		prog += hh->outPair("bouquetnr", string_printf("%d", bouquetnr), true);
+		prog += hh->outPair("channel_id", string_printf(PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS, channel_id), true);
 		prog += hh->outPair("eventid", string_printf("%llu", eventIterator->eventID), true);
 		prog += hh->outPair("eventid_hex", string_printf("%llx", eventIterator->eventID), true);
 		prog += hh->outPair("start_sec", string_printf("%ld", eventIterator->startTime), true);
@@ -1503,7 +1527,16 @@ std::string CControlAPI::channelEPGformated(CyhookHandler *hh, int bouquetnr, t_
 		mtime = localtime(&_stoptime);
 		strftime(zbuffer, 20, "%H:%M", mtime);
 		prog += hh->outPair("stop_t", std::string(zbuffer), true);
-		prog += hh->outPair("duration_min", string_printf("%d", (int) (eventIterator->duration / 60)), false);
+		prog += hh->outPair("duration_min", string_printf("%d", (int) (eventIterator->duration / 60)), true);
+
+		if (!(hh->ParamList["details"].empty())) {
+			CShortEPGData epg;
+			if (CEitManager::getInstance()->getEPGidShort(eventIterator->eventID, &epg)) {
+				prog += hh->outPair("info1", hh->outValue(epg.info1), true);
+				prog += hh->outPair("info2", hh->outValue(epg.info2), true);
+			}
+		}
+		prog += hh->outPair("description", hh->outValue(eventIterator->description), false);
 
 		if(isFirstLine)
 			isFirstLine = false;
@@ -2456,7 +2489,7 @@ void CControlAPI::SendTimers(CyhookHandler *hh)
 		repeat += hh->outPair("text", zRep, true);
 		repeat += hh->outPair("weekdays", weekdays, false);
 
-		timer_item += hh->outObject("repeat", repeat, true);
+		timer_item += hh->outObject("repeat", repeat, false);
 
 		// channel infos
 		std::string channel_name = NeutrinoAPI->GetServiceName(timer->channel_id);
@@ -2484,6 +2517,7 @@ void CControlAPI::SendTimers(CyhookHandler *hh)
 #endif
 
 		case CTimerd::TIMER_ZAPTO : {
+			timer_item += hh->outNext();
 			timer_item += hh->outPair("channel_id", string_printf(PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS, timer->channel_id), true);
 			timer_item += hh->outPair("channel_name", channel_name, true);
 			timer_item += hh->outPair("title", title, false);
@@ -2491,6 +2525,7 @@ void CControlAPI::SendTimers(CyhookHandler *hh)
 		break;
 
 		case CTimerd::TIMER_RECORD : {
+			timer_item += hh->outNext();
 			timer_item += hh->outPair("channel_id", string_printf(PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS, timer->channel_id), true);
 			timer_item += hh->outPair("channel_name", channel_name, true);
 			timer_item += hh->outPair("title", title, true);
@@ -2526,6 +2561,7 @@ void CControlAPI::SendTimers(CyhookHandler *hh)
 		break;
 
 		case CTimerd::TIMER_STANDBY : {
+			timer_item += hh->outNext();
 			timer_item += hh->outPair("status", (timer->standby_on) ? "on" : "off", false);
 		}
 		break;
@@ -2533,11 +2569,13 @@ void CControlAPI::SendTimers(CyhookHandler *hh)
 		case CTimerd::TIMER_REMIND : {
 			std::string _message;
 			_message = std::string(timer->message).substr(0,20);
+			timer_item += hh->outNext();
 			timer_item += hh->outPair("message", _message, false);
 		}
 		break;
 
 		case CTimerd::TIMER_EXEC_PLUGIN : {
+			timer_item += hh->outNext();
 			timer_item += hh->outPair("plugin", timer->pluginName, false);
 		}
 		break;

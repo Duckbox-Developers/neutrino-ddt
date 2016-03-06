@@ -69,19 +69,24 @@
 #include <mymenu.h>
 
 #include <gui/widget/icons.h>
+#include <gui/adzap.h>
 #include <gui/network_setup.h>
 #include <gui/update_menue.h>
 #include <gui/hdd_menu.h>
+#include <gui/webtv_setup.h>
 
 #include <driver/radiotext.h>
 #include <driver/record.h>
 #include <driver/screen_max.h>
 
 #include <system/helpers.h>
+#include <zapit/zapit.h>
+#include <video.h>
 
 #include <daemonc/remotecontrol.h>
 extern CRemoteControl * g_RemoteControl;	/* neutrino.cpp */
 extern CPlugins * g_PluginList;			/* neutrino.cpp */
+extern cVideo * videoDecoder;
 #if !HAVE_SPARK_HARDWARE
 extern CCAMMenuHandler * g_CamHandler;
 #endif
@@ -179,7 +184,11 @@ bool CUserMenu::showUserMenu(neutrino_msg_t msg)
 	else
 		menu->addItem(GenericMenuSeparator);
 
-	bool _mode_ts = CNeutrinoApp::getInstance()->getMode() == NeutrinoMessages::mode_ts;
+	bool _mode_ts    = CNeutrinoApp::getInstance()->getMode() == NeutrinoMessages::mode_ts;
+	bool _mode_webtv = (CNeutrinoApp::getInstance()->getMode() == NeutrinoMessages::mode_webtv) &&
+				(!CZapit::getInstance()->GetCurrentChannel()->getScriptName().empty());
+
+	bool adzap_active = CAdZapMenu::getInstance()->isActive();
 
 	std::string itemstr_last("1");
 
@@ -264,6 +273,8 @@ bool CUserMenu::showUserMenu(neutrino_msg_t msg)
 		case SNeutrinoSettings::ITEM_SUBCHANNEL:
 		{
 			if (g_RemoteControl->subChannels.empty())
+				break;
+			if (_mode_webtv)
 				break;
 			// NVOD/SubService- Kanal!
 			CMenuWidget *tmpNVODSelector = new CMenuWidget(g_RemoteControl->are_subchannels ? LOCALE_NVODSELECTOR_SUBSERVICE : LOCALE_NVODSELECTOR_STARTTIME, NEUTRINO_ICON_VIDEO);
@@ -365,11 +376,23 @@ bool CUserMenu::showUserMenu(neutrino_msg_t msg)
 			menu_item = new CMenuForwarder(!g_settings.mode_clock ? LOCALE_CLOCK_SWITCH_ON:LOCALE_CLOCK_SWITCH_OFF, true, NULL, neutrino, "clock_switch", key, icon);
 			menu_item->setHint("", LOCALE_MENU_HINT_CLOCK_MODE);
 			break;
-#if 0
 		case SNeutrinoSettings::ITEM_ADZAP:
 			keyhelper.get(&key,&icon,CRCInput::RC_blue);
-			menu_item = new CMenuForwarder(LOCALE_USERMENU_ITEM_ADZAP, true, NULL, neutrino, "adzap", key, icon);
-			menu_item->setHint("", LOCALE_MENU_HINT_ADZAP);
+			menu_item = new CMenuForwarder(LOCALE_USERMENU_ITEM_ADZAP, true, adzap_active ? g_Locale->getText(LOCALE_OPTIONS_OFF) : NULL, CAdZapMenu::getInstance(), "adzap", key, icon);
+			menu_item->setHint(NEUTRINO_ICON_HINT_ADZAP, adzap_active ? LOCALE_MENU_HINT_ADZAP_ACTIVE : LOCALE_MENU_HINT_ADZAP);
+			break;
+#if 0
+		case SNeutrinoSettings::ITEM_TUNER_RESTART:
+			keyhelper.get(&key,&icon);
+			menu_item = new CMenuForwarder(LOCALE_SERVICEMENU_RESTART_TUNER, true, NULL, neutrino, "restarttuner", key, icon);
+			menu_item->setHint(NEUTRINO_ICON_HINT_RELOAD_CHANNELS, LOCALE_MENU_HINT_RESTART_TUNER);
+			break;
+		case SNeutrinoSettings::ITEM_RASS:
+			if (!(neutrino->getMode() == CNeutrinoApp::mode_radio && g_Radiotext && g_Radiotext->haveRASS()))
+				continue;
+			keyhelper.get(&key,&icon);
+			menu_item = new CMenuForwarder(LOCALE_RASS_HEAD, true, NULL, neutrino, "rass", key, icon);
+			menu_item->setHint(NEUTRINO_ICON_HINT_RASS, LOCALE_MENU_HINT_RASS);
 			break;
 		case SNeutrinoSettings::ITEM_NETZKINO:
 			keyhelper.get(&key,&icon);
@@ -431,6 +454,13 @@ bool CUserMenu::showUserMenu(neutrino_msg_t msg)
 			menu_item = new CMenuDForwarder(LOCALE_SERVICEMENU_UPDATE, true, NULL, new CSoftwareUpdate(), NULL, key, icon);
 			menu_item->setHint(NEUTRINO_ICON_HINT_SW_UPDATE, LOCALE_MENU_HINT_SW_UPDATE);
 			break;
+		case SNeutrinoSettings::ITEM_LIVESTREAM_RESOLUTION:
+			if (!_mode_webtv)
+				break;
+			keyhelper.get(&key,&icon);
+			menu_item = new CMenuDForwarder(LOCALE_LIVESTREAM_RESOLUTION, true, NULL, new CWebTVResolution(), NULL, key, icon);
+			//menu_item->setHint(xx, yy);
+			break;
 		case -1: // plugin
 		    {
 			int number_of_plugins = g_PluginList->getNumberOfPlugins();
@@ -460,8 +490,7 @@ bool CUserMenu::showUserMenu(neutrino_msg_t msg)
 		}
 	}
 
-	extern CInfoClock *InfoClock;
-	InfoClock->enableInfoClock(false);
+	CInfoClock::getInstance()->enableInfoClock(false);
 	// show menu if there are more than 2 items only
 	// otherwise, we start the item directly (must be the last one)
 	if (menu_items > 1 )
@@ -469,7 +498,7 @@ bool CUserMenu::showUserMenu(neutrino_msg_t msg)
 	else if (last_menu_item)
 		last_menu_item->exec( NULL );
 	
-	InfoClock->enableInfoClock(true);
+	CInfoClock::getInstance()->enableInfoClock(true);
 	CNeutrinoApp::getInstance()->StartSubtitles();
 
 	if (button < COL_BUTTONMAX)
@@ -513,6 +542,29 @@ const char *CUserMenu::getUserMenuButtonName(int button, bool &active, bool retu
 				continue;
 			case SNeutrinoSettings::ITEM_NONE:
 			case SNeutrinoSettings::ITEM_BAR:
+			case SNeutrinoSettings::ITEM_LIVESTREAM_RESOLUTION:
+				if (mode == NeutrinoMessages::mode_webtv && !CZapit::getInstance()->GetCurrentChannel()->getScriptName().empty()) {
+					if(loc == NONEXISTANT_LOCALE && !text) {
+						CWebTVResolution webtvres;
+						text = webtvres.getResolutionValue();
+						if (!(videoDecoder->getBlank()))
+						{
+							int xres = 0, yres = 0, framerate;
+							videoDecoder->getPictureInfo(xres, yres, framerate);
+							if (xres && yres)
+							{
+								std::string res = to_string(xres) + "x" + to_string(yres);
+								if (res.compare(text))
+								{
+									std::string tmp = (string)text + " (" + res + ")";
+									text = tmp.c_str();
+								}
+							}
+						}
+					} else
+						return_title = true;
+					active = true;
+				}
 				continue;
 			case SNeutrinoSettings::ITEM_EPG_MISC:
 				return_title = true;

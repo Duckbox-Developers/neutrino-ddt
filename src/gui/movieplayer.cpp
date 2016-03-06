@@ -45,6 +45,7 @@
 #include <gui/plugins.h>
 #include <gui/videosettings.h>
 #include <gui/streaminfo2.h>
+#include <gui/lua/luainstance.h>
 #include <gui/lua/lua_video.h>
 #include <gui/screensaver.h>
 #include <driver/screenshot.h>
@@ -62,6 +63,7 @@
 #include <stdlib.h>
 #include <sys/timeb.h>
 #include <sys/mount.h>
+#include <json/json.h>
 
 #include <video.h>
 #include <libtuxtxt/teletext.h>
@@ -71,6 +73,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <algorithm>
 #include <iconv.h>
 #include <libdvbsub/dvbsub.h>
 #include <audio.h>
@@ -87,7 +90,7 @@ bool glcd_play = false;
 
 extern cVideo * videoDecoder;
 extern CRemoteControl *g_RemoteControl;	/* neutrino.cpp */
-extern CInfoClock *InfoClock;
+
 extern CVolume* g_volume;
 
 #define TIMESHIFT_SECONDS 3
@@ -593,7 +596,7 @@ void CMoviePlayerGui::ClearQueue()
 void CMoviePlayerGui::EnableClockAndMute(bool enable)
 {
 	CAudioMute::getInstance()->enableMuteIcon(enable);
-	InfoClock->enableInfoClock(enable);
+	CInfoClock::getInstance()->enableInfoClock(enable);
 }
 
 void CMoviePlayerGui::makeFilename()
@@ -818,7 +821,236 @@ void* CMoviePlayerGui::bgPlayThread(void *arg)
 	pthread_exit(NULL);
 }
 
-bool CMoviePlayerGui::PlayBackgroundStart(const std::string &file, const std::string &name, t_channel_id chan)
+bool CMoviePlayerGui::sortStreamList(livestream_info_t info1, livestream_info_t info2)
+{
+	return (info1.res1 < info2.res1);
+}
+
+bool CMoviePlayerGui::luaGetUrl(const std::string &script, const std::string &file, std::vector<livestream_info_t> &streamList)
+{
+	CHintBox* box = new CHintBox(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_LIVESTREAM_READ_DATA));
+	box->paint();
+
+	std::string result_code = "";
+	std::string result_string = "";
+
+	std::vector<std::string> args;
+	args.push_back(file);
+
+	CLuaInstance *lua = new CLuaInstance();
+	lua->runScript(script.c_str(), &args, &result_code, &result_string);
+	delete lua;
+
+	if ((result_code != "0") || result_string.empty()) {
+		if (box != NULL) {
+			box->hide();
+			delete box;
+		}
+		return false;
+	}
+
+	Json::Value root;
+	Json::Reader reader;
+	bool parsedSuccess = reader.parse(result_string, root, false);
+	if (!parsedSuccess) {
+		printf("Failed to parse JSON\n");
+		printf("%s\n", reader.getFormattedErrorMessages().c_str());
+		if (box != NULL) {
+			box->hide();
+			delete box;
+		}
+		return false;
+	}
+
+	livestream_info_t info;
+	std::string tmp;
+	bool haveurl = false;
+	if ( !root.isObject() ) {
+		for (Json::Value::iterator it = root.begin(); it != root.end(); ++it) {
+			info.url=""; info.name=""; info.bandwidth = 1; info.resolution=""; info.res1 = 1;
+			tmp = "0";
+			Json::Value object_it = *it;
+			for (Json::Value::iterator iti = object_it.begin(); iti != object_it.end(); iti++) {
+				std::string name = iti.name();
+				if (name=="url") {
+					info.url = (*iti).asString();
+					haveurl = true;
+				} else if (name=="name") {
+					info.name = (*iti).asString();
+				} else if (name=="band") {
+					info.bandwidth  = atoi((*iti).asString().c_str());
+				} else if (name=="res1") {
+					tmp = (*iti).asString();
+					info.res1 = atoi(tmp.c_str());
+				} else if (name=="res2") {
+					info.resolution = tmp + "x" + (*iti).asString();
+				}
+			}
+			if (haveurl) {
+				streamList.push_back(info);
+			}
+			haveurl = false;
+		}
+	}
+	if (root.isObject()) {
+		for (Json::Value::iterator it = root.begin(); it != root.end(); ++it) {
+			info.url=""; info.name=""; info.bandwidth = 1; info.resolution=""; info.res1 = 1;
+			tmp = "0";
+			std::string name = it.name();
+			if (name=="url") {
+				info.url = (*it).asString();
+				haveurl = true;
+			} else if (name=="name") {
+				info.name = (*it).asString();
+			} else if (name=="band") {
+				info.bandwidth  = atoi((*it).asString().c_str());
+			} else if (name=="res1") {
+				tmp = (*it).asString();
+				info.res1 = atoi(tmp.c_str());
+			} else if (name=="res2") {
+				info.resolution = tmp + "x" + (*it).asString();
+			}
+		}
+		if (haveurl) {
+			streamList.push_back(info);
+		}
+		haveurl = false;
+	}
+	/* sort streamlist */
+	std::sort(streamList.begin(), streamList.end(), sortStreamList);
+
+	/* remove duplicate resolutions */
+	livestream_info_t *_info;
+	int res_old = 0;
+	for (size_t i = 0; i < streamList.size(); ++i) {
+		_info = &(streamList[i]);
+		if (res_old == _info->res1)
+			streamList.erase(streamList.begin()+i);
+		res_old = _info->res1;
+	}
+
+	if (box != NULL) {
+		box->hide();
+		delete box;
+	}
+
+	return true;
+}
+
+bool CMoviePlayerGui::selectLivestream(std::vector<livestream_info_t> &streamList, int res, livestream_info_t* info)
+{
+	livestream_info_t* _info;
+	int _res = res;
+
+#if 0
+	printf("\n");
+	for (size_t i = 0; i < streamList.size(); ++i) {
+		_info = &(streamList[i]);
+		printf("%d - _info->res1: %4d, _info->res: %9s, _info->bandwidth: %d\n", i, _info->res1, (_info->resolution).c_str(), _info->bandwidth);
+	}
+	printf("\n");
+#endif
+
+	bool resIO = false;
+	while (1) {
+		size_t i;
+		for (i = 0; i < streamList.size(); ++i) {
+			_info = &(streamList[i]);
+			if (_info->res1 == _res) {
+				info->url        = _info->url;
+				info->name       = _info->name;
+				info->resolution = _info->resolution;
+				info->res1       = _info->res1;
+				info->bandwidth  = _info->bandwidth;
+				return true;
+			}
+		}
+		/* Required resolution not found, decreasing resolution */
+		for (i = streamList.size(); i > 0; --i) {
+			_info = &(streamList[i-1]);
+			if (_info->res1 < _res) {
+				_res = _info->res1;
+				resIO = true;
+				break;
+			}
+		}
+		/* Required resolution not found, increasing resolution */
+		if (resIO == false) {
+			for (i = 0; i < streamList.size(); ++i) {
+				_info = &(streamList[i]);
+				if (_info->res1 > _res) {
+					_res = _info->res1;
+					break;
+				}
+			}
+		}
+	}
+	return false;
+}
+
+bool CMoviePlayerGui::getLiveUrl(const t_channel_id chan, const std::string &url, const std::string &script, std::string &realUrl, std::string &_pretty_name, std::string &info1, std::string &info2)
+{
+	static t_channel_id oldChan = 0;
+	static std::vector<livestream_info_t> liveStreamList;
+	livestream_info_t info;
+
+	if (script.empty()) {
+		realUrl = url;
+		return true;
+	}
+	std::string _script = script;
+
+	if (_script.find("/") == std::string::npos)
+		_script = g_settings.livestreamScriptPath + "/" + _script;
+
+	size_t pos = _script.find(".lua");
+	if (!file_exists(_script.c_str()) || (pos == std::string::npos) || (_script.length()-pos != 4)) {
+		liveStreamList.clear();
+		printf(">>>>> [%s:%s:%d] script error\n", __file__, __func__, __LINE__);
+		return false;
+	}
+	if ((oldChan != chan) || liveStreamList.empty()) {
+		liveStreamList.clear();
+		if (!luaGetUrl(_script, url, liveStreamList)) {
+			liveStreamList.clear();
+			printf(">>>>> [%s:%s:%d] lua script error\n", __file__, __func__, __LINE__);
+			return false;
+		}
+		oldChan = chan;
+	}
+
+	if (!selectLivestream(liveStreamList, g_settings.livestreamResolution, &info)) {
+		liveStreamList.clear();
+		printf(">>>>> [%s:%s:%d] error selectLivestream\n", __file__, __func__, __LINE__);
+		return false;
+	}
+
+	realUrl = info.url;
+	if (!info.name.empty()) {
+		info1 = info.name;
+		_pretty_name = info.name;
+	}
+#if 0
+	if (!info.resolution.empty())
+		info2 = info.resolution;
+	if (info.bandwidth > 0) {
+		char buf[32];
+		memset(buf, '\0', sizeof(buf));
+		snprintf(buf, sizeof(buf), "%.02f kbps", (float)((float)info.bandwidth/(float)1000));
+		info2 += (std::string)", " + (std::string)buf;
+	}
+#else
+	if (info.bandwidth > 0) {
+		char buf[32];
+		memset(buf, '\0', sizeof(buf));
+		snprintf(buf, sizeof(buf), "%.02f kbps", (float)((float)info.bandwidth/(float)1000));
+		info2 = (std::string)buf;
+	}
+#endif
+	return true;
+}
+
+bool CMoviePlayerGui::PlayBackgroundStart(const std::string &file, const std::string &name, t_channel_id chan, const std::string &script)
 {
 	printf("%s: starting...\n", __func__);
 	static CZapProtection *zp = NULL;
@@ -850,6 +1082,11 @@ bool CMoviePlayerGui::PlayBackgroundStart(const std::string &file, const std::st
 		}
 	}
 
+	std::string realUrl = file;
+	std::string _pretty_name = name;
+	if (!getLiveUrl(chan, file, script, realUrl, _pretty_name, livestreamInfo1, livestreamInfo2))
+		return false;
+
 	OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(mutex);
 
 	instance_bg->Cleanup();
@@ -859,12 +1096,11 @@ bool CMoviePlayerGui::PlayBackgroundStart(const std::string &file, const std::st
 	instance_bg->isWebTV = true;
 	instance_bg->is_file_player = true;
 	instance_bg->isHTTP = true;
-
-	instance_bg->file_name = file;
-	instance_bg->pretty_name = name;
+	instance_bg->file_name = realUrl;
+	instance_bg->pretty_name = _pretty_name;
 
 	instance_bg->movie_info.epgTitle = name;
-	instance_bg->movie_info.epgChannel = file;
+	instance_bg->movie_info.epgChannel = realUrl;
 	instance_bg->movie_info.epgId = chan;
 	instance_bg->p_movie_info = &movie_info;
 
@@ -904,6 +1140,8 @@ void CMoviePlayerGui::stopPlayBack(void)
 		pthread_join(bgThread, NULL);
 		bgThread = 0;
 	}
+	livestreamInfo1.clear();
+	livestreamInfo2.clear();
 	printf("%s: stopped\n", __func__);
 }
 
@@ -2196,7 +2434,7 @@ void CMoviePlayerGui::handleMovieBrowser(neutrino_msg_t msg, int /*position*/)
 		bool restore = FileTime.IsVisible();
 		if (restore)
 			FileTime.kill();
-		InfoClock->enableInfoClock(false);
+		CInfoClock::getInstance()->enableInfoClock(false);
 
 		if (isLuaPlay && haveLuaInfoFunc) {
 			int xres = 0, yres = 0, aspectRatio = 0, framerate = -1;
@@ -2211,7 +2449,7 @@ void CMoviePlayerGui::handleMovieBrowser(neutrino_msg_t msg, int /*position*/)
 		else if (p_movie_info)
 			cMovieInfo.showMovieInfo(*p_movie_info);
 
-		InfoClock->enableInfoClock(true);
+		CInfoClock::getInstance()->enableInfoClock(true);
 		if (restore) {
 			FileTime.setMode(m_mode);
 			FileTime.update(position, duration);
@@ -2844,12 +3082,13 @@ void CMoviePlayerGui::parsePlaylist(CFile *file)
 	while (infile.good())
 	{
 		infile.getline(cLine, sizeof(cLine));
-		if (cLine[strlen(cLine)-1]=='\r')
-			cLine[strlen(cLine)-1]=0;
+		size_t len = strlen(cLine);
+		if (len > 0 && cLine[len-1]=='\r')
+			cLine[len-1]=0;
 
 		int dur;
 		sscanf(cLine, "#EXTINF:%d,%[^\n]\n", &dur, name);
-		if (strlen(cLine) > 0 && cLine[0]!='#')
+		if (len > 0 && cLine[0]!='#')
 		{
 			char *url = NULL;
 			if ((url = strstr(cLine, "http://")) || (url = strstr(cLine, "https://")) || (url = strstr(cLine, "rtmp://")) || (url = strstr(cLine, "rtsp://")) || (url = strstr(cLine, "mmsh://")) ) {

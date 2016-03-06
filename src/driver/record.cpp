@@ -1931,9 +1931,8 @@ void CStreamRec::GetPids(CZapitChannel * channel)
 	channel = channel;
 }
 
-void CStreamRec::FillMovieInfo(CZapitChannel * channel, APIDList & apid_list)
+void CStreamRec::FillMovieInfo(CZapitChannel * /*channel*/, APIDList & /*apid_list*/)
 {
-	CRecordInstance::FillMovieInfo(channel, apid_list);
 	recMovieInfo->VideoType = 0;
 
 	for (unsigned i = 0; i < ofcx->nb_streams; i++) {
@@ -2053,13 +2052,14 @@ record_error_msg_t CStreamRec::Record()
 		return ret;
 	}
 
+	CRecordInstance::FillMovieInfo(channel, apid_list);
 	if (!Open(channel) || !Start()) {
 		Close();
 		hintBox.hide();
 		return RECORD_FAILURE;
 	}
-
 	FillMovieInfo(channel, apid_list);
+
 	SaveXml();
 	if(recording_id == 0) {
 		time_t now = time(NULL);
@@ -2100,6 +2100,12 @@ bool CStreamRec::Open(CZapitChannel * channel)
 
 	if (url.empty())
 		return false;
+
+	std::string pretty_name;
+	if (!CMoviePlayerGui::getInstance(true).getLiveUrl(channel->getChannelID(), channel->getUrl(), channel->getScriptName(), url, pretty_name, recMovieInfo->epgInfo1, recMovieInfo->epgInfo2)) {
+		printf("%s: getLiveUrl() [%s] failed!\n", __FUNCTION__, url.c_str());
+		return false;
+	}
 
 	//av_log_set_level(AV_LOG_VERBOSE);
 	av_register_all();

@@ -4,14 +4,6 @@
   Copyright (C) 2001 Steffen Hehn 'McClean'
   Homepage: http://dbox.cyberphoria.org/
 
-  Kommentar:
-
-  Diese GUI wurde von Grund auf neu programmiert und sollte nun vom
-  Aufbau und auch den Ausbaumoeglichkeiten gut aussehen. Neutrino basiert
-  auf der Client-Server Idee, diese GUI ist also von der direkten DBox-
-  Steuerung getrennt. Diese wird dann von Daemons uebernommen.
-
-
   License: GPL
 
   This program is free software; you can redistribute it and/or modify
@@ -25,8 +17,7 @@
   GNU General Public License for more details.
 
   You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+  along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #ifndef __upnpplayergui__
@@ -102,12 +93,15 @@ class CUpnpBrowserGui : public CMenuTarget, public CListHelpers
 	bool           m_playing_entry_is_shown;
 	time_t         timeout;
 	CComponentsDetailLine * dline;
+	CComponentsFooter footer;
+	CComponentsInfoBox ibox, timebox, topbox;
+	CComponentsPicture *image;
 
 	bool discoverDevices();
 	void splitProtocol(std::string &protocol, std::string &prot, std::string &network, std::string &mime, std::string &additional);
 	bool getResults(std::string id, unsigned int start, unsigned int count, std::list<UPnPAttribute> &results); 
 	std::vector<UPnPEntry> *decodeResult(std::string);
-
+	void Init();
 	void updateDeviceSelection(int newpos);
 	void selectDevice();
 	void paintDevices();
