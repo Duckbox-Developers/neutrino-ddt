@@ -818,7 +818,8 @@ int CControlAPI::rc_send(int ev, unsigned int code, unsigned int value)
 
 //-----------------------------------------------------------------------------
 // The code here is based on rcsim. Thx Carjay!
-void CControlAPI::RCEmCGI(CyhookHandler *hh) {
+void CControlAPI::RCEmCGI(CyhookHandler *hh)
+{
 	if (hh->ParamList.empty()) {
 		hh->SendError();
 		return;
@@ -1049,7 +1050,8 @@ void CControlAPI::LogolistCGI(CyhookHandler *hh)
 //-----------------------------------------------------------------------------
 // get actual and next event data for given channel
 //-----------------------------------------------------------------------------
-std::string CControlAPI::_GetBouquetActualEPGItem(CyhookHandler *hh, CZapitChannel * channel) {
+std::string CControlAPI::_GetBouquetActualEPGItem(CyhookHandler *hh, CZapitChannel * channel)
+{
 	std::string result, firstEPG, secondEPG = "";
 	t_channel_id current_channel = CZapit::getInstance()->GetCurrentChannelID();
 	std::string timestr;
@@ -1057,12 +1059,7 @@ std::string CControlAPI::_GetBouquetActualEPGItem(CyhookHandler *hh, CZapitChann
 
 	CSectionsdClient::responseGetCurrentNextInfoChannelID currentNextInfo;
 	CChannelEvent event;
-	event.eventID = 0;
-	NeutrinoAPI->Lock();
-	CChannelEvent * evt = NeutrinoAPI->ChannelListEvents[channel->getChannelID()];
-	if (evt)
-		event = *evt;
-	NeutrinoAPI->Unlock();
+	NeutrinoAPI->GetChannelEvent(channel->getChannelID(), event);
 
 	bool return_epginfo = (hh->ParamList["epginfo"] != "false");
 
@@ -1114,7 +1111,8 @@ std::string CControlAPI::_GetBouquetActualEPGItem(CyhookHandler *hh, CZapitChann
 
 //-----------------------------------------------------------------------------
 // produce data (collection) for given channel
-std::string CControlAPI::_GetBouquetWriteItem(CyhookHandler *hh, CZapitChannel * channel, int bouquetNr, int channelNr) {
+std::string CControlAPI::_GetBouquetWriteItem(CyhookHandler *hh, CZapitChannel * channel, int bouquetNr, int channelNr)
+{
 	std::string result = "";
 	bool isEPGdetails = !(hh->ParamList["epg"].empty());
 	if (hh->outType == json || hh->outType == xml) {
@@ -1138,12 +1136,7 @@ std::string CControlAPI::_GetBouquetWriteItem(CyhookHandler *hh, CZapitChannel *
 	}
 	else {
 		CChannelEvent event;
-		event.eventID = 0;
-		NeutrinoAPI->Lock();
-		CChannelEvent * evt = NeutrinoAPI->ChannelListEvents[channel->getChannelID()];
-		if (evt)
-			event = *evt;
-		NeutrinoAPI->Unlock();
+		NeutrinoAPI->GetChannelEvent(channel->getChannelID(), event);
 
 		if (event.eventID && isEPGdetails) {
 			result += string_printf("%u "
@@ -1229,7 +1222,8 @@ std::string CControlAPI::_GetBouquetWriteItem(CyhookHandler *hh, CZapitChannel *
  * @endcode
  */
 //-------------------------------------------------------------------------
-void CControlAPI::GetBouquetCGI(CyhookHandler *hh) {
+void CControlAPI::GetBouquetCGI(CyhookHandler *hh)
+{
 	TOutType outType = hh->outStart(true /*old mode*/);
 
 	std::string result = "";
@@ -1429,7 +1423,8 @@ void CControlAPI::GetChannelCGI(CyhookHandler *hh)
  * @endcode
  */
 //-------------------------------------------------------------------------
-void CControlAPI::GetBouquetsCGI(CyhookHandler *hh) {
+void CControlAPI::GetBouquetsCGI(CyhookHandler *hh)
+{
 	bool show_hidden = true;
 	bool encode = false;
 	std::string result = "";
@@ -1489,10 +1484,12 @@ void CControlAPI::GetBouquetsCGI(CyhookHandler *hh) {
 //-----------------------------------------------------------------------------
 //	details EPG Information for channelid
 //-----------------------------------------------------------------------------
-std::string CControlAPI::channelEPGformated(CyhookHandler *hh, int bouquetnr, t_channel_id channel_id, int max, long stoptime) {
+std::string CControlAPI::channelEPGformated(CyhookHandler *hh, int bouquetnr, t_channel_id channel_id, int max, long stoptime)
+{
 	std::string result = "";
 	std::string channelData = "";
-	CEitManager::getInstance()->getEventsServiceKey(channel_id, NeutrinoAPI->eList);
+	CChannelEventList eList;
+	CEitManager::getInstance()->getEventsServiceKey(channel_id, eList);
 	channelData += hh->outPair("channel_name", hh->outValue(NeutrinoAPI->GetServiceName(channel_id)), true);
 	channelData += hh->outPair("channel_id", string_printf(PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS, channel_id), true);
 	channelData += hh->outPair("channel_short_id", string_printf(PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS, channel_id & 0xFFFFFFFFFFFFULL), (bouquetnr > -1));
@@ -1503,7 +1500,7 @@ std::string CControlAPI::channelEPGformated(CyhookHandler *hh, int bouquetnr, t_
 	int i = 0;
 	CChannelEventList::iterator eventIterator;
 	bool isFirstLine = true;
-	for (eventIterator = NeutrinoAPI->eList.begin(); eventIterator != NeutrinoAPI->eList.end(); ++eventIterator, i++) {
+	for (eventIterator = eList.begin(); eventIterator != eList.end(); ++eventIterator, i++) {
 		if ((max != -1 && i >= max) || (stoptime != -1 && eventIterator->startTime >= stoptime))
 			break;
 		std::string prog = "";
@@ -1553,7 +1550,8 @@ std::string CControlAPI::channelEPGformated(CyhookHandler *hh, int bouquetnr, t_
 //-----------------------------------------------------------------------------
 // Detailed EPG list in XML or JSON
 //-----------------------------------------------------------------------------
-void CControlAPI::epgDetailList(CyhookHandler *hh) {
+void CControlAPI::epgDetailList(CyhookHandler *hh)
+{
 	// ------ get parameters -------
 	// max = maximal output items
 	int max = -1;
@@ -1596,7 +1594,6 @@ void CControlAPI::epgDetailList(CyhookHandler *hh) {
 	hh->outStart(true /*old mode*/);
 	std::string result = "";
 
-	NeutrinoAPI->eList.clear();
 	if (bouquetnr >= 0 || all_bouquets) {
 		int bouquet_size = (int) g_bouquetManager->Bouquets.size();
 		int start_bouquet = 0;
@@ -1846,8 +1843,8 @@ void CControlAPI::SendFoundEvents(CyhookHandler *hh, bool xml_format)
  */
 
 //-------------------------------------------------------------------------
-void CControlAPI::EpgCGI(CyhookHandler *hh) {
-	NeutrinoAPI->eList.clear();
+void CControlAPI::EpgCGI(CyhookHandler *hh)
+{
 	bool param_empty = hh->ParamList.empty();
 	hh->SetHeader(HTTP_OK, "text/plain; charset=UTF-8"); // default
 	// Detailed EPG list in XML or JSON
@@ -1865,12 +1862,7 @@ void CControlAPI::EpgCGI(CyhookHandler *hh) {
 		CBouquetManager::ChannelIterator cit = mode == CZapitClient::MODE_RADIO ? g_bouquetManager->radioChannelsBegin() : g_bouquetManager->tvChannelsBegin();
 		for (; !(cit.EndOfChannels()); cit++) {
 			CZapitChannel * channel = *cit;
-			event.eventID = 0;
-			NeutrinoAPI->Lock();
-			CChannelEvent * evt = NeutrinoAPI->ChannelListEvents[channel->getChannelID()];
-			if (evt)
-				event = *evt;
-			NeutrinoAPI->Unlock();
+			NeutrinoAPI->GetChannelEvent(channel->getChannelID(), event);
 			if (event.eventID) {
 				if (!isExt) {
 					hh->printf(PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS
@@ -1917,9 +1909,10 @@ void CControlAPI::EpgCGI(CyhookHandler *hh) {
 	else if (!(hh->ParamList["id"].empty())) {
 		t_channel_id channel_id = 0;
 		sscanf(hh->ParamList["id"].c_str(), SCANF_CHANNEL_ID_TYPE, &channel_id);
-		CEitManager::getInstance()->getEventsServiceKey(channel_id, NeutrinoAPI->eList);
+		CChannelEventList eList;
+		CEitManager::getInstance()->getEventsServiceKey(channel_id, eList);
 		CChannelEventList::iterator eventIterator;
-		for (eventIterator = NeutrinoAPI->eList.begin(); eventIterator != NeutrinoAPI->eList.end(); ++eventIterator) {
+		for (eventIterator = eList.begin(); eventIterator != eList.end(); ++eventIterator) {
 			CShortEPGData epg;
 			if (CEitManager::getInstance()->getEPGidShort(eventIterator->eventID, &epg)) {
 				hh->printf("%llu %ld %d\n", eventIterator->eventID, eventIterator->startTime, eventIterator->duration);
@@ -2146,10 +2139,11 @@ void CControlAPI::LCDAction(CyhookHandler *hh)
 void CControlAPI::SendEventList(CyhookHandler *hh, t_channel_id channel_id)
 {
 	int pos = 0;
-	CEitManager::getInstance()->getEventsServiceKey(channel_id, NeutrinoAPI->eList);
+	CChannelEventList eList;
+	CEitManager::getInstance()->getEventsServiceKey(channel_id, eList);
 	CChannelEventList::iterator eventIterator;
 
-	for (eventIterator = NeutrinoAPI->eList.begin(); eventIterator != NeutrinoAPI->eList.end(); ++eventIterator, pos++)
+	for (eventIterator = eList.begin(); eventIterator != eList.end(); ++eventIterator, pos++)
 		hh->printf("%llu %ld %d %s\n", eventIterator->eventID, eventIterator->startTime, eventIterator->duration, eventIterator->description.c_str());
 }
 
@@ -3251,7 +3245,8 @@ void CControlAPI::logoCGI(CyhookHandler *hh)
  * @endcode
  */
 //-------------------------------------------------------------------------
-void CControlAPI::ConfigCGI(CyhookHandler *hh) {
+void CControlAPI::ConfigCGI(CyhookHandler *hh)
+{
 	bool load = true;
 	CConfigFile *Config = new CConfigFile(',');
 	ConfigDataMap conf;
@@ -3374,7 +3369,8 @@ void CControlAPI::ConfigCGI(CyhookHandler *hh) {
  *  action =new_folder|delete|read_file|write_file|set_properties
  */
 //-----------------------------------------------------------------------------
-void CControlAPI::FileCGI(CyhookHandler *hh) {
+void CControlAPI::FileCGI(CyhookHandler *hh)
+{
 	std::string result = "";
 
 	if (hh->ParamList["action"] == "list") { // directory list: action=list&path=<path>
@@ -3510,7 +3506,8 @@ void CControlAPI::FileCGI(CyhookHandler *hh) {
  * @endcode
  */
 //-----------------------------------------------------------------------------
-void CControlAPI::StatfsCGI(CyhookHandler *hh) {
+void CControlAPI::StatfsCGI(CyhookHandler *hh)
+{
 	std::string result = "";
 
 	if (hh->ParamList["path"].empty())
@@ -3569,7 +3566,8 @@ void CControlAPI::StatfsCGI(CyhookHandler *hh) {
  *
  */
 //-----------------------------------------------------------------------------
-void CControlAPI::getDirCGI(CyhookHandler *hh) {
+void CControlAPI::getDirCGI(CyhookHandler *hh)
+{
 	std::string result = "";
 	std::string item = "";
 	bool isFirstLine = true;
@@ -3629,7 +3627,8 @@ void CControlAPI::getDirCGI(CyhookHandler *hh) {
 }
 
 //Helpfunction to get subdirs of a dir
-std::string CControlAPI::getSubdirectories(CyhookHandler *hh, std::string path, std::string result) {
+std::string CControlAPI::getSubdirectories(CyhookHandler *hh, std::string path, std::string result)
+{
 	std::string item = "";
 	std::string dirname;
 	DIR *dirp;
