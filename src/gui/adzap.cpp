@@ -44,7 +44,7 @@
 #define ADZAP_DATA "/tmp/adzap.data"
 
 static const struct button_label CAdZapMenuFooterButtons[] = {
-	{ NEUTRINO_ICON_BUTTON_RED,	LOCALE_ADZAP_DISABLE },
+	//{ NEUTRINO_ICON_BUTTON_RED,	LOCALE_ADZAP_DISABLE },
 	{ NEUTRINO_ICON_BUTTON_GREEN,	LOCALE_ADZAP_ENABLE },
 	{ NEUTRINO_ICON_BUTTON_BLUE,	LOCALE_ADZAP_MONITOR }
 };
@@ -105,7 +105,6 @@ time_t CAdZapMenu::getMonitorLifeTime()
 		return 0;
 
 	CChannelEventList::iterator eli;
-	struct timespec ts;
 	clock_gettime(CLOCK_REALTIME, &ts);
 	for (eli = evtlist.begin(); eli != evtlist.end(); ++eli)
 	{
@@ -139,7 +138,6 @@ void CAdZapMenu::Run()
 
 		if (monitor)
 		{
-			struct timespec ts;
 			clock_gettime(CLOCK_REALTIME, &ts);
 			ts.tv_sec += 1;
 
@@ -173,42 +171,19 @@ void CAdZapMenu::Run()
 		{
 			if (g_settings.adzap_writeData)
 			{
-				struct timespec ts;
 				clock_gettime(CLOCK_REALTIME, &ts);
 				ts.tv_sec += 1;
 
 				sem_timedwait(&sem, &ts);
-
-				int zp = g_settings.adzap_zapBackPeriod;
-				long int zb = zapBackTime.tv_sec + ZAPBACK_ALERT_PERIOD - ts.tv_sec;
-
-				if (FILE *f = fopen(ADZAP_DATA, "w"))
-				{
-					fprintf(f, "%" PRIx64 "\n%s\n%d\n%d:%02d\n%ld\n%ld:%02ld\n",
-							channelId,
-							channelName.c_str(),
-							zp,
-							zp / 60, zp % 60,
-							zb,
-							zb / 60, zb % 60);
-					fclose(f);
-				}
-				else
-					printf("CAdZapMenu::%s: write data failed.\n", __func__);
 			}
 			else
 				sem_timedwait(&sem, &zapBackTime);
 		}
 		else
-		{
-			if (access(ADZAP_DATA, F_OK) == 0)
-				unlink(ADZAP_DATA);
 			sem_wait(&sem);
-		}
 
 		if (armed)
 		{
-			struct timespec ts;
 			clock_gettime(CLOCK_REALTIME, &ts);
 			if (ts.tv_sec >= zapBackTime.tv_sec)
 			{
@@ -231,22 +206,54 @@ void CAdZapMenu::Run()
 				else
 				{
 					alerted = false;
-					if (channelList)
+					if ((channelId != curChannelId) && channelList)
 						channelList->zapTo_ChannelID(channelId);
 					armed = false;
 				}
 			}
 		}
+
+		if (g_settings.adzap_writeData && (monitor || armed))
+			WriteData();
+		else
+			RemoveData();
 	}
 }
 
+void CAdZapMenu::WriteData()
+{
+	int zp = g_settings.adzap_zapBackPeriod;
+	clock_gettime(CLOCK_REALTIME, &ts);
+	long int zb = armed ? zapBackTime.tv_sec + ZAPBACK_ALERT_PERIOD - ts.tv_sec : 0;
+
+	if (FILE *f = fopen(ADZAP_DATA, "w"))
+	{
+		fprintf(f, "%" PRIx64 "\n%s\n%d\n%d:%02d\n%ld\n%ld:%02ld\n",
+				channelId,
+				channelName.c_str(),
+				zp,
+				zp / 60, zp % 60,
+				zb,
+				zb / 60, zb % 60);
+		fclose(f);
+	}
+	else
+		printf("CAdZapMenu::%s: failed.\n", __func__);
+}
+
+void CAdZapMenu::RemoveData()
+{
+	if (access(ADZAP_DATA, F_OK) == 0)
+		unlink(ADZAP_DATA);
+}
 int CAdZapMenu::exec(CMenuTarget *parent, const std::string & actionKey)
 {
 	Init();
 
 	int res = menu_return::RETURN_EXIT_ALL;
+	bool marked_ok = (actionKey.length() == 1 && g_settings.adzap_zapBackPeriod == (actionKey[0] - '0') * 60);
 
-	if (actionKey == "enable")
+	if (actionKey == "enable" || marked_ok)
 	{
 		if (!monitor)
 			armed = true;
@@ -288,7 +295,11 @@ int CAdZapMenu::exec(CMenuTarget *parent, const std::string & actionKey)
 	{
 		g_settings.adzap_zapBackPeriod = actionKey[0] - '0';
 		for (int shortcut = 1; shortcut < 10; shortcut++)
-			forwarders[shortcut - 1]->setMarked(shortcut == g_settings.adzap_zapBackPeriod);
+		{
+			bool selected = (g_settings.adzap_zapBackPeriod == shortcut);
+			forwarders[shortcut - 1]->setMarked(selected);
+			forwarders[shortcut - 1]->iconName_Info_right = selected ? NEUTRINO_ICON_CHECKMARK : NULL;
+		}
 		nc->setMarked(false);
 		g_settings.adzap_zapBackPeriod *= 60;
 		return menu_return::RETURN_REPAINT;
@@ -308,7 +319,7 @@ void CAdZapMenu::ShowMenu()
 	bool show_monitor = monitorLifeTime.tv_sec;
 
 	CMenuWidget *menu = new CMenuWidget(LOCALE_ADZAP, NEUTRINO_ICON_SETTINGS, width);
-	menu->addKey(CRCInput::RC_red, this, "disable");
+	//menu->addKey(CRCInput::RC_red, this, "disable");
 	menu->addKey(CRCInput::RC_green, this, "enable");
 	menu->addKey(CRCInput::RC_blue, this, "monitor");
 	menu->addIntroItems();
@@ -327,6 +338,7 @@ void CAdZapMenu::ShowMenu()
 		bool selected = g_settings.adzap_zapBackPeriod == 60 * shortcut;
 		forwarders[shortcut - 1] = new CMenuForwarder(minute, true, NULL, this, actionKey, CRCInput::convertDigitToKey(shortcut));
 		forwarders[shortcut - 1]->setMarked(selected);
+		forwarders[shortcut - 1]->iconName_Info_right = selected ? NEUTRINO_ICON_CHECKMARK : NULL;
 		forwarders[shortcut - 1]->setHint(NEUTRINO_ICON_HINT_ADZAP, "");
 		menu->addItem(forwarders[shortcut - 1], selected);
 		minute = LOCALE_ADZAP_MINUTES;

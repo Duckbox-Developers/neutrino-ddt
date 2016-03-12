@@ -732,6 +732,7 @@ CStreamStream::CStreamStream(int clientfd, t_channel_id chid, stream_pids_t &_pi
 {
 	ifcx = NULL;
 	ofcx = NULL;
+	bsfc = NULL;
 	avio_ctx = NULL;
 	stopped = true;
 	interrupt = false;
@@ -772,8 +773,12 @@ void CStreamStream::Close()
 	if (avio_ctx)
 		av_free(avio_ctx);
 
+	if (bsfc)
+		av_bitstream_filter_close(bsfc);
+
 	ifcx = NULL;
 	ofcx = NULL;
+	bsfc = NULL;
 	avio_ctx = NULL;
 }
 
@@ -811,7 +816,11 @@ bool CStreamStream::Open()
 		printf("%s: Cannot find stream info [%s]!\n", __FUNCTION__, channel->getUrl().c_str());
 		return false;
 	}
-	if (!strstr(ifcx->iformat->name, "applehttp") && !strstr(ifcx->iformat->name, "mpegts")) {
+	if (!strstr(ifcx->iformat->name, "applehttp") &&
+			!strstr(ifcx->iformat->name, "mpegts") &&
+			!strstr(ifcx->iformat->name, "matroska") &&
+			!strstr(ifcx->iformat->name, "avi") &&
+			!strstr(ifcx->iformat->name, "mp4")) {
 		printf("%s: not supported format [%s]!\n", __FUNCTION__, ifcx->iformat->name);
 		return false;
 	}
@@ -853,6 +862,9 @@ bool CStreamStream::Open()
 	av_log_set_level(AV_LOG_VERBOSE);
 	av_dump_format(ofcx, 0, ofcx->filename, 1);
 	av_log_set_level(AV_LOG_WARNING);
+	bsfc = av_bitstream_filter_init("h264_mp4toannexb");
+	if (!bsfc)
+		printf("%s: av_bitstream_filter_init h264_mp4toannexb failed!\n", __FUNCTION__);
 
 	return true;
 }
@@ -895,6 +907,27 @@ void CStreamStream::run()
 		av_init_packet(&pkt);
 		if (av_read_frame(ifcx, &pkt) < 0)
 			break;
+		if (pkt.stream_index < 0)
+			continue;
+
+		AVCodecContext *codec = ifcx->streams[pkt.stream_index]->codec;
+		if (bsfc && codec->codec_id == CODEC_ID_H264 ) {
+			AVPacket newpkt = pkt;
+
+			int len;
+			if ((len = av_bitstream_filter_filter(bsfc, codec, NULL, &newpkt.data, &newpkt.size, pkt.data, pkt.size, pkt.flags & AV_PKT_FLAG_KEY)) < 0) {
+				av_free_packet(&pkt);
+				continue;
+			}
+
+			av_free_packet(&pkt);
+
+			newpkt.buf = av_buffer_create(newpkt.data, newpkt.size, av_buffer_default_free, NULL, 0);
+			pkt = newpkt;
+		}
+		pkt.pts = av_rescale_q(pkt.pts, ifcx->streams[pkt.stream_index]->time_base, ofcx->streams[pkt.stream_index]->time_base);
+		pkt.dts = av_rescale_q(pkt.dts, ifcx->streams[pkt.stream_index]->time_base, ofcx->streams[pkt.stream_index]->time_base);
+
 		av_write_frame(ofcx, &pkt);
 		av_free_packet(&pkt);
 	}
