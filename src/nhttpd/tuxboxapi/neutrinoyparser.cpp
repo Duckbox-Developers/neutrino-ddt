@@ -127,7 +127,6 @@ const CNeutrinoYParser::TyFuncCall CNeutrinoYParser::yFuncCallList[]=
 	{"set_timer_form",				&CNeutrinoYParser::func_set_timer_form},
 	{"bouquet_editor_main",			&CNeutrinoYParser::func_bouquet_editor_main},
 	{"set_bouquet_edit_form",		&CNeutrinoYParser::func_set_bouquet_edit_form},
-
 };
 //-------------------------------------------------------------------------
 // y-func : dispatching and executing
@@ -405,7 +404,7 @@ std::string CNeutrinoYParser::func_get_bouquets_with_epg(CyhookHandler *hh, std:
 		if(event.eventID && event.duration > 0)
 		{
 			prozent = 100 * (time(NULL) - event.startTime) / event.duration;
-			yresult += string_printf("<td class=\"%c\"><table border=\"0\" cellspacing=\"0\" cellpadding=\"3\"><tr><td>\n"
+			yresult += string_printf("<td class=\"%c title_cell\"><table class=\"title_table\" border=\"0\" cellspacing=\"0\" cellpadding=\"3\"><tr><td class=\"cslider_cell\">\n"
 					"\t<table border=\"0\" rules=\"none\" class=\"cslider cslider_table\">"
 					"<tr>"
 					"<td class=\"cslider cslider_used\" width=\"%d\"></td>"
@@ -419,7 +418,7 @@ std::string CNeutrinoYParser::func_get_bouquets_with_epg(CyhookHandler *hh, std:
 		}
 		else
 		{
-			yresult += string_printf("<td class=\"%c\"><table border=\"0\" cellspacing=\"0\" cellpadding=\"3\"><tr><td>\n"
+			yresult += string_printf("<td class=\"%c title_cell\"><table class=\"title_table\" border=\"0\" cellspacing=\"0\" cellpadding=\"3\"><tr><td class=\"cslider_cell\">\n"
 					"\t<table border=\"0\" rules=\"none\" class=\"cslider cslider_table\">"
 					"<tr>"
 					"<td class=\"cslider cslider_noepg\"></td>"
@@ -429,29 +428,62 @@ std::string CNeutrinoYParser::func_get_bouquets_with_epg(CyhookHandler *hh, std:
 				);
 		}
 
-		/* channel name and buttons */
-		yresult += string_printf("<td>\n%s<a class=\"clist\" href=\"javascript:do_zap('"
-				PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS
-				"')\">&nbsp;%d. %s%s</a>&nbsp;<a href=\"javascript:do_epg('"
-				PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS
-				"','"
-				PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS
-				"')\">%s</a>\n",
-				((channel->getChannelID() == current_channel) ? "<a name=\"akt\"></a>" : " "),
-				channel->getChannelID(),
-				channel->number /* num + j */,
-				channel->getName().c_str(),
-				(channel->getServiceType() == ST_NVOD_REFERENCE_SERVICE) ? " (NVOD)" : "",
-				channel->getChannelID(),
-				channel->getChannelID() & 0xFFFFFFFFFFFFULL,
-				(event.eventID ? "<img src=\"/images/elist.png\" alt=\"Program preview\" style=\"border: 0px\" />" : ""));
+		/* channel name */
+		yresult += "<td>\n";
 
 		if (channel->getChannelID() == current_channel)
-			yresult += string_printf("\n&nbsp;&nbsp;<a href=\"javascript:do_streaminfo()\"><img src=\"/images/streaminfo.png\" alt=\"Streaminfo\" style=\"border: 0px\" /></a>");
+			yresult += "<a name=\"akt\"></a>\n";
+
+		yresult += string_printf("<a class=\"clist\" href=\"javascript:do_zap('"PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS"')\">"
+				"%d. %s%s"
+				"</a>\n"
+				, channel->getChannelID()
+				, channel->number
+				, channel->getName().c_str()
+				, (channel->getServiceType() == ST_NVOD_REFERENCE_SERVICE) ? " (NVOD)" : ""
+			);
+
+		yresult += "</td>\n";
+
+		/* buttons */
+		yresult += "<td align=\"right\" >\n";
+
+		if (channel->getChannelID() == current_channel)
+		{
+			yresult += "<a href=\"javascript:do_streaminfo()\">";
+			yresult += "<img src=\"/images/streaminfo.png\" alt=\"Streaminfo\" title=\"Streaminfo\" />";
+			yresult += "</a>\n";
+		}
+
+		if (!channel->getUrl().empty())
+		{
+			yresult += "<img src=\"/images/webtv.png\" alt=\"WebTV\" title=\"WebTV\" />\n";
+		}
+
+		if (channel->scrambled)
+		{
+			yresult += "<img src=\"/images/key.png\" alt=\"Scrambled\" title=\"Scrambled\" />\n";
+		}
+		if (event.eventID)
+		{
+			yresult += string_printf("<a href=\"javascript:do_epg('"PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS"','"PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS"')\">"
+					"<img src=\"/images/elist.png\" alt=\"Program preview\" title=\"EPG\" />"
+					"</a>\n"
+					, channel->getChannelID()
+					, channel->getChannelID() & 0xFFFFFFFFFFFFULL
+				);
+		}
+
+		yresult += string_printf("<a href=\"javascript:do_stream('"PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS"','%s')\">"
+				"<img src=\"/images/stream.png\" alt=\"Stream\" title=\"Stream\" />"
+				"</a>\n"
+				, channel->getChannelID()
+				, channel->getName().c_str()
+			);
 
 		yresult += string_printf("\n&nbsp;&nbsp;<a href=\"/control/build_playlist?id="PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS"\"><img src=\"/images/vlc.png\" alt=\"VLC-Link\" style=\"border: 0px\" /></a>",channel->getChannelID());
 
-		yresult += string_printf("</td></tr></table>\n</td>\n</tr>\n");
+		yresult += "</td></tr></table>\n</td>\n</tr>\n";
 
 		if (channel->getServiceType() == ST_NVOD_REFERENCE_SERVICE)
 		{
@@ -701,7 +733,8 @@ std::string  CNeutrinoYParser::func_get_audio_pids_as_dropdown(CyhookHandler *, 
 						{
 							if(!(init_iso))
 							{
-								strcpy( pids.APIDs[j].desc, _getISO639Description( pids.APIDs[j].desc ) );
+								std::string tmp_desc = _getISO639Description( pids.APIDs[j].desc);
+								strncpy(pids.APIDs[j].desc, tmp_desc.c_str(), DESC_MAX_LEN -1);
 							}
 							yresult += string_printf("<option value=%05u %s>%s %s</option>\r\n",idx_as_id ? j : pids.APIDs[j].pid,(j==selected_apid) ? "selected=\"selected\"" : "",std::string(pids.APIDs[j].desc).c_str(),pids.APIDs[j].is_ac3 ? " (AC3)": pids.APIDs[j].is_aac ? "(AAC)" : pids.APIDs[j].is_eac3 ? "(EAC3)" : " ");
 						}
@@ -718,7 +751,8 @@ std::string  CNeutrinoYParser::func_get_audio_pids_as_dropdown(CyhookHandler *, 
 			{
 				if(!(init_iso))
 				{
-					strcpy( pids.APIDs[i].desc, _getISO639Description( pids.APIDs[i].desc ) );
+					std::string tmp_desc = _getISO639Description( pids.APIDs[i].desc);
+					strncpy(pids.APIDs[i].desc, tmp_desc.c_str(), DESC_MAX_LEN -1);
 				}
 				yresult += string_printf("<option value=%05u %s>%s %s</option>\r\n",
 							 idx_as_id ? i : it->pid, (i==selected_apid) ? "selected=\"selected\"" : "",pids.APIDs[i].desc,
