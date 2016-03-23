@@ -1767,6 +1767,7 @@ moviebrowser.info_prevplaydate Letzte Wiedergabe
 moviebrowser.info_prodcountry Land
 moviebrowser.info_prodyear Jahr
 moviebrowser.info_quality Qualität
+moviebrowser.info_rating Bewertung
 moviebrowser.info_recorddate Aufnahmedatum
 moviebrowser.info_serie Serie
 moviebrowser.info_size Dateigröße (MB)
@@ -1816,6 +1817,7 @@ moviebrowser.short_path Pfad
 moviebrowser.short_prevplaydate Zuletzt
 moviebrowser.short_prodyear Jahr
 moviebrowser.short_quality Qualität
+moviebrowser.short_rating Vote
 moviebrowser.short_recorddate Datum
 moviebrowser.short_serie Serie
 moviebrowser.short_size Größe
