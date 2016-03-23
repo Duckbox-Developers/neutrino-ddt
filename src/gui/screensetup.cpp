@@ -364,6 +364,7 @@ int CScreenSetup::exec(CMenuTarget* parent, const std::string &)
 			}
 			case CRCInput::RC_favorites:
 			case CRCInput::RC_sat:
+			case CRCInput::RC_www:
 				break;
 
 			default:
