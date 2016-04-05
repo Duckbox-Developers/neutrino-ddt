@@ -88,6 +88,9 @@ bool glcd_play = false;
 #include <libavcodec/avcodec.h>
 #endif
 
+#include <system/stacktrace.h>
+
+
 extern cVideo * videoDecoder;
 extern CRemoteControl *g_RemoteControl;	/* neutrino.cpp */
 
@@ -103,13 +106,14 @@ OpenThreads::Mutex CMoviePlayerGui::bgmutex;
 OpenThreads::Condition CMoviePlayerGui::cond;
 pthread_t CMoviePlayerGui::bgThread;
 cPlayback *CMoviePlayerGui::playback;
+bool CMoviePlayerGui::webtv_started;
 CMovieBrowser* CMoviePlayerGui::moviebrowser;
 CBookmarkManager * CMoviePlayerGui::bookmarkmanager;
 
 CMoviePlayerGui& CMoviePlayerGui::getInstance(bool background)
 {
-	OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(bgmutex);
-	if (!instance_mp)
+	OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(mutex);
+	if (!instance_mp )
 	{
 		instance_mp = new CMoviePlayerGui();
 		instance_bg = new CMoviePlayerGui();
@@ -636,9 +640,11 @@ bool CMoviePlayerGui::prepareFile(CFile *file)
 	if (isMovieBrowser) {
 		if (filelist_it != filelist.end()) {
 			unsigned idx = filelist_it - filelist.begin();
-			p_movie_info = milist[idx];
-			startposition = p_movie_info->bookmarks.start > 0 ? p_movie_info->bookmarks.start*1000 : -1;
-			printf("CMoviePlayerGui::prepareFile: file %s start %d\n", file_name.c_str(), startposition);
+			if(milist.size() > idx){
+				p_movie_info = milist[idx];
+				startposition = p_movie_info->bookmarks.start > 0 ? p_movie_info->bookmarks.start*1000 : -1;
+				printf("CMoviePlayerGui::prepareFile: file %s start %d\n", file_name.c_str(), startposition);
+			}
 		}
 		if (isYT) {
 			file_name = file->Url;
@@ -787,13 +793,52 @@ void *CMoviePlayerGui::ShowStartHint(void *arg)
 	return NULL;
 }
 
+bool CMoviePlayerGui::StartWebtv(void)
+{
+	printf("%s: starting...\n", __func__);fflush(stdout);
+	last_read = position = duration = 0;
+
+	cutNeutrino();
+	clearSubtitle();
+
+	playback->Open(is_file_player ? PLAYMODE_FILE : PLAYMODE_TS);
+
+	bool res = playback->Start((char *) file_name.c_str(), cookie_header);//url with cookies
+
+	playback->SetSpeed(1);
+	if (!res) {
+		playback->Close();
+	} else {
+		getCurrentAudioName(is_file_player, currentaudioname);
+		if (is_file_player)
+			selectAutoLang();
+	}
+
+	return res;
+}
+
 void* CMoviePlayerGui::bgPlayThread(void *arg)
 {
 	set_threadname(__func__);
 	CMoviePlayerGui *mp = (CMoviePlayerGui *) arg;
+	printf("%s: starting... instance %p\n", __func__, mp);fflush(stdout);
 
 	int eof = 0, pos = 0;
-	while(true) {
+	unsigned char *chid = new unsigned char[sizeof(t_channel_id)];
+	*(t_channel_id*)chid = mp->movie_info.epgId;
+
+	bool started = mp->StartWebtv();
+	printf("%s: started: %d\n", __func__, started);fflush(stdout);
+
+	mutex.lock();
+	if (!webtv_started)
+		started = false;
+	else if (!started)
+		g_RCInput->postMsg(NeutrinoMessages::EVT_ZAP_FAILED, (neutrino_msg_data_t) chid);
+	webtv_started = started;
+	mutex.unlock();
+
+	while(webtv_started) {
 		if (mp->playback->GetPosition(mp->position, mp->duration)) {
 #if 0
 			printf("CMoviePlayerGui::bgPlayThread: position %d duration %d (%d)\n", mp->position, mp->duration, mp->duration-mp->position);
@@ -804,8 +849,6 @@ void* CMoviePlayerGui::bgPlayThread(void *arg)
 				eof = 0;
 			if (eof > 5) {
 				printf("CMoviePlayerGui::bgPlayThread: playback stopped, try to rezap...\n");
-				unsigned char *chid = new unsigned char[sizeof(t_channel_id)];
-				*(t_channel_id*)chid = mp->movie_info.epgId;
 				g_RCInput->postMsg(NeutrinoMessages::EVT_WEBTV_ZAP_COMPLETE, (neutrino_msg_data_t) chid);
 				break;
 			}
@@ -820,7 +863,7 @@ void* CMoviePlayerGui::bgPlayThread(void *arg)
 		mp->showSubtitle(0);
 #endif
 	}
-	printf("%s: play end...\n", __func__);
+	printf("%s: play end...\n", __func__);fflush(stdout);
 	mp->PlayFileEnd();
 	pthread_exit(NULL);
 }
@@ -1067,7 +1110,7 @@ bool CMoviePlayerGui::getLiveUrl(const t_channel_id chan, const std::string &url
 
 bool CMoviePlayerGui::PlayBackgroundStart(const std::string &file, const std::string &name, t_channel_id chan, const std::string &script)
 {
-	printf("%s: starting...\n", __func__);
+	printf("%s: starting...\n", __func__);fflush(stdout);
 	static CZapProtection *zp = NULL;
 	if (zp)
 		return true;
@@ -1097,15 +1140,12 @@ bool CMoviePlayerGui::PlayBackgroundStart(const std::string &file, const std::st
 		}
 	}
 
-	std::string realUrl = file;
+	std::string realUrl;
 	std::string _pretty_name = name;
+	cookie_header.clear();
 	if (!getLiveUrl(chan, file, script, realUrl, _pretty_name, livestreamInfo1, livestreamInfo2, cookie_header)) {
-		/* FIXME: lua->runScript calling channelRezap, which makes neutrino to loop at start,
-		   let playback start -> drop messages in ShowStartHint */
-		//return false;
+		return false;
 	}
-
-	OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(mutex);
 
 	instance_bg->Cleanup();
 	instance_bg->ClearFlags();
@@ -1127,14 +1167,16 @@ bool CMoviePlayerGui::PlayBackgroundStart(const std::string &file, const std::st
 	numpids = 0;
 	numpidt = 0; currentttxsub = "";
 
-	bool res = instance_bg->PlayFileStart();
-	if (res) {
-		if (pthread_create (&bgThread, 0, CMoviePlayerGui::bgPlayThread, instance_bg))
-			fprintf(stderr, "ERROR: pthread_create(%s)\n", __func__);
-	} else
-		instance_bg->PlayFileEnd();
-	printf("%s: this %p started: res %d thread %lx\n", __func__, this, res, bgThread);fflush(stdout);
-	return res;
+	stopPlayBack();
+	webtv_started = true;
+	if (pthread_create (&bgThread, 0, CMoviePlayerGui::bgPlayThread, instance_bg)) {
+		printf("ERROR: pthread_create(%s)\n", __func__);
+		webtv_started = false;
+		return false;
+	}
+
+	printf("%s: this %p started, thread %lx\n", __func__, this, bgThread);fflush(stdout);
+	return true;
 }
 
 bool MoviePlayerZapto(const std::string &file, const std::string &name, t_channel_id chan)
@@ -1155,6 +1197,10 @@ void CMoviePlayerGui::stopPlayBack(void)
 	repeat_mode = REPEAT_OFF;
 	if (bgThread) {
 		printf("%s: this %p join background thread %lx\n", __func__, this, bgThread);fflush(stdout);
+		mutex.lock();
+		webtv_started = false;
+		playback->RequestAbort();
+		mutex.unlock();
 		cond.broadcast();
 		pthread_join(bgThread, NULL);
 		bgThread = 0;
@@ -1179,9 +1225,7 @@ void CMoviePlayerGui::Pause(bool b)
 
 void CMoviePlayerGui::PlayFile(void)
 {
-	mutex.lock();
 	PlayFileStart();
-	mutex.unlock();
 	PlayFileLoop();
 	bool repeat = (repeat_mode == REPEAT_OFF);
 	if (isLuaPlay)
@@ -1209,6 +1253,7 @@ bool CMoviePlayerGui::PlayFileStart(void)
 	cutNeutrino();
 	if (isWebTV)
 		videoDecoder->setBlank(true);
+
 #if 0
 	clearSubtitle();
 #endif
@@ -1256,12 +1301,7 @@ bool CMoviePlayerGui::PlayFileStart(void)
 		showStartingHint = true;
 		pthread_create(&thrStartHint, NULL, CMoviePlayerGui::ShowStartHint, this);
 	}
-	bool res = false;
-	if(cookie_header.empty()){
-		res = playback->Start((char *) file_name.c_str(), vpid, vtype, currentapid, currentac3, duration);
-	}else{
-		res = playback->Start((char *) file_name.c_str(), cookie_header);//url with cookies
-	}
+	bool res = playback->Start((char *) file_name.c_str(), vpid, vtype, currentapid, currentac3, duration);
 
 	if (thrStartHint) {
 		showStartingHint = false;
@@ -2011,7 +2051,8 @@ void CMoviePlayerGui::callInfoViewer(bool init_vzap_it)
 			if (vzap_it <= filelist.end()) {
 				unsigned idx = vzap_it - filelist.begin();
 				//printf("CMoviePlayerGui::%s: idx: %d\n", __func__, idx);
-				mi = milist[idx];
+				if(milist.size() > idx)
+					mi = milist[idx];
 			}
 		}
 

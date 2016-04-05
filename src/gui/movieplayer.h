@@ -213,6 +213,7 @@ class CMoviePlayerGui : public CMenuTarget
 	static OpenThreads::Mutex bgmutex;
 	static OpenThreads::Condition cond;
 	static pthread_t bgThread;
+	static bool webtv_started;
 
 	static cPlayback *playback;
 	static CMoviePlayerGui* instance_mp;
@@ -224,6 +225,7 @@ class CMoviePlayerGui : public CMenuTarget
 	void PlayFileLoop();
 	void PlayFileEnd(bool restore = true);
 	void cutNeutrino();
+	bool StartWebtv();
 
 	void quickZap(neutrino_msg_t msg);
 	void showHelpTS(void);
