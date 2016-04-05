@@ -799,7 +799,9 @@ bool CMoviePlayerGui::StartWebtv(void)
 	last_read = position = duration = 0;
 
 	cutNeutrino();
+#if 0
 	clearSubtitle();
+#endif
 
 	playback->Open(is_file_player ? PLAYMODE_FILE : PLAYMODE_TS);
 
