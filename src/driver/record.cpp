@@ -2000,6 +2000,8 @@ bool CStreamRec::Stop(bool remove_event)
 	if (stopped)
 		return false;
 
+	av_log(NULL, AV_LOG_QUIET, "%s", "");
+
 	time_t end_time = time_monotonic();
 	CHintBox hintBox(LOCALE_MESSAGEBOX_INFO, rec_stop_msg.c_str());
 	if ((!(autoshift && g_settings.auto_timeshift)) && g_settings.recording_startstop_msg)
@@ -2116,18 +2118,25 @@ bool CStreamRec::Open(CZapitChannel * channel)
 	avformat_network_init();
 	printf("%s: Open input [%s]....\n", __FUNCTION__, url.c_str());
 
+	av_log_set_flags(AV_LOG_SKIP_REPEATED);
 	AVDictionary *options = NULL;
+	av_dict_set(&options, "auth_type", "basic", 0);
 	if (!headers.empty())//add cookies
+	{
+		headers += "\r\n";
 		av_dict_set(&options, "headers", headers.c_str(), 0);
+	}
 
+	av_log_set_level(AV_LOG_DEBUG);
 	if (avformat_open_input(&ifcx, url.c_str(), NULL, &options) != 0) {
 		printf("%s: Cannot open input [%s]!\n", __FUNCTION__, url.c_str());
-		if (!headers.empty())
-			av_dict_free(&options);
+		av_log_set_level(AV_LOG_INFO);
+		av_dict_free(&options);
 		return false;
 	}
-	if (!headers.empty())
-		av_dict_free(&options);
+
+	av_log_set_level(AV_LOG_INFO);
+	av_dict_free(&options);
 
 	if (avformat_find_stream_info(ifcx, NULL) < 0) {
 		printf("%s: Cannot find stream info [%s]!\n", __FUNCTION__, channel->getUrl().c_str());
@@ -2183,7 +2192,7 @@ bool CStreamRec::Open(CZapitChannel * channel)
 	}
 	av_log_set_level(AV_LOG_VERBOSE);
 	av_dump_format(ofcx, 0, ofcx->filename, 1);
-	av_log_set_level(AV_LOG_WARNING);
+	av_log_set_level(AV_LOG_INFO);
 	bsfc = av_bitstream_filter_init("h264_mp4toannexb");
 	if (!bsfc)
 		printf("%s: av_bitstream_filter_init h264_mp4toannexb failed!\n", __FUNCTION__);
