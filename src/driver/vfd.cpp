@@ -568,7 +568,7 @@ void CVFD::showTime(bool force)
 	}
 
 	int tmp_recstatus = CNeutrinoApp::getInstance()->recordingstatus;
-	if (tmp_recstatus) {
+	if (tmp_recstatus && !CRecordManager::getInstance()->TimeshiftOnly()) {
 		if(clearClock) {
 			clearClock = 0;
 			if (RecIconID>=0) SetIcon(RecIconID, false);
