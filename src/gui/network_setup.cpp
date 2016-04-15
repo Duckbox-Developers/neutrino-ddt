@@ -721,9 +721,9 @@ void CNetworkSetup::testNetworkSettings()
 	std::string wiki_URL = "wiki.neutrino-hd.de";
 	std::string wiki_IP = "89.31.143.1";
 
-	//get www-domain testsite from /.version
+	//get www-domain testsite from /usr/ntrino/version/
 	CConfigFile config('\t');
-	config.loadConfig("/.version");
+	config.loadConfig("/usr/ntrino/version/");
 	testsite = config.getString("homepage",defaultsite);
 	testsite.replace( 0, testsite.find("www",0), "" );
 

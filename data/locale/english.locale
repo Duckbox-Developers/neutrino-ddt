@@ -2592,3 +2592,8 @@ zapitsetup.last_radio Radio Channel
 zapitsetup.last_tv TV Channel
 zapitsetup.last_use from last Channel
 zaptotimer.announce Zapto timer in one minute
+j00zek.openpli Start openPLI
+j00zek.update Update Neutrino
+j00zek.restart SoftCam restart
+j00zek.vfd_show_number number
+recording.failed Recording failed!

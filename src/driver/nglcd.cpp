@@ -518,7 +518,7 @@ void nGLCD::Run(void)
 				char ws[10];
 				snprintf(ws, sizeof(ws), "%d", bitmap->Width());
 				const char *bmpShot = "/tmp/nglcd-video.bmp";
-				my_system(4, "/bin/grab", "-vr", ws, bmpShot);
+				my_system(4, "/usr/bin/grab", "-vr", ws, bmpShot);
 				int bw = 0, bh = 0;
 				g_PicViewer->getSize(bmpShot, &bw, &bh);
 				if (bw > 0 && bh > 0) {

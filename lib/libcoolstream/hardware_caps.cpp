@@ -19,7 +19,7 @@ hw_caps_t *get_hwcaps(void) {
 	caps.has_SCART_input = 0;
 	caps.has_YUV_cinch = 1;
 	caps.can_shutdown = (cs_get_revision() > 7);
-	caps.can_cec = 1;
+	caps.can_cec = 0;
 	caps.display_type = HW_DISPLAY_LINE_TEXT;
 	caps.display_xres = 12;
 	caps.display_yres = 0;
