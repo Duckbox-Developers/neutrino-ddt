@@ -215,7 +215,7 @@ CBouquetList   * AllFavBouquetList;
 CPlugins       * g_PluginList;
 CRemoteControl * g_RemoteControl;
 CPictureViewer * g_PicViewer;
-#if !HAVE_SPARK_HARDWARE
+#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
 CCAMMenuHandler * g_CamHandler;
 #endif
 CVolume        * g_volume;
@@ -422,8 +422,8 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.audio_mixer_volume_spdif = configfile.getInt32("audio_mixer_volume_spdif", 75);
 #endif
 
-	g_settings.audio_volume_percent_ac3 = configfile.getInt32("audio_volume_percent_ac3",  100);
-	g_settings.audio_volume_percent_pcm = configfile.getInt32("audio_volume_percent_pcm",  65);
+	g_settings.audio_volume_percent_ac3 = configfile.getInt32("audio_volume_percent_ac3",   100);
+	g_settings.audio_volume_percent_pcm = configfile.getInt32("audio_volume_percent_pcm",   65);
 
 	g_settings.channel_mode = configfile.getInt32("channel_mode", LIST_MODE_FAV);
 	g_settings.channel_mode_radio = configfile.getInt32("channel_mode_radio", LIST_MODE_FAV);
@@ -434,7 +434,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	if (g_settings.channel_mode_initial_radio > -1)
 		g_settings.channel_mode_radio = g_settings.channel_mode_initial_radio;
 
-	g_settings.fan_speed = configfile.getInt32( "fan_speed",  0);
+	g_settings.fan_speed = configfile.getInt32( "fan_speed",   0);
 	if(g_settings.fan_speed < 1) g_settings.fan_speed = 1;
 
 	g_settings.srs_enable = configfile.getInt32( "srs_enable", 0);
@@ -2201,7 +2201,9 @@ TIMER_START();
 	CVFD::getInstance()->init(neutrinoFonts->fontDescr.filename.c_str(), neutrinoFonts->fontDescr.name.c_str());
 	CVFD::getInstance()->Clear();
 	CVFD::getInstance()->ShowText(g_Locale->getText(LOCALE_NEUTRINO_STARTING));
+#if !HAVE_DUCKBOX_HARDWARE
 	CVFD::getInstance()->setBacklight(g_settings.backlight_tv);
+#endif
 
 #if HAVE_DUCKBOX_HARDWARE
 	CVFD::getInstance()->ClearIcons();
@@ -2325,18 +2327,19 @@ TIMER_START();
 	g_InfoViewer = new CInfoViewer;
 	g_EventList = new CEventList;
 
-#if !HAVE_SPARK_HARDWARE
+#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
 	g_CamHandler = new CCAMMenuHandler();
 	g_CamHandler->init();
 #endif
 
+#if 0
 #ifndef ASSUME_MDEV
 	mkdir("/media/sda1", 0755);
 	mkdir("/media/sdb1", 0755);
 	my_system(3, "mount", "/dev/sda1", "/media/sda1");
 	my_system(3, "mount", "/dev/sdb1", "/media/sdb1");
 #endif
-
+#endif
 	CFSMounter::automount();
 	g_PluginList = new CPlugins;
 	g_PluginList->setPluginDir(PLUGINDIR);
@@ -3027,7 +3030,7 @@ bool CNeutrinoApp::wakeupFromStandby(void)
 
 	if ((mode == mode_standby) && !alive) {
 		cpuFreq->SetCpuFreq(g_settings.cpufreq * 1000 * 1000);
-#if !HAVE_SPARK_HARDWARE
+#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
 		if(g_settings.ci_standby_reset) {
 			g_CamHandler->exec(NULL, "ca_ci_reset0");
 			g_CamHandler->exec(NULL, "ca_ci_reset1");
@@ -3183,7 +3186,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 		return( res & ( 0xFFFFFFFF - messages_return::unhandled ) );
 	}
 
-#if !HAVE_SPARK_HARDWARE
+#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
 	/* we assume g_CamHandler free/delete data if needed */
 	res = g_CamHandler->handleMsg(msg, data);
 	if( res != messages_return::unhandled ) {
@@ -4131,7 +4134,10 @@ void CNeutrinoApp::standbyMode( bool bOnOff, bool fromDeepStandby )
 #ifdef ENABLE_GRAPHLCD
 		nGLCD::StandbyMode(true);
 #endif
-		CVFD::getInstance()->ShowText("standby...");
+		if (g_settings.language == "polski")
+			CVFD::getInstance()->ShowText("Czuwanie...");
+		else
+			CVFD::getInstance()->ShowText("standby...");
 		if( mode == mode_scart ) {
 			//g_Controld->setScartMode( 0 );
 		}
@@ -4212,7 +4218,10 @@ void CNeutrinoApp::standbyMode( bool bOnOff, bool fromDeepStandby )
 		// Active standby off
 		powerManager->SetStandby(false, false);
 		CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
-		CVFD::getInstance()->ShowText("resume");
+		if (g_settings.language == "polski")
+			CVFD::getInstance()->ShowText("Pobudka...");
+		else
+			CVFD::getInstance()->ShowText("resume");
 		cpuFreq->SetCpuFreq(g_settings.cpufreq * 1000 * 1000);
 		videoDecoder->Standby(false);
 		CEpgScan::getInstance()->Stop();
@@ -4237,7 +4246,7 @@ void CNeutrinoApp::standbyMode( bool bOnOff, bool fromDeepStandby )
 		}
 #endif
 
-#if !HAVE_SPARK_HARDWARE
+#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
 		if(!recordingstatus && g_settings.ci_standby_reset) {
 			g_CamHandler->exec(NULL, "ca_ci_reset0");
 			g_CamHandler->exec(NULL, "ca_ci_reset1");
@@ -4397,6 +4406,12 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 		unlink("/tmp/.reboot");
 		returnval = menu_return::RETURN_NONE;
 	}
+	else if(actionKey=="j00zek_runpli")
+		ExitRun(true, 2);
+	else if(actionKey=="j00zek_update")
+		ExitRun(true, 3);
+	else if(actionKey=="j00zek_restartoscam")
+		my_system("/usr/ntrino/scripts/restart_softcam.sh");
 	else if (actionKey=="clock_switch")
 	{
 		InfoClock->switchClockOnOff();
@@ -5077,7 +5092,7 @@ void CNeutrinoApp::Cleanup()
 	printf("cleanup 13\n");fflush(stdout);
 	delete g_PluginList; g_PluginList = NULL;
 	printf("cleanup 16\n");fflush(stdout);
-#if !HAVE_SPARK_HARDWARE
+#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
 	delete g_CamHandler; g_CamHandler = NULL;
 	printf("cleanup 17\n");fflush(stdout);
 #endif

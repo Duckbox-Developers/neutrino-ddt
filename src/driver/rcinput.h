@@ -147,6 +147,7 @@ class CRCInput
 		int 		fd_pipe_high_priority[2];
 		int 		fd_pipe_low_priority[2];
 		int         	fd_gamerc;
+#if 0
 #if HAVE_SPARK_HARDWARE
 #ifdef BOXMODEL_SPARK
 #define NUMBER_OF_EVENT_DEVICES 2
@@ -164,6 +165,13 @@ class CRCInput
 #define NUMBER_OF_EVENT_DEVICES 1
 #endif
 #endif
+#endif
+#ifdef HAVE_DUCKBOX_HARDWARE
+#define NUMBER_OF_EVENT_DEVICES 2
+#else
+#define NUMBER_OF_EVENT_DEVICES 1
+#endif
+
 		int         	fd_rc[NUMBER_OF_EVENT_DEVICES];
 		int		fd_keyb;
 		int		fd_event;
@@ -285,6 +293,13 @@ class CRCInput
 			RC_ttreveal	= KEY_REVEAL,
 			RC_zoomin	= KEY_ZOOMIN,
 			RC_zoomout	= KEY_ZOOMOUT,
+
+			/* nbox remote keys */
+			RC_option	= KEY_OPTION,
+			RC_media	= KEY_MEDIA,
+			RC_n		= KEY_GOTO,
+			RC_pvr		= KEY_PVR,
+			RC_list		= KEY_LIST,
 
 			RC_timeout	= 0xFFFFFFFF,
 			RC_nokey	= 0xFFFFFFFE

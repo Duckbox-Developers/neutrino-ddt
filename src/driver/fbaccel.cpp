@@ -210,10 +210,31 @@ CFbAccel::CFbAccel(CFrameBuffer *_fb)
 	}
 	backbuf_sz = 1280 * 720 * sizeof(fb_pixel_t);
 	BPAMemAllocMemData bpa_data;
+		char buf[64];
+	
+	//j00zek dynamiczna definicja partcji bpa
+	int len = -1;
+	int fd = open("/proc/stb/info/model", O_RDONLY);
+	bpa_data.bpa_part = (char *)"LMI_VID";
+	if (fd != -1) {
+		len = read(fd, buf, sizeof(buf) - 1);
+		close(fd);
+	}
+	if (len > 0) {
+		buf[len] = 0;
+		if  (/*(!strncmp(buf, "arivalink200", 12)) || */
+			(!strncmp(buf, "cuberevo", 8)) ||
+			(!strncmp(buf, "octagon1008", 11)) ||
+			(!strncmp(buf, "ipbox", 5))
+		) 
+			bpa_data.bpa_part = (char *)"LMI_SYS";
+	}
+#if 0
 #if BOXMODEL_OCTAGON1008 || BOXMODEL_FORTIS_HDBOX || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_2000HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_IPBOX55 || BOXMODEL_TF7700
 	bpa_data.bpa_part = (char *)"LMI_SYS";
 #else
 	bpa_data.bpa_part = (char *)"LMI_VID";
+#endif
 #endif
 	bpa_data.mem_size = backbuf_sz;
 	int res;

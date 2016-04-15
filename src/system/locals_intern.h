@@ -2619,6 +2619,11 @@ const char * locale_real_names[] =
 	"zapitsetup.last_radio",
 	"zapitsetup.last_tv",
 	"zapitsetup.last_use",
-	"zaptotimer.announce"
+	"zaptotimer.announce",
+	"j00zek.openpli",
+	"j00zek.update",
+	"j00zek.restart",
+	"j00zek.vfd_show_number",
+	"j00zek.vfd_show_curr_pname"
 };
 #endif

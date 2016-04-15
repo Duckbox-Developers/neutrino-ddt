@@ -69,6 +69,7 @@
 
 #define ENABLE_REPEAT_CHECK
 
+#if 0
 #if HAVE_SPARK_HARDWARE
 /* this relies on event0 being the AOTOM frontpanel driver device
  * TODO: what if another input device is present? */
@@ -92,6 +93,13 @@ const char * const RC_EVENT_DEVICE[NUMBER_OF_EVENT_DEVICES] = {"/dev/input/event
 const char * const RC_EVENT_DEVICE[NUMBER_OF_EVENT_DEVICES] = {"/dev/input/nevis_ir"};
 #endif
 #endif
+#endif
+#if HAVE_DUCKBOX_HARDWARE
+const char * const RC_EVENT_DEVICE[NUMBER_OF_EVENT_DEVICES] = {"/dev/input/nevis_ir", "/dev/input/nevis_fp"};
+#else
+const char * const RC_EVENT_DEVICE[NUMBER_OF_EVENT_DEVICES] = {"/dev/input/event0"};
+#endif
+
 typedef struct input_event t_input_event;
 
 #ifdef KEYBOARD_INSTEAD_OF_REMOTE_CONTROL
@@ -1607,6 +1615,17 @@ const char * CRCInput::getSpecialKeyName(const unsigned int key)
 				return "pos";
 			case RC_sleep:
 				return "sleep";
+			/* nbox remote keys */
+			case RC_option:
+				return "opt";
+			case RC_media:
+				return "media";
+			case RC_n:
+				return "n";
+			case RC_pvr:
+				return "pvr";
+			case RC_list:
+				return "list";
 			default:
 				printf("unknown key: %d (0x%x) \n", key, key);
 				return "unknown";
