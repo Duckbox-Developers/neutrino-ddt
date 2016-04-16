@@ -1,0 +1,97 @@
+#!/bin/sh
+
+# Graterlia OS
+# homepage: http://graterlia.xunil.pl
+# e-mail: nbox@xunil.pl
+#
+# skrypt włączający TV poprzez CEC
+# @j00zek
+# wersja 2015-02-14
+
+. /etc/sysconfig/gfunctions #wczytanie funkcji wspólnych dla skryptów Graterlia
+
+if [ -f /tmp/timerwakeup ]; then #flaga ze to jest timerwakup.
+	GOSdebug ">>>>>>>>>> $0 timerwakeup, no actions"
+	exit 0
+fi
+GOSdebug ">>>>>>>>>> $0"
+
+##### FUNKCJE #####
+getCONFIG(){
+if grep -lq "config.plugins.CEC.$1=" /etc/enigma2/settings; then
+	value=`grep "config.plugins.CEC.$1=" /etc/enigma2/settings | cut -d '=' -f2` 
+	case $1 in
+		ActiveSource)
+			case $value in
+				HDMI1|11)[ "$cecModule" == "new" ] && value='3f 82 11 00 ' ||  value='3f821100';;
+				HDMI2|21)[ "$cecModule" == "new" ] && value='3f 82 21 00 ' ||  value='3f822100';;
+				HDMI3|31)[ "$cecModule" == "new" ] && value='3f 82 31 00 ' ||  value='3f823100';;
+				HDMI4|41)[ "$cecModule" == "new" ] && value='3f 82 41 00 ' ||  value='3f824100';;
+			esac
+			;;
+		Counter) value='2';;
+		Delay) 	 value='1';;
+		*) value='default';;
+	esac
+else
+	case $1 in
+		ActiveSource)
+			if [ "$cecModule" == "new" ]; then
+				value='0'
+			else
+				value='3f821100'
+			fi
+			;;
+		Counter) value='2';;
+		Delay) 	 value='1';;
+		*) value='default';;
+	esac
+fi
+echo "$value"
+}
+
+CEC_SendCommand(){
+GOSdebug "Sending: '$1'>$2"
+echo "$1">$2
+}
+
+##### INICJALIZACJA #####
+if `lsmod | grep -q cec_ctrl`; then #old_cec
+	cecModule='old'
+	CEC_send='/proc/stb/hdmi/cec'
+    CEC_Wakeup='3004'
+    CEC_goStandby='3036'
+elif `lsmod | grep -q cec`; then #new_cec
+	cecModule='new'
+	CEC_send='/proc/stb/cec/send'
+    CEC_Wakeup='30 04 '
+    CEC_goStandby='30 36 '
+else
+	GOSdebug "NO CEC detected, exiting"
+	exit 0
+fi
+GOSdebug "$cecModule CEC detected."
+
+CEC_ActiveHDMI=$( getCONFIG ActiveSource )
+echo "HDMI: $CEC_ActiveHDMI"
+
+if [ "$CEC_ActiveHDMI" == "0" ]; then
+	CEC_send='/proc/stb/cec/onetouchplay'
+    CEC_Wakeup='0'
+fi
+
+CEC_repeats=$( getCONFIG Counter )
+CEC_Delay=$( getCONFIG Delay )
+
+##### MAIN #####
+while [ "$CEC_repeats" -gt 0 ]
+do
+	CEC_SendCommand "$CEC_Wakeup" "$CEC_send"
+	if [ "$CEC_ActiveHDMI" != "0" ]; then
+		sleep 1
+		CEC_SendCommand "$CEC_ActiveHDMI" "$CEC_send"
+	fi
+	CEC_repeats=$(( $CEC_repeats - 1 ))
+	sleep $CEC_Delay
+done
+GOSdebug "<<<<<<<<<< $0"
