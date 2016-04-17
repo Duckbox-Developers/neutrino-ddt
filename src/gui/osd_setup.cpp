@@ -402,14 +402,14 @@ const CMenuOptionChooser::keyval INFOBAR_CASYSTEM_MODE_OPTIONS[INFOBAR_CASYSTEM_
 	{ 2, LOCALE_MISCSETTINGS_INFOBAR_CASYSTEM_MINI },
 	{ 3, LOCALE_OPTIONS_OFF  }
 };
-
+#if 0 //not used
 #define SHOW_INFOMENU_MODE_OPTION_COUNT 2
 const CMenuOptionChooser::keyval SHOW_INFOMENU_MODE_OPTIONS[SHOW_INFOMENU_MODE_OPTION_COUNT] =
 {
 	{ 0, LOCALE_MAINMENU_HEAD },
 	{ 1, LOCALE_MAINMENU_SERVICE }
 };
-
+#endif
 #define MENU_CORNERSETTINGS_TYPE_OPTION_COUNT 2
 const CMenuOptionChooser::keyval MENU_CORNERSETTINGS_TYPE_OPTIONS[MENU_CORNERSETTINGS_TYPE_OPTION_COUNT] =
 {
@@ -479,7 +479,7 @@ const CMenuOptionChooser::keyval  CHANNELLIST_EPGTEXT_ALIGN_RIGHT_OPTIONS[CHANNE
 	{ 0 , LOCALE_CHANNELLIST_EPGTEXT_ALIGN_LEFT },
 	{ 1 , LOCALE_CHANNELLIST_EPGTEXT_ALIGN_RIGHT }
 };
-
+#if 0 //not used
 #define CHANNELLIST_EXTENDED_OPTIONS_COUNT 3
 const CMenuOptionChooser::keyval CHANNELLIST_EXTENDED_OPTIONS[CHANNELLIST_EXTENDED_OPTIONS_COUNT]=
 {
@@ -487,7 +487,7 @@ const CMenuOptionChooser::keyval CHANNELLIST_EXTENDED_OPTIONS[CHANNELLIST_EXTEND
 	{ 1, LOCALE_CHANNELLIST_EXTENDED_SIMPLE },	//unicolor
 	{ 2, LOCALE_CHANNELLIST_EXTENDED_COLORED }	//colored
 };
-
+#endif
 #define OPTIONS_COLORED_EVENTS_OPTION_COUNT 3
 const CMenuOptionChooser::keyval OPTIONS_COLORED_EVENTS_OPTIONS[OPTIONS_COLORED_EVENTS_OPTION_COUNT] =
 {
@@ -936,7 +936,8 @@ public:
 
 void COsdSetup::AddFontSettingItem(CMenuWidget &font_Settings, const SNeutrinoSettings::FONT_TYPES number_of_fontsize_entry)
 {
-	font_Settings.addItem(new CMenuNumberInput(neutrino_font[number_of_fontsize_entry].name, neutrino_font[number_of_fontsize_entry].defaultsize, fontsizenotifier, CNeutrinoApp::getInstance()->getConfigFile()));
+	CMenuNumberInput *ni = new CMenuNumberInput(neutrino_font[number_of_fontsize_entry].name, neutrino_font[number_of_fontsize_entry].defaultsize, fontsizenotifier, CNeutrinoApp::getInstance()->getConfigFile());
+	font_Settings.addItem(ni);
 }
 
 //font settings menu
@@ -1051,7 +1052,6 @@ void COsdSetup::showOsdMenusSetup(CMenuWidget *menu_menus)
 	CMenuOptionChooser * mc;
 
 	submenu_menus->addIntroItems(LOCALE_SETTINGS_MENUS);
-
 	// menu position
 	mc = new CMenuOptionChooser(LOCALE_SETTINGS_MENU_POS, &g_settings.menu_pos, MENU_DISP_POS_OPTIONS, MENU_DISP_POS_OPTIONS_COUNT, true, this);
 	mc->setHint("", LOCALE_MENU_HINT_MENU_POS);
