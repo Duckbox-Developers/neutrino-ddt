@@ -1,17 +1,11 @@
 #!/bin/sh
 
-# Graterlia OS
-# homepage: http://graterlia.xunil.pl
+#
+# @j00zek dla Graterlia
 # e-mail: nbox@xunil.pl
 #
-# skrypt uczyszcz¹cy linki zrobione dla Neutrino
-# wersja 2015-03-19
-
-. /etc/sysconfig/gfunctions #wczytanie funkcji wspólnych dla skryptów Graterlia
-# za³adowanie informacji o konfiguracji o ile istnieje
-if [ -e /etc/sysctl.gos ]; then
-	. /etc/sysctl.gos
-fi
+# skrypt uczyszczacy linki zrobione dla Neutrino
+# wersja 2016-04-17
 
 [ -e /dev/input/nevis_ir ] && rm -rf /dev/input/nevis_ir #obsluga pilota w neutrino
 [ -e /etc/cron/hourly/GetWeather ] && rm -rf /etc/cron/hourly/GetWeather #pogoda na infobarze
@@ -20,3 +14,8 @@ fi
 [ -e /usr/local/share/tuxbox ] && rm -rf /usr/local/share/tuxbox
 [ -e /var/tuxbox ] && rm -rf /var/tuxbox
 [ -e /usr/ntrino ] && rm -rf /usr/ntrino
+[ -e /usr/share/tuxbox ] && rm -rf /usr/share/tuxbox
+[ -e /usr/share/lua ] && rm -rf /usr/share/lua
+[ -e /usr/share/xupnpd ] && rm -rf /usr/share/xupnpd
+
+exit 0

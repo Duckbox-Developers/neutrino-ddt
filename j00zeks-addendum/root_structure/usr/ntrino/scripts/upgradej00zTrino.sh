@@ -1,72 +1,55 @@
 #!/bin/sh
 
-removeTarGz(){
-[ -e /tmp/j00zTrino.tar.gz ] && rm -rf /tmp/j00zTrino.tar.gz
-}
-
 errorExit()
 {
+echo "$1"
 echo "$1">/dev/vfd
-removeTarGz
+[ -e /tmp/neutrino-mod-j00zek_sh4.ipk ] && rm -rf /tmp/neutrino-mod-j00zek_sh4.ipk
 pkill showiframe
 sleep 5
 exit 1
 }
 
-#upgrade clean - from old, unnecessary stuff
-[ -e /usr/ntrino/.debug ] && rm -f /usr/ntrino/.debug
-if ! `grep -q 'Ndbg='</etc/sysctl.gos`;then
-  echo "Ndbg=3">>//etc/sysctl.gos
-fi
-removeTarGz
-tuxbox="/var/tuxbox"
-Nconfig="$tuxbox/config"
-LISTA="$Nconfig/*.off $Nconfig.on $tuxbox/plugins"
-
-for plikORfolder in  $LISTA ; do
-	[ -e $plikORfolder ] && rm -fr $plikORfolder || echo "Brak $plikORfolder :)"
-done
-#upgrade
-
-if [ -f /tmp/neutrino-mp-cst-dev.tar.gz ]; then
-  mv -f /tmp/neutrino-mp-cst-dev.tar.gz /tmp/j00zTrino.tar.gz
-  sync
-  sleep 1
+isPublic=`ls /etc/opkg/*.conf|grep -c 'j00zTrino-OPKG.conf'`
+if [ $isPublic -eq 0 ]; then
+    if [ -f /tmp/neutrino-mod-j00zek_sh4.ipk ]; then
+	opkg install /tmp/neutrino-mod-j00zek_sh4.ipk
+	[ $? -gt 0 ] && errorExit "Error installing"
+	rm -rf /tmp/neutrino-mod-j00zek_sh4.ipk
+    else
+	errorExit "DEV is up-to-date"
+    fi
 else
-  [ -f /usr/share/tuxbox/neutrino/icons/download.mpg ] && showiframe /usr/share/tuxbox/neutrino/icons/download.mpg & 
+  #update opkg
+  [ -f /usr/share/tuxbox/neutrino/icons/updateOPKG.mpg ] && showiframe /usr/share/tuxbox/neutrino/icons/updateOPKG.mpg & 
+  echo "opkg update"
+  echo "opkg update">/dev/vfd
+  opkg update
   sync
-  sleep 1
-  echo "Checking internet connection..."
-  echo "InEt...">/dev/vfd
+  #test connection
+  [ -f /usr/share/tuxbox/neutrino/icons/download.mpg ] && showiframe /usr/share/tuxbox/neutrino/icons/download.mpg & 
+  echo "Test Inet..."
+  echo "Test Inet...">/dev/vfd
   ping -c 1 github.com 1>/dev/null 2>&1
   if [ $? -gt 0 ]; then
-    echo "github server unavailable, update impossible!!!"
-    exit 1
+    errorExit "No Inet..."
   fi
-
-  echo "Downloading latest j00zTrino version..."
+  #download
+  echo "download"
   echo "download">/dev/vfd
-  #curl -kLs https://github.com/j00zek/eePlugins/blob/master/j00zTrino/neutrino-mp-cst.tar.gz?raw=true -o /tmp/j00zTrino.tar.gz
-  wget -q http://hybrid.xunil.pl/j00ztrino/j00ztrino/neutrino-mp-cst.tar.gz -O /tmp/j00zTrino.tar.gz
-  if [ $? -gt 0 ]; then
-    errorExit "Error downloading" 
-  fi
-
-  if [ ! -e /tmp/j00zTrino.tar.gz ]; then
-    errorExit "Error downloading" 
-  fi
+  opkg download neutrino-mod-j00zek
+  sync
 fi
+[ ! -f /tmp/neutrino-mod-j00zek_sh4.ipk ] && errorExit "Error downloading package"
 (pkill showiframe;sleep 1;[ -f /usr/share/tuxbox/neutrino/icons/install.mpg ] && showiframe /usr/share/tuxbox/neutrino/icons/install.mpg) & 
-echo "Unpacking new version..."
 echo "Instaling...">/dev/vfd
-#cd /tmp
-tar -zxf /tmp/j00zTrino.tar.gz -C /
+echo "Instaling...">/dev/vfd
+opkg install /tmp/neutrino-mod-j00zek_sh4.ipk
 if [ $? -gt 0 ]; then
   errorExit "Error installing" 
 fi
-
-echo "donE">/dev/vfd
-removeTarGz
+[ -e /tmp/neutrino-mod-j00zek_sh4.ipk ] && rm -rf /tmp/neutrino-mod-j00zek_sh4.ipk
+echo "Done">/dev/vfd
 sync
 sleep 1
 sync

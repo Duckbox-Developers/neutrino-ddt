@@ -69,6 +69,7 @@ mkdir -p $j00zTrinoRoot
 mkdir -p $j00zTrinoRoot/usr/ntrino
 mkdir -p $j00zTrinoRoot/usr/ntrino/lib
 mkdir -p $j00zTrinoRoot/usr/ntrino/bin
+mkdir -p $j00zTrinoRoot/usr/share/
 #kopiowanie binarek
 cp -rf ./usr/local/bin/* $j00zTrinoRoot/usr/ntrino/bin
 #kopiowanie potrzebnych libow (niektóre są redundantne, ale za to pozwalają odinstalowac openPLI :)
@@ -89,6 +90,8 @@ cp -rf ./usr/lib/librtmp* $j00zTrinoRoot/usr/ntrino/lib/
 cp -rf ./usr/lib/libsigc-2.0.* $j00zTrinoRoot/usr/ntrino/lib/
 cp -rf ./usr/lib/libswresample.* $j00zTrinoRoot/usr/ntrino/lib/
 cp -rf ./usr/lib/libxml2* $j00zTrinoRoot/usr/ntrino/lib/
+cp -rf ./usr/share/tuxbox $j00zTrinoRoot/usr/share/
+cp -rf ./usr/share/lua $j00zTrinoRoot/usr/share/
 cp -rf $j00zTrinoExtras/root_structure/*  $j00zTrinoRoot/
 
 echo "imagename=Neutrino mod j00zek">$j00zTrinoRoot/usr/ntrino/version
