@@ -1,3 +1,14 @@
+/j00zeks-addendum/root_structure/usr/ntrino/scripts/deepstandby.off
+/j00zeks-addendum/root_structure/usr/ntrino/scripts/deepstandby.on
+/j00zeks-addendum/root_structure/usr/ntrino/scripts/inactivity.on
+/j00zeks-addendum/root_structure/usr/ntrino/scripts/standby.off
+/j00zeks-addendum/root_structure/usr/ntrino/scripts/standby.on
+/j00zeks-addendum/root_structure/usr/ntrino/scripts/movieplayer.end
+/j00zeks-addendum/root_structure/usr/ntrino/scripts/movieplayer.start
+/j00zeks-addendum/root_structure/usr/ntrino/scripts/recording.end
+/j00zeks-addendum/root_structure/usr/ntrino/scripts/recording.start
+/j00zeks-addendum/root_structure/usr/ntrino/scripts/recording.timer
+/j00zeks-addendum/root_structure/var/tuxbox/config/AutoScripts/deepstandby.off/RestartSoftCam
 ### mostly autoconf crap
 Makefile
 autom4te.cache
@@ -51,3 +62,4 @@ local_build_config.h
 .directory
 # kate
 *-swp
+
