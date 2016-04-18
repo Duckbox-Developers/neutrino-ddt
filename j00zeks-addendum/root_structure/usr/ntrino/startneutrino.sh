@@ -4,61 +4,63 @@
 # homepage: http://graterlia.xunil.pl
 # @j00zek
 #
+#!/bin.sh
+#
+# @j00zek
 # skrypt uruchomieniowy dla roznego rodzaju Neutrino
-# wersja 2016-04-02
+# wersja 2016-04-18
 
 . /etc/sysconfig/gfunctions #wczytanie funkcji wspólnych dla skryptów Graterlia
 . /var/grun/grcstype #wczytania informacji o rodzaju odbiornika
 # zaladowanie informacji o konfiguracji o ile istnieje
 if [ -e /etc/sysctl.gos ]; then
-  . /etc/sysctl.gos
+    . /etc/sysctl.gos
 fi
-# initial install when unavailable
-if [ ! -e /usr/ntrino/bin/neutrino ];then
-  cp -f /usr/ntrino/scripts/upgradej00zTrino.sh /tmp/upgradej00zTrino.sh
-  /tmp/upgradej00zTrino.sh
-  rm -f /tmp/upgradej00zTrino.sh
-fi
-# if still unavailable, switch again to openPLI
-if [ ! -e /usr/ntrino/bin/neutrino ];then
-  echo "Error">/dev/vfd
-  sleep 10
-  rm -f /usr/bin/startneutrino
-  (sleep 1;/etc/init.d/gui restart) &
-  exit 0
+if [ -e /usr/ntrino/version ]; then
+    . /usr/ntrino/version
 fi
 
-if [ -e /usr/ntrino/version ]; then
-  . /usr/ntrino/version
+# if unavailable, switch again to openPLI
+if [ ! -e /usr/ntrino/bin/neutrino ];then
+    echo "Error">/dev/vfd
+    sleep 10
+    rm -f /usr/bin/startneutrino
+    (sleep 1;/etc/init.d/gui restart) &
+    exit 0
 fi
-imagename='Neutrino'
-#initial copy
+
+#initial settings
 [ -e /var/tuxbox/config/zapit/bouquets.xml ] || cp -f /var/tuxbox/config/initial/bouquets.xml /var/tuxbox/config/zapit/
 [ -e /var/tuxbox/config/zapit/services.xml ] || cp -f /var/tuxbox/config/initial/services.xml /var/tuxbox/config/zapit/
 [ -e /var/tuxbox/config/zapit/ubouquets.xml ] || cp -f /var/tuxbox/config/initial/ubouquets.xml /var/tuxbox/config/zapit/
 [ -e /var/tuxbox/config/zapit/zapit.conf ] || cp -f /var/tuxbox/config/initial/zapit.conf /var/tuxbox/config/zapit/
+[ -e /var/tuxbox/config/debug.conf ] || cp -f /var/tuxbox/config/initial/debug.conf /var/tuxbox/config/debug.conf
 
 export LD_LIBRARY_PATH=/usr/ntrino/lib/:$LD_LIBRARY_PATH #tu trzymamy biblioteki specyficzne dla neutrino
 
 # Set input links :)
 if [ $rcstype == ADB2850 ] || [ $rcstype == SPARK7162 ]; then
-  ln -sf /dev/input/event1 /dev/input/nevis_ir
-  ln -sf /dev/input/event0 /dev/input/nevis_fp
+    ln -sf /dev/input/event1 /dev/input/nevis_ir
+    ln -sf /dev/input/event0 /dev/input/nevis_fp
 else
-  ln -sf /dev/input/event0 /dev/input/nevis_ir
-  ln -sf /dev/input/event1 /dev/input/nevis_fp
+    ln -sf /dev/input/event0 /dev/input/nevis_ir
+    ln -sf /dev/input/event1 /dev/input/nevis_fp
 fi
-[ -e /.version ] && rm -f /.version #|| ln -sf /usr/ntrino/version /.version #info o wersji wyswietlane w neutrino
-[ -e /usr/local/share/tuxbox ] || ln -sf /usr/share/tuxbox/ /usr/local/share/tuxbox
-[ -e /var/tuxbox/config/neutrino.conf ] || cp -rf /var/tuxbox/config/initial/neutrino.conf /var/tuxbox/config/
-#[ -e /usr/local/bin ] || ln -sf /usr/ntrino/bin /usr/local/bin #w razie czego
-#[ -e /etc/cron/hourly/GetWeather ] || ln -sf /etc/ntrino/plugins/Weather/GetWeather /etc/cron/hourly/GetWeather #pogoda na infobarze
 
 /etc/init.d/gbootlogo stop
 [ -e /tmp/xupnpd-feeds ] || mkdir -p /tmp/xupnpd-feeds
 
 doStartupActions(){
-	[ -z "$NdbgFolder" ] && NdbgFolder='/hdd'
+	Ndbg=3
+	NdbgFolder='/hdd'
+	NdbgHAL=off
+	NdbgSizeKB=0
+	if [ -f /var/tuxbox/config/debug.conf ];then
+		Ndbg=`grep 'Ndbg=' </var/tuxbox/config/neutrino.conf|cut -d '=' -f2`
+		NdbgFolder=`grep 'NdbgFolder=' </var/tuxbox/config/neutrino.conf|cut -d '=' -f2`
+		NdbgHAL=`grep 'NdbgHAL=' </var/tuxbox/config/neutrino.conf|cut -d '=' -f2`
+		NdbgSizeKB=`grep 'NdbgSizeKB=' </var/tuxbox/config/neutrino.conf|cut -d '=' -f2`
+	fi
 	[ -e $NdbgFolder/neutrino.log ] && mv -f $NdbgFolder/neutrino.log $NdbgFolder/neutrino.log.prev
 	#czy logowac?
 	if [ -z "$Ndbg" ]; then

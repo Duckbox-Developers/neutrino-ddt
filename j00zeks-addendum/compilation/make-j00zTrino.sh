@@ -70,6 +70,7 @@ mkdir -p $j00zTrinoRoot/usr/ntrino
 mkdir -p $j00zTrinoRoot/usr/ntrino/lib
 mkdir -p $j00zTrinoRoot/usr/ntrino/bin
 mkdir -p $j00zTrinoRoot/usr/share/
+ln -sf /usr/share/tuxbox/ $j00zTrinoRoot/usr/local/share/tuxbox
 #kopiowanie binarek
 cp -rf ./usr/local/bin/* $j00zTrinoRoot/usr/ntrino/bin
 #kopiowanie potrzebnych libow (niektóre są redundantne, ale za to pozwalają odinstalowac openPLI :)
