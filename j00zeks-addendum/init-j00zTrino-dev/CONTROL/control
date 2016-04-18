@@ -1,9 +1,0 @@
-Package: init-neutrino-by-j00zek-dev
-Priority: optional
-Section: utils
-Depends:
-Description: for people interested in testing neutrino on GOS
-Maintainer: j00zek
-Source: https://github.com/j00zek/eePlugins/tree/master/j00zTrino
-Version: 2016-04-03
-Architecture: sh4

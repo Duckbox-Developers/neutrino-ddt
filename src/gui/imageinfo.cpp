@@ -67,7 +67,7 @@ void CImageInfo::Init(void)
 	
 	license_txt	= "";
 	v_info.clear();
-	config.loadConfig("/usr/ntrino/version/");
+	config.loadConfig("/.version");
 }
 
 CImageInfo::~CImageInfo()

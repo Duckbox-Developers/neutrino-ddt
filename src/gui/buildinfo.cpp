@@ -148,7 +148,7 @@ bool CBuildInfo::HasData()
 
 #if 0
 	CConfigFile data ('\t');
-	data.loadConfig("/usr/ntrino/version/");
+	data.loadConfig("/.version");
 	build_info_t creator	= {BI_TYPE_ID_CREATOR, LOCALE_BUILDINFO_CREATOR, data.getString("creator", "n/a")};
 	v_info.push_back(creator);
 #endif

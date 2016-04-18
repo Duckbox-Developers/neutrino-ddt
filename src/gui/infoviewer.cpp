@@ -294,13 +294,12 @@ void CInfoViewer::showRecordIcon (const bool show)
 		
 		int txt_h = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight();
 		int txt_w = 0;
-		
-		// int box_x = BoxStartX + ChanWidth + 2*SHADOW_OFFSET;
-		// int box_y = BoxStartY + SHADOW_OFFSET;
-		int box_x = BoxEndX - time_width - 100;
-		int box_y = ChanNameY + 2;
+
+		int box_x = BoxStartX + ChanWidth + 2*SHADOW_OFFSET;
+		int box_y = BoxStartY + SHADOW_OFFSET;
 		int box_w = 0;
 		int box_h = txt_h;
+
 		int icon_space = SHADOW_OFFSET/2;
 
 		int rec_icon_x = 0, rec_icon_w = 0, rec_icon_h = 0;
@@ -310,7 +309,7 @@ void CInfoViewer::showRecordIcon (const bool show)
 		frameBuffer->getIconSize(ts_icon.c_str(), &ts_icon_w, &ts_icon_h);
 		
 		int icon_h = std::max(rec_icon_h, ts_icon_h);
-		box_h = header_height -4;
+		box_h = std::max(box_h, icon_h+icon_space*2);
 		
 		int icon_y = box_y + (box_h - icon_h)/2;
 		int txt_y  = box_y + (box_h + txt_h)/2;
@@ -345,9 +344,9 @@ void CInfoViewer::showRecordIcon (const bool show)
 		if (show)
 		{
 			if (rec == NULL){ //TODO: full refactoring of this icon handler
-				rec = new CComponentsShapeSquare(box_x, box_y , box_w, box_h, NULL, CC_SHADOW_OFF, NULL, COL_INFOBAR_PLUS_0);
-			//	rec->setFrameThickness(0);
-			//	rec->setShadowWidth(SHADOW_OFFSET/2);
+				rec = new CComponentsShapeSquare(box_x, box_y , box_w, box_h, NULL, CC_SHADOW_ON, COL_RED, COL_INFOBAR_PLUS_0);
+				rec->setFrameThickness(2);
+				rec->setShadowWidth(SHADOW_OFFSET/2);
 				rec->setCorner(RADIUS_MIN, CORNER_ALL);
 			}
 			if (rec->getWidth() != box_w)

@@ -3210,7 +3210,7 @@ void CControlAPI::logoCGI(CyhookHandler *hh)
  * @code
  * /control/config?config=neutrino
  * /control/config?config=neutrino&format=json
- * /control/config?config=neutrino&action=submit&epg_dir=/hdd/epg
+ * /control/config?config=neutrino&action=submit&epg_dir=/media/sda1/epg
  * @endcode
  *
  * @par output (json)
@@ -3484,7 +3484,7 @@ void CControlAPI::FileCGI(CyhookHandler *hh)
  * @par example:
  * @code
  * /control/statfs
- * /control/statfs?path=/hdd/movies&format=json
+ * /control/statfs?path=/media/sda1/movies&format=json
  * @endcode
  *
  * @par output
@@ -3492,7 +3492,7 @@ void CControlAPI::FileCGI(CyhookHandler *hh)
  * {"success": "true", "data":
  * {
  * 	"statfs": {
- * 		"path": "/hdd/movies",
+ * 		"path": "/media/sda1/movies",
  * 		"f_type": "0x4d44",
  * 		"f_bsize": "4096",
  * 		"f_blocks": "488444",
@@ -3560,7 +3560,7 @@ void CControlAPI::StatfsCGI(CyhookHandler *hh)
 }
 ,{"dir": "/mnt/movies/subdir"
 }
-{"dir": "/hdd/movie"
+{"dir": "/media/sda1/movie"
 }
 ,]
 }}
@@ -3665,15 +3665,15 @@ std::string CControlAPI::getSubdirectories(CyhookHandler *hh, std::string path, 
  * @endcode
  *
 {"success": "true", "data":{"movies": [{"title": "Sample.mkv",
-"path": "/hdd/movies/Sample.mkv",
+"path": "/media/sda1/movies/Sample.mkv",
 "size": "1136242099"
 }
 ,{"title": "Aufnahme1.ts",
-"path": "/hdd/recording/Aufnahme1.ts",
+"path": "/media/sda1/recording/Aufnahme1.ts",
 "size": "941"
 }
 ,{"title": "Aufnahme2.ts",
-"path": "/hdd/recording/Aufnahme2.ts",
+"path": "/media/sda1/recording/Aufnahme2.ts",
 "size": "941"
 }
 ]

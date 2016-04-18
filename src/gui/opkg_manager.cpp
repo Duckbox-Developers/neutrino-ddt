@@ -609,7 +609,7 @@ int COPKGManager::showMenu()
 
 bool COPKGManager::hasOpkgSupport()
 {
-	string deps[] = {"/var/opkg", /*"/bin/opkg-check-config", "/bin/update-alternatives", "/share/opkg/intercept"*/};
+	string deps[] = {"/var/lib/opkg", /*"/bin/opkg-check-config", "/bin/update-alternatives", "/share/opkg/intercept"*/};
 
 	if (find_executable(OPKG_CL).empty()) {
 		dprintf(DEBUG_NORMAL, "[COPKGManager] [%s - %d]" OPKG_CL " executable not found\n", __func__, __LINE__);
@@ -970,7 +970,7 @@ void COPKGManager::loadConfig()
 
 void COPKGManager::saveConfig()
 {
-	return; //j00zek dont touch opkg config file
+	//set package feeds
 	for(size_t i=0; i<OPKG_MAX_FEEDS ;i++){
 		string src_key = "src " + to_string(i);
 

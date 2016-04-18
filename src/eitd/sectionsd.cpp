@@ -102,7 +102,7 @@ static bool messaging_zap_detected = false;
 //NTP-Config
 #define CONF_FILE CONFIGDIR "/neutrino.conf"
 
-std::string ntp_system_cmd_prefix = find_executable("rdate") + " -s ";
+std::string ntp_system_cmd_prefix = find_executable("rdate") + "-s ";
 
 std::string ntp_system_cmd;
 std::string ntpserver;
