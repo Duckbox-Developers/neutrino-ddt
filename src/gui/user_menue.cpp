@@ -56,7 +56,7 @@
 #include "plugins.h"
 #include "imageinfo.h"
 #include "dboxinfo.h"
-#if !HAVE_SPARK_HARDWARE
+#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
 #include "cam_menu.h"
 #endif
 #include "pluginlist.h"
@@ -87,7 +87,7 @@
 extern CRemoteControl * g_RemoteControl;	/* neutrino.cpp */
 extern CPlugins * g_PluginList;			/* neutrino.cpp */
 extern cVideo * videoDecoder;
-#if !HAVE_SPARK_HARDWARE
+#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
 extern CCAMMenuHandler * g_CamHandler;
 #endif
 
@@ -364,7 +364,7 @@ bool CUserMenu::showUserMenu(neutrino_msg_t msg)
 			menu_item = new CMenuDForwarder(LOCALE_EXTRA_DBOXINFO, true, NULL, new CDBoxInfoWidget, NULL, key, icon);
 			menu_item->setHint(NEUTRINO_ICON_HINT_DBOXINFO, LOCALE_MENU_HINT_DBOXINFO);
 			break;
-#if !HAVE_SPARK_HARDWARE
+#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
 		case SNeutrinoSettings::ITEM_CAM:
 			//if(cs_get_revision() == 10) continue;
 			keyhelper.get(&key,&icon);

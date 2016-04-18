@@ -105,11 +105,13 @@ const CMenuOptionChooser::keyval LEDMENU_OPTIONS[LEDMENU_OPTION_COUNT] =
 	{ 3, LOCALE_LEDCONTROLER_ON_LED2   }
 };
 
-#define LCD_INFO_OPTION_COUNT 2
+#define LCD_INFO_OPTION_COUNT 4
 const CMenuOptionChooser::keyval LCD_INFO_OPTIONS[LCD_INFO_OPTION_COUNT] =
 {
 	{ 0, LOCALE_LCD_INFO_LINE_CHANNEL },
-	{ 1, LOCALE_LCD_INFO_LINE_CLOCK }
+	{ 1, LOCALE_LCD_INFO_LINE_CLOCK },
+	{ 2, LOCALE_J00ZEK_VFD_SHOW_NUMBER },
+	{ 3, LOCALE_J00ZEK_VFD_SHOW_CURR_PNAME }
 };
 #if HAVE_DUCKBOX_HARDWARE || BOXMODEL_SPARK7162
 #define OPTIONS_OFF_ON_OPTION_COUNT 2
@@ -141,9 +143,11 @@ int CVfdSetup::showSetup()
 
 	if (CVFD::getInstance()->has_lcd) {
 		//vfd brightness menu
-		mf = new CMenuForwarder(LOCALE_LCDMENU_LCDCONTROLER, vfd_enabled, NULL, this, "brightness", CRCInput::RC_green);
-		mf->setHint("", LOCALE_MENU_HINT_VFD_BRIGHTNESS_SETUP);
-		vfds->addItem(mf);
+		if (CVFD::getInstance()->supports_brightness) {
+			mf = new CMenuForwarder(LOCALE_LCDMENU_LCDCONTROLER, vfd_enabled, NULL, this, "brightness", CRCInput::RC_green);
+			mf->setHint("", LOCALE_MENU_HINT_VFD_BRIGHTNESS_SETUP);
+			vfds->addItem(mf);
+		}
 
 		if (cs_get_revision() == 9) // Tank only
 		{

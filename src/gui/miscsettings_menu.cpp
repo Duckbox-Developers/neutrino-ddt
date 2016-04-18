@@ -323,12 +323,14 @@ int CMiscMenue::showMiscSettingsMenu()
 	mf->setHint("", LOCALE_MENU_HINT_MISC_CPUFREQ);
 	misc_menue.addItem(mf);
 #endif /*CPU_FREQ*/
+#if 0
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 	// kerneloptions
 	CKernelOptions kernelOptions;
 	mf = new CMenuForwarder(LOCALE_KERNELOPTIONS_HEAD, true, NULL, &kernelOptions, NULL, CRCInput::RC_5);
 	mf->setHint("", LOCALE_MENU_HINT_MISC_KERNELOPTIONS);
 	misc_menue.addItem(mf);
+#endif
 #endif
 
 	int res = misc_menue.exec(NULL, "");

@@ -91,6 +91,9 @@ extern CBouquetManager *g_bouquetManager;
 extern int old_b_id;
 static CComponentsChannelLogoScalable* CChannelLogo = NULL;
 static CComponentsHeader *header = NULL;
+static int PIGwidth = 480; //435;
+static int PIGheight = 270; //245;
+static int NextEventsHeight = 0; //j00zek, contains where info about next events should start
 extern bool timeset;
 
 CChannelList::CChannelList(const char * const pName, bool phistoryMode, bool _vlist)
@@ -432,7 +435,7 @@ int CChannelList::doChannelMenu(void)
 int CChannelList::exec()
 {
 	displayNext = 0; // always start with current events
-	displayList = 1; // always start with event list
+	displayList = 0; //j00zek oways with EPG 1; // always start with event list
 	int nNewChannel = show();
 	if ( nNewChannel > -1 && nNewChannel < (int) (*chanlist).size()) {
 		if(this->historyMode && (*chanlist)[nNewChannel]) {
@@ -464,7 +467,7 @@ void CChannelList::calcSize()
 	full_width = pig_on_win ? (frameBuffer->getScreenWidth()-2*ConnectLineBox_Width) : frameBuffer->getScreenWidthRel();
 
 	if (g_settings.channellist_additional)
-		width = full_width / 3 * 2;
+		width = full_width - PIGwidth; // j00zek / 3 * 2;
 	else
 		width = full_width;
 
@@ -499,10 +502,11 @@ void CChannelList::calcSize()
 	y = getScreenStartY(height + info_height);
 
 	// calculate width/height of right info_zone and pip-box
-	infozone_width = full_width - width;
+	//infozone_width = full_width - width;
+	infozone_width = PIGwidth;
 	pig_width = infozone_width;
 	if ( pig_on_win /* with miniTV */ )
-		pig_height = (pig_width * 9) / 16;
+		pig_height = PIGheight; //(pig_width * 9) / 16; j00zek, let's use fixed (working size)
 	else
 		pig_height = 0;
 	infozone_height = height - theight - pig_height - footerHeight;
@@ -732,7 +736,7 @@ int CChannelList::show()
 		else if (!empty && (msg == CRCInput::RC_up || (int)msg == g_settings.key_pageup ||
 				    msg == CRCInput::RC_down || (int)msg == g_settings.key_pagedown))
 		{
-			displayList = 1;
+			// j00zek displayList = 1;
 			int new_selected = UpDownKey((*chanlist), msg, listmaxshow, selected);
 			if (new_selected >= 0)
 				actzap = updateSelection(new_selected);
@@ -761,13 +765,25 @@ int CChannelList::show()
 					oldselected = selected;
 					paintBody(); // refresh zapped vs selected
 				} else if(SameTP()) {
-					zapOnExit = true;
-					loop=false;
+					if ((new_zap_mode == 1) && (oldselected != selected)) {
+						printf("RC_OK & SameTP & new_zap_mode = 1");
+						zapTo(selected);
+						actzap = true;
+						oldselected = selected;
+						paintBody(); // refresh zapped vs selected
+					}
+					else
+					{
+						zapOnExit = true;
+						loop=false;
+					}
 				}
 			}
 		}
 		else if (!edit_state && ( msg == CRCInput::RC_spkr ) && new_zap_mode ) {
 			if(CNeutrinoApp::getInstance()->getMode() != NeutrinoMessages::mode_ts) {
+// j00zek nie wiem po jaką cholerę oni to przestawiają w tym miejscu. Czyba bez sensu. ;)
+#if 1
 				switch (new_zap_mode) {
 					case 2: /* active */
 						new_zap_mode = 1; /* allow */
@@ -779,6 +795,7 @@ int CChannelList::show()
 						break;
 
 				}
+#endif
 				paintButtonBar(SameTP());
 			}
 		}
@@ -1680,8 +1697,15 @@ void CChannelList::paintAdditionals(int index)
 	{
 		if (displayList)
 			paint_events(index);
-		else
+		else {
 			showdescription(selected);
+			//printf("# j00zek, disabled footer, NextEventsHeight=%d\n",NextEventsHeight);
+			if (NextEventsHeight > 0) {
+				frameBuffer->paintBoxRel(x+ width,y+ theight+pig_height+NextEventsHeight+1, infozone_width, 2,COL_MENUCONTENT_PLUS_3);//j00zek, kolor slidera
+				NextEventsHeight += 4;
+			}
+			paint_events(index);
+		}
 	}
 }
 
@@ -1929,12 +1953,12 @@ void CChannelList::paintItem(int pos, const bool firstpaint)
 		frameBuffer->getIconSize(icon, &s_icon_w, &s_icon_h);
 		r_icon_w = ChannelList_Rec;
 		int r_icon_x = icon_x;
-
+/* j00zek we don't paint scrambled icons
 		//paint icon
 		if(chan->scrambled || isWebTV)
 			if (frameBuffer->paintIcon(icon, icon_x - s_icon_w, ypos, fheight))//ypos + (fheight - 16)/2);
 				r_icon_x = r_icon_x - s_icon_w;
-
+*/
 		//paint HD Icon
 		if(chan->isHD() && g_settings.channellist_hdicon) {
 			frameBuffer->getIconSize(NEUTRINO_ICON_RESOLUTION_HD, &h_icon_w, &s_icon_h);
@@ -2288,7 +2312,17 @@ void CChannelList::paint_events(int index)
 {
 	ffheight = g_Font[eventFont]->getHeight();
 	readEvents((*chanlist)[index]->getEpgID());
-	frameBuffer->paintBoxRel(x+ width,y+ theight+pig_height, infozone_width, infozone_height,COL_MENUCONTENT_PLUS_0);
+	int firstRowY=0;
+	int nextRowsY=0;
+	if (NextEventsHeight > 0) {
+		firstRowY=NextEventsHeight;//j00zek przesuniecie pierwszej linii w trybie epg z programami
+		nextRowsY=ffheight;//j00zek przesuniecie nastepnych linii w trybie epg z programami
+	}
+	
+	if (infozone_width-firstRowY < ffheight)
+		return;
+	
+	frameBuffer->paintBoxRel(x+ width,y+ theight+pig_height+firstRowY, infozone_width, infozone_height - firstRowY,COL_MENUCONTENT_PLUS_0); //j00zek
 
 	char startTime[10];
 	int eventStartTimeWidth = 4 * g_Font[eventFont]->getMaxDigitWidth() + g_Font[eventFont]->getRenderWidth(":") + 5; // use a fixed value
@@ -2327,21 +2361,27 @@ void CChannelList::paint_events(int index)
 			break;
 
 		//Display the remaining events
-		if ((y+ theight+ pig_height + i*ffheight) < (y+ theight+ pig_height + infozone_height))
+		if ((y+ theight+ pig_height + i*ffheight) < (y+ theight+ pig_height + infozone_height - firstRowY + nextRowsY)) //j00zek w trybie epg wyswietlamy pierwsza pozycje przed epg, dopiero reszta jest po
 		{
+			bool first = (i == 1);
 			fb_pixel_t color = COL_MENUCONTENTDARK_TEXT;
 			if (e->eventID)
 			{
-				bool first = (i == 1);
 				if ((first && g_settings.theme.colored_events_channellist == 1 /* current */) || (!first && g_settings.theme.colored_events_channellist == 2 /* next */))
 					color = COL_COLORED_EVENTS_TEXT;
 				struct tm *tmStartZeit = localtime(&e->startTime);
 				strftime(startTime, sizeof(startTime), "%H:%M", tmStartZeit );
 				//printf("%s %s\n", startTime, e->description.c_str());
 				startTimeWidth = eventStartTimeWidth;
-				g_Font[eventFont]->RenderString(x+ width+5, y+ theight+ pig_height + i*ffheight, startTimeWidth, startTime, color);
+				if (first)
+					g_Font[eventFont]->RenderString(x+ width+5, y+ theight + pig_height + i*ffheight, startTimeWidth, startTime, color);
+				else
+					g_Font[eventFont]->RenderString(x+ width+5, y+ theight + pig_height + firstRowY - nextRowsY + i*ffheight, startTimeWidth, startTime, color);
 			}
-			g_Font[eventFont]->RenderString(x+ width+5+startTimeWidth, y+ theight+ pig_height + i*ffheight, infozone_width - startTimeWidth - 20, e->description, color);
+			if (first)
+				g_Font[eventFont]->RenderString(x+ width+5+startTimeWidth, y+ theight+ pig_height + i*ffheight, infozone_width - startTimeWidth - 20, e->description, color);
+			else
+				g_Font[eventFont]->RenderString(x+ width+5+startTimeWidth, y+ theight+ pig_height + firstRowY - nextRowsY + i*ffheight, infozone_width - startTimeWidth - 20, e->description, color);
 		}
 		else
 		{
@@ -2419,8 +2459,10 @@ void CChannelList::showdescription(int index)
 		processTextToArray(strEpisode + epgData.info2); // UTF-8
 
 	frameBuffer->paintBoxRel(x+ width,y+ theight+pig_height, infozone_width, infozone_height,COL_MENUCONTENT_PLUS_0);
-	for (int i = 1; (i < (int)epgText.size()+1) && ((y+ theight+ pig_height + i*ffheight) < (y+ theight+ pig_height + infozone_height)); i++)
+	for (int i = 2; (i < (int)epgText.size()+1) && ((y+ theight+ pig_height + i*ffheight) < (y+ theight+ pig_height + infozone_height - 2*ffheight)); i++) {
 		g_Font[eventFont]->RenderString(x+ width+5, y+ theight+ pig_height + i*ffheight, infozone_width - 20, epgText[i-1].first, COL_MENUCONTENTDARK_TEXT);
+		NextEventsHeight = i*ffheight;
+	}
 }
 
 void CChannelList::addTextToArray(const std::string & text, int screening) // UTF-8

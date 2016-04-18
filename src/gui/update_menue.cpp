@@ -109,12 +109,13 @@ int CSoftwareUpdate::showSoftwareUpdate()
 
 	softUpdate.addItem(GenericMenuSeparatorLine);
 
+#if 0 //j00zek don't present dangerous mtd tools
 	//expert-functions
 	showSoftwareUpdateExpert(&mtdexpert); 
 	mf = new CMenuForwarder(LOCALE_FLASHUPDATE_EXPERTFUNCTIONS, true, NULL, &mtdexpert, NULL, CRCInput::RC_blue);
 	mf->setHint("", LOCALE_MENU_HINT_SOFTUPDATE_EXPERT);
 	softUpdate.addItem(mf);
-
+#endif
 #if 0
 	//firmware update via opkg
 	mf = new CMenuDForwarder(LOCALE_OPKG_TITLE, COPKGManager::hasOpkgSupport(), NULL, new COPKGManager());

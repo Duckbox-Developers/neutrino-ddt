@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Graterlia OS
+# homepage: http://graterlia.xunil.pl
+# e-mail: nbox@xunil.pl
+#
+# skrypt zatrzymujący wiatrak w trybie moderater
+# @sunfizz
+# wersja 2014-12-15
+
+if lsmod | grep -q fan_ctrl; then
+	echo "100" > /proc/stb/fan/fan_ctrl
+fi
