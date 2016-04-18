@@ -93,7 +93,6 @@ class CVFD
 		pthread_t			thrTime;
 #if HAVE_DUCKBOX_HARDWARE
 		pthread_t			thread_start_loop;
-		int				TIMING_INFOBAR_counter; 
 #endif
 		int                             last_toggle_state_power;
 		bool				clearClock;
@@ -166,8 +165,6 @@ class CVFD
 		void Clear();
 		void ShowIcon(fp_icon icon, bool show);
 #if HAVE_DUCKBOX_HARDWARE
-		bool hasConfigOption(char *str);
-		bool supports_brightness;
 		void UpdateIcons();
 		void ShowScrollText(char * str);
 		static void* ThreadScrollText(void * arg);
