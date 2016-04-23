@@ -382,7 +382,8 @@ int CTimerList::exec(CMenuTarget* parent, const std::string & actionKey)
 		return menu_return::RETURN_EXIT;
 	}
 	else if(actionKey == "rec_dir1") {
-		parent->hide();
+		if (parent)
+			parent->hide();
 		const char *action_str = "RecDir1";
 		if(chooserDir(timerlist[selected].recordingDir, true, action_str, sizeof(timerlist[selected].recordingDir)-1)) {
 			printf("[timerlist] new %s dir %s\n", action_str, timerlist[selected].recordingDir);
@@ -391,7 +392,8 @@ int CTimerList::exec(CMenuTarget* parent, const std::string & actionKey)
 		return menu_return::RETURN_REPAINT;
 	}
 	else if(actionKey == "rec_dir2") {
-		parent->hide();
+		if (parent)
+			parent->hide();
 		const char *action_str = "RecDir2";
 		if(chooserDir(timerNew.recordingDir, true, action_str, sizeof(timerNew.recordingDir)-1)) {
 			printf("[timerlist] new %s dir %s\n", action_str, timerNew.recordingDir);
@@ -1057,19 +1059,18 @@ int CTimerList::modifyTimer()
 
 //printf("TIMER: rec dir %s len %s\n", timer->recordingDir, strlen(timer->recordingDir));
 
-	if (!strlen(timer->recordingDir))
-		strncpy(timer->recordingDir,g_settings.network_nfs_recordingdir.c_str(),sizeof(timer->recordingDir)-1);
-	timer_recordingDir = timer->recordingDir;
-
-	bool recDirEnabled = (g_settings.recording_type == RECORDING_FILE); // obsolete?
-	CMenuForwarder* m6 = new CMenuForwarder(LOCALE_TIMERLIST_RECORDING_DIR, recDirEnabled, timer_recordingDir, this, "rec_dir1", CRCInput::RC_green);
-
 	timerSettings.addItem(GenericMenuSeparatorLine);
 	timerSettings.addItem(m3);
 	timerSettings.addItem(m4);
 	timerSettings.addItem(m5);
 	if (timer->eventType == CTimerd::TIMER_RECORD)
 	{
+		if (!strlen(timer->recordingDir))
+			strncpy(timer->recordingDir,g_settings.network_nfs_recordingdir.c_str(),sizeof(timer->recordingDir)-1);
+		timer_recordingDir = timer->recordingDir;
+
+		bool recDirEnabled = (g_settings.recording_type == RECORDING_FILE); // obsolete?
+		CMenuForwarder* m6 = new CMenuForwarder(LOCALE_TIMERLIST_RECORDING_DIR, recDirEnabled, timer_recordingDir, this, "rec_dir1", CRCInput::RC_green);
 		timerSettings.addItem(GenericMenuSeparatorLine);
 		timerSettings.addItem(m6);
 	}
