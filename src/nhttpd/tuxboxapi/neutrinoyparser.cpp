@@ -842,6 +842,7 @@ std::string CNeutrinoYParser::func_get_boxtype(CyhookHandler *, std::string)
 			if( boxname == "Armas ")
 				boxname += "TripleDragon";
 			break;
+#ifdef BOXMODEL_NEVIS
 		case 6:
 			boxname += "HD1";
 			break;
@@ -853,19 +854,29 @@ std::string CNeutrinoYParser::func_get_boxtype(CyhookHandler *, std::string)
 			if (CFEManager::getInstance()->getFrontendCount() > 1)
 				boxname += " Twin";
 			break;
-		case 9:
-			boxname += "Tank";
-			break;
 		case 10:
 			boxname += "Zee";
 			break;
+#endif
+#ifdef BOXMODEL_APOLLO
+		case 9:
+			boxname += "Tank";
+			break;
 		case 11:
 			boxname += "Trinity";
+			if (cs_get_chip_type() != 33904 /*0x8470*/)
+				boxname += " V2";
 			break;
 		case 12:
 			boxname += "Zee2";
 			break;
-
+		case 13:
+			boxname += "Link";
+			break;
+		case 14:
+			boxname += "Trinity Duo";
+			break;
+#endif
 		default:
 			char buffer[10];
 			snprintf(buffer, sizeof(buffer), "%u\n", system_rev);
@@ -899,21 +910,30 @@ std::string CNeutrinoYParser::func_get_boxmodel(CyhookHandler *, std::string)
 
 	switch(system_rev)
 	{
+#ifdef BOXMODEL_NEVIS
 		case 6:
 		case 7:
 		case 8:
 		case 10:
 			boxmodel = "Nevis";
 			break;
+#endif
+#ifdef BOXMODEL_APOLLO
 		case 9:
 			boxmodel = "Apollo";
 			break;
 		case 11:
-			boxmodel = "Shiner";
+			if (cs_get_chip_type() == 33904 /*0x8470*/)
+				boxmodel = "Shiner";
+			else
+				boxmodel = "Kronos";
 			break;
 		case 12:
+		case 13:
+		case 14:
 			boxmodel = "Kronos";
 			break;
+#endif
 		default:
 			break;
 	}
