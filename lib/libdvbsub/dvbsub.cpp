@@ -590,8 +590,6 @@ static void* reader_thread(void * /*arg*/)
 			continue;
 		}
 #endif
-		len = 0;
-		count = 0;
 
 		pfds[1].fd = dmx->getFD();
 		pfds[1].events = POLLIN;
