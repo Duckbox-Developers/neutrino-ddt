@@ -2243,6 +2243,7 @@ const char * locale_real_names[] =
 	"satsetup.uncomm_input",
 	"satsetup.uni_settings",
 	"satsetup.unicable",
+	"satsetup.unicable2",
 	"satsetup.usals_repeat",
 	"satsetup.use_bat",
 	"satsetup.use_fta_flag",
