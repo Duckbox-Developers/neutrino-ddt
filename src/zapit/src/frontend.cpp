@@ -1802,6 +1802,32 @@ void CFrontend::sendDiseqcReset(uint32_t ms)
 void CFrontend::sendDiseqcStandby(uint32_t ms)
 {
 	printf("[fe%d] diseqc standby\n", fenumber);
+	if (config.diseqcType > DISEQC_ADVANCED)
+	{
+		/* use ODU_Power_OFF command for unicable or jess here
+		to set the used UB frequency of the frontend to standby */
+		struct dvb_diseqc_master_cmd cmd = {{0}, 6};
+		printf("[fe%d] standby scr: %d\n", fenumber, config.uni_scr);
+		if (config.diseqcType == DISEQC_UNICABLE)
+		{
+			cmd.msg[0] = 0xe0;
+			cmd.msg[1] = 0x10;
+			cmd.msg[2] = 0x5a;
+			cmd.msg[3] = ((config.uni_scr & 0x07) << 5);
+			cmd.msg_len = 5;
+		}
+		if (config.diseqcType == DISEQC_UNICABLE2)
+		{
+			cmd.msg[0] = 0x70;
+			cmd.msg[1] = ((config.uni_scr & 0x1F) << 3);
+			cmd.msg_len = 4;
+		}
+		fop(ioctl, FE_SET_VOLTAGE, SEC_VOLTAGE_18);
+		usleep(15 * 1000);
+		sendDiseqcCommand(&cmd, ms);
+		fop(ioctl, FE_SET_VOLTAGE, SEC_VOLTAGE_13);
+		return;
+	}
 	// Send power off to 'all' equipment
 	sendDiseqcZeroByteCommand(0xe0, 0x00, 0x02, ms);
 }
