@@ -1119,6 +1119,11 @@ int CHDDMenuHandler::checkDevice(std::string dev)
 	int percent = 0, opercent = 0;
 	char buf[256] = { 0 };
 
+	bool loop;
+	uint64_t timeoutEnd;
+	neutrino_msg_t      msg;
+	neutrino_msg_data_t data;
+
 	std::string devname = "/dev/" + dev;
 	std::string tmp_mpoint;
 
@@ -1194,7 +1199,16 @@ int CHDDMenuHandler::checkDevice(std::string dev)
 
 	progress->showGlobalStatus(100);
 	progress->showStatusMessageUTF(buf);
-	sleep(2);
+
+	timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_MENU] == 0 ? 0xFFFF : g_settings.timing[SNeutrinoSettings::TIMING_MENU]);
+	loop = true;
+	while (loop)
+	{
+		g_RCInput->getMsgAbsoluteTimeout(&msg, &data, &timeoutEnd);
+		if (msg == CRCInput::RC_timeout || msg == CRCInput::RC_ok || msg == CRCInput::RC_home)
+			loop = false;
+	}
+
 	progress->hide();
 	delete progress;
 
