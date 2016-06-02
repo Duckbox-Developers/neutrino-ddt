@@ -74,19 +74,16 @@ class COnOffNotifier : public CChangeObserver
 
 class CSectionsdConfigNotifier : public CChangeObserver
 {
-        public:
-                bool changeNotify(const neutrino_locale_t, void * );
+	public:
+		bool changeNotify(const neutrino_locale_t, void * );
 };
 
 class CTouchFileNotifier : public CChangeObserver
 {
 	const char * filename;
- public:
-	inline CTouchFileNotifier(const char * file_to_modify)
-		{
-			filename = file_to_modify;
-		};
-	bool changeNotify(const neutrino_locale_t, void * data);
+	public:
+		inline CTouchFileNotifier(const char * _filename) { filename = _filename; };
+		bool changeNotify(const neutrino_locale_t, void * data);
 };
 
 class CColorSetupNotifier : public CChangeObserver

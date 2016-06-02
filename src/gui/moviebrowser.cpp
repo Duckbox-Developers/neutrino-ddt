@@ -351,7 +351,7 @@ CMovieBrowser::CMovieBrowser(): configfile ('\t')
 CMovieBrowser::~CMovieBrowser()
 {
 	//TRACE("[mb] del\n");
-	hide();
+
 	m_dir.clear();
 
 	m_dirNames.clear();
@@ -1251,7 +1251,11 @@ int CMovieBrowser::paint(void)
 	refreshLCD();
 	if (m_settings.gui == MB_GUI_FILTER)
 		m_settings.gui = MB_GUI_MOVIE_INFO;
-	onSetGUIWindow(m_settings.gui);
+	if (show_mode == MB_SHOW_YT)
+		onSetGUIWindow(MB_GUI_MOVIE_INFO);
+	else
+		onSetGUIWindow(m_settings.gui);
+
 	return (true);
 }
 
@@ -2613,6 +2617,26 @@ void CMovieBrowser::loadAllTsFileNamesFromStorage(void)
 	}
 
 	TRACE("[mb] Dir%d, Files:%d\n", (int)m_dirNames.size(), (int)m_vMovieInfo.size());
+}
+
+bool CMovieBrowser::gotMovie(const char *rec_title)
+{
+	//TRACE("[mb]->gotMovie\n");
+
+	m_doRefresh = false;
+	loadAllTsFileNamesFromStorage();
+
+	bool found = false;
+	for (unsigned int i = 0; i < m_vMovieInfo.size(); i++)
+	{
+		//printf("[mb] search for %s in %s\n", rec_title, m_vMovieInfo[i].epgTitle.c_str());
+		if (strcmp(rec_title, m_vMovieInfo[i].epgTitle.c_str()) == 0)
+		{
+			found = true;
+			break;
+		}
+	}
+	return found;
 }
 
 static const char * const ext_list[] =

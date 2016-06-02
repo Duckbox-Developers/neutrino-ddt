@@ -33,6 +33,7 @@
 #include <gui/eventlist.h>
 #include <gui/epgplus.h>
 #include <gui/epgview.h>
+#include <gui/moviebrowser.h>
 #include <gui/timerlist.h>
 #include <gui/user_menue.h>
 
@@ -467,8 +468,25 @@ int CEventList::exec(const t_channel_id channel_id, const std::string& channelna
 					else
 						recDir = "";
 				}
+				bool doRecord = true;
+				if (g_settings.recording_already_found_check)
+				{
+					CHintBox loadBox(LOCALE_RECORDING_ALREADY_FOUND_CHECK, LOCALE_MOVIEBROWSER_SCAN_FOR_MOVIES);
+					loadBox.paint();
+					CMovieBrowser moviebrowser;
+					const char *rec_title = evtlist[selected].description.c_str();
+					bool already_found = moviebrowser.gotMovie(rec_title);
+					loadBox.hide();
+					if (already_found)
+					{
+						printf("already found in moviebrowser: %s\n", rec_title);
+						char message[1024];
+						snprintf(message, sizeof(message)-1, g_Locale->getText(LOCALE_RECORDING_ALREADY_FOUND), rec_title);
+						doRecord = (ShowMsg(LOCALE_RECORDING_ALREADY_FOUND_CHECK, message, CMessageBox::mbrYes, CMessageBox::mbYes | CMessageBox::mbNo) == CMessageBox::mbrYes);
+					}
+				}
 				t_channel_id used_id = IS_WEBTV(channel_id) ? channel_id : evtlist[selected].channelID;
-				if (!recDir.empty()) //add/remove recording timer events and check/warn for conflicts
+				if (!recDir.empty() && doRecord) //add/remove recording timer events and check/warn for conflicts
 				{
 					if (g_Timerd->addRecordTimerEvent(used_id,
 								evtlist[selected].startTime,
@@ -648,7 +666,7 @@ int CEventList::exec(const t_channel_id channel_id, const std::string& channelna
 			oldIndex = -1;
 			oldEventID = -1;
 			bgRightBoxPaint = false;
-			in_search = findEvents();
+			in_search = findEvents(channel_id, channelname);
 			timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_EPG]);
 		}
 		else if (msg == CRCInput::RC_sat || msg == CRCInput::RC_favorites || msg == CRCInput::RC_www) {
@@ -1036,12 +1054,11 @@ int CEventListHandler::exec(CMenuTarget* parent, const std::string &/*actionkey*
 }
 
 /************************************************************************************************/
-bool CEventList::findEvents(void)
+bool CEventList::findEvents(t_channel_id channel_id, std::string channelname)
 /************************************************************************************************/
 {
 	bool res = false;
 	int event = 0;
-	t_channel_id channel_id = 0;
 
 	if((m_search_keyword.empty() || m_search_keyword == m_search_autokeyword) && evtlist[selected].eventID != 0)
 	{
@@ -1132,14 +1149,11 @@ bool CEventList::findEvents(void)
 		}
 		if(evtlist.empty())
 		{
-			if ( evtlist.empty() )
-			{
-				CChannelEvent evt;
-				//evt.description = m_search_keyword + ": " + g_Locale->getText(LOCALE_EPGVIEWER_NOTFOUND);
-				evt.description = g_Locale->getText(LOCALE_EPGVIEWER_NOTFOUND);
-				evt.eventID = 0;
-				evtlist.push_back(evt);
-			}
+			CChannelEvent evt;
+			//evt.description = m_search_keyword + ": " + g_Locale->getText(LOCALE_EPGVIEWER_NOTFOUND);
+			evt.description = g_Locale->getText(LOCALE_EPGVIEWER_NOTFOUND);
+			evt.eventID = 0;
+			evtlist.push_back(evt);
 		}
 		if (current_event == (unsigned int)-1)
 			current_event = 0;
@@ -1165,7 +1179,10 @@ bool CEventList::findEvents(void)
 		}
 
 	}
-	paintHead(0, search_head_name);
+	if(event)
+		paintHead(0, search_head_name);
+	else
+		paintHead(channel_id, channelname);
 	paint();
 	showFunctionBar(true, channel_id);
 	return(res);
