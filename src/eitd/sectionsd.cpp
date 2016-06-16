@@ -102,7 +102,7 @@ static bool messaging_zap_detected = false;
 //NTP-Config
 #define CONF_FILE CONFIGDIR "/neutrino.conf"
 
-std::string ntp_system_cmd_prefix = find_executable("rdate") + "-s ";
+std::string ntp_system_cmd_prefix = find_executable("ntpdate") + " ";
 
 std::string ntp_system_cmd;
 std::string ntpserver;
@@ -2194,7 +2194,7 @@ bool CEitManager::Start()
 	max_events = config.epg_max_events;
 	epg_save_frequently = config.epg_save_frequently;
 
-	if (find_executable("rdate").empty()){
+	if (find_executable("ntpdate").empty()){
 		ntp_system_cmd_prefix = find_executable("ntpd");
 		if (!ntp_system_cmd_prefix.empty()){
 			ntp_system_cmd_prefix += " -n -q -p ";
