@@ -67,7 +67,7 @@ extern CRemoteControl * g_RemoteControl;
 
 extern const char * locale_real_names[];
 extern std::string ttx_font_file;
-extern std::string sub_font_file;
+extern std::string *sub_font_file;
 extern int sub_font_size;
 
 COsdSetup::COsdSetup(int wizard_mode)
@@ -223,8 +223,8 @@ int COsdSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 			g_settings.font_file = fileBrowser.getSelectedFile()->Name;
 			printf("[neutrino] new font file %s\n", fileBrowser.getSelectedFile()->Name.c_str());
 			CNeutrinoApp::getInstance()->SetupFonts(CNeutrinoFonts::FONTSETUP_ALL);
-			osdFontFile = "(" + getBaseName(fileBrowser.getSelectedFile()->Name) + ")";
-			mfFontFile->setOption(osdFontFile.c_str());
+			osdFontFile = getBaseName(fileBrowser.getSelectedFile()->Name);
+			mfFontFile->setOption(osdFontFile);
 		}
 		return res;
 	}
@@ -240,8 +240,8 @@ int COsdSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 			ttx_font_file = fileBrowser.getSelectedFile()->Name;
 			printf("[neutrino] ttx font file %s\n", fileBrowser.getSelectedFile()->Name.c_str());
 			CNeutrinoApp::getInstance()->SetupFonts(CNeutrinoFonts::FONTSETUP_NEUTRINO_FONT | CNeutrinoFonts::FONTSETUP_NEUTRINO_FONT_INST);
-			osdTtxFontFile = "(" + getBaseName(fileBrowser.getSelectedFile()->Name) + ")";
-			mfTtxFontFile->setOption(osdTtxFontFile.c_str());
+			osdTtxFontFile = getBaseName(fileBrowser.getSelectedFile()->Name);
+			mfTtxFontFile->setOption(osdTtxFontFile);
 		}
 		return res;
 	}
@@ -254,7 +254,7 @@ int COsdSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 		if (fileBrowser.exec(FONTDIR) == true)
 		{
 			g_settings.sub_font_file = fileBrowser.getSelectedFile()->Name;
-			sub_font_file = fileBrowser.getSelectedFile()->Name;
+			*sub_font_file = fileBrowser.getSelectedFile()->Name;
 			printf("[neutrino] sub font file %s\n", fileBrowser.getSelectedFile()->Name.c_str());
 			osdSubFontFile = getBaseName(fileBrowser.getSelectedFile()->Name);
 			mfSubFontFile->setOption(osdSubFontFile);
@@ -949,14 +949,14 @@ void COsdSetup::showOsdFontSizeSetup(CMenuWidget *menu_fonts)
 
 	// select gui font file
 	osdFontFile = g_settings.font_file;
-	osdFontFile = "(" + getBaseName(osdFontFile) + ")";
+	osdFontFile = getBaseName(osdFontFile);
 	mfFontFile = new CMenuForwarder(LOCALE_COLORMENU_FONT, true, osdFontFile.c_str(), this, "select_font", CRCInput::RC_red);
 	mfFontFile->setHint("", LOCALE_MENU_HINT_FONT_GUI);
 	fontSettings->addItem(mfFontFile);
 
 	// select teletext font file
 	osdTtxFontFile = g_settings.ttx_font_file;
-	osdTtxFontFile = "(" + getBaseName(osdTtxFontFile) + ")";
+	osdTtxFontFile = getBaseName(osdTtxFontFile);
 	mfTtxFontFile = new CMenuForwarder(LOCALE_COLORMENU_FONT_TTX, true, osdTtxFontFile.c_str(), this, "ttx_font",  CRCInput::RC_green);
 	mfTtxFontFile->setHint("", LOCALE_MENU_HINT_FONT_TTX);
 	fontSettings->addItem(mfTtxFontFile);
