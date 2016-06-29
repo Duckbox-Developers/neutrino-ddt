@@ -526,7 +526,7 @@ start-block~remote
 		{=if-equal:{=var-get:boxtype=}~spark7162~	{=include-block:Y_Blocks.txt;rc_spark_new=}~
 
 		{=comment:fallback~=}				{=include-block:Y_Blocks.txt;rc_ufs910=}
-		=}=}=}=}=}=}=}=}=}=}
+		=}=}=}=}=}=}=}=}=}=}=}=}
 ~
 	{=if-equal:{=var-get:yfbtype=}~-3~	{=include-block:Y_Blocks.txt;rc_ufs910=}~
 	{=if-equal:{=var-get:yfbtype=}~-2~	{=include-block:Y_Blocks.txt;rc_spark_old=}~
@@ -541,7 +541,7 @@ start-block~remote
 	{=if-equal:{=var-get:yfbtype=}~8~	{=include-block:Y_Blocks.txt;rc_cst_v6=}~
 
 	{=comment:fallback~=}			{=include-block:Y_Blocks.txt;rc_ufs910=}
-	=}=}=}=}=}=}=}=}=}
+	=}=}=}=}=}=}=}=}=}=}=}
 =}
 end-block~remote
 
