@@ -42,7 +42,8 @@
 		<br/>
 		<table class="y_invisible_table" cellpadding="5" width="85%">
 		  <tr>
-		    <td>Mit <b>m3uConvert</b> ist es möglich, m3u-Playlisten in das webtv_usr.xml Format zu konvertieren.</td>
+		    <td>Mit <b>m3uConvert</b> ist es möglich, m3u-Playlisten in das webtv.xml Format zu konvertieren.<br>
+		    <br><b>Vorsicht !</b> Eventuell vorhanden Dateien werden überschrieben !!</td>
 		  </tr>
 			<tr><td class="y_form_header" colspan="2">1. Streams einfügen:</td></tr>
 			<tr>
@@ -55,8 +56,7 @@ http://www.xyz.com:8000/live/test/test/377.ts
 #EXTINF:0,DE:ZDF
 http://www.xyz.com:8000/live/test/test/372.ts
 #EXTINF:0,DE:TNT_SERIE
-http://www.xyz.com:8000/live/test/test/376.ts">
-						</textarea>
+http://www.xyz.com:8000/live/test/test/376.ts"></textarea>
 					</form>
 				</td>
 			</tr>
@@ -73,27 +73,48 @@ http://www.xyz.com:8000/live/test/test/376.ts">
 			</tr>   
 			<tr><td class="y_form_header" colspan="2">2. Beschreibung angeben:</td></tr>
 				<td>
-					<input id="inputDescription" title="Variablenwert Description in der Datei ... description='Stream'..." value="Stream"></input>
+					<input id="inputDescription" title="Variablenwert Description in der Datei ... description='Stream'..." value="stream"></input>
+				<br>(wird automatisch Teil des Dateinamens)
 				</td>
 			</tr>   
-			<tr><td class="y_form_header" colspan="2">3. Inputbox umwandeln in xml-Format:</td></tr>
+			<tr><td class="y_form_header" colspan="2">3. Umwandeln in xml-Format:</td></tr>
 				<td>
-					<button onclick="WriteForm();" title="obige m3u in webtv_usr umwandeln">Umwandeln</button>
+					<button onclick="WriteForm();" title="obige m3u in webtv umwandeln">Umwandeln</button>
 				</td>
 			</tr>   
 			<tr><td class="y_form_header" colspan="2">4. Dateiname zum Speichern und Download:</td></tr>
 				<td>
-					<input id="inputFileNameToSaveAs" value="webtv_usr.xml" title="Dateiname zum lokal speichern oder auf der Box aufrufen/erstellen"></input>
+					<input id="inputFileNameToSaveAs" value="webtv_stream.xml" title="Dateiname zum lokal speichern oder auf der Box aufrufen/erstellen (vorhandenes wird überschrieben!)"></input>
 				</td>
 			</tr>
-			<tr><td class="y_form_header" colspan="2">5. Export mit obigem Dateinamen:</td></tr>
+			<tr><td class="y_form_header" colspan="2">5. Dateiaktionen:</td></tr>
 				<td>
-					<div><button onclick="oeffnenXML();" title="Datei mit obigem Namen auf der Box &ouml;ffnen oder erstellen">Datei online bearbeiten/erstellen</button>
-						<button onclick="saveXML()" title="Download">Download auf PC</button>
-					</div></td>
+					<div>
+						<button onclick="save2box();" title="Datei mit obigem Namen auf der Box speichern">Direkt auf Box speichern</button>
+						<button onclick="oeffnenXML();" title="Datei mit obigem Namen auf der Box &ouml;ffnen">Datei online bearbeiten</button>
+						<button onclick="saveXML()" title="Download">Herunterladen</button>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				<form name="f" accept-charset="UTF-8" action="/y/cgi?execute=include-block:Y_Filemgr_blocks.txt;edit_save_settings;nix" method="POST">
+					<textarea id="savetxt" name="editfile" title="Editor" style="display:none;"></textarea>
+					<input type="hidden" name="tmpl" value="Y_Tools_m3uConvert.yhtm"/>
+					<input type="hidden" id="savefile" name="file" value=""/>
+				</form>
+				</td>
 			</tr>
 		</table>   
 	</div>
+
+<script type="text/javascript">
+   var sel = document.getElementById('inputDescription');
+   sel.onchange = function() {
+      var show = document.getElementById('inputFileNameToSaveAs');
+      show.value = 'webtv_'+this.value+'.xml';
+   }
+</script>
 
 <script language="javascript" type="text/javascript">
 	var textAreas = document.getElementsByTagName('textarea');
@@ -113,6 +134,7 @@ http://www.xyz.com:8000/live/test/test/376.ts">
 			e = document.getElementById("InputOutputField");
 			descri = document.getElementById("inputDescription").value;
 			l = e.value.split("\n");
+			if (l[0].trim() == '<?xml version="1.0"?>') { return false; }
 			s = '<?xml version="1.0"?>\n<webtvs>\n';
 			name = '';
 			if (l.length > 1)
@@ -159,6 +181,14 @@ http://www.xyz.com:8000/live/test/test/376.ts">
 			alert("Error: " + Err.description);
 		}
 		return false;
+	}
+	
+	function save2box()
+	{
+		document.getElementById("savetxt").value = document.getElementById("InputOutputField").value;
+		document.getElementById("savefile").value = '/var/tuxbox/config/' + document.getElementById("inputFileNameToSaveAs").value;
+		var t=document.getElementsByName("editfile");
+		document.f.submit();
 	}
 
 	function oeffnenXML()
