@@ -235,6 +235,8 @@ http://www.xyz.com:8000/live/test/test/376.ts"></textarea>
 		// cancel event and hover styling
 		FileDragHover(e);
 		// fetch FileList object
+		var m = $id("InputOutputField");
+		m.value = "";
 		var files = e.target.files || e.dataTransfer.files;
 		// process all File objects
 		for (var i = 0, f; f = files[i]; i++)
