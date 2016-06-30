@@ -55,6 +55,9 @@ function init(){
 					{=include-block:Y_Blocks.txt;management_link=}
 					=}
 				</li>
+				<li>
+					<a target="work" href="Y_Tools_m3uConvert.yhtm">m3uConvert</a>
+				</li>
 			</ul>
 		</div>
 		<div class="y_menu_sec_section">{=L:tools.expert=}</div>
