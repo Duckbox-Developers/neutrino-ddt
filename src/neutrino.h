@@ -121,7 +121,7 @@ private:
 #if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
 	void ExitRun(const bool write_si = true, int retcode = 0);
 #endif
-	void RealRun(CMenuWidget &mainSettings);
+	void RealRun();
 	void InitZapper();
 	void InitTimerdClient();
 	void InitZapitClient();
