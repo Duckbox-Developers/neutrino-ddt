@@ -284,6 +284,7 @@ channellist.show_empty_favs Zeige leere Favoriten-Bouquets
 channellist.show_infobox Sendungsfenster anzeigen
 channellist.since seit
 channellist.start Start
+ci.check_live_slot CI-Slot auf Live-TV Nutzung prüfen
 ci.clock CI Takt (Mhz)
 ci.empty Kein CAM im Slot
 ci.ignore_msg CA Meldungen ignorieren

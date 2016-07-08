@@ -474,6 +474,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.ci_clock = configfile.getInt32("ci_clock", 9);
 	g_settings.ci_ignore_messages = configfile.getInt32("ci_ignore_messages", 0);
 	g_settings.ci_save_pincode = configfile.getInt32("ci_save_pincode", 0);
+	g_settings.ci_check_live = configfile.getInt32("ci_check_live", 0);
 	g_settings.ci_pincode = configfile.getString("ci_pincode", "");
 	g_settings.ci_tuner = configfile.getInt32("ci_tuner", -1);
 
@@ -1149,6 +1150,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32("ci_clock", g_settings.ci_clock);
 	configfile.setInt32("ci_ignore_messages", g_settings.ci_ignore_messages);
 	configfile.setInt32("ci_save_pincode", g_settings.ci_save_pincode);
+	configfile.setInt32("ci_check_live", g_settings.ci_check_live);
 	configfile.setString("ci_pincode", g_settings.ci_pincode);
 	configfile.setInt32("ci_tuner", g_settings.ci_tuner);
 
@@ -2401,6 +2403,7 @@ TIMER_START();
 	delete hintBox;
 
 	cCA::GetInstance()->Ready(true);
+	cCA::GetInstance()->setCheckLiveSlot(g_settings.ci_check_live);
 	//InitZapper();
 
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE

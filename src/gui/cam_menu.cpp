@@ -120,6 +120,7 @@ int CCAMMenuHandler::doMainMenu()
 	}
 	cammenu->addItem( new CMenuOptionChooser(LOCALE_CI_IGNORE_MSG, &g_settings.ci_ignore_messages, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true));
 	cammenu->addItem( new CMenuOptionChooser(LOCALE_CI_SAVE_PINCODE, &g_settings.ci_save_pincode, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this));
+	cammenu->addItem( new CMenuOptionChooser(LOCALE_CI_CHECK_LIVE_SLOT, &g_settings.ci_check_live, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this));
 
 #ifdef BOXMODEL_APOLLO
 	CMenuOptionChooser::keyval_ext feselect[fecount+1];
@@ -560,6 +561,9 @@ bool CCAMMenuHandler::changeNotify(const neutrino_locale_t OptionName, void * Da
 			printf("CCAMMenuHandler::changeNotify: clear saved pincode\n");
 			g_settings.ci_pincode.clear();
 		}
+	}
+	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_CI_CHECK_LIVE_SLOT)) {
+		ca->setCheckLiveSlot(g_settings.ci_check_live);
 	}
 	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_CI_TUNER)) {
 		printf("CCAMMenuHandler::changeNotify: bind CI to tuner %d\n", g_settings.ci_tuner);
