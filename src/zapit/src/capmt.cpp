@@ -302,16 +302,23 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 		}
 	}
 	// CI
-	if((oldmask == newmask) && mode) {
-		if(start) {
-			CaIdVector caids;
-			cCA::GetInstance()->GetCAIDS(caids);
-			uint8_t list = CCam::CAPMT_ONLY;
-			cam->makeCaPmt(channel, false, list, caids);
-			int len;
-			unsigned char * buffer = channel->getRawPmt(len);
-			cam->sendCaPmt(channel->getChannelID(), buffer, len, CA_SLOT_TYPE_CI, channel->scrambled, channel->camap, mode, start);
-		} else {
+	if(oldmask == newmask) {
+		if (mode) {
+			if(start) {
+				CaIdVector caids;
+				cCA::GetInstance()->GetCAIDS(caids);
+				uint8_t list = CCam::CAPMT_ONLY;
+				cam->makeCaPmt(channel, false, list, caids);
+				int len;
+				unsigned char * buffer = channel->getRawPmt(len);
+				cam->sendCaPmt(channel->getChannelID(), buffer, len, CA_SLOT_TYPE_CI, channel->scrambled, channel->camap, mode, start);
+			} else {
+				cam->sendCaPmt(channel->getChannelID(), NULL, 0, CA_SLOT_TYPE_CI, channel->scrambled, channel->camap, mode, start);
+			}
+		}
+		else if (!start) {
+			/* condition: STREAM or RECORD and LIVE-TV are running on the same channel
+			 * now when zap to another channel, tell the CI here that former LIVE-TV has stopped */
 			cam->sendCaPmt(channel->getChannelID(), NULL, 0, CA_SLOT_TYPE_CI, channel->scrambled, channel->camap, mode, start);
 		}
 	}
