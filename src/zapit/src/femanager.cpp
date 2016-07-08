@@ -43,6 +43,8 @@
 
 static int fedebug = 0;
 static int unused_demux;
+static int noSameFE = 0;
+extern Zapit_config zapitCfg;
 
 #define FEDEBUG(fmt, args...)					\
         do {							\
@@ -536,8 +538,13 @@ CFrontend * CFEManager::getFrontend(CZapitChannel * channel)
 	CFrontend * retfe = NULL;
 
 	if (livefe && livefe->tuned && livefe->sameTsidOnid(channel->getTransponderId())) {
-		FEDEBUG("live fe %d on the same TP", livefe->fenumber);
-		return livefe;
+		if (!noSameFE) {
+			FEDEBUG("live fe %d on the same TP", livefe->fenumber);
+			return livefe;
+		} else if (livefe->getChannelID() == channel->getChannelID()) {
+			FEDEBUG("live fe %d on the same TP-SID", livefe->fenumber);
+			return livefe;
+		}
 	}
 
 	t_satellite_position satellitePosition = channel->getSatellitePosition();
@@ -573,8 +580,13 @@ CFrontend * CFEManager::getFrontend(CZapitChannel * channel)
 						break;
 					}
 					if (fe->tuned && fe->sameTsidOnid(channel->getTransponderId())) {
-						FEDEBUG("fe %d on the same TP", fe->fenumber);
-						return fe;
+						if (!noSameFE) {
+							FEDEBUG("fe %d on the same TP", fe->fenumber);
+							return fe;
+						} else if (fe->getChannelID() == channel->getChannelID()) {
+							FEDEBUG("fe %d on the same TP-SID", fe->fenumber);
+							return fe;
+						}
 					}
 					if (!loop_busy && fe->getMode() != CFrontend::FE_MODE_LINK_TWIN) {
 						if (have_loop && !loopCanTune(fe, channel)) {
@@ -601,14 +613,21 @@ CFrontend * CFEManager::getFrontend(CZapitChannel * channel)
 					mfe->Locked(), mfe->getFrequency(), mfe->getTsidOnid(), channel->getFreqId(), channel->getTransponderId());
 			if(mfe->Locked()) {
 				if(mfe->tuned && mfe->sameTsidOnid(channel->getTransponderId())) {
-					FEDEBUG("fe %d on the same TP", mfe->fenumber);
-					return mfe;
+					if (!noSameFE) {
+						FEDEBUG("fe %d on the same TP", mfe->fenumber);
+						return mfe;
+					} else if (mfe->getChannelID() == channel->getChannelID()) {
+						FEDEBUG("fe %d on the same TP-SID", mfe->fenumber);
+						return mfe;
+					}
 				}
 			} else if(!retfe)
 				retfe = mfe;
 		}
 	}
 	FEDEBUG("Selected fe: %d", retfe ? retfe->fenumber : -1);
+	if (noSameFE && retfe)
+		retfe->setChannelID(channel->getChannelID());
 	return retfe;
 }
 
@@ -656,6 +675,9 @@ bool CFEManager::haveFreeDemux()
 CFrontend * CFEManager::allocateFE(CZapitChannel * channel, bool forrecord)
 {
 	OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(mutex);
+		
+	CZapit::getInstance()->GetConfig(zapitCfg);
+	noSameFE = zapitCfg.noSameFE;
 
 	if (forrecord)
 		fedebug = 1;

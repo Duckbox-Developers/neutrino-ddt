@@ -199,6 +199,7 @@ void CZapit::SaveSettings(bool write)
 #endif
 
 		/* FIXME FE global */
+		configfile.setInt32("noSameFE", config.noSameFE);
 		char tempd[12];
 		sprintf(tempd, "%3.6f", config.gotoXXLatitude);
 		configfile.setString("gotoXXLatitude", tempd);
@@ -340,6 +341,7 @@ void CZapit::LoadSettings()
 
 	config.feTimeout			= configfile.getInt32("feTimeout", 40);
 	config.feRetries			= configfile.getInt32("feRetries", 1);
+	config.noSameFE				= configfile.getInt32("noSameFE", 0);
 	config.highVoltage			= configfile.getBool("highVoltage", 0);
 
 	config.gotoXXLatitude 			= strtod(configfile.getString("gotoXXLatitude", "0.0").c_str(), NULL);

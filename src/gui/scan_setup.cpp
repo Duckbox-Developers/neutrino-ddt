@@ -299,6 +299,13 @@ const CMenuOptionChooser::keyval SECTIONSD_SCAN_OPTIONS[SECTIONSD_SCAN_OPTIONS_C
 	{ 2, LOCALE_OPTIONS_ON_WITHOUT_MESSAGES  }
 };
 
+#define NOSAMEFE_SCAN_OPTIONS_COUNT 2
+const CMenuOptionChooser::keyval NOSAMEFE_SCAN_OPTIONS[NOSAMEFE_SCAN_OPTIONS_COUNT] =
+{
+	{ 0, LOCALE_OPTIONS_OFF },
+	{ 1, LOCALE_OPTIONS_ON  }
+};
+
 #define DISEQC_ORDER_OPTION_COUNT 2
 const CMenuOptionChooser::keyval DISEQC_ORDER_OPTIONS[DISEQC_ORDER_OPTION_COUNT] =
 {
@@ -710,6 +717,9 @@ void CScanSetup::addScanMenuFrontendOptions(CMenuWidget *m)
 	nc = new CMenuOptionNumberChooser(LOCALE_EXTRA_ZAPIT_FE_RETRIES, (int *)&zapitCfg.feRetries, true, 0, 9);
 	nc->setHint("", LOCALE_MENU_HINT_SCAN_FERETRIES);
 	m->addItem(nc);
+	CMenuOptionChooser * mc = new CMenuOptionChooser(LOCALE_EXTRA_ZAPIT_FE_NO_SAME,  (int *)&zapitCfg.noSameFE, NOSAMEFE_SCAN_OPTIONS, NOSAMEFE_SCAN_OPTIONS_COUNT, true, NULL);
+	mc->setHint("", LOCALE_MENU_HINT_SCAN_FENOSAME);
+	m->addItem(mc);
 }
 
 int CScanSetup::showScanMenuFrontendSetup()

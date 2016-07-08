@@ -569,6 +569,7 @@ extra.volume_pos Lautstärkeanzeige
 extra.volume_size Höhe der Anzeige
 extra.west Westen
 extra.zap_cycle Zap nur in Bouquet
+extra.zapit_fe_no_same Verschiedene Tuner bei gleichen Transponder
 extra.zapit_fe_retries Tuning Wiederholungen
 extra.zapit_fe_timeout Tuning Timeout
 extra.zapit_hvoltage High (13.5/ 18.5) Voltage
@@ -1381,6 +1382,7 @@ menu.hint_scan_fastupdate Aktivieren/Deaktivieren Fastscan Auto-Update
 menu.hint_scan_fec Wählen Sie eine Transponder-FEC
 menu.hint_scan_felink Select tuner to link tuner to
 menu.hint_scan_femode Wählen Sie den Verbindungstyp für den zweiten Tuner
+menu.hint_scan_fenosame Für zwei gleiche CI+ Module:\nGleichen Tuner nur nutzen bei gleicher Service-ID
 menu.hint_scan_feretries Wiederholungen bei fehlgeschlagenem Tuning
 menu.hint_scan_fesetup Konfigurieren des oder der Tuner
 menu.hint_scan_fetimeout Wartezeit auf das Signal
