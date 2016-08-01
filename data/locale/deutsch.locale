@@ -2111,6 +2111,7 @@ rclock.title Fernbedienung sperren
 rclock.unlockmsg Fernbedienung reaktiviert
 recording.already_found %s\nwurde bereits gefunden. Trotzdem aufnehmen?
 recording.already_found_check Prüfe Aufnahmen
+recording.failed Aufzeichnung ist fehlgeschlagen!
 recording.is_running Folgende Aufnahme läuft bereits! Neue Aufnahme starten?
 recording.start Starte Aufnahme, bitte warten...!
 recording.startstop_msg Meldung bei Aufnahme Start/Ende
