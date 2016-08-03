@@ -2524,6 +2524,7 @@ tunersetup.power 5V-Versorgung bei DVB-T/T2 Kanälen
 tunersetup.terr Terrestrisch (DVB-T/T2)
 tmdb.api_key TMDb API Schlüssel
 tmdb.enabled TMDb-Unterstützung
+tmdb.info TMDb-Info
 tmdb.read_data Suche TMDb-Daten ...
 unicable.lnb Unicable Eingang
 unicable.qrg Unicable Frequenz

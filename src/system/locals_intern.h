@@ -2551,6 +2551,7 @@ const char * locale_real_names[] =
 	"tunersetup.terr",
 	"tmdb.api_key",
 	"tmdb.enabled",
+	"tmdb.info",
 	"tmdb.read_data",
 	"unicable.lnb",
 	"unicable.qrg",
