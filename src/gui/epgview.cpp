@@ -1119,7 +1119,6 @@ int CEpgData::show(const t_channel_id channel_id, uint64_t a_id, time_t* a_start
 				showPos=0;
 				break;
 #else
-			case CRCInput::RC_info:
 			case CRCInput::RC_help:
 #endif
 
