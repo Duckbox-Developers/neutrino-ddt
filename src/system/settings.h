@@ -620,6 +620,7 @@ struct SNeutrinoSettings
 	int window_width;
 	int window_height;
 	int eventlist_additional;
+	int eventlist_epgplus;
 	int channellist_additional;
 	int channellist_epgtext_align_right;
 	int channellist_progressbar_design;
@@ -790,6 +791,8 @@ struct SNeutrinoSettings
 	int   audioplayer_show_playlist;
 	int   audioplayer_enable_sc_metadata;
 	std::string shoutcast_dev_id;
+	int shoutcast_enabled;
+
 	//Filebrowser
 	int filebrowser_showrights;
 	int filebrowser_sortmethod;
@@ -799,7 +802,9 @@ struct SNeutrinoSettings
 	//movieplayer
 	int   movieplayer_repeat_on;
 	std::string youtube_dev_id;
+	int youtube_enabled;
 	std::string tmdb_api_key;
+	int tmdb_enabled;
 
 	//zapit setup
 	std::string StartChannelTV;
