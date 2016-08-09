@@ -161,7 +161,7 @@ audiomenu.volume_step Volume step
 audioplayer.add Add
 audioplayer.add_ic Icecast
 audioplayer.add_loc Local radio list
-audioplayer.add_sc Shoutcast
+audioplayer.add_sc SHOUTcast
 audioplayer.artist_title Artist, Title
 audioplayer.building_search_index building search index
 audioplayer.button_select_title_by_id search by ID
@@ -170,7 +170,7 @@ audioplayer.defdir start dir.
 audioplayer.delete Remove
 audioplayer.deleteall remove all
 audioplayer.display_order display order
-audioplayer.enable_sc_metadata enable shoutcast meta data parsing
+audioplayer.enable_sc_metadata enable SHOUTcast meta data parsing
 audioplayer.fastforward fast forw.
 audioplayer.follow auto select current
 audioplayer.head Audio Playlist
@@ -1242,7 +1242,7 @@ menu.hint_misc_epg Save/load EPG options, EPG cache options\nEPG save directory
 menu.hint_misc_filebrowser Filesystem encoding, file rights\ndeny directory leave
 menu.hint_misc_general Start to standby, cache teletext, swp rotor\nplugin hdd dir
 menu.hint_misc_kerneloptions Select the kernel modules to be loaded in addition to the standard ones
-menu.hint_misc_onlineservices Configure and control online services like YouTube, ShoutCast and TMDb
+menu.hint_misc_onlineservices Configure and control online services like YouTube, SHOUTCast and TMDb
 menu.hint_misc_zapit Initial TV/Radio channels
 menu.hint_movie Play movies
 menu.hint_moviebrowser_setup Set selection and display options.
@@ -1461,6 +1461,7 @@ menu.hint_service Tuner setup, service scan,\nbouquet editor, software upgrade
 menu.hint_service_scan Auto / manual service scan
 menu.hint_settings Configure Neutrino\nNetwork, audio, video, OSD and more
 menu.hint_shoutcast_dev_id Type your SHOUTcast Dev ID. An empty input disables SHOUTcast support
+menu.hint_shoutcast_enabled Enable or disable SHOUTcast support
 menu.hint_show_mute_icon Show mute icon, when volume set to 0
 menu.hint_shutdown Put your box in deep standby mode\nNo confirmation
 menu.hint_shutdown_count Time to put box in deep-standby\nfrom soft-standby mode
@@ -1489,6 +1490,7 @@ menu.hint_timeouts Configure time to hide GUI windows\nin seconds
 menu.hint_timers Add/Remove/Edit scheduled\nrecording, reminders etc.
 menu.hint_timezone Select your timezone
 menu.hint_tmdb_api_key Type your TMDb API key. An empty input disables TMDb support
+menu.hint_tmdb_enabled Enable or disable TMDb support (themoviedb.org)
 menu.hint_tools Run tools
 menu.hint_tvmode Switch box to TV mode
 menu.hint_tvradio_switch Switches between TV and Radio mode
@@ -1535,7 +1537,8 @@ menu.hint_volume_size Select volume indicator height
 menu.hint_webtv_setup WebTV channels configured here will be available in the standard channel lists.
 menu.hint_window_size Channellist, EPG-infos and some other windows are scaled by this factor
 menu.hint_youtube_dev_id Type your YouTube Dev ID. An empty input disables YouTube support
-menu.hint_ytplay Play selected youtube feeds
+menu.hint_youtube_enabled Enable or disable YouTube support
+menu.hint_ytplay Play selected YouTube feeds
 menu.hint_ytplay_setup Configure YouTube-specific options, e.g. an upper limit for search results
 menu.hint_zap_cycle When swithing channels, stay in current bouquet
 menu.next Next
@@ -1853,7 +1856,7 @@ moviebrowser.yt_cancel_transfer Cancel download?
 moviebrowser.yt_clear Clear
 moviebrowser.yt_completed Completed downloads
 moviebrowser.yt_concurrent_connections Concurrent connections
-moviebrowser.yt_error Failed to load youtube feed
+moviebrowser.yt_error Failed to load YouTube feed
 moviebrowser.yt_failed Failed downloads
 moviebrowser.yt_history Search history
 moviebrowser.yt_max_history Max search history size
@@ -1898,7 +1901,7 @@ movieplayer.tshelp7 skip approx. 1 minute
 movieplayer.tshelp8 approx. 5 minutes back
 movieplayer.tshelp9 skip approx. 5 minutes
 movieplayer.tsplayback Play
-movieplayer.ytplayback Youtube
+movieplayer.ytplayback YouTube videoplayer
 mpkey.audio Audiotracks
 mpkey.bookmark Bookmarks
 mpkey.forward Forward
@@ -2344,6 +2347,7 @@ settings.pos_top_right top right
 settings.restore Image-Settings: Restore
 settings.restore_warn This will replace all settings and reboot\nContinue ?
 shoutcast.dev_id SHOUTcast Dev ID
+shoutcast.enabled SHOUTcast support
 shutdown.recording_query You really want to to stop record ?
 shutdowntimer.announce Box will shutdown in 1 min.\nCancel Shutdown ?
 sleeptimerbox.announce Box will standby in 1 min.\nCancel Standby ?
@@ -2472,6 +2476,7 @@ timing.menu Menu
 timing.numericzap Numeric Zap
 timing.volumebar Volume bar
 tmdb.api_key TMDb API key
+tmdb.enabled TMDb support
 tmdb.read_data Search TMDB Data...
 unicable.lnb Unicable Input
 unicable.qrg Unicable Frequency
@@ -2600,6 +2605,7 @@ wizard.welcome_text Next steps will guide you through initial installation of th
 word.from from
 word.in in
 youtube.dev_id YouTube Dev ID
+youtube.enabled YouTube support
 zapit.scantype scan for services
 zapit.scantype.all all services
 zapit.scantype.radio only radio
