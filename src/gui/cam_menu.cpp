@@ -274,7 +274,9 @@ int CCAMMenuHandler::handleCamMsg(const neutrino_msg_t msg, neutrino_msg_data_t 
 
 	printf("CCAMMenuHandler::handleCamMsg: CA msg %x from %s\n", MsgId, from_menu ? "menu" : "neutrino");
 
-	if (g_settings.ci_ignore_messages && !from_menu)
+	if (g_settings.ci_ignore_messages && !from_menu && MsgId != CA_MESSAGE_MSG_MMI_REQ_INPUT
+	&& MsgId != CA_MESSAGE_MSG_MMI_CLOSE && MsgId != CA_MESSAGE_MSG_INIT_OK
+	&& MsgId != CA_MESSAGE_MSG_INSERTED && MsgId != CA_MESSAGE_MSG_REMOVED)
 		return 1;
 
 	hideHintBox();
