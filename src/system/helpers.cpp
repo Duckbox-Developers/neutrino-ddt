@@ -491,6 +491,8 @@ std::string& htmlEntityDecode(std::string& text)
 	};
 	decode_table dt[] =
 	{
+		{"\n", "&#x0a;"},
+		{"\n", "&#x0d;"},
 		{" ",  "&nbsp;"},
 		{"&",  "&amp;"},
 		{"<",  "&lt;"},
