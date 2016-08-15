@@ -1941,6 +1941,7 @@ bool CMovieBrowser::onButtonPressMainFrame(neutrino_msg_t msg)
 
 			TRACE("[mb]->new sorting %d,%s\n",m_settings.sorting.item,g_Locale->getText(m_localizedItemName[m_settings.sorting.item]));
 			refreshBrowserList();
+			refreshMovieInfo();
 			refreshFoot();
 		}
 	}
@@ -2227,61 +2228,62 @@ bool CMovieBrowser::onButtonPressMovieInfoList(neutrino_msg_t msg)
 	return (result);
 }
 
-bool CMovieBrowser::onDeleteFile(MI_MOVIE_INFO *movieinfo, bool skipAsk)
+std::string CMovieBrowser::formatDeleteMsg(MI_MOVIE_INFO *movieinfo, int msgFont, const int boxWidth)
 {
-	//TRACE("[onDeleteFile] ");
-	bool result = false;
-#if 0
-	int test= movieinfo->file.Name.find(".ts", movieinfo->file.Name.length()-3);
-	if (test == -1) {
-		// not a TS file, return!!!!!
-		TRACE("show_ts_info: not a TS file ");
-		return;
-	}
-#endif
-	size_t msgMax = 50;
+	Font *msgFont_ = g_Font[msgFont];
+	int msgWidth = boxWidth - 20;
 	std::string msg = g_Locale->getText(LOCALE_FILEBROWSER_DODELETE1);
-	msg += "\n  ";
+	msg += "\n";
+
 	if (!movieinfo->epgTitle.empty()) {
-		if ((movieinfo->epgTitle.length() + movieinfo->epgInfo1.length()) <= msgMax) {
-			msg += movieinfo->epgTitle;
+		int titleW = msgFont_->getRenderWidth(movieinfo->epgTitle);
+		int infoW = 0;
+		int zW = 0;
+		if (!movieinfo->epgInfo1.empty()) {
+			infoW = msgFont_->getRenderWidth(movieinfo->epgInfo1);
+			zW = msgFont_->getRenderWidth(" ()");
+		}
+
+		if ((titleW+infoW+zW) <= msgWidth) {
+			/* one line */
+			msg += trim(movieinfo->epgTitle);
 			if (!movieinfo->epgInfo1.empty()) {
 				msg += " (";
-				msg += movieinfo->epgInfo1;
+				msg += trim(movieinfo->epgInfo1);
 				msg += ")";
 			}
 		}
 		else {
-			if (movieinfo->epgTitle.length() > msgMax) {
-				msg += movieinfo->epgTitle.substr(0, msgMax);
-				msg += "...";
-			}
-			else {
-				msg += movieinfo->epgTitle;
-				if (!movieinfo->epgInfo1.empty()) {
-					msg += "\n  (";
-					if (movieinfo->epgInfo1.length() > msgMax) {
-						msg = movieinfo->epgInfo1.substr(0, msgMax);
-						msg += "...";
-					}
-					else
-						msg += movieinfo->epgInfo1;
+			/* two lines */
+			msg += cutString(movieinfo->epgTitle, msgFont, msgWidth);
+			if (!movieinfo->epgInfo1.empty()) {
+				msg += "\n(";
+				msg += cutString(movieinfo->epgInfo1, msgFont, msgWidth);
 				msg += ")";
-				}
 			}
 		}
 	}
-	else {
-		if (movieinfo->file.Name.length() > msgMax) {
-			msg += movieinfo->file.Name.substr(0, msgMax);
-			msg += "...";
-		}
-		else
-			msg += movieinfo->file.Name;
-	}
+	else
+		msg += cutString(movieinfo->file.Name, msgFont, msgWidth);
+
 	msg += "\n";
 	msg += g_Locale->getText(LOCALE_FILEBROWSER_DODELETE2);
-	if ((skipAsk || !movieinfo->delAsk) || (ShowMsg(LOCALE_FILEBROWSER_DELETE, msg, CMessageBox::mbrYes, CMessageBox::mbYes|CMessageBox::mbNo)==CMessageBox::mbrYes))
+
+	return msg;
+}
+
+bool CMovieBrowser::onDeleteFile(MI_MOVIE_INFO *movieinfo, bool skipAsk)
+{
+	//TRACE("[onDeleteFile] ");
+	bool result = false;
+
+	/* default font for ShowMsg */
+	int msgFont = SNeutrinoSettings::FONT_TYPE_MENU;
+	/* default width for ShowMsg */
+	int msgBoxWidth = 450;
+
+	std::string msg = formatDeleteMsg(movieinfo, msgFont, msgBoxWidth);
+	if ((skipAsk || !movieinfo->delAsk) || (ShowMsg(LOCALE_FILEBROWSER_DELETE, msg, CMessageBox::mbrYes, CMessageBox::mbYes|CMessageBox::mbNo, NULL, msgBoxWidth)==CMessageBox::mbrYes))
 	{
 		CHintBox * hintBox = new CHintBox(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_MOVIEBROWSER_DELETE_INFO));
 		hintBox->paint();

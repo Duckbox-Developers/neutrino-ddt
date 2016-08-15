@@ -1431,7 +1431,7 @@ void CMenuWidget::paintHint(int pos)
 		/* clear info box */
 		if ((info_box) && (pos < 0))
 			savescreen ? info_box->hide() : info_box->kill();
-		hint_painted = false;
+		hint_painted = info_box->isPainted();
 	}
 	if (pos < 0)
 		return;
@@ -1441,7 +1441,7 @@ void CMenuWidget::paintHint(int pos)
 	if (!item->hintIcon && item->hint == NONEXISTANT_LOCALE && item->hintText.empty()) {
 		if (info_box) {
 			savescreen ? info_box->hide() : info_box->kill();
-			hint_painted = false;
+			hint_painted = info_box->isPainted();
 		}
 		return;
 	}
@@ -1486,7 +1486,7 @@ void CMenuWidget::paintHint(int pos)
 	info_box->setColorAll(COL_MENUCONTENT_PLUS_6, COL_MENUCONTENTDARK_PLUS_0, COL_MENUCONTENTDARK_PLUS_0);
 	info_box->enableShadow();
 	info_box->setPicture(item->hintIcon ? item->hintIcon : "");
-	info_box->enableColBodyGradient(g_settings.theme.menu_Hint_gradient, COL_INFOBAR_SHADOW_PLUS_1, g_settings.theme.menu_Hint_gradient_direction);// COL_INFOBAR_SHADOW_PLUS_1 is default footer color
+	info_box->enableColBodyGradient(g_settings.theme.menu_Hint_gradient, COL_MENUFOOT_PLUS_0, g_settings.theme.menu_Hint_gradient_direction);// COL_MENUFOOT_PLUS_0 is default footer color
 
 	//paint result
 	if (details_line)

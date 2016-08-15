@@ -46,6 +46,7 @@
 #include <linux/hdreg.h>
 #include <linux/fs.h>
 #include "debug.h"
+#include <global.h>
 #include <system/helpers.h>
 #include <gui/update_ext.h>
 #include <driver/framebuffer.h>
@@ -440,6 +441,28 @@ std::string trim(std::string &str, const std::string &trimChars /*= " \n\r\t"*/)
 {
 	std::string result = str.erase(str.find_last_not_of(trimChars) + 1);
 	return result.erase(0, result.find_first_not_of(trimChars));
+}
+
+std::string cutString(const std::string str, int msgFont, const int width)
+{
+	Font *msgFont_ = g_Font[msgFont];
+	std::string ret = str;
+	ret = trim(ret);
+	int sw = msgFont_->getRenderWidth(ret);
+	if (sw <= width)
+		return ret;
+	else {
+		std::string z = "...";
+		int zw = msgFont_->getRenderWidth(z);
+		if (width <= 2*zw)
+			return ret;
+		do {
+			ret = ret.substr(0, ret.length()-1);
+			sw = msgFont_->getRenderWidth(ret);
+		} while (sw+zw > width);
+		ret = trim(ret) + z;
+	}
+	return ret;
 }
 
 std::string strftime(const char *format, const struct tm *tm)
