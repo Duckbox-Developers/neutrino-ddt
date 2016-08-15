@@ -47,6 +47,7 @@
 #include <linux/fs.h>
 #include "debug.h"
 #include <global.h>
+#include <neutrino.h>
 #include <system/helpers.h>
 #include <gui/update_ext.h>
 #include <driver/framebuffer.h>
