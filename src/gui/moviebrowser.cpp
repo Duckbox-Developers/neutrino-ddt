@@ -143,7 +143,7 @@ const CMenuOptionChooser::keyval MESSAGEBOX_PARENTAL_LOCKAGE_OPTIONS[MESSAGEBOX_
 #define TITLE_FONT_COLOR COL_MENUHEAD_TEXT
 
 #define TITLE_FONT g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]
-#define FOOT_FONT g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]
+#define FOOT_FONT g_Font[SNeutrinoSettings::FONT_TYPE_MENU_FOOT]
 
 #define INTER_FRAME_SPACE 4  // space between e.g. upper and lower window
 
@@ -1192,7 +1192,7 @@ int CMovieBrowser::paint(void)
 	//CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, g_Locale->getText(LOCALE_MOVIEBROWSER_HEAD));
 
 	Font* font = NULL;
-
+	m_movieSelectionHandler = NULL;
 	m_pcBrowser = new CListFrame(&m_browserListLines, font, CListFrame::SCROLL | CListFrame::HEADER_LINE,
 			&m_cBoxFrameBrowserList);
 	m_pcLastPlay = new CListFrame(&m_playListLines, font, CListFrame::SCROLL | CListFrame::HEADER_LINE | CListFrame::TITLE,

@@ -138,11 +138,12 @@ const SNeutrinoSettings::FONT_TYPES epg_font_sizes[4] =
 	SNeutrinoSettings::FONT_TYPE_EPG_DATE
 };
 
-const SNeutrinoSettings::FONT_TYPES menu_font_sizes[4] =
+const SNeutrinoSettings::FONT_TYPES menu_font_sizes[5] =
 {
 	SNeutrinoSettings::FONT_TYPE_MENU_TITLE,
 	SNeutrinoSettings::FONT_TYPE_MENU,
 	SNeutrinoSettings::FONT_TYPE_MENU_INFO,
+	SNeutrinoSettings::FONT_TYPE_MENU_FOOT,
 	SNeutrinoSettings::FONT_TYPE_MENU_HINT
 };
 
@@ -155,7 +156,7 @@ const SNeutrinoSettings::FONT_TYPES other_font_sizes[2] =
 #define FONT_GROUP_COUNT 6
 font_sizes_groups font_sizes_groups[FONT_GROUP_COUNT] =
 {
-	{LOCALE_FONTMENU_MENU       , 4, menu_font_sizes       , "fontsize.dmen", LOCALE_MENU_HINT_MENU_FONTS },
+	{LOCALE_FONTMENU_MENU       , 5, menu_font_sizes       , "fontsize.dmen", LOCALE_MENU_HINT_MENU_FONTS },
 	{LOCALE_FONTMENU_CHANNELLIST, 5, channellist_font_sizes, "fontsize.dcha", LOCALE_MENU_HINT_CHANNELLIST_FONTS },
 	{LOCALE_FONTMENU_EVENTLIST  , 5, eventlist_font_sizes  , "fontsize.deve", LOCALE_MENU_HINT_EVENTLIST_FONTS },
 	{LOCALE_FONTMENU_EPG        , 4, epg_font_sizes        , "fontsize.depg", LOCALE_MENU_HINT_EPG_FONTS },
@@ -168,6 +169,7 @@ font_sizes_struct neutrino_font[SNeutrinoSettings::FONT_TYPE_COUNT] =
 	{LOCALE_FONTSIZE_MENU               ,  20, CNeutrinoFonts::FONT_STYLE_BOLD   , 0},
 	{LOCALE_FONTSIZE_MENU_TITLE         ,  30, CNeutrinoFonts::FONT_STYLE_BOLD   , 0},
 	{LOCALE_FONTSIZE_MENU_INFO          ,  16, CNeutrinoFonts::FONT_STYLE_REGULAR, 0},
+	{LOCALE_FONTSIZE_MENU_FOOT          ,  14, CNeutrinoFonts::FONT_STYLE_REGULAR, 1},
 	{LOCALE_FONTSIZE_EPG_TITLE          ,  25, CNeutrinoFonts::FONT_STYLE_REGULAR, 1},
 	{LOCALE_FONTSIZE_EPG_INFO1          ,  17, CNeutrinoFonts::FONT_STYLE_ITALIC , 2},
 	{LOCALE_FONTSIZE_EPG_INFO2          ,  17, CNeutrinoFonts::FONT_STYLE_REGULAR, 2},
@@ -734,6 +736,8 @@ void COsdSetup::showOsdMenueColorSetup(CMenuWidget *menu_colors)
 			NULL, colorSetupNotifier);
 	CColorChooser* chFootcolor = new CColorChooser(LOCALE_COLORMENU_BACKGROUND, &t.menu_Foot_red, &t.menu_Foot_green, &t.menu_Foot_blue,
 			&t.menu_Foot_alpha, colorSetupNotifier);
+	CColorChooser* chFootTextcolor = new CColorChooser(LOCALE_COLORMENU_TEXTCOLOR, &t.menu_Foot_Text_red, &t.menu_Foot_Text_green, &t.menu_Foot_Text_blue,
+			NULL, colorSetupNotifier);
 
 	menu_colors->addItem( new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_COLORMENUSETUP_MENUHEAD));
 
@@ -796,7 +800,12 @@ void COsdSetup::showOsdMenueColorSetup(CMenuWidget *menu_colors)
 	// footer
 	menu_colors->addItem( new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_COLORMENUSETUP_MENUFOOT));
 	mf = new CMenuDForwarder(LOCALE_COLORMENU_BACKGROUND, true, NULL, chFootcolor );
-	mf->setHint("", LOCALE_MENU_HINT_HEAD_BACK);
+	mf->setHint("", LOCALE_MENU_HINT_FOOT_BACK);
+	menu_colors->addItem(mf);
+
+	// footer text
+	mf = new CMenuDForwarder(LOCALE_COLORMENU_TEXTCOLOR, true, NULL, chFootTextcolor );
+	mf->setHint("", LOCALE_MENU_HINT_FOOT_TEXTCOLOR);
 	menu_colors->addItem(mf);
 
 	// hintbox color gradient
