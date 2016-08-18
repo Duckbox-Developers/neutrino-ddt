@@ -1244,14 +1244,13 @@ void CMenuWidget::paint()
 		header->setOffset(10);
 	}
 	header->setColorBody(COL_MENUHEAD_PLUS_0);
-	header->setColorShadow(COL_MENUCONTENTDARK_PLUS_0);
 	header->setCaptionColor(COL_MENUHEAD_TEXT);
 	header->enableColBodyGradient(g_settings.theme.menu_Head_gradient, COL_MENUCONTENT_PLUS_0);
 	header->enableGradientBgCleanUp(savescreen);
 	header->paint(CC_SAVE_SCREEN_NO);
 
 	// paint body shadow
-	frameBuffer->paintBoxRel(x+SHADOW_OFFSET, y + hheight + SHADOW_OFFSET, width + sb_width, height - hheight + RADIUS_LARGE + (fbutton_count ? fbutton_height : 0), COL_MENUCONTENTDARK_PLUS_0, RADIUS_LARGE, CORNER_BOTTOM);
+	frameBuffer->paintBoxRel(x+SHADOW_OFFSET, y + hheight + SHADOW_OFFSET, width + sb_width, height - hheight + RADIUS_LARGE + (fbutton_count ? fbutton_height : 0), COL_SHADOW_PLUS_0, RADIUS_LARGE, CORNER_BOTTOM);
 	// paint body background
 	frameBuffer->paintBoxRel(x, y+hheight, width + sb_width, height-hheight + RADIUS_LARGE, COL_MENUCONTENT_PLUS_0, RADIUS_LARGE, (fbutton_count ? CORNER_NONE : CORNER_BOTTOM));
 
@@ -1431,7 +1430,8 @@ void CMenuWidget::paintHint(int pos)
 		/* clear info box */
 		if ((info_box) && (pos < 0))
 			savescreen ? info_box->hide() : info_box->kill();
-		hint_painted = info_box->isPainted();
+		if (info_box)
+			hint_painted = info_box->isPainted();
 	}
 	if (pos < 0)
 		return;
@@ -1483,7 +1483,7 @@ void CMenuWidget::paintHint(int pos)
 	info_box->removeLineBreaks(str);
 	info_box->setText(str, CTextBox::AUTO_WIDTH, g_Font[SNeutrinoSettings::FONT_TYPE_MENU_HINT], COL_MENUCONTENT_TEXT);
 	info_box->setCorner(RADIUS_LARGE);
-	info_box->setColorAll(COL_MENUCONTENT_PLUS_6, COL_MENUCONTENTDARK_PLUS_0, COL_MENUCONTENTDARK_PLUS_0);
+	info_box->setColorAll(COL_MENUCONTENT_PLUS_6, COL_MENUCONTENTDARK_PLUS_0);
 	info_box->enableShadow();
 	info_box->setPicture(item->hintIcon ? item->hintIcon : "");
 	info_box->enableColBodyGradient(g_settings.theme.menu_Hint_gradient, COL_MENUFOOT_PLUS_0, g_settings.theme.menu_Hint_gradient_direction);// COL_MENUFOOT_PLUS_0 is default footer color
