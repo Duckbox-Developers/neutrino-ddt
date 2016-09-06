@@ -17,7 +17,7 @@ version.h:
 noinst_HEADERS = version.h
 .PHONY: version.h
 
-SUBDIRS = bedit components widget
+SUBDIRS = bedit components moviebrowser widget
 
 if ENABLE_LUA
 SUBDIRS += lua
@@ -72,7 +72,6 @@ libneutrino_gui_a_SOURCES = \
 	mediaplayer.cpp \
 	mediaplayer_setup.cpp \
 	miscsettings_menu.cpp \
-	moviebrowser.cpp \
 	movieinfo.cpp \
 	movieplayer.cpp \
 	network_service.cpp \
