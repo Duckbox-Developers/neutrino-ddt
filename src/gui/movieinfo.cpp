@@ -389,7 +389,7 @@ bool CMovieInfo::parseXmlTree(std::string &_text, MI_MOVIE_INFO *movie_info)
 			}
 			//printf("MOVIE INFO: apid %d type %d name %s selected %d\n", audio_pids.AudioPid, audio_pids.atype, audio_pids.epgAudioPidName.c_str(), audio_pids.selected);
 			unsigned int j, asize = movie_info->audioPids.size();
-			for (j = 0; j < asize && audio_pids.epgAudioPid != movie_info->audioPids[j].epgAudioPid; j++);
+			for (j = 0; j < asize && audio_pids.AudioPid != movie_info->audioPids[j].AudioPid; j++);
 			if (j == asize)
 				movie_info->audioPids.push_back(audio_pids);
 		}
@@ -514,12 +514,12 @@ void CMovieInfo::clearMovieInfo(MI_MOVIE_INFO * movie_info)
 	movie_info->productionDate = 0;	// (Year)  years since 1900
 	movie_info->parentalLockAge = 0;	// MI_PARENTAL_LOCKAGE (0,6,12,16,18)
 
+	movie_info->channelId = 0;
 	movie_info->epgId = 0;
-	movie_info->epgEpgId = 0;
-	movie_info->epgMode = 0;
-	movie_info->epgVideoPid = 0;
+	movie_info->mode = 0;
+	movie_info->VideoPid = 0;
 	movie_info->VideoType = 0;
-	movie_info->epgVTXPID = 0;
+	movie_info->VtxtPid = 0;
 
 	movie_info->audioPids.clear();
 
@@ -527,7 +527,7 @@ void CMovieInfo::clearMovieInfo(MI_MOVIE_INFO * movie_info)
 	movie_info->epgTitle = "";
 	movie_info->epgInfo1 = "";	//epgInfo1
 	movie_info->epgInfo2 = "";	//epgInfo2
-	movie_info->epgChannel = "";
+	movie_info->channelName = "";
 	movie_info->serieName = "";	// (name e.g. 'StarWars)
 	movie_info->bookmarks.end = 0;
 	movie_info->bookmarks.start = 0;

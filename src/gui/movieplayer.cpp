@@ -1334,13 +1334,13 @@ bool CMoviePlayerGui::PlayFileStart(void)
 		if (p_movie_info)
 			for (unsigned int i = 0; i < numpida; i++) {
 				unsigned int j, asize = p_movie_info->audioPids.size();
-				for (j = 0; j < asize && p_movie_info->audioPids[j].epgAudioPid != apids[i]; j++);
+				for (j = 0; j < asize && p_movie_info->audioPids[j].AudioPid != apids[i]; j++);
 				if (j == asize) {
-					EPG_AUDIO_PIDS pids;
-					pids.epgAudioPid = apids[i];
+					AUDIO_PIDS pids;
+					pids.AudioPid = apids[i];
 					pids.selected = 0;
 					pids.atype = ac3flags[i];
-					pids.epgAudioPidName = language[i];
+					pids.AudioPidName = language[i];
 					p_movie_info->audioPids.push_back(pids);
 				}
 			}
@@ -2047,8 +2047,8 @@ void CMoviePlayerGui::callInfoViewer(bool init_vzap_it)
 				CVFD::getInstance()->showServicename(movie_info.epgTitle.c_str());
 				continue;
 			}
-			if (movie_info.epgChannel.empty() && !strcasecmp("artist", key.c_str())) {
-				movie_info.epgChannel = isUTF8(values[i]) ? values[i] : convertLatin1UTF8(values[i]);
+			if (movie_info.channelName.empty() && !strcasecmp("artist", key.c_str())) {
+				movie_info.channelName = isUTF8(values[i]) ? values[i] : convertLatin1UTF8(values[i]);
 				continue;
 			}
 			if (movie_info.epgInfo1.empty() && !strcasecmp("album", key.c_str())) {
@@ -2056,7 +2056,7 @@ void CMoviePlayerGui::callInfoViewer(bool init_vzap_it)
 				continue;
 			}
 		}
-		if (!movie_info.epgChannel.empty() || !movie_info.epgTitle.empty())
+		if (!movie_info.channelName.empty() || !movie_info.epgTitle.empty())
 			p_movie_info = &movie_info;
 #ifdef ENABLE_GRAPHLCD
 		if (p_movie_info)
