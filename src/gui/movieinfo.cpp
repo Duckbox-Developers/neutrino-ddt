@@ -106,14 +106,14 @@ bool CMovieInfo::encodeMovieInfoXml(std::string * extMessage, MI_MOVIE_INFO * mo
 			"\t<" MI_XML_TAG_RECORD " command=\""
 			"record"
 			"\">\n";
-	XML_ADD_TAG_STRING(*extMessage, MI_XML_TAG_CHANNELNAME, movie_info->epgChannel);
+	XML_ADD_TAG_STRING(*extMessage, MI_XML_TAG_CHANNELNAME, movie_info->channelName);
 	XML_ADD_TAG_STRING(*extMessage, MI_XML_TAG_EPGTITLE, movie_info->epgTitle);
-	XML_ADD_TAG_LONG(*extMessage, MI_XML_TAG_ID, movie_info->epgId);
+	XML_ADD_TAG_LONG(*extMessage, MI_XML_TAG_ID, movie_info->channelId);
 	XML_ADD_TAG_STRING(*extMessage, MI_XML_TAG_INFO1, movie_info->epgInfo1);
 	XML_ADD_TAG_STRING(*extMessage, MI_XML_TAG_INFO2, movie_info->epgInfo2);
-	XML_ADD_TAG_LONG(*extMessage, MI_XML_TAG_EPGID, movie_info->epgEpgId); // %llu
-	XML_ADD_TAG_UNSIGNED(*extMessage, MI_XML_TAG_MODE, movie_info->epgMode); // %d
-	XML_ADD_TAG_UNSIGNED(*extMessage, MI_XML_TAG_VIDEOPID, movie_info->epgVideoPid); // %u
+	XML_ADD_TAG_LONG(*extMessage, MI_XML_TAG_EPGID, movie_info->epgId); // %llu
+	XML_ADD_TAG_UNSIGNED(*extMessage, MI_XML_TAG_MODE, movie_info->mode); // %d
+	XML_ADD_TAG_UNSIGNED(*extMessage, MI_XML_TAG_VIDEOPID, movie_info->VideoPid); // %u
 	XML_ADD_TAG_UNSIGNED(*extMessage, MI_XML_TAG_VIDEOTYPE, movie_info->VideoType); // %u
 	if ( !movie_info->audioPids.empty() ) {
 		*extMessage += "\t\t<" MI_XML_TAG_AUDIOPIDS ">\n";
@@ -121,18 +121,18 @@ bool CMovieInfo::encodeMovieInfoXml(std::string * extMessage, MI_MOVIE_INFO * mo
 		for (unsigned int i = 0; i < movie_info->audioPids.size(); i++) // pids.APIDs.size()
 		{
 			*extMessage += "\t\t\t<" MI_XML_TAG_AUDIO " " MI_XML_TAG_PID "=\"";
-			*extMessage += to_string(movie_info->audioPids[i].epgAudioPid);
+			*extMessage += to_string(movie_info->audioPids[i].AudioPid);
 			*extMessage += "\" " MI_XML_TAG_ATYPE "=\"";
 			*extMessage += to_string(movie_info->audioPids[i].atype);
 			*extMessage += "\" " MI_XML_TAG_SELECTED "=\"";
 			*extMessage += to_string(movie_info->audioPids[i].selected);
 			*extMessage += "\" " MI_XML_TAG_NAME "=\"";
-			*extMessage += ZapitTools::UTF8_to_UTF8XML(movie_info->audioPids[i].epgAudioPidName.c_str());
+			*extMessage += ZapitTools::UTF8_to_UTF8XML(movie_info->audioPids[i].AudioPidName.c_str());
 			*extMessage += "\"/>\n";
 		}
 		*extMessage += "\t\t</" MI_XML_TAG_AUDIOPIDS ">\n";
 	}
-	XML_ADD_TAG_UNSIGNED(*extMessage, MI_XML_TAG_VTXTPID, movie_info->epgVTXPID); // %u
+	XML_ADD_TAG_UNSIGNED(*extMessage, MI_XML_TAG_VTXTPID, movie_info->VtxtPid); // %u
 
 	XML_ADD_TAG_UNSIGNED(*extMessage, MI_XML_TAG_GENRE_MAJOR, movie_info->genreMajor);
 	XML_ADD_TAG_UNSIGNED(*extMessage, MI_XML_TAG_GENRE_MINOR, movie_info->genreMinor);
@@ -287,21 +287,21 @@ bool CMovieInfo::parseXmlTree(std::string &_text, MI_MOVIE_INFO *movie_info)
 
 	int pos = 0;
 
-	EPG_AUDIO_PIDS audio_pids;
+	AUDIO_PIDS audio_pids;
 
 	while ((pos = find_next_char('<', text, pos, bytes)) != -1) {
 		pos++;
-		GET_XML_DATA_STRING(text, pos, MI_XML_TAG_CHANNELNAME, movie_info->epgChannel)
+		GET_XML_DATA_STRING(text, pos, MI_XML_TAG_CHANNELNAME, movie_info->channelName)
 		GET_XML_DATA_STRING(text, pos, MI_XML_TAG_EPGTITLE, movie_info->epgTitle)
-		GET_XML_DATA_LONG(text, pos, MI_XML_TAG_ID, movie_info->epgId)
+		GET_XML_DATA_LONG(text, pos, MI_XML_TAG_ID, movie_info->channelId)
 		GET_XML_DATA_STRING(text, pos, MI_XML_TAG_INFO1, movie_info->epgInfo1)
 		GET_XML_DATA_STRING(text, pos, MI_XML_TAG_INFO2, movie_info->epgInfo2)
-		GET_XML_DATA_LONG(text, pos, MI_XML_TAG_EPGID, movie_info->epgEpgId)
-		GET_XML_DATA_INT(text, pos, MI_XML_TAG_MODE, movie_info->epgMode)
-		GET_XML_DATA_INT(text, pos, MI_XML_TAG_VIDEOPID, movie_info->epgVideoPid)
+		GET_XML_DATA_LONG(text, pos, MI_XML_TAG_EPGID, movie_info->epgId)
+		GET_XML_DATA_INT(text, pos, MI_XML_TAG_MODE, movie_info->mode)
+		GET_XML_DATA_INT(text, pos, MI_XML_TAG_VIDEOPID, movie_info->VideoPid)
 		GET_XML_DATA_INT(text, pos, MI_XML_TAG_VIDEOTYPE, movie_info->VideoType)
-		GET_XML_DATA_STRING(text, pos, MI_XML_TAG_NAME, movie_info->epgChannel)
-		GET_XML_DATA_INT(text, pos, MI_XML_TAG_VTXTPID, movie_info->epgVTXPID)
+		GET_XML_DATA_STRING(text, pos, MI_XML_TAG_NAME, movie_info->channelName)
+		GET_XML_DATA_INT(text, pos, MI_XML_TAG_VTXTPID, movie_info->VtxtPid)
 		GET_XML_DATA_INT(text, pos, MI_XML_TAG_GENRE_MAJOR, movie_info->genreMajor)
 		GET_XML_DATA_INT(text, pos, MI_XML_TAG_GENRE_MINOR, movie_info->genreMinor)
 		GET_XML_DATA_STRING(text, pos, MI_XML_TAG_SERIE_NAME, movie_info->serieName)
@@ -334,9 +334,9 @@ bool CMovieInfo::parseXmlTree(std::string &_text, MI_MOVIE_INFO *movie_info)
 				while (text[pos + pos2] != '\"' && text[pos + pos2] != 0 && text[pos + pos2] != '/')
 					pos2++;
 				if (text[pos + pos2] == '\"')
-					audio_pids.epgAudioPid = atoi(&text[pos + pos2 + 1]);
+					audio_pids.AudioPid = atoi(&text[pos + pos2 + 1]);
 			} else
-				audio_pids.epgAudioPid = 0;
+				audio_pids.AudioPid = 0;
 
 			audio_pids.atype = 0;
 			pos2 = -1;
@@ -366,7 +366,7 @@ bool CMovieInfo::parseXmlTree(std::string &_text, MI_MOVIE_INFO *movie_info)
 					audio_pids.selected = atoi(&text[pos + pos2 + 1]);
 			}
 
-			audio_pids.epgAudioPidName = "";
+			audio_pids.AudioPidName = "";
 			//pos2 = strcspn(&text[pos],MI_XML_TAG_NAME);
 			pos2 = -1;
 			ptr = strstr(&text[pos], MI_XML_TAG_NAME);
@@ -382,12 +382,12 @@ bool CMovieInfo::parseXmlTree(std::string &_text, MI_MOVIE_INFO *movie_info)
 						pos3++;
 					if (text[pos + pos3] == '\"')
 					{
-						audio_pids.epgAudioPidName.append(&text[pos + pos2 + 1], pos3 - pos2 - 1);
-						audio_pids.epgAudioPidName = htmlEntityDecode(audio_pids.epgAudioPidName);
+						audio_pids.AudioPidName.append(&text[pos + pos2 + 1], pos3 - pos2 - 1);
+						audio_pids.AudioPidName = htmlEntityDecode(audio_pids.AudioPidName);
 					}
 				}
 			}
-			//printf("MOVIE INFO: apid %d type %d name %s selected %d\n", audio_pids.epgAudioPid, audio_pids.atype, audio_pids.epgAudioPidName.c_str(), audio_pids.selected);
+			//printf("MOVIE INFO: apid %d type %d name %s selected %d\n", audio_pids.AudioPid, audio_pids.atype, audio_pids.epgAudioPidName.c_str(), audio_pids.selected);
 			unsigned int j, asize = movie_info->audioPids.size();
 			for (j = 0; j < asize && audio_pids.epgAudioPid != movie_info->audioPids[j].epgAudioPid; j++);
 			if (j == asize)
@@ -568,12 +568,12 @@ void MI_MOVIE_INFO::clear(void)
 	//format = 0;
 	//audio = 0;
 
+	channelId = 0;
 	epgId = 0;
-	epgEpgId = 0;
-	epgMode = 0;
-	epgVideoPid = 0;
+	mode = 0;
+	VideoPid = 0;
 	VideoType = 0;
-	epgVTXPID = 0;
+	VtxtPid = 0;
 
 	audioPids.clear();
 
@@ -581,7 +581,7 @@ void MI_MOVIE_INFO::clear(void)
 	epgTitle = "";
 	epgInfo1 = "";
 	epgInfo2 = "";
-	epgChannel = "";
+	channelName = "";
 	serieName = "";
 	bookmarks.end = 0;
 	bookmarks.start = 0;

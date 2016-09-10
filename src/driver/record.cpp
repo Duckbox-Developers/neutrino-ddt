@@ -190,11 +190,11 @@ record_error_msg_t CRecordInstance::Start(CZapitChannel * channel)
 		}
 	}
 	for (unsigned int i = 0; i < recMovieInfo->audioPids.size(); i++) {
-		apids[numpids++] = recMovieInfo->audioPids[i].epgAudioPid;
+		apids[numpids++] = recMovieInfo->audioPids[i].AudioPid;
 		if(channel->getAudioChannel(i)->audioChannelType == CZapitAudioChannel::EAC3){
-			psi.addPid(recMovieInfo->audioPids[i].epgAudioPid, EN_TYPE_AUDIO_EAC3, recMovieInfo->audioPids[i].atype, channel->getAudioChannel(i)->description.c_str());		  
+			psi.addPid(recMovieInfo->audioPids[i].AudioPid, EN_TYPE_AUDIO_EAC3, recMovieInfo->audioPids[i].atype, channel->getAudioChannel(i)->description.c_str());
 		}else
-			psi.addPid(recMovieInfo->audioPids[i].epgAudioPid, EN_TYPE_AUDIO, recMovieInfo->audioPids[i].atype, channel->getAudioChannel(i)->description.c_str());
+			psi.addPid(recMovieInfo->audioPids[i].AudioPid, EN_TYPE_AUDIO, recMovieInfo->audioPids[i].atype, channel->getAudioChannel(i)->description.c_str());
 
 		if (numpids >= REC_MAX_APIDS)
 			break;
@@ -358,10 +358,10 @@ bool CRecordInstance::Update()
 			record->AddPid(it->apid);
 			for(unsigned int i = 0; i < allpids.APIDs.size(); i++) {
 				if(allpids.APIDs[i].pid == it->apid) {
-					EPG_AUDIO_PIDS audio_pids;
+					AUDIO_PIDS audio_pids;
 
-					audio_pids.epgAudioPid = allpids.APIDs[i].pid;
-					audio_pids.epgAudioPidName = allpids.APIDs[i].desc;
+					audio_pids.AudioPid = allpids.APIDs[i].pid;
+					audio_pids.AudioPidName = allpids.APIDs[i].desc;
 					audio_pids.atype = allpids.APIDs[i].is_ac3 ? 1 : allpids.APIDs[i].is_aac ? 5 : allpids.APIDs[i].is_eac3 ? 7 : 0;
 					audio_pids.selected = 0;
 					recMovieInfo->audioPids.push_back(audio_pids);
@@ -593,9 +593,9 @@ void CRecordInstance::FillMovieInfo(CZapitChannel * channel, APIDList & apid_lis
 	std::string tmpstring = channel->getName();
 
 	if (tmpstring.empty())
-		recMovieInfo->epgChannel = "unknown";
+		recMovieInfo->channelName = "unknown";
 	else
-		recMovieInfo->epgChannel = tmpstring;
+		recMovieInfo->channelName = tmpstring;
 
 	tmpstring = "not available";
 	if (epgid != 0) {
@@ -634,23 +634,23 @@ void CRecordInstance::FillMovieInfo(CZapitChannel * channel, APIDList & apid_lis
 		tmpstring = epgTitle;
 	}
 	recMovieInfo->epgTitle		= tmpstring;
-	recMovieInfo->epgId		= channel->getChannelID();
+	recMovieInfo->channelId		= channel->getChannelID();
 	recMovieInfo->epgInfo1		= info1;
 	recMovieInfo->epgInfo2		= info2;
-	recMovieInfo->epgEpgId		= epgid;
-	recMovieInfo->epgMode		= g_Zapit->getMode();
-	recMovieInfo->epgVideoPid	= allpids.PIDs.vpid;
+	recMovieInfo->epgId		= epgid;
+	recMovieInfo->mode		= g_Zapit->getMode();
+	recMovieInfo->VideoPid		= allpids.PIDs.vpid;
 	recMovieInfo->VideoType		= channel->type;
 
-	EPG_AUDIO_PIDS audio_pids;
+	AUDIO_PIDS audio_pids;
 	APIDList::iterator it;
 	for(unsigned int i= 0; i< allpids.APIDs.size(); i++) {
 		for(it = apid_list.begin(); it != apid_list.end(); ++it) {
 			if(allpids.APIDs[i].pid == it->apid) {
-				audio_pids.epgAudioPid = allpids.APIDs[i].pid;
-				audio_pids.epgAudioPidName = allpids.APIDs[i].desc;
+				audio_pids.AudioPid = allpids.APIDs[i].pid;
+				audio_pids.AudioPidName = allpids.APIDs[i].desc;
 				audio_pids.atype = allpids.APIDs[i].is_ac3 ? 1 : allpids.APIDs[i].is_aac ? 5 : allpids.APIDs[i].is_eac3 ? 7 : 0;
-				audio_pids.selected = (audio_pids.epgAudioPid == channel->getAudioPid()) ? 1 : 0;
+				audio_pids.selected = (audio_pids.AudioPid == channel->getAudioPid()) ? 1 : 0;
 				recMovieInfo->audioPids.push_back(audio_pids);
 			}
 		}
@@ -658,13 +658,13 @@ void CRecordInstance::FillMovieInfo(CZapitChannel * channel, APIDList & apid_lis
 	/* FIXME sometimes no apid in xml ?? */
 	if(recMovieInfo->audioPids.empty() && !allpids.APIDs.empty()) {
 		int i = 0;
-		audio_pids.epgAudioPid = allpids.APIDs[i].pid;
-		audio_pids.epgAudioPidName = allpids.APIDs[i].desc;
+		audio_pids.AudioPid = allpids.APIDs[i].pid;
+		audio_pids.AudioPidName = allpids.APIDs[i].desc;
 		audio_pids.atype = allpids.APIDs[i].is_ac3 ? 1 : allpids.APIDs[i].is_aac ? 5 : allpids.APIDs[i].is_eac3 ? 7 : 0;
 		audio_pids.selected = 1;
 		recMovieInfo->audioPids.push_back(audio_pids);
 	}
-	recMovieInfo->epgVTXPID = allpids.PIDs.vtxtpid;
+	recMovieInfo->VtxtPid = allpids.PIDs.vtxtpid;
 }
 
 record_error_msg_t CRecordInstance::MakeFileName(CZapitChannel * channel)
@@ -1940,7 +1940,7 @@ void CStreamRec::FillMovieInfo(CZapitChannel * /*channel*/, APIDList & /*apid_li
 		AVStream *st = ofcx->streams[i];
 		AVCodecContext * codec = st->codec;
 		if (codec->codec_type == AVMEDIA_TYPE_AUDIO) {
-			EPG_AUDIO_PIDS audio_pids;
+			AUDIO_PIDS audio_pids;
 			AVDictionaryEntry *lang = av_dict_get(st->metadata, "language", NULL, 0);
 			AVDictionaryEntry *title = av_dict_get(st->metadata, "title", NULL, 0);
 
@@ -1970,16 +1970,16 @@ void CStreamRec::FillMovieInfo(CZapitChannel * /*channel*/, APIDList & /*apid_li
 			}
 
 			audio_pids.selected = 0;
-			audio_pids.epgAudioPidName = desc;
-			audio_pids.epgAudioPid = st->id;
+			audio_pids.AudioPidName = desc;
+			audio_pids.AudioPid = st->id;
 			recMovieInfo->audioPids.push_back(audio_pids);
-			printf("%s: [AUDIO] 0x%x [%s]\n", __FUNCTION__, audio_pids.epgAudioPid, desc.c_str());
+			printf("%s: [AUDIO] 0x%x [%s]\n", __FUNCTION__, audio_pids.AudioPid, desc.c_str());
 
 		} else if (codec->codec_type == AVMEDIA_TYPE_VIDEO) {
-			recMovieInfo->epgVideoPid = st->id;
+			recMovieInfo->VideoPid = st->id;
 			if (codec->codec_id == AV_CODEC_ID_H264)
 				recMovieInfo->VideoType = 1;
-			printf("%s: [VIDEO] 0x%x\n", __FUNCTION__, recMovieInfo->epgVideoPid);
+			printf("%s: [VIDEO] 0x%x\n", __FUNCTION__, recMovieInfo->VideoPid);
 		}
 	}
 }
