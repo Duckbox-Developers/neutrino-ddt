@@ -72,11 +72,7 @@
 #if HAVE_SPARK_HARDWARE
 /* this relies on event0 being the AOTOM frontpanel driver device
  * TODO: what if another input device is present? */
-#ifdef BOXMODEL_SPARK
-const char * const RC_EVENT_DEVICE[NUMBER_OF_EVENT_DEVICES] = {"/dev/input/nevis_ir", "/dev/input/event0"};
-#else
 const char * const RC_EVENT_DEVICE[NUMBER_OF_EVENT_DEVICES] = {"/dev/input/nevis_ir"};
-#endif
 #elif HAVE_GENERIC_HARDWARE
 /* the FIFO created by libstb-hal */
 const char * const RC_EVENT_DEVICE[NUMBER_OF_EVENT_DEVICES] = {"/tmp/neutrino.input"};
