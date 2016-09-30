@@ -116,7 +116,7 @@ class CSignalBar : public CComponentsForm, public CCTextScreen
 		CSignalBar(const int& xpos, const int& ypos, const int& w, const int& h, CFrontend *frontend_ref, const std::string& sb_name = "SIG", CComponentsForm *parent = NULL);
 
 		///assigns the current used frontend, simplified a tuner object, see frontend_c.h
-		virtual void setFrontEnd(CFrontend *frontend_ref){sb_frontend = frontend_ref;};
+		virtual void setFrontEnd(CFrontend *frontend_ref){if (sb_frontend != frontend_ref) {sb_lastsig = 0; sb_frontend = frontend_ref;}}
 		///assigns font for caption
 		virtual void setTextFont(Font* font_text){sb_font = font_text;};
 		///sets the caption color, see also property 'sb_caption_color'
@@ -291,12 +291,15 @@ class CSignalBox : public CComponentsForm, public CCTextScreen
 
 	public:
 		///class constructor for signal noise ratio.
-		CSignalBox(const int& xpos, const int& ypos, const int& w, const int& h, CFrontend *frontend_ref = NULL, const bool vertical = true, CComponentsForm *parent = NULL, const std::string& sig_name = "SIG", const std::string& snr_name = "SNR" );
+		CSignalBox(const int& xpos, const int& ypos, const int& w, const int& h, CFrontend *frontend_ref, const bool vertical = true, CComponentsForm *parent = NULL, const std::string& sig_name = "SIG", const std::string& snr_name = "SNR" );
 
 		///returns the signal object, type = CSignalBar*
 		CSignalBar* getScaleObject(){return sbar;};
 		///returns the signal noise ratio object, type = CSignalNoiseRatioBar*
 		CSignalNoiseRatioBar* getLabelObject(){return snrbar;};
+
+		///assigns the current used frontend, simplified a tuner object, see frontend_c.h
+		void setFrontEnd(CFrontend *frontend_ref){sbx_frontend = frontend_ref;}
 
 		///sets the caption color of signalbars, see also property 'sbx_caption_color'
 		void setTextColor(const fb_pixel_t& caption_color){ sbx_caption_color = caption_color;};
