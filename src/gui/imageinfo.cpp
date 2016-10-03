@@ -38,9 +38,17 @@
 #include <string>
 #include <daemonc/remotecontrol.h>
 #include <system/flashtool.h>
+#include <system/helpers.h>
 #include "version.h"
 #include <gui/buildinfo.h>
 #define LICENSEDIR DATADIR "/neutrino/license/"
+#ifdef ENABLE_LUA
+#include <gui/lua/lua_api_version.h>
+#endif
+#include <nhttpd/yconfig.h>
+
+#define VERSION_FILE TARGET_PREFIX "/.version"
+#define Y_VERSION_FILE TARGET_PREFIX "/share/tuxbox/neutrino/httpd/Y_Version.txt"
 
 using namespace std;
 
@@ -62,12 +70,12 @@ void CImageInfo::Init(void)
 	b_info 		= NULL;
 	btn_red		= NULL;
 	item_offset	= 10;
-	item_font 	= g_Font[SNeutrinoSettings::FONT_TYPE_MENU];
-	item_height 	= item_font->getHeight();
+	item_font 	= NULL;
+	item_height 	= 0;
 	
 	license_txt	= "";
 	v_info.clear();
-	config.loadConfig("/.version");
+	config.loadConfig(VERSION_FILE);
 }
 
 CImageInfo::~CImageInfo()
@@ -108,6 +116,9 @@ int CImageInfo::exec(CMenuTarget* parent, const std::string &)
 
 	CFrameBuffer *frameBuffer = CFrameBuffer::getInstance();
 
+	bool fadeout = false;
+	neutrino_msg_t postmsg = 0;
+
 	neutrino_msg_t msg;
 	while (1)
 	{
@@ -116,9 +127,23 @@ int CImageInfo::exec(CMenuTarget* parent, const std::string &)
 		uint64_t timeoutEnd = CRCInput::calcTimeoutEnd_MS(100);
 		g_RCInput->getMsgAbsoluteTimeout( &msg, &data, &timeoutEnd );
 
+		if ((msg == NeutrinoMessages::EVT_TIMER) && (data ==cc_win->GetFadeTimer())){
+			if (cc_win->FadeDone())
+				break;
+			continue;
+		}
+		if (fadeout && msg == CRCInput::RC_timeout){
+			if (cc_win->StartFadeOut()){
+				msg = menu_return::RETURN_EXIT_ALL;
+				continue;
+			}
+			else
+				break;
+		}
+
 		if(msg == CRCInput::RC_setup) {
 			res = menu_return::RETURN_EXIT_ALL;
-			break;
+			fadeout = true;
 		}
 		else if (msg == CRCInput::RC_red){
 			// init temporarly vars
@@ -155,9 +180,9 @@ int CImageInfo::exec(CMenuTarget* parent, const std::string &)
 			btn_red->paint(false);
 		}
 		else if (CNeutrinoApp::getInstance()->listModeKey(msg)) {
-			g_RCInput->postMsg (msg, 0);
+			postmsg = msg;
 			res = menu_return::RETURN_EXIT_ALL;
-			break;
+			fadeout = true;
 		}
 		else if ((msg == CRCInput::RC_up) || (msg == CRCInput::RC_page_up)) {
 			ScrollLic(false);
@@ -166,7 +191,7 @@ int CImageInfo::exec(CMenuTarget* parent, const std::string &)
 			ScrollLic(true);
 		}
 		else if (msg <= CRCInput::RC_MaxRC){
-			break;
+			fadeout = true;
 		}
 
 		if ( msg >  CRCInput::RC_MaxRC && msg != CRCInput::RC_timeout){
@@ -174,6 +199,9 @@ int CImageInfo::exec(CMenuTarget* parent, const std::string &)
 		}
 
 	}
+
+	if (postmsg)
+		g_RCInput->postMsg(postmsg, 0);
 
 	hide();
 	frameBuffer->blit();
@@ -210,6 +238,7 @@ void CImageInfo::ShowWindow()
 	InitInfoText(getLicenseText());
 
 	//paint window
+	cc_win->StartFadeIn();
 	cc_win->paint(CC_SAVE_SCREEN_NO);
 }
 
@@ -280,6 +309,23 @@ void CImageInfo::InitInfoData()
 #endif
 	image_info_t date	= {LOCALE_IMAGEINFO_DATE,	builddate};
 	v_info.push_back(date);
+	string s_api;
+#ifdef ENABLE_LUA
+	s_api	+= "LUA " + to_string(LUA_API_VERSION_MAJOR) + "." + to_string(LUA_API_VERSION_MINOR);
+	s_api	+= ", ";
+#endif
+	s_api	+= "yWeb ";
+	s_api	+= getYApi();
+	s_api	+= ", ";
+	s_api	+= HTTPD_NAME;
+	s_api	+= + " ";
+	s_api	+= HTTPD_VERSION;
+	s_api	+= + ", ";
+	s_api	+= YHTTPD_NAME;
+	s_api	+= + " ";
+	s_api	+= YHTTPD_VERSION;
+	image_info_t api	= {LOCALE_IMAGEINFO_API,	s_api};
+	v_info.push_back(api);
 	if (uname(&uts_info) == 0) {
 		image_info_t kernel	= {LOCALE_IMAGEINFO_KERNEL,	uts_info.release};
 		v_info.push_back(kernel);
@@ -311,14 +357,17 @@ void CImageInfo::InitInfos()
 	//set width, use size between left border and minitv
 	cc_info->setWidth(cc_win->getWidth() - cc_tv->getWidth() - 2*item_offset);
 	
-	//calculate initial height for info form
-	cc_info->setHeight(v_info.size()*item_height);
-	
 	//create label and text items
 	for (size_t i=0; i<v_info.size(); i++) {
 		CComponentsExtTextForm *item = new CComponentsExtTextForm(1, CC_APPEND, cc_info->getWidth(), item_height, g_Locale->getText(v_info[i].caption), v_info[i].info_text);
-		item->setLabelAndTextFont(item_font);
 		item->setLabelWidthPercent(20);
+
+		if (!item_font){
+			item_font = item->getFont();
+			//calculate initial height for info form
+			item_height = item_font->getHeight();
+		}
+		cc_info->setHeight(v_info.size()*item_height);
 
 		if ((i == 0) && (item->getYPos() == CC_APPEND))
 			item->setYPos(1);
@@ -412,7 +461,18 @@ void CImageInfo::hide()
 	printf("[CImageInfo]   [%s - %d] hide...\n", __FUNCTION__, __LINE__);
 	if (cc_win){
 		cc_win->kill();
+		cc_win->StopFade();
 		Clean();
 		CFrameBuffer::getInstance()->blit();
 	}
 }
+
+string CImageInfo::getYApi()
+{
+	string ret;
+	config.loadConfig(Y_VERSION_FILE);
+	ret = config.getString("version", "n/a");
+	config.loadConfig(VERSION_FILE);
+	return ret;
+}
+

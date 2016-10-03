@@ -825,6 +825,7 @@ hdd_statfs_recording nur während Aufnahme
 hdd_umount aushängen
 hdd_umount_warn Laufwerk aushängen
 hdd_umounted Laufwerk entfernt
+imageinfo.api API:
 imageinfo.creator Ersteller:
 imageinfo.date Datum:
 imageinfo.dokumentation Dokus:

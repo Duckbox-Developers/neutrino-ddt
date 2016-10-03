@@ -68,6 +68,7 @@ class CComponentsExtTextForm : public CComponentsForm, public CCTextScreen
 		///initialize basic variables
 		void initVarExtTextForm(const int& x_pos, const int& y_pos, const int& w, const int& h,
 					const std::string& label_text, const std::string& text,
+					Font* font_text,
 					CComponentsForm* parent,
 					int shadow_mode,
 					fb_pixel_t label_color,
@@ -78,6 +79,7 @@ class CComponentsExtTextForm : public CComponentsForm, public CCTextScreen
 		///advanced constructor for CComponentsExtTextForm, provides parameters for the most required properties, and caption as string
 		CComponentsExtTextForm(	const int& x_pos = 1, const int& y_pos = 1, const int& w = 300, const int& h = 48,
 					const std::string& label_text = "", const std::string& text = "",
+					Font* font_text = NULL,
 					CComponentsForm *parent = NULL,
 					int shadow_mode = CC_SHADOW_OFF,
 					fb_pixel_t label_color = COL_MENUCONTENTINACTIVE_TEXT,
@@ -131,6 +133,9 @@ class CComponentsExtTextForm : public CComponentsForm, public CCTextScreen
 		///sets the text modes (mainly text alignment) to the label and text object, see /gui/widget/textbox.h for possible modes
 		void setTextModes(const int& label_mode, const int& text_mode);
 
+		///return current font
+		Font* getFont(){return ccx_font;}
+
 		///paint this item/form
 		void paint(bool do_save_bg = CC_SAVE_SCREEN_YES);
 };
@@ -141,6 +146,7 @@ class CComponentsExtTextFormLocalized : public CComponentsExtTextForm
 		///advanced constructor for CComponentsExtTextForm, provides parameters for the most required properties, and caption as locales
 		CComponentsExtTextFormLocalized(const int& x_pos = 1, const int& y_pos = 1, const int& w = 300, const int& h = 48,
 						const neutrino_locale_t& locale_label_text = NONEXISTANT_LOCALE, const neutrino_locale_t& locale_text = NONEXISTANT_LOCALE,
+						Font* font_text = NULL,
 						CComponentsForm *parent = NULL,
 						int shadow_mode = CC_SHADOW_OFF,
 						fb_pixel_t label_color = COL_MENUCONTENTINACTIVE_TEXT,
