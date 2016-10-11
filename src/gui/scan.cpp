@@ -50,8 +50,6 @@
 #include <global.h>
 #include <neutrino.h>
 
-#include <gui/customcolor.h>
-
 #include <zapit/femanager.h>
 #include <zapit/scan.h>
 #include <zapit/zapit.h>

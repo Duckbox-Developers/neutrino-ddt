@@ -28,6 +28,7 @@
 #include <system/helpers.h>
 #include <system/settings.h>
 #include <system/set_threadname.h>
+#include <gui/color_custom.h>
 #include <gui/widget/msgbox.h>
 #include <gui/widget/messagebox.h>
 #include <gui/movieplayer.h>
@@ -176,6 +177,11 @@ static void set_lua_variables(lua_State *L)
 		{ "MENUCONTENTSELECTED",	MAGIC_COLOR | (COL_MENUCONTENTSELECTED) },
 		{ "MENUCONTENTINACTIVE",	MAGIC_COLOR | (COL_MENUCONTENTINACTIVE) },
 		{ "MENUFOOT",			MAGIC_COLOR | (COL_MENUFOOT) },
+		{ "FRAME",			MAGIC_COLOR | (COL_FRAME) },
+		{ "SCROLLBAR_ACTIVE",		MAGIC_COLOR | (COL_SCROLLBAR_ACTIVE) },
+		{ "SCROLLBAR_PASSIVE",		MAGIC_COLOR | (COL_SCROLLBAR_PASSIVE) },
+		{ "PROGRESSBAR_ACTIVE",		MAGIC_COLOR | (COL_PROGRESSBAR_ACTIVE) },
+		{ "PROGRESSBAR_PASSIVE",	MAGIC_COLOR | (COL_PROGRESSBAR_PASSIVE) },
 		{ "BACKGROUND",			MAGIC_COLOR | (COL_BACKGROUND) },
 		{ "DARK_RED",			MAGIC_COLOR | (COL_DARK_RED0) },
 		{ "DARK_GREEN",			MAGIC_COLOR | (COL_DARK_GREEN0) },
@@ -222,6 +228,11 @@ static void set_lua_variables(lua_State *L)
 		{ "MENUCONTENTSELECTED_PLUS_2",		(lua_Unsigned) (COL_MENUCONTENTSELECTED_PLUS_2) },
 		{ "MENUCONTENTINACTIVE_PLUS_0",		(lua_Unsigned) (COL_MENUCONTENTINACTIVE_PLUS_0) },
 		{ "MENUFOOT_PLUS_0",			(lua_Unsigned) (COL_MENUFOOT_PLUS_0) },
+		{ "FRAME_PLUS_0",			(lua_Unsigned) (COL_FRAME_PLUS_0) },
+		{ "SCROLLBAR_ACTIVE_PLUS_0",		(lua_Unsigned) (COL_SCROLLBAR_ACTIVE_PLUS_0) },
+		{ "SCROLLBAR_PASSIVE_PLUS_0",		(lua_Unsigned) (COL_SCROLLBAR_PASSIVE_PLUS_0) },
+		{ "PROGRESSBAR_ACTIVE_PLUS_0",		(lua_Unsigned) (COL_PROGRESSBAR_ACTIVE_PLUS_0) },
+		{ "PROGRESSBAR_PASSIVE_PLUS_0",		(lua_Unsigned) (COL_PROGRESSBAR_PASSIVE_PLUS_0) },
 		{ NULL, 0 }
 	};
 

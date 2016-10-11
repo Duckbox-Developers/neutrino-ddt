@@ -652,7 +652,7 @@ void CTimerList::hide()
 {
 	if (visible)
 	{
-		frameBuffer->paintBackgroundBoxRel(x, y, width + SHADOW_OFFSET, height + SHADOW_OFFSET);
+		frameBuffer->paintBackgroundBoxRel(x, y, width + OFFSET_SHADOW, height + OFFSET_SHADOW);
 		frameBuffer->blit();
 		visible = false;
 	}
@@ -677,7 +677,7 @@ void CTimerList::paintItem(int pos)
 	else
 		bgcolor = COL_MENUCONTENT_PLUS_0;
 	//shadow
-	frameBuffer->paintBoxRel(x + width, ypos, SHADOW_OFFSET, 2*fheight, COL_MENUCONTENTDARK_PLUS_0);
+	frameBuffer->paintBoxRel(x + width, ypos, OFFSET_SHADOW, 2*fheight, COL_SHADOW_PLUS_0);
 	//item
 	frameBuffer->paintBoxRel(x, ypos, real_width, 2*fheight, bgcolor);
 
@@ -858,7 +858,7 @@ void CTimerList::paintFoot()
 	}
 
 	//shadow
-	frameBuffer->paintBoxRel(x + SHADOW_OFFSET, y + height - footerHeight, width, footerHeight + SHADOW_OFFSET, COL_MENUCONTENTDARK_PLUS_0, RADIUS_LARGE, CORNER_BOTTOM);
+	frameBuffer->paintBoxRel(x + OFFSET_SHADOW, y + height - footerHeight, width, footerHeight + OFFSET_SHADOW, COL_SHADOW_PLUS_0, RADIUS_LARGE, CORNER_BOTTOM);
 
 	if (timerlist.empty())
 		::paintButtons(x, y + height - footerHeight, width, 2, &(TimerListButtons[1]), width);
@@ -884,13 +884,13 @@ void CTimerList::paint()
 	{
 		int ypos = y+ theight;
 		int sb = 2*fheight* listmaxshow;
-		frameBuffer->paintBoxRel(x+ width- 15,ypos, 15, sb, COL_MENUCONTENT_PLUS_1);
+		frameBuffer->paintBoxRel(x+ width- 15,ypos, 15, sb, COL_SCROLLBAR_PASSIVE_PLUS_0);
 		unsigned  int  tmp_max  =  listmaxshow;
 		if(!tmp_max)
 			tmp_max  =  1;
 		int sbc= ((timerlist.size()- 1)/ tmp_max)+ 1;
 
-		frameBuffer->paintBoxRel(x+ width- 13, ypos+ 2+ page_nr * (sb-4)/sbc, 11, (sb-4)/sbc, COL_MENUCONTENT_PLUS_3, RADIUS_SMALL);
+		frameBuffer->paintBoxRel(x+ width- 13, ypos+ 2+ page_nr * (sb-4)/sbc, 11, (sb-4)/sbc, COL_SCROLLBAR_ACTIVE_PLUS_0, RADIUS_SMALL);
 	}
 
 	paintFoot();

@@ -49,6 +49,7 @@
 #include <driver/radiotext.h>
 
 #include <gui/color.h>
+#include <gui/color_custom.h>
 #include <gui/epgview.h>
 #include <gui/eventlist.h>
 #include <gui/infoviewer.h>
@@ -64,7 +65,6 @@
 #include <gui/infoclock.h>
 #include <system/settings.h>
 #include <system/set_threadname.h>
-#include <gui/customcolor.h>
 
 #include <gui/bouquetlist.h>
 #include <daemonc/remotecontrol.h>
@@ -1563,7 +1563,7 @@ void CChannelList::paintDetails(int index)
 	bool colored_event_N = (g_settings.theme.colored_events_channellist == 2);
 
 	frameBuffer->paintBoxRel(x+1, y + height + 1, full_width-2, info_height - 2, COL_MENUCONTENTDARK_PLUS_0, RADIUS_LARGE);//round
-	frameBuffer->paintBoxFrame(x, y + height, full_width, info_height, 2, COL_MENUCONTENT_PLUS_6, RADIUS_LARGE);
+	frameBuffer->paintBoxFrame(x, y + height, full_width, info_height, 2, COL_FRAME_PLUS_0, RADIUS_LARGE);
 
 	if ((*chanlist).empty())
 		return;
@@ -1874,42 +1874,59 @@ void CChannelList::paintItem(int pos, const bool firstpaint)
 	int ypos = y+ theight + pos*fheight;
 	fb_pixel_t color;
 	fb_pixel_t bgcolor;
-	bool iscurrent = true;
+	bool is_available = true;
 	bool paintbuttons = false;
 	unsigned int curr = liststart + pos;
-	fb_pixel_t c_rad_small = 0;
+	fb_pixel_t c_radius = 0;
 
-	if(curr < (*chanlist).size()) {
+	if (curr < (*chanlist).size())
+	{
 		if (edit_state)
-			iscurrent = !((*chanlist)[curr]->flags & CZapitChannel::NOT_PRESENT);
+			is_available = !((*chanlist)[curr]->flags & CZapitChannel::NOT_PRESENT);
 		else
-			iscurrent = SameTP((*chanlist)[curr]);
+			is_available = SameTP((*chanlist)[curr]);
 	}
 
-	if(selected >= (*chanlist).size())
+	if (selected >= (*chanlist).size())
 		selected = (*chanlist).size()-1;
 
-	if (curr == selected) {
-		color   = COL_MENUCONTENTSELECTED_TEXT;
-		bgcolor = COL_MENUCONTENTSELECTED_PLUS_0;
+	unsigned int is_tuned = (getKey(curr) == CNeutrinoApp::getInstance()->channelList->getActiveChannelNumber() && new_zap_mode != 2 /*active*/);
+
+	if (curr == selected)
+	{
+		if (is_tuned)
+		{
+			color   = COL_MENUCONTENTSELECTED_TEXT_PLUS_2;
+			bgcolor = COL_MENUCONTENTSELECTED_PLUS_2;
+		}
+		else
+		{
+			color   = COL_MENUCONTENTSELECTED_TEXT;
+			bgcolor = COL_MENUCONTENTSELECTED_PLUS_0;
+		}
 		paintItem2DetailsLine (pos);
 		paintDetails(curr);
 		paintAdditionals(curr);
-		c_rad_small = RADIUS_LARGE;
+		c_radius = RADIUS_LARGE;
 		paintbuttons = true;
 	}
-	else if (getKey(curr) == CNeutrinoApp::getInstance()->channelList->getActiveChannelNumber()  && new_zap_mode != 2/*active*/)
+	else
 	{
-		color   = !displayNext ? COL_MENUCONTENT_TEXT  : COL_MENUCONTENTINACTIVE_TEXT;
-		bgcolor = !displayNext ? COL_MENUCONTENT_PLUS_1 : COL_MENUCONTENTINACTIVE_PLUS_0;
-		c_rad_small = RADIUS_LARGE;
-	} else {
-		color = iscurrent ? COL_MENUCONTENT_TEXT : COL_MENUCONTENTINACTIVE_TEXT;
-		bgcolor = iscurrent ? COL_MENUCONTENT_PLUS_0 : COL_MENUCONTENTINACTIVE_PLUS_0;
+		if (is_tuned)
+		{
+			color   = !displayNext ? COL_MENUCONTENT_TEXT_PLUS_2 : COL_MENUCONTENTINACTIVE_TEXT;
+			bgcolor = !displayNext ? COL_MENUCONTENT_PLUS_2 : COL_MENUCONTENTINACTIVE_PLUS_0;
+			c_radius = RADIUS_LARGE;
+		}
+		else
+		{
+			color   = is_available ? COL_MENUCONTENT_TEXT : COL_MENUCONTENTINACTIVE_TEXT;
+			bgcolor = is_available ? COL_MENUCONTENT_PLUS_0 : COL_MENUCONTENTINACTIVE_PLUS_0;
+		}
 	}
 
 	if(!firstpaint || (curr == selected) || getKey(curr) == CNeutrinoApp::getInstance()->channelList->getActiveChannelNumber())
-		  frameBuffer->paintBoxRel(x,ypos, width- 15, fheight, bgcolor, c_rad_small);
+		  frameBuffer->paintBoxRel(x,ypos, width- 15, fheight, bgcolor, c_radius);
 
 	if(curr < (*chanlist).size()) {
 		char nameAndDescription[255];
@@ -1974,7 +1991,7 @@ void CChannelList::paintItem(int pos, const bool firstpaint)
 
 		//paint buttons
 		if (paintbuttons)
-			paintButtonBar(iscurrent);
+			paintButtonBar(is_available);
 
 		int icon_space = r_icon_w+s_icon_w+h_icon_w+8;
 
@@ -1999,32 +2016,21 @@ void CChannelList::paintItem(int pos, const bool firstpaint)
 			l = snprintf(nameAndDescription, sizeof(nameAndDescription), "%s", chan->getName().c_str());
 
 		int pb_space = prg_offset - title_offset;
-		CProgressBar pb(x+5+numwidth + title_offset, ypos + fheight/4 + 2, pb_space + 2, fheight/2 - 4,
-				0, COL_MENUCONTENT_PLUS_0, COL_MENUCONTENTDARK_PLUS_0, COL_INFOBAR_PLUS_7, COL_INFOBAR_PLUS_3);
+		int pb_height = g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_NUMBER]->getDigitHeight();
+		CProgressBar pb(x+5+numwidth + title_offset, ypos + (fheight-pb_height)/2, pb_space + 2, pb_height, COL_MENUCONTENT_PLUS_0);
 		pb.setType(CProgressBar::PB_TIMESCALE);
 		pb.setDesign(g_settings.channellist_progressbar_design);
 		pb.setCornerType(0);
-		pb.setFrameThickness(0);	// no frame
-		pb.doPaintBg(false);		// no background
-		int pb_max = pb_space - 4;
-		if (g_settings.progressbar_design != CProgressBar::PB_MONO) {
-			if (liststart + pos != selected) {
-				fb_pixel_t pbgcol = COL_MENUCONTENT_PLUS_1;
-				if (pbgcol == bgcolor)
-					pbgcol = COL_MENUCONTENT_PLUS_0;
-				pb.setStatusColors(COL_MENUCONTENT_PLUS_3, pbgcol);
-			} else {
-				fb_pixel_t pbgcol = COL_MENUCONTENTSELECTED_PLUS_0;
-				if (pbgcol == bgcolor)
-					pbgcol = COL_MENUCONTENT_PLUS_0;
-				pb.setStatusColors(COL_MENUCONTENTSELECTED_PLUS_2, pbgcol);
-			}
-		} else {
-			if (liststart + pos != selected)
-				pb.setStatusColors(COL_MENUCONTENT_PLUS_3, COL_MENUCONTENT_PLUS_1);
-			else
-				pb.setStatusColors(COL_MENUCONTENTSELECTED_PLUS_2, COL_MENUCONTENTSELECTED_PLUS_0);
+		pb.setStatusColors(COL_MENUCONTENT_PLUS_3, COL_MENUCONTENT_PLUS_1);
+		int pb_frame = 0;
+		if (g_settings.channellist_progressbar_design == CProgressBar::PB_MONO && !g_settings.progressbar_gradient)
+		{
+			// add small frame to mono progressbars w/o gradient for a better visibility
+			pb_frame = 1;
 		}
+		pb.setFrameThickness(pb_frame);
+		pb.doPaintBg(false);
+		int pb_max = pb_space - 4;
 
 		if (!(p_event->description.empty())) {
 			snprintf(nameAndDescription+l, sizeof(nameAndDescription)-l,g_settings.channellist_epgtext_align_right ? "  ":" - ");
@@ -2219,14 +2225,14 @@ void CChannelList::paintBody()
 
 	const int ypos = y+ theight;
 	const int sb = height - theight - footerHeight; // paint scrollbar over full height of main box
-	frameBuffer->paintBoxRel(x+ width- 15,ypos, 15, sb,  COL_MENUCONTENT_PLUS_1);
+	frameBuffer->paintBoxRel(x+ width- 15,ypos, 15, sb,  COL_SCROLLBAR_PASSIVE_PLUS_0);
 	unsigned int listmaxshow_tmp = listmaxshow ? listmaxshow : 1;//avoid division by zero
 	int sbc= (((*chanlist).size()- 1)/ listmaxshow_tmp)+ 1;
 	const int sbs= (selected/listmaxshow_tmp);
 	if (sbc < 1)
 		sbc = 1;
 
-	frameBuffer->paintBoxRel(x+ width- 13, ypos+ 2+ sbs*(sb-4)/sbc, 11, (sb-4)/sbc, COL_MENUCONTENT_PLUS_3);
+	frameBuffer->paintBoxRel(x+ width- 13, ypos+ 2+ sbs*(sb-4)/sbc, 11, (sb-4)/sbc, COL_SCROLLBAR_ACTIVE_PLUS_0);
 	showChannelLogo();
 	if ((*chanlist).empty())
 		paintButtonBar(false);
