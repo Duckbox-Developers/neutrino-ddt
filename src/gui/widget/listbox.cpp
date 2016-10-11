@@ -76,7 +76,6 @@ void CListBox::paint()
 		sbc = 1;
 
 	int sbh= (sb- 4)/ sbc;
-	int sbs= (selected/listmaxshow);
 
 	frameBuffer->paintBoxRel(x+ width- 13, ypos+ 2+ sbs* sbh , 11, sbh,  COL_SCROLLBAR_ACTIVE_PLUS_0);
 }
