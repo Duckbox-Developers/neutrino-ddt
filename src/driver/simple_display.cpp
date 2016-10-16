@@ -652,12 +652,14 @@ void CLCD::SetIcons(int icon, bool on)
 		d.u.icon.on = 1;
 	else
 		d.u.icon.on = 0;
-	int fd = dev_open();
-	if (fd < 0)
-		return;
-	if (ioctl(fd, VFDICONDISPLAYONOFF, &d) <0)
-		perror("[neutrino] SetIcons() VFDICONDISPLAYONOFF");
-	close(fd);
+	if (g_info.hw_caps->display_type == HW_DISPLAY_LINE_TEXT) {
+		int fd = dev_open();
+		if (fd < 0)
+			return;
+		if (ioctl(fd, VFDICONDISPLAYONOFF, &d) <0)
+			perror("[neutrino] SetIcons() VFDICONDISPLAYONOFF");
+		close(fd);
+	}
 }
 void CLCD::ShowDiskLevel()
 {
