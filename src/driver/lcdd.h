@@ -215,14 +215,12 @@ class CLCD
 		static void	*TimeThread(void *);
 		pthread_t	thrTime;
 		bool		thread_running;
-#ifdef HAVE_SPARK_HARDWARE
 		int			last_toggle_state_power;
 		int			brightness;
 		unsigned int	timeout_cnt;
 		unsigned int	switch_name_time_cnt;
 		void		setlcdparameter(int dimm, int power);
 		void		count_down();
-#endif
 #endif
 
 	public:
@@ -286,11 +284,9 @@ class CLCD
 		void Lock();
 		void Unlock();
 		void Clear();
-#ifdef HAVE_SPARK_HARDWARE
 		void SetIcons(int icon, bool show);
 		void UpdateIcons();
 		void ShowDiskLevel();
-#endif
 		void Reset() {};
 		void ShowIcon(fp_icon icon, bool show);
 		void ShowText(const char *s) { showServicename(std::string(s), true); };

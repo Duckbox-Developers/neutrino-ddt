@@ -48,6 +48,8 @@ static bool timer_icon = false;
 #endif
 #if HAVE_GENERIC_HARDWARE
 #define DISPLAY_DEV "/dev/null"
+static bool usb_icon = false;
+static bool timer_icon = false;
 #endif
 
 static char volume = 0;
@@ -462,6 +464,7 @@ void CLCD::setMode(const MODES m, const char * const)
 
 void CLCD::setBrightness(int dimm)
 {
+#ifndef HAVE_GENERIC_HARDWARE
 	switch(dimm) {
 	case 15:
 	case 14: dimm = 7; break;
@@ -498,6 +501,7 @@ void CLCD::setBrightness(int dimm)
 
 		close(fd);
 	}
+#endif
 }
 
 int CLCD::getBrightness()
@@ -646,6 +650,7 @@ printf("CLCD::setlcdparameter dimm %d power %d\n", dimm, power);
 
 void CLCD::SetIcons(int icon, bool on)
 {
+#ifndef HAVE_GENERIC_HARDWARE
 	struct aotom_ioctl_data d;
 	d.u.icon.icon_nr = icon;
 	if (on == true)
@@ -660,9 +665,11 @@ void CLCD::SetIcons(int icon, bool on)
 			perror("[neutrino] SetIcons() VFDICONDISPLAYONOFF");
 		close(fd);
 	}
+#endif
 }
 void CLCD::ShowDiskLevel()
 {
+#ifndef HAVE_GENERIC_HARDWARE
 	int hdd_icons[9] ={24, 23, 21, 20, 19, 18, 17, 16, 22};
 	int percent, digits, i, j;
 	uint64_t t, u;
@@ -688,9 +695,11 @@ void CLCD::ShowDiskLevel()
 		SetIcons(SPARK_HDD, false);
 
 	}
+#endif
 }
 void CLCD::UpdateIcons()
 {
+#ifndef HAVE_GENERIC_HARDWARE
 	CFrontend *aktFE = CFEManager::getInstance()->getLiveFE();
 	SetIcons(SPARK_SAT, aktFE->isSat(aktFE->getCurrentDeliverySystem()));
 	SetIcons(SPARK_CAB, aktFE->isCable(aktFE->getCurrentDeliverySystem()));
@@ -710,6 +719,7 @@ void CLCD::UpdateIcons()
 			SetIcons(SPARK_MP3, chan->getAudioChannel()->audioChannelType == CZapitAudioChannel::MPEG);
 		}
 	}
+#endif
 }
 
 void CLCD::ShowIcon(fp_icon i, bool on)
