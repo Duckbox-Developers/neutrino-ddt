@@ -66,17 +66,11 @@
 #define MIN_WINDOW_WIDTH  (frameBuffer->getScreenWidth() >> 1)
 #define MIN_WINDOW_HEIGHT 40
 
-#define TITLE_BACKGROUND_COLOR ((CFBWindow::color_t)COL_MENUHEAD_PLUS_0)
-#define HEADER_LIST_BACKGROUND_COLOR ((CFBWindow::color_t)COL_MENUCONTENT_PLUS_0)
-#define LIST_BACKGROUND_COLOR ((CFBWindow::color_t)COL_MENUCONTENT_PLUS_0)
-//#define LIST_BACKGROUND_COLOR_SELECTED ((CFBWindow::color_t)COL_MENUCONTENT_PLUS_1)
-#define LIST_BACKGROUND_COLOR_SELECTED ((CFBWindow::color_t)COL_MENUCONTENTSELECTED_PLUS_0)
-
+#define TITLE_BACKGROUND_COLOR COL_MENUHEAD_PLUS_0
 #define TITLE_FONT_COLOR COL_MENUHEAD_TEXT
+
+#define HEADER_LIST_BACKGROUND_COLOR COL_MENUCONTENT_PLUS_0
 #define HEADER_LIST_FONT_COLOR COL_MENUCONTENT_TEXT
-#define LIST_FONT_COLOR COL_MENUCONTENT_TEXT
-//#define LIST_FONT_COLOR_SELECTED COL_MENUCONTENT_TEXT
-#define LIST_FONT_COLOR_SELECTED COL_MENUCONTENTSELECTED_TEXT
 
 #define FONT_LIST g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]
 #define FONT_HEADER_LIST g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO1]
@@ -410,7 +404,7 @@ void CListFrame::refreshList(void)
 	//TRACE("[CListFrame]->refreshList: %d\r\n",m_nCurrentLine);
 	if( frameBuffer == NULL) return;
 	frameBuffer->paintBoxRel(m_cFrameListRel.iX+m_cFrame.iX, m_cFrameListRel.iY+m_cFrame.iY,
-			m_cFrameListRel.iWidth, m_cFrameListRel.iHeight,  LIST_BACKGROUND_COLOR);
+			m_cFrameListRel.iWidth, m_cFrameListRel.iHeight,  COL_MENUCONTENT_PLUS_0);
 
 	if(  m_nNrOfLines <= 0)
 		return;
@@ -432,27 +426,19 @@ void CListFrame::refreshLine(int line)
 	if((line < m_nCurrentLine) && (line > m_nCurrentLine + m_nLinesPerPage))
 		return;
 
-	uint32_t color, bgcolor;
+	fb_pixel_t color, bgcolor;
 	int rel_line = line - m_nCurrentLine;
 	int y = m_cFrameListRel.iY + TEXT_BORDER_WIDTH + (rel_line*m_nFontListHeight);
 	int radius = 0;
 
+	bool selected = (line == m_nSelectedLine && m_showSelection == true);
 	bool marked = (!m_pLines->marked.empty() && m_pLines->marked[line]);
-	if(line == m_nSelectedLine && m_showSelection == true)
-	{
-		color = marked ? COL_MENUCONTENTINACTIVE_TEXT : LIST_FONT_COLOR_SELECTED;
-		bgcolor = marked ? COL_MENUCONTENTSELECTED_PLUS_2 : LIST_BACKGROUND_COLOR_SELECTED;
+
+	getItemColors(color, bgcolor, selected, marked);
+
+	if (selected || marked)
 		radius = RADIUS_LARGE;
-	}
-	else if (marked) {
-		color   = COL_MENUCONTENT_TEXT;
-		bgcolor = COL_MENUCONTENT_PLUS_2;
-	}
-	else
-	{
-		color = LIST_FONT_COLOR;
-		bgcolor = LIST_BACKGROUND_COLOR;
-	}
+
 	frameBuffer->paintBoxRel(m_cFrameListRel.iX+m_cFrame.iX, y+m_cFrame.iY,
 			m_cFrameListRel.iWidth, m_nFontListHeight, bgcolor, radius);
 

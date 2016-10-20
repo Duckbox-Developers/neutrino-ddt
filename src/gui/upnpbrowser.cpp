@@ -97,6 +97,7 @@ void CUpnpBrowserGui::Init()
 	infobox.enableFrame(true, 2);
 	infobox.setCorner(RADIUS_LARGE);
 	infobox.setColorAll(topbox.getColorFrame(), COL_MENUCONTENTDARK_PLUS_0);
+	infobox.setTextColor(COL_MENUCONTENTDARK_TEXT);
 	infobox.setTextFont(g_Font[SNeutrinoSettings::FONT_TYPE_MENU]);
 	infobox.enableColBodyGradient(g_settings.theme.menu_Hint_gradient, COL_SHADOW_PLUS_0, g_settings.theme.menu_Hint_gradient_direction);
 	infobox.enableShadow(CC_SHADOW_ON, -1, true);
@@ -104,6 +105,7 @@ void CUpnpBrowserGui::Init()
 	timebox.enableFrame(true, 2);
 	timebox.setCorner(RADIUS_LARGE);
 	timebox.setColorAll(infobox.getColorFrame(), infobox.getColorBody());
+	timebox.setTextColor(infobox.getTextColor());
 	timebox.setTextFont(g_Font[SNeutrinoSettings::FONT_TYPE_MENU]);
 	timebox.enableColBodyGradient(g_settings.theme.menu_Hint_gradient, COL_SHADOW_PLUS_0, g_settings.theme.menu_Hint_gradient_direction);
 	timebox.enableShadow(CC_SHADOW_ON, -1, true);
@@ -955,22 +957,25 @@ void CUpnpBrowserGui::paintDeviceInfo()
 void CUpnpBrowserGui::paintDevice(unsigned int _pos)
 {
 	int ypos = m_item_y + _pos*m_item_height;
+	unsigned int pos = m_deviceliststart + _pos;
+
+	bool i_selected	= pos == m_selecteddevice;
+	int i_radius	= RADIUS_NONE;
+
 	fb_pixel_t color;
 	fb_pixel_t bgcolor;
 
-	unsigned int pos = m_deviceliststart + _pos;
-	if (pos == m_selecteddevice)
+	getItemColors(color, bgcolor, i_selected);
+
+	if (i_selected)
 	{
-		color   = COL_MENUCONTENTSELECTED_TEXT;
-		bgcolor = COL_MENUCONTENTSELECTED_PLUS_0;
 		paintDeviceInfo();
+		i_radius = RADIUS_LARGE;
 	}
-	else
-	{
-		color   = COL_MENUCONTENT_TEXT;
-		bgcolor = COL_MENUCONTENT_PLUS_0;
-	}
-	m_frameBuffer->paintBoxRel(m_x, ypos, m_width - 15, m_item_height, bgcolor);
+
+	if (i_radius)
+		m_frameBuffer->paintBoxRel(m_x, ypos, m_width - 15, m_item_height, COL_MENUCONTENT_PLUS_0);
+	m_frameBuffer->paintBoxRel(m_x, ypos, m_width - 15, m_item_height, bgcolor, i_radius);
 
 	if (pos >= m_devices.size())
 		return;
@@ -1024,27 +1029,28 @@ void CUpnpBrowserGui::paintDevices()
 void CUpnpBrowserGui::paintItem(std::vector<UPnPEntry> *entries, unsigned int pos, unsigned int selected)
 {
 	int ypos = m_item_y + pos*m_item_height;
+
+	bool i_selected	= pos == selected;
+	int i_radius	= RADIUS_NONE;
+
 	fb_pixel_t color;
 	fb_pixel_t bgcolor;
 
-	if (pos == selected)
-	{
-		color   = COL_MENUCONTENT_TEXT_PLUS_2;
-		bgcolor = COL_MENUCONTENT_PLUS_2;
-	}
-	else
-	{
-		color   = COL_MENUCONTENT_TEXT;
-		bgcolor = COL_MENUCONTENT_PLUS_0;
-	}
-	m_frameBuffer->paintBoxRel(m_x, ypos, m_width - 15, m_item_height, bgcolor);
+	getItemColors(color, bgcolor, i_selected);
+
+	if (i_selected)
+		i_radius = RADIUS_LARGE;
+
+	if (i_radius)
+		m_frameBuffer->paintBoxRel(m_x, ypos, m_width - 15, m_item_height, COL_MENUCONTENT_PLUS_0);
+	m_frameBuffer->paintBoxRel(m_x, ypos, m_width - 15, m_item_height, bgcolor, i_radius);
 
 	if (pos >= (*entries).size())
 		return;
 
 	UPnPEntry *entry = &(*entries)[pos];
 
-	if (pos == selected)
+	if (i_selected)
 	{
 		paintItemInfo(entry);
 		paintDetails(entry);
@@ -1313,8 +1319,7 @@ void CUpnpBrowserGui::playVideo(std::string name, std::string url)
 {
 	CNeutrinoApp::getInstance()->handleMsg(NeutrinoMessages::CHANGEMODE, NeutrinoMessages::mode_ts);
 
-	if (CAudioPlayer::getInstance()->getState() != CBaseDec::STOP)
-		CAudioPlayer::getInstance()->stop();
+	stopAudio();
 
 	m_frameBuffer->stopFrame();
 	CMoviePlayerGui::getInstance().SetFile(name, url);
