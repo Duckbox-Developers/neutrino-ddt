@@ -68,7 +68,8 @@ class CTimerd
 			TIMER_REMIND,
 			TIMER_SLEEPTIMER,
 			TIMER_EXEC_PLUGIN,
-			TIMER_IMMEDIATE_RECORD
+			TIMER_IMMEDIATE_RECORD,
+			TIMER_REMOTEBOX
 		};
 		
 		enum CTimerEventStates 
@@ -161,6 +162,9 @@ class CTimerd
 			char              pluginName[EXEC_PLUGIN_NAME_MAXLEN];      //only filled if applicable
 			char              recordingDir[RECORD_DIR_MAXLEN];       //only filled if applicable
 			char              epgTitle[EPG_TITLE_MAXLEN];       //only filled if applicable
+			char              remotebox_ip[16];
+			int               rem_pre;
+			int               rem_post;
 			
 			bool operator< (const responseGetTimer& a) const
 			{
