@@ -329,14 +329,14 @@ int CMiscMenue::showMiscSettingsMenu()
 	//CPU
 	CMenuWidget misc_menue_cpu(LOCALE_MAINSETTINGS_HEAD, NEUTRINO_ICON_SETTINGS, width);
 	showMiscSettingsMenuCPUFreq(&misc_menue_cpu);
-	mf = new CMenuForwarder(LOCALE_MISCSETTINGS_CPU, true, NULL, &misc_menue_cpu, NULL, CRCInput::RC_4);
+	mf = new CMenuForwarder(LOCALE_MISCSETTINGS_CPU, true, NULL, &misc_menue_cpu, NULL, CRCInput::RC_5);
 	mf->setHint("", LOCALE_MENU_HINT_MISC_CPUFREQ);
 	misc_menue.addItem(mf);
 #endif /*CPU_FREQ*/
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 	// kerneloptions
 	CKernelOptions kernelOptions;
-	mf = new CMenuForwarder(LOCALE_KERNELOPTIONS_HEAD, true, NULL, &kernelOptions, NULL, CRCInput::RC_5);
+	mf = new CMenuForwarder(LOCALE_KERNELOPTIONS_HEAD, true, NULL, &kernelOptions, NULL, CRCInput::RC_6);
 	mf->setHint("", LOCALE_MENU_HINT_MISC_KERNELOPTIONS);
 	misc_menue.addItem(mf);
 #endif
