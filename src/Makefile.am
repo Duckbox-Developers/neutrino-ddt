@@ -22,7 +22,6 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib/libupnpclient \
 	@SIGC_CFLAGS@ \
 	@FREETYPE_CFLAGS@ \
-	@LIBCS_CFLAGS@ \
 	@AVFORMAT_CFLAGS@ \
 	@HWLIB_CFLAGS@
 
@@ -118,7 +117,9 @@ neutrino_LDADD = \
 	@FREETYPE_LIBS@ \
 	@PNG_LIBS@ \
 	@BLURAY_LIBS@ \
-	@LIBCS_LIBS@ \
+	@AVFORMAT_LIBS@ \
+	@AVUTIL_LIBS@ \
+	@AVCODEC_LIBS@ \
 	$(ADEC_LIBS) \
 	@SIGC_LIBS@ \
 	$(PUGIXML_LIBS) \
@@ -185,15 +186,7 @@ neutrino_LDFLAGS = \
 	$(STB_HAL_LIB)
 endif
 
-if BOXTYPE_TRIPLE
 neutrino_LDADD += \
-	$(top_builddir)/src/lcddisplay/liblcddisplay.a
-endif
-
-neutrino_LDADD += \
-	@AVFORMAT_LIBS@ \
-	@AVUTIL_LIBS@ \
-	@AVCODEC_LIBS@ \
 	@SWRESAMPLE_LIBS@
 
 neutrino_LDADD += -lfribidi
