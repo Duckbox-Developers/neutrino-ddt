@@ -311,7 +311,10 @@ void CTextBox::initFramesRel(void)
 
 	m_cFrameTextRel.iWidth	= m_cFrame.iWidth - m_cFrameScrollRel.iWidth;
 
-	m_nLinesPerPage = std::max(1, (m_cFrameTextRel.iHeight - (2*text_Vborder_width)) / m_nFontTextHeight);
+	int lines_per_page_tmp = (m_cFrameTextRel.iHeight - (2*text_Vborder_width)) / m_nFontTextHeight;
+	m_nLinesPerPage = std::max(1,lines_per_page_tmp);
+	if(lines_per_page_tmp && (m_cFrameTextRel.iHeight - (2*text_Vborder_width)) % m_nFontTextHeight)
+		m_nLinesPerPage += 1;
 
 #if 0
 	TRACE_1("Frames\r\n\tScren:\t%3d,%3d,%3d,%3d\r\n\tMain:\t%3d,%3d,%3d,%3d\r\n\tText:\t%3d,%3d,%3d,%3d \r\n\tScroll:\t%3d,%3d,%3d,%3d \r\n",
@@ -466,7 +469,10 @@ void CTextBox::refreshTextLineArray(void)
 			reSizeMainFrameHeight(m_nNrOfLines * m_nFontTextHeight);
 		}
 
-		m_nLinesPerPage = std::max(1, (m_cFrameTextRel.iHeight - (2*text_Vborder_width)) / m_nFontTextHeight);
+		int lines_per_page_tmp = (m_cFrameTextRel.iHeight - (2*text_Vborder_width)) / m_nFontTextHeight;
+		m_nLinesPerPage = std::max(1, lines_per_page_tmp);
+		if(lines_per_page_tmp && (m_cFrameTextRel.iHeight - (2*text_Vborder_width)) % m_nFontTextHeight)
+			m_nLinesPerPage += 1;
 		m_nNrOfPages =	((m_nNrOfLines-1) / m_nLinesPerPage) + 1;
 
 		if(m_nCurrentPage >= m_nNrOfPages)
