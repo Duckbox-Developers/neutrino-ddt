@@ -78,7 +78,7 @@ const char * const RC_EVENT_DEVICE[NUMBER_OF_EVENT_DEVICES] = {"/dev/input/nevis
 const char * const RC_EVENT_DEVICE[NUMBER_OF_EVENT_DEVICES] = {"/tmp/neutrino.input"};
 #else
 #if HAVE_DUCKBOX_HARDWARE
-#if defined (BOXMODEL_IPBOX9900) || defined (BOXMODEL_IPBOX99) || defined (BOXMODEL_IPBOX55)
+#if defined (BOXMODEL_IPBOX9900) || defined (BOXMODEL_IPBOX99) || defined (BOXMODEL_IPBOX55) || defined (BOXMODEL_HL101)
 const char * const RC_EVENT_DEVICE[NUMBER_OF_EVENT_DEVICES] = {"/dev/input/event0", "/dev/input/event1"};
 #else
 const char * const RC_EVENT_DEVICE[NUMBER_OF_EVENT_DEVICES] = {"/dev/input/event0"};
