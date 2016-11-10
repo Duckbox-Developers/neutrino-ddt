@@ -773,7 +773,7 @@ void CFrameBuffer::paintBoxRel(const int x, const int y, const int dx, const int
 		p = accel->lbb + (y + line) * stride/sizeof(fb_pixel_t) + x + dx - ofr - 1;
 		*p = mergeColor(*p, 255 - level, col, level);
 
-		accel->paintLine(x + ofl + 1, y + line, x + dx - ofr - 1, y + line, col);
+		accel->paintLine(x + ofl, y + line, x + dx - ofr, y + line, col);
 		line++;
 	}
 	checkFbArea(x, y, dx, dy, false);
