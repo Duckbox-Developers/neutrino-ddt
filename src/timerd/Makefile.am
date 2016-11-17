@@ -1,7 +1,6 @@
 AM_CPPFLAGS = -fno-rtti -fno-exceptions -D__STDC_FORMAT_MACROS
 
 AM_CPPFLAGS += \
-	@HWLIB_CFLAGS@ \
 	-I$(top_builddir) \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/src \
