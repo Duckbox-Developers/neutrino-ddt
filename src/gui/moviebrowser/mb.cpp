@@ -3159,26 +3159,30 @@ int CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 	CMenuWidget bookmarkMenu(LOCALE_MOVIEBROWSER_HEAD, NEUTRINO_ICON_MOVIEPLAYER);
 
 	bookmarkMenu.addIntroItems(LOCALE_MOVIEBROWSER_BOOK_HEAD);
-	bookmarkMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_CLEAR_ALL, true, NULL, this, "book_clear_all",CRCInput::RC_blue));
+	bookmarkMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_CLEAR_ALL, true, NULL, this, "book_clear_all", CRCInput::RC_red));
 	bookmarkMenu.addItem(GenericMenuSeparatorLine);
 	bookmarkMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_MOVIESTART,    true, bookStartIntInput.getValue(), &bookStartIntInput));
-	bookmarkMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_MOVIEEND,      true, bookEndIntInput.getValue(),  &bookLastIntInput));
-	bookmarkMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_LASTMOVIESTOP, true, bookLastIntInput.getValue(),   &bookEndIntInput));
+	bookmarkMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_MOVIEEND,      true, bookEndIntInput.getValue(),   &bookEndIntInput));
+	bookmarkMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_LASTMOVIESTOP, true, bookLastIntInput.getValue(),  &bookLastIntInput));
 	bookmarkMenu.addItem(GenericMenuSeparatorLine);
 
 	for (int li =0 ; li < MI_MOVIE_BOOK_USER_MAX && li < MAX_NUMBER_OF_BOOKMARK_ITEMS; li++)
 	{
-		CKeyboardInput * pBookNameInput = new CKeyboardInput(LOCALE_MOVIEBROWSER_EDIT_BOOK_NAME_INFO1, &movie_info->bookmarks.user[li].name, 20);
-		CIntInput *pBookPosIntInput =  new CIntInput(LOCALE_MOVIEBROWSER_EDIT_BOOK, (int *)&movie_info->bookmarks.user[li].pos, 20, LOCALE_MOVIEBROWSER_EDIT_BOOK_POS_INFO1, LOCALE_MOVIEBROWSER_EDIT_BOOK_POS_INFO2);
-		CIntInput *pBookTypeIntInput = new CIntInput(LOCALE_MOVIEBROWSER_EDIT_BOOK, (int *)&movie_info->bookmarks.user[li].length, 20, LOCALE_MOVIEBROWSER_EDIT_BOOK_TYPE_INFO1, LOCALE_MOVIEBROWSER_EDIT_BOOK_TYPE_INFO2);
+		std::string bookmark_user_name = g_Locale->getText(LOCALE_MOVIEBROWSER_BOOK_NEW);
+		if (!movie_info->bookmarks.user[li].name.empty())
+			bookmark_user_name = movie_info->bookmarks.user[li].name;
+
+		CKeyboardInput *pBookNameInput = new CKeyboardInput(LOCALE_MOVIEBROWSER_EDIT_BOOK,   &movie_info->bookmarks.user[li].name,   20, NULL, NULL, LOCALE_MOVIEBROWSER_EDIT_BOOK_NAME_INFO1, LOCALE_MOVIEBROWSER_EDIT_BOOK_NAME_INFO2);
+		CIntInput *pBookPosIntInput    = new CIntInput(LOCALE_MOVIEBROWSER_EDIT_BOOK, (int *)&movie_info->bookmarks.user[li].pos,     5, LOCALE_MOVIEBROWSER_EDIT_BOOK_POS_INFO1,  LOCALE_MOVIEBROWSER_EDIT_BOOK_POS_INFO2);
+		CIntInput *pBookTypeIntInput   = new CIntInput(LOCALE_MOVIEBROWSER_EDIT_BOOK, (int *)&movie_info->bookmarks.user[li].length, 20, LOCALE_MOVIEBROWSER_EDIT_BOOK_TYPE_INFO1, LOCALE_MOVIEBROWSER_EDIT_BOOK_TYPE_INFO2);
 
 		CMenuWidget* pBookItemMenu = new CMenuWidget(LOCALE_MOVIEBROWSER_BOOK_HEAD, NEUTRINO_ICON_MOVIEPLAYER);
 		pBookItemMenu->addItem(GenericMenuSeparator);
-		pBookItemMenu->addItem(new CMenuDForwarder(LOCALE_MOVIEBROWSER_BOOK_NAME,     true,  movie_info->bookmarks.user[li].name, pBookNameInput));
+		pBookItemMenu->addItem(new CMenuDForwarder(LOCALE_MOVIEBROWSER_BOOK_NAME,     true,  bookmark_user_name.c_str(),    pBookNameInput));
 		pBookItemMenu->addItem(new CMenuDForwarder(LOCALE_MOVIEBROWSER_BOOK_POSITION, true,  pBookPosIntInput->getValue(),  pBookPosIntInput));
 		pBookItemMenu->addItem(new CMenuDForwarder(LOCALE_MOVIEBROWSER_BOOK_TYPE,     true,  pBookTypeIntInput->getValue(), pBookTypeIntInput));
 
-		bookmarkMenu.addItem(new CMenuDForwarder(movie_info->bookmarks.user[li].name.c_str(), true, pBookPosIntInput->getValue(), pBookItemMenu));
+		bookmarkMenu.addItem(new CMenuDForwarder(bookmark_user_name.c_str(), true, pBookPosIntInput->getValue(), pBookItemMenu));
 	}
 
 	/********************************************************************/
