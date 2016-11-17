@@ -165,6 +165,7 @@ class CVFD
 		void Clear();
 		void ShowIcon(fp_icon icon, bool show);
 #if HAVE_DUCKBOX_HARDWARE
+		void repaintIcons();
 		void UpdateIcons();
 		void ShowScrollText(char * str);
 		static void* ThreadScrollText(void * arg);

@@ -44,6 +44,7 @@
 
 #include <gui/widget/icons.h>
 #include <gui/widget/messagebox.h>
+#include <gui/widget/hintbox.h>
 #include <gui/widget/stringinput.h>
 #include <gui/widget/keyboard_input.h>
 
@@ -51,6 +52,7 @@
 
 #include <driver/screen_max.h>
 #include <driver/screenshot.h>
+#include <driver/display.h>
 
 #include <system/debug.h>
 #include <system/helpers.h>
@@ -114,6 +116,55 @@ int CKeybindSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 			printf("[neutrino keybind_setup] save keys: %s\n", sname.c_str());
 			CNeutrinoApp::getInstance()->saveKeys(sname.c_str());
 			delete sms;
+		}
+		return menu_return::RETURN_REPAINT;
+	}
+	else if(actionKey == "savecode") {
+		if (remote_code != remote_code_old)
+		{
+			if (setRemoteCode(remote_code))
+			{
+				neutrino_msg_t      msg = 0;
+				neutrino_msg_data_t data = 0;
+				CVFD::getInstance()->Clear();
+				remote_code_old = remote_code;
+				CHintBox *Hint;
+				std::string Text = g_Locale->getText(LOCALE_KEYBINDINGMENU_REMOTECONTROL_CODE);
+				Text += " > " + to_string(remote_code) + "\n";
+				Text += g_Locale->getText(LOCALE_KEYBINDINGMENU_REMOTECONTROL_CODE_MSG1);
+				Text += " " + to_string(remote_code) + "\n";
+				Text += g_Locale->getText(LOCALE_KEYBINDINGMENU_REMOTECONTROL_CODE_MSG2);
+				Hint = new CHintBox(LOCALE_KEYBINDINGMENU_REMOTECONTROL_CODE_SAVE, Text.c_str());
+				Hint->paint();
+				for (int i = 0; i < 6; i++)
+				{
+					g_RCInput->getMsg(&msg, &data, 1);
+					g_RCInput->clearRCMsg();
+				}
+				system("killall evremote2");
+				usleep(300000);
+				system("/bin/evremote2 10 120 > /dev/null &");
+				std::string vfd_msg = "RC Code: " + to_string(remote_code);
+				sleep(1);
+				CVFD::getInstance()->repaintIcons();
+				CVFD::getInstance()->ShowText(vfd_msg.c_str());
+				while(true)
+				{
+					g_RCInput->getMsg(&msg, &data, 1);
+					if (msg == CRCInput::RC_ok)
+					{
+						//printf("MSG: 0x%lx\n", msg);
+						g_RCInput->clearRCMsg();
+						break;
+					}
+					g_RCInput->clearRCMsg();
+				}
+				Hint->hide();
+			}
+		}
+		else
+		{
+			ShowHint(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_KEYBINDINGMENU_REMOTECONTROL_CODE_NOT_SAVE), 450, 5);
 		}
 		return menu_return::RETURN_REPAINT;
 	}
@@ -280,6 +331,21 @@ int CKeybindSetup::showKeySetup()
 	mf = new CMenuForwarder(LOCALE_EXTRA_SAVEKEYS, true, NULL, this, "savekeys", CRCInput::RC_yellow);
 	mf->setHint("", LOCALE_MENU_HINT_KEY_SAVE);
 	keySettings->addItem(mf);
+
+	char * model = g_info.hw_caps->boxname;
+	if(strstr(model, "ufs912") || strstr(model, "ufs913"))
+	{
+		remote_code = getRemoteCode();
+		remote_code_old = remote_code;
+		keySettings->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_KEYBINDINGMENU_REMOTECONTROL_CODE_CHANGE));
+		CMenuOptionNumberChooser * nc = new CMenuOptionNumberChooser(LOCALE_KEYBINDINGMENU_REMOTECONTROL_CODE, &remote_code, true, 1, 4);
+		nc->setHint("", LOCALE_MENU_HINT_REMOTE_CODE);
+		keySettings->addItem(nc);
+
+		mf = new CMenuForwarder(LOCALE_KEYBINDINGMENU_REMOTECONTROL_CODE_SAVE, true, NULL, this, "savecode", CRCInput::RC_blue);
+		mf->setHint("", LOCALE_MENU_HINT_REMOTE_CODE_SAVE);
+		keySettings->addItem(mf);
+	}
 
 	keySettings->addItem(GenericMenuSeparatorLine);
 
@@ -629,4 +695,43 @@ const char *CKeybindSetup::getMoviePlayerButtonName(const neutrino_msg_t key, bo
 		}
 	}
 	return "";
+}
+
+int CKeybindSetup::getRemoteCode()
+{
+	int code = 1;
+	if (!access("/etc/.rccode", F_OK))
+	{
+		char buf[10];
+		int val;
+		FILE* fd;
+		fd = fopen("/etc/.rccode", "r");
+		if (fd != NULL)
+		{
+			if (fgets (buf , sizeof(buf), fd) != NULL)
+			{
+				val = atoi(buf);
+				if (val > 0 && val < 5)
+					code = val;
+			}
+			fclose(fd);
+		}
+	}
+	return code;
+}
+
+bool CKeybindSetup::setRemoteCode(int code)
+{
+	char buf[10];
+	bool ret = false;
+	FILE* fd;
+	fd = fopen("/etc/.rccode", "w");
+	if (fd != NULL)
+	{
+		sprintf(buf, "%d\n", code);
+		if (fputs(buf, fd) > 0)
+			ret = true;
+		fclose(fd);
+	}
+	return ret;
 }

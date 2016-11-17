@@ -103,6 +103,8 @@ class CKeybindSetup : public CMenuTarget, public CChangeObserver
 	private:
 		CKeyChooser *keychooser[KEYBINDS_COUNT];
 		int width;
+		int remote_code;
+		int remote_code_old;
 
 		int showKeySetup();
 		void showKeyBindSetup(CMenuWidget *bindSettings);
@@ -112,7 +114,9 @@ class CKeybindSetup : public CMenuTarget, public CChangeObserver
 		void showKeyBindMovieplayerSetup(CMenuWidget *bindSettings_mplayer);
 		void showKeyBindMoviebrowserSetup(CMenuWidget *bindSettings_mbrowser);
 		void showKeyBindSpecialSetup(CMenuWidget *bindSettings_special);
-
+		int getRemoteCode();
+		bool setRemoteCode(int code);
+		
 	public:				
 		CKeybindSetup();
 		~CKeybindSetup();

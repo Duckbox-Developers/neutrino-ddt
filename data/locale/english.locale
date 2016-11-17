@@ -894,6 +894,12 @@ keybindingmenu.pagedown page down
 keybindingmenu.pageup page up
 keybindingmenu.poweroff Power toggle
 keybindingmenu.quickzap Quickzap
+keybindingmenu.remotecontrol_code Remote control code
+keybindingmenu.remotecontrol_code_change Change remote control code
+keybindingmenu.remotecontrol_code_msg1 For changing the remote control code please press the buttons: back +
+keybindingmenu.remotecontrol_code_msg2 at the same time, after that press the button: OK for leaving the infobox.
+keybindingmenu.remotecontrol_code_not_save The remote control code has not been changed !
+keybindingmenu.remotecontrol_code_save Save new code
 keybindingmenu.remotecontrol_hardware Hardware
 keybindingmenu.remotecontrol_hardware_coolstream CST
 keybindingmenu.remotecontrol_hardware_dbox d-box Nokia (old)
@@ -1367,6 +1373,8 @@ menu.hint_record_zap_pre_time For ZapTo timers, switch channel\nbefore event sta
 menu.hint_recording Recording and timeshift options\nTimers safety, audio pids options
 menu.hint_reload_channels Reload channels from flash
 menu.hint_reload_plugins Reload plugins from flash
+menu.hint_remote_code For changing the code of the remote controls for Kathrein UFS912/13 models. It is possible to use four different codes ( 1 to 4 )
+menu.hint_remote_code_save Save and activate the new choosen code for remote control
 menu.hint_reset Reset Neutrino GUI settings to defaults\nTuner config and channels not affected
 menu.hint_restart_tuner Restart the internal tuner. This may help if you're experiencing reception problems
 menu.hint_restore Restore files from selected backup

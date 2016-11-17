@@ -894,6 +894,12 @@ keybindingmenu.pagedown Seite weiter
 keybindingmenu.pageup Seite zurück
 keybindingmenu.poweroff Standby EIN/AUS
 keybindingmenu.quickzap Schnellumschaltung
+keybindingmenu.remotecontrol_code Fernbedienung Code
+keybindingmenu.remotecontrol_code_change Code der Fernbedienung ändern
+keybindingmenu.remotecontrol_code_msg1 Für die Umstellung der Fernbedienung bitte die Tasten: Back +
+keybindingmenu.remotecontrol_code_msg2 gleichzeitig betätigen, danach: OK Taste drücken zum Verlassen der Infobox.
+keybindingmenu.remotecontrol_code_not_save Der Code der Fernbedienung wurde nicht geändert !
+keybindingmenu.remotecontrol_code_save Neuen Code speichern
 keybindingmenu.remotecontrol_hardware Hardware
 keybindingmenu.remotecontrol_hardware_coolstream CST
 keybindingmenu.remotecontrol_hardware_dbox DBox Nokia (alt)
@@ -1367,6 +1373,8 @@ menu.hint_record_zap_pre_time Stellen Sie eine Vorlaufzeit in Minuten für den U
 menu.hint_recording Aufnahme-, Timeshift- und Timer-Optionen, Einstellung von aufzunehmenden Tonspuren
 menu.hint_reload_channels Kanallisten neu laden, um Änderungen wirksam zu machen
 menu.hint_reload_plugins Plugins neu laden, um Änderungen wirksam zu machen
+menu.hint_remote_code Den Code der Fernbedienung für die Kathrein UFS912/13 Modelle umstellen. Es sind vier verschiedene Codes möglich ( 1 bis 4 )
+menu.hint_remote_code_save Den neu eingestellten Fernbedienung Code speichern und aktivieren
 menu.hint_reset Zurücksetzen von Neutrino-Einstellungen auf Standardwerte. Tuner-Einstellungen und Kanäle bleiben erhalten
 menu.hint_restart_tuner Führen Sie einen Neustart des internen Tuners durch. Das kann Empfangsprobleme beheben.
 menu.hint_restore Wiederherstellen von vorher erstellten Sicherungen
