@@ -222,7 +222,7 @@ if test "$BOXTYPE" != coolstream; then
 	if test "$STB_HAL_INC" = ""; then
 		AC_MSG_ERROR([need libstb-hal includes path with --with-stb-hal-includes=...])
 	fi
-	HWLIB_CFLAGS="-I$STB_HAL_INC -I$(top_srcdir)/src/zapit/include/private"
+	HWLIB_CFLAGS="-I$STB_HAL_INC"
 fi
 
 # Lua - embeddable scripting language
