@@ -1295,8 +1295,6 @@ void CTimerEvent_Record::announceEvent()
 //------------------------------------------------------------
 void CTimerEvent_Record::stopEvent()
 {
-	if (adjustToCurrentEPG())
-		return;
 	CTimerd::RecordingStopInfo stopinfo;
 	// Set EPG-ID if not set
 	stopinfo.eventID = eventID;
