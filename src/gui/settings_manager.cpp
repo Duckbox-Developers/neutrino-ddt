@@ -106,8 +106,8 @@ int CSettingsManager::exec(CMenuTarget* parent, const std::string &actionKey)
 	{
 		struct statfs s;
 		int result = ShowMsg(LOCALE_SETTINGS_BACKUP, (std::string)g_Locale->getText(LOCALE_MOVIEBROWSER_INFO_PATH) + " : " + g_settings.image_settings_backup_path, \
-		CMessageBox::mbrYes, CMessageBox::mbYes | CMessageBox::mbNo);
-		if(result == CMessageBox::mbrNo)
+		CMsgBox::mbrYes, CMsgBox::mbYes | CMsgBox::mbNo);
+		if(result == CMsgBox::mbrNo)
 		{
 			fileBrowser.Dir_Mode = true;
 			if (fileBrowser.exec("/media") == true)
@@ -123,7 +123,7 @@ int CSettingsManager::exec(CMenuTarget* parent, const std::string &actionKey)
 			my_system(2, backup_sh, g_settings.image_settings_backup_path.c_str());
 		}
 		else
-			ShowMsg(LOCALE_MESSAGEBOX_ERROR, g_Locale->getText(LOCALE_SETTINGS_BACKUP_FAILED),CMessageBox::mbrBack, CMessageBox::mbBack, NEUTRINO_ICON_ERROR);
+			ShowMsg(LOCALE_MESSAGEBOX_ERROR, g_Locale->getText(LOCALE_SETTINGS_BACKUP_FAILED),CMsgBox::mbrBack, CMsgBox::mbBack, NEUTRINO_ICON_ERROR);
 		return res;
 	}
 	else if(actionKey == "restore")

@@ -121,7 +121,7 @@ int CScreenSetup::exec(CMenuTarget* parent, const std::string &action)
 	}
 	if (action == "ex" || action == "ti") {
 		if (action == "ex" && ((startX != x_coord[0] ) || ( endX != x_coord[1] ) || ( startY != y_coord[0] ) || ( endY != y_coord[1] ) ) &&
-			(ShowMsg(LOCALE_VIDEOMENU_SCREENSETUP, LOCALE_MESSAGEBOX_DISCARD, CMessageBox::mbrYes, CMessageBox::mbYes | CMessageBox::mbCancel) == CMessageBox::mbrCancel))
+			(ShowMsg(LOCALE_VIDEOMENU_SCREENSETUP, LOCALE_MESSAGEBOX_DISCARD, CMsgBox::mbrYes, CMsgBox::mbYes | CMsgBox::mbCancel) == CMsgBox::mbrCancel))
 			return menu_return::RETURN_NONE;
 		loadBorder(channel_id);
 		return (action == "ex") ? menu_return::RETURN_EXIT : menu_return::RETURN_EXIT_ALL;

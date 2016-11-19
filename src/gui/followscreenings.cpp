@@ -95,7 +95,7 @@ int CFollowScreenings::exec(CMenuTarget* /*parent*/, const std::string & actionK
 #if 0
 							else
 								ShowMsg(LOCALE_TIMER_EVENTREMOVED_TITLE, LOCALE_TIMER_EVENTREMOVED_MSG,
-									CMessageBox::mbrBack, CMessageBox::mbBack, NEUTRINO_ICON_INFO);
+									CMsgBox::mbrBack, CMsgBox::mbBack, NEUTRINO_ICON_INFO);
 #endif
 							return menu_return::RETURN_REPAINT;
 						}
