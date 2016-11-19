@@ -49,7 +49,7 @@
 
 #include <gui/widget/icons.h>
 #include <gui/widget/stringinput.h>
-#include <gui/widget/messagebox.h>
+#include <gui/widget/msgbox.h>
 #include <gui/widget/keyboard_input.h>
 
 #include <driver/screen_max.h>
@@ -128,7 +128,7 @@ int CMiscMenue::exec(CMenuTarget* parent, const std::string &actionKey)
 		unsigned num = CEitManager::getInstance()->getEventsCount();
 		char str[128];
 		sprintf(str, "Event count: %d", num);
-		ShowMsg(LOCALE_MESSAGEBOX_INFO, str, CMessageBox::mbrBack, CMessageBox::mbBack);
+		ShowMsg(LOCALE_MESSAGEBOX_INFO, str, CMsgBox::mbrBack, CMsgBox::mbBack);
 		return menu_return::RETURN_REPAINT;
 	}
 	else if(actionKey == "energy")

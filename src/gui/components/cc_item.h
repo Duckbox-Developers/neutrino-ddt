@@ -1,5 +1,5 @@
 /*
-	Based up Neutrino-GUI - Tuxbox-Project
+	Based up Neutrino-GUI - Tuxbox-Project 
 	Copyright (C) 2001 by Steffen Hehn 'McClean'
 
 	Classes for generic GUI-related components.
@@ -104,12 +104,18 @@ class CComponentsItem : public CComponents
 		virtual int getItemType();
 		///syncronizes item colors with current color settings if required, NOTE: overwrites internal values!
 		virtual void syncSysColors();
-
-		///set select mode, see also col_frame_sel
-		virtual void setSelected(bool selected){cc_item_selected = selected;};
+		
+		///set select mode
+		virtual void setSelected(bool selected,
+					const fb_pixel_t& sel_frame_col = COL_MENUCONTENTSELECTED_PLUS_0,
+					const fb_pixel_t& frame_col = COL_SHADOW_PLUS_0,
+					const fb_pixel_t& sel_body_col = COL_MENUCONTENT_PLUS_0,
+					const fb_pixel_t& body_col = COL_MENUCONTENT_PLUS_0,
+					const int& frame_w = 3,
+					const int& sel_frame_w = 3);
 		///set enable mode, see also cc_item_enabled
 		virtual void setEnable(bool enabled){cc_item_enabled = enabled;};
-
+		
 		///get select mode, see also setSelected() above
 		virtual bool isSelected(){return cc_item_selected;};
 		///get enable mode, see also setEnable() above

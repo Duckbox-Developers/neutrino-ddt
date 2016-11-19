@@ -449,3 +449,4 @@ bool CComponentsFrmClock::enableColBodyGradient(const int& enable_mode, const fb
 	}
 	return false;
 }
+
