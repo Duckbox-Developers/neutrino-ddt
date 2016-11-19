@@ -27,7 +27,7 @@
 #include <system/debug.h>
 #include <system/helpers.h>
 #include <driver/screen_max.h>
-#include <gui/widget/messagebox.h>
+#include <gui/widget/msgbox.h>
 #include <gui/widget/menue.h>
 #include <gui/kerneloptions.h>
 
