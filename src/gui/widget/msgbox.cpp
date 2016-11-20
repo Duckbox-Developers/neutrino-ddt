@@ -208,13 +208,13 @@ void CMsgBox::initButtons()
 	Refresh();
 
 	//set the 1st button as default selected button
-	ccw_footer->setSelectedButton(0);
+	ccw_footer->setSelectedButton(0,COL_MENUCONTENTSELECTED_PLUS_2,COL_MENUCONTENT_TEXT);
 
 	//define default selected button from default_result
 	if (v_buttons.size() > 1){
 		for (size_t i = 0; i< v_buttons.size(); i++){
 			if (v_buttons[i].btn_result == result){
-				ccw_footer->setSelectedButton(i);
+				ccw_footer->setSelectedButton(i,COL_MENUCONTENTSELECTED_PLUS_2,COL_MENUCONTENT_TEXT);
 				break;
 			}
 		}
@@ -246,7 +246,6 @@ int CMsgBox::exec()
 	{
 		g_RCInput->getMsgAbsoluteTimeout( &msg, &data, &timeoutEnd );
 
-
 		//***timeout result***
 		if (msg == CRCInput::RC_timeout && timeout > 0)
 		{
@@ -276,11 +275,11 @@ int CMsgBox::exec()
 			if(msg==CRCInput::RC_right || msg==CRCInput::RC_left)
 			{
 				if(msg==CRCInput::RC_right){
-					ccw_footer->setSelectedButton(selected+1);
+					ccw_footer->setSelectedButton(selected+1,COL_MENUCONTENTSELECTED_PLUS_2,COL_MENUCONTENT_TEXT);
 					mb_show_button = ccw_footer->getSelectedButtonObject()->getButtonAlias();
 				}
 				if(msg==CRCInput::RC_left){
-					ccw_footer->setSelectedButton(selected-1);
+					ccw_footer->setSelectedButton(selected-1,COL_MENUCONTENTSELECTED_PLUS_2,COL_MENUCONTENT_TEXT);
 					mb_show_button = ccw_footer->getSelectedButtonObject()->getButtonAlias();
 				}
 				selected = ccw_footer->getSelectedButton();
@@ -328,6 +327,7 @@ int CMsgBox::exec()
 void CMsgBox::refreshFoot(void)
 {
 	ccw_footer->paint(false);
+	CFrameBuffer::getInstance()->blit();
 }
 
 
