@@ -132,7 +132,7 @@ void CHintBox::init(const std::string& Text, const int& Width, const std::string
 	timeout		= HINTBOX_DEFAULT_TIMEOUT;
 	w_indentation	= indent;
 
-	hb_font		= g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO];
+	hb_font		= g_Font[SNeutrinoSettings::FONT_TYPE_MENU];
 
 	//enable shadow
 	shadow = true;

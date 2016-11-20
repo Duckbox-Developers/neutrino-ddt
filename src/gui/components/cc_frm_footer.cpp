@@ -355,7 +355,7 @@ void CComponentsFooter::setSelectedButton(size_t item_id, const fb_pixel_t& fr_c
 		fb_pixel_t sel_col = fr_col;
 		if (chain->size() > 1)
 			sel_col = sel_fr_col; //TODO: make it configurable
-		chain->setSelectedItem(item_id, sel_col, fr_col, sel_bg_col, bg_col, 1, 2);
+		chain->setSelectedItem(item_id, sel_col, fr_col, sel_bg_col, bg_col, 1, 1);
 
 		if (chain->size() > 1)
 			getSelectedButtonObject()->setButtonTextColor(sel_text_col);
