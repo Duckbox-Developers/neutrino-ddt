@@ -277,6 +277,8 @@ CVFD::CVFD()
 		has_lcd = false;
 		has_led_segment = false;
 	}
+#else
+	fd = 1;
 #endif
 
 #ifdef BOXMODEL_APOLLO
