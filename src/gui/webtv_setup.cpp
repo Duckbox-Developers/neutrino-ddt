@@ -54,10 +54,11 @@ const CMenuOptionChooser::keyval_ext LIVESTREAM_RESOLUTION_OPTIONS[] =
 };
 #define LIVESTREAM_RESOLUTION_OPTION_COUNT (sizeof(LIVESTREAM_RESOLUTION_OPTIONS)/sizeof(CMenuOptionChooser::keyval_ext))
 
-#define CWebTVSetupFooterButtonCount 2
+#define CWebTVSetupFooterButtonCount 3
 static const struct button_label CWebTVSetupFooterButtons[CWebTVSetupFooterButtonCount] = {
 	{ NEUTRINO_ICON_BUTTON_RED, LOCALE_WEBTV_XML_DEL },
-	{ NEUTRINO_ICON_BUTTON_GREEN, LOCALE_WEBTV_XML_ADD }
+	{ NEUTRINO_ICON_BUTTON_GREEN, LOCALE_WEBTV_XML_ADD },
+	{ NEUTRINO_ICON_BUTTON_BLUE, LOCALE_WEBTV_XML_RELOAD }
 };
 
 int CWebTVSetup::exec(CMenuTarget* parent, const std::string & actionKey)
@@ -104,6 +105,10 @@ int CWebTVSetup::exec(CMenuTarget* parent, const std::string & actionKey)
 		}
 		return res;
 	}
+	if(actionKey == "r" /* reload */) {
+		changed = true;
+		return menu_return::RETURN_EXIT_ALL;
+	}
 	if (actionKey == "script_path") {
 		const char *action_str = "ScriptPath";
 		chooserDir(g_settings.livestreamScriptPath, false, action_str);
@@ -125,6 +130,7 @@ int CWebTVSetup::Show()
 	m = new CMenuWidget(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_MOVIEPLAYER, width, MN_WIDGET_ID_WEBTVSETUP);
 	m->addKey(CRCInput::RC_red, this, "d");
 	m->addKey(CRCInput::RC_green, this, "a");
+	m->addKey(CRCInput::RC_blue, this, "r");
 
 	m->addIntroItems(LOCALE_WEBTV_HEAD, LOCALE_LIVESTREAM_HEAD);
 

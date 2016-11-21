@@ -179,7 +179,9 @@ void CHintBox::enableTimeOutBar(bool enable)
 
 	if(timeout_pb){
 		timeout_pb->paint0();
-		timeout_pb->setValues(timeout_pb->getValue()+1, 100*timeout);
+		if (timeout > 0)
+			timeout_pb->setValues(timeout_pb->getValue()+1, 100*timeout);
+		CFrameBuffer::getInstance()->blit();
 	}else{
 		timeout_pb = new CProgressBar();
 		timeout_pb->setDimensionsAll(ccw_body->getRealXPos(), ccw_body->getRealYPos(), ccw_body->getWidth(), TIMEOUT_BAR_HEIGHT);

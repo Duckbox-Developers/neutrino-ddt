@@ -856,6 +856,7 @@ void CEventList::paintHead(t_channel_id _channel_id, std::string _channelname, s
 	header->setDimensionsAll(x, y, full_width, theight);
 	header->enableColBodyGradient(g_settings.theme.menu_Head_gradient, COL_MENUCONTENT_PLUS_0, g_settings.theme.menu_Head_gradient_direction);
 	header->setCorner(RADIUS_LARGE, CORNER_TOP);
+	header->set2ndColor(COL_MENUCONTENT_PLUS_0);
 	header->clear();
 
 	int x_off = OFFSET_INNER_MID;

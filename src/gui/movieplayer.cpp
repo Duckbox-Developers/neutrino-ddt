@@ -145,6 +145,7 @@ CMoviePlayerGui::~CMoviePlayerGui()
 		instance_bg = NULL;
 	}
 	instance_mp = NULL;
+	filelist.clear();
 }
 
 #if !HAVE_COOL_HARDWARE
@@ -1343,6 +1344,12 @@ bool CMoviePlayerGui::PlayFileStart(void)
 					pids.AudioPidName = language[i];
 					p_movie_info->audioPids.push_back(pids);
 				}
+			}
+		else
+			for (unsigned int i = 0; i < numpida; i++)
+				if (apids[i] == playback->GetAPid()) {
+				CZapit::getInstance()->SetVolumePercent((ac3flags[i] > 2) ? g_settings.audio_volume_percent_ac3 : g_settings.audio_volume_percent_pcm);
+				break;
 			}
 		repeat_mode = (repeat_mode_enum) g_settings.movieplayer_repeat_on;
 		playstate = CMoviePlayerGui::PLAY;
@@ -2967,6 +2974,7 @@ bool CMoviePlayerGui::setAPID(unsigned int i) {
 		currentapid = apids[i];
 		currentac3 = ac3flags[i];
 		playback->SetAPid(currentapid, currentac3);
+		CZapit::getInstance()->SetVolumePercent((ac3flags[i] > 2) ? g_settings.audio_volume_percent_ac3 : g_settings.audio_volume_percent_pcm);
 	}
 	return (i < numpida);
 }
@@ -3170,6 +3178,7 @@ void CMoviePlayerGui::parsePlaylist(CFile *file)
 	std::ifstream infile;
 	char cLine[1024];
 	char name[1024] = { 0 };
+	std::string file_path = file->getPath();
 	infile.open(file->Name.c_str(), std::ifstream::in);
 	filelist_it = filelist.erase(filelist_it);
 	CFile tmp_file;
@@ -3192,6 +3201,22 @@ void CMoviePlayerGui::parsePlaylist(CFile *file)
 					tmp_file.Url = url;
 					filelist.push_back(tmp_file);
 				}
+			}
+			else
+			{
+				printf("name %s [%d] file: %s\n", name, dur, cLine);
+				std::string illegalChars = "\\/:?\"<>|";
+				std::string::iterator it;
+				std::string name_s = name;
+				for (it = name_s.begin() ; it < name_s.end() ; ++it){
+					bool found = illegalChars.find(*it) != string::npos;
+					if(found){
+						*it = ' ';
+					}
+				}
+				tmp_file.Name = name_s;
+				tmp_file.Url = file_path + cLine;
+				filelist.push_back(tmp_file);
 			}
 		}
 	}
@@ -3277,6 +3302,8 @@ void CMoviePlayerGui::showFileInfos()
 	size_t count = keys.size();
 	if (count > 0) {
 		CMenuWidget* sfimenu = new CMenuWidget("Fileinfos", NEUTRINO_ICON_SETTINGS);
+		sfimenu->addItem(GenericMenuBack);
+		sfimenu->addItem(GenericMenuSeparatorLine);
 		for (size_t i = 0; i < count; i++) {
 			std::string key = trim(keys[i]);
 			printf("key: %s - values: %s \n", key.c_str(), isUTF8(values[i]) ? values[i].c_str() : convertLatin1UTF8(values[i]).c_str());
