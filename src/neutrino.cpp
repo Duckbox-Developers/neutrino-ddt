@@ -2505,6 +2505,7 @@ TIMER_STOP("################################## after all #######################
 			//flash.enableNotify(false);
 			flash.exec(NULL, "inet");
 		}
+		hintBox->hide();
 		delete hintBox;
 	}
 	RealRun();
@@ -4525,8 +4526,8 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 		returnval = menu_return::RETURN_EXIT_ALL;
 	}
 	else if(actionKey=="savesettings") {
-		CHintBox * hintBox = new CHintBox(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_MAINSETTINGS_SAVESETTINGSNOW_HINT)); // UTF-8
-		hintBox->paint();
+		CHintBox hintBox(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_MAINSETTINGS_SAVESETTINGSNOW_HINT)); // UTF-8
+		hintBox.paint();
 
 		saveSetup(NEUTRINO_SETTINGS_FILE);
 
@@ -4538,20 +4539,18 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 		//g_Sectionsd->setEventsAreOldInMinutes((unsigned short) (g_settings.epg_old_hours*60));
 		//g_Sectionsd->setHoursToCache((unsigned short) (g_settings.epg_cache_days*24));
 
-		hintBox->hide();
-		delete hintBox;
+		hintBox.hide();
 	}
 	else if(actionKey=="recording") {
 		setupRecordingDevice();
 	}
 	else if(actionKey=="reloadplugins") {
-		CHintBox * hintBox = new CHintBox(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_SERVICEMENU_GETPLUGINS_HINT));
-		hintBox->paint();
+		CHintBox hintBox(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_SERVICEMENU_GETPLUGINS_HINT));
+		hintBox.paint();
 
 		g_PluginList->loadPlugins();
 
-		hintBox->hide();
-		delete hintBox;
+		hintBox.hide();
 	}
 	else if(actionKey=="restarttuner") {
 		CHintBox * hintBox = new CHintBox(LOCALE_SERVICEMENU_RESTART_TUNER,
@@ -5268,7 +5267,9 @@ void CNeutrinoApp::CheckFastScan(bool standby, bool reload)
 				scanSettings.fst_version = CServiceScan::getInstance()->GetFstVersion();
 				scanSettings.saveSettings(NEUTRINO_SCAN_SETTINGS_FILE);
 			}
-			delete fhintbox;
+			if (fhintbox){
+				fhintbox->hide(); delete fhintbox;
+			}
 			if (standby)
 				CVFD::getInstance()->setMode(CVFD::MODE_STANDBY);
 		}
