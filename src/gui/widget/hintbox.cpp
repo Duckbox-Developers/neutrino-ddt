@@ -135,7 +135,7 @@ void CHintBox::init(const std::string& Text, const int& Width, const std::string
 	hb_font		= MSG_FONT;
 
 	//enable shadow
-	shadow = true;
+	shadow = CC_SHADOW_ON;
 
 	//disable disable header if no title has been defined
 	if (ccw_caption.empty())
@@ -198,6 +198,10 @@ int CHintBox::exec()
 	neutrino_msg_t msg;
 	neutrino_msg_data_t data;
 	int res = messages_return::none;
+
+	if (timeout == NO_TIMEOUT || timeout == 0)
+		timeout = HINTBOX_DEFAULT_TIMEOUT;
+
 	uint64_t timeoutEnd = CRCInput::calcTimeoutEnd( timeout );
 
 	if (timeout > 0)
@@ -307,8 +311,8 @@ void CHintBox::addHintItem(const std::string& Text, const int& text_mode, const 
 	ReSize();
 
 	/* set hint box position general to center and refresh window */
-	setCenterPos();
-
+	setCenterPos(CC_ALONG_X);
+	y = frameBuffer->getScreenY() + ((frameBuffer->getScreenHeight() - height) >> 2),
 	Refresh();
 }
 

@@ -204,7 +204,8 @@ void CMsgBox::initButtons()
 	ccw_footer->enableButtonShadow(CC_SHADOW_ON, OFFSET_SHADOW/2, true);
 
 	//set position of meassage window and refresh window properties
-	setCenterPos();
+	setCenterPos(CC_ALONG_X);
+	y = frameBuffer->getScreenY() + ((frameBuffer->getScreenHeight() - height) >> 2),
 	Refresh();
 
 	//set the 1st button as default selected button
@@ -236,6 +237,9 @@ int CMsgBox::exec()
 
 	ccw_footer->getSelectedButtonObject()->setButtonAlias(mb_show_button);
 	int selected = ccw_footer->getSelectedButton();
+	if (timeout == NO_TIMEOUT)
+		timeout = 0;
+
 	uint64_t timeoutEnd = CRCInput::calcTimeoutEnd(timeout);
 
 	if (timeout > 0)
@@ -432,7 +436,7 @@ int ShowMsg2UTF(	const neutrino_locale_t Title,
 			const int& Text_mode,
 			fb_pixel_t color_frame)
 {
-	int result = ShowMsg(	g_Locale->getText(Title), Text, Default, ShowButtons, Icon, Width, Timeout, returnDefaultOnTimeout, Text_mode, color_frame);
+	int result = ShowMsg2UTF(g_Locale->getText(Title), Text, Default, ShowButtons, Icon, Width, Timeout, returnDefaultOnTimeout, Text_mode, color_frame);
 
 	return (result);
 }
