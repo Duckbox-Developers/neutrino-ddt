@@ -381,25 +381,6 @@ bool CUserMenu::showUserMenu(neutrino_msg_t msg)
 			menu_item = new CMenuForwarder(LOCALE_USERMENU_ITEM_ADZAP, true, adzap_active ? g_Locale->getText(LOCALE_OPTIONS_OFF) : NULL, CAdZapMenu::getInstance(), "adzap", key, icon);
 			menu_item->setHint(NEUTRINO_ICON_HINT_ADZAP, adzap_active ? LOCALE_MENU_HINT_ADZAP_ACTIVE : LOCALE_MENU_HINT_ADZAP);
 			break;
-#if 0
-		case SNeutrinoSettings::ITEM_TUNER_RESTART:
-			keyhelper.get(&key,&icon);
-			menu_item = new CMenuForwarder(LOCALE_SERVICEMENU_RESTART_TUNER, true, NULL, neutrino, "restarttuner", key, icon);
-			menu_item->setHint(NEUTRINO_ICON_HINT_RELOAD_CHANNELS, LOCALE_MENU_HINT_RESTART_TUNER);
-			break;
-		case SNeutrinoSettings::ITEM_RASS:
-			if (!(neutrino->getMode() == CNeutrinoApp::mode_radio && g_Radiotext && g_Radiotext->haveRASS()))
-				continue;
-			keyhelper.get(&key,&icon);
-			menu_item = new CMenuForwarder(LOCALE_RASS_HEAD, true, NULL, neutrino, "rass", key, icon);
-			menu_item->setHint(NEUTRINO_ICON_HINT_RASS, LOCALE_MENU_HINT_RASS);
-			break;
-		case SNeutrinoSettings::ITEM_NETZKINO:
-			keyhelper.get(&key,&icon);
-			menu_item = new CMenuForwarder(LOCALE_MOVIEPLAYER_NKPLAYBACK, true, NULL, neutrino, "nkplayback", key, icon);
-			menu_item->setHint(NEUTRINO_ICON_HINT_NKPLAY, LOCALE_MENU_HINT_NKPLAY);
-			break;
-#endif
 		case SNeutrinoSettings::ITEM_TUNER_RESTART:
 			keyhelper.get(&key,&icon);
 			menu_item = new CMenuForwarder(LOCALE_SERVICEMENU_RESTART_TUNER, true, NULL, neutrino, "restarttuner", key, icon);
