@@ -55,7 +55,7 @@ class CKernelOptions : public CMenuTarget, public CChangeObserver
 		CKernelOptions();
 		void hide();
 		int exec(CMenuTarget* parent, const std::string & actionKey);
-		void Settings();
+		int Settings();
 		bool isEnabled(std::string name);
 		bool Enable(std::string name, bool active);
 		bool changeNotify(const neutrino_locale_t /*OptionName*/, void * /*Data*/);

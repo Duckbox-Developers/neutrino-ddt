@@ -44,32 +44,24 @@ CKernelOptions::CKernelOptions()
 
 void CKernelOptions::loadModule(int i)
 {
-	// check whether there are dependencies with options specified
-	unsigned int j;
-	for (j = 0; j < modules[i].moduleList.size(); j++)
-		if (!modules[i].moduleList[j].second.empty())
-			break;
-
-	if (j >= modules[i].moduleList.size() - 1) {
-		// dependencies come without options
-		if (modules[i].moduleList.back().second.empty())
-			my_system(2, "insmod", modules[i].moduleList.back().first.c_str());
-		else
-			system(("insmod " + modules[i].moduleList.back().first + " " + modules[i].moduleList.back().second).c_str());
-	return;
-	}
-
-	for (j = 0; j < modules[i].moduleList.size(); j++) {
-		if (modules[i].moduleList.back().second.empty())
+	for (unsigned int j = 0; j < modules[i].moduleList.size(); j++) {
+		if (modules[i].moduleList[j].second.empty())
+		{
+			//printf(" %s\n", ("command: insmod " + modules[i].moduleList[j].first).c_str());
 			my_system(2, "insmod", modules[i].moduleList[j].first.c_str());
+		}
 		else
-			system(("insmod " + modules[i].moduleList[j].first + " " + modules[i].moduleList.back().second).c_str());
+		{
+			//printf(" %s\n", ("command: insmod " + modules[i].moduleList[j].first + " " + modules[i].moduleList[j].second).c_str());
+			system(("insmod " + modules[i].moduleList[j].first + " " + modules[i].moduleList[j].second).c_str());
+		}
 	}
 }
 
 void CKernelOptions::unloadModule(int i)
 {
-	my_system(2, "rmmod", modules[i].moduleList.back().first.c_str());
+	for (unsigned int j = modules[i].moduleList.size(); j > 0; j--)
+		my_system(2, "rmmod", modules[i].moduleList[j - 1].first.c_str());
 }
 
 void CKernelOptions::updateStatus(void)
@@ -136,7 +128,7 @@ int CKernelOptions::exec(CMenuTarget * parent, const std::string & actionKey)
 	if (parent)
 		parent->hide();
 
-	Settings();
+	res = Settings();
 
 	return res;
 }
@@ -290,7 +282,7 @@ bool CKernelOptions::changeNotify(const neutrino_locale_t /*OptionName */ , void
 	return true;
 }
 
-void CKernelOptions::Settings()
+int CKernelOptions::Settings()
 {
 	CMenuWidget *menu = new CMenuWidget(LOCALE_MAINSETTINGS_HEAD, NEUTRINO_ICON_SETTINGS);
 	menu->addKey(CRCInput::RC_red, this, "reset");
@@ -308,7 +300,8 @@ void CKernelOptions::Settings()
 
 	updateStatus();
 
-	menu->exec(NULL, "");
-	menu->hide();
+	int ret = menu->exec(NULL, "");
+	//menu->hide();
 	delete menu;
+	return ret;
 }
