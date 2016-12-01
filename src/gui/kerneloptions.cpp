@@ -284,7 +284,7 @@ bool CKernelOptions::changeNotify(const neutrino_locale_t /*OptionName */ , void
 
 int CKernelOptions::Settings()
 {
-	CMenuWidget *menu = new CMenuWidget(LOCALE_MAINSETTINGS_HEAD, NEUTRINO_ICON_SETTINGS);
+	CMenuWidget *menu = new CMenuWidget(LOCALE_MAINSETTINGS_HEAD, NEUTRINO_ICON_SETTINGS, width);
 	menu->addKey(CRCInput::RC_red, this, "reset");
 	menu->addKey(CRCInput::RC_green, this, "apply");
 	menu->setFooter(KernelOptionsButtons, KernelOptionsButtonCount);
