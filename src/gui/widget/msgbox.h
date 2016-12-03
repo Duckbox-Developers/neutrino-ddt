@@ -38,6 +38,7 @@
 #define MSGBOX_MIN_WIDTH HINTBOX_MIN_WIDTH
 #define MSGBOX_MIN_HEIGHT HINTBOX_MIN_HEIGHT + 75
 
+#define MSGBOX_DEFAULT_TIMEOUT g_settings.timing[SNeutrinoSettings::TIMING_STATIC_MESSAGES]
 #define DEFAULT_MSGBOX_TEXT_MODE (CMsgBox::CENTER | CMsgBox::AUTO_WIDTH | CMsgBox::AUTO_HIGH)
 
 //! Sub class of CHintBox. Shows a window as a messagebox
@@ -125,7 +126,7 @@ class CMsgBox : public CHintBox
 		* @param[in]	Title
 		* 	@li 	optional: exepts type const char*, default = NULL, this causes default title "Information"
 		* @param[in]	Icon
-		* 	@li 	optional: exepts type const char*, defines the icon name on the left side of titlebar, default = NULL (non Icon)
+		* 	@li 	optional: exepts type const char*, defines the icon name on the left side of titlebar, default = DEFAULT_HEADER_ICON
 		* @param[in]	Picon
 		* 	@li 	optional: exepts type const char*, defines the picon name on the left side of message text, default = NULL (non Icon)
 		* @param[in]	Width
@@ -165,7 +166,7 @@ class CMsgBox : public CHintBox
 		*/
 		CMsgBox(const char* Text,
 			const char* Title = NULL,
-			const char* Icon = NULL,
+			const char* Icon = DEFAULT_HEADER_ICON,
 			const char* Picon = NULL,
 			const int& Width = MSGBOX_MIN_WIDTH,
 			const int& Height = MSGBOX_MIN_HEIGHT,
@@ -179,7 +180,7 @@ class CMsgBox : public CHintBox
 		* @param[in]	Title
 		* 	@li 	optional: exepts type neutrino_locale_t with locale entry from /system/locals.h default = NONEXISTANT_LOCALE, this causes default title "Information"
 		* @param[in]	Icon
-		* 	@li 	optional: exepts type const char*, defines the icon name on the left side of titlebar, default = NULL (non Icon)
+		* 	@li 	optional: exepts type const char*, defines the icon name on the left side of titlebar, default = DEFAULT_HEADER_ICON
 		* @param[in]	Picon
 		* 	@li 	optional: exepts type const char*, defines the picon name on the left side of message text, default = NULL (non Icon)
 		* @param[in]	Width
@@ -219,7 +220,7 @@ class CMsgBox : public CHintBox
 		*/
 		CMsgBox(const char* Text,
 			const neutrino_locale_t locale_Title = NONEXISTANT_LOCALE,
-			const char* Icon = NULL,
+			const char* Icon = DEFAULT_HEADER_ICON,
 			const char* Picon = NULL,
 			const int& Width = MSGBOX_MIN_WIDTH,
 			const int& Height = MSGBOX_MIN_HEIGHT,

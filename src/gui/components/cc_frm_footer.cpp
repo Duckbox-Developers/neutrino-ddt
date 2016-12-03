@@ -79,7 +79,7 @@ void CComponentsFooter::initVarFooter(	const int& x_pos, const int& y_pos, const
 	col_frame	= color_frame;
 	col_body	= color_body;
 	col_shadow	= color_shadow;
-	cc_body_gradient_enable		= cc_body_gradient_enable_old	= g_settings.theme.menu_ButtonBar_gradient; //TODO: not complete implemented at the moment
+	cc_body_gradient_enable		= cc_body_gradient_enable_old = CC_COLGRAD_OFF/*g_settings.theme.menu_ButtonBar_gradient*/; //TODO: not complete implemented at the moment
 	cc_body_gradient_direction	= CFrameBuffer::gradientVertical;
 	cc_body_gradient_mode		= CColorGradient::gradientDark2Light;
 	btn_auto_frame_col	= false;
@@ -362,8 +362,7 @@ void CComponentsFooter::setSelectedButton(size_t item_id,
 			sel_col = sel_fr_col; //TODO: make it configurable
 		chain->setSelectedItem(item_id, sel_col, fr_col, sel_bg_col, bg_col, frame_width, sel_frame_width);
 
-		if (chain->size() > 1)
-			getSelectedButtonObject()->setButtonTextColor(sel_text_col);
+		getSelectedButtonObject()->setButtonTextColor(sel_text_col);
 	}
 }
 

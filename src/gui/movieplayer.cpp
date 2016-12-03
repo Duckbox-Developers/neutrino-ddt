@@ -1825,10 +1825,35 @@ void CMoviePlayerGui::PlayFileLoop(void)
 				SetPosition(1000 * (hh * 3600 + mm * 60 + ss), true);
 
 		} else if (msg == CRCInput::RC_help || msg == CRCInput::RC_info) {
-			if (fromInfoviewer)
-			{
-				g_EpgData->show_mp(p_movie_info,GetPosition(),GetDuration());
+			if (fromInfoviewer) {
+				CTimeOSD::mode m_mode = FileTime.getMode();
+				bool restore = FileTime.IsVisible();
+				if (restore)
+					FileTime.kill();
+				CInfoClock::getInstance()->enableInfoClock(false);
+#ifdef ENABLE_LUA
+				if (isLuaPlay && haveLuaInfoFunc) {
+					int xres = 0, yres = 0, aspectRatio = 0, framerate = -1;
+					if (!videoDecoder->getBlank()) {
+						videoDecoder->getPictureInfo(xres, yres, framerate);
+						if (yres == 1088)
+							yres = 1080;
+						aspectRatio = videoDecoder->getAspectRatio();
+					}
+					CLuaInstVideo::getInstance()->execLuaInfoFunc(luaState, xres, yres, aspectRatio, framerate);
+				}
+				else {
+#endif
+					g_EpgData->show_mp(p_movie_info,GetPosition(),GetDuration());
+#ifdef ENABLE_LUA
+				}
+#endif
 				fromInfoviewer = false;
+				CInfoClock::getInstance()->enableInfoClock(true);
+				if (restore) {
+					FileTime.setMode(m_mode);
+					FileTime.update(position, duration);
+				}
 			}
 			else
 				callInfoViewer();
@@ -2525,27 +2550,14 @@ void CMoviePlayerGui::handleMovieBrowser(neutrino_msg_t msg, int /*position*/)
 				cMovieInfo.saveMovieInfo(*p_movie_info);	/* save immediately in xml file */
 			}
 		}
-	} else if (msg == NeutrinoMessages::SHOW_EPG && (p_movie_info || (isLuaPlay && haveLuaInfoFunc))) {
+	} else if (msg == NeutrinoMessages::SHOW_EPG && p_movie_info) {
 		CTimeOSD::mode m_mode = FileTime.getMode();
 		bool restore = FileTime.IsVisible();
 		if (restore)
 			FileTime.kill();
 		CInfoClock::getInstance()->enableInfoClock(false);
 
-		if (isLuaPlay && haveLuaInfoFunc) {
-			int xres = 0, yres = 0, aspectRatio = 0, framerate = -1;
-			if (!videoDecoder->getBlank()) {
-				videoDecoder->getPictureInfo(xres, yres, framerate);
-				if (yres == 1088)
-					yres = 1080;
-				aspectRatio = videoDecoder->getAspectRatio();
-			}
-#ifdef ENABLE_LUA
-			CLuaInstVideo::getInstance()->execLuaInfoFunc(luaState, xres, yres, aspectRatio, framerate);
-#endif
-		}
-		else if (p_movie_info)
-			g_EpgData->show_mp(p_movie_info, position, duration);
+		g_EpgData->show_mp(p_movie_info, position, duration);
 
 		CInfoClock::getInstance()->enableInfoClock(true);
 		if (restore) {
