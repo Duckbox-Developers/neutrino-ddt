@@ -37,7 +37,7 @@ if test "$TARGET" = "native"; then
 		CXXFLAGS="-Wall -O2 -pipe $DEBUG_CFLAGS"
 	fi
 	if test "$prefix" = "NONE"; then
-		prefix=/usr/local
+		prefix=/usr
 	fi
 	TARGET_PREFIX=$prefix
 	if test "$exec_prefix" = "NONE"; then
