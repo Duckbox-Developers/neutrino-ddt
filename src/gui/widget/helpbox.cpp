@@ -189,6 +189,13 @@ void Helpbox::addLine(const std::string& text, const int& text_mode, const int& 
 
 void Helpbox::addPagebreak(void)
 {
+	int w, h;
+	/* adjust scrollbar to button width */
+	if(!page)
+	{
+		CFrameBuffer::getInstance()->getIconSize(NEUTRINO_ICON_BUTTON_TOP, &w, &h);
+		setScrollBarWidth(w);
+	}
 	page ++;
 	setPageCount(page);
 	hbox_y = 1;
