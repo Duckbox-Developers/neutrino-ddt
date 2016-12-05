@@ -159,9 +159,17 @@ void CComponentsForm::execPageScroll(neutrino_msg_t& msg, neutrino_msg_data_t& /
 		return;
 
 	if (page_scroll_mode & PG_SCROLL_M_UP_DOWN_KEY){
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+		if (msg == CRCInput::RC_page_up || msg == CRCInput::RC_up)
+#else
 		if (msg == CRCInput::RC_page_up)
+#endif
 			ScrollPage(SCROLL_P_DOWN);
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+		if (msg == CRCInput::RC_page_down || msg == CRCInput::RC_down)
+#else
 		if (msg == CRCInput::RC_page_down)
+#endif
 			ScrollPage(SCROLL_P_UP);
 	}
 
@@ -171,6 +179,9 @@ void CComponentsForm::execPageScroll(neutrino_msg_t& msg, neutrino_msg_data_t& /
 		if (msg == CRCInput::RC_right)
 			ScrollPage(SCROLL_P_UP);
 	}
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	CFrameBuffer::getInstance()->blit();
+#endif
 }
 
 void CComponentsForm::execExit(neutrino_msg_t& msg, neutrino_msg_data_t& data, int& res, bool& cancel_exec, const std::vector<neutrino_msg_t>& v_msg_list)
