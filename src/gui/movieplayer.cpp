@@ -1634,7 +1634,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			keyPressed = CMoviePlayerGui::PLUGIN_PLAYSTATE_STOP;
 			ClearQueue();
 		} else if ((!filelist.empty() && msg == (neutrino_msg_t) CRCInput::RC_ok)) {
-			EnableClockAndMute(false);
+			disableOsdElements(MUTE);
 			CFileBrowser *playlist = new CFileBrowser();
 			CFile *pfile = NULL;
 			pfile = &(*filelist_it);
@@ -1657,7 +1657,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 					filelist_it = filelist.begin() + selected;
 			}
 			delete playlist;
-			EnableClockAndMute(true);
+			enableOsdElements(MUTE);
 		} else if (msg == CRCInput::RC_left || msg == CRCInput::RC_right) {
 			bool reset_vzap_it = true;
 			switch (g_settings.mode_left_right_key_tv)
