@@ -1,4 +1,14 @@
-SUBDIRS = fonts icons inetradio iso-codes license locale scripts themes neutrino-scripts
+SUBDIRS = \
+	fonts \
+	icons \
+	inetradio \
+	iso-codes \
+	license \
+	locale \
+	neutrino-scripts \
+	pictures \
+	scripts \
+	themes
 
 if BOXTYPE_TRIPLE
 SUBDIRS += lcd
