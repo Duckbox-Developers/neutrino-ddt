@@ -193,7 +193,7 @@ void Helpbox::addPagebreak(void)
 	/* adjust scrollbar to button width */
 	if(!page)
 	{
-		CFrameBuffer::getInstance()->getIconSize(NEUTRINO_ICON_BUTTON_TOP, &w, &h);
+		CFrameBuffer::getInstance()->getIconSize(NEUTRINO_ICON_BUTTON_UP, &w, &h);
 		setScrollBarWidth(w);
 	}
 	page ++;
