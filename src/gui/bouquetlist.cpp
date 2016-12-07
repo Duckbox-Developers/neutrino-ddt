@@ -635,8 +635,6 @@ void CBouquetList::paintItem(int pos)
 	if (i_selected)
 		i_radius = RADIUS_LARGE;
 
-	if (i_radius)
-		frameBuffer->paintBoxRel(x, ypos, width- 15, fheight, bgcolor);
 	frameBuffer->paintBoxRel(x, ypos, width- 15, fheight, bgcolor, i_radius);
 
 	if (npos < (int) Bouquets.size())
