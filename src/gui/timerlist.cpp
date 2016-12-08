@@ -653,7 +653,6 @@ struct button_label TimerListButtons[] =
 	{ NEUTRINO_ICON_BUTTON_YELLOW	, LOCALE_TIMERLIST_RELOAD },
 	{ NEUTRINO_ICON_BUTTON_BLUE	, LOCALE_TIMERLIST_MODIFY },
 	{ NEUTRINO_ICON_BUTTON_INFO_SMALL, NONEXISTANT_LOCALE     },
-	{ NEUTRINO_ICON_BUTTON_MENU_SMALL, NONEXISTANT_LOCALE     },
 	{ NEUTRINO_ICON_BUTTON_PLAY	, NONEXISTANT_LOCALE      }
 };
 size_t TimerListButtonsCount = sizeof(TimerListButtons)/sizeof(TimerListButtons[0]);
@@ -992,7 +991,7 @@ int CTimerList::show()
 						if (!epgdata.title.empty())
 							title = "(" + epgdata.title + ")\n";
 						snprintf(buf1, sizeof(buf1)-1, g_Locale->getText(LOCALE_TIMERLIST_ASK_TO_DELETE), title.c_str());
-						if (ShowMsg(LOCALE_RECORDINGMENU_RECORD_IS_RUNNING, buf1, CMsgBox::mbrYes, CMsgBox::mbYes | CMsgBox::mbNo, NULL, 450, 30, false) == CMsgBox::mbrNo)
+						if (ShowMsg(LOCALE_RECORDINGMENU_RECORD_IS_RUNNING, buf1, CMsgBox::mbrNo, CMsgBox::mbYesNo, NULL, 450) & CMsgBox::mbrNo)
 						{
 							killTimer = false;
 							update = false;
