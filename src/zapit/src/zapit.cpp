@@ -1951,9 +1951,9 @@ bool CZapit::ParseCommand(CBasicMessage::Header &rmsg, int connfd)
 		CBasicServer::receive_data(connfd, &msgBoolean, sizeof(msgBoolean));
 		extern CRCInput *g_RCInput;
 		if (msgBoolean.truefalse)
-			g_RCInput->stopInput();
+			g_RCInput->stopInput(true);
 		else
-			g_RCInput->restartInput();
+			g_RCInput->restartInput(true);
 		break;
 	}
 
