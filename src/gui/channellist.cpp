@@ -1544,24 +1544,23 @@ void CChannelList::paintDetails(int index)
 	int ypos   = y + height + OFFSET_INTER;
 	int ypos_a = ypos + OFFSET_INNER_SMALL;
 
-	CChannelEvent *p_event = NULL;
-
-	//colored_events init
-	bool colored_event_C = (g_settings.theme.colored_events_channellist == 1);
-	bool colored_event_N = (g_settings.theme.colored_events_channellist == 2);
-
 	frameBuffer->paintBoxRel(x, ypos, full_width, info_height, COL_MENUCONTENTDARK_PLUS_0, RADIUS_LARGE);
 	frameBuffer->paintBoxFrame(x, ypos, full_width, info_height, 2, COL_FRAME_PLUS_0, RADIUS_LARGE);
 
 	if ((*chanlist).empty())
 		return;
 
+	//colored_events init
+	bool colored_event_C = (g_settings.theme.colored_events_channellist == 1);
+	bool colored_event_N = (g_settings.theme.colored_events_channellist == 2);
+
+	CChannelEvent *p_event = NULL;
 	if (displayNext)
 		p_event = &(*chanlist)[index]->nextEvent;
 	else
 		p_event = &(*chanlist)[index]->currentEvent;
 
-	if (/* !IS_WEBTV((*chanlist)[index]->getChannelID()) && */ !p_event->description.empty()) {
+	if (/* !IS_WEBTV((*chanlist)[index]->getChannelID()) && */ p_event && !p_event->description.empty()) {
 		char cNoch[50] = {0}; // UTF-8
 		char cSeit[50] = {0}; // UTF-8
 
@@ -1645,7 +1644,7 @@ void CChannelList::paintDetails(int index)
 	else if( !displayNext && g_settings.channellist_foot == 1) { // next Event
 
 		CSectionsdClient::CurrentNextInfo CurrentNext;
-		CEitManager::getInstance()->getCurrentNextServiceKey((*chanlist)[index]->getChannelID(), CurrentNext);
+		CEitManager::getInstance()->getCurrentNextServiceKey((*chanlist)[index]->getEpgID(), CurrentNext);
 		if (!CurrentNext.next_name.empty()) {
 			char buf[128] = {0};
 			char cFrom[50] = {0}; // UTF-8
