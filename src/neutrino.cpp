@@ -4612,7 +4612,6 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 			saveSetup(NEUTRINO_SETTINGS_FILE);
 
 			/* this is an ugly mess :-( */
-			delete g_RCInput;
 			delete g_Sectionsd;
 			delete g_RemoteControl;
 			delete g_fontRenderer;
@@ -4622,6 +4621,8 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 
 			stop_daemons(true);
 			stop_video();
+			/* g_RCInput is used in stop_daemons if a web-tv channel is running */
+			delete g_RCInput;
 			/* g_Timerd, g_Zapit and CVFD are used in stop_daemons */
 			delete g_Timerd;
 			delete g_Zapit; //do we really need this?
