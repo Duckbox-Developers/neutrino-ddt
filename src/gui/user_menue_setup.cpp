@@ -262,7 +262,6 @@ int CUserMenuSetup::showSetup()
 	return res;
 }
 
-
 //check button name for details like empty string and show an user message on issue
 void CUserMenuSetup::checkButtonName()
 {

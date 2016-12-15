@@ -81,6 +81,7 @@ void CComponentsScrollBar::initVarSbForm(const int& count)
 
 	sb_up_obj 	= sb_down_obj = NULL;
 	sb_segments_obj = NULL;
+	setCorner(RADIUS_MIN, CORNER_ALL);
 
 	sb_up_icon	= frameBuffer->getIconPath(NEUTRINO_ICON_BUTTON_UP) ;
 	sb_down_icon	= frameBuffer->getIconPath(NEUTRINO_ICON_BUTTON_DOWN);
@@ -110,22 +111,20 @@ void CComponentsScrollBar::initTopNaviIcon()
 {
 	//initialize icon object
 	if (sb_up_obj == NULL){
-		sb_up_obj = new CComponentsPicture(CC_CENTERED, fr_thickness, sb_up_icon, this);
+		sb_up_obj = new CComponentsPicture(CC_CENTERED, fr_thickness, width-2*fr_thickness, width-2*fr_thickness, sb_up_icon, this);
 		sb_up_obj->SetTransparent(CFrameBuffer::TM_BLACK);
 		sb_up_obj->doPaintBg(false);
 	}
-	sb_up_obj->setWidth(width-2*fr_thickness);
 }
 
 void CComponentsScrollBar::initBottomNaviIcon()
 {
 	//initialize icon object
 	if (sb_down_obj == NULL){
-		sb_down_obj = new CComponentsPicture(CC_CENTERED, CC_APPEND, sb_down_icon, this);
+		sb_down_obj = new CComponentsPicture(CC_CENTERED, height - width-2*fr_thickness, width-2*fr_thickness, 0, sb_down_icon, this);
 		sb_down_obj->SetTransparent(CFrameBuffer::TM_BLACK);
 		sb_down_obj->doPaintBg(false);
 	}
-	sb_down_obj->setWidth(width-2*fr_thickness);
 }
 
 void CComponentsScrollBar::initSegments()
@@ -188,4 +187,21 @@ void CComponentsScrollBar::initSegments()
 	//set corner types
 	sb_segments_obj->front()->setCorner(RADIUS_MIN, CORNER_TOP);
 	sb_segments_obj->back()->setCorner(RADIUS_MIN, CORNER_BOTTOM);
+}
+
+
+void paintScrollBar(	const int &x_pos,
+			const int &y_pos,
+			const int &w,
+			const int &h,
+			const int& count,
+			const int& current_num,
+			int shadow_mode,
+			fb_pixel_t color_frame,
+			fb_pixel_t color_body,
+			fb_pixel_t color_shadow)
+{
+	CComponentsScrollBar scrollbar(x_pos, y_pos, w, h, count, NULL, shadow_mode, color_frame, color_body, color_shadow);
+	scrollbar.setMarkID(current_num);
+	scrollbar.paint0();
 }
