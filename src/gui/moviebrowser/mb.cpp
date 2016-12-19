@@ -609,8 +609,20 @@ bool CMovieBrowser::loadSettings(MB_SETTINGS* settings)
 	settings->sorting.direction = (MB_DIRECTION)configfile.getInt32("mb_sorting_direction", MB_DIRECTION_UP);
 
 	settings->filter.item = (MB_INFO_ITEM)configfile.getInt32("mb_filter_item", MB_INFO_MAX_NUMBER);
-	settings->filter.optionString = configfile.getString("mb_filter_optionString", "");
+	settings->filter.optionString = configfile.getString("mb_filter_optionString", g_Locale->getText(LOCALE_OPTIONS_OFF));
 	settings->filter.optionVar = configfile.getInt32("mb_filter_optionVar", 0);
+
+	if (settings->filter.item == MB_INFO_FILEPATH)
+	{
+		struct stat info;
+		if (!(stat(settings->filter.optionString.c_str(), &info) == 0 && S_ISDIR(info.st_mode)))
+		{
+			//reset filter if directory not exists
+			settings->filter.item = MB_INFO_MAX_NUMBER;
+			settings->filter.optionString = g_Locale->getText(LOCALE_OPTIONS_OFF);
+			settings->filter.optionVar = 0;
+		}
+	}
 
 	settings->parentalLockAge = (MI_PARENTAL_LOCKAGE)configfile.getInt32("mb_parentalLockAge", MI_PARENTAL_OVER18);
 	settings->parentalLock = (MB_PARENTAL_LOCK)configfile.getInt32("mb_parentalLock", MB_PARENTAL_LOCK_ACTIVE);
@@ -2718,24 +2730,37 @@ bool CMovieBrowser::onSortMovieInfoHandleList(std::vector<MI_MOVIE_INFO*>& handl
 
 void CMovieBrowser::updateDir(void)
 {
+	struct stat info;
+
 	m_dir.clear();
+
 #if 0
 	// check if there is a movie dir and if we should use it
 	if (g_settings.network_nfs_moviedir[0] != 0)
 	{
+		if (!(stat(g_settings.network_nfs_moviedir.c_str(), &info) == 0 && S_ISDIR(info.st_mode)))
+			m_settings.storageDirMovieUsed = false;
+
 		std::string name = g_settings.network_nfs_moviedir;
 		addDir(name,&m_settings.storageDirMovieUsed);
 	}
 #endif
+
 	// check if there is a record dir and if we should use it
 	if (!g_settings.network_nfs_recordingdir.empty())
 	{
+		if (!(stat(g_settings.network_nfs_recordingdir.c_str(), &info) == 0 && S_ISDIR(info.st_mode)))
+			m_settings.storageDirRecUsed = false;
+
 		addDir(g_settings.network_nfs_recordingdir, &m_settings.storageDirRecUsed);
 		cHddStat::getInstance()->statOnce();
 	}
 
 	for (int i = 0; i < MB_MAX_DIRS; i++)
 	{
+		if (!(stat(m_settings.storageDir[i].c_str(), &info) == 0 && S_ISDIR(info.st_mode)))
+			m_settings.storageDirUsed[i] = false;
+
 		if (!m_settings.storageDir[i].empty())
 			addDir(m_settings.storageDir[i],&m_settings.storageDirUsed[i]);
 	}

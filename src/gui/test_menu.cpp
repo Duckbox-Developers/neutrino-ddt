@@ -90,6 +90,7 @@ CTestMenu::CTestMenu()
 	clock = clock_r = NULL;
 	text_ext = NULL;
 	scrollbar = NULL;
+	timer = NULL;
 }
 
 CTestMenu::~CTestMenu()
@@ -955,6 +956,8 @@ void CTestMenu::showRecords()
 
 	const int box_posX = 30;
 	const int box_posY = 300;
+	if (!timer)
+		timer = new CComponentsTimer(1);
 
 	if (crm->RecordingStatus())
 	{
@@ -1018,7 +1021,7 @@ void CTestMenu::showRecords()
 
 		for(size_t j = 0; j< images.size(); j++){
 			images[j]->kill();
-			images[j]->paintBlink();
+			images[j]->paintBlink(timer);
 		}
 
 		ShowHint("Testmenu: Records", "Record test ...", 200, 30, NULL, NEUTRINO_ICON_HINT_RECORDING, CComponentsHeader::CC_BTN_EXIT);
