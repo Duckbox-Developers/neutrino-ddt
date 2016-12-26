@@ -1,6 +1,7 @@
 installdir = $(THEMESDIR)
 
 install_DATA = \
+	AdulteratedOrange.theme \
 	Bluemoon-3.0.theme \
 	Classic.theme \
 	Crema.theme \
