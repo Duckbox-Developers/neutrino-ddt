@@ -81,8 +81,6 @@ CMsgBox::CMsgBox(	const char* Text,
 
 void CMsgBox::init(const int& Height, const int& ShowButtons, const msg_result_t& Default_result)
 {
-	dprintf(DEBUG_NORMAL, "[CMsgBox]   [%s - %d] \n", __func__, __LINE__);
-
 	initTimeOut();
 
 	//enable footer and add its height
@@ -524,6 +522,22 @@ int ShowMsg(	const std::string & Title,
 			fb_pixel_t color_frame)
 {
 	int result = ShowMsg2UTF(Title.c_str(), Text.c_str(), Default, ShowButtons, Icon, Width, Timeout, returnDefaultOnTimeout, Text_mode, color_frame);
+
+	return (result);
+}
+
+int ShowMsg(	const std::string & Title,
+			const neutrino_locale_t Text,
+			const CMsgBox::msg_result_t Default,
+			const uint32_t ShowButtons,
+			const char * const Icon,
+			const int Width,
+			const int Timeout,
+			bool returnDefaultOnTimeout,
+			const int& Text_mode,
+			fb_pixel_t color_frame)
+{
+	int result = ShowMsg2UTF(Title.c_str(), g_Locale->getText(Text), Default, ShowButtons, Icon, Width, Timeout, returnDefaultOnTimeout, Text_mode, color_frame);
 
 	return (result);
 }
