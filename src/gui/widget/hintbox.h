@@ -32,7 +32,7 @@
 
 #include <gui/components/cc.h>
 
-#define HINTBOX_MIN_WIDTH 420
+#define HINTBOX_MIN_WIDTH 320
 #define HINTBOX_MIN_HEIGHT 125
 #define HINTBOX_MAX_HEIGHT 520
 #define HINTBOX_DEFAULT_TIMEOUT g_settings.timing[SNeutrinoSettings::TIMING_POPUP_MESSAGES]
@@ -60,6 +60,7 @@ class CHintBox : public CComponentsWindow
 		int y_hint_obj;
 		int h_hint_obj;
 		int w_indentation;
+		bool enable_txt_scroll;
 
 		Font* hb_font;
 
@@ -285,6 +286,12 @@ class CHintBox : public CComponentsWindow
 		*		FONT_STYLE_ITALIC
 		*/
 		void setMsgText(const std::string& Text,
+				const uint& hint_id = 0,
+				const int& mode = CTextBox::AUTO_WIDTH | CTextBox::AUTO_HIGH | CTextBox::CENTER,
+				Font* font_text = NULL,
+				const fb_pixel_t& color_text = COL_MENUCONTENT_TEXT,
+				const int& style = CComponentsText::FONT_STYLE_REGULAR);
+		void setMsgText(const neutrino_locale_t& locale,
 				const uint& hint_id = 0,
 				const int& mode = CTextBox::AUTO_WIDTH | CTextBox::AUTO_HIGH | CTextBox::CENTER,
 				Font* font_text = NULL,
