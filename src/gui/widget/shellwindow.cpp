@@ -7,7 +7,7 @@
 	Implementation:
 	Copyright (C) 2013 martii
 	gitorious.org/neutrino-mp/martiis-neutrino-mp
-	Copyright (C) 2015 Stefan Seyfried
+	Copyright (C) 2015-2017 Stefan Seyfried
 
 	License: GPL
 
@@ -35,6 +35,7 @@
 #include <global.h>
 #include <neutrino.h>
 #include <sys/wait.h>
+#include <driver/abstime.h>
 #include <driver/framebuffer.h>
 #include <gui/widget/textbox.h>
 #include <stdio.h>
@@ -63,6 +64,34 @@ void CShellWindow::setCommand(const std::string &Command, const int Mode, int* R
 		exec();
 }
 
+static int read_line(int fd, struct pollfd *fds, char *b, size_t sz)
+{
+	int ret;
+	size_t i = 0;
+	while ((ret = read(fd, b + i, 1)) > 0) {
+		i++;
+		if (b[i - 1] == '\n')
+			break;
+		if (i >= sz)
+			break;
+		fds->revents = 0;
+		if (poll(fds, 1, 300) < 1)
+			break;
+	}
+	b[i] = 0;
+	return i;
+}
+
+static std::string lines2txt(list<std::string> &lines)
+{
+	std::string txt = "";
+	for (std::list<std::string>::const_iterator it = lines.begin(), end = lines.end(); it != end; ++it) {
+		txt += *it;
+		txt += '\n';
+	}
+	return txt;
+}
+
 void CShellWindow::exec()
 {
 	std::string cmd;
@@ -80,11 +109,11 @@ void CShellWindow::exec()
 	else {
 		pid_t pid = 0;
 		cmd = command + " 2>&1";
-		FILE *f = my_popen(pid, cmd.c_str(), "r");
-		if (!f) {
+		int f = run_pty(pid, cmd.c_str());
+		if (f < 0) {
 			if (res)
 				*res = -1;
-			dprintf(DEBUG_NORMAL, "[CShellWindow] [%s:%d]  Error! my_popen errno: %d command: %s\n", __func__, __LINE__, errno, cmd.c_str());
+			dprintf(DEBUG_NORMAL, "[CShellWindow] [%s:%d]  Error! run_pty errno: %d command: %s\n", __func__, __LINE__, errno, cmd.c_str());
 			return;
 		}
 
@@ -99,29 +128,24 @@ void CShellWindow::exec()
 			textBox->enableSaveScreen(false);
 		}
 		struct pollfd fds;
-		fds.fd = fileno(f);
+		fds.fd = f;
 		fds.events = POLLIN | POLLHUP | POLLERR;
 		fcntl(fds.fd, F_SETFL, fcntl(fds.fd, F_GETFL, 0) | O_NONBLOCK);
 
-		struct timeval tv;
-		gettimeofday(&tv,NULL);
-		uint64_t lastPaint = (uint64_t) tv.tv_usec + (uint64_t)((uint64_t) tv.tv_sec * (uint64_t) 1000000);
+		time_t lastPaint = time_monotonic_ms();
 		bool ok = true, nlseen = false, dirty = false, incomplete = false;
 		char output[1024];
 		std::string txt = "";
 		std::string line = "";
 
 		do {
-			uint64_t now;
+			time_t now;
 			fds.revents = 0;
 			int r = poll(&fds, 1, 300);
 			if (r > 0) {
-				if (!feof(f)) {
-					gettimeofday(&tv,NULL);
-					now = (uint64_t) tv.tv_usec + (uint64_t)((uint64_t) tv.tv_sec * (uint64_t) 1000000);
-
+				if (fds.revents & POLLIN) {
 					unsigned int lines_read = 0;
-					while (fgets(output, sizeof(output), f)) {
+					while (read_line(f, &fds, output, sizeof(output)-1)) {
 						char *outputp = output;
 						dirty = true;
 
@@ -133,7 +157,9 @@ void CShellWindow::exec()
 									*outputp = 0;
 									break;
 								case '\r':
+#if 0
 									outputp = output;
+#endif
 									break;
 								case '\n':
 									lines_read++;
@@ -168,17 +194,11 @@ void CShellWindow::exec()
 						else
 							dprintf(DEBUG_NORMAL, "[CShellWindow] [%s:%d] res=NULL ok=%d\n", __func__, __LINE__, ok);
 
+						now = time_monotonic_ms();
 						if (lines.size() > lines_max)
 							lines.pop_front();
-						txt = "";
-						bool first = true;
-						for (std::list<std::string>::const_iterator it = lines.begin(), end = lines.end(); it != end; ++it) {
-							if (!first)
-								txt += '\n';
-							first = false;
-							txt += *it;
-						}
-						if (((lines_read == lines_max) && (lastPaint + 100000 < now)) || (lastPaint + 250000 < now)) {
+						if (((lines_read >= lines_max) && (lastPaint + 100 < now)) || (lastPaint + 500 < now)) {
+							txt = lines2txt(lines);
 							textBox->setText(&txt, textBox->getWindowsPos().iWidth, false);
 							if (!textBox->isPainted())
 								if (mode & VERBOSE) textBox->paint();
@@ -192,9 +212,9 @@ void CShellWindow::exec()
 			} else if (r < 0)
 				ok = false;
 
-			gettimeofday(&tv,NULL);
-			now = (uint64_t) tv.tv_usec + (uint64_t)((uint64_t) tv.tv_sec * (uint64_t) 1000000);
-			if (!ok || (r < 1 && dirty && lastPaint + 250000 < now)) {
+			now = time_monotonic_ms();
+			if (!ok || (r < 1 && dirty && lastPaint + 500 < now)) {
+				txt = lines2txt(lines);
 				textBox->setText(&txt, textBox->getWindowsPos().iWidth, false);
 				if (!textBox->isPainted())
 					if (mode & VERBOSE) textBox->paint();
@@ -204,11 +224,12 @@ void CShellWindow::exec()
 		} while(ok);
 
 		if (mode & VERBOSE) {
+			txt = lines2txt(lines);
 			txt += "\n...ready";
 			textBox->setText(&txt, textBox->getWindowsPos().iWidth, false);
 		}
 
-		fclose(f);
+		close(f);
 		int s;
 		errno = 0;
 		int r = waitpid(pid, &s, 0);
