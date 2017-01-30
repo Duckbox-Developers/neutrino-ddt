@@ -95,6 +95,7 @@ extern cVideo * videoDecoder;
 extern CRemoteControl *g_RemoteControl;	/* neutrino.cpp */
 
 extern CVolume* g_volume;
+extern CTimeOSD *FileTimeOSD;
 
 #define TIMESHIFT_SECONDS 3
 #define ISO_MOUNT_POINT "/media/iso"
@@ -242,8 +243,6 @@ void CMoviePlayerGui::Init(void)
 	blockedFromPlugin = false;
 	m_screensaver = false;
 	m_idletime = time(NULL);
-	m_mode = CTimeOSD::MODE_HIDE;
-	m_restore = false;
 }
 
 void CMoviePlayerGui::cutNeutrino()
@@ -334,6 +333,10 @@ int CMoviePlayerGui::exec(CMenuTarget * parent, const std::string & actionKey)
 	Cleanup();
 	ClearFlags();
 	ClearQueue();
+
+	FileTimeOSD->kill();
+	FileTimeOSD->setMode(CTimeOSD::MODE_HIDE);
+	time_forced = false;
 
 	if (actionKey == "tsmoviebrowser") {
 		isMovieBrowser = true;
@@ -613,11 +616,6 @@ void CMoviePlayerGui::enableOsdElements(bool mute)
 		CAudioMute::getInstance()->enableMuteIcon(true);
 
 	CInfoClock::getInstance()->enableInfoClock(true);
-
-	if (m_restore) {
-		FileTime.setMode(m_mode);
-		FileTime.update(position, duration);
-	}
 }
 
 void CMoviePlayerGui::disableOsdElements(bool mute)
@@ -626,11 +624,6 @@ void CMoviePlayerGui::disableOsdElements(bool mute)
 		CAudioMute::getInstance()->enableMuteIcon(false);
 
 	CInfoClock::getInstance()->enableInfoClock(false);
-
-	m_mode    = FileTime.getMode();
-	m_restore = FileTime.IsVisible();
-	if (m_restore)
-		FileTime.kill();
 }
 
 void CMoviePlayerGui::makeFilename()
@@ -1423,8 +1416,8 @@ bool CMoviePlayerGui::PlayFileStart(void)
 			speed = -1;
 			playback->SetSpeed(-1);
 			playstate = CMoviePlayerGui::REW;
-			if (!FileTime.IsVisible() && !time_forced) {
-				FileTime.switchMode(position, duration);
+			if (!FileTimeOSD->IsVisible() && !time_forced) {
+				FileTimeOSD->switchMode(position, duration);
 				time_forced = true;
 			}
 		} else if (timeshift == TSHIFT_MODE_OFF || !g_settings.timeshift_pause) {
@@ -1531,7 +1524,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 
 		if ((playstate >= CMoviePlayerGui::PLAY) && (timeshift != TSHIFT_MODE_OFF || (playstate != CMoviePlayerGui::PAUSE))) {
 			if (playback->GetPosition(position, duration)) {
-				FileTime.update(position, duration);
+				FileTimeOSD->update(position, duration);
 				if (duration > 100)
 					file_prozent = (unsigned char) (position / (duration / 100));
 
@@ -1587,7 +1580,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			if (playstate == CMoviePlayerGui::STOPPED)
 				at_eof = true;
 
-			FileTime.update(position, duration);
+			FileTimeOSD->update(position, duration);
 		}
 #if 0
 		showSubtitle(0);
@@ -1702,7 +1695,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 		} else if (msg == (neutrino_msg_t) g_settings.mpkey_play) {
 			if (time_forced) {
 				time_forced = false;
-				FileTime.kill();
+				FileTimeOSD->kill();
 			}
 			if (playstate > CMoviePlayerGui::PLAY) {
 				playstate = CMoviePlayerGui::PLAY;
@@ -1787,7 +1780,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 #endif
 			update_lcd = true;
 		} else if (msg == (neutrino_msg_t) g_settings.mpkey_time) {
-			FileTime.switchMode(position, duration);
+			FileTimeOSD->switchMode(position, duration);
 		} else if (msg == (neutrino_msg_t) g_settings.mbkey_cover) {
 			makeScreenShot(false, true);
 		} else if (msg == (neutrino_msg_t) g_settings.key_screenshot) {
@@ -1821,8 +1814,8 @@ void CMoviePlayerGui::PlayFileLoop(void)
 				updateLcd();
 			}
 
-			if (!FileTime.IsVisible() && !time_forced) {
-				FileTime.switchMode(position, duration);
+			if (!FileTimeOSD->IsVisible() && !time_forced) {
+				FileTimeOSD->switchMode(position, duration);
 				time_forced = true;
 			}
 			if (timeshift == TSHIFT_MODE_OFF)
@@ -1935,8 +1928,8 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			}
 #endif
 		} else if (timeshift != TSHIFT_MODE_OFF && (msg == CRCInput::RC_text || msg == CRCInput::RC_epg || msg == NeutrinoMessages::SHOW_EPG)) {
-			bool restore = FileTime.IsVisible();
-			FileTime.kill();
+			bool restore = FileTimeOSD->IsVisible();
+			FileTimeOSD->kill();
 
 			StopSubtitles(true);
 			if (msg == CRCInput::RC_epg)
@@ -1945,15 +1938,15 @@ void CMoviePlayerGui::PlayFileLoop(void)
 				g_EpgData->show(CNeutrinoApp::getInstance()->channelList->getActiveChannel_ChannelID());
 			StartSubtitles(true);
 			if (restore)
-				FileTime.show(position);
+				FileTimeOSD->show(position);
 #if 0
 		} else if (msg == CRCInput::RC_red) {
-			bool restore = FileTime.IsVisible();
-			FileTime.kill();
+			bool restore = FileTimeOSD->IsVisible();
+			FileTimeOSD->kill();
 			CStreamInfo2 streaminfo;
 			streaminfo.exec(NULL, "");
 			if (restore)
-				FileTime.show(position);
+				FileTimeOSD->show(position);
 			update_lcd = true;
 #endif
 		} else if (msg == NeutrinoMessages::SHOW_EPG) {
@@ -1988,12 +1981,12 @@ void CMoviePlayerGui::PlayFileLoop(void)
 		} else if (msg == (neutrino_msg_t) CRCInput::RC_setup) {
 			CNeutrinoApp::getInstance()->handleMsg(NeutrinoMessages::SHOW_MAINMENU, 0);
 		} else if (msg == CRCInput::RC_red || msg == CRCInput::RC_green || msg == CRCInput::RC_yellow || msg == CRCInput::RC_blue ) {
-			//maybe move FileTime.kill to Usermenu to simplify this call
-			bool restore = FileTime.IsVisible();
-			FileTime.kill();
+			//maybe move FileTimeOSD->kill to Usermenu to simplify this call
+			bool restore = FileTimeOSD->IsVisible();
+			FileTimeOSD->kill();
 			CNeutrinoApp::getInstance()->usermenu.showUserMenu(msg);
 			if (restore)
-				FileTime.show(position);
+				FileTimeOSD->show(position);
 			update_lcd = true;
 		} else {
 			if (CNeutrinoApp::getInstance()->handleMsg(msg, data) & messages_return::cancel_all) {
@@ -2030,7 +2023,7 @@ void CMoviePlayerGui::PlayFileEnd(bool restore)
 {
 	printf("%s: stopping, this %p thread %p\n", __func__, this, CMoviePlayerGui::bgPlayThread);fflush(stdout);
 	if (filelist_it == filelist.end())
-		FileTime.kill();
+		FileTimeOSD->kill();
 #if 0
 	clearSubtitle();
 #endif
@@ -2601,7 +2594,7 @@ void CMoviePlayerGui::UpdatePosition()
 	if (playback->GetPosition(position, duration)) {
 		if (duration > 100)
 			file_prozent = (unsigned char) (position / (duration / 100));
-		FileTime.update(position, duration);
+		FileTimeOSD->update(position, duration);
 #ifdef DEBUG
 		printf("CMoviePlayerGui::%s: spd %d pos %d/%d (%d, %d%%)\n", __func__, speed, position, duration, duration-position, file_prozent);
 #endif

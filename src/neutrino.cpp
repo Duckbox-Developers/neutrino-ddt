@@ -105,6 +105,7 @@
 #include "gui/widget/menue.h"
 #include "gui/widget/msgbox.h"
 #include "gui/infoclock.h"
+#include "gui/timeosd.h"
 #include "gui/parentallock_setup.h"
 #ifdef ENABLE_PIP
 #include "gui/pipsetup.h"
@@ -158,6 +159,7 @@
 int old_b_id = -1;
 
 CInfoClock      *InfoClock;
+CTimeOSD	*FileTimeOSD;
 int allow_flash = 1;
 Zapit_config zapitCfg;
 char zapit_lat[20]="#";
@@ -2414,6 +2416,8 @@ TIMER_START();
 
 	g_RemoteControl = new CRemoteControl;
 	g_EpgData = new CEpgData;
+	InfoClock = CInfoClock::getInstance();
+	FileTimeOSD = CTimeOSD::getInstance();
 	g_InfoViewer = new CInfoViewer;
 	g_EventList = new CEventList;
 
@@ -2631,9 +2635,6 @@ void CNeutrinoApp::RealRun()
 	neutrino_msg_data_t data;
 
 	dprintf(DEBUG_NORMAL, "initialized everything\n");
-
-	//activating infoclock
-	InfoClock = CInfoClock::getInstance();
 
 	if(g_settings.power_standby || init_cec_setting)
 		standbyMode(true, true);
@@ -4745,6 +4746,8 @@ void stop_daemons(bool stopall, bool for_flash)
 	  	videoDecoder->SetCECMode((VIDEO_HDMI_CEC_MODE)0);
 	}
 
+	delete InfoClock;
+	delete FileTimeOSD;
 	delete &CMoviePlayerGui::getInstance();
 
 	CZapit::getInstance()->Stop();
