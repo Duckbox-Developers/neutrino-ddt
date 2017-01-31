@@ -1075,6 +1075,8 @@ void CMenuWidget::hide()
 			header->kill();
 		if (info_box)
 			info_box->kill();
+		if (details_line)
+			details_line->hide();
 		frameBuffer->paintBackgroundBoxRel(x, y, full_width, full_height + fbutton_height);
 		//paintHint(-1);
 	}
@@ -1255,6 +1257,8 @@ void CMenuWidget::paint()
 	header->setCaptionColor(COL_MENUHEAD_TEXT);
 	header->enableColBodyGradient(g_settings.theme.menu_Head_gradient, COL_MENUCONTENT_PLUS_0);
 	header->enableGradientBgCleanUp(savescreen);
+	if (header->isPainted())
+		header->kill(header->getColorBody());
 	header->paint(CC_SAVE_SCREEN_NO);
 
 	// paint body shadow
