@@ -352,6 +352,9 @@ void CComponentsForm::paintForm(bool do_save_bg)
 
 void CComponentsForm::paint(bool do_save_bg)
 {
+	if(is_painted)
+		OnBeforeRePaint();
+	OnBeforePaint();
 	paintForm(do_save_bg);
 }
 
