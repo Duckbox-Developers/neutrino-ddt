@@ -522,6 +522,8 @@ const char *CFlashVersionInfo::getReleaseCycle(void) const
 
 const char *CFlashVersionInfo::getType(void) const
 {
+	// TODO: localize it
+
 	switch (snapshot)
 	{
 	case '0':
@@ -536,6 +538,8 @@ const char *CFlashVersionInfo::getType(void) const
 		return "Settings";
 	case 'A':
 		return "Addon";
+	case 'U':
+		return "Update";
 	case 'T':
 		return "Text";
 	default:

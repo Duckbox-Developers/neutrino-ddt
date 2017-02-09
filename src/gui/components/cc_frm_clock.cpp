@@ -30,7 +30,7 @@
 
 #include "cc_frm_clock.h"
 #include <time.h>
-#include <sigc++/bind.h>
+
 #include <unistd.h>
 #include <errno.h>
 #include <driver/framebuffer.h>
@@ -99,9 +99,6 @@ CComponentsFrmClock::CComponentsFrmClock( 	const int& x_pos,
 
 	//init slot for running clock
 	cl_sl_show = sigc::mem_fun0(*this, &CComponentsFrmClock::ShowTime);
-
-	//init slot to ensure paint segments after painted background
-	sl_items_repaint = sigc::bind(sigc::mem_fun(*this, &CComponentsFrmClock::forceItemsPaint), true);
 
 	//run clock already if required
 	if (activ)
@@ -300,11 +297,6 @@ void CComponentsFrmClock::initCCLockItems()
 		x_lbl += v_cc_items[i-1]->getWidth();
 		v_cc_items[i]->setPos(x_lbl, y_lbl);
 	}
-
-	if(!OnAfterPaintBg.empty())
-		OnAfterPaintBg.clear();
-	//init slot to handle repaint of segments if background was repainted
-	OnAfterPaintBg.connect(sl_items_repaint);
 }
 
 
