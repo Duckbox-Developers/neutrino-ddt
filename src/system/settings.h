@@ -44,7 +44,7 @@
 #include <string>
 #include <list>
 
-#ifdef BOXMODEL_APOLLO
+#ifdef BOXMODEL_CS_HD2
 #define VIDEOMENU_VIDEOMODE_OPTION_COUNT 16
 #else
 #define VIDEOMENU_VIDEOMODE_OPTION_COUNT 13
@@ -186,7 +186,7 @@ struct SNeutrinoSettings
 	uint32_t video_mixer_color;
 #endif
 
-#ifdef BOXMODEL_APOLLO
+#ifdef BOXMODEL_CS_HD2
 	int brightness;
 	int contrast;
 	int saturation;

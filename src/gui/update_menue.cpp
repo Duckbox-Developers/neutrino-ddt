@@ -122,7 +122,7 @@ int CSoftwareUpdate::showSoftwareUpdate()
 	softUpdate.addItem(mf);
 #endif
 
-#ifdef BOXMODEL_APOLLO
+#ifdef BOXMODEL_CS_HD2
 	softUpdate.addItem(GenericMenuSeparatorLine);
 
 	mf = new CMenuDForwarder(LOCALE_FLASHUPDATE_CREATEIMAGE_MENU, true, NULL, new CFlashExpertSetup(), NULL, CRCInput::convertDigitToKey(1));

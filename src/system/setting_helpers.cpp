@@ -577,7 +577,7 @@ int CDataResetNotifier::exec(CMenuTarget* /*parent*/, const std::string& actionK
 		CServiceManager::getInstance()->SatelliteList().clear();
 		CZapit::getInstance()->LoadSettings();
 		CZapit::getInstance()->GetConfig(zapitCfg);
-#ifdef BOXMODEL_APOLLO
+#ifdef BOXMODEL_CS_HD2
 		/* flag file to erase /var partition on factory reset,
 		   will be done by init scripts */
 		FILE * fp = fopen("/var_init/etc/.reset", "w");
@@ -616,7 +616,7 @@ int CDataResetNotifier::exec(CMenuTarget* /*parent*/, const std::string& actionK
 void CFanControlNotifier::setSpeed(unsigned int speed)
 {
 	printf("FAN Speed %d\n", speed);
-#ifndef BOXMODEL_APOLLO
+#ifndef BOXMODEL_CS_HD2
 	int cfd = open("/dev/cs_control", O_RDONLY);
 	if(cfd < 0) {
 		perror("Cannot open /dev/cs_control");
@@ -731,7 +731,7 @@ bool CAutoModeNotifier::changeNotify(const neutrino_locale_t /*OptionName*/, voi
 					i, VIDEOMENU_VIDEOMODE_OPTIONS[i].key, VIDEO_STD_MAX);
 			continue;
 		}
-#ifdef BOXMODEL_APOLLO
+#ifdef BOXMODEL_CS_HD2
 		modes[VIDEOMENU_VIDEOMODE_OPTIONS[i].key] = g_settings.enabled_auto_modes[i];
 #else
 		modes[VIDEOMENU_VIDEOMODE_OPTIONS[i].key] = g_settings.enabled_video_modes[i];
