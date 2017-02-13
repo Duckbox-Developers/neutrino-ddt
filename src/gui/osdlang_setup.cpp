@@ -76,7 +76,6 @@ int COsdLangSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 
 	if (!actionKey.empty()) {
 		g_settings.language = actionKey;
-		g_fontRenderer->enableReCheck();
 		g_PluginList->loadPlugins();
 		g_Locale->loadLocale(g_settings.language.c_str());
 		return menu_return::RETURN_EXIT;

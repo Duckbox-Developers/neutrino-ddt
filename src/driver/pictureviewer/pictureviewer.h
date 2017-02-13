@@ -30,6 +30,7 @@
 #include <vector>
 #include <stdio.h>    /* printf       */
 #include <sys/time.h> /* gettimeofday */
+#include <map>
 #include <pthread.h>
 #include <inttypes.h>
 class CPictureViewer

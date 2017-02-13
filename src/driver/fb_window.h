@@ -52,8 +52,6 @@ class CFBWindow
 	fb_pixel_t* saveScreen(const int _x, const int _y, const int _dx, const int _dy);
 	void restoreScreen(const int _x, const int _y, const int _dx, const int _dy, fb_pixel_t* buf, bool delBuf);
 
-	void blit(bool b) { mayBlit = b; }
-	void blit(void) { if (frameBuffer) frameBuffer->blit(); }
 };
 
 #endif /* __fb_window_h__ */
