@@ -1233,8 +1233,9 @@ void * CFrameBuffer::convertRGBA2FB(unsigned char *rgbbuff, unsigned long x, uns
 	return int_convertRGB2FB(rgbbuff, x, y, 0, true);
 }
 
-void CFrameBuffer::blit2FB(void *, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, bool)
+void CFrameBuffer::blit2FB(void *fbbuff, uint32_t width, uint32_t height, uint32_t xoff, uint32_t yoff, uint32_t xp, uint32_t yp, bool transp)
 {
+	accel_sti_ddt->blit2FB(fbbuff, width, height, xoff, yoff, xp, yp, transp);
 }
 
 void CFrameBuffer::blitBox2FB(const fb_pixel_t* boxBuf, uint32_t width, uint32_t height, uint32_t xoff, uint32_t yoff)

@@ -355,6 +355,56 @@ void CFbAccel::paintLine(int xa, int ya, int xb, int yb, const fb_pixel_t col)
 	}
 }
 
+void CFbAccel::blit2FB(void *fbbuff, uint32_t width, uint32_t height, uint32_t xoff, uint32_t yoff, uint32_t xp, uint32_t yp, bool transp)
+{
+	int x, y, dw, dh;
+	x = xoff;
+	y = yoff;
+	dw = width - xp;
+	dh = height - yp;
+
+	size_t mem_sz = width * height * sizeof(fb_pixel_t);
+	unsigned long ulFlags = 0;
+	if (!transp) /* transp == false (default): use transparency from source alphachannel */
+		ulFlags = BLT_OP_FLAGS_BLEND_SRC_ALPHA|BLT_OP_FLAGS_BLEND_DST_MEMORY; // we need alpha blending
+
+	STMFBIO_BLT_EXTERN_DATA blt_data;
+	memset(&blt_data, 0, sizeof(STMFBIO_BLT_EXTERN_DATA));
+	blt_data.operation  = BLT_OP_COPY;
+	blt_data.ulFlags    = ulFlags;
+	blt_data.srcOffset  = 0;
+	blt_data.srcPitch   = width * 4;
+	blt_data.dstOffset  = lbb_off;
+	blt_data.dstPitch   = fb->stride;
+	blt_data.src_left   = xp;
+	blt_data.src_top    = yp;
+	blt_data.src_right  = width;
+	blt_data.src_bottom = height;
+	blt_data.dst_left   = x;
+	blt_data.dst_top    = y;
+	blt_data.dst_right  = x + dw;
+	blt_data.dst_bottom = y + dh;
+	blt_data.srcFormat  = SURF_ARGB8888;
+	blt_data.dstFormat  = SURF_ARGB8888;
+	blt_data.srcMemBase = (char *)backbuffer;
+	blt_data.dstMemBase = (char *)fb->lfb;
+	blt_data.srcMemSize = mem_sz;
+	blt_data.dstMemSize = fb->stride * fb->yRes + lbb_off;
+
+	OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(mutex);
+#if 0
+	ioctl(fb->fd, STMFBIO_SYNC_BLITTER);
+#endif
+	if (fbbuff != backbuffer)
+		memmove(backbuffer, fbbuff, mem_sz);
+	// icons are so small that they will still be in cache
+	msync(backbuffer, backbuf_sz, MS_SYNC);
+
+	if (ioctl(fb->fd, STMFBIO_BLT_EXTERN, &blt_data) < 0)
+		perror("CFbAccel blit2FB STMFBIO_BLT_EXTERN");
+	return;
+}
+
 void CFbAccel::blitBB2FB(int fx0, int fy0, int fx1, int fy1, int tx0, int ty0, int tx1, int ty1)
 {
 	STMFBIO_BLT_DATA  bltData;
