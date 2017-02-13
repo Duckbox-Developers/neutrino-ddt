@@ -21,7 +21,7 @@
 	Boston, MA  02110-1301, USA.
 */
 
-#if BOXTYPE_SPARK || BOXTYPE_DUCKBOX
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 #include "framebuffer_ng.h"
 #else
 #include "fb_generic.h"
