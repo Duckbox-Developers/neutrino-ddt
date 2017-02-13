@@ -50,8 +50,8 @@ endif
 
 if BOXTYPE_DUCKBOX
 libneutrino_driver_a_SOURCES += \
-	framebuffer_ng.cpp \
-	fbaccel.cpp \
+	fb_generic_sti_ddt.cpp \
+	fb_accel_sti_ddt.cpp \
 	vfd.cpp
 endif
 
@@ -81,8 +81,8 @@ endif
 
 if BOXTYPE_SPARK
 libneutrino_driver_a_SOURCES += \
-	framebuffer_ng.cpp \
-	fbaccel.cpp \
+	fb_generic_sti_ddt.cpp \
+	fb_accel_sti_ddt.cpp \
 	simple_display.cpp
 endif
 

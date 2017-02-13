@@ -2,31 +2,27 @@
 	Neutrino-GUI  -   DBoxII-Project
 
 	Copyright (C) 2001 Steffen Hehn 'McClean'
+	Homepage: http://dbox.cyberphoria.org/
+
+	Copyright (C) 2007-2013 Stefan Seyfried
+	Copyright (C) 2017 TangoCash
 
 	License: GPL
 
-	This program is free software; you can redistribute it and/or
-	modify it under the terms of the GNU General Public
-	License as published by the Free Software Foundation; either
-	version 2 of the License, or (at your option) any later version.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
 
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-	General Public License for more details.
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public
-	License along with this program; if not, write to the
-	Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
-	Boston, MA  02110-1301, USA.
+	You should have received a copy of the GNU General Public License
+	along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
-#include "fb_generic_sti_ddt.h"
-#else
-#include "fb_generic.h"
-#endif
-#if 0
 
 #ifndef __framebuffer__
 #define __framebuffer__
@@ -37,11 +33,13 @@
 #include <linux/vt.h>
 
 #include <string>
-#include <vector>
 #include <map>
-#include <OpenThreads/Mutex>
-#include <OpenThreads/ScopedLock>
+#include <vector>
 #include <sigc++/signal.h>
+#include <pthread.h>
+
+#include <linux/stmfb.h>
+
 #define fb_pixel_t uint32_t
 
 typedef struct fb_var_screeninfo t_fb_var_screeninfo;
@@ -67,7 +65,7 @@ typedef struct gradientData_t
 #define CORNER_BOTTOM		0xC
 #define CORNER_ALL		0xF
 
-#define FADE_TIME 5000
+#define FADE_TIME 10000
 #define FADE_STEP 5
 #define FADE_RESET 0xFFFF
 
@@ -76,13 +74,13 @@ typedef struct gradientData_t
 #define WINDOW_SIZE_MIN_FORCED	80 // %
 #define ConnectLineBox_Width	16 // px
 
+class CFbAccel;
 /** Ausfuehrung als Singleton */
 class CFrameBuffer : public sigc::trackable
 {
+	friend class CFbAccel;
 	private:
-
 		CFrameBuffer();
-		OpenThreads::Mutex mutex;
 
 		struct rgbData
 		{
@@ -130,31 +128,15 @@ class CFrameBuffer : public sigc::trackable
 		bool	active;
 		static	void switch_signal (int);
 		fb_fix_screeninfo fix;
-#ifdef USE_NEVIS_GXA
-		int		  devmem_fd;		/* to access the GXA register we use /dev/mem */
-		unsigned int	  smem_start;		/* as aquired from the fbdev, the framebuffers physical start address */
-		volatile uint8_t *gxa_base;		/* base address for the GXA's register access */
-#endif /* USE_NEVIS_GXA */
 		bool locked;
 		std::map<std::string, rawIcon> icon_cache;
 		int cache_size;
-
-		int *q_circle;
-		bool corner_tl, corner_tr, corner_bl, corner_br;
-
 		void * int_convertRGB2FB(unsigned char *rgbbuff, unsigned long x, unsigned long y, int transp, bool alpha);
 		int m_transparent_default, m_transparent;
-		// Unlocked versions (no mutex)
-		void paintHLineRelInternal(int x, int dx, int y, const fb_pixel_t col);
-		void paintVLineRelInternal(int x, int y, int dy, const fb_pixel_t col);
 
 		inline void paintHLineRelInternal2Buf(const int& x, const int& dx, const int& y, const int& box_dx, const fb_pixel_t& col, fb_pixel_t* buf);
-		void paintShortHLineRelInternal(const int& x, const int& dx, const int& y, const fb_pixel_t& col);
-		int  limitRadius(const int& dx, const int& dy, int& radius);
-		void setCornerFlags(const int& type);
-		void initQCircle();
-		inline int calcCornersOffset(const int& dy, const int& line, const int& radius, const int& type) { int ofs = 0; calcCorners(&ofs, NULL, NULL, dy, line, radius, type); return ofs; }
-		bool calcCorners(int *ofs, int *ofl, int *ofr, const int& dy, const int& line, const int& radius, const int& type);
+
+		CFbAccel *accel_sti_ddt;
 
 	public:
 		///gradient direction
@@ -174,18 +156,16 @@ class CFrameBuffer : public sigc::trackable
 		~CFrameBuffer();
 
 		static CFrameBuffer* getInstance();
-#ifdef USE_NEVIS_GXA
-		void setupGXA(void);
-#endif
 
-		void init(const char * const fbDevice = "/dev/fb/0");
+		void init(const char * const fbDevice = "/dev/fb0");
 		int setMode(unsigned int xRes, unsigned int yRes, unsigned int bpp);
 
 
 		int getFileHandle() const; //only used for plugins (games) !!
 		t_fb_var_screeninfo *getScreenInfo();
 
-		fb_pixel_t * getFrameBufferPointer() const; // pointer to framebuffer
+		fb_pixel_t * getFrameBufferPointer(bool real = false); // pointer to framebuffer
+		fb_pixel_t * getBackBufferPointer() const;  // pointer to backbuffer
 		unsigned int getStride() const;             // size of a single line in the framebuffer (in bytes)
 		unsigned int getScreenWidth(bool real = false);
 		unsigned int getScreenHeight(bool real = false); 
@@ -200,6 +180,8 @@ class CFrameBuffer : public sigc::trackable
 		void setTransparency( int tr = 0 );
 		void setBlendMode(uint8_t mode = 1);
 		void setBlendLevel(int level);
+
+		void setMixerColor(uint32_t mixer_background);
 
 		//Palette stuff
 		void setAlphaFade(int in, int num, int tr);
@@ -221,17 +203,17 @@ class CFrameBuffer : public sigc::trackable
 		inline void paintBox(int xa, int ya, int xb, int yb, const fb_pixel_t col) { paintBoxRel(xa, ya, xb - xa, yb - ya, col); }
 		inline void paintBox(int xa, int ya, int xb, int yb, const fb_pixel_t col, int radius, int type) { paintBoxRel(xa, ya, xb - xa, yb - ya, col, radius, type); }
 
-		void paintBoxFrame(const int x, const int y, const int dx, const int dy, const int px, const fb_pixel_t col, int radius = 0, int type = CORNER_ALL);
+		void paintBoxFrame(const int x, const int y, const int dx, const int dy, const int px, const fb_pixel_t col, const int rad = 0, int type = CORNER_ALL);
 		void paintLine(int xa, int ya, int xb, int yb, const fb_pixel_t col);
 
-		inline void paintVLine(int x, int ya, int yb, const fb_pixel_t col) { paintVLineRel(x, ya, yb - ya, col); }
+		void paintVLine(int x, int ya, int yb, const fb_pixel_t col);
 		void paintVLineRel(int x, int y, int dy, const fb_pixel_t col);
 
-		inline void paintHLine(int xa, int xb, int y, const fb_pixel_t col) { paintHLineRel(xa, xb - xa, y, col); }
+		void paintHLine(int xa, int xb, int y, const fb_pixel_t col);
 		void paintHLineRel(int x, int dx, int y, const fb_pixel_t col);
 
 		void setIconBasePath(const std::string & iconPath);
-		std::string getIconBasePath(){return iconBasePath;};
+		std::string getIconBasePath(){return iconBasePath;}
 		std::string getIconPath(std::string icon_name, std::string file_type = "png");
 
 		void getIconSize(const char * const filename, int* width, int *height);
@@ -270,17 +252,15 @@ class CFrameBuffer : public sigc::trackable
 		bool Lock(void);
 		void Unlock(void);
 		bool Locked(void) { return locked; };
-#ifdef USE_NEVIS_GXA
-		void add_gxa_sync_marker(void);
-		void waitForIdle(const char* func=NULL);
-#else
-		inline void waitForIdle(const char*) {};
-#endif
+		void waitForIdle(const char *func = NULL);
 		void* convertRGB2FB(unsigned char *rgbbuff, unsigned long x, unsigned long y, int transp = 0xFF);
 		void* convertRGBA2FB(unsigned char *rgbbuff, unsigned long x, unsigned long y);
 		void displayRGB(unsigned char *rgbbuff, int x_size, int y_size, int x_pan, int y_pan, int x_offs, int y_offs, bool clearfb = true, int transp = 0xFF);
 		void blit2FB(void *fbbuff, uint32_t width, uint32_t height, uint32_t xoff, uint32_t yoff, uint32_t xp = 0, uint32_t yp = 0, bool transp = false);
 		void blitBox2FB(const fb_pixel_t* boxBuf, uint32_t width, uint32_t height, uint32_t xoff, uint32_t yoff);
+
+		void mark(int x, int y, int dx, int dy);
+		void blit();
 
 		enum 
 			{
@@ -291,6 +271,31 @@ class CFrameBuffer : public sigc::trackable
 			};
 		void SetTransparent(int t){ m_transparent = t; }
 		void SetTransparentDefault(){ m_transparent = m_transparent_default; }
+		bool OSDShot(const std::string &name);
+		enum Mode3D { Mode3D_off = 0, Mode3D_SideBySide, Mode3D_TopAndBottom, Mode3D_Tile, Mode3D_SIZE };
+		void set3DMode(Mode3D);
+		Mode3D get3DMode(void);
+	private:
+		enum Mode3D mode3D;
+
+	public:
+		void blitArea(int src_width, int src_height, int fb_x, int fb_y, int width, int height);
+		void ClearFB(void);
+		void resChange(void);
+		void setBorder(int sx, int sy, int ex, int ey);
+		void getBorder(int &sx, int &sy, int &ex, int &ey);
+		void setBorderColor(fb_pixel_t col = 0);
+		fb_pixel_t getBorderColor(void);
+
+	private:
+		bool autoBlitStatus;
+		pthread_t autoBlitThreadId;
+		static void *autoBlitThread(void *arg);
+		void autoBlitThread();
+
+	public:
+		void autoBlit(bool b = true);
+		void blitBPA2FB(unsigned char *mem, SURF_FMT fmt, int w, int h, int x = 0, int y = 0, int pan_x = -1, int pan_y = -1, int fb_x = -1, int fb_y = -1, int fb_w = -1, int fb_h = -1, int transp = false);
 
 // ## AudioMute / Clock ######################################
 	private:
@@ -331,9 +336,7 @@ class CFrameBuffer : public sigc::trackable
 		void setFbArea(int element, int _x=0, int _y=0, int _dx=0, int _dy=0);
 		void fbNoCheck(bool noCheck) { fb_no_check = noCheck; }
 		void doPaintMuteIcon(bool mode) { do_paint_mute_icon = mode; }
-		void blit(void) {}
 		sigc::signal<void> OnAfterSetPallette;
 };
 
-#endif
 #endif
