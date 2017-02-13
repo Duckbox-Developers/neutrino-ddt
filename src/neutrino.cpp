@@ -842,14 +842,17 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.screen_height = frameBuffer->getScreenHeight(true);
 
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	g_settings.screen_width = frameBuffer->getScreenWidth(true) - 1;
+	g_settings.screen_height = frameBuffer->getScreenHeight(true) - 1;
+
 	g_settings.screen_StartX_int = g_settings.screen_StartX;
 	g_settings.screen_StartY_int = g_settings.screen_StartY;
 	g_settings.screen_EndX_int = g_settings.screen_EndX;
 	g_settings.screen_EndY_int = g_settings.screen_EndY;
 	g_settings.screen_StartX = 0;
 	g_settings.screen_StartY = 0;
-	g_settings.screen_width = frameBuffer->getScreenWidth(true) - 1;
-	g_settings.screen_height = frameBuffer->getScreenHeight(true) - 1;
+	g_settings.screen_EndX = g_settings.screen_width;
+	g_settings.screen_EndY = g_settings.screen_height;
 #endif
 
 	// avoid configuration mismatch
