@@ -11,7 +11,6 @@
 #include <map>
 
 #include <zapit/include/dmx.h>
-#include <system/set_threadname.h>
 #include <driver/framebuffer.h>
 
 #include <poll.h>
@@ -30,6 +29,7 @@ extern "C" {
 #include "PacketQueue.hpp"
 #include "helpers.hpp"
 #include "dvbsubtitle.h"
+#include <system/set_threadname.h>
 
 Debug sub_debug;
 static PacketQueue packet_queue;
@@ -540,7 +540,7 @@ static void* reader_thread(void * /*arg*/)
 	uint16_t packlen;
 	uint8_t* buf;
 	bool bad_startcode = false;
-	set_threadname("dvbsub_reader_thread");
+	set_threadname("dvbsub:reader");
 
 	dmx = new cDemux(0);
 #if HAVE_TRIPLEDRAGON
@@ -698,7 +698,7 @@ static void* dvbsub_thread(void* /*arg*/)
 {
 	struct timespec restartWait;
 	struct timeval now;
-	set_threadname("dvbsub_thread");
+	set_threadname("dvbsub:main");
 
 	sub_debug.print(Debug::VERBOSE, "%s started\n", __FUNCTION__);
 	if (!dvbSubtitleConverter)

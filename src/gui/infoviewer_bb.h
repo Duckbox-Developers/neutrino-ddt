@@ -33,17 +33,14 @@
 #ifndef __infoview_bb__
 #define __infoview_bb__
 
-#include <sectionsdclient/sectionsdclient.h>
-
 #include <driver/rcinput.h>
-#include <driver/framebuffer.h>
-#include <driver/fontrenderer.h>
 #include <driver/fade.h>
 #include <system/settings.h>
 #include "widget/menue.h"
 #include <gui/components/cc.h>
 #include <string>
 
+class CFrameBuffer;
 class CInfoViewerBB
 {
 	public:

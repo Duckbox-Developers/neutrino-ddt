@@ -29,6 +29,7 @@
 #include <neutrino.h>
 
 #include "cc_frm_clock.h"
+#include "cc_timer.h"
 #include <time.h>
 
 #include <unistd.h>
@@ -37,6 +38,7 @@
 #include <ctype.h>
 #include <system/helpers.h>
 #include <system/debug.h>
+#include <driver/fontrenderer.h>
 
 using namespace std;
 
@@ -319,6 +321,7 @@ bool CComponentsFrmClock::startClock()
 
 	if (cl_timer == NULL){
 		cl_timer = new CComponentsTimer(0);
+		cl_timer->setThreadName("frmClock");
 		if (cl_timer->OnTimer.empty()){
 			dprintf(DEBUG_INFO,"\033[33m[CComponentsFrmClock]\t[%s] init slot...\033[0m\n", __func__);
 			cl_timer->OnTimer.connect(cl_sl_show);

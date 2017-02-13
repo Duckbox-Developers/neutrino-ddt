@@ -1,4 +1,4 @@
-AC_INIT(Tuxbox-Neutrino,3.4.1)
+AC_INIT(Tuxbox-Neutrino,3.4.2)
 AM_INIT_AUTOMAKE([1.0.1 nostdinc])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES])
 
@@ -148,10 +148,6 @@ TUXBOX_APPS_LIB_PKGCONFIG(SIGC,sigc++-2.0)
 AC_ARG_ENABLE(keyboard-no-rc,
          [  --enable-keyboard-no-rc             enable keyboard control, disable rc control],
          [AC_DEFINE(KEYBOARD_INSTEAD_OF_REMOTE_CONTROL,1,[enable keyboard control, disable rc control])])
-
-AC_ARG_ENABLE(restore-prev-mode,
-         [  --enable-restore-prev-mode          enable return from graphics mode],
-         [AC_DEFINE(RETURN_FROM_GRAPHICS_MODE,1,[enable return from graphics mode])])
 
 AC_ARG_ENABLE(mdev,
 	[  --enable-mdev disable broken neutrino mount hack, use with mdev],
@@ -304,6 +300,9 @@ fi
 HWLIB_CFLAGS='-I$(top_srcdir)/lib/libcoolstream2 -I$(top_srcdir)/src/zapit/include'
 fi
 fi
+
+# hack, so that framebuffer.h does not need to be included everywhere...
+AC_DEFINE(fb_pixel_t, uint32_t, [hack, so that framebuffer.h does not need to be included everywhere...])
 
 # hack to define a short filename also for out-of-tree build
 if test `dirname $0` = `pwd` || test "$0" = ./configure; then

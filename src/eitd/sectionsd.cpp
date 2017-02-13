@@ -48,6 +48,7 @@
 #include <driver/abstime.h>
 #include <system/set_threadname.h>
 #include <system/helpers.h>
+#include <system/set_threadname.h>
 #include <OpenThreads/ScopedLock>
 
 #include "eitd.h"
@@ -2093,6 +2094,7 @@ static void print_meminfo(void)
 static void *houseKeepingThread(void *)
 {
 	int count = 0, scount = 0, ecount = 0;
+	set_threadname("sd:housekeeping");
 
 	dprintf("housekeeping-thread started.\n");
 	pthread_setcanceltype (PTHREAD_CANCEL_ASYNCHRONOUS, 0);

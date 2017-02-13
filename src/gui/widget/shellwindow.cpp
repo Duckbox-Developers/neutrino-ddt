@@ -30,6 +30,7 @@
 #endif
 
 
+#include <gui/color.h>
 #include "shellwindow.h"
 
 #include <global.h>
@@ -37,6 +38,7 @@
 #include <sys/wait.h>
 #include <driver/abstime.h>
 #include <driver/framebuffer.h>
+#include <driver/fontrenderer.h>
 #include <gui/widget/textbox.h>
 #include <stdio.h>
 #include <poll.h>

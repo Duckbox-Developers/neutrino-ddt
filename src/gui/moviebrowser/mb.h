@@ -56,7 +56,6 @@
 #include <gui/movieinfo.h>
 #include <driver/file.h>
 #include <driver/fb_window.h>
-#include <driver/pictureviewer/pictureviewer.h>
 #include <system/ytparser.h>
 
 #define MAX_NUMBER_OF_BOOKMARK_ITEMS MI_MOVIE_BOOK_USER_MAX // we just use the same size as used in Movie info (MAX_NUMBER_OF_BOOKMARK_ITEMS is used for the number of menu items)
@@ -363,6 +362,7 @@ class CMovieBrowser : public CMenuTarget
 		void clearSelection();
 		bool supportedExtension(CFile &file);
 		bool addFile(CFile &file, int dirItNr);
+		sigc::signal<void, size_t, size_t, std::string> OnLoadFile;
 };
 
 // I tried a lot to use the menu.cpp as ListBox selection, and I got three solution which are all garbage.

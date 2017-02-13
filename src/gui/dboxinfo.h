@@ -34,11 +34,11 @@
 #define __dboxinfo__
 
 #include <gui/widget/menue.h>
-#include <driver/framebuffer.h>
-#include <driver/fontrenderer.h>
 #include <gui/components/cc.h>
 #include <string>
 
+class Font;
+class CFrameBuffer;
 class CDBoxInfoWidget : public CMenuTarget
 {
 	private:

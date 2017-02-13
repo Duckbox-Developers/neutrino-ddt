@@ -22,8 +22,6 @@
  *
  */
  
-#include <driver/fontrenderer.h>
-#include <driver/framebuffer.h>
 #include <system/localize.h>
 #include <gui/color.h>
 

@@ -15,8 +15,8 @@
 #include <zlib.h>
 #endif
 
-#include <system/set_threadname.h>
 #include <zapit/include/dmx.h>
+#include <system/set_threadname.h>
 
 tuxtxt_cache_struct tuxtxt_cache;
 static pthread_mutex_t tuxtxt_cache_lock = PTHREAD_MUTEX_INITIALIZER;
@@ -695,7 +695,7 @@ void *tuxtxt_CacheThread(void * /*arg*/)
 	sem_init(&inject_sem, 0, 0);
 #endif
 	printf("TuxTxt running thread...(%04x)\n",tuxtxt_cache.vtxtpid);
-	set_threadname("tuxtxt_CacheThread");
+	set_threadname("tuxtxt:cache");
 	tuxtxt_cache.receiving = 1;
 	nice(3);
 	while (!stop_cache)

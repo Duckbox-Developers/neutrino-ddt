@@ -67,7 +67,7 @@ SHTDCNT* SHTDCNT::getInstance()
 
 void* SHTDCNT::TimeThread(void *)
 {
-	set_threadname("SHTDCNT::TimeThread");
+	set_threadname("n:shtdcnt");
 	while(1)
 	{
 		sleep(1);

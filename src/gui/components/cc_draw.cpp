@@ -25,6 +25,7 @@
 #include <global.h>
 #include <neutrino.h>
 #include "cc_draw.h"
+#include "cc_timer.h"
 #include <cs_api.h>
 
 #include <system/debug.h>
@@ -774,6 +775,7 @@ bool CCDraw::paintBlink(const int& interval, bool is_nano)
 {
 	if (cc_draw_timer == NULL)
 		cc_draw_timer = new CComponentsTimer(interval, is_nano);
+	cc_draw_timer->setThreadName(__func__);
 
 	return paintBlink(cc_draw_timer);
 }

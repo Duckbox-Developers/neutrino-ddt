@@ -33,6 +33,7 @@
 #include <sectionsdclient/sectionsdclient.h>
 #include <connection/basicserver.h>
 #include <timerdclient/timerdmsg.h>
+#include <system/set_threadname.h>
 
 #include "debug.h"
 #include "timermanager.h"
@@ -482,7 +483,7 @@ int timerd_main_thread(void *data)
 {
 	set_threadname(__func__);
 	pthread_setcanceltype (PTHREAD_CANCEL_ASYNCHRONOUS, 0);
-
+	set_threadname("n:timerd");
 	printf("timerd startup, tid %ld\n", syscall(__NR_gettid));
 
 	CBasicServer timerd_server;

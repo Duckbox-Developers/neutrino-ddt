@@ -688,8 +688,6 @@ struct SNeutrinoSettings
 	int screen_preset;
 	int screen_width;
 	int screen_height;
-	int screen_xres;
-	int screen_yres;
 
 	//Software-update
 	int softupdate_mode;
@@ -856,9 +854,13 @@ struct SNeutrinoSettings
 	int	zap_cycle;
 	int	sms_channel;
 	int	sms_movie;
+
 	std::string	font_file;
 	std::string	ttx_font_file;
 	std::string	sub_font_file;
+
+	int font_scaling_x;
+	int font_scaling_y;
 
 	int		livestreamResolution;
 	std::string	livestreamScriptPath;

@@ -46,9 +46,6 @@
 #ifndef __RADIO_AUDIO_H
 #define __RADIO_AUDIO_H
 
-#include <driver/framebuffer.h>
-#include <driver/fontrenderer.h>
-
 #include <dmx.h>
 #include <OpenThreads/Thread>
 #include <OpenThreads/Condition>

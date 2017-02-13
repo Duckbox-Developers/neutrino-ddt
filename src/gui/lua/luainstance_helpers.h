@@ -21,6 +21,7 @@
 #ifndef _LUAINSTANCEHELPERS_H
 #define _LUAINSTANCEHELPERS_H
 
+#include <map>
 
 //#define LUA_DEBUG printf
 #define LUA_DEBUG(...)
@@ -44,6 +45,8 @@
 
 #define lua_unboxpointer(L, i) \
 	(*(void **)(lua_touserdata(L, i)))
+
+class Font;
 
 typedef std::pair<lua_Integer, Font*> fontmap_pair_t;
 typedef std::map<lua_Integer, Font*> fontmap_t;

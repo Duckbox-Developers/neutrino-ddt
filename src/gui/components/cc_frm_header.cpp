@@ -30,6 +30,7 @@
 #include <neutrino.h>
 #include "cc_frm_header.h"
 #include <system/debug.h>
+#include <driver/fontrenderer.h>
 
 
 using namespace std;

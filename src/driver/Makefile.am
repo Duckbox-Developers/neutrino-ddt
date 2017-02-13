@@ -27,10 +27,8 @@ libneutrino_driver_a_SOURCES = \
 	colorgradient.cpp \
 	fade.cpp \
 	fb_window.cpp \
-	fbaccel.cpp \
 	file.cpp \
 	fontrenderer.cpp \
-	framebuffer_ng.cpp \
 	genpsi.cpp \
 	moviecut.cpp \
 	neutrinofonts.cpp \
@@ -49,37 +47,64 @@ if ENABLE_GRAPHLCD
 libneutrino_driver_a_SOURCES += \
 	nglcd.cpp
 endif
+
 if BOXTYPE_DUCKBOX
 libneutrino_driver_a_SOURCES += \
+	framebuffer_ng.cpp \
+	fbaccel.cpp \
 	vfd.cpp
 endif
 
 if BOXTYPE_COOL
 libneutrino_driver_a_SOURCES += \
+	fb_generic.cpp \
+	fb_accel.cpp
+if BOXMODEL_CS_HD2
+libneutrino_driver_a_SOURCES += \
+	fb_accel_cs_hd2.cpp \
 	vfd.cpp
+else
+libneutrino_driver_a_SOURCES += \
+	fb_accel_cs_hd1.cpp \
+	vfd.cpp
+endif
 endif
 
 if BOXTYPE_TRIPLE
 libneutrino_driver_a_SOURCES += \
+	fb_generic.cpp \
+	fb_accel.cpp \
+	fb_accel_td.cpp \
 	newclock.cpp \
 	lcdd.cpp
 endif
 
 if BOXTYPE_SPARK
 libneutrino_driver_a_SOURCES += \
+	framebuffer_ng.cpp \
+	fbaccel.cpp \
 	simple_display.cpp
 endif
+
 if BOXTYPE_AZBOX
-libneutrino_driver_a_SOURCES += \
-	simple_display.cpp
-endif
-if BOXTYPE_GENERIC
 libneutrino_driver_a_SOURCES += \
 	simple_display.cpp
 endif
 if USE_STB_HAL
 AM_CPPFLAGS += \
 	@DIRECTFB_CFLAGS@
+endif
+
+#if BOXTYPE_SPARK
+#libneutrino_driver_a_SOURCES += \
+#	fb_accel_sti.cpp \
+#	simple_display.cpp
+#endif
+
+if BOXTYPE_GENERIC
+libneutrino_driver_a_SOURCES += \
+	fb_accel_glfb.cpp \
+	simple_display.cpp
 endif
 
 libneutrino_driver_netfile_a_SOURCES = netfile.cpp

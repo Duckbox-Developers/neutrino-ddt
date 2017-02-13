@@ -50,6 +50,7 @@
 #include <global.h>
 #include <neutrino.h>
 #include <driver/fontrenderer.h>
+#include <driver/framebuffer.h>
 #include <system/helpers.h>
 #include <gui/update_ext.h>
 #include <driver/framebuffer.h>

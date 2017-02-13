@@ -473,7 +473,7 @@ void CFEManager::linkFrontends(bool init)
 	for(unsigned i = 0; i < MAX_DMX_UNITS; i++) {
 		if (demuxes[i] == 0) {
 			unused_demux = i;
-			INFO("pip demux: %d\n", unused_demux);
+			INFO("pip demux: %d", unused_demux);
 			break;
 		}
 	}
