@@ -296,6 +296,9 @@ class CFrameBuffer : public sigc::trackable
 	public:
 		void autoBlit(bool b = true);
 		void blitBPA2FB(unsigned char *mem, SURF_FMT fmt, int w, int h, int x = 0, int y = 0, int pan_x = -1, int pan_y = -1, int fb_x = -1, int fb_y = -1, int fb_w = -1, int fb_h = -1, int transp = false);
+		virtual bool needAlign4Blit() { return false; };
+		virtual uint32_t getWidth4FB_HW_ACC(const uint32_t x, const uint32_t w, const bool max=true);
+
 
 // ## AudioMute / Clock ######################################
 	private:

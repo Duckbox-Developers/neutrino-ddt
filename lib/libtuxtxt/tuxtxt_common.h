@@ -548,6 +548,7 @@ void tuxtxt_allocate_cache(int magazine)
 	// Lock here as we have a possible race here with
 	// tuxtxt_clear_cache(). We should not be allocating and
 	// freeing at the same time.
+	// *** this is probably worked around by tuxtxt_cacehe_biglock now *** --seife
 	pthread_mutex_lock(&tuxtxt_cache_lock);
 
 	/* check cachetable and allocate memory if needed */

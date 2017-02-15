@@ -211,6 +211,11 @@ int CFbAccelCSHD2::setMode(unsigned int, unsigned int, unsigned int)
 	return 0; /* dont fail because of this */
 }
 
+fb_pixel_t * CFbAccelCSHD2::getBackBufferPointer() const
+{
+	return backbuffer;
+}
+
 void CFbAccelCSHD2::setBlendMode(uint8_t mode)
 {
 	if (ioctl(fd, FBIO_SETBLENDMODE, mode))
@@ -227,4 +232,21 @@ void CFbAccelCSHD2::setBlendLevel(int level)
 		printf("FBIO_SETOPACITY failed.\n");
 	if (level == 100) // TODO: sucks.
 		usleep(20000);
+}
+
+/* align for hw blit */
+uint32_t CFbAccelCSHD2::getWidth4FB_HW_ACC(const uint32_t _x, const uint32_t _w, const bool max)
+{
+	uint32_t ret = _w;
+	if ((_x + ret) >= xRes)
+		ret = xRes-_x-1;
+	if (ret%4 == 0)
+		return ret;
+
+	int add = (max) ? 3 : 0;
+	ret = ((ret + add) / 4) * 4;
+	if ((_x + ret) >= xRes)
+		ret -= 4;
+
+	return ret;
 }
