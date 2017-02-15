@@ -103,6 +103,8 @@ endif
 
 if BOXTYPE_GENERIC
 libneutrino_driver_a_SOURCES += \
+	fb_generic.cpp \
+	fb_accel.cpp \
 	fb_accel_glfb.cpp \
 	simple_display.cpp
 endif
