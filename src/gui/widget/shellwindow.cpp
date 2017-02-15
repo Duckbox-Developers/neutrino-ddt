@@ -192,9 +192,9 @@ void CShellWindow::exec()
 						std::string s_output = std::string((output));
 						OnShellOutputLoop(&s_output, res, &ok);
 						if (res)
-							dprintf(DEBUG_NORMAL, "[CShellWindow] [%s:%d] res=%d ok=%d\n", __func__, __LINE__, *res, ok);
+							dprintf(DEBUG_INFO, "[CShellWindow] [%s:%d] res=%d ok=%d\n", __func__, __LINE__, *res, ok);
 						else
-							dprintf(DEBUG_NORMAL, "[CShellWindow] [%s:%d] res=NULL ok=%d\n", __func__, __LINE__, ok);
+							dprintf(DEBUG_INFO, "[CShellWindow] [%s:%d] res=NULL ok=%d\n", __func__, __LINE__, ok);
 
 						now = time_monotonic_ms();
 						if (lines.size() > lines_max)
@@ -207,6 +207,7 @@ void CShellWindow::exec()
 							lines_read = 0;
 							lastPaint = now;
 							dirty = false;
+							frameBuffer->blit();
 						}
 					}
 				} else
@@ -282,6 +283,7 @@ void CShellWindow::showResult()
 				btn.paint(false);
 			}
 
+			frameBuffer->blit();
 			neutrino_msg_t msg;
 			neutrino_msg_data_t data;
 			uint64_t timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_MENU] == 0 ? 0xFFFF : g_settings.timing[SNeutrinoSettings::TIMING_MENU]);
