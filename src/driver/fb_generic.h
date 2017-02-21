@@ -112,7 +112,7 @@ class CFrameBuffer : public sigc::trackable
 		fb_pixel_t      backgroundColor;
 		std::string     backgroundFilename;
 		bool            useBackgroundPaint;
-		unsigned int	xRes, yRes, stride, bpp;
+		unsigned int	xRes, yRes, stride, swidth, bpp;
 		t_fb_var_screeninfo screeninfo;
 		fb_cmap cmap;
 		__u16 red[256], green[256], blue[256], trans[256];
@@ -266,6 +266,7 @@ class CFrameBuffer : public sigc::trackable
 		void* convertRGB2FB(unsigned char *rgbbuff, unsigned long x, unsigned long y, int transp = 0xFF);
 		void* convertRGBA2FB(unsigned char *rgbbuff, unsigned long x, unsigned long y);
 		void displayRGB(unsigned char *rgbbuff, int x_size, int y_size, int x_pan, int y_pan, int x_offs, int y_offs, bool clearfb = true, int transp = 0xFF);
+		virtual void fbCopyArea(uint32_t width, uint32_t height, uint32_t dst_x, uint32_t dst_y, uint32_t src_x, uint32_t src_y);
 		virtual void blit2FB(void *fbbuff, uint32_t width, uint32_t height, uint32_t xoff, uint32_t yoff, uint32_t xp = 0, uint32_t yp = 0, bool transp = false);
 		virtual void blitBox2FB(const fb_pixel_t* boxBuf, uint32_t width, uint32_t height, uint32_t xoff, uint32_t yoff);
 

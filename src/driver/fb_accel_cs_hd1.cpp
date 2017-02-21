@@ -262,6 +262,17 @@ void CFbAccelCSHD1::paintBoxRel(const int x, const int y, const int dx, const in
 	checkFbArea(x, y, dx, dy, false);
 }
 
+void CFbAccelCSHD1::fbCopyArea(uint32_t width, uint32_t height, uint32_t dst_x, uint32_t dst_y, uint32_t src_x, uint32_t src_y)
+{
+	uint32_t  w_, h_;
+	w_ = (width > xRes) ? xRes : width;
+	h_ = (height > yRes) ? yRes : height;
+
+	//printf("\033[33m>>>>\033[0m [CFbAccelCSHD1::%s:%d] fb_copyarea w: %d, h: %d, dst_x: %d, dst_y: %d, src_x: %d, src_y: %d\n", __func__, __LINE__, w_, h_, dst_x, dst_y, src_x, src_y);
+	printf("\033[31m>>>>\033[0m [CFbAccelCSHD1::%s:%d] sw blit w: %d, h: %d, dst_x: %d, dst_y: %d, src_x: %d, src_y: %d\n", __func__, __LINE__, w_, h_, dst_x, dst_y, src_x, src_y);
+	CFrameBuffer::fbCopyArea(width, height, dst_x, dst_y, src_x, src_y);
+}
+
 void CFbAccelCSHD1::blit2FB(void *fbbuff, uint32_t width, uint32_t height, uint32_t xoff, uint32_t yoff, uint32_t xp, uint32_t yp, bool transp)
 {
 	int  xc, yc;
@@ -335,6 +346,7 @@ int CFbAccelCSHD1::setMode(unsigned int, unsigned int, unsigned int)
 		return -1;
 	}
 	stride = _fix.line_length;
+	swidth = stride / sizeof(fb_pixel_t);
 	if (ioctl(fd, FBIOBLANK, FB_BLANK_UNBLANK) < 0)
 		printf("screen unblanking failed\n");
 	xRes = screeninfo.xres;
@@ -344,7 +356,7 @@ int CFbAccelCSHD1::setMode(unsigned int, unsigned int, unsigned int)
 	int needmem = stride * yRes * 2;
 	if (available >= needmem)
 	{
-		backbuffer = lfb + stride / sizeof(fb_pixel_t) * yRes;
+		backbuffer = lfb + swidth * yRes;
 		return 0;
 	}
 	fprintf(stderr, LOGTAG "not enough FB memory (have %d, need %d)\n", available, needmem);
