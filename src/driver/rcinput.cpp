@@ -1770,7 +1770,6 @@ int CRCInput::translate(int code)
 	{
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 		case KEY_EXIT:
-		case KEY_HOME:
 			return RC_home;
 		case KEY_FASTFORWARD:
 			return RC_forward;
