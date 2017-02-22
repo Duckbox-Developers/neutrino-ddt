@@ -1759,6 +1759,8 @@ const char * CRCInput::getSpecialKeyName(const unsigned int key)
 				return "sleep";
 			case RC_media:
 				return "media";
+			case RC_search:
+				return "search";
 			default:
 				printf("unknown key: %d (0x%x) \n", key, key);
 				return "unknown";
