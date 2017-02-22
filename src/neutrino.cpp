@@ -326,6 +326,11 @@ static SNeutrinoSettings::usermenu_t usermenu_default[] = {
 	{ CRCInput::RC_blue,            "12,11,20,21,19,14,29,30,15",           "",     "blue"          },
 	{ CRCInput::RC_play,            "9",                                    "",     "5"             },
 	{ CRCInput::RC_audio,           "27",                                   "",     "6"             },
+#if HAVE_SPARK_HARDWARE
+	{ CRCInput::RC_timer,           "19",                                   "",     "7"             },
+	{ CRCInput::RC_usb,             "31",                                   "",     "6"             },
+	{ CRCInput::RC_archive,         "30",                                   "",     "4"             },
+#endif
 	{ CRCInput::RC_nokey,           "",                                     "",     ""              },
 };
 
