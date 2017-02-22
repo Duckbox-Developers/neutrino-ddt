@@ -242,7 +242,12 @@ class CRCInput
 			RC_record	= KEY_RECORD,
 			RC_play		= KEY_PLAY,
 			RC_pause	= KEY_PAUSE,
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE /* evremote don't use forward */
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+			/* media/portal and archiv/media keys ufs912/ufs913 */
+			RC_media	= KEY_MEDIA,
+			RC_archive	= KEY_ARCHIVE,
+			RC_search	= KEY_SEARCH,
+			 /* evremote don't use forward */
 			RC_forward	= KEY_FASTFORWARD,
 #else
 			RC_forward	= KEY_FORWARD,
