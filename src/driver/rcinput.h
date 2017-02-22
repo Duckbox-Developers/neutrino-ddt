@@ -265,6 +265,7 @@ class CRCInput
 			RC_prog2	= KEY_PROG2,
 			RC_prog3	= KEY_PROG3,
 			RC_prog4	= KEY_PROG4,
+			RC_media	= KEY_MEDIA,
 
 			RC_power_on	= KEY_POWERON,
 			RC_power_off	= KEY_POWEROFF,
