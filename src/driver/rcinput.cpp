@@ -1797,6 +1797,8 @@ int CRCInput::translate(int code)
 		case KEY_EXIT:
 		case KEY_HOME:
 			return RC_home;
+		case KEY_FASTFORWARD:
+			return RC_forward;
 #endif
 		case 0x100: // FIXME -- needed?
 			return RC_up;
