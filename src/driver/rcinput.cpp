@@ -179,25 +179,6 @@ bool CRCInput::checkdev()
 	return true; /* need to check anyway... */
 }
 
-#ifdef BOXMODEL_CS_HD2
-bool CRCInput::checkdev_lnk(std::string lnk)
-{
-	static struct stat info;
-	if (lstat(lnk.c_str(), &info) != -1) {
-		if (S_ISLNK(info.st_mode)) {
-			std::string tmp = readLink(lnk);
-			if (!tmp.empty()) {
-				if (lstat(tmp.c_str(), &info) != -1) {
-					if (S_ISCHR(info.st_mode))
-						return true;
-				}
-			}
-		}
-	}
-	return false;
-}
-#endif
-
 bool CRCInput::checkpath(in_dev id)
 {
 	for (std::vector<in_dev>::iterator it = indev.begin(); it != indev.end(); ++it) {
@@ -1410,13 +1391,7 @@ void CRCInput::getMsg_us(neutrino_msg_t * msg, neutrino_msg_data_t * data, uint6
 #endif
 						CTimerManager::getInstance()->cancelShutdownOnWakeup();
 					}
-					uint64_t now_pressed;
 					bool keyok = true;
-#if 0
-					uint64_t now_pressed;
-					tv = ev.time;
-					now_pressed = (uint64_t) tv.tv_usec + (uint64_t)((uint64_t) tv.tv_sec * (uint64_t) 1000000);
-#endif
 					if (trkey == rc_last_key) {
 						/* only allow selected keys to be repeated */
 						if (mayRepeat(trkey, bAllowRepeatLR) ||
