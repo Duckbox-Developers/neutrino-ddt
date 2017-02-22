@@ -179,9 +179,49 @@ bool CRCInput::checkdev()
 	return true; /* need to check anyway... */
 }
 
+#ifdef BOXMODEL_CS_HD2
+bool CRCInput::checkdev_lnk(std::string lnk)
+{
+	static struct stat info;
+	if (lstat(lnk.c_str(), &info) != -1) {
+		if (S_ISLNK(info.st_mode)) {
+			std::string tmp = readLink(lnk);
+			if (!tmp.empty()) {
+				if (lstat(tmp.c_str(), &info) != -1) {
+					if (S_ISCHR(info.st_mode))
+						return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+#endif
+
 bool CRCInput::checkpath(in_dev id)
 {
 	for (std::vector<in_dev>::iterator it = indev.begin(); it != indev.end(); ++it) {
+#ifdef BOXMODEL_CS_HD2
+		if ((id.type == DT_LNK) || ((*it).type == DT_LNK)) {
+			std::string check1, check2;
+			if (id.type == DT_LNK)
+				check1 = readLink(id.path);
+			else
+				check1 = id.path;
+
+			if ((*it).type == DT_LNK)
+				check2 = readLink((*it).path);
+			else
+				check2 = (*it).path;
+
+			if ((!check1.empty()) && (!check2.empty()) && (check1 == check2)) {
+				printf("[rcinput:%s] skipping already opened %s => %s\n", __func__, id.path.c_str(), check1.c_str());
+				return true;
+			}
+			else
+				return false;
+		}
+#endif
 		if ((*it).path == id.path) {
 			printf("[rcinput:%s] skipping already opened %s\n", __func__, id.path.c_str());
 			return true;
@@ -210,10 +250,21 @@ void CRCInput::open(bool recheck)
 
 	while ((dentry = readdir(dir)) != NULL)
 	{
-		if (dentry->d_type != DT_CHR) {
+		if ((dentry->d_type != DT_CHR)
+#ifdef BOXMODEL_CS_HD2
+		&& (dentry->d_type != DT_LNK)
+#endif
+		) {
 			d_printf("[rcinput:%s] skipping '%s'\n", __func__, dentry->d_name);
 			continue;
 		}
+#ifdef BOXMODEL_CS_HD2
+		if ((dentry->d_type == DT_LNK) && (!checkdev_lnk("/dev/input/" + std::string(dentry->d_name)))) {
+			d_printf("[rcinput:%s] skipping '%s'\n", __func__, dentry->d_name);
+			continue;
+		}
+		id.type = dentry->d_type;
+#endif
 		d_printf("[rcinput:%s] considering '%s'\n", __func__, dentry->d_name);
 		id.path = "/dev/input/" + std::string(dentry->d_name);
 		if (checkpath(id))
@@ -528,8 +579,6 @@ int CRCInput::checkTimers()
 	return _id;
 }
 
-
-
 int64_t CRCInput::calcTimeoutEnd(const int timeout_in_seconds)
 {
 	return time_monotonic_us() + ((uint64_t)timeout_in_seconds * (uint64_t) 1000000);
@@ -610,7 +659,6 @@ void CRCInput::getMsg_us(neutrino_msg_t * msg, neutrino_msg_data_t * data, uint6
 	//static __u16 rc_last_key =  KEY_MAX;
 	static __u16 rc_last_repeat_key =  KEY_MAX;
 
-	struct timeval tv;
 	struct timeval tvselect;
 	uint64_t InitialTimeout = Timeout;
 	int64_t targetTimeout;
@@ -632,7 +680,6 @@ void CRCInput::getMsg_us(neutrino_msg_t * msg, neutrino_msg_data_t * data, uint6
 	uint64_t getKeyBegin = time_monotonic_us();
 
 	while(1) {
-		/* we later check for ev.type = EV_SYN which is 0x00, so set something invalid here... */
 		timer_id = 0;
 		if ( !timers.empty() )
 		{
@@ -1317,6 +1364,22 @@ void CRCInput::getMsg_us(neutrino_msg_t * msg, neutrino_msg_data_t * data, uint6
 				}
 				if (ev.type == EV_SYN)
 					continue; /* ignore... */
+				if (ev.value) {
+					/* try to compensate for possible changes in wall clock
+					 * kernel ev.time default uses CLOCK_REALTIME, as does gettimeofday().
+					 * so subtract gettimeofday() from ev.time and then add
+					 * CLOCK_MONOTONIC, which is supposed to not change with settimeofday.
+					 * Everything would be much easier if we could use the post-kernel 3.4
+					 * EVIOCSCLOCKID ioctl :-) */
+					struct timespec t1;
+					now_pressed = ev.time.tv_usec + ev.time.tv_sec * 1000000ULL;
+					if (!clock_gettime(CLOCK_MONOTONIC, &t1)) {
+						struct timeval t2;
+						gettimeofday(&t2, NULL);
+						now_pressed += t1.tv_sec * 1000000ULL + t1.tv_nsec / 1000;
+						now_pressed -= (t2.tv_usec + t2.tv_sec * 1000000ULL);
+					}
+				}
 				SHTDCNT::getInstance()->resetSleepTimer();
 				if (ev.value && firstKey) {
 					firstKey = false;
@@ -1324,9 +1387,7 @@ void CRCInput::getMsg_us(neutrino_msg_t * msg, neutrino_msg_data_t * data, uint6
 				}
 
 				uint32_t trkey = translate(ev.code);
-#ifdef _DEBUG
-				printf("%d key: %04x value %d, translate: %04x -%s-\n", ev.value, ev.code, ev.value, trkey, getKeyName(trkey).c_str());
-#endif
+				d_printf("key: %04x value %d, translate: %04x -%s-\n", ev.code, ev.value, trkey, getKeyName(trkey).c_str());
 				if (trkey == RC_nokey)
 					continue;
 
@@ -1360,9 +1421,7 @@ void CRCInput::getMsg_us(neutrino_msg_t * msg, neutrino_msg_data_t * data, uint6
 				}
 
 				if (ev.value) {
-#ifdef RCDEBUG
-					printf("rc_last_key %04x rc_last_repeat_key %04x\n\n", rc_last_key, rc_last_repeat_key);
-#endif
+					d_printf("rc_last_key %04x rc_last_repeat_key %04x\n\n", rc_last_key, rc_last_repeat_key);
 					if (*timer_wakeup) {
 						unlink("/tmp/.timer_wakeup");
 						*timer_wakeup = false;
@@ -1374,13 +1433,21 @@ void CRCInput::getMsg_us(neutrino_msg_t * msg, neutrino_msg_data_t * data, uint6
 					}
 					uint64_t now_pressed;
 					bool keyok = true;
-
+#if 0
+					uint64_t now_pressed;
 					tv = ev.time;
 					now_pressed = (uint64_t) tv.tv_usec + (uint64_t)((uint64_t) tv.tv_sec * (uint64_t) 1000000);
+#endif
 					if (trkey == rc_last_key) {
 						/* only allow selected keys to be repeated */
 						if (mayRepeat(trkey, bAllowRepeatLR) ||
-							(g_settings.shutdown_real_rcdelay && ((trkey == RC_standby) && (g_info.hw_caps->can_shutdown))))
+						    (g_settings.shutdown_real_rcdelay && ((trkey == RC_standby) &&
+#if HAVE_COOL_HARDWARE
+						    (cs_get_revision() > 7)
+#else
+						    (g_info.hw_caps->can_shutdown)
+#endif
+						)))
 						{
 #ifdef ENABLE_REPEAT_CHECK
 							if (rc_last_repeat_key != trkey) {
@@ -1731,7 +1798,7 @@ void CRCInput::setKeyRepeatDelay(unsigned int start_ms, unsigned int repeat_ms)
 		std::string path = (*it).path;
 		if (path == "/tmp/neutrino.input")
 			continue; /* setting repeat rate does not work here */
-#ifdef HAVE_COOL_HARDWARE
+#ifdef BOXMODEL_CS_HD1
 		/* this is ugly, but the driver does not support anything advanced... */
 		if (path == "/dev/input/nevis_ir") {
 			d_printf("[rcinput:%s] %s(fd %d) using proprietary ioctl\n", __func__, path.c_str(), fd);
@@ -1771,7 +1838,11 @@ void CRCInput::set_rc_hw(ir_protocol_t ir_protocol, unsigned int ir_address)
 	}
 	int fd = -1;
 	for (std::vector<in_dev>::iterator it = indev.begin(); it != indev.end(); ++it) {
-		if ((*it).path == "/dev/input/nevis_ir") {
+		if (((*it).path == "/dev/input/nevis_ir")
+#ifdef BOXMODEL_CS_HD2
+		    || ((*it).path == "/dev/input/input0")
+#endif
+		){
 			fd = (*it).fd;
 			break;
 		}
