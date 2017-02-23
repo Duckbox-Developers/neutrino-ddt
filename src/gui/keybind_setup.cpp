@@ -382,7 +382,7 @@ int CKeybindSetup::showKeySetup()
 #endif
 
 	cc = new CMenuOptionNumberChooser(LOCALE_KEYBINDINGMENU_REPEATBLOCK,
-		&g_settings.repeat_blocker, true, 0, 999, NULL,
+		&g_settings.repeat_blocker, true, 0, 999, this,
 		CRCInput::convertDigitToKey(shortcut++), NULL, 0, 0, LOCALE_OPTIONS_OFF);
 	cc->setNumberFormat(ms_number_format);
 	cc->setNumericInput(true);
@@ -390,7 +390,7 @@ int CKeybindSetup::showKeySetup()
 	keySettings->addItem(cc);
 
 	cc = new CMenuOptionNumberChooser(LOCALE_KEYBINDINGMENU_REPEATBLOCKGENERIC,
-		&g_settings.repeat_genericblocker, true, 0, 999, NULL,
+		&g_settings.repeat_genericblocker, true, 0, 999, this,
 		CRCInput::convertDigitToKey(shortcut++), NULL, 0, 0, LOCALE_OPTIONS_OFF);
 	cc->setNumberFormat(ms_number_format);
 	cc->setNumericInput(true);
