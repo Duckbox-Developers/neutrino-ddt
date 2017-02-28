@@ -1507,9 +1507,12 @@ void CMoviePlayerGui::PlayFileLoop(void)
 	int ss,mm,hh;
 #if HAVE_COOL_HARDWARE
 	int eof = 0;
+	int eof2 = 0;
+	int position_tmp = 0;
 #endif
 	bool at_eof = !(playstate >= CMoviePlayerGui::PLAY);;
 	keyPressed = CMoviePlayerGui::PLUGIN_PLAYSTATE_NORMAL;
+
 	while (playstate >= CMoviePlayerGui::PLAY)
 	{
 #ifdef ENABLE_GRAPHLCD
@@ -1567,6 +1570,20 @@ void CMoviePlayerGui::PlayFileLoop(void)
 #if HAVE_COOL_HARDWARE
 			{
 				/* in case ffmpeg report incorrect values */
+				if((playstate == CMoviePlayerGui::PLAY) && (speed == 1)){
+					if(position_tmp != position){
+						position_tmp = position ;
+						eof2 = 0;
+					}else{
+						if (++eof2 > 6) {
+							at_eof = true;
+							break;
+						}
+					}
+				}
+				else{
+					eof2 = 0;
+				}
 				int posdiff = duration - position;
 				if ((posdiff >= 0) && (posdiff < 2000) && timeshift == TSHIFT_MODE_OFF)
 				{
