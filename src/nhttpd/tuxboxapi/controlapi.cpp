@@ -56,7 +56,7 @@ extern CPictureViewer *g_PicViewer;
 
 extern cVideo * videoDecoder;
 
-extern CPlugins *g_PluginList;//for relodplugins
+extern CPlugins *g_Plugins;//for relodplugins
 extern CBouquetManager *g_bouquetManager;
 #if HAVE_DUCKBOX_HARDWARE
 #define EVENTDEV "/dev/input/event0"
@@ -2031,7 +2031,7 @@ void CControlAPI::ReloadNeutrinoSetupCGI(CyhookHandler *hh)
 
 void CControlAPI::ReloadPluginsCGI(CyhookHandler *hh)
 {
-	g_PluginList->loadPlugins();
+	g_Plugins->loadPlugins();
 	hh->SendOk();
 }
 
