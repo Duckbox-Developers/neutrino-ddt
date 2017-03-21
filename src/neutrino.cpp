@@ -2550,11 +2550,7 @@ TIMER_STOP("################################## after all #######################
 	}
 	RealRun();
 
-<<<<<<< HEAD
-	ExitRun(true, !can_deepstandby);
-=======
 	ExitRun(g_info.hw_caps->can_shutdown);
->>>>>>> 8516b1662d3a64f083a296d91ebbfd0fdd2bcf83
 
 	return 0;
 }
@@ -3737,11 +3733,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 				return messages_return::handled;
 			}
 		}
-<<<<<<< HEAD
 		if (g_settings.shutdown_real && can_deepstandby)
-=======
-		if (g_settings.shutdown_real)
->>>>>>> 8516b1662d3a64f083a296d91ebbfd0fdd2bcf83
 			g_RCInput->postMsg(NeutrinoMessages::SHUTDOWN, 0);
 		else
 			g_RCInput->postMsg(NeutrinoMessages::STANDBY_ON, 0);
