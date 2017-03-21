@@ -4137,7 +4137,6 @@ void CNeutrinoApp::ExitRun(int can_shutdown)
 #if HAVE_COOL_HARDWARE
 		}
 #endif
-	}
 }
 
 void CNeutrinoApp::saveEpg(bool cvfd_mode)
