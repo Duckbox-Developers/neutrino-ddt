@@ -2275,7 +2275,6 @@ TIMER_START();
 
 	g_info.hw_caps  = get_hwcaps();
 	can_deepstandby = g_info.hw_caps->can_shutdown;
-	g_info.has_fan  = g_info.hw_caps->has_fan;
 
 	g_Locale        = new CLocaleManager;
 
@@ -4127,7 +4126,7 @@ void CNeutrinoApp::ExitRun(int can_shutdown)
 				nGLCD::SetBrightness(0);
 #endif
 
-			printf("[neutrino] This is the end. exiting with code %d\n", retcode);
+			printf("[neutrino] This is the end. exiting with code %d\n", can_shutdown);
 			Cleanup();
 #ifdef __sh__
 			/* the sh4 gcc seems to dislike someting about openthreads... */
