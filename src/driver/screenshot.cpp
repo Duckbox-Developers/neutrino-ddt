@@ -61,12 +61,12 @@ CScreenShot::CScreenShot(const std::string fname, screenshot_format_t fmt)
 	pixel_data = NULL;
 #if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
 	fd = NULL;
-#endif
-	xres = 0;
-	yres = 0;
 	scs_thread = 0;
 	pthread_mutex_init(&thread_mutex, NULL);
 	pthread_mutex_init(&getData_mutex, NULL);
+#endif
+	xres = 0;
+	yres = 0;
 	get_video = g_settings.screenshot_mode & 1;
 	get_osd = g_settings.screenshot_mode & 2;
 #if HAVE_GENERIC_HARDWARE
@@ -78,8 +78,10 @@ CScreenShot::CScreenShot(const std::string fname, screenshot_format_t fmt)
 
 CScreenShot::~CScreenShot()
 {
+#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
 	pthread_mutex_destroy(&thread_mutex);
 	pthread_mutex_destroy(&getData_mutex);
+#endif
 //	printf("[CScreenShot::%s:%d] thread: %p\n", __func__, __LINE__, this);
 }
 
@@ -134,6 +136,7 @@ bool CScreenShot::startThread()
 }
 #endif
 
+#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
 void* CScreenShot::initThread(void *arg)
 {
 	CScreenShot *scs = static_cast<CScreenShot*>(arg);
@@ -166,6 +169,7 @@ void CScreenShot::cleanupThread(void *arg)
 //	printf("[CScreenShot::%s:%d] thread: %p\n", __func__, __LINE__, scs);
 	delete scs;
 }
+#endif
 
 /* start ::run in new thread to save file in selected format */
 bool CScreenShot::Start(const std::string custom_cmd)

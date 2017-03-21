@@ -56,12 +56,12 @@ class CScreenShot
 		bool SavePng();
 		bool SaveJpg();
 		bool SaveBmp();
-#endif
 
 		bool startThread();
 		static void* initThread(void *arg);
 		void runThread();
 		static void cleanupThread(void *arg);
+#endif
 
 	public:
 		CScreenShot(const std::string fname = "", screenshot_format_t fmt = CScreenShot::FORMAT_JPG);
