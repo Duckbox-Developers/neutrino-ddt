@@ -198,6 +198,7 @@ int CColorChooser::exec(CMenuTarget* parent, const std::string &)
 							val += 2;
 						else
 							val = 100;
+						(*value[selected]) = (uint8_t)val;
 
 						paintSlider(x + 10, y + hheight + mheight * selected, value[selected], colorchooser_names[selected], iconnames[selected], true);
 						setColor();
@@ -212,6 +213,7 @@ int CColorChooser::exec(CMenuTarget* parent, const std::string &)
 							val -= 2;
 						else
 							val = 0;
+						(*value[selected]) = (uint8_t)val;
 
 						paintSlider(x + 10, y + hheight + mheight * selected, value[selected], colorchooser_names[selected], iconnames[selected], true);
 						setColor();

@@ -119,7 +119,7 @@ private:
 	void getAnnounceEpgName(CTimerd::RecordingInfo * eventinfo, std::string &name);
 
 #if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
-	void ExitRun(const bool write_si = true, int retcode = 0);
+	void ExitRun(int can_shutdown = 0);
 #endif
 	void RealRun();
 	void InitZapper();
@@ -239,7 +239,7 @@ public:
 		SHUTDOWN,
 		REBOOT
 	};
-	void ExitRun(const bool write_si = true, int retcode = SHUTDOWN);
+	void ExitRun(int can_shutdown = SHUTDOWN);
 #endif
 	bool wakeupFromStandby(void);
 	void standbyToStandby(void);

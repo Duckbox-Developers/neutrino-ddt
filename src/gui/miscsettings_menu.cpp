@@ -58,7 +58,6 @@
 #include <zapit/femanager.h>
 #include <eitd/sectionsd.h>
 
-#include <cs_api.h>
 #include <video.h>
 
 #include <sectionsdclient/sectionsdclient.h>
@@ -282,7 +281,7 @@ int CMiscMenue::showMiscSettingsMenu()
 	misc_menue.addItem(mf);
 
 	//energy, shutdown
-	if (g_info.hw_caps->can_shutdown)
+	if(g_info.hw_caps->can_shutdown)
 	{
 		mf = new CMenuForwarder(LOCALE_MISCSETTINGS_ENERGY, true, NULL, this, "energy", CRCInput::RC_green);
 		mf->setHint("", LOCALE_MENU_HINT_MISC_ENERGY);
@@ -380,7 +379,7 @@ void CMiscMenue::showMiscSettingsMenuGeneral(CMenuWidget *ms_general)
 	ms_general->addItem(mc);
 
 	//fan speed
-	if (g_info.has_fan)
+	if (g_info.hw_caps->has_fan)
 	{
 #if defined (BOXMODEL_IPBOX9900) || defined (BOXMODEL_IPBOX99)
 		CMenuOptionNumberChooser * mn = new CMenuOptionNumberChooser(LOCALE_FAN_SPEED, &g_settings.fan_speed, true, 0, 1, fanNotifier, CRCInput::RC_nokey, NULL, 0, 0, LOCALE_OPTIONS_OFF);

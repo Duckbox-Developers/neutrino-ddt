@@ -354,6 +354,7 @@ void CLCD::setlcdparameter(int dimm, const int contrast, const int power, const 
 			perror("[lcdd] set invert failed!");
 		}
 
+#if 0
 		if (g_info.box_Type == CControld::TUXBOX_MAKER_PHILIPS) 
 		{
 			if (ioctl(fd, LCD_IOCTL_BIAS, &bias) < 0)
@@ -361,6 +362,7 @@ void CLCD::setlcdparameter(int dimm, const int contrast, const int power, const 
 				perror("[lcdd] set bias failed!");
 			}
 		}
+#endif
 		close(fd);
 	}
 #endif
