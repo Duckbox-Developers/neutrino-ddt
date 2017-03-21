@@ -234,9 +234,6 @@ CNeutrinoFonts * neutrinoFonts = NULL;
 bool parentallocked = false;
 static char **global_argv;
 
-/* hack until we have real platform abstraction... */
-static bool can_deepstandby = false;
-
 extern const char * locale_real_names[]; /* #include <system/locals_intern.h> */
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -529,7 +526,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.shutdown_count = configfile.getInt32("shutdown_count", 0);
 
 	g_settings.shutdown_min = 0;
-	if (can_deepstandby || g_info.hw_caps->can_shutdown)
+	if (g_info.hw_caps->can_shutdown)
 		g_settings.shutdown_min = configfile.getInt32("shutdown_min", 0);
 	g_settings.sleeptimer_min = configfile.getInt32("sleeptimer_min", 0);
 
@@ -2274,7 +2271,6 @@ TIMER_START();
 	cs_register_messenger(CSSendMessage);
 
 	g_info.hw_caps  = get_hwcaps();
-	can_deepstandby = g_info.hw_caps->can_shutdown;
 
 	g_Locale        = new CLocaleManager;
 
@@ -3732,7 +3728,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 				return messages_return::handled;
 			}
 		}
-		if (g_settings.shutdown_real && can_deepstandby)
+		if (g_settings.shutdown_real && g_info.hw_caps->can_shutdown)
 			g_RCInput->postMsg(NeutrinoMessages::SHUTDOWN, 0);
 		else
 			g_RCInput->postMsg(NeutrinoMessages::STANDBY_ON, 0);
@@ -3779,7 +3775,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 		if(!skipShutdownTimer) {
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 			timer_wakeup = true;
-			ExitRun(!can_deepstandby);
+			ExitRun(!g_info.hw_caps->can_shutdown);
 #else
 			ExitRun(g_info.hw_caps->can_shutdown);
 #endif
