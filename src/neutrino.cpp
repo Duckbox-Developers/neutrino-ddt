@@ -2545,7 +2545,12 @@ TIMER_STOP("################################## after all #######################
 	}
 	RealRun();
 
+
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	ExitRun(CNeutrinoApp::REBOOT);
+#else
 	ExitRun(g_info.hw_caps->can_shutdown);
+#endif
 
 	return 0;
 }
@@ -3775,7 +3780,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 		if(!skipShutdownTimer) {
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 			timer_wakeup = true;
-			ExitRun(!g_info.hw_caps->can_shutdown);
+			ExitRun(CNeutrinoApp::SHUTDOWN);
 #else
 			ExitRun(g_info.hw_caps->can_shutdown);
 #endif
