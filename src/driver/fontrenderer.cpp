@@ -39,11 +39,9 @@
 #include <system/debug.h>
 #include <global.h>
 
-// fribidi
+#ifdef ENABLE_FRIBIDI
 #include <fribidi/fribidi.h>
-static bool fribidi_enabled = false;
-static bool locale_seen = false;
-// end fribidi
+#endif
 
 FT_Error FBFontRenderClass::myFTC_Face_Requester(FTC_FaceID  face_id,
         FT_Library  /*library*/,
@@ -394,66 +392,48 @@ int UTF8ToUnicode(const char * &text, const bool utf8_encoded) // returns -1 on 
 	return unicode_value;
 }
 
-// fribidi
-static bool Check_for_Fribidi()
-{
-	if (!locale_seen)
-	{
-		if(g_settings.language.find("arabic") != std::string::npos)
-			fribidi_enabled = true;
-		else
-			fribidi_enabled = false;
-		locale_seen = true;
-	}
-	return fribidi_enabled;
-}
-
-void FBFontRenderClass::enableReCheck()
-{
-	locale_seen = false;
-}
-
-static std::string fribidiShapeChar(const char * text)
+#ifdef ENABLE_FRIBIDI
+static std::string fribidi_shape_char(const char * text)
 {
 	if(text && *text)
 	{
 		int len = strlen(text);
-		char * Rtl = NULL;
-		int RtlLen = 0;
+		char * rtl_text = NULL;
+		int rtl_len = 0;
 
 		fribidi_set_mirroring(true);
 		fribidi_set_reorder_nsm(false);
 
 		// init to utf-8
-		FriBidiCharSet fribidiCharset = FRIBIDI_CHAR_SET_UTF8;
+		FriBidiCharSet fribidi_charset = FRIBIDI_CHAR_SET_UTF8;
 
 		// tell bidi that we need bidirectional
-		FriBidiCharType Base = FRIBIDI_TYPE_L;
+		FriBidiCharType fribidi_chartype = FRIBIDI_TYPE_L;
 
 		// our buffer
-		FriBidiChar *Logical = (FriBidiChar *)alloca(sizeof(FriBidiChar)*(len + 1));
-		FriBidiChar *Visual = (FriBidiChar *)alloca(sizeof(FriBidiChar)*(len + 1));
+		FriBidiChar *logical = (FriBidiChar *)alloca(sizeof(FriBidiChar)*(len + 1));
+		FriBidiChar *visual = (FriBidiChar *)alloca(sizeof(FriBidiChar)*(len + 1));
 
 		// convert from the selected charset to Unicode
-		RtlLen = fribidi_charset_to_unicode(fribidiCharset, const_cast<char *>(text), len, Logical);
-		//printf("len: %d rtllen: %d\n", len, RtlLen);
+		rtl_len = fribidi_charset_to_unicode(fribidi_charset, const_cast<char *>(text), len, logical);
+		//printf("len: %d rtl_len: %d\n", len, rtl_len);
 
 		// logical to visual
-		if (fribidi_log2vis(Logical, RtlLen, &Base, Visual, NULL, NULL, NULL))
+		if (fribidi_log2vis(logical, rtl_len, &fribidi_chartype, visual, NULL, NULL, NULL))
 		{
 			// removes bidirectional marks
-			fribidi_remove_bidi_marks(Visual, RtlLen, NULL, NULL, NULL);
+			fribidi_remove_bidi_marks(visual, rtl_len, NULL, NULL, NULL);
 
-			Rtl = (char *)alloca(sizeof(char)*(RtlLen * 4 + 1));
-			fribidi_unicode_to_charset(fribidiCharset, Visual, RtlLen, Rtl);
+			rtl_text = (char *)alloca(sizeof(char)*(rtl_len * 4 + 1));
+			fribidi_unicode_to_charset(fribidi_charset, visual, rtl_len, rtl_text);
 
-			return std::string(Rtl);
+			return std::string(rtl_text);
 		}
 	}
 
 	return std::string(text);
 }
-//end fribidi
+#endif
 
 #define F_MUL 0x7FFF
 
@@ -517,13 +497,10 @@ void Font::RenderString(int x, int y, const int width, const char *text, const f
 
 	pthread_mutex_lock( &renderer->render_mutex );
 
-// fribidi
-	if (Check_for_Fribidi())
-	{
-		std::string Text = fribidiShapeChar(text);
-		text = Text.c_str();
-	}
-// end fribidi
+#ifdef ENABLE_FRIBIDI
+	std::string Text = fribidi_shape_char(text);
+	text = Text.c_str();
+#endif
 
 	FT_Error err = FTC_Manager_LookupSize(renderer->cacheManager, &scaler, &size);
 	if (err != 0)
@@ -715,13 +692,10 @@ int Font::getRenderWidth(const char *text, const bool utf8_encoded)
 {
 	pthread_mutex_lock( &renderer->render_mutex );
 
-// fribidi
-	if (Check_for_Fribidi())
-	{
-		std::string Text = fribidiShapeChar(text);
-		text = Text.c_str();
-	}
-// end fribidi
+#ifdef ENABLE_FRIBIDI
+	std::string Text = fribidi_shape_char(text);
+	text = Text.c_str();
+#endif
 
 	FT_Error err = FTC_Manager_LookupSize(renderer->cacheManager, &scaler, &size);
 	if (err != 0)
