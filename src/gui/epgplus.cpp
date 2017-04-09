@@ -580,7 +580,7 @@ void EpgPlus::createChannelEntries(int selectedChannelEntryIndex)
 
 			CZapitChannel * channel = (*this->channelList)[i];
 
-			ChannelEntry *channelEntry = new ChannelEntry(channel, i, this->frameBuffer, this->footer, this->bouquetList, this->channelsTableX + 2, yPosChannelEntry, this->channelsTableWidth);
+			ChannelEntry *channelEntry = new ChannelEntry(channel, i, this->frameBuffer, this->footer, this->bouquetList, this->channelsTableX, yPosChannelEntry, this->channelsTableWidth);
 			//printf("Going to get getEventsServiceKey for %llx\n", (channel->getChannelID() & 0xFFFFFFFFFFFFULL));
 			CChannelEventList channelEventList;
 			CEitManager::getInstance()->getEventsServiceKey(channel->getEpgID(), channelEventList);
