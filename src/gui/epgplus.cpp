@@ -55,6 +55,7 @@
 #include <zapit/satconfig.h>
 #include <zapit/getservices.h>
 #include <eitd/sectionsd.h>
+#include <system/helpers.h>
 
 #include <algorithm>
 #include <sstream>
@@ -68,6 +69,7 @@ time_t EpgPlus::duration = 0;
 int EpgPlus::sliderWidth = 0;
 int EpgPlus::channelsTableWidth = 0;
 int EpgPlus::entryFontSize = 0;
+int EpgPlus::channelNumberOffset = 0;
 
 /* negative size means "screen width in percent" */
 static EpgPlus::SizeSetting sizeSettingTable[] =
@@ -266,6 +268,13 @@ void EpgPlus::TimeLine::clearMark()
 {
 	this->frameBuffer->paintBoxRel(this->x, this->y + this->font->getHeight(),
 					this->width, this->font->getHeight() , COL_MENUCONTENT_PLUS_0);
+
+	// paint the separation line
+	if (separationLineThickness > 0)
+	{
+		this->frameBuffer->paintBoxRel(this->x, this->y + this->font->getHeight() + this->font->getHeight(),
+					this->width, this->separationLineThickness, COL_MENUCONTENTDARK_PLUS_0);
+	}
 }
 
 int EpgPlus::TimeLine::getUsedHeight()
@@ -307,13 +316,12 @@ bool EpgPlus::ChannelEventEntry::isSelected(time_t _selectedTime) const
 
 void EpgPlus::ChannelEventEntry::paint(bool pisSelected, bool toggleColor)
 {
-	if (this->channelEvent.description.empty())
-		pisSelected = false;
+	bool selected = this->channelEvent.description.empty() ? false : pisSelected;
 
 	fb_pixel_t color;
 	fb_pixel_t bgcolor;
 
-	getItemColors(color, bgcolor, pisSelected, false, toggleColor);
+	getItemColors(color, bgcolor, selected, false, toggleColor, true /* toggle enlighten */);
 
 	this->frameBuffer->paintBoxRel(this->x, this->y, this->width, this->font->getHeight(), bgcolor);
 
@@ -332,7 +340,8 @@ void EpgPlus::ChannelEventEntry::paint(bool pisSelected, bool toggleColor)
 					this->width, this->separationLineThickness, COL_MENUCONTENTDARK_PLUS_0);
 	}
 
-	if (pisSelected) {
+	if (pisSelected)
+	{
 		if (this->channelEvent.description.empty())
 		{	// dummy channel event
 			this->timeLine->clearMark();
@@ -363,16 +372,12 @@ EpgPlus::ChannelEntry::ChannelEntry(const CZapitChannel * pchannel, int pindex, 
 {
 	this->channel = pchannel;
 
+	this->displayNumber = "";
+	this->displayName = "";
 	if (pchannel != NULL)
 	{
-		std::stringstream pdisplayName;
-		//pdisplayName << pindex + 1 << " " << pchannel->getName();
-		if (g_settings.channellist_show_numbers)
-			pdisplayName << pchannel->number << " " << pchannel->getName();
-		else
-			pdisplayName << pchannel->getName();
-
-		this->displayName = pdisplayName.str();
+		this->displayNumber = to_string(pchannel->number);
+		this->displayName = pchannel->getName();
 	}
 
 	this->index = pindex;
@@ -423,8 +428,20 @@ void EpgPlus::ChannelEntry::paint(bool isSelected, time_t _selectedTime)
 
 	this->frameBuffer->paintBoxRel(this->x, this->y, this->width, this->font->getHeight(), bgcolor, radius, CORNER_LEFT);
 
-	this->font->RenderString(this->x + OFFSET_INNER_MID, this->y + this->font->getHeight(),
-					this->width - 2*OFFSET_INNER_MID, this->displayName, color);
+	int xPos = this->x + OFFSET_INNER_MID;
+	int numberWidth = 0;
+
+	if (g_settings.channellist_show_numbers)
+	{
+		// display channelnumber
+		int xOffset = EpgPlus::channelNumberOffset - this->font->getRenderWidth(this->displayNumber);
+		this->font->RenderString(xPos + xOffset, this->y + this->font->getHeight(), this->width - 2*OFFSET_INNER_MID, this->displayNumber, color);
+		numberWidth = EpgPlus::channelNumberOffset + OFFSET_INNER_SMALL;
+		xPos += numberWidth;
+	}
+
+	// display channelname
+	this->font->RenderString(xPos, this->y + this->font->getHeight(), this->width - numberWidth - 2*OFFSET_INNER_MID, this->displayName, color);
 
 	if (isSelected)
 	{
@@ -484,7 +501,7 @@ void EpgPlus::ChannelEntry::paint(bool isSelected, time_t _selectedTime)
 	// paint detailsline
 	if (isSelected)
 	{
-		int xPos	= this->x - DETAILSLINE_WIDTH;
+		xPos		= this->x - DETAILSLINE_WIDTH;
 		int yPosTop	= this->y + this->font->getHeight()/2;
 		int yPosBottom	= this->footer->y + this->footer->getUsedHeight()/2;
 
@@ -725,6 +742,16 @@ void EpgPlus::createChannelEntries(int selectedChannelEntryIndex)
 
 		this->selectedChannelEntry = this->displayedChannelEntries[selectedChannelEntryIndex - this->channelListStartIndex];
 	}
+
+	// get largest channelnumber
+	int n = 1;
+	for (TChannelEntries::iterator It = this->displayedChannelEntries.begin();
+			It != this->displayedChannelEntries.end();
+			++It)
+	{
+		n = std::max(n, (*It)->channel->number);
+	}
+	channelNumberOffset = ChannelEntry::font->getRenderWidth(to_string(n));
 }
 
 void EpgPlus::init()
