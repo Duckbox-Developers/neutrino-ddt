@@ -75,6 +75,9 @@ CComponentsFrmClock::CComponentsFrmClock( 	const int& x_pos,
 	setClockFormat(prformat_str, secformat_str);
 	cl_col_text	= COL_MENUCONTENT_TEXT;
 
+	//enable refresh of all segments on each interval as default
+	cl_force_repaint = true;
+
 	//init default font
 	cl_font 	= font;
 	cl_font_style	= font_style;
@@ -87,9 +90,6 @@ CComponentsFrmClock::CComponentsFrmClock( 	const int& x_pos,
 
 	//set default text background behavior
 	cc_txt_save_screen = false;
-
-	//enable refresh of all segments on each interval as default
-	cl_force_repaint = true;
 
 	//set default running clock properties
 	cl_interval	= interval_seconds;
