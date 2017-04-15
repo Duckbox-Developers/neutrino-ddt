@@ -441,6 +441,7 @@ bool CStreamManager::Parse(int fd, stream_pids_t &pids, t_channel_id &chid, CFro
 	if (sscanf(bp, "id=%" SCNx64, &tmpid) == 1) {
 		channel = CServiceManager::getInstance()->FindChannel(tmpid);
 		chid = tmpid;
+		pids.clear(); // to catch and stream all pids later !
 	}
 #endif
 	if (!channel)

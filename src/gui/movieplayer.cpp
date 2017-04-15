@@ -2203,14 +2203,20 @@ void CMoviePlayerGui::callInfoViewer(bool init_vzap_it)
 bool CMoviePlayerGui::getAudioName(int apid, std::string &apidtitle)
 {
 	if (p_movie_info == NULL)
-		return false;
-
-	for (int i = 0; i < (int)p_movie_info->audioPids.size(); i++) {
-		if (p_movie_info->audioPids[i].AudioPid == apid && !p_movie_info->audioPids[i].AudioPidName.empty()) {
-			apidtitle = p_movie_info->audioPids[i].AudioPidName;
+		numpida = REC_MAX_APIDS;
+		playback->FindAllPids(apids, ac3flags, &numpida, language);
+		for (unsigned int count = 0; count < numpida; count++)
+			if(apid == apids[count]){
+					apidtitle = getISO639Description(language[count].c_str());
 			return true;
+			}
+	else
+		for (int i = 0; i < (int)p_movie_info->audioPids.size(); i++) {
+			if (p_movie_info->audioPids[i].AudioPid == apid && !p_movie_info->audioPids[i].AudioPidName.empty()) {
+				apidtitle = getISO639Description(p_movie_info->audioPids[i].AudioPidName.c_str());
+				return true;
+			}
 		}
-	}
 	return false;
 }
 
