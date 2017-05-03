@@ -733,7 +733,7 @@ bool CUpnpBrowserGui::selectItem(std::string id)
 	if (!getItems(id, liststart, entries, total))
 		return endall;
 
-	while (loop) {
+	while (loop && entries!=NULL) {
 		updateTimes();
 		updateMode();
 
