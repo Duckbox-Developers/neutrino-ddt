@@ -2098,7 +2098,8 @@ bool CMovieBrowser::onButtonPressMainFrame(neutrino_msg_t msg)
 	{
 		if (m_movieSelectionHandler != NULL)
 		{
-			m_header->getClockObject()->kill();
+			if (m_header->getClockObject())
+				m_header->getClockObject()->kill();
 			framebuffer->paintBackground(); //clear whole screen
 			g_EpgData->show_mp(m_movieSelectionHandler);
 			refresh();
