@@ -526,19 +526,17 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	   For this reason we need this workaround.
 	*/
 #if HAVE_COOL_HARDWARE
-	bool can_shutdown = (cs_get_revision() > 7);
-#else
-	bool can_shutdown = true;
+	g_info.hw_caps->can_shutdown = (cs_get_revision() > 7);
 #endif
 
 	g_settings.shutdown_real = false;
-	if (can_shutdown) //(g_info.hw_caps->can_shutdown)
+	if (g_info.hw_caps->can_shutdown)
 		g_settings.shutdown_real = configfile.getBool("shutdown_real"        , false );
 	g_settings.shutdown_real_rcdelay = configfile.getBool("shutdown_real_rcdelay", false );
 	g_settings.shutdown_count = configfile.getInt32("shutdown_count", 0);
 
 	g_settings.shutdown_min = 0;
-	if (can_shutdown) //(g_info.hw_caps->can_shutdown)
+	if (g_info.hw_caps->can_shutdown)
 		g_settings.shutdown_min = configfile.getInt32("shutdown_min", 0);
 	g_settings.sleeptimer_min = configfile.getInt32("sleeptimer_min", 0);
 
@@ -2282,6 +2280,9 @@ TIMER_START();
 	cs_api_init();
 	cs_register_messenger(CSSendMessage);
 
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	g_info.hw_caps = get_hwcaps();
+#endif
 	g_Locale        = new CLocaleManager;
 
 	int loadSettingsErg = loadSetup(NEUTRINO_SETTINGS_FILE);
@@ -2384,8 +2385,10 @@ TIMER_START();
 	CheckFastScan();
 #endif
 
+#if HAVE_COOL_HARDWARE
 	// init hw_caps *after* zapit start!
 	g_info.hw_caps = get_hwcaps();
+#endif
 
 	//timer start
 #if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
