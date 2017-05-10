@@ -89,7 +89,7 @@ int CLuaInstCCWindow::CCWindowNew(lua_State *L)
 	tableLookup(L, "name", name) || tableLookup(L, "title", name) || tableLookup(L, "caption", name);
 	tableLookup(L, "icon", icon);
 
-	int has_shadow = CC_SHADOW_OFF;
+	lua_Integer has_shadow = CC_SHADOW_OFF;
 	if (!tableLookup(L, "has_shadow", has_shadow)) {
 		tmp1 = "false";
 		if (tableLookup(L, "has_shadow", tmp1))
@@ -224,7 +224,7 @@ int CLuaInstCCWindow::CCWindowSetCaption(lua_State *L)
 	lua_Integer alignment = (lua_Integer)CTextBox::NO_AUTO_LINEBREAK;
 	tableLookup(L, "alignment", alignment);
 
-	D->w->setWindowCaption(name, alignment | (lua_Integer)CTextBox::NO_AUTO_LINEBREAK);
+	D->w->setWindowCaption(name, alignment);
 	return 0;
 }
 
