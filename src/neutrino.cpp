@@ -528,7 +528,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 #if HAVE_COOL_HARDWARE
 	bool can_shutdown = (cs_get_revision() > 7);
 #else
-	bool can_shutdown = true;
+	bool can_shutdown = g_info.hw_caps->can_shutdown;
 #endif
 
 	g_settings.shutdown_real = false;
@@ -2282,6 +2282,9 @@ TIMER_START();
 	cs_api_init();
 	cs_register_messenger(CSSendMessage);
 
+#if !HAVE_COOL_HARDWARE
+	g_info.hw_caps = get_hwcaps();
+#endif
 	g_Locale        = new CLocaleManager;
 
 	int loadSettingsErg = loadSetup(NEUTRINO_SETTINGS_FILE);
@@ -2385,7 +2388,9 @@ TIMER_START();
 #endif
 
 	// init hw_caps *after* zapit start!
+#if HAVE_COOL_HARDWARE
 	g_info.hw_caps = get_hwcaps();
+#endif
 
 	//timer start
 #if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
