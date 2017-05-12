@@ -122,6 +122,7 @@ void EpgPlus::Header::paint(const char * Name)
 		{
 			// ensure to have clean background
 			this->logo = this->head->getChannelLogoObject();
+			this->logo->disableSaveBg();
 			this->logo->hide();
 			this->logo->allowPaint(false);
 		}
