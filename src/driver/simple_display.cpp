@@ -187,6 +187,7 @@ void* CLCD::TimeThread(void *)
                         CLCD::getInstance()->wake_up();
 		} else
 			CLCD::getInstance()->showTime();
+#if 0
 		/* hack, just if we missed the blit() somewhere
 		 * this will update the framebuffer once per second */
 		if (getenv("SPARK_NOBLIT") == NULL) {
@@ -195,6 +196,7 @@ void* CLCD::TimeThread(void *)
 			if (!fb->Locked())
 				fb->blit();
 		}
+#endif
 	}
 	return NULL;
 }
