@@ -882,6 +882,7 @@ void CEventList::paintHead(t_channel_id _channel_id, std::string _channelname, s
 		header = new CComponentsHeader();
 		header->getTextObject()->enableTboxSaveScreen(g_settings.theme.menu_Head_gradient);//enable screen save for title text if color gradient is in use
 		header->enableClock(true, "%H:%M", "%H %M", true);
+		header->getClockObject()->setBlit(false);
 		header->enableColBodyGradient(g_settings.theme.menu_Head_gradient, COL_MENUCONTENT_PLUS_0, g_settings.theme.menu_Head_gradient_direction);
 		header->set2ndColor(COL_MENUCONTENT_PLUS_0);
 		header->setDimensionsAll(x, y, full_width, theight);
@@ -1051,6 +1052,8 @@ void CEventList::showFunctionBar(t_channel_id channel_id)
 		btn_cnt++;
 	}
 	::paintButtons(bx, by, bw, btn_cnt, buttons, bw, bh);
+	if(header)
+		header->getClockObject()->setBlit();
 }
 
 int CEventListHandler::exec(CMenuTarget* parent, const std::string &/*actionkey*/)
