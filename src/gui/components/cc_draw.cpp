@@ -714,7 +714,7 @@ void CCDraw::hide()
 	}
 	firstPaint = true;
 	is_painted = false;
-	frameBuffer->blit();
+	//frameBuffer->blit();
 	OnAfterHide();
 }
 
