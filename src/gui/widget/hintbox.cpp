@@ -190,6 +190,7 @@ void CHintBox::enableTimeOutBar(bool enable)
 		CFrameBuffer::getInstance()->blit();
 	}else{
 		timeout_pb = new CProgressBar();
+		timeout_pb->setType(CProgressBar::PB_TIMESCALE);
 		timeout_pb->setDimensionsAll(ccw_body->getRealXPos(), ccw_body->getRealYPos(), ccw_body->getWidth(), TIMEOUT_BAR_HEIGHT);
 		timeout_pb->setValues(0, 100*timeout);
 		if (!timeout_pb_timer) {
