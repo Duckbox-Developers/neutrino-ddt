@@ -77,6 +77,7 @@ private:
 	} move_state;
 
 	bool edit_state;
+	bool channelsPainted;
 
 	CFrameBuffer		*frameBuffer;
 
