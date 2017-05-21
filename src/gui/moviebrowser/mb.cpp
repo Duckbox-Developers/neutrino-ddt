@@ -1992,6 +1992,7 @@ bool CMovieBrowser::onButtonPressMainFrame(neutrino_msg_t msg)
 	}
 	else if (msg == CRCInput::RC_left)
 	{
+		hideDetailsLine();
 		if (m_windowFocus == MB_FOCUS_MOVIE_INFO2 && m_settings.browserAdditional)
 			onSetFocusNext();
 		else if (show_mode != MB_SHOW_YT)
@@ -1999,6 +2000,7 @@ bool CMovieBrowser::onButtonPressMainFrame(neutrino_msg_t msg)
 	}
 	else if (msg == CRCInput::RC_right)
 	{
+		hideDetailsLine();
 		if (m_windowFocus == MB_FOCUS_BROWSER && m_settings.browserAdditional)
 			onSetFocusNext();
 		else if (show_mode != MB_SHOW_YT)
@@ -2201,6 +2203,7 @@ void CMovieBrowser::markItem(CListFrame *list)
 void CMovieBrowser::scrollBrowserItem(bool next, bool page)
 {
 	int mode = -1;
+	hideDetailsLine();
 	if (show_mode == MB_SHOW_YT && next && ytparser.HaveNext() && m_pcBrowser->getSelectedLine() == m_pcBrowser->getLines() - 1)
 		mode = cYTFeedParser::NEXT;
 	if (show_mode == MB_SHOW_YT && !next && ytparser.HavePrev() && m_pcBrowser->getSelectedLine() == 0)
@@ -2544,7 +2547,7 @@ void CMovieBrowser::onSetGUIWindow(MB_GUI gui)
 	TRACE("[mb]->onSetGUIWindow: gui %d -> %d\n", m_settings.gui, gui);
 	m_settings.gui = gui;
 
-	hideDetailsLine();
+	//hideDetailsLine();
 
 	m_showMovieInfo = true;
 	if (gui == MB_GUI_MOVIE_INFO) {
