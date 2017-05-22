@@ -114,6 +114,7 @@ void EpgPlus::Header::paint(const char * Name)
 		this->head = new CComponentsHeader();
 		this->head->setContextButton(CComponentsHeader::CC_BTN_HELP);
 		this->head->enableClock(true, "%H:%M", "%H %M", true);
+		this->head->getClockObject()->setBlit(false);
 	}
 
 	if (this->head)
@@ -928,6 +929,8 @@ int EpgPlus::exec(CChannelList * pchannelList, int selectedChannelIndex, CBouque
 
 		this->paint();
 		frameBuffer->blit();
+
+		this->header->head->getClockObject()->setBlit();
 
 		uint64_t timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_CHANLIST]);
 		bool loop = true;
