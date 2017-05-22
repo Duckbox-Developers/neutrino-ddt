@@ -181,6 +181,11 @@ class CHintBox : public CComponentsWindow
 		int exec();
 
 		/**
+		* hide caller
+		*/
+		void hide(){hideCCItems(); CCDraw::hide(); CFrameBuffer::getInstance()->blit();}
+
+		/**
 		* Defines timeout for message window.
 		* Timeout is enabled with parameter1 = DEFAULT_TIMEOUT (-1) or any other value > 0
 		* To disable timeout use NO_TIMEOUT (0)
