@@ -1297,6 +1297,17 @@ std::string CMovieBrowser::getScreenshotName(std::string movie, bool is_dir)
 
 void CMovieBrowser::refreshChannelLogo(void)
 {
+	if (!g_settings.channellist_show_channellogo)
+	{
+		if (m_channelLogo)
+		{
+			m_channelLogo->hide();
+			delete m_channelLogo;
+			m_channelLogo = NULL;
+		}
+		return;
+	}
+
 	TRACE("[mb]->%s:%d\n", __func__, __LINE__);
 
 	int w_logo_max = m_cBoxFrameTitleRel.iWidth / 4;
