@@ -143,11 +143,11 @@ bool CComponentsTimer::startTimer()
 bool CComponentsTimer::stopTimer()
 {
 	tm_enable = false;
-	OnTimer.clear();
 	stopThread();
-	if(tm_thread == 0)
+	if(tm_thread == 0) {
+		OnTimer.clear();
 		return true;
-
+	}
 	return false;
 }
 
