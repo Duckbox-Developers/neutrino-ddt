@@ -1389,6 +1389,8 @@ void EpgPlus::hide()
 	if (this->header->head)
 	{
 		this->header->head->kill();
+		delete this->header->head;
+		this->header->head = NULL;
 	}
 	this->frameBuffer->paintBackgroundBoxRel(this->usableScreenX - DETAILSLINE_WIDTH, this->usableScreenY, DETAILSLINE_WIDTH + this->usableScreenWidth, this->usableScreenHeight);
 	frameBuffer->blit();
