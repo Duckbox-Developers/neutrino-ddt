@@ -1573,7 +1573,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 #if HAVE_COOL_HARDWARE
 			{
 				/* in case ffmpeg report incorrect values */
-				if(file_prozent > 96 && (playstate == CMoviePlayerGui::PLAY) && (speed == 1)){
+				if(file_prozent > 89 && (playstate == CMoviePlayerGui::PLAY) && (speed == 1)){
 					if(position_tmp != position){
 						position_tmp = position ;
 						eof2 = 0;
