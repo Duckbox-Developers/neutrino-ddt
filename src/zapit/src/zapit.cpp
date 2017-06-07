@@ -81,6 +81,7 @@
 #include <OpenThreads/ScopedLock>
 
 #include <neutrino.h>
+#include <gui/osd_helpers.h>
 
 #ifdef PEDANTIC_VALGRIND_SETUP
 #define VALGRIND_PARANOIA(x) memset(&x, 0, sizeof(x))
@@ -1734,7 +1735,8 @@ bool CZapit::ParseCommand(CBasicMessage::Header &rmsg, int connfd)
         case CZapitMessages::CMD_SET_VIDEO_SYSTEM: {
 		CZapitMessages::commandInt msg;
 		CBasicServer::receive_data(connfd, &msg, sizeof(msg));
-		videoDecoder->SetVideoSystem(msg.val);
+		COsdHelpers::getInstance()->setVideoSystem(msg.val);
+		COsdHelpers::getInstance()->changeOsdResolution(0, true);
 		CNeutrinoApp::getInstance()->g_settings_video_Mode(msg.val);
                 break;
         }
@@ -2480,7 +2482,9 @@ bool CZapit::Start(Z_start_arg *ZapStart_arg)
 	audioDecoder = cAudio::GetDecoder(0);
 
 	videoDecoder->SetDemux(videoDemux);
-	videoDecoder->SetVideoSystem(video_mode);
+	COsdHelpers::getInstance()->setVideoSystem(video_mode);
+	uint32_t osd_resolution = ZapStart_arg->osd_resolution;
+	COsdHelpers::getInstance()->changeOsdResolution(osd_resolution);
 	videoDecoder->Standby(false);
 
 	audioDecoder->SetDemux(audioDemux);
@@ -2603,7 +2607,7 @@ static bool zapit_parse_command(CBasicMessage::Header &rmsg, int connfd)
 
 void CZapit::run()
 {
-	set_threadname("CZapit::run");
+	set_threadname("zap:main");
 	printf("[zapit] starting... tid %ld\n", syscall(__NR_gettid));
 
 	abort_zapit = 0;
@@ -2777,6 +2781,7 @@ void CZapitSdtMonitor::run()
 	t_satellite_position            satellitePosition = 0;
 	freq_id_t                       freq = 0;
 	transponder_id_t 		tpid = 0;
+	set_threadname("zap:sdtmonitor");
 
 	//tstart = time(0);
 	sdt_tp.clear();

@@ -5384,7 +5384,7 @@ static void RenderPage()
 			{
 				page_atrb[32].fg = yellow;
 				page_atrb[32].bg = menu1;
-				int showpage = tuxtxt_cache.page_receiving;
+				int showpage = tuxtxt_cache.page_receiving < 0 ? 0 : tuxtxt_cache.page_receiving;
 				int showsubpage = tuxtxt_cache.subpagetable[showpage];
 				if (showsubpage!=0xff)
 				{
@@ -5720,9 +5720,20 @@ static void CopyBB2FB()
 		f->blitBPA2FB((unsigned char *)lbb, SURF_ARGB8888, var_screeninfo.xres, var_screeninfo.yres,
 			0, 0, -1, -1,
 			-1, -1, -1, -1, true);
+#elif defined(HAVE_COOL_HARDWARE)
+		f->fbCopyArea(var_screeninfo.xres, var_screeninfo.yres, 0, 0, 0, var_screeninfo.yres);
 #else
-		memcpy(lfb, lbb, var_screeninfo.xres*var_screeninfo.yres * sizeof(fb_pixel_t));
-#endif
+		if ((uint32_t)stride > var_screeninfo.xres) {
+			fb_pixel_t *lfb_ = lfb;
+			fb_pixel_t *lbb_ = lbb;
+			for (uint32_t i1 = 0; i1 < var_screeninfo.yres; i1++) {
+				memcpy(lfb_, lbb_, var_screeninfo.xres * sizeof(fb_pixel_t));
+				lfb_ += stride;
+				lbb_ += stride;
+			}
+		}
+		else
+			memcpy(lfb, lbb, fix_screeninfo.line_length*var_screeninfo.yres);
 #endif
 
 		/* adapt background of backbuffer if changed */

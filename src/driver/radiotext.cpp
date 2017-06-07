@@ -63,6 +63,7 @@
 
 #include <global.h>
 #include <system/settings.h>
+#include <system/set_threadname.h>
 #include <neutrino.h>
 #include <gui/color.h>
 #include <system/set_threadname.h>
@@ -992,7 +993,7 @@ void CRadioText::setPid(uint inPid)
 
 void CRadioText::run()
 {
-	set_threadname("CRadioText::run");
+	set_threadname("n:radiotext");
 	uint current_pid = 0;
 
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE

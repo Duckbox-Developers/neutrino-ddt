@@ -46,6 +46,7 @@
 #include <gui/widget/hintbox.h>
 #include <gui/widget/msgbox.h>
 #include <gui/osd_setup.h>
+#include <gui/osd_helpers.h>
 #include <gui/psisetup.h>
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 #include <gui/widget/colorchooser.h>
@@ -620,7 +621,8 @@ void CVideoSettings::setVideoSettings()
 void CVideoSettings::setupVideoSystem(bool do_ask)
 {
 	printf("[neutrino VideoSettings] %s setup videosystem...\n", __FUNCTION__);
-	videoDecoder->SetVideoSystem(g_settings.video_Mode); //FIXME
+	COsdHelpers::getInstance()->setVideoSystem(g_settings.video_Mode); //FIXME
+	COsdHelpers::getInstance()->changeOsdResolution(0, true, false);
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 	frameBuffer->resChange();
 #endif
@@ -633,7 +635,8 @@ void CVideoSettings::setupVideoSystem(bool do_ask)
 			if (ShowMsg(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_VIDEO_MODE_OK), CMsgBox::mbrNo, CMsgBox::mbYes | CMsgBox::mbNo, NEUTRINO_ICON_INFO) != CMsgBox::mbrYes)
 			{
 				g_settings.video_Mode = prev_video_mode;
-				videoDecoder->SetVideoSystem(g_settings.video_Mode);
+				COsdHelpers::getInstance()->setVideoSystem(g_settings.video_Mode);
+				COsdHelpers::getInstance()->changeOsdResolution(0, true, false);
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 				frameBuffer->resChange();
 #endif
@@ -830,7 +833,8 @@ void CVideoSettings::nextMode(void)
 		else if(res == messages_return::cancel_info) {
 			g_settings.video_Mode = VIDEOMENU_VIDEOMODE_OPTIONS[curmode].key;
 			//CVFD::getInstance()->ShowText(text);
-			videoDecoder->SetVideoSystem(g_settings.video_Mode);
+			COsdHelpers::getInstance()->setVideoSystem(g_settings.video_Mode);
+			COsdHelpers::getInstance()->changeOsdResolution(0, true, false);
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 			frameBuffer->resChange();
 #endif

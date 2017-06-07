@@ -66,7 +66,7 @@ bool CNit::Stop()
 
 void CNit::run()
 {
-	set_threadname("CNit::run");
+	set_threadname("zap:nit");
 	if(Parse())
 		printf("[scan] NIT finished.\n");
 	else

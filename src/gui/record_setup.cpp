@@ -41,6 +41,7 @@
 
 #include "record_setup.h"
 #include <gui/filebrowser.h>
+#include <gui/followscreenings.h>
 
 #include <gui/widget/icons.h>
 #include <gui/widget/msgbox.h>
@@ -172,6 +173,13 @@ const CMenuOptionChooser::keyval END_OF_RECORDING[END_OF_RECORDING_COUNT] =
 	{0, LOCALE_RECORDINGMENU_END_OF_RECORDING_MAX},
 	{1, LOCALE_RECORDINGMENU_END_OF_RECORDING_EPG}
 };
+
+const CMenuOptionChooser::keyval timer_followscreenings_options[] =
+{
+	{CFollowScreenings::FOLLOWSCREENINGS_OFF	,LOCALE_OPTIONS_OFF	},
+	{CFollowScreenings::FOLLOWSCREENINGS_ON		,LOCALE_OPTIONS_ON	}
+};
+size_t timer_followscreenings_options_count = sizeof(timer_followscreenings_options)/sizeof(CMenuOptionChooser::keyval);
 
 int CRecordSetup::showRecordSetup()
 {
@@ -325,7 +333,7 @@ void CRecordSetup::showRecordTimerSetup(CMenuWidget *menu_timersettings)
 	menu_timersettings->addItem(GenericMenuSeparatorLine);
 
 	//allow followscreenings
-	CMenuOptionChooser* followscreenings = new CMenuOptionChooser(LOCALE_TIMERSETTINGS_FOLLOWSCREENINGS, &g_settings.timer_followscreenings, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
+	CMenuOptionChooser* followscreenings = new CMenuOptionChooser(LOCALE_TIMERSETTINGS_FOLLOWSCREENINGS, &g_settings.timer_followscreenings, timer_followscreenings_options, timer_followscreenings_options_count, true);
 	followscreenings->setHint("", LOCALE_MENU_HINT_TIMER_FOLLOWSCREENINGS);
 	menu_timersettings->addItem(followscreenings);
 }

@@ -99,7 +99,7 @@ bool CServiceScan::Stop()
 
 void CServiceScan::run()
 {
-	set_threadname("CServiceScan::run");
+	set_threadname("zap:servicescan");
 	running = true;
 
 	CleanAllMaps();

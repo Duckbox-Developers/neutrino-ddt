@@ -69,7 +69,7 @@ bool CBat::Stop()
 
 void CBat::run()
 {
-	set_threadname("CBat::run");
+	set_threadname("zap:bat");
 	if(Parse())
 		printf("[scan] BAT finished.\n");
 	else
