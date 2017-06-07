@@ -44,6 +44,14 @@
 
 typedef struct fb_var_screeninfo t_fb_var_screeninfo;
 
+typedef struct osd_resolution_t
+{
+	uint32_t yRes;
+	uint32_t xRes;
+	uint32_t bpp;
+	uint32_t mode;
+} osd_resolution_struct_t;
+
 typedef struct gradientData_t
 {
 	fb_pixel_t* gradientBuf;
@@ -260,6 +268,13 @@ class CFrameBuffer : public sigc::trackable
 		void blitBox2FB(const fb_pixel_t* boxBuf, uint32_t width, uint32_t height, uint32_t xoff, uint32_t yoff);
 
 		void mark(int x, int y, int dx, int dy);
+
+		virtual int scale2Res(int size) { return size; };
+		virtual bool fullHdAvailable() { return false; };
+		virtual void setOsdResolutions();
+		std::vector<osd_resolution_t> osd_resolutions;
+		size_t getIndexOsdResolution(uint32_t mode);
+
 		void blit();
 
 		enum 
@@ -298,7 +313,6 @@ class CFrameBuffer : public sigc::trackable
 		void blitBPA2FB(unsigned char *mem, SURF_FMT fmt, int w, int h, int x = 0, int y = 0, int pan_x = -1, int pan_y = -1, int fb_x = -1, int fb_y = -1, int fb_w = -1, int fb_h = -1, int transp = false);
 		bool needAlign4Blit() { return false; };
 		uint32_t getWidth4FB_HW_ACC(const uint32_t x, const uint32_t w, const bool max=true);
-		int scale2Res(int size) {return size; };
 
 
 // ## AudioMute / Clock ######################################
