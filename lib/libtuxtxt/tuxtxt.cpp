@@ -5735,6 +5735,7 @@ static void CopyBB2FB()
 		else
 			memcpy(lfb, lbb, fix_screeninfo.line_length*var_screeninfo.yres);
 #endif
+#endif
 
 		/* adapt background of backbuffer if changed */
 		if (StartX > 0 && *lfb != *lbb) {
