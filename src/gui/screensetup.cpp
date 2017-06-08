@@ -153,15 +153,15 @@ int CScreenSetup::exec(CMenuTarget* parent, const std::string &action)
 			showBorder(channel_id);
 
 			if(g_settings.screen_preset) {
-				g_settings.screen_StartX_lcd = g_settings.screen_StartX_int;
-				g_settings.screen_StartY_lcd = g_settings.screen_StartY_int;
-				g_settings.screen_EndX_lcd = g_settings.screen_EndX_int;
-				g_settings.screen_EndY_lcd = g_settings.screen_EndY_int;
+				g_settings.screen_StartX_lcd_0 = g_settings.screen_StartX_int;
+				g_settings.screen_StartY_lcd_0 = g_settings.screen_StartY_int;
+				g_settings.screen_EndX_lcd_0 = g_settings.screen_EndX_int;
+				g_settings.screen_EndY_lcd_0 = g_settings.screen_EndY_int;
 			} else {
-				g_settings.screen_StartX_crt = g_settings.screen_StartX_int;
-				g_settings.screen_StartY_crt = g_settings.screen_StartY_int;
-				g_settings.screen_EndX_crt = g_settings.screen_EndX_int;
-				g_settings.screen_EndY_crt = g_settings.screen_EndY_int;
+				g_settings.screen_StartX_crt_0 = g_settings.screen_StartX_int;
+				g_settings.screen_StartY_crt_0 = g_settings.screen_StartY_int;
+				g_settings.screen_EndX_crt_0 = g_settings.screen_EndX_int;
+				g_settings.screen_EndY_crt_0 = g_settings.screen_EndY_int;
 			}
 		}
 		return menu_return::RETURN_EXIT;

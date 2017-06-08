@@ -269,9 +269,9 @@ class CFrameBuffer : public sigc::trackable
 
 		void mark(int x, int y, int dx, int dy);
 
-		virtual int scale2Res(int size) { return size; };
-		virtual bool fullHdAvailable() { return false; };
-		virtual void setOsdResolutions();
+		int scale2Res(int size) { return size; };
+		bool fullHdAvailable() { return false; };
+		void setOsdResolutions();
 		std::vector<osd_resolution_t> osd_resolutions;
 		size_t getIndexOsdResolution(uint32_t mode);
 
