@@ -1095,8 +1095,13 @@ int CNeutrinoApp::loadSetup(const char * fname)
 
 void CNeutrinoApp::setScreenSettings()
 {
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	g_settings.screen_width = frameBuffer->getScreenWidth(true) - 1;
+	g_settings.screen_height = frameBuffer->getScreenHeight(true) - 1;
+#else
 	g_settings.screen_width = frameBuffer->getScreenWidth(true);
 	g_settings.screen_height = frameBuffer->getScreenHeight(true);
+#endif
 
 	switch (g_settings.osd_resolution) {
 #ifdef ENABLE_CHANGE_OSD_RESOLUTION
@@ -1141,6 +1146,16 @@ void CNeutrinoApp::setScreenSettings()
 		    }
 		break;
 	}
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	g_settings.screen_StartX_int = g_settings.screen_StartX;
+	g_settings.screen_StartY_int = g_settings.screen_StartY;
+	g_settings.screen_EndX_int = g_settings.screen_EndX;
+	g_settings.screen_EndY_int = g_settings.screen_EndY;
+	g_settings.screen_StartX = 0;
+	g_settings.screen_StartY = 0;
+	g_settings.screen_EndX = g_settings.screen_width;
+	g_settings.screen_EndY = g_settings.screen_height;
+#endif
 }
 
 void CNeutrinoApp::upgradeSetup(const char * fname)
