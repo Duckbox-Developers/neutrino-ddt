@@ -43,6 +43,7 @@
 #include <gui/audiomute.h>
 #include <gui/color.h>
 #include <gui/pictureviewer.h>
+#include <gui/osd_helpers.h>
 #include <system/debug.h>
 #include <global.h>
 #include <video.h>
@@ -1532,4 +1533,58 @@ void CFrameBuffer::blit()
 void CFrameBuffer::blitBPA2FB(unsigned char *mem, SURF_FMT fmt, int w, int h, int x, int y, int pan_x, int pan_y, int fb_x, int fb_y, int fb_w, int fb_h, int transp)
 {
 	accel_sti_ddt->blitBPA2FB(mem, fmt, w, h, x, y, pan_x, pan_y, fb_x, fb_y, fb_w, fb_h, transp);
+}
+
+void CFrameBuffer::setOsdResolutions()
+{
+	osd_resolution_t res;
+	osd_resolutions.clear();
+	res.xRes = 1280;
+	res.yRes = 720;
+	res.bpp  = 32;
+	res.mode = OSDMODE_720;
+	osd_resolutions.push_back(res);
+	if (fullHdAvailable()) {
+		res.xRes = 1920;
+		res.yRes = 1080;
+		res.bpp  = 32;
+		res.mode = OSDMODE_1080;
+		osd_resolutions.push_back(res);
+	}
+}
+
+size_t CFrameBuffer::getIndexOsdResolution(uint32_t mode)
+{
+	if (osd_resolutions.size() == 1)
+		return 0;
+
+	for (size_t i = 0; i < osd_resolutions.size(); i++) {
+		if (osd_resolutions[i].mode == mode)
+			return i;
+	}
+	return 0;
+}
+
+bool CFrameBuffer::fullHdAvailable()
+{
+#ifdef ENABLE_CHANGE_OSD_RESOLUTION
+	//if (available >= 16588800) /* new fb driver with maxres 1920x1080(*8) */
+		return true;
+#endif
+	return false;
+}
+
+int CFrameBuffer::scale2Res(int size)
+{
+	/*
+	   The historic resolution 1280x720 is default for some values/sizes.
+	   So let's scale these values to other resolutions.
+	*/
+
+#ifdef ENABLE_CHANGE_OSD_RESOLUTION
+	if (screeninfo.xres == 1920)
+		size += size/2;
+#endif
+
+	return size;
 }
