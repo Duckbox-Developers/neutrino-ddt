@@ -166,17 +166,10 @@ int COsdHelpers::isVideoSystem1080(int res)
 	return false;
 }
 
-#ifdef ENABLE_CHANGE_OSD_RESOLUTION
 int COsdHelpers::getVideoSystem()
 {
 	return videoDecoder->GetVideoSystem();
 }
-#else
-int COsdHelpers::getVideoSystem()
-{
-	return g_settings.video_Mode;
-}
-#endif
 
 uint32_t COsdHelpers::getOsdResolution()
 {
