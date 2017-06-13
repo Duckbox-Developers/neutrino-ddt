@@ -679,9 +679,9 @@ int COsdSetup::showOsdSetup()
 	mf->setHint("", LOCALE_MENU_HINT_SCREENSAVER_SETUP);
 	osd_menu->addItem(mf);
 
+#ifdef ENABLE_CHANGE_OSD_RESOLUTION
 	osd_menu->addItem(GenericMenuSeparatorLine);
 
-#ifdef ENABLE_CHANGE_OSD_RESOLUTION
 	// osd resolution
 	size_t resCount = frameBuffer->osd_resolutions.size();
 	struct CMenuOptionChooser::keyval_ext kext[resCount];
