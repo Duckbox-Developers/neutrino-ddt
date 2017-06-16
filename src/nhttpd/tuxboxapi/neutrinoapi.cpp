@@ -28,6 +28,7 @@
 #include <driver/screen_max.h>
 #include <driver/pictureviewer/pictureviewer.h>
 #include <system/httptool.h>
+#include <system/helpers.h>
 #include <gui/color.h>
 #include <gui/widget/icons.h>
 #include <gui/movieplayer.h>
@@ -555,14 +556,13 @@ void CNeutrinoAPI::SendAllTimers(std::string url, bool force)
 	timerlist.clear();
 	Timerd->getTimerList(timerlist);
 	sort(timerlist.begin(), timerlist.end());
-	CTimerd::TimerList::iterator timer = timerlist.begin();
 
 	int pre,post;
 	Timerd->getRecordingSafety(pre,post);
 	CHTTPTool httpTool;
 	std::string r_url;
 
-	for(int i = 0; timer != timerlist.end(); ++timer)
+	for(CTimerd::TimerList::iterator timer = timerlist.begin(); timer != timerlist.end(); ++timer)
 	{
 		if (timer->eventType == CTimerd::TIMER_RECORD) {
 			r_url = "http://";
