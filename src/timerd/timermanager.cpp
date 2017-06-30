@@ -1396,7 +1396,7 @@ bool CTimerEvent_Record::adjustToCurrentEPG()
 	CChannelEventList evtlist;
 	CEitManager::getInstance()->getEventsServiceKey(eventInfo.channel_id, evtlist);
 
-	int pre, post;
+	int pre = 0, post = 0;
 	CTimerManager::getInstance()->getRecordingSafety(pre, post);
 
 	time_t _announceTime = announceTime;
