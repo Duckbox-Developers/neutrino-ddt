@@ -62,9 +62,9 @@ class CCDraw : public COSDFader, public CComponentsSignals
 		///property: y-position on screen, to alter setPos() or setDimensionsAll(), see also defines CC_APPEND, CC_CENTERED
 		int y, y_old;
 		///property: contains real x-position on screen
-		int cc_xr;
+		int cc_xr, cc_xr_old;
 		///property: contains real y-position on screen
-		int cc_yr;
+		int cc_yr, cc_yr_old;
 		///property: height-dimension on screen, to alter with setHeight() or setDimensionsAll()
 		int height, height_old;
 		///property: width-dimension on screen, to alter with setWidth() or setDimensionsAll()

@@ -1317,9 +1317,9 @@ void CUpnpBrowserGui::showPicture(std::string name)
 
 void CUpnpBrowserGui::playVideo(std::string name, std::string url)
 {
-	CNeutrinoApp::getInstance()->handleMsg(NeutrinoMessages::CHANGEMODE, NeutrinoMessages::mode_ts);
-
 	stopAudio();
+
+	CNeutrinoApp::getInstance()->handleMsg(NeutrinoMessages::CHANGEMODE, NeutrinoMessages::mode_ts);
 
 	m_frameBuffer->stopFrame();
 	CMoviePlayerGui::getInstance().SetFile(name, url);
