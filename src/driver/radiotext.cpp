@@ -827,7 +827,8 @@ void CRadioText::RassDecode(unsigned char *mtext, int len)
 						slidenumr = Rass_SlideFoto;
 					}
 					//
-					char *filepath = asprintf(&filepath, "%s/Rass_%d.error", DataDir, slidenumr);
+					char *filepath;
+					asprintf(&filepath, "%s/Rass_%d.error", DataDir, slidenumr);
 					(filetype == 2) ? asprintf(&filepath, "%s/Rass_%d.def", DataDir, slidenumr)
 							: asprintf(&filepath, "%s/Rass_%d.m2v", DataDir, slidenumr);
 					char *filepath_tmp;
