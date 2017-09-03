@@ -827,8 +827,7 @@ void CRadioText::RassDecode(unsigned char *mtext, int len)
 						slidenumr = Rass_SlideFoto;
 					}
 					//
-					char *filepath;
-					asprintf(&filepath, "%s/Rass_%d.error", DataDir, slidenumr);
+					char *filepath = NULL;
 					(filetype == 2) ? asprintf(&filepath, "%s/Rass_%d.def", DataDir, slidenumr)
 							: asprintf(&filepath, "%s/Rass_%d.m2v", DataDir, slidenumr);
 					char *filepath_tmp;
@@ -884,11 +883,9 @@ void CRadioText::RassDecode(unsigned char *mtext, int len)
 						}
 					}
 					else
-						printf("ERROR %s: writing image/data-file failed '%s'", __func__, filepath);
-					free(filepath);
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
-					free(filepath_tmp);
-#endif
+						printf("ERROR vdr-radio: writing image/data-file failed '%s'", filepath);
+					if(filepath)
+						free(filepath);
 				}
 			}
 			dstart = false;
