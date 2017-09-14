@@ -23,7 +23,6 @@
 #include <time.h>
 #include <locale.h>
 #include <langinfo.h>
-#include <unistd.h>
 #include <dirent.h>
 // tuxbox
 #include <global.h>

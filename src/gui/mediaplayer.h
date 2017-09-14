@@ -43,7 +43,7 @@ class CMediaPlayerMenu : public CMenuTarget
 		
 		CAudioPlayerGui *audioPlayer;
 		CAudioPlayerGui *inetPlayer;
-				
+
 		void showMoviePlayer(CMenuWidget *menu_movieplayer, CPersonalizeGui *p);
 		void showNetworkNFSMounts(CMenuWidget *menu_nfs,  CPersonalizeGui *p);
 

@@ -205,6 +205,7 @@ int CAudioSetup::showAudioSetup()
 	// ac3,pcm and clear volume adjustment
 	CMenuOptionNumberChooser *adj_ac3 = NULL, *adj_pcm = NULL;
 	CMenuForwarder *adj_clear = NULL;
+
 	adj_ac3 = new CMenuOptionNumberChooser(LOCALE_AUDIOMENU_VOLUME_ADJUSTMENT_AC3,
 	(int *)&g_settings.audio_volume_percent_ac3, true, 0, 100, audioSetupNotifier);
 	adj_ac3->setNumberFormat("%d%%");
@@ -217,6 +218,7 @@ int CAudioSetup::showAudioSetup()
 
 	adj_clear = new CMenuForwarder(LOCALE_AUDIOMENU_VOLUME_ADJUSTMENT_CLEAR, true, NULL, this, "clear_vol_map");
 	adj_clear->setHint("", LOCALE_MENU_HINT_AUDIO_ADJUST_VOL_CLEAR);
+
 	//paint items
 	audioSettings->addIntroItems(LOCALE_MAINSETTINGS_AUDIO);
 	//---------------------------------------------------------
@@ -247,6 +249,7 @@ int CAudioSetup::showAudioSetup()
 #if 0
 	audioSettings->addItem(mf);
 #endif
+
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 	CMenuOptionNumberChooser *ch;
 	audioSettings->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_AUDIOMENU_MIXER_VOLUME));

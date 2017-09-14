@@ -110,7 +110,7 @@ int CSoftwareUpdate::showSoftwareUpdate()
 	softUpdate.addItem(GenericMenuSeparatorLine);
 
 	//expert-functions
-	showSoftwareUpdateExpert(&mtdexpert); 
+	showSoftwareUpdateExpert(&mtdexpert);
 	mf = new CMenuForwarder(LOCALE_FLASHUPDATE_EXPERTFUNCTIONS, true, NULL, &mtdexpert, NULL, CRCInput::RC_blue);
 	mf->setHint("", LOCALE_MENU_HINT_SOFTUPDATE_EXPERT);
 	softUpdate.addItem(mf);

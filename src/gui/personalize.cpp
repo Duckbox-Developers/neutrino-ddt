@@ -351,7 +351,6 @@ int CPersonalizeGui::ShowPersonalizationMenu()
 		pMenu->addItem(p_mn[i]);
 	}
 
-
 	//usermenu
 	uMenu = NULL;
 	if (show_usermenu)
