@@ -68,6 +68,7 @@ std::string cutString(const std::string str, int msgFont, const int width);
 std::string strftime(const char *format, const struct tm *tm);
 std::string strftime(const char *format, time_t when, bool gm = false);
 time_t toEpoch(std::string &date);
+const char *cstr_replace(const char *search, const char *replace, const char *text);
 std::string& str_replace(const std::string &search, const std::string &replace, std::string &text);
 std::string& htmlEntityDecode(std::string& text);
 
@@ -145,5 +146,10 @@ bool split_config_string(const std::string &str, std::map<std::string,std::strin
 std::string getJFFS2MountPoint(int mtdPos);
 std::string Lang2ISO639_1(std::string& lang);
 std::string readLink(std::string lnk);
+
+int getpidof(const char *process);
+std::string filehash(const char * file);
+std::string get_path(const char * path);
+inline bool file_exists(const std::string file) { return file_exists(file.c_str()); }
 
 #endif

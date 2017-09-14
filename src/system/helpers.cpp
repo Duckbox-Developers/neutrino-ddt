@@ -54,6 +54,8 @@
 #include <system/helpers.h>
 #include <gui/update_ext.h>
 #include <driver/framebuffer.h>
+#include <libmd5sum.h>
+#define MD5_DIGEST_LENGTH 16
 using namespace std;
 
 int mySleep(int sec) {
@@ -524,6 +526,61 @@ std::string& str_replace(const std::string &search, const std::string &replace, 
 		text.replace(pos, searchLen, replace);
 	}
 	return text;
+}
+
+/*
+ * ported from:
+ * https://stackoverflow.com/questions/779875/what-is-the-function-to-replace-string-in-c
+ *
+ * You must delete the result if result is non-NULL
+ */
+const char *cstr_replace(const char *search, const char *replace, const char *text)
+{
+	const char *result;	// the return string
+	const char *ins;	// the next insert point
+	char *tmp;		// varies
+	int len_search;		// length of search (the string to remove)
+	int len_replace;	// length of replace (the string to replace search with)
+	int len_front;		// distance between search and end of last search
+	int count;		// number of replacements
+
+	// sanity checks and initialization
+	if (!text || !search)
+		return NULL;
+	len_search = strlen(search);
+	if (len_search == 0)
+		return NULL; // empty search causes infinite loop during count
+	if (!replace)
+		replace = "";
+	len_replace = strlen(replace);
+
+	// count the number of replacements needed
+	ins = text;
+	for (count = 0; (tmp = (char*)strstr(ins, search)); ++count)
+		ins = tmp + len_search;
+
+	int len_tmp = strlen(text) + (len_replace - len_search) * count + 1;
+	tmp = new char[len_tmp];
+	memset(tmp, '\0', len_tmp);
+	result = (const char*)tmp;
+
+	if (!result)
+		return NULL;
+
+	// first time through the loop, all the variable are set correctly
+	// from here on,
+	//    tmp points to the end of the result string
+	//    ins points to the next occurrence of search in text
+	//    text points to the remainder of text after "end of search"
+	while (count--) {
+		ins = strstr(text, search);
+		len_front = ins - text;
+		tmp = strncpy(tmp, text, len_front) + len_front;
+		tmp = strncpy(tmp, replace, len_replace) + len_replace;
+		text += len_front + len_search; // move to next "end of search"
+	}
+	strncpy(tmp, text, strlen(text));
+	return result;
 }
 
 std::string& htmlEntityDecode(std::string& text)
@@ -1279,6 +1336,112 @@ std::string Lang2ISO639_1(std::string& lang)
 		ret = "sv";
 
 	return ret;
+}
+
+// returns the pid of the first process found in /proc
+int getpidof(const char *process)
+{
+	DIR *dp;
+	struct dirent *entry;
+	struct stat statbuf;
+
+	if ((dp = opendir("/proc")) == NULL)
+	{
+		fprintf(stderr, "Cannot open directory /proc\n");
+		return -1;
+	}
+
+	while ((entry = readdir(dp)) != NULL)
+	{
+		// get information about the file/folder
+		lstat(entry->d_name, &statbuf);
+		// files under /proc which start with a digit are processes
+		if (S_ISDIR(statbuf.st_mode) && isdigit(entry->d_name[0]))
+		{
+			// 14 chars for /proc//status + 0
+			char procpath[14 + strlen(entry->d_name)];
+			char procname[50];
+			FILE *file;
+
+			sprintf(procpath, "/proc/%s/status", entry->d_name);
+
+			if (! (file = fopen(procpath, "r")) ) {
+				continue;
+			}
+
+			fscanf(file,"%*s %s", procname);
+			fclose(file);
+
+			// only 15 char available
+			if (strncmp(procname, process, 15) == 0) {
+				return atoi(entry->d_name);
+			}
+		}
+	}
+	closedir (dp);
+	return 0;
+}
+
+std::string filehash(const char *file)
+{
+#if 0
+	int fd;
+	int i;
+	unsigned long size;
+	struct stat s_stat;
+	unsigned char hash[MD5_DIGEST_LENGTH];
+	void *buff;
+	std::ostringstream os;
+ 
+	memset(hash, 0, MD5_DIGEST_LENGTH);
+
+	fd = open(file, O_RDONLY | O_NONBLOCK);
+	if (fd > 0)
+	{
+		// Get the size of the file by its file descriptor
+		fstat(fd, &s_stat);
+		size = s_stat.st_size;
+
+		buff = mmap(0, size, PROT_READ, MAP_SHARED, fd, 0);
+		MD5((const unsigned char *)buff, size, hash);
+		munmap(buff, size);
+
+		// Print the MD5 sum as hex-digits.
+		for(i = 0; i < MD5_DIGEST_LENGTH; ++i) {
+			os.width(2);
+			os.fill('0');
+			os << std::hex << static_cast<int>(hash[i]);
+		}
+		close(fd);
+	}
+	return os.str();
+#endif
+	int i;
+	unsigned char hash[MD5_DIGEST_LENGTH];
+	std::ostringstream os;
+
+	md5_file(file, 1, (unsigned char*) hash);
+	// Print the MD5 sum as hex-digits.
+	for(i = 0; i < MD5_DIGEST_LENGTH; ++i) {
+		os.width(2);
+		os.fill('0');
+		os << std::hex << static_cast<int>(hash[i]);
+	}
+	return os.str();
+}
+
+std::string get_path(const char *path)
+{
+	if(path[0] == '/' && strstr(path,"/var") == 0)
+	{
+		std::string varc = "/var";
+		varc += path;
+
+		if(file_exists(varc.c_str()))
+			return varc;
+	}
+
+	return path;
 }
 
 string readLink(string lnk)

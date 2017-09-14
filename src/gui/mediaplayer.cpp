@@ -223,9 +223,9 @@ int CMediaPlayerMenu::initMenuMedia(CMenuWidget *m, CPersonalizeGui *p)
  		//adding personalized items
 		personalize->addPersonalizedItems();
 		
-		//add I_TYPE_MULTIMEDIA plugins
+		//add PLUGIN_INTEGRATION_MULTIMEDIA plugins
 		unsigned int nextShortcut = (unsigned int)media->getNextShortcut();
-		media->integratePlugins(CPlugins::I_TYPE_MULTIMEDIA, nextShortcut, enabled);
+		media->integratePlugins(PLUGIN_INTEGRATION_MULTIMEDIA, nextShortcut, enabled);
 
 		res = media->exec(NULL, "");
 		delete media;
