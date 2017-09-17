@@ -417,9 +417,9 @@ bool CCDraw::CheckFbData(const cc_fbdata_t& fbdata, const char* func, const int 
 {
 	int32_t rows = fbdata.dx / (int32_t)frameBuffer->getScreenWidth(true) - 1 + fbdata.y;
 	int32_t rest = fbdata.dx % (int32_t)frameBuffer->getScreenWidth(true);
-	int32_t end  = rows * (int32_t)frameBuffer->getScreenWidth(true) + rest;
+        int32_t end  = rows * (int32_t)frameBuffer->getScreenWidth(true) + rest;
 	if (	(fbdata.x < 0 || fbdata.y < 0) ||
-		(end >= (int32_t)frameBuffer->getScreenWidth(true)*(int32_t)frameBuffer->getScreenHeight(true))
+		(end >= (int32_t)frameBuffer->getScreenWidth(true)*(int32_t)frameBuffer->getScreenHeight(true)) 
 	   ) {
 			dprintf(DEBUG_NORMAL, "[CCDraw] ERROR! Position < 0 or > FB end [%s - %d]\n\tx = %d  y = %d\n\tdx = %d  dy = %d\n",
 				func, line,
@@ -725,7 +725,6 @@ void CCDraw::hide()
 	}
 	firstPaint = true;
 	is_painted = false;
-	//frameBuffer->blit();
 	OnAfterHide();
 }
 

@@ -168,7 +168,6 @@ void CComponentsText::initCCText()
 	ct_textbox->setBackGroundColor(col_body);
 	ct_textbox->setBackGroundRadius(0/*(corner_type ? corner_rad-fr_thickness : 0), corner_type*/);
 	ct_textbox->enableSaveScreen(cc_txt_save_screen && !ct_paint_textbg);
-	ct_textbox->enableUTF8(ct_utf8_encoded);
 	ct_textbox->blit(false);
 
 	//observe behavior of parent form if available

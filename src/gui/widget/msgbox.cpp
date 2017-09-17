@@ -255,6 +255,7 @@ int CMsgBox::exec()
 	{
 		g_RCInput->getMsgAbsoluteTimeout( &msg, &data, &timeoutEnd );
 
+
 		//***timeout result***
 		if (msg == CRCInput::RC_timeout && timeout > 0)
 		{
@@ -334,7 +335,6 @@ int CMsgBox::exec()
 
 void CMsgBox::refreshFoot(void)
 {
-
 	ccw_footer->getButtonChainObject()->paint();
 	CFrameBuffer::getInstance()->blit();
 }

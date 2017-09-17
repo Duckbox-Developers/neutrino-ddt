@@ -165,7 +165,7 @@ class CTextBox : public sigc::trackable
 		int text_Vborder_width;
 		bool m_FontUseDigitHeight;
 		bool m_blit;
-		
+
 	public:
 		/* Constructor */
 		CTextBox();

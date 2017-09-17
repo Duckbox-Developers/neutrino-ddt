@@ -148,6 +148,7 @@ bool CComponentsTimer::stopTimer()
 			OnTimer.clear();
 		return true;
 	}
+
 	return false;
 }
 

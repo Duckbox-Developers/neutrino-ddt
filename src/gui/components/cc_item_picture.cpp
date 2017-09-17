@@ -459,5 +459,3 @@ void CComponentsChannelLogo::setChannel(const uint64_t& channelId, const std::st
 
 	doPaintBg(false);
 }
-
-

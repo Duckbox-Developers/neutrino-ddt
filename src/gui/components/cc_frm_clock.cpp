@@ -338,7 +338,7 @@ bool CComponentsFrmClock::startClock()
 
 	if (cl_timer->startTimer())
 		return true;
-
+	
 	return  false;
 }
 
@@ -463,4 +463,3 @@ bool CComponentsFrmClock::enableColBodyGradient(const int& enable_mode, const fb
 	}
 	return false;
 }
-

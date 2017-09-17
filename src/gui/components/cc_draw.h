@@ -107,7 +107,7 @@ class CCDraw : public COSDFader, public CComponentsSignals
 
 		///paint caching for body and shadow, default init value = true, see also enablePaintCache() NOTE: has no effect if paint_bg = false
 		bool cc_paint_cache;
-
+		
 		///enable/disable background buffer, default init value = false, see also enableSaveBg()
 		bool cc_save_bg;
 
@@ -183,17 +183,6 @@ class CCDraw : public COSDFader, public CComponentsSignals
 		///Note: position of bound components (items) means position related within parent form, not for screen!
 		///to set the real screen position, look at setRealPos()
 		virtual void setPos(const int& xpos, const int& ypos){setXPos(xpos); setYPos(ypos);}
-
-		///sets real x position on screen. Use this, if item is added to a parent form
-		virtual void setRealXPos(const int& xr){cc_xr = xr;}
-		///sets real y position on screen. Use this, if item is added to a parent form
-		virtual void setRealYPos(const int& yr){cc_yr = yr;}
-		///sets real x and y position on screen at once. Use this, if item is added to a parent form
-		virtual void setRealPos(const int& xr, const int& yr){cc_xr = xr; cc_yr = yr;}
-		///get real x-position on screen. Use this, if item contains own render methods and item is bound to a form
-		virtual int getRealXPos(){return cc_xr;}
-		///get real y-position on screen. Use this, if item contains own render methods and item is bound to a form
-		virtual int getRealYPos(){return cc_yr;}
 
 		///set height of component on screen
 		virtual void setHeight(const int& h);
@@ -303,7 +292,7 @@ class CCDraw : public COSDFader, public CComponentsSignals
 		///disable color gradient, returns true if gradient mode was changed
 		virtual bool disableColBodyGradient(){return enableColBodyGradient(CC_COLGRAD_OFF);}
 		///set color gradient properties, possible parameter values for mode and intensity to find in CColorGradient, in driver/framebuffer.h>
-		virtual void setColBodyGradient(const int& mode, const int& direction = 1 /*CFrameBuffer::gradientVertical*/, const fb_pixel_t& sec_color = 255 /*=COL_BACKGROUND*/, const int& intensity = CColorGradient::normal, uint8_t v_min=0x40, uint8_t v_max=0xE0, uint8_t s=0xC0)
+		virtual void setColBodyGradient(const int& mode, const int& direction  = 1 /*CFrameBuffer::gradientVertical*/, const fb_pixel_t& sec_color = 255 /*=COL_BACKGROUND*/, const int& intensity = CColorGradient::normal, uint8_t v_min=0x40, uint8_t v_max=0xE0, uint8_t s=0xC0)
 						{	cc_body_gradient_intensity=intensity;
 							cc_body_gradient_intensity_v_min=v_min;
 							cc_body_gradient_intensity_v_max=v_max;
