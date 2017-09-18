@@ -1464,7 +1464,7 @@ void CMenuWidget::enableSaveScreen(bool enable)
 void CMenuWidget::paintHint(int pos)
 {
 	if (!g_settings.show_menu_hints){
-		ResetModules(); //ensure clean up on changed setting
+		//ResetModules(); //ensure clean up on changed setting
 		return;
 	}
 

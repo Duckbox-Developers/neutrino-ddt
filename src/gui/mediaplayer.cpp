@@ -104,7 +104,7 @@ int CMediaPlayerMenu::exec(CMenuTarget* parent, const std::string &actionKey)
 		int res = inetPlayer->exec(NULL, "init");
 		return res; //menu_return::RETURN_REPAINT;
 	}
-	else if (actionKey == "moviebrowser")
+	else if (actionKey == "movieplayer")
 	{
 		audiomute->enableMuteIcon(false);
 		CInfoClock::getInstance()->enableInfoClock(false);
