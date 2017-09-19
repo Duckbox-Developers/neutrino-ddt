@@ -2088,7 +2088,6 @@ void CControlAPI::ScreenshotCGI(CyhookHandler *hh)
 	if(!hh->ParamList["name"].empty())
 		filename = hh->ParamList["name"];
 
-<<<<<<< HEAD
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 	if (!enableVideo) {
 		CFrameBuffer::getInstance()->OSDShot("/tmp/screenshot.png");
@@ -2096,20 +2095,14 @@ void CControlAPI::ScreenshotCGI(CyhookHandler *hh)
 		return;
 	}
 #endif
-
-	CScreenShot * sc = new CScreenShot("/tmp/" + filename + ".bmp", CScreenShot::FORMAT_BMP);
-	sc->EnableOSD(enableOSD);
-	sc->EnableVideo(enableVideo);
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
-	sc->Start();
-	hh->SendOk();
-#else
-=======
-	CScreenShot * screenshot = new CScreenShot("/tmp/" + filename + ".png", (CScreenShot::screenshot_format_t)0 /*PNG*/);
+	CScreenShot * screenshot = new CScreenShot("/tmp/" + filename + ".bmp", CScreenShot::FORMAT_BMP);
 	if(screenshot){
 		screenshot->EnableOSD(enableOSD);
 		screenshot->EnableVideo(enableVideo);
->>>>>>> gui-neutrino/master
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+		screenshot->Start();
+		hh->SendOk();
+#else
 #if 0
 	screenshot->Start();
 	hh->SendOk(); // FIXME what if screenshot->Start() failed?
@@ -2119,12 +2112,9 @@ void CControlAPI::ScreenshotCGI(CyhookHandler *hh)
 		else
 			hh->SendError();
 #endif
-<<<<<<< HEAD
 #endif
-=======
 		delete screenshot;
 	}
->>>>>>> gui-neutrino/master
 }
 
 //-----------------------------------------------------------------------------
@@ -2792,7 +2782,7 @@ void CControlAPI::YWeb_SendRadioStreamingPid(CyhookHandler *hh)
 	hh->printf("0x%04x",apid);
 }
 
-//-------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void CControlAPI::doModifyTimer(CyhookHandler *hh)
 {
 	hh->ParamList["update"]="1";
