@@ -2088,6 +2088,7 @@ void CControlAPI::ScreenshotCGI(CyhookHandler *hh)
 	if(!hh->ParamList["name"].empty())
 		filename = hh->ParamList["name"];
 
+<<<<<<< HEAD
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 	if (!enableVideo) {
 		CFrameBuffer::getInstance()->OSDShot("/tmp/screenshot.png");
@@ -2103,16 +2104,27 @@ void CControlAPI::ScreenshotCGI(CyhookHandler *hh)
 	sc->Start();
 	hh->SendOk();
 #else
+=======
+	CScreenShot * screenshot = new CScreenShot("/tmp/" + filename + ".png", (CScreenShot::screenshot_format_t)0 /*PNG*/);
+	if(screenshot){
+		screenshot->EnableOSD(enableOSD);
+		screenshot->EnableVideo(enableVideo);
+>>>>>>> gui-neutrino/master
 #if 0
-	sc->Start();
-	hh->SendOk(); // FIXME what if sc->Start() failed?
+	screenshot->Start();
+	hh->SendOk(); // FIXME what if screenshot->Start() failed?
 #else
-	if (sc->StartSync())
-		hh->SendOk();
-	else
-		hh->SendError();
+		if (screenshot->StartSync())
+			hh->SendOk();
+		else
+			hh->SendError();
 #endif
+<<<<<<< HEAD
 #endif
+=======
+		delete screenshot;
+	}
+>>>>>>> gui-neutrino/master
 }
 
 //-----------------------------------------------------------------------------
