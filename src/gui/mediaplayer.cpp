@@ -161,7 +161,7 @@ int CMediaPlayerMenu::initMenuMedia(CMenuWidget *m, CPersonalizeGui *p)
 	if (!upnpbrowsergui)
 		upnpbrowsergui = new CUpnpBrowserGui();
 
-	CMenuForwarder *fw_upnp = new CMenuForwarder(LOCALE_UPNPBROWSER_HEAD, enabled, NULL, upnpbrowsergui, NULL, CRCInput::RC_0);
+	CMenuForwarder *fw_upnp = new CMenuForwarder(LOCALE_UPNPBROWSER_HEAD, enabled, NULL, upnpbrowsergui, NULL, CRCInput::RC_yellow);
 	fw_upnp->setHint(NEUTRINO_ICON_HINT_A_PIC, LOCALE_MENU_HINT_UPNP);
 	personalize->addItem(multimedia_menu, fw_upnp, &g_settings.personalize[SNeutrinoSettings::P_MEDIA_UPNP]);
 #endif
@@ -173,17 +173,17 @@ int CMediaPlayerMenu::initMenuMedia(CMenuWidget *m, CPersonalizeGui *p)
 //	personalize->addIntroItems(movieplayer_menu);
 
 	//moviebrowser
-	CMenuForwarder *fw_mbrowser = new CMenuForwarder(LOCALE_MOVIEBROWSER_HEAD, true, NULL, this, "moviebrowser", CRCInput::RC_red);
+	CMenuForwarder *fw_mbrowser = new CMenuForwarder(LOCALE_MOVIEBROWSER_HEAD, true, NULL, this, "moviebrowser", CRCInput::RC_0);
 	fw_mbrowser->setHint(NEUTRINO_ICON_HINT_MB, LOCALE_MENU_HINT_MB);
 	personalize->addItem(multimedia_menu, fw_mbrowser, &g_settings.personalize[SNeutrinoSettings::P_MPLAYER_MBROWSER]);
 
 	//fileplayback
-	CMenuForwarder *fw_fileplay = new CMenuForwarder(LOCALE_MOVIEPLAYER_FILEPLAYBACK, true, NULL, &CMoviePlayerGui::getInstance(), "fileplayback", CRCInput::RC_green);
+	CMenuForwarder *fw_fileplay = new CMenuForwarder(LOCALE_MOVIEPLAYER_FILEPLAYBACK, true, NULL, &CMoviePlayerGui::getInstance(), "fileplayback", CRCInput::RC_1);
 	fw_fileplay->setHint(NEUTRINO_ICON_HINT_FILEPLAY, LOCALE_MENU_HINT_FILEPLAY);
 	personalize->addItem(multimedia_menu, fw_fileplay, &g_settings.personalize[SNeutrinoSettings::P_MPLAYER_FILEPLAY]);
 
 	//ytplayback
-	CMenuForwarder *fw_ytplay = new CMenuForwarder(LOCALE_MOVIEPLAYER_YTPLAYBACK, g_settings.youtube_enabled, NULL, &CMoviePlayerGui::getInstance(), "ytplayback", CRCInput::RC_yellow);
+	CMenuForwarder *fw_ytplay = new CMenuForwarder(LOCALE_MOVIEPLAYER_YTPLAYBACK, g_settings.youtube_enabled, NULL, &CMoviePlayerGui::getInstance(), "ytplayback", CRCInput::RC_2);
 	fw_ytplay->setHint(NEUTRINO_ICON_HINT_YTPLAY, LOCALE_MENU_HINT_YTPLAY);
 	personalize->addItem(multimedia_menu, fw_ytplay, &g_settings.personalize[SNeutrinoSettings::P_MPLAYER_YTPLAY]);
 

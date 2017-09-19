@@ -3077,7 +3077,7 @@ void CNeutrinoApp::RealRun()
 				{
 				default:
 				case 0:
-					CMediaPlayerMenu::getInstance()->exec(NULL, "movieplayer");
+					CMediaPlayerMenu::getInstance()->exec(NULL, "moviebrowser");
 					break;
 				case 1:
 					CMoviePlayerGui::getInstance().exec(NULL, "fileplayback");
