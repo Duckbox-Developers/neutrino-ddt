@@ -1428,8 +1428,8 @@ void CTimeThread::run()
 	set_threadname(name.c_str());
 	time_t dvb_time = 0;
 	xprintf("%s::run:: starting, pid %d (%lu)\n", name.c_str(), getpid(), pthread_self());
-	const char *tn = ("sd:" + name).c_str();
-	set_threadname(tn);
+	const std::string tn = ("sd:" + name).c_str();
+	set_threadname(tn.c_str());
 	addFilters();
 	DMX::start();
 
@@ -1569,8 +1569,8 @@ void CSectionThread::run()
 {
 	set_threadname(name.c_str());
 	xprintf("%s::run:: starting, pid %d (%lu)\n", name.c_str(), getpid(), pthread_self());
-	const char *tn = ("sd:" + name).c_str();
-	set_threadname(tn);
+	const std::string tn = ("sd:" + name).c_str();
+	set_threadname(tn.c_str());
 	if (sections_debug)
 		dump_sched_info(name);
 
