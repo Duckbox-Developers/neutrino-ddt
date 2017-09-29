@@ -12,6 +12,7 @@ AM_CPPFLAGS = \
 	@FREETYPE_CFLAGS@ \
 	@VORBISIDEC_CFLAGS@ \
 	@AVFORMAT_CFLAGS@ \
+	@LUA_CFLAGS@ \
 	@HWLIB_CFLAGS@
 
 noinst_LIBRARIES = libneutrino_driver_audiodec.a

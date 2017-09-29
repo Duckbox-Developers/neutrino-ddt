@@ -166,7 +166,7 @@ class CMoviePlayerGui : public CMenuTarget
 	unsigned short sub_supported[REC_MAX_APIDS];
 	int currentspid;
 	int min_x, min_y, max_x, max_y;
-	time_t end_time;
+	int64_t end_time;
 	bool ext_subs;
 	bool lock_subs;
 #endif
