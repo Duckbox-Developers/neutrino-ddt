@@ -44,6 +44,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <limits.h>
 
 #include <sys/un.h>
 #include <sys/socket.h>
@@ -410,7 +411,7 @@ int CRCInput::messageLoop( bool anyKeyCancels, int timeout )
 	if ( timeout == -1 )
 		timeout = g_settings.timing[SNeutrinoSettings::TIMING_MENU];
 
-	uint64_t timeoutEnd = CRCInput::calcTimeoutEnd( timeout == 0 ? 0xFFFF : timeout);
+	uint64_t timeoutEnd = CRCInput::calcTimeoutEnd(timeout);
 
 	while (doLoop)
 	{
@@ -440,7 +441,7 @@ int CRCInput::messageLoop( bool anyKeyCancels, int timeout )
 					if ( anyKeyCancels )
 						doLoop = false;
 					else
-						timeoutEnd = CRCInput::calcTimeoutEnd( timeout );
+						timeoutEnd = CRCInput::calcTimeoutEnd(timeout);
 				}
 			}
 		}
@@ -474,7 +475,7 @@ int CRCInput::addTimer(uint64_t Interval, bool oneshot, bool correct_time )
 
 	_newtimer.correct_time = correct_time;
 
-printf("adding timer %d (0x%llx, 0x%llx)\n", _newtimer.id, _newtimer.times_out, Interval);
+//printf("adding timer %d (0x%" PRIx64 ", 0x%" PRIx64 ")\n", _newtimer.id, _newtimer.times_out, Interval);
 
 	std::vector<timer>::iterator e;
 	for ( e= timers.begin(); e!= timers.end(); ++e )
@@ -487,7 +488,7 @@ printf("adding timer %d (0x%llx, 0x%llx)\n", _newtimer.id, _newtimer.times_out, 
 
 void CRCInput::killTimer(uint32_t &id)
 {
-printf("killing timer %d\n", id);
+//printf("killing timer %d\n", id);
 	if(id == 0)
 		return;
 
@@ -540,15 +541,15 @@ int CRCInput::checkTimers()
 	return _id;
 }
 
-int64_t CRCInput::calcTimeoutEnd(const int timeout_in_seconds)
+int64_t CRCInput::calcTimeoutEnd(const int _timeout_in_seconds)
 {
-	return time_monotonic_us() + ((uint64_t)timeout_in_seconds * (uint64_t) 1000000);
+	uint64_t timeout_in_seconds = (_timeout_in_seconds == 0) ? INT_MAX : _timeout_in_seconds;
+	return time_monotonic_us() + (timeout_in_seconds * 1000000);
 }
 
 int64_t CRCInput::calcTimeoutEnd_MS(const int timeout_in_milliseconds)
 {
-	uint64_t timeNow = time_monotonic_us();
-	return ( timeNow + timeout_in_milliseconds * 1000 );
+	return time_monotonic_us() + (timeout_in_milliseconds * 1000);
 }
 
 void CRCInput::getMsgAbsoluteTimeout(neutrino_msg_t * msg, neutrino_msg_data_t * data, uint64_t *TimeoutEnd, bool bAllowRepeatLR)

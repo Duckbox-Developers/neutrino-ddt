@@ -249,8 +249,7 @@ int CScreenSetup::exec(CMenuTarget* parent, const std::string &)
 
 	selected = 0;
 
-	uint64_t timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_MENU] == 0 ? 0xFFFF : g_settings.timing[SNeutrinoSettings
-::TIMING_MENU]);
+	uint64_t timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_MENU]);
 
 	bool loop=true;
 	while (loop)
@@ -258,8 +257,7 @@ int CScreenSetup::exec(CMenuTarget* parent, const std::string &)
 		g_RCInput->getMsgAbsoluteTimeout( &msg, &data, &timeoutEnd, true );
 
 		if ( msg <= CRCInput::RC_MaxRC )
-			timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_MENU] == 0 ? 0xFFFF : g_settings.timing[SNeutrinoSettings
-::TIMING_MENU]);
+			timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_MENU]);
 
 		switch ( msg )
 		{
@@ -326,6 +324,7 @@ int CScreenSetup::exec(CMenuTarget* parent, const std::string &)
 							( g_settings.screen_EndY != y_coord[1] ) ) &&
 						(ShowMsg(LOCALE_VIDEOMENU_SCREENSETUP, LOCALE_MESSAGEBOX_DISCARD, CMsgBox::mbrYes, CMsgBox::mbYes | CMsgBox::mbCancel) == CMsgBox::mbrCancel))
 					break;
+				/* falls through */
 
 			case CRCInput::RC_timeout:
 				loop = false;

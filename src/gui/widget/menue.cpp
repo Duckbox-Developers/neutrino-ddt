@@ -778,7 +778,7 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 	int pos = selected;
 
 	int retval = menu_return::RETURN_REPAINT;
-	uint64_t timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_MENU] == 0 ? 0xFFFF : g_settings.timing[SNeutrinoSettings::TIMING_MENU]);
+	uint64_t timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_MENU]);
 		
 	bool bAllowRepeatLR_override = keyActionMap.find(CRCInput::RC_left) != keyActionMap.end() || keyActionMap.find(CRCInput::RC_right) != keyActionMap.end();
 	do {
@@ -790,7 +790,7 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 
 		int handled= false;
 		if ( msg <= CRCInput::RC_MaxRC ) {
-			timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_MENU] == 0 ? 0xFFFF : g_settings.timing[SNeutrinoSettings::TIMING_MENU]);
+			timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_MENU]);
 
 			std::map<neutrino_msg_t, keyAction>::iterator it = keyActionMap.find(msg);
 			if (it != keyActionMap.end()) {
@@ -799,6 +799,7 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 				switch ( rv ) {
 					case menu_return::RETURN_EXIT_ALL:
 						retval = menu_return::RETURN_EXIT_ALL;
+						/* fall through */
 					case menu_return::RETURN_EXIT:
 						msg = CRCInput::RC_timeout;
 						break;
@@ -890,6 +891,7 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 						break;
 					case CRCInput::RC_up:
 						dir = -1;
+						/* fall through */
 					default: /* fallthrough or RC_down => dir = 1 */
 						pos += dir;
 						if (pos < 0 || pos >= (int)items.size())
@@ -950,6 +952,7 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 						switch ( rv ) {
 							case menu_return::RETURN_EXIT_ALL:
 								retval = menu_return::RETURN_EXIT_ALL;
+								/* fall through */
 							case menu_return::RETURN_EXIT:
 								msg = CRCInput::RC_timeout;
 								break;
@@ -1003,7 +1006,7 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 		}
 		if(msg == CRCInput::RC_timeout) {
 			if(fade && fader.StartFadeOut()) {
-				timeoutEnd = CRCInput::calcTimeoutEnd( 1 );
+				timeoutEnd = CRCInput::calcTimeoutEnd(1);
 				msg = 0;
 				continue;
 			}
@@ -1012,7 +1015,7 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 		if ( msg <= CRCInput::RC_MaxRC )
 		{
 			// recalculate timeout for RC-keys
-			timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_MENU] == 0 ? 0xFFFF : g_settings.timing[SNeutrinoSettings::TIMING_MENU]);
+			timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_MENU]);
 		}
 		frameBuffer->blit();
 	}
@@ -1079,7 +1082,7 @@ void CMenuWidget::hide()
 			info_box->kill();
 		if (details_line)
 			details_line->hide();
-		frameBuffer->paintBackgroundBoxRel(x, y, full_width, full_height/* + footer_height*/);	// full_height includes footer_height : see calcSize
+		frameBuffer->paintBackgroundBoxRel(x, y, full_width, full_height); // full_height includes footer_height : see calcSize
 		//paintHint(-1);
 	}
 	paintHint(-1);
@@ -1141,11 +1144,11 @@ void CMenuWidget::calcSize()
 	hint_height = 0;
 	if(g_settings.show_menu_hints && has_hints) {
 		int lines = 2;
-		int text_height = 2*OFFSET_INNER_MID + lines*g_Font[SNeutrinoSettings::FONT_TYPE_MENU_HINT]->getHeight();
+		int text_height = 2*OFFSET_INNER_SMALL + lines*g_Font[SNeutrinoSettings::FONT_TYPE_MENU_HINT]->getHeight();
 		/* assuming all hint icons has the same size ! */
 		int icon_width, icon_height;
 		frameBuffer->getIconSize(NEUTRINO_ICON_HINT_TVMODE, &icon_width, &icon_height);
-		icon_height += 2*OFFSET_INNER_MID;
+		icon_height += 2*OFFSET_INNER_SMALL;
 		hint_height = std::max(icon_height, text_height);
 	}
 	/* set the max height to 9/10 of usable screen height
@@ -1203,11 +1206,13 @@ void CMenuWidget::calcSize()
 	// shrink menu if less items
 	height = std::min(height, hheight + maxItemHeight);
 	/*
-	   Always add a bottom offset.
+	   Always add a bottom separator offset.
 	   Most menus has an upper offset too,
 	   which is added with the intro-items
 	*/
-	height += OFFSET_INNER_MID;
+	CMenuItem *separator = new CMenuSeparator();
+	height += separator->getHeight();
+	delete separator;
 	
 	//scrollbar width
 	scrollbar_width=0;
@@ -1215,7 +1220,7 @@ void CMenuWidget::calcSize()
 		scrollbar_width = SCROLLBAR_WIDTH;
 
 	full_width = width + scrollbar_width + OFFSET_SHADOW;
-	full_height = height + footer_height + OFFSET_SHADOW/* + OFFSET_INTER*/; // hintbox is handled separately
+	full_height = height + footer_height + OFFSET_SHADOW; // hintbox is handled separately
 
 	/* + DETAILSLINE_WIDTH for the hintbox connection line
 	 * + center_offset for symmetry
@@ -1299,7 +1304,10 @@ void CMenuWidget::setMenuPos(const int& menu_width)
 	int scr_y = frameBuffer->getScreenY();
 	int scr_w = frameBuffer->getScreenWidth();
 	int scr_h = frameBuffer->getScreenHeight();
-	int real_h = full_height/* + footer_height*/ + hint_height;		// full_height includes footer_height : see calcSize
+	int hint_h = 0;
+	if (hint_height)
+		hint_h = OFFSET_INTER + hint_height + OFFSET_SHADOW;
+	int real_h = full_height + hint_h; // full_height includes footer_height : see calcSize
 	int x_old = x;
 	int y_old = y;
 	//configured positions 
@@ -1419,20 +1427,23 @@ void CMenuWidget::saveScreen()
 		return;
 
 	delete[] background;
-	saveScreen_height = full_height/* + footer_height*/;	// full_height includes footer_height : see calcSize
+	int hint_h = 0;
+	if (hint_height)
+		hint_h = OFFSET_INTER + hint_height + OFFSET_SHADOW;
+	saveScreen_height = full_height + hint_h; // full_height includes footer_height : see calcSize
 	saveScreen_width = full_width;
 	saveScreen_y = y;
 	saveScreen_x = x;
 	background = new fb_pixel_t [saveScreen_height * saveScreen_width];
 	if(background)
-		frameBuffer->SaveScreen(saveScreen_x /*-DETAILSLINE_WIDTH*/, saveScreen_y, saveScreen_width, saveScreen_height, background);
+		frameBuffer->SaveScreen(saveScreen_x, saveScreen_y, saveScreen_width, saveScreen_height, background);
 }
 
 void CMenuWidget::restoreScreen()
 {
 	if(background) {
 		if(savescreen)
-			frameBuffer->RestoreScreen(saveScreen_x /*-DETAILSLINE_WIDTH*/, saveScreen_y, saveScreen_width, saveScreen_height, background);
+			frameBuffer->RestoreScreen(saveScreen_x, saveScreen_y, saveScreen_width, saveScreen_height, background);
 	}
 }
 
