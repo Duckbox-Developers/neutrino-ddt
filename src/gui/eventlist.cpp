@@ -379,7 +379,7 @@ int CEventList::exec(const t_channel_id channel_id, const std::string& channelna
 	int oldselected = selected;
 
 	int timeout = g_settings.timing[SNeutrinoSettings::TIMING_EPG];
-	uint64_t timeoutEnd = CRCInput::calcTimeoutEnd(timeout == 0 ? 0xFFFF : timeout);
+	uint64_t timeoutEnd = CRCInput::calcTimeoutEnd(timeout);
 
 	bool loop = true;
 	while (loop)
@@ -388,7 +388,7 @@ int CEventList::exec(const t_channel_id channel_id, const std::string& channelna
 		g_RCInput->getMsgAbsoluteTimeout(&msg, &data, &timeoutEnd);
 
 		if ( msg <= CRCInput::RC_MaxRC )
-			timeoutEnd = CRCInput::calcTimeoutEnd(timeout == 0 ? 0xFFFF : timeout);
+			timeoutEnd = CRCInput::calcTimeoutEnd(timeout);
 
 		if((msg == NeutrinoMessages::EVT_TIMER) && (data == fader.GetFadeTimer())) {
 			if(fader.FadeDone())
@@ -398,7 +398,7 @@ int CEventList::exec(const t_channel_id channel_id, const std::string& channelna
 		{
 			selected = oldselected;
 			if(fader.StartFadeOut()) {
-				timeoutEnd = CRCInput::calcTimeoutEnd( 1 );
+				timeoutEnd = CRCInput::calcTimeoutEnd(1);
 				msg = 0;
 			} else
 				loop = false;
@@ -494,7 +494,7 @@ int CEventList::exec(const t_channel_id channel_id, const std::string& channelna
 						hide();
 						recDirs.exec(NULL,"");
 						paint(evtlist[selected].channelID);
-						timeoutEnd = CRCInput::calcTimeoutEnd(timeout == 0 ? 0xFFFF : timeout);
+						timeoutEnd = CRCInput::calcTimeoutEnd(timeout);
 					} 
 					else
 					{
@@ -531,7 +531,7 @@ int CEventList::exec(const t_channel_id channel_id, const std::string& channelna
 						evtlist[selected].startTime + evtlist[selected].duration,
 						evtlist[selected].description, evtlist[selected].eventID, TIMERD_APIDS_CONF, true, "", &evtlist);
 					m.exec(NULL, "");
-					timeoutEnd = CRCInput::calcTimeoutEnd(timeout == 0 ? 0xFFFF : timeout);
+					timeoutEnd = CRCInput::calcTimeoutEnd(timeout);
 				}
 				timerlist.clear();
 				g_Timerd->getTimerList (timerlist);
@@ -561,7 +561,7 @@ int CEventList::exec(const t_channel_id channel_id, const std::string& channelna
 			g_Timerd->getTimerList (timerlist);
 			paint(evtlist[selected].channelID );
 			paintFoot(evtlist[selected].channelID );
-			timeoutEnd = CRCInput::calcTimeoutEnd(timeout == 0 ? 0xFFFF : timeout);
+			timeoutEnd = CRCInput::calcTimeoutEnd(timeout);
 		}
 		else if (msg == (neutrino_msg_t)g_settings.key_channelList_cancel)
 		{
@@ -575,7 +575,7 @@ int CEventList::exec(const t_channel_id channel_id, const std::string& channelna
 			} else {
 				selected = oldselected;
 				if(fader.StartFadeOut()) {
-					timeoutEnd = CRCInput::calcTimeoutEnd( 1 );
+					timeoutEnd = CRCInput::calcTimeoutEnd(1);
 					msg = 0;
 				} else
 					loop = false;
@@ -611,7 +611,7 @@ int CEventList::exec(const t_channel_id channel_id, const std::string& channelna
 			infozone_background = false;
 			paint(channel_id);
 			paintFoot(channel_id);
-			timeoutEnd = CRCInput::calcTimeoutEnd(timeout == 0 ? 0xFFFF : timeout);
+			timeoutEnd = CRCInput::calcTimeoutEnd(timeout);
 		}
 		else if (msg == CRCInput::RC_epg)
 		{
@@ -654,7 +654,7 @@ int CEventList::exec(const t_channel_id channel_id, const std::string& channelna
 					infozone_background = false;
 					paint(channel_id);
 					paintFoot(channel_id);
-					timeoutEnd = CRCInput::calcTimeoutEnd(timeout == 0 ? 0xFFFF : timeout);
+					timeoutEnd = CRCInput::calcTimeoutEnd(timeout);
 				}
 			}
 		}
@@ -664,7 +664,7 @@ int CEventList::exec(const t_channel_id channel_id, const std::string& channelna
 			oldEventID = -1;
 			infozone_background = false;
 			in_search = findEvents(channel_id, channelname);
-			timeoutEnd = CRCInput::calcTimeoutEnd(timeout == 0 ? 0xFFFF : timeout);
+			timeoutEnd = CRCInput::calcTimeoutEnd(timeout);
 		}
 		else if (CNeutrinoApp::getInstance()->listModeKey(msg)) {
 			g_RCInput->postMsg (msg, 0);
