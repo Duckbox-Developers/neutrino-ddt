@@ -418,7 +418,7 @@ CPictureViewer::CPictureViewer ()
 	m_aspect_ratio_correction = m_aspect / ((double) xs / ys);
 
 	m_busy_buffer = NULL;
-	logo_hdd_dir = string(g_settings.logo_hdd_dir);
+	logo_hdd_dir = std::string(g_settings.logo_hdd_dir);
 	pthread_mutexattr_t attr;
 	pthread_mutexattr_init(&attr);
 	pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK_NP);

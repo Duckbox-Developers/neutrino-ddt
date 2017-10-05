@@ -95,7 +95,7 @@ int C3DSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 		hintBox.paint();
 		load();
 		if (frameBuffer->get3DMode() == CFrameBuffer::Mode3D_off) {
-			map<t_channel_id, CFrameBuffer::Mode3D>::iterator i;
+			std::map<t_channel_id, CFrameBuffer::Mode3D>::iterator i;
 			i = threeDMap.find(CZapit::getInstance()->GetCurrentChannelID());
 			if (i != threeDMap.end())
 				threeDMap.erase(i);
@@ -108,7 +108,7 @@ int C3DSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 	}
 	if (actionKey == "zapped") {
 		load();
-		map<t_channel_id, CFrameBuffer::Mode3D>::iterator i;
+		std::map<t_channel_id, CFrameBuffer::Mode3D>::iterator i;
 		i = threeDMap.find(CZapit::getInstance()->GetCurrentChannelID());
 		if (i != threeDMap.end())
 			frameBuffer->set3DMode((*i).second);
@@ -156,7 +156,7 @@ void C3DSetup::load()
 
 void C3DSetup::save()
 {
-	map<t_channel_id, CFrameBuffer::Mode3D>::iterator i;
+	std::map<t_channel_id, CFrameBuffer::Mode3D>::iterator i;
 	FILE *f = fopen(THREE_D_CONFIG_FILE, "w");
 	if (f) {
 		for (i = threeDMap.begin(); i != threeDMap.end(); i++) {

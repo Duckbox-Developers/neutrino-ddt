@@ -43,7 +43,7 @@ extern CPictureViewer * g_PicViewer;
 nGLCD::nGLCD() {
 	lcd = NULL;
 	Channel = "Neutrino";
-	Epg = string(g_info.hw_caps->boxvendor) + " " + string(g_info.hw_caps->boxname);
+	Epg = std::string(g_info.hw_caps->boxvendor) + " " + std::string(g_info.hw_caps->boxname);
 
 	sem_init(&sem, 0, 1);
 
@@ -139,7 +139,7 @@ void nGLCD::Exec() {
 				font_tmp.LoadFT2(g_settings.glcd_font, "UTF-8", fontsize_epg * (bitmap->Width() - 4) / fw);
 				fw = font_tmp.Width(Epg);
 
-				bitmap->DrawText(max(2,(bitmap->Width() - 4 - fw)/2),
+				bitmap->DrawText(std::max(2,(bitmap->Width() - 4 - fw)/2),
 					10 * bitmap->Height()/100, bitmap->Width() - 4, Epg,
 					&font_tmp, g_settings.glcd_color_fg, GLCD::cColor::Transparent);
 
@@ -158,7 +158,7 @@ void nGLCD::Exec() {
 
 			std::string Time = strftime("%H:%M", tm);
 
-			bitmap->DrawText(max(2,(bitmap->Width() - 4 - font_time_standby.Width(Time))/2),
+			bitmap->DrawText(std::max(2,(bitmap->Width() - 4 - font_time_standby.Width(Time))/2),
 				(bitmap->Height() - font_time_standby.Height(Time))/2, bitmap->Width() - 1, Time,
 				&font_time_standby, g_settings.glcd_color_fg, GLCD::cColor::Transparent);
 			lcd->SetScreen(bitmap->Data(), bitmap->Width(), bitmap->Height());
@@ -197,7 +197,7 @@ void nGLCD::Exec() {
 				doScrollChannel = false;
 			}
 
-			bitmap->DrawText(max(2,(bitmap->Width() - 4 - ChannelWidth)/2) + scrollChannelOffset,
+			bitmap->DrawText(std::max(2,(bitmap->Width() - 4 - ChannelWidth)/2) + scrollChannelOffset,
 				off * bitmap->Height()/100, bitmap->Width() - 4, Channel,
 				&font_channel, g_settings.glcd_color_fg, GLCD::cColor::Transparent, true, scrollChannelSkip);
 
@@ -231,7 +231,7 @@ void nGLCD::Exec() {
 				doScrollEpg = false;
 			}
 
-			bitmap->DrawText(max(2,(bitmap->Width() - 4 - EpgWidth)/2) + scrollEpgOffset,
+			bitmap->DrawText(std::max(2,(bitmap->Width() - 4 - EpgWidth)/2) + scrollEpgOffset,
 				off * bitmap->Height()/100, bitmap->Width() - 4, Epg,
 				&font_epg, g_settings.glcd_color_fg, GLCD::cColor::Transparent, true, scrollEpgSkip);
 
@@ -268,7 +268,7 @@ void nGLCD::Exec() {
 	if (percent_time) {
 		off += percent_space;
 		std::string Time = strftime("%H:%M", tm);
-		bitmap->DrawText(max(2,(bitmap->Width() - 4 - font_time.Width(Time))/2),
+		bitmap->DrawText(std::max(2,(bitmap->Width() - 4 - font_time.Width(Time))/2),
 			off * bitmap->Height()/100, bitmap->Width() - 1, Time,
 			&font_time, g_settings.glcd_color_fg, GLCD::cColor::Transparent);
 	}

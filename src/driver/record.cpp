@@ -183,7 +183,7 @@ void CRecordInstance::WaitRecMsg(time_t StartTime, time_t WaitTime)
 void recordingFailureHelper(void *data)
 {
 	CRecordInstance *inst = (CRecordInstance *) data;
-	std::string errormsg = std::string(g_Locale->getText(LOCALE_RECORDING_FAILED)) + "\n" + string(inst->GetFileName());
+	std::string errormsg = std::string(g_Locale->getText(LOCALE_RECORDING_FAILED)) + "\n" + std::string(inst->GetFileName());
 	CHintBox hintBox(LOCALE_MESSAGEBOX_INFO, errormsg.c_str());
 	hintBox.paint();
 	sleep(3);

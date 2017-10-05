@@ -3350,7 +3350,7 @@ void CMoviePlayerGui::parsePlaylist(CFile *file)
 				std::string::iterator it;
 				std::string name_s = name;
 				for (it = name_s.begin() ; it < name_s.end() ; ++it){
-					bool found = illegalChars.find(*it) != string::npos;
+					bool found = illegalChars.find(*it) != std::string::npos;
 					if(found){
 						*it = ' ';
 					}

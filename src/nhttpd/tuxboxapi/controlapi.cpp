@@ -3414,7 +3414,7 @@ void CControlAPI::build_playlist(CyhookHandler *hh)
 		std::string illegalChars = "\\/:?\"<>|+ ";
 		std::string::iterator it;
 		for (it = chan_name.begin() ; it < chan_name.end() ; ++it){
-		    bool found = illegalChars.find(*it) != string::npos;
+		    bool found = illegalChars.find(*it) != std::string::npos;
 	    	if(found){
 	        	*it = '_';
 	    	}

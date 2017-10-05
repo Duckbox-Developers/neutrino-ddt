@@ -54,7 +54,7 @@
 
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 struct borderFrame { int sx, sy, ex, ey; };
-static map<t_channel_id, borderFrame> borderMap;
+static std::map<t_channel_id, borderFrame> borderMap;
 #define BORDER_CONFIG_FILE CONFIGDIR "/zapit/borders.conf"
 #else
 //int x_box = 15 * 5;
