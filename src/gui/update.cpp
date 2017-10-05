@@ -434,7 +434,7 @@ bool CFlashUpdate::checkVersion4Update()
 		if (allow_flash)
 			UpdatesFilter.addFilter(FILEBROWSER_UPDATE_FILTER);
 
-		string filters[] = {"bin", "txt", "opk", "ipk"};
+		std::string filters[] = {"bin", "txt", "opk", "ipk"};
 		for(size_t i=0; i<sizeof(filters)/sizeof(filters[0]) ;i++)
 			UpdatesFilter.addFilter(filters[i]);
 

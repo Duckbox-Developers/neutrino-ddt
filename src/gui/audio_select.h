@@ -33,8 +33,6 @@
 
 
 
-using namespace std;
-
 class CAudioSelectMenuHandler : public CMenuTarget
 {
 	private:
