@@ -256,6 +256,10 @@ struct SNeutrinoSettings
 	int audio_mixer_volume_spdif;
 	int audio_mixer_volume_hdmi;
 #endif
+#if HAVE_ARM_HARDWARE
+	int ac3_pass;
+	int dts_pass;
+#endif // HAVE_ARM_HARDWARE
 	int auto_lang;
 	int auto_subs;
 	int srs_enable;
