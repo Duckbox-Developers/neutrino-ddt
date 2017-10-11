@@ -32,7 +32,11 @@
 #include <map>
 
 
+#if HAVE_ARM_HARDWARE
+#define THREE_D_OPTIONS_COUNT 3
+#else
 #define THREE_D_OPTIONS_COUNT 4
+#endif
 
 class C3DSetup:public CMenuTarget
 {

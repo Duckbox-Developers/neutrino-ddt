@@ -1869,3 +1869,12 @@ uint32_t CFrameBuffer::getWidth4FB_HW_ACC(const uint32_t /*x*/, const uint32_t w
 {
 	return w;
 }
+
+CFrameBuffer::Mode3D CFrameBuffer::get3DMode()
+{
+	return Mode3D_off;
+}
+
+void CFrameBuffer::set3DMode(Mode3D m)
+{
+}

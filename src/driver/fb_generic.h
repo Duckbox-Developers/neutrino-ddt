@@ -279,6 +279,10 @@ class CFrameBuffer : public sigc::trackable
 		virtual void blitBox2FB(const fb_pixel_t* boxBuf, uint32_t width, uint32_t height, uint32_t xoff, uint32_t yoff);
 
 		virtual void mark(int x, int y, int dx, int dy);
+		enum Mode3D { Mode3D_off = 0, Mode3D_SideBySide, Mode3D_TopAndBottom, Mode3D_SIZE };
+		virtual void set3DMode(Mode3D);
+		virtual Mode3D get3DMode(void);
+		enum Mode3D mode3D;
 /* Remove this when pu/fb-setmode branch is merged to master */
 #define SCALE2RES_DEFINED
 		virtual int scale2Res(int size) { return size; };

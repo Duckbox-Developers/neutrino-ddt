@@ -62,9 +62,11 @@
 
 #include <cs_api.h>
 #include <video.h>
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
+#include "3dsetup.h"
+#endif
 #if HAVE_SH4_HARDWARE
 #include <zapit/zapit.h>
-#include "3dsetup.h"
 #include "screensetup.h"
 #endif
 
@@ -559,6 +561,14 @@ int CVideoSettings::showVideoSetup()
 	mf->setHint("", LOCALE_MENU_HINT_VIDEO_MASK);
 	videosetup->addItem(mf);
 #endif
+#if HAVE_ARM_HARDWARE
+	CMenuForwarder *mf;
+	videosetup->addItem(GenericMenuSeparatorLine);
+
+	mf = new CMenuForwarder(LOCALE_THREE_D_SETTINGS, true, NULL, CNeutrinoApp::getInstance(), "3dmode", CRCInput::RC_green);
+	mf->setHint("", LOCALE_MENU_HINT_VIDEO_THREE_D);
+	videosetup->addItem(mf);
+#endif // HAVE_ARM_HARDWARE
 #ifdef BOXMODEL_CS_HD2
 	/* values are from -128 to 127, but brightness really no sense after +/- 40. changeNotify multiply contrast and saturation to 3 */
 	CMenuOptionNumberChooser * bcont = new CMenuOptionNumberChooser(LOCALE_VIDEOMENU_BRIGHTNESS, &g_settings.brightness, true, -42, 42, this);

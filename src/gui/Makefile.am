@@ -126,6 +126,11 @@ libneutrino_gui_a_SOURCES += \
 	psisetup.cpp
 endif
 
+if BOXTYPE_ARMBOX
+libneutrino_gui_a_SOURCES += \
+	3dsetup.cpp
+endif
+
 if ENABLE_GRAPHLCD
 libneutrino_gui_a_SOURCES += \
 	glcdsetup.cpp

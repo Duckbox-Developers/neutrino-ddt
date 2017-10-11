@@ -222,6 +222,8 @@ class CFbAccelARM
 		int scale2Res(int size);
 		bool fullHdAvailable();
 		void setOsdResolutions();
+		void set3DMode(Mode3D);
+		Mode3D get3DMode(void);
 };
 
 #endif
