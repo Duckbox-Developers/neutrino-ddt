@@ -797,6 +797,7 @@ void CFlashExpert::readmtd(int preadmtd)
 	netGetHostname(hostName);
 	std::string timeStr  = getNowTimeStr("_%Y%m%d_%H%M");
 	std::string tankStr  = "";
+
 #if ENABLE_EXTUPDATE
 #ifdef BOXMODEL_CS_HD2
 	int eSize = CMTDInfo::getInstance()->getMTDEraseSize(CMTDInfo::getInstance()->findMTDsystem());

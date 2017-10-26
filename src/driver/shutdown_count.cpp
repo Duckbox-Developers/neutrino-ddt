@@ -4,6 +4,8 @@
 	Copyright (C) 2001 Steffen Hehn 'McClean'
 	Homepage: http://dbox.cyberphoria.org/
 
+	Copyright (C) 2012-2013 Stefan Seyfried
+
 	License: GPL
 
 	This program is free software; you can redistribute it and/or modify
@@ -40,9 +42,20 @@
 
 SHTDCNT::SHTDCNT()
 {
+	thread_running = false;
 	sleep_cnt = 0;
 	shutdown_cnt = 0;
 	thread_running = false;
+}
+
+SHTDCNT::~SHTDCNT()
+{
+	if (thread_running)
+	{
+		thread_running = false;
+		pthread_cancel(thrTime);
+		pthread_join(thrTime, NULL);
+	}
 }
 
 SHTDCNT::~SHTDCNT()

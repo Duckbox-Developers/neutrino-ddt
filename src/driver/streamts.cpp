@@ -57,7 +57,6 @@
 #include <driver/record.h>
 #include <driver/genpsi.h>
 #include <system/set_threadname.h>
-
 #include <gui/movieplayer.h>
 
 #include <system/set_threadname.h>
@@ -161,7 +160,7 @@ void CStreamInstance::AddClient(int clientfd)
 {
 	OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(mutex);
 	fds.insert(clientfd);
-	printf("CStreamInstance::AddClient: %d (count %d)\n", clientfd, fds.size());
+	printf("CStreamInstance::AddClient: %d (count %d)\n", clientfd, (int)fds.size());
 }
 
 void CStreamInstance::RemoveClient(int clientfd)
@@ -169,7 +168,7 @@ void CStreamInstance::RemoveClient(int clientfd)
 	OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(mutex);
 	fds.erase(clientfd);
 	close(clientfd);
-	printf("CStreamInstance::RemoveClient: %d (count %d)\n", clientfd, fds.size());
+	printf("CStreamInstance::RemoveClient: %d (count %d)\n", clientfd, (int)fds.size());
 }
 
 bool CStreamInstance::Open()
@@ -283,8 +282,11 @@ bool CStreamManager::Stop()
 	if (!running)
 		return false;
 	running = false;
-	cancel();
-	bool ret = (OpenThreads::Thread::join() == 0);
+	bool ret = false;
+	if (OpenThreads::Thread::CurrentThread() == this) {
+		cancel();
+		ret = (OpenThreads::Thread::join() == 0);
+	}
 	StopAll();
 	return ret;
 }

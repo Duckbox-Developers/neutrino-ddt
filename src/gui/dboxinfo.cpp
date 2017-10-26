@@ -46,7 +46,6 @@
 #include <driver/record.h>
 
 #include <zapit/femanager.h>
-#include <cs_api.h>
 
 #include <sys/sysinfo.h>
 #include <sys/vfs.h>
@@ -333,10 +332,7 @@ void CDBoxInfoWidget::paint()
 
 	//paint head
 	std::string title(g_Locale->getText(LOCALE_EXTRA_DBOXINFO));
-#if 1
-	title += ": ";
-	title += g_info.hw_caps->boxname;
-#else
+#if 0
 	std::map<std::string,std::string> cpuinfo;
 	in.open("/proc/cpuinfo");
 	if (in.is_open()) {
@@ -358,10 +354,11 @@ void CDBoxInfoWidget::paint()
 		title += ": ";
 		title + cpuinfo["machine"];
 	}
-	char ss[17];
-	sprintf(ss, "%016llx", cs_get_serial());
-	title += ", S/N ";
-	title += ss;
+#endif
+	title += ": ";
+	title += g_info.hw_caps->boxvendor;
+	title += " ";
+	title += g_info.hw_caps->boxname;
 	width = std::max(width, g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getRenderWidth(title, true) + 50);
 #endif
 
@@ -490,7 +487,6 @@ void CDBoxInfoWidget::paint()
 	const int headSize = 5;
 	int maxWidth[headSize];
 	memset(maxWidth, 0, headSize * sizeof(int));
-
 	int ypos_mem_head = ypos;
 	ypos += mheight;
 
@@ -566,7 +562,7 @@ void CDBoxInfoWidget::paint()
 						tmp = basename((char *)mnt);
 						_w = nameWidth - mpOffset;
 						if ((*it).second)
-							_w -= icon_w + 10;
+							_w -= icon_w;
 						_w += width_i/2;
 						break;
 					case 1:

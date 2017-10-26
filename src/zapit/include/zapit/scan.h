@@ -122,7 +122,6 @@ class CServiceScan : public OpenThreads::Thread
 		bool ScanFast();
 		void ReportFastScan(FrontendParameters &feparams, t_satellite_position satellitePosition);
 #endif
-
 		void run();
 
 		CFrontend * frontend;

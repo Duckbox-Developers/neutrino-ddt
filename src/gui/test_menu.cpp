@@ -662,7 +662,7 @@ int CTestMenu::exec(CMenuTarget* parent, const std::string &actionKey)
 			footer->setIcon(NEUTRINO_ICON_INFO);
 
 			//add button labels with conventional button label struct
-			footer->setButtonLabels(TestButtons, TestButtonsCount, 0, footer->getWidth()/TestButtonsCount);
+			footer->setButtonLabels(TestButtons, TestButtonsCount, 1000, footer->getWidth()/TestButtonsCount);
 
 			//also possible: use directly button name and as 2nd parameter string or locale as text
 //			footer->setButtonLabel(NULL, "Test", 0, 250);
@@ -1127,9 +1127,12 @@ int CTestMenu::showTestMenu()
 	w_test.setFooter(footerButtons, 2);
 	w_test.addKey(CRCInput::RC_red, this, "footer_key");
 	w_test.addKey(CRCInput::RC_green, this, "footer_key");
-
+	int res = w_test.exec(NULL, "");
+	delete w_hw;
+	delete w_cc;
+	delete w_msg;
 	//exit
-	return w_test.exec(NULL, "");;
+	return res;
 }
 
 void CTestMenu::showCCTests(CMenuWidget *widget)

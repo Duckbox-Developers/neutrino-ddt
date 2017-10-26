@@ -157,7 +157,6 @@ class CLCD
 
 
 	private:
-
 #ifdef HAVE_TRIPLEDRAGON
 		class FontsDef
 		{

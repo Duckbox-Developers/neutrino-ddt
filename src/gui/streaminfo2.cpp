@@ -1,6 +1,9 @@
 /*
 	Neutrino-GUI  -   DBoxII-Project
 
+	(C) 2004-2009 tuxbox project contributors
+
+	(C) 2011-2012,2015 Stefan Seyfried
 
 	License: GPL
 
@@ -33,6 +36,7 @@
 #include <global.h>
 #include <neutrino.h>
 
+#include <driver/abstime.h>
 #include <driver/fade.h>
 #include <driver/display.h>
 #include <driver/fontrenderer.h>
@@ -140,43 +144,20 @@ int CStreamInfo2::doSignalStrengthLoop ()
 	neutrino_msg_t msg;
 	neutrino_msg_t postmsg = 0;
 	uint64_t maxb, minb, lastb, tmp_rate;
-	unsigned int current_pmt_version= pmt_version;
+	unsigned int current_pmt_version = (unsigned int)-1;
 	int cnt = 0;
-	char tmp_str[150];
 	int delay_counter = 0;
 	const int delay = 15;
-	int offset = g_Font[font_info]->getRenderWidth(g_Locale->getText (LOCALE_STREAMINFO_BITRATE));
-	int sw = g_Font[font_info]->getRenderWidth ("99999.999");
+	int sw = g_Font[font_info]->getRenderWidth("99999");
 	maxb = minb = lastb = tmp_rate = 0;
+	std::string br_str = std::string(g_Locale->getText(LOCALE_STREAMINFO_BITRATE)) + ":";
+	std::string avg_str = "(" + std::string(g_Locale->getText(LOCALE_STREAMINFO_AVERAGE_BITRATE)) + ")";
+	int offset = g_Font[font_info]->getRenderWidth(avg_str);
+	int dheight = g_Font[font_info]->getHeight ();
+	int dx1 = x + 10;
 	ts_setup ();
 	frameBuffer->blit();
 	while (1) {
-		neutrino_msg_data_t data;
-
-		uint64_t timeoutEnd = CRCInput::calcTimeoutEnd_MS(10);
-		g_RCInput->getMsgAbsoluteTimeout (&msg, &data, &timeoutEnd);
-
-		if ((msg == NeutrinoMessages::EVT_TIMER) && (data == fader.GetFadeTimer()))
-		{
-			if (fader.FadeDone())
-			{
-				break;
-			}
-			continue;
-		}
-		if (fadeout && msg == CRCInput::RC_timeout)
-		{
-			if (fader.StartFadeOut())
-			{
-				msg = 0;
-				continue;
-			}
-			else
-			{
-				break;
-			}
-		}
-
 		if (!mp) {
 			signal.sig = frontend->getSignalStrength() & 0xFFFF;
 			signal.snr = frontend->getSignalNoiseRatio() & 0xFFFF;
@@ -188,17 +169,7 @@ int CStreamInfo2::doSignalStrengthLoop ()
 			
 			if (cnt < 12)
 				cnt++;
-			int dheight = g_Font[font_info]->getHeight ();
-			int dx1 = x + 10;
 
-			if(!mp && delay_counter > delay + 1){
-				CZapitChannel * channel = CZapit::getInstance()->GetCurrentChannel();
-				if(channel)
-					pmt_version = channel->getPmtVersion();
-				if(pmt_version != current_pmt_version){
-					delay_counter = 0;
-				}
-			}
 			if (ret && (lastb != bit_s)) {
 				lastb = bit_s;
 
@@ -208,26 +179,25 @@ int CStreamInfo2::doSignalStrengthLoop ()
 					rate.min_short_average = minb = bit_s;
 
 				char currate[150];
-				snprintf(tmp_str,sizeof(tmp_str), "%s:",g_Locale->getText(LOCALE_STREAMINFO_BITRATE));
-				g_Font[font_info]->RenderString(dx1 , average_bitrate_pos, offset+10, tmp_str, COL_MENUCONTENT_TEXT);
-
-				sprintf(currate, "%5llu.%02llu", rate.short_average / 1000ULL, rate.short_average % 1000ULL);
+				sprintf(currate, "%u", rate.short_average / 1000);
+				g_Font[font_info]->RenderString(dx1, average_bitrate_pos, width/2, br_str, COL_MENUCONTENT_TEXT);
+				g_Font[font_info]->RenderString(dx1+average_bitrate_offset+sw+10 , average_bitrate_pos, offset, avg_str, COL_MENUCONTENT_TEXT);
 				frameBuffer->paintBoxRel (dx1 + average_bitrate_offset , average_bitrate_pos -dheight, sw, dheight, COL_MENUCONTENT_PLUS_0);
-
-				g_Font[font_info]->RenderString (dx1 + average_bitrate_offset , average_bitrate_pos, sw - 10, currate, COL_MENUCONTENT_TEXT);
-
-				snprintf(tmp_str,sizeof(tmp_str), "(%s)",g_Locale->getText(LOCALE_STREAMINFO_AVERAGE_BITRATE));
-				g_Font[font_info]->RenderString (dx1 + average_bitrate_offset + sw , average_bitrate_pos, sw *2, tmp_str, COL_MENUCONTENT_TEXT);
-
+				g_Font[font_info]->RenderString(dx1+average_bitrate_offset, average_bitrate_pos, sw, currate, COL_MENUCONTENT_TEXT);
 			}
 			if (!mp) {
 				showSNR ();
-				if(pmt_version != current_pmt_version && delay_counter > delay){
-					current_pmt_version = pmt_version;
-					paint_techinfo (x + 10, y+ hheight +5);
+				if (++delay_counter > delay) {
+					CZapitChannel * channel = CZapit::getInstance()->GetCurrentChannel();
+					if (channel)
+						pmt_version = channel->getPmtVersion();
+					delay_counter = 0;
+					if (pmt_version != current_pmt_version && delay_counter > delay){
+						current_pmt_version = pmt_version;
+						paint_techinfo(dx1, y + hheight + 5);
+					}
 				}
 			}
-			delay_counter++;
 		}
 		rate.short_average = abit_s;
 		if (signal.max_ber < signal.ber)
@@ -253,6 +223,31 @@ int CStreamInfo2::doSignalStrengthLoop ()
 		signal.old_sig = signal.sig;
 		signal.old_snr = signal.snr;
 		signal.old_ber = signal.ber;
+
+		neutrino_msg_data_t data;
+		/* rate limiting is done in update_rate */
+		g_RCInput->getMsg_us(&msg, &data, 0);
+
+		if ((msg == NeutrinoMessages::EVT_TIMER) && (data == fader.GetFadeTimer()))
+		{
+			if (fader.FadeDone())
+			{
+				break;
+			}
+			continue;
+		}
+		if (fadeout && msg == CRCInput::RC_timeout)
+		{
+			if (fader.StartFadeOut())
+			{
+				msg = 0;
+				continue;
+			}
+			else
+			{
+				break;
+			}
+		}
 
 		// switch paint mode
 		if (msg == CRCInput::RC_red || msg == CRCInput::RC_blue || msg == CRCInput::RC_green || msg == CRCInput::RC_yellow) {
@@ -502,7 +497,7 @@ void CStreamInfo2::paint (int /*mode*/)
 		pip->paint(CC_SAVE_SCREEN_NO);
 
 		paint_techinfo (xpos, ypos);
-		paint_signal_fe_box (width - width/3 - 10, (y + 10 + height/3 + hheight), width/3, height/3 + hheight);
+		paint_signal_fe_box (width - width/3 - 10, y + 10 + height/3, width/3, height/3 + hheight);
 	} else {
 		// --  small PIG, small signal graph
 		// -- paint backround, title pig, etc.
@@ -668,8 +663,11 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 	   ddmode is always 1 ("CH1/CH2").
 	*/
 	audioDecoder->getAudioInfo(type, layer, freq, lbitrate, mode);
+	std::string desc = "N/A";
+	if (!g_RemoteControl->current_PIDs.APIDs.empty())
+		desc = g_RemoteControl->current_PIDs.APIDs[g_RemoteControl->current_PIDs.PIDs.selected_apid].desc;
 
-	if (type == AUDIO_FMT_MPEG)
+	if (type == AUDIO_FMT_MPEG || type == AUDIO_FMT_MP3)
 	{
 		const char *mpegmodes[] =
 		{
@@ -679,9 +677,9 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 			"single_ch"
 		};
 		int max_mode = sizeof(mpegmodes) / sizeof(mpegmodes[0]);
-		snprintf(buf, sizeof(buf), "MPEG %s (%d)",
+		snprintf(buf, sizeof(buf), "MPEG %s (%d) (%s)",
 			 (mode > max_mode) ? "unk" : mpegmodes[mode],
-			 freq);
+			 freq, desc.c_str());
 	}
 	else if (type == AUDIO_FMT_DOLBY_DIGITAL || type == AUDIO_FMT_DD_PLUS)
 	{
@@ -697,10 +695,10 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 			"L/C/R/SL/SR"
 		};
 		int max_mode = sizeof(ddmodes) / sizeof(ddmodes[0]);
-		snprintf(buf, sizeof(buf), "%s %s (%d)",
+		snprintf(buf, sizeof(buf), "%s %s (%d) (%s)",
 			 (type == AUDIO_FMT_DOLBY_DIGITAL) ? "DD" : "DD+",
 			 (mode > max_mode) ? "unk" : ddmodes[mode],
-			 freq);
+			 freq, desc.c_str());
 	}
 	else if (type == AUDIO_FMT_AAC || type == AUDIO_FMT_AAC_PLUS)
 	{
@@ -718,16 +716,16 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 			"Dual-Mono"
 		};
 		int max_mode = sizeof(aacmodes) / sizeof(aacmodes[0]);
-		snprintf(buf, sizeof(buf), "%s %s (%d)",
+		snprintf(buf, sizeof(buf), "%s %s (%d) (%s)",
 			 (type == AUDIO_FMT_AAC) ? "AAC" : "AAC+",
 			 (mode > max_mode) ? "unk" : aacmodes[mode],
-			 freq);
+			 freq, desc.c_str());
 	}
 	else
 	{
-		snprintf(buf, sizeof(buf), "%s (%d)",
+		snprintf(buf, sizeof(buf), "%s (%d) (%s)",
 			 g_Locale->getText(LOCALE_STREAMINFO_AUDIOTYPE_UNKNOWN),
-			 freq);
+			 freq, desc.c_str());
 	}
 #endif
 	g_Font[font_info]->RenderString (xpos+spaceoffset, ypos, box_width2, buf, COL_MENUCONTENT_TEXT);
@@ -956,7 +954,6 @@ void CStreamInfo2::paintCASystem(int xpos, int ypos)
 	}
 
 	spaceoffset+=4;
-	ypos += iheight*2;
 	bool cryptsysteme = true;
 	for(int ca_id = 0; ca_id < NUM_CAIDS; ca_id++){
 		if(caids[ca_id] == true){
@@ -1071,16 +1068,23 @@ int CStreamInfo2::update_rate ()
 
 	int ret = 0;
 	int timeout = 100;
-	int b_len;
-
+	int b_len = 0;
 	if(!dmx && !mp)
 		return 0;
 
-	if (mp) {
-		usleep(timeout * 1000);
-		b_len = mp->GetReadCount();
-	} else {
-		b_len = dmx->Read(dmxbuf, TS_BUF_SIZE, timeout);
+        if (mp) {
+                usleep(timeout * 1000);
+                b_len = mp->GetReadCount();
+        } else {
+		int64_t start = time_monotonic_ms();
+		/* always sample for ~100ms */
+		while (time_monotonic_ms() - start < timeout)
+		{
+			ret = dmx->Read(dmxbuf, TS_BUF_SIZE, 10);
+			if (ret >= 0)
+				b_len += ret;
+		}
+		//printf("ts: read %d time %" PRId64 "\n", b_len, time_monotonic_ms() - start);
 	}
 	//printf("ts: read %d\n", b_len);
 
@@ -1110,8 +1114,8 @@ int CStreamInfo2::update_rate ()
 
 	last_tv.tv_sec = tv.tv_sec;
 	last_tv.tv_usec = tv.tv_usec;
-	ret = 1;
-	return ret;
+
+	return 1;
 }
 
 int CStreamInfo2::ts_close ()
@@ -1127,9 +1131,15 @@ int CStreamInfo2::ts_close ()
 
 void CStreamInfo2::showSNR ()
 {
+	/* sig_text_y + sheight + 4 + 5 is upper limit of ber/snr/sig numbers
+	 * sheight*3 is 3x sig numbers + 1/2 sheight */
+	int snr_y = sig_text_y + 4+5 + sheight*9 / 2;
+	int snr_h = 50;
+	if (snr_y + snr_h > max_height - 10)
+		return;
 	if (signalbox == NULL)
 	{
-		signalbox = new CSignalBox(x + 10, yypos, 240, 50, frontend);
+		signalbox = new CSignalBox(sigBox_x, snr_y, 240, snr_h, frontend);
 		signalbox->setColorBody(COL_MENUCONTENT_PLUS_0);
 		signalbox->setTextColor(COL_MENUCONTENT_TEXT);
 		signalbox->doPaintBg(true);

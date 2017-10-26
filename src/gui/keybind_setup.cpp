@@ -510,9 +510,11 @@ void CKeybindSetup::showKeyBindSetup(CMenuWidget *bindSettings)
 	mf->setHint("", key_settings[NKEY_UNLOCK].hint);
 	bindSettings->addItem(mf);
 	// screenshot
+#ifdef SCREENSHOT
 	mf = new CMenuForwarder(key_settings[NKEY_SCREENSHOT].keydescription, true, keychooser[NKEY_SCREENSHOT]->getKeyName(), keychooser[NKEY_SCREENSHOT]);
 	mf->setHint("", key_settings[NKEY_SCREENSHOT].hint);
 	bindSettings->addItem(mf);
+#endif
 #ifdef ENABLE_PIP
 	// pip
 	mf = new CMenuForwarder(key_settings[NKEY_PIP_CLOSE].keydescription, true, keychooser[NKEY_PIP_CLOSE]->getKeyName(), keychooser[NKEY_PIP_CLOSE]);

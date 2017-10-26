@@ -4,6 +4,7 @@
  * (C) 2002-2003 Andreas Oberritter <obi@tuxbox.org>
  *
  * Copyright (C) 2011 CoolStream International Ltd
+ * Copyright (C) 2009,2010,2012,2013 Stefan Seyfried
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

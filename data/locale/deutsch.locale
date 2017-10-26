@@ -2344,8 +2344,8 @@ servicemenu.head Service
 servicemenu.imageinfo Imageinfo
 servicemenu.reload Kanallisten neu laden
 servicemenu.reload_hint Kanallisten werden neu geladen,\nbitte warten ...
-servicemenu.restart GUI neu starten
-servicemenu.restart_hint GUI wird neu gestartet ...
+servicemenu.restart Neutrino neu starten
+servicemenu.restart_hint Neutrino wird neu gestartet ...
 servicemenu.restart_refused_recording Aufnahme läuft. Neustart nicht möglich.
 servicemenu.restart_tuner Tuner neu starten
 servicemenu.restarting_tuner Tuner wird neu gestartet
@@ -2430,6 +2430,7 @@ timerlist.bouquetselect Bouquet wählen
 timerlist.channel Kanal
 timerlist.channelselect Kanal wählen
 timerlist.delete Löschen
+timerlist.info Info
 timerlist.menumodify Timer bearbeiten
 timerlist.menunew Neuer Timer
 timerlist.message Nachricht
@@ -2465,6 +2466,7 @@ timerlist.repeatcount Wiederholungen
 timerlist.repeatcount.hint_1 Anzahl der Timerausführungen
 timerlist.repeatcount.hint_2 0 für unbegrenzte Anzahl
 timerlist.save Timer speichern
+timerlist.send.timer Sende Timer
 timerlist.standby Aktion
 timerlist.standby.off Aufwachen aus Standby
 timerlist.standby.on In Standby gehen

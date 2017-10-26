@@ -178,6 +178,7 @@ class CInfoViewer
 	void lookAheadEPG(const int ChanNum, const std::string & Channel, const t_channel_id new_channel_id = 0, const bool calledFromNumZap = false); //alpha: fix for nvod subchannel update
 	void	killTitle();
 	void	getEPG(const t_channel_id for_channel_id, CSectionsdClient::CurrentNextInfo &info);
+	CSectionsdClient::CurrentNextInfo getCurrentNextInfo() const { return info_CurrentNext; }
 	
 	void	showSubchan();
 	//void	Set_CA_Status(int Status);

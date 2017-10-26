@@ -995,7 +995,10 @@ void CRadioText::run()
 	set_threadname("n:radiotext");
 	uint current_pid = 0;
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	printf("CRadioText::run: ###################### Starting thread ######################\n");
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE || HAVE_GENERIC_HARDWARE
+	int buflen = 0;
+	unsigned char *buf = NULL;
 	audioDemux = new cDemux(0); // live demux
 #else
 	audioDemux = new cDemux(1);
@@ -1034,7 +1037,7 @@ void CRadioText::run()
 		}
 		mutex.unlock();
 		if (pid) {
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE || HAVE_GENERIC_HARDWARE
 			int n;
 			unsigned char tmp[6];
 
@@ -1056,7 +1059,7 @@ void CRadioText::run()
 			if (!buf)
 				break;
 			memcpy(buf, tmp, 6);
-		
+
 			while ((n < packlen) && running) {
 				int len = audioDemux->Read(buf + n, packlen - n, 500);
 				if (len < 0)
@@ -1069,7 +1072,6 @@ void CRadioText::run()
 
 			n = audioDemux->Read(buf, sizeof(buf), 500 /*5000*/);
 #endif
-
 			if (n > 0) {
 				//printf("."); fflush(stdout);
 				mutex.lock();
@@ -1078,7 +1080,7 @@ void CRadioText::run()
 			}
 		}
 	}
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE || HAVE_GENERIC_HARDWARE
 	if (buf)
 		free(buf);
 #endif

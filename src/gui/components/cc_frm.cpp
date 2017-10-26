@@ -256,7 +256,7 @@ int CComponentsForm::genIndex()
 CComponentsItem* CComponentsForm::getCCItem(const uint& cc_item_id)
 {
 	if (cc_item_id >= size()){
-		dprintf(DEBUG_NORMAL, "[CComponentsForm]   [%s - %d]  Error: parameter cc_item_id = %u, out of range (size = %" PRIx32")...\n", __func__, __LINE__, cc_item_id, size());
+		dprintf(DEBUG_NORMAL, "[CComponentsForm]   [%s - %d]  Error: parameter cc_item_id = %u, out of range (size = %zx)...\n", __func__, __LINE__, cc_item_id, size());
 		return NULL;
 	}
 

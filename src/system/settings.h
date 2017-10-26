@@ -4,6 +4,8 @@
   Copyright (C) 2001 Steffen Hehn 'McClean'
   Homepage: http://dbox.cyberphoria.org/
 
+  Copyright (C) 2007-2012 Stefan Seyfried
+
   Kommentar:
 
   Diese GUI wurde von Grund auf neu programmiert und sollte nun vom
@@ -976,7 +978,7 @@ typedef struct time_settings_t
 
 const time_settings_struct_t timing_setting[SNeutrinoSettings::TIMING_SETTING_COUNT] =
 {
-	{ 0,	LOCALE_TIMING_MENU,			LOCALE_MENU_HINT_OSD_TIMING},//TODO: add hint locales
+	{ 240,	LOCALE_TIMING_MENU,			LOCALE_MENU_HINT_OSD_TIMING},//TODO: add hint locales
 	{ 60,	LOCALE_TIMING_CHANLIST,			LOCALE_MENU_HINT_OSD_TIMING},
 	{ 240,	LOCALE_TIMING_EPG,			LOCALE_MENU_HINT_OSD_TIMING},
 	{ 6,	LOCALE_TIMING_INFOBAR,			LOCALE_MENU_HINT_OSD_TIMING},

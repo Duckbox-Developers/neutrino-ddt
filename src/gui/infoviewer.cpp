@@ -104,6 +104,9 @@ CInfoViewer::CInfoViewer ()
 	info_CurrentNext.current_zeit.dauer = 0;
 	info_CurrentNext.flags = 0;
 	clock = NULL;
+	info_CurrentNext.current_zeit.startzeit = 0;
+	info_CurrentNext.current_zeit.dauer = 0;
+	info_CurrentNext.flags = 0;
 	frameBuffer = CFrameBuffer::getInstance();
 	infoViewerBB = CInfoViewerBB::getInstance();
 	InfoHeightY = 0;
@@ -144,8 +147,6 @@ void CInfoViewer::Init()
 	recordModeActive = false;
 	is_visible = false;
 	showButtonBar = false;
-	//gotTime = g_Sectionsd->getIsTimeSet ();
-	gotTime = timeset;
 	zap_mode = IV_MODE_DEFAULT;
 	newfreq = true;
 	chanready = 1;
@@ -538,7 +539,7 @@ void CInfoViewer::show_current_next(bool new_chan, int  epgpos)
 
 	if (!(info_CurrentNext.flags & (CSectionsdClient::epgflags::has_later | CSectionsdClient::epgflags::has_current | CSectionsdClient::epgflags::not_broadcast))) {
 		neutrino_locale_t loc;
-		if (!gotTime)
+		if (!timeset)
 			loc = LOCALE_INFOVIEWER_WAITTIME;
 		else if (showButtonBar)
 			loc = LOCALE_INFOVIEWER_EPGWAIT;
@@ -574,8 +575,6 @@ void CInfoViewer::showMovieTitle(const int playState, const t_channel_id &Channe
 	fileplay = true;
 	zap_mode = _zap_mode;
 	reset_allScala();
-	if (!gotTime)
-		gotTime = timeset;
 
 	if (g_settings.radiotext_enable && g_Radiotext) {
 		g_Radiotext->RT_MsgShow = true;
@@ -738,8 +737,6 @@ void CInfoViewer::showTitle(CZapitChannel * channel, const bool calledFromNumZap
 	newfreq = true;
 
 	reset_allScala();
-	if (!gotTime)
-		gotTime = timeset;
 
 	if(!is_visible && !calledFromNumZap)
 		fader.StartFadeIn();
@@ -1547,6 +1544,8 @@ int CInfoViewer::handleMsg (const neutrino_msg_t msg, neutrino_msg_data_t data)
 				show_Data (true);
 		}
 		showLcdPercentOver ();
+		eventname = info_CurrentNext.current_name;
+		CVFD::getInstance()->setEPGTitle(eventname);
 		return messages_return::handled;
 	} else if (msg == NeutrinoMessages::EVT_ZAP_SUB_FAILED) {
 		//chanready = 1;
@@ -1582,7 +1581,7 @@ int CInfoViewer::handleMsg (const neutrino_msg_t msg, neutrino_msg_data_t data)
 			infoViewerBB->showIcon_16_9 ();
 		return messages_return::handled;
 	} else if (msg == NeutrinoMessages::EVT_TIMESET) {
-		gotTime = true;
+		// gotTime = true;
 		return messages_return::handled;
 	}
 #if 0
@@ -1622,25 +1621,27 @@ void CInfoViewer::getEPG(const t_channel_id for_channel_id, CSectionsdClient::Cu
 
 	/* of there is no EPG, send an event so that parental lock can work */
 	if (info.current_uniqueKey == 0 && info.next_uniqueKey == 0) {
+		memcpy(&oldinfo, &info, sizeof(CSectionsdClient::CurrentNextInfo));
 		sendNoEpg(for_channel_id);
-		oldinfo = info;
 		return;
 	}
 
-	if (info.current_uniqueKey != oldinfo.current_uniqueKey || info.next_uniqueKey != oldinfo.next_uniqueKey) {
-		if (info.flags & (CSectionsdClient::epgflags::has_current | CSectionsdClient::epgflags::has_next)) {
-			CSectionsdClient::CurrentNextInfo *_info = new CSectionsdClient::CurrentNextInfo;
-			*_info = info;
-			neutrino_msg_t msg;
+	if (info.current_uniqueKey != oldinfo.current_uniqueKey || info.next_uniqueKey != oldinfo.next_uniqueKey)
+	{
+		char *p = new char[sizeof(t_channel_id)];
+		memcpy(p, &for_channel_id, sizeof(t_channel_id));
+		neutrino_msg_t msg;
+		if (info.flags & (CSectionsdClient::epgflags::has_current | CSectionsdClient::epgflags::has_next))
+		{
 			if (info.flags & CSectionsdClient::epgflags::has_current)
 				msg = NeutrinoMessages::EVT_CURRENTEPG;
 			else
 				msg = NeutrinoMessages::EVT_NEXTEPG;
-			g_RCInput->postMsg(msg, (const neutrino_msg_data_t) _info, false);
-		} else {
-			sendNoEpg(for_channel_id);
 		}
-		oldinfo = info;
+		else
+			msg = NeutrinoMessages::EVT_NOEPG_YET;
+		g_RCInput->postMsg(msg, (const neutrino_msg_data_t)p, false); // data is pointer to allocated memory
+		memcpy(&oldinfo, &info, sizeof(CSectionsdClient::CurrentNextInfo));
 	}
 }
 
@@ -1909,7 +1910,7 @@ void CInfoViewer::show_Data (bool calledFromEvent)
 		int seit = (abs(jetzt - info_CurrentNext.current_zeit.startzeit) + 30) / 60;
 		int rest = (info_CurrentNext.current_zeit.dauer / 60) - seit;
 		runningPercent = 0;
-		if (!gotTime)
+		if (!timeset)
 			snprintf(runningRest, sizeof(runningRest), "%d %s", info_CurrentNext.current_zeit.dauer / 60, unit_short_minute);
 		else if (jetzt < info_CurrentNext.current_zeit.startzeit)
 			snprintf(runningRest, sizeof(runningRest), "%s %d %s", g_Locale->getText(LOCALE_WORD_IN), seit, unit_short_minute);
@@ -1963,7 +1964,7 @@ void CInfoViewer::show_Data (bool calledFromEvent)
 			(calledFromEvent && !(info_CurrentNext.flags & (CSectionsdClient::epgflags::has_next|CSectionsdClient::epgflags::has_current))))
 	{
 		// no EPG available
-		display_Info(g_Locale->getText(gotTime ? LOCALE_INFOVIEWER_NOEPG : LOCALE_INFOVIEWER_WAITTIME), NULL);
+		display_Info(g_Locale->getText(timeset ? LOCALE_INFOVIEWER_NOEPG : LOCALE_INFOVIEWER_WAITTIME), NULL);
 		/* send message. Parental pin check gets triggered on EPG events... */
 		/* clear old info in getEPG */
 		CSectionsdClient::CurrentNextInfo dummy;
@@ -2024,7 +2025,7 @@ void CInfoViewer::show_Data (bool calledFromEvent)
 		// no EPG available
 		ChanInfoY += height;
 		frameBuffer->paintBox (ChanInfoX + 10, ChanInfoY, BoxEndX, ChanInfoY + height, COL_INFOBAR_PLUS_0);
-		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO]->RenderString (BoxStartX + ChanWidth + 20, ChanInfoY + height, BoxEndX - (BoxStartX + ChanWidth + 20), g_Locale->getText (gotTime ? LOCALE_INFOVIEWER_NOEPG : LOCALE_INFOVIEWER_WAITTIME), COL_INFOBAR_TEXT);
+		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO]->RenderString (BoxStartX + ChanWidth + 20, ChanInfoY + height, BoxEndX - (BoxStartX + ChanWidth + 20), g_Locale->getText (timeset ? LOCALE_INFOVIEWER_NOEPG : LOCALE_INFOVIEWER_WAITTIME), COL_INFOBAR_TEXT);
 	} else {
 		// irgendein EPG gefunden
 		int duration1Width = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO]->getRenderWidth (runningRest);

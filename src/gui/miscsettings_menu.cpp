@@ -281,7 +281,7 @@ int CMiscMenue::showMiscSettingsMenu()
 	misc_menue.addItem(mf);
 
 	//energy, shutdown
-	if(g_info.hw_caps->can_shutdown)
+	if (g_info.hw_caps->can_shutdown)
 	{
 		mf = new CMenuForwarder(LOCALE_MISCSETTINGS_ENERGY, true, NULL, this, "energy", CRCInput::RC_green);
 		mf->setHint("", LOCALE_MENU_HINT_MISC_ENERGY);
@@ -507,7 +507,8 @@ void CMiscMenue::showMiscSettingsMenuEpg(CMenuWidget *ms_epg)
 	mf3->setHint("", LOCALE_MENU_HINT_EPG_MAX_EVENTS);
 
 	epg_scan = new CMenuOptionChooser(LOCALE_MISCSETTINGS_EPG_SCAN_BOUQUETS, &g_settings.epg_scan, EPG_SCAN_OPTIONS, EPG_SCAN_OPTION_COUNT,
-		g_settings.epg_scan_mode != CEpgScan::MODE_OFF && g_settings.epg_save_mode == 0);
+		true);
+		//(g_settings.epg_scan_mode != CEpgScan::MODE_OFF && g_settings.epg_save_mode == 0);
 	epg_scan->setHint("", LOCALE_MENU_HINT_EPG_SCAN);
 
 	CMenuOptionChooser * mc3 = new CMenuOptionChooser(LOCALE_MISCSETTINGS_EPG_SCAN, &g_settings.epg_scan_mode, EPG_SCAN_MODE_OPTIONS,
@@ -732,14 +733,16 @@ bool CMiscMenue::changeNotify(const neutrino_locale_t OptionName, void * /*data*
 	}
 	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_MISCSETTINGS_EPG_SCAN))
 	{
-		epg_scan->setActive(g_settings.epg_scan_mode != CEpgScan::MODE_OFF && g_settings.epg_save_mode == 0);
+		epg_scan->setActive(g_settings.epg_scan_mode != CEpgScan::MODE_OFF /*&& g_settings.epg_save_mode == 0*/);
 	}
+#if 0
 	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_MISCSETTINGS_EPG_SAVE_MODE))
 	{
 		g_settings.epg_scan = CEpgScan::SCAN_FAV;
 		epg_scan->setActive(g_settings.epg_scan_mode != CEpgScan::MODE_OFF && g_settings.epg_save_mode == 0);
 		ret = menu_return::RETURN_REPAINT;
 	}
+#endif
 	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_TMDB_API_KEY))
 	{
 		g_settings.tmdb_enabled = check_tmdb_api_key();

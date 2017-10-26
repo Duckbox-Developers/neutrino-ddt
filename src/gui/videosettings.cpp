@@ -54,6 +54,7 @@
 
 #include <driver/display.h>
 #include <driver/screen_max.h>
+#include <driver/display.h>
 
 #include <daemonc/remotecontrol.h>
 
@@ -94,11 +95,12 @@ CVideoSettings::CVideoSettings(int wizard_mode)
 	prev_video_mode = g_settings.video_Mode;
 
 	setupVideoSystem(false);
+	Init43ModeOptions();
 }
 
 CVideoSettings::~CVideoSettings()
 {
-
+	videomenu_43mode_options.clear();
 }
 
 int CVideoSettings::exec(CMenuTarget* parent, const std::string &/*actionKey*/)
@@ -397,19 +399,26 @@ int CVideoSettings::showVideoSetup()
 #endif
 
 	//4:3 mode
-	CMenuOptionChooser * vs_43mode_ch = new CMenuOptionChooser(LOCALE_VIDEOMENU_43MODE, &g_settings.video_43mode, VIDEOMENU_43MODE_OPTIONS, VIDEOMENU_43MODE_OPTION_COUNT, true, this);
+	CMenuOptionChooser * vs_43mode_ch = new CMenuOptionChooser(LOCALE_VIDEOMENU_43MODE, &g_settings.video_43mode, videomenu_43mode_options, true, this);
 	vs_43mode_ch->setHint("", LOCALE_MENU_HINT_VIDEO_43MODE);
 
 	//display format
-	CMenuOptionChooser * vs_dispformat_ch = new CMenuOptionChooser(LOCALE_VIDEOMENU_VIDEOFORMAT, &g_settings.video_Format, VIDEOMENU_VIDEOFORMAT_OPTIONS, VIDEOMENU_VIDEOFORMAT_OPTION_COUNT, true, this);
+	CMenuOptionChooser * vs_dispformat_ch = new CMenuOptionChooser(LOCALE_VIDEOMENU_VIDEOFORMAT, &g_settings.video_Format, VIDEOMENU_VIDEOFORMAT_OPTIONS, g_info.hw_caps->can_ar_14_9 ? VIDEOMENU_VIDEOFORMAT_OPTION_COUNT : VIDEOMENU_VIDEOFORMAT_OPTION_COUNT -1, true, this); /* works only if 14:9 is last! */
 	vs_dispformat_ch->setHint("", LOCALE_MENU_HINT_VIDEO_FORMAT);
 
 	//video system
 	CMenuOptionChooser * vs_videomodes_ch = new CMenuOptionChooser(LOCALE_VIDEOMENU_VIDEOMODE, &g_settings.video_Mode, vmode_options, vmode_option_count, true, this, CRCInput::RC_nokey, "", true);
 	vs_videomodes_ch->setHint("", LOCALE_MENU_HINT_VIDEO_MODE);
 
-	//dbdr options
 	CMenuOptionChooser *vs_dbdropt_ch = NULL;
+	CMenuWidget videomodes(LOCALE_MAINSETTINGS_VIDEO, NEUTRINO_ICON_SETTINGS);
+#ifdef BOXMODEL_CS_HD2
+	CMenuForwarder * vs_automodes_fw = NULL;
+	CMenuWidget automodes(LOCALE_MAINSETTINGS_VIDEO, NEUTRINO_ICON_SETTINGS);
+#endif
+	CAutoModeNotifier anotify;
+	CMenuForwarder *vs_videomodes_fw = NULL;
+	//dbdr options
 	if (system_rev != 0x01)	/* dbdr options only on COOLSTREAM */
 	{
 		vs_dbdropt_ch = new CMenuOptionChooser(LOCALE_VIDEOMENU_DBDR, &g_settings.video_dbdr, VIDEOMENU_DBDR_OPTIONS, VIDEOMENU_DBDR_OPTION_COUNT, true, this);
@@ -417,9 +426,6 @@ int CVideoSettings::showVideoSetup()
 	}
 
 	//video system modes submenue
-	CMenuWidget videomodes(LOCALE_MAINSETTINGS_VIDEO, NEUTRINO_ICON_SETTINGS);
-	CAutoModeNotifier anotify;
-	CMenuForwarder *vs_videomodes_fw = NULL;
 	if (g_info.hw_caps->has_HDMI) /* does this make sense on a box without HDMI? */
 	{
 		videomodes.addIntroItems(LOCALE_VIDEOMENU_ENABLED_MODES);
@@ -428,7 +434,7 @@ int CVideoSettings::showVideoSetup()
 			if (VIDEOMENU_VIDEOMODE_OPTIONS[i].key != -1)
 				videomodes.addItem(new CMenuOptionChooser(VIDEOMENU_VIDEOMODE_OPTIONS[i].valname, &g_settings.enabled_video_modes[i], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, &anotify));
 
-		vs_videomodes_fw = new CMenuForwarder(LOCALE_VIDEOMENU_ENABLED_MODES, true, NULL, &videomodes, NULL, CRCInput::RC_mode);
+		vs_videomodes_fw = new CMenuForwarder(LOCALE_VIDEOMENU_ENABLED_MODES, true, NULL, &videomodes, NULL, CRCInput::RC_red);
 		vs_videomodes_fw->setHint("", LOCALE_MENU_HINT_VIDEO_MODES);
 
 #ifdef BOXMODEL_CS_HD2
@@ -442,30 +448,22 @@ int CVideoSettings::showVideoSetup()
 #endif
 	}
 
-	if (vs_colorformat_analog || vs_colorformat_hdmi) {
-		videosetup->addIntroItems(LOCALE_MAINSETTINGS_VIDEO, LOCALE_VIDEOMENU_COLORFORMAT);
-		if (vs_colorformat_analog)
-			videosetup->addItem(vs_colorformat_analog);
-		if (vs_colorformat_hdmi)
-			videosetup->addItem(vs_colorformat_hdmi);
-		videosetup->addItem(GenericMenuSeparatorLine);
-	} else {
-		neutrino_locale_t tmp_locale = NONEXISTANT_LOCALE;
-		if (vs_analg_ch != NULL || vs_scart_ch != NULL || vs_chinch_ch != NULL)
-			tmp_locale = LOCALE_VIDEOMENU_TV_SCART;
-		//---------------------------------------
-		videosetup->addIntroItems(LOCALE_MAINSETTINGS_VIDEO, tmp_locale);
-		//---------------------------------------
-		//videosetup->addItem(vs_scart_sep);	  //separator scart
-		if (vs_analg_ch != NULL)
-			videosetup->addItem(vs_analg_ch); //analog option
-		if (vs_scart_ch != NULL)
-			videosetup->addItem(vs_scart_ch); //scart
-		if (vs_chinch_ch != NULL)
-			videosetup->addItem(vs_chinch_ch);//chinch
-		if (tmp_locale != NONEXISTANT_LOCALE)
-			videosetup->addItem(GenericMenuSeparatorLine);
-	}
+	neutrino_locale_t tmp_locale = NONEXISTANT_LOCALE;
+	/* TODO: check the locale */
+	if (vs_analg_ch != NULL || vs_scart_ch != NULL || vs_chinch_ch != NULL)
+		tmp_locale = LOCALE_VIDEOMENU_TV_SCART;
+	//---------------------------------------
+	videosetup->addIntroItems(LOCALE_MAINSETTINGS_VIDEO, tmp_locale);
+	//---------------------------------------
+	//videosetup->addItem(vs_scart_sep);	  //separator scart
+	if (vs_analg_ch != NULL)
+		videosetup->addItem(vs_analg_ch); //analog option
+	if (vs_scart_ch != NULL)
+		videosetup->addItem(vs_scart_ch); //scart
+	if (vs_chinch_ch != NULL)
+		videosetup->addItem(vs_chinch_ch);//chinch
+	//if (tmp_locale != NONEXISTANT_LOCALE)
+	//	videosetup->addItem(GenericMenuSeparatorLine);
 	//---------------------------------------
 	videosetup->addItem(vs_43mode_ch);	  //4:3 mode
 	videosetup->addItem(vs_dispformat_ch);	  //display format
@@ -736,20 +734,20 @@ void CVideoSettings::next43Mode(void)
 {
 	printf("[neutrino VideoSettings] %s setting 43Mode...\n", __FUNCTION__);
 	neutrino_locale_t text;
-	int curmode = 0;
+	unsigned int curmode = 0;
 
-	for (int i = 0; i < (int) VIDEOMENU_43MODE_OPTION_COUNT; i++) {
-		if (VIDEOMENU_43MODE_OPTIONS[i].key == g_settings.video_43mode) {
+	for (unsigned int i = 0; i < videomenu_43mode_options.size(); i++) {
+		if (videomenu_43mode_options[i].key == g_settings.video_43mode) {
 			curmode = i;
 			break;
 		}
 	}
 	curmode++;
-	if (curmode >= (int) VIDEOMENU_43MODE_OPTION_COUNT)
+	if (curmode >= videomenu_43mode_options.size())
 		curmode = 0;
 
-	text =  VIDEOMENU_43MODE_OPTIONS[curmode].value;
-	g_settings.video_43mode = VIDEOMENU_43MODE_OPTIONS[curmode].key;
+	text = videomenu_43mode_options[curmode].value;
+	g_settings.video_43mode = videomenu_43mode_options[curmode].key;
 	videoDecoder->setAspectRatio(-1, g_settings.video_43mode);
 #ifdef ENABLE_PIP
 	pipDecoder->setAspectRatio(-1, g_settings.video_43mode);
@@ -772,7 +770,8 @@ void CVideoSettings::SwitchFormat()
 	curmode++;
 	if (curmode >= VIDEOMENU_VIDEOFORMAT_OPTION_COUNT)
 		curmode = 0;
-
+	if (VIDEOMENU_VIDEOFORMAT_OPTIONS[curmode].key == DISPLAY_AR_14_9 && g_info.hw_caps->can_ar_14_9 == 0)
+		curmode = 0;
 	text =  VIDEOMENU_VIDEOFORMAT_OPTIONS[curmode].value;
 	g_settings.video_Format = VIDEOMENU_VIDEOFORMAT_OPTIONS[curmode].key;
 
@@ -849,4 +848,18 @@ void CVideoSettings::nextMode(void)
 #endif
 	CVFD::getInstance()->showServicename(g_RemoteControl->getCurrentChannelName(), g_RemoteControl->getCurrentChannelNumber());
 	//ShowHint(LOCALE_VIDEOMENU_VIDEOMODE, text, 450, 2);
+}
+
+void CVideoSettings::Init43ModeOptions()
+{
+	videomenu_43mode_options.clear();
+	for (unsigned int i = 0; i < VIDEOMENU_43MODE_OPTION_COUNT; i++)
+	{
+		if (VIDEOMENU_43MODE_OPTIONS[i].key == DISPLAY_AR_MODE_PANSCAN2 &&
+		    g_info.hw_caps->can_ps_14_9 == 0)
+			continue;
+		CMenuOptionChooser::keyval_ext o;
+		o = VIDEOMENU_43MODE_OPTIONS[i];
+		videomenu_43mode_options.push_back(o);
+	}
 }

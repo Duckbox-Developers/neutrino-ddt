@@ -1100,10 +1100,8 @@ void CZapitClient::setStandby(const bool enable)
 	msg.truefalse = enable;
 	OpenThreads::ScopedLock<OpenThreads::Mutex> lock(mutex);
 	send(CZapitMessages::CMD_SET_STANDBY, (char*)&msg, sizeof(msg));
-	if(enable) {
-		CZapitMessages::responseCmd response;
-		CBasicClient::receive_data((char* )&response, sizeof(response));
-	}
+	CZapitMessages::responseCmd response;
+	CBasicClient::receive_data((char* )&response, sizeof(response));
 	close_connection();
 }
 

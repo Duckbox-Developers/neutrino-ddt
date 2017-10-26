@@ -3,7 +3,7 @@
  *
  * (C) 2002, 2003 by Andreas Oberritter <obi@tuxbox.org>
  *
- * (C) 2007-2009, 2013 Stefan Seyfried
+ * (C) 2007-2013 Stefan Seyfried
  * (C) 2014 CoolStream International Ltd. <bas@coolstreamtech.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -565,7 +565,7 @@ void CServiceManager::FindTransponder(xmlNodePtr search)
 		const char * name = xmlGetAttribute(search, "name");
 		t_satellite_position satellitePosition = GetSatellitePosition(name);
 #endif
-		DBG("going to parse dvb-%c provider %s\n", xmlGetName(search)[0], xmlGetAttribute(search, "name"));
+		INFO("going to parse dvb-%c provider %s", xmlGetName(search)[0], xmlGetAttribute(search, "name"));
 		ParseTransponders(xmlChildrenNode(search), satellitePosition, delsys);
 		newfound++;
 		search = xmlNextNode(search);
@@ -746,11 +746,16 @@ int CServiceManager::LoadMotorPositions(void)
 
 	printf("[getservices] loading motor positions...\n");
 
+	/* this is only read and never written, so it only serves for
+	 * upgrading from old pre-multituner capable neutrino */
 	if ((fd = fopen(SATCONFIG, "r"))) {
 		fgets(buffer, 255, fd);
 		while(!feof(fd)) {
 			sscanf(buffer, "%d %d %d %d %d %d %d %d %d %d %d", &spos, &mpos, &diseqc, &com, &uncom, &offL, &offH, &sw, &inuse, &usals, &input);
 
+			int configured = 0;
+			if (diseqc != -1 || com != -1 || uncom != -1 || usals != 0 || mpos != 0)
+				configured = 1;
 			satellitePosition = spos;
 			sat_iterator_t sit = satellitePositions.find(satellitePosition);
 			if(sit != satellitePositions.end()) {
@@ -765,6 +770,7 @@ int CServiceManager::LoadMotorPositions(void)
 				sit->second.use_usals = usals;
 				sit->second.input = input;
 				sit->second.position = satellitePosition;
+				sit->second.configured = configured;
 			}
 			fgets(buffer, 255, fd);
 		}
@@ -979,7 +985,7 @@ void CServiceManager::CopyFile(const char * from, const char * to)
 		}
 		in.close();
 	}
-	sync();
+	// sync();
 }
 
 void CServiceManager::WriteSatHeader(FILE * fd, sat_config_t &config)

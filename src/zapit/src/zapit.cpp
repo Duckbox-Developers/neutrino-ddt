@@ -1998,9 +1998,9 @@ bool CZapit::ParseCommand(CBasicMessage::Header &rmsg, int connfd)
 		if (msgBoolean.truefalse) {
 			// if(currentMode & RECORD_MODE) videoDecoder->freeze();
 			enterStandby();
-			SendCmdReady(connfd);
 		} else
 			leaveStandby();
+		SendCmdReady(connfd);
 		break;
 	}
 #if 0
@@ -2496,7 +2496,13 @@ bool CZapit::Start(Z_start_arg *ZapStart_arg)
 	pipDecoder->SetDemux(pipDemux);
 #endif
 #else
+#if HAVE_COOL_HARDWARE
+	/* work around broken drivers: when starting up with 720p50 image is pink on hd1 */
+	videoDecoder = new cVideo(VIDEO_STD_1080I50, videoDemux->getChannel(), videoDemux->getBuffer());
+	videoDecoder->SetVideoSystem(video_mode);
+#else
         videoDecoder = new cVideo(video_mode, videoDemux->getChannel(), videoDemux->getBuffer());
+#endif
         videoDecoder->Standby(false);
 
         audioDecoder = new cAudio(audioDemux->getBuffer(), videoDecoder->GetTVEnc(), NULL /*videoDecoder->GetTVEncSD()*/);

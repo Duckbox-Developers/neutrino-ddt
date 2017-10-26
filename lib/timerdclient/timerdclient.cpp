@@ -382,6 +382,7 @@ void CTimerdClient::removeTimerEvent( int evId)
 {
 	CTimerdMsg::commandRemoveTimer msgRemoveTimer;
 	VALGRIND_PARANOIA(msgRemoveTimer);
+
 	msgRemoveTimer.eventID  = evId;
 
 	send(CTimerdMsg::CMD_REMOVETIMER, (char*) &msgRemoveTimer, sizeof(msgRemoveTimer));

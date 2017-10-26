@@ -811,7 +811,6 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 						paint();
 						break;
 				}
-				frameBuffer->blit();
 				continue;
 			}
 			for (unsigned int i= 0; i< items.size(); i++) {
@@ -1455,10 +1454,8 @@ void CMenuWidget::enableSaveScreen(bool enable)
 
 void CMenuWidget::paintHint(int pos)
 {
-	if (!g_settings.show_menu_hints){
-		//ResetModules(); //ensure clean up on changed setting
+	if (!g_settings.show_menu_hints)
 		return;
-	}
 
 	if (pos < 0 && !hint_painted)
 		return;
@@ -1555,7 +1552,7 @@ void CMenuWidget::setFooter(const struct button_label *_fbutton_labels, const in
 		if (!footer)
 			footer = new CComponentsFooter(x, y + height, width + scrollbar_width, 0, 0, NULL, CC_SHADOW_ON);
 		footer->setWidth(width + scrollbar_width);
-		footer->setButtonLabels(fbutton_labels, fbutton_count, 0, width/fbutton_count);
+		footer->setButtonLabels(fbutton_labels, fbutton_count);
 		footer_height = footer->getHeight();
 		footer_width = footer->getWidth();
 	}else{
@@ -2380,6 +2377,7 @@ bool CZapProtection::check()
 	hint = NONEXISTANT_LOCALE;
 	int res;
 	std::string cPIN;
+	char systemstr[128];
 	do
 	{
 		cPIN = "";
@@ -2388,10 +2386,11 @@ bool CZapProtection::check()
 
 		res = PINInput->exec(getParent(), "");
 		delete PINInput;
-		if (!access(CONFIGDIR "/pinentered.sh", X_OK)) {
-			std::string systemstr = CONFIGDIR "/pinentered.sh " + cPIN;
-			system(systemstr.c_str());
-		}
+		cPIN[4] = 0;
+		strcpy(systemstr, CONFIGDIR "/pinentered.sh ");
+		strcat(systemstr, cPIN.c_str());
+		system(systemstr);
+
 		hint = LOCALE_PINPROTECTION_WRONGCODE;
 	} while ( (cPIN != *validPIN) && !cPIN.empty() &&
 		  ( res == menu_return::RETURN_REPAINT ) &&

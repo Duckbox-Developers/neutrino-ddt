@@ -1486,7 +1486,7 @@ menu.hint_sleeptimer Set timer to put your box\nin sleep mode
 menu.hint_sleeptimer_min Default setting for sleeptimer
 menu.hint_sms_channel If enabled, numeric buttons in channel list used to search channel in SMS style
 menu.hint_sms_movie If enabled, numeric buttons in moviebrowser used to search movie in SMS style
-menu.hint_soft_restart Restart GUI without reboot
+menu.hint_soft_restart Restart Neutrino without reboot
 menu.hint_softupdate_check Check online update, download and flash firmware
 menu.hint_softupdate_check_local Select and flash firmware from local file
 menu.hint_softupdate_createimage_menu Backup of current software, including all settings
@@ -2430,6 +2430,7 @@ timerlist.bouquetselect choose bouquet
 timerlist.channel Channel
 timerlist.channelselect choose channel
 timerlist.delete Delete
+timerlist.info Info
 timerlist.menumodify Modify timer
 timerlist.menunew New timer
 timerlist.message Message
@@ -2465,6 +2466,7 @@ timerlist.repeatcount repeats
 timerlist.repeatcount.hint_1 Amount of timer repeats
 timerlist.repeatcount.hint_2 0 for unlimited repeats
 timerlist.save Save timer
+timerlist.send.timer Send Timer
 timerlist.standby Action
 timerlist.standby.off Leave standby
 timerlist.standby.on Enter standby

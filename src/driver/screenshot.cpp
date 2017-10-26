@@ -159,7 +159,6 @@ bool CScreenShot::GetData()
 #endif
 	if (videoDecoder->getBlank()) 
 		get_video = false;
-
 #ifdef BOXMODEL_CS_HD2
 	if (extra_osd && !get_video) {
 		uint32_t memSize = xres * yres * sizeof(fb_pixel_t) * 2;
@@ -174,8 +173,7 @@ bool CScreenShot::GetData()
 	}
 	else
 #endif
-#if !HAVE_GENERIC_HARDWARE
-	// to enable after libcs/drivers update
+#ifdef SCREENSHOT
 	res = videoDecoder->GetScreenImage(pixel_data, xres, yres, get_video, get_osd, scale_to_video);
 #endif
 
@@ -369,11 +367,7 @@ bool CScreenShot::SavePng()
 
 	png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, (png_voidp)NULL, (png_error_ptr)NULL, (png_error_ptr)NULL);
 	info_ptr = png_create_info_struct(png_ptr);
-#if (PNG_LIBPNG_VER < 10500)
-	if (setjmp(png_ptr->jmpbuf))
-#else
 	if (setjmp(png_jmpbuf(png_ptr)))
-#endif
 	{
 		printf("CScreenShot::SavePng: %s save error\n", filename.c_str());
 		png_destroy_write_struct(&png_ptr, &info_ptr);

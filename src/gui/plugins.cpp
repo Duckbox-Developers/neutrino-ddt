@@ -4,6 +4,8 @@
 	Copyright (C) 2001 Steffen Hehn 'McClean'
 	Homepage: http://dbox.cyberphoria.org/
 
+	Copyright (C) 2011-2014 Stefan Seyfried
+
 	License: GPL
 
 	This program is free software; you can redistribute it and/or
@@ -118,7 +120,7 @@ void CPlugins::scanDir(const char *dir)
 					new_plugin.pluginfile.append(".sh");
 				else if (new_plugin.type == CPlugins::P_TYPE_LUA)
 					new_plugin.pluginfile.append(".lua");
-				else
+				else // CPlugins::P_TYPE_GAME or CPlugins::P_TYPE_TOOL
 					new_plugin.pluginfile.append(".so");
 				// We do not check if new_plugin.pluginfile exists since .cfg in
 				// PLUGINDIR_VAR can overwrite settings in read only dir
@@ -127,7 +129,6 @@ void CPlugins::scanDir(const char *dir)
 				// already exists in the list.
 				// This behavior is used to make sure plugins can be disabled
 				// by creating a .cfg in PLUGINDIR_VAR (PLUGINDIR often is read only).
-
 				if (!plugin_exists(new_plugin.filename))
 				{
 					plugin_list.push_back(new_plugin);
@@ -455,7 +456,7 @@ bool CPlugins::hasPlugin(CPlugins::p_type_t type)
 	for (std::vector<plugin>::iterator it=plugin_list.begin();
 			it!=plugin_list.end(); ++it)
 	{
-		if (it->type == type && !it->hide)
+		if ((it->type & type) && !it->hide)
 			return true;
 	}
 	return false;
