@@ -1005,10 +1005,6 @@ void CRadioText::run()
 #endif
 	audioDemux->Open(DMX_PES_CHANNEL,0,128*1024);
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
-	int buflen = 0;
-	unsigned char *buf = NULL;
-#endif
 	while(running) {
 		mutex.lock();
 		if (pid == 0) {
