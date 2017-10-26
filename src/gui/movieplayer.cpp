@@ -95,11 +95,6 @@ bool glcd_play = false;
 
 #include <system/stacktrace.h>
 
-#ifndef HAVE_COOL_HARDWARE
-#define LCD_MODE CVFD::MODE_MOVIE
-#else
-#define LCD_MODE CVFD::MODE_MENU_UTF8
-#endif
 
 extern cVideo * videoDecoder;
 extern CRemoteControl *g_RemoteControl;	/* neutrino.cpp */
@@ -560,7 +555,7 @@ void CMoviePlayerGui::updateLcd()
 			break;
 	}
 	lcd += name;
-	CVFD::getInstance()->setMode(LCD_MODE);
+	CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8);
 	CVFD::getInstance()->showMenuText(0, lcd.c_str(), -1, true);
 #endif
 }
