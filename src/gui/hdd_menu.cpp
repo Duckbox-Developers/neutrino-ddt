@@ -921,7 +921,7 @@ _show_menu:
 				enabled = false;
 			else if (kernel_fs_list.find(it->fmt) == kernel_fs_list.end())
 				enabled = false;
-			it->cmf = new CMenuForwarder(it->desc, enabled, it->mounted ? umount : mount , this,
+			it->cmf = new CMenuForwarder(it->desc, enabled, g_Locale->getText(it->mounted ? LOCALE_HDD_UMOUNT : LOCALE_HDD_MOUNT) , this,
 					key.c_str(), CRCInput::convertDigitToKey(shortcut++), NULL, rec_icon);
 			hddmenu->addItem(it->cmf);
 		}
