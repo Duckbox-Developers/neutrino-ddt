@@ -1605,10 +1605,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 					update_lcd = true;
 				}
 #ifdef DEBUG
-				if (msg < CRCInput::RC_Events || eof > 0 || position - lastpos >= 10000) {
-					lastpos = position;
-					printf("CMoviePlayerGui::%s: spd %d pos %d/%d (%d, %d%%)\n", __func__, speed, position, duration, duration-position, file_prozent);
-				}
+				printf("CMoviePlayerGui::%s: spd %d pos %d/%d (%d, %d%%)\n", __func__, speed, position, duration, duration-position, file_prozent);
 #endif
 			} else
 #if HAVE_COOL_HARDWARE
@@ -2306,8 +2303,6 @@ void CMoviePlayerGui::addAudioFormat(int count, std::string &apidtitle, bool& en
 			break;
 		case 6: /*DTS*/
 			apidtitle.append(" (DTS)");
-			if (apidtitle.find("DTS") == std::string::npos)
-				apidtitle.append(" (DTS)");
 #if ! defined(HAVE_SPARK_HARDWARE) && ! defined (BOXMODEL_CS_HD2)
 			enabled = false;
 #endif
