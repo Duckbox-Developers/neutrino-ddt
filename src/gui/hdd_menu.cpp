@@ -186,11 +186,10 @@ bool CHDDMenuHandler::is_mounted(const char *dev)
 
 void CHDDMenuHandler::getBlkIds()
 {
-	pid_t pid;
-	std::string blkid = find_executable("blkid");
-	if (blkid.empty())
-		return;
-	std::string pcmd = blkid + (std::string)" -s TYPE";
+	FILE *          mountFile;
+	struct mntent * mnt;
+	struct dirent **namelist;
+	blkid_cache c;
 
 	const char *label;
 	const char *type;
