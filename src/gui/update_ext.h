@@ -122,6 +122,4 @@ static unsigned int timer_msec;
 		updateLog(updateLogBuf);
 #endif
 
-#endif
-
 #endif // __CEXTUPDATE__
