@@ -360,7 +360,6 @@ void CDBoxInfoWidget::paint()
 	title += " ";
 	title += g_info.hw_caps->boxname;
 	width = std::max(width, g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getRenderWidth(title, true) + 50);
-#endif
 
 	if (!header)
 		header = new CComponentsHeader(x, ypos, width, hheight, title, NEUTRINO_ICON_SHELL);
