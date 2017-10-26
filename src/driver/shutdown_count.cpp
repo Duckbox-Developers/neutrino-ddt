@@ -58,16 +58,6 @@ SHTDCNT::~SHTDCNT()
 	}
 }
 
-SHTDCNT::~SHTDCNT()
-{
-	if (thread_running)
-	{
-		thread_running = false;
-		pthread_cancel(thrTime);
-		pthread_join(thrTime, NULL);
-	}
-}
-
 SHTDCNT* SHTDCNT::getInstance()
 {
 	static SHTDCNT* shtdcnt = NULL;
