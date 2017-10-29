@@ -207,6 +207,8 @@ int CScreenSetup::exec(CMenuTarget* parent, const std::string &action)
 
 		frameBuffer->setBorder(x_coord[0], y_coord[0], x_coord[1], y_coord[1]);
 		updateCoords();
+		m->paint();
+		frameBuffer->blit();
 		return menu_return::RETURN_REPAINT;
 	}
 	return menu_return::RETURN_NONE;
