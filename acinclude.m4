@@ -412,6 +412,7 @@ AC_ARG_WITH(boxmodel,
 			else
 				AC_MSG_ERROR([unknown model $withval for boxtype $BOXTYPE])
 			fi
+			;;
 		hd51)
 			if test "$BOXTYPE" = "armbox"; then
 				BOXMODEL="$withval"
