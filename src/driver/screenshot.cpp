@@ -54,7 +54,7 @@ extern "C" {
 
 extern cVideo *videoDecoder;
 
-#if HAVE_COOL_HARDWARE
+#if !HAVE_COOL_HARDWARE
 /* constructor, defaults is empty fname and CScreenShot::FORMAT_JPG format */
 CScreenShot::CScreenShot(const std::string fname, screenshot_format_t fmt)
 {
@@ -175,7 +175,8 @@ bool CScreenShot::GetData()
 	}
 	else
 #endif
-#if 1 // to enable after libcs/drivers update
+#if !HAVE_GENERIC_HARDWARE
+	// to enable after libcs/drivers update
 	res = videoDecoder->GetScreenImage(pixel_data, xres, yres, get_video, get_osd, scale_to_video);
 #endif
 
