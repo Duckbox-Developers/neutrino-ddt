@@ -1,6 +1,6 @@
-AUDIOSelectMenue.head Audio and subtitles
+AUDIOSelectMenue.head Audio Options
 AUDIOSelectMenue.volume Audio selection and volume adjustment
-EPGMenu.epgplus Eventlist overview
+EPGMenu.epgplus EPG-Timelines (EPG-Plus)
 EPGMenu.eventinfo Details current program
 EPGMenu.eventlist Eventlist current programm
 EPGMenu.head EPG - Program information
@@ -229,6 +229,7 @@ bouquetname.hdtv HD channels
 bouquetname.new New channels
 bouquetname.other Unknown provider
 bouquetname.removed Removed channels
+bouquetname.uhdtv UHD channels
 bouquetname.webtv WebTV channels
 buildinfo.compiled_on Build Host
 buildinfo.compiled_with Compiler version
@@ -262,7 +263,7 @@ channellist.head All Services
 channellist.history History
 channellist.history_clear Clear History
 channellist.keep_numbers Persistent Channel Numbers
-channellist.make_hdlist Create list of HD channels
+channellist.make_hdlist Create lists of HD and UHD channels
 channellist.make_newlist Create list of new channels
 channellist.make_removedlist Create list of removed channels
 channellist.make_webtvlist Create list of WebTV channels
@@ -343,7 +344,7 @@ colorthememenu.head Select theme
 colorthememenu.head2 Load themes
 colorthememenu.menu_hints Hint box
 colorthememenu.name Theme name
-colorthememenu.neutrino_theme Neutrino Theme
+colorthememenu.neutrino_theme Reset Theme
 colorthememenu.question Use selected theme?
 colorthememenu.save Save current theme
 colorthememenu.select1 User Theme
@@ -613,7 +614,9 @@ flashupdate.cantopenfile can't open file
 flashupdate.cantopenmtd can't open MTD
 flashupdate.checkupdate_internet Online update
 flashupdate.checkupdate_local Local update
+flashupdate.choose_partition Choose partition
 flashupdate.copy_image Copy Image to main memory
+flashupdate.copy_settings Copy settings to new image?
 flashupdate.createimage Save image
 flashupdate.createimage_add_env Add 'env' to image
 flashupdate.createimage_add_kernel Add 'kernel' to image
@@ -661,7 +664,7 @@ flashupdate.namemode2_default <partition>+<time>.img
 flashupdate.namemode2_hostname_time <partition>+<time>+<hostname>.img
 flashupdate.new_found New image found !
 flashupdate.new_notfound No new images found
-flashupdate.noversion Version check is only supported via Online update.\nAre you sure that you want to install this image?
+flashupdate.noversion Version check is only supported via online updates.\nAre you sure that you want to continue?
 flashupdate.programmingflash programming flash
 flashupdate.proxypassword Password
 flashupdate.proxypassword_hint1 enter the proxyserver password
@@ -681,8 +684,10 @@ flashupdate.readflashmtd Read one partition
 flashupdate.ready ready
 flashupdate.reallyflashmtd Do you really want to flash?\n\nIf a error occurs or the image is not\nvalid, the box will not boot after flashing.\n\nImagename: %s\nTarget: %s
 flashupdate.savesuccess The image was successfully saved \nunder %s.
-flashupdate.selectimage Available Images/Files
+flashupdate.selectimage Available images and updates
 flashupdate.settings Update settings
+flashupdate.start_ofgwrite Starting ofgwrite ...
+flashupdate.start_selected_partition Start chosen partition?
 flashupdate.titlereadflash Reading Flash
 flashupdate.titlewriteflash Writing Flash
 flashupdate.type_addon Addon
@@ -799,8 +804,8 @@ hdd_5min 5 min.
 hdd_60min 60 min.
 hdd_activate Apply settings
 hdd_check Check filesystem
-hdd_check_failed HDD-check failed!
-hdd_extended_settings Extended HDD-Settings
+hdd_check_failed Filesystem-check failed!
+hdd_extended_settings Extended Settings
 hdd_fast Fast
 hdd_format Format device
 hdd_format_failed Formating failed! Make sure device not in use, reboot and try again
@@ -826,7 +831,7 @@ hdd_statfs Fill level query
 hdd_statfs_always always
 hdd_statfs_recording while recording only
 hdd_umount Unmount
-hdd_umount_warn unmount device
+hdd_umount_warn Unmount device
 hdd_umounted Device removed
 help_box_title Help
 imageinfo.api API:
@@ -1066,7 +1071,7 @@ menu.hint_channellist_hdicon Show HD icons in channel list
 menu.hint_channellist_mode Use the selected channel list mode on startup if last mode is TV
 menu.hint_channellist_mode_radio Use the selected channel list mode on startup if last mode is Radio
 menu.hint_channellist_setup Configure channel list GUI options
-menu.hint_channellist_show_channellogo Show channel logos in channel list
+menu.hint_channellist_show_channellogo Enable/disable channel logos.
 menu.hint_channellist_show_channelnumber Show channel number in channel list
 menu.hint_channellist_show_empty_favs Show or hide empty bouquets in favorites
 menu.hint_channellist_show_infobox Show or hide bottom infobox of channellist
@@ -1143,7 +1148,7 @@ menu.hint_inact_timer Shutdown box after inactivity
 menu.hint_inactive_back Change inactive item background color
 menu.hint_inactive_textcolor Change inactive item text color
 menu.hint_inet_radio Internet radio
-menu.hint_info Information about image, box cpu and storage,\nstream information
+menu.hint_info Show system informations.
 menu.hint_infobar_back Change infobar background color
 menu.hint_infobar_buttons_usertitle Forces userdefined titles for the color keys
 menu.hint_infobar_casys On: display all with colored active, mini: single\nlocked icon, descreet: all active ca-systems
@@ -1154,7 +1159,7 @@ menu.hint_infobar_dd Show DD icon
 menu.hint_infobar_filesys Show flash and HDD used space levels
 menu.hint_infobar_fonts Change infobar font sizes
 menu.hint_infobar_logo Logo, channelnumber and signal display; Options in [brackets] will be displayed in small infobox
-menu.hint_infobar_logo_dir Select directory to search for channels logo
+menu.hint_infobar_logo_dir Set folder for channel logos.
 menu.hint_infobar_on_epg Show infobar on current EPG event change
 menu.hint_infobar_radiotext Show radiotext window
 menu.hint_infobar_res Show channel resolution icons
@@ -1232,7 +1237,7 @@ menu.hint_leds_tv Working LEDs state
 menu.hint_load Load GUI settings from file
 menu.hint_longkeypress_duration A key press will be considered as "long key press" if it's pressed longer than the specified time.
 menu.hint_lua Run Lua Plugins
-menu.hint_make_hdlist Auto-create HD channel list based on\nchannel type and name
+menu.hint_make_hdlist Auto-create HD and UHD channel lists based on\nchannel type and name
 menu.hint_make_newlist Create list of recently added channels
 menu.hint_make_removedlist Create list of recently removed channels
 menu.hint_make_webtvlist Auto-create WebTV channel list based on\nchannel type and name
@@ -1832,7 +1837,7 @@ moviebrowser.menu_truncate Truncate movie
 moviebrowser.option_browser Browser Options
 moviebrowser.reload_at_start Reload movie info at start
 moviebrowser.remount_at_start Remount at start
-moviebrowser.scan_for_movies Scan for Movies ...
+moviebrowser.scan_for_movies Scan for recordings...
 moviebrowser.serie_auto_create Serie auto create
 moviebrowser.serie_head Serie
 moviebrowser.serie_name Change name
@@ -2125,7 +2130,7 @@ ping.socket is unreachable (socket error)
 ping.unreachable is unreachable
 pinprotection.head Enter PIN code
 pinprotection.wrongcode PIN-Code was wrong! Try again.
-plugins.hdd_dir Plugin HDD dir.
+plugins.hdd_dir Plugin external directory.
 plugins.no_plugin No plugin
 plugins.result plugin output
 plugintype.disabled Disabled
@@ -2351,7 +2356,7 @@ servicemenu.restart_tuner Restart tuner
 servicemenu.restarting_tuner Restarting tuner
 servicemenu.scants Servicescan
 servicemenu.update Software Update
-settings.backup Image-Settings: Backup
+settings.backup Save system settings
 settings.backup_failed Backup failed!
 settings.help Help
 settings.menu_hints Show menu hints
@@ -2367,7 +2372,7 @@ settings.pos_higher_center higher center
 settings.pos_top_center top center
 settings.pos_top_left top left
 settings.pos_top_right top right
-settings.restore Image-Settings: Restore
+settings.restore Restore system settings
 settings.restore_warn This will replace all settings and reboot\nContinue ?
 shoutcast.dev_id SHOUTcast Dev ID
 shoutcast.enabled SHOUTcast support
@@ -2625,7 +2630,7 @@ wizard.setup_easy Easy
 wizard.setup_type Installation type
 wizard.setup_type_hint Easy to setup for CanalDigitaal/TéléSAT/TV Vlaanderen providers or simple cable scan
 wizard.welcome_head Welcome to the Setup Wizard
-wizard.welcome_text Next steps will guide you through initial installation of the device.\nImportant: Your set-top box can be conveniently controlled\nwith the web interface for timer management or live TV on the Web browser.\nDo not make it accessible to untrusted networks!\nDo you want to continue?
+wizard.welcome_text Neutrino is designed for set-top boxes and is maintained by the Tuxbox community and lives from the support of users and many volontary contributors./nIf you need help or have  suggestions, found bugs, please feel free to contact us.\nSupport pages or Contact and / or Web addresses can be found in the main menu under "Information".\nNext steps will guide you through initial installation of the device.\nImportant: Your set-top box can be conveniently controlled\nwith the web interface for timer management or live TV on the Web browser.\nDo not make it accessible to untrusted networks!\nDo you want to continue?
 word.from from
 word.in in
 youtube.dev_id YouTube Dev ID

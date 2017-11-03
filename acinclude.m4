@@ -21,6 +21,14 @@ if test "$DEBUG" = "yes"; then
 	AC_DEFINE(DEBUG,1,[Enable debug messages])
 fi
 
+AC_ARG_WITH(libcoolstream-static-dir,
+	[  --with-libcoolstream-static-dir=PATH  path for static libcoolstream],
+	[LIBCOOLSTREAM_STATIC_DIR="$withval"],[LIBCOOLSTREAM_STATIC_DIR=""])
+
+AC_ARG_ENABLE(libcoolstream-static,
+	AS_HELP_STRING(--enable-libcoolstream-static,[libcoolstream static linked for testing]))
+AM_CONDITIONAL(ENABLE_LIBCOOLSTREAM_STATIC,test "$enable_libcoolstream_static" = "yes")
+
 AC_ARG_ENABLE(reschange,
        AS_HELP_STRING(--enable-reschange,enable change the osd resolution (default for hd2)))
 
@@ -143,6 +151,9 @@ TUXBOX_APPS_DIRECTORY_ONE(datadir,DATADIR,datadir,/share,/tuxbox,
 TUXBOX_APPS_DIRECTORY_ONE(fontdir,FONTDIR,datadir,/share,/fonts,
 	[--with-fontdir=PATH           ],[where to find the fonts])
 
+TUXBOX_APPS_DIRECTORY_ONE(fontdir_var,FONTDIR_VAR,localstatedir,/var,/tuxbox/fonts,
+	[--with-fontdir_var=PATH       ],[where to find the fonts in /var])
+
 TUXBOX_APPS_DIRECTORY_ONE(gamesdir,GAMESDIR,localstatedir,/var,/tuxbox/games,
 	[--with-gamesdir=PATH          ],[where games data is stored])
 
@@ -157,6 +168,9 @@ TUXBOX_APPS_DIRECTORY_ONE(plugindir_var,PLUGINDIR_VAR,localstatedir,/var,/tuxbox
 
 TUXBOX_APPS_DIRECTORY_ONE(webtvdir_var,WEBTVDIR_VAR,localstatedir,/var,/tuxbox/plugins/webtv,
 	[--with-webtvdir_var=PATH      ],[where to find the livestreamScriptPath in /var])
+
+TUXBOX_APPS_DIRECTORY_ONE(webtvdir,WEBTVDIR,datadir,/share,/tuxbox/neutrino/webtv,
+	[--with-webtvdir=PATH          ],[where to find the webtv content])
 
 TUXBOX_APPS_DIRECTORY_ONE(plugindir_mnt,PLUGINDIR_MNT,mntdir,/mnt,/plugins,
 	[--with-plugindir_mnt=PATH     ],[where to find the the extern plugins])
@@ -185,11 +199,14 @@ TUXBOX_APPS_DIRECTORY_ONE(iconsdir_var,ICONSDIR_VAR,localstatedir,/var,/tuxbox/i
 TUXBOX_APPS_DIRECTORY_ONE(private_httpddir,PRIVATE_HTTPDDIR,datadir,/share,/tuxbox/neutrino/httpd,
 	[--with-private_httpddir=PATH  ],[where to find the the private httpd files])
 
-TUXBOX_APPS_DIRECTORY_ONE(public_httpddir,PUBLIC_HTTPDDIR,localstatedir,/var,/httpd,
+TUXBOX_APPS_DIRECTORY_ONE(public_httpddir,PUBLIC_HTTPDDIR,localstatedir,/var,/tuxbox/httpd,
 	[--with-public_httpddir=PATH   ],[where to find the the public httpd files])
 
 TUXBOX_APPS_DIRECTORY_ONE(hosted_httpddir,HOSTED_HTTPDDIR,mntdir,/mnt,/hosted,
 	[--with-hosted_httpddir=PATH   ],[where to find the the hosted files])
+
+TUXBOX_APPS_DIRECTORY_ONE(flagdir,FLAGDIR,localstatedir,/var,/etc,
+	[--with-flagdir=PATH           ],[where to find flagfiles])
 ])
 
 dnl automake <= 1.6 needs this specifications
@@ -197,6 +214,7 @@ AC_SUBST(CONFIGDIR)
 AC_SUBST(DATADIR)
 AC_SUBST(FONTDIR)
 AC_SUBST(FONTDIR_VAR)
+AC_SUBST(FLAGDIR)
 AC_SUBST(GAMESDIR)
 AC_SUBST(LIBDIR)
 AC_SUBST(MNTDIR)
@@ -294,9 +312,9 @@ _TUXBOX_APPS_LIB_PKGCONFIG($1,$2)
 
 AC_DEFUN([TUXBOX_BOXTYPE],[
 AC_ARG_WITH(boxtype,
-	[  --with-boxtype          valid values: tripledragon,coolstream,spark,azbox,generic,duckbox,spark7162],
+	[  --with-boxtype          valid values: tripledragon,coolstream,spark,azbox,generic,armbox,duckbox,spark7162],
 	[case "${withval}" in
-		tripledragon|coolstream|azbox|generic)
+		tripledragon|coolstream|azbox|generic|armbox)
 			BOXTYPE="$withval"
 			;;
 		spark|spark7162)
@@ -357,6 +375,7 @@ AC_ARG_WITH(boxtype,
 
 AC_ARG_WITH(boxmodel,
 	[  --with-boxmodel         valid for coolstream: hd1, hd2
+                          valid for armbox: hd51
                           valid for generic: raspi
                           valid for duckbox: ufs910, ufs912, ufs913, ufs922, atevio7500, fortis_hdbox, octagon1008, hs7110, hs7810a, hs7119, hs7819, dp7000, cuberevo, cuberevo_mini, cuberevo_mini2, cuberevo_250hd, cuberevo_2000hd, cuberevo_3000hd, ipbox9900, ipbox99, ipbox55, arivalink200, tf7700, hl101
                           valid for spark: spark, spark7162],
@@ -393,6 +412,12 @@ AC_ARG_WITH(boxmodel,
 			else
 				AC_MSG_ERROR([unknown model $withval for boxtype $BOXTYPE])
 			fi
+		hd51)
+			if test "$BOXTYPE" = "armbox"; then
+				BOXMODEL="$withval"
+			else
+				AC_MSG_ERROR([unknown model $withval for boxtype $BOXTYPE])
+			fi
 			;;
 		raspi)
 			if test "$BOXTYPE" = "generic"; then
@@ -416,6 +441,8 @@ AM_CONDITIONAL(BOXTYPE_COOL, test "$BOXTYPE" = "coolstream")
 AM_CONDITIONAL(BOXTYPE_SPARK, test "$BOXTYPE" = "spark")
 AM_CONDITIONAL(BOXTYPE_GENERIC, test "$BOXTYPE" = "generic")
 AM_CONDITIONAL(BOXTYPE_DUCKBOX, test "$BOXTYPE" = "duckbox")
+AM_CONDITIONAL(BOXTYPE_ARMBOX, test "$BOXTYPE" = "armbox")
+
 AM_CONDITIONAL(BOXMODEL_CS_HD1,test "$BOXMODEL" = "hd1")
 AM_CONDITIONAL(BOXMODEL_CS_HD2,test "$BOXMODEL" = "hd2")
 AM_CONDITIONAL(BOXMODEL_UFS910,test "$BOXMODEL" = "ufs910")
@@ -456,10 +483,14 @@ elif test "$BOXTYPE" = "coolstream"; then
 	AC_DEFINE(HAVE_COOL_HARDWARE, 1, [building for a coolstream])
 elif test "$BOXTYPE" = "spark"; then
 	AC_DEFINE(HAVE_SPARK_HARDWARE, 1, [building for a goldenmedia 990 or edision pingulux])
+	AC_DEFINE(HAVE_SH4_HARDWARE, 1, [building for a sh4 box])
 elif test "$BOXTYPE" = "generic"; then
 	AC_DEFINE(HAVE_GENERIC_HARDWARE, 1, [building for a generic device like a standard PC])
 elif test "$BOXTYPE" = "duckbox"; then
 	AC_DEFINE(HAVE_DUCKBOX_HARDWARE, 1, [building for a duckbox])
+	AC_DEFINE(HAVE_SH4_HARDWARE, 1, [building for a sh4 box])
+elif test "$BOXTYPE" = "armbox"; then
+	AC_DEFINE(HAVE_ARM_HARDWARE, 1, [building for an armbox])
 fi
 
 # TODO: do we need more defines?
@@ -520,6 +551,9 @@ elif test "$BOXMODEL" = "tf7700"; then
 	AC_DEFINE(BOXMODEL_TF7700, 1, [tf7700])
 elif test "$BOXMODEL" = "hl101"; then
 	AC_DEFINE(BOXMODEL_HL101, 1, [hl101])	
+elif test "$BOXMODEL" = "hd51"; then
+	AC_DEFINE(BOXMODEL_HD51, 1, [hd51])	
+	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION,1,[enable change the osd resolution])
 elif test "$BOXMODEL" = "raspi"; then
 	AC_DEFINE(BOXMODEL_RASPI, 1, [Raspberry pi])
 fi

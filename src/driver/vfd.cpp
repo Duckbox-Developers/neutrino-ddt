@@ -70,6 +70,7 @@ extern CRemoteControl * g_RemoteControl; /* neutrino.cpp */
 
 bool invert = false;
 char g_str[64];
+
 bool blocked = false;
 int blocked_counter = 0;
 int file_vfd = -1;
@@ -255,6 +256,14 @@ void* CVFD::ThreadScrollText(void * arg)
 
 CVFD::CVFD()
 {
+	text[0] = 0;
+	g_str[0] = 0;
+	clearClock = 0;
+	mode = MODE_TVRADIO;
+	switch_name_time_cnt = 0;
+	timeout_cnt = 0;
+	service_number = -1;
+
 #ifdef VFD_UPDATE
         m_fileList = NULL;
         m_fileListPos = 0;
@@ -313,13 +322,6 @@ CVFD::CVFD()
 	support_text	= true;
 	support_numbers	= true;
 #endif
-
-	text.clear();
-	clearClock = 0;
-	mode = MODE_TVRADIO;
-	switch_name_time_cnt = 0;
-	timeout_cnt = 0;
-	service_number = -1;
 }
 
 CVFD::~CVFD()
@@ -817,7 +819,7 @@ void CVFD::showVolume(const char vol, const bool force_update)
 		}
 #else
 		ShowIcon(FP_ICON_FRAME, true);
-		int pp = (vol * 8 + 50) / 100;
+		int pp = (int) round((double) vol * (double) 8 / (double) 100);
 		if(pp > 8) pp = 8;
 
 		if(force_update || oldpp != pp) {
@@ -862,7 +864,7 @@ void CVFD::showPercentOver(const unsigned char perc, const bool /*perform_update
 		if(perc == 255)
 			pp = 0;
 		else
-			pp = (perc * 8 + 50) / 100;
+			pp = (int) round((double) perc * (double) 8 / (double) 100);
 		if(pp > 8) pp = 8;
 
 		if(pp != ppold) {
@@ -1038,7 +1040,9 @@ void CVFD::setMode(const MODES m, const char * const title)
 		ShowIcon(FP_ICON_COL1, true);
 		ShowIcon(FP_ICON_COL2, true);
 #endif
+#if ! HAVE_COOL_HARDWARE
 		ClearIcons();
+#endif
 		ShowIcon(FP_ICON_USB, false);
 		ShowIcon(FP_ICON_HDD, false);
 		showclock = true;

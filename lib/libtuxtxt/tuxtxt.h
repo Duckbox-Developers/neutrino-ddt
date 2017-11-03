@@ -21,7 +21,6 @@
 
 #include <config.h>
 
-#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -32,12 +31,6 @@
 
 #include <linux/fb.h>
 
-#include <linux/input.h>
-
-#include <sys/ioctl.h>
-#include <sys/mman.h>
-
-#include <driver/framebuffer.h>
 #include "tuxtxt_def.h"
 
 #include <ft2build.h>
@@ -100,7 +93,6 @@ int tv_pip_y;
 //#define TV169FULLWIDTH  (ex - sx)/2
 #define TV169FULLWIDTH  (screen_w / 2)
 #define TV169FULLHEIGHT (ey - sy)
-
 #define TOPMENUSTARTX (TV43STARTX+2)
 //#define TOPMENUENDX TVENDX
 #define TOPMENUSTARTY StartY
@@ -149,36 +141,6 @@ int tv_pip_y;
 #define hold_mosaic         0x1E
 #define release_mosaic      0x1F
 
-#if 0
-/* rc codes */
-#define RC_0        0x00
-#define RC_1        0x01
-#define RC_2        0x02
-#define RC_3        0x03
-#define RC_4        0x04
-#define RC_5        0x05
-#define RC_6        0x06
-#define RC_7        0x07
-#define RC_8        0x08
-#define RC_9        0x09
-#define RC_RIGHT    0x0A
-#define RC_LEFT     0x0B
-#define RC_UP       0x0C
-#define RC_DOWN     0x0D
-#define RC_OK       0x0E
-#define RC_MUTE     0x0F
-#define RC_STANDBY  0x10
-#define RC_GREEN    0x11
-#define RC_YELLOW   0x12
-#define RC_RED      0x13
-#define RC_BLUE     0x14
-#define RC_PLUS     0x15
-#define RC_MINUS    0x16
-#define RC_HELP     0x17
-#define RC_DBOX     0x18
-#define RC_TEXT     0x19
-#define RC_HOME     0x1F
-#else
 #define RC_0        CRCInput::RC_0
 #define RC_1        CRCInput::RC_1
 #define RC_2        CRCInput::RC_2
@@ -205,8 +167,19 @@ int tv_pip_y;
 #define RC_HELP     CRCInput::RC_help
 #define RC_INFO     CRCInput::RC_info
 #define RC_DBOX     CRCInput::RC_setup
-#define RC_TEXT     CRCInput::RC_text
 #define RC_HOME     CRCInput::RC_home
+#define RC_TTTV     CRCInput::RC_tttv
+#define RC_TTZOOM   CRCInput::RC_ttzoom
+#define RC_TTREVEAL CRCInput::RC_ttreveal
+#if HAVE_TRIPLEDRAGON
+/* td has more keys so use ttx key for switching split mode... */
+#define RC_SPLIT    CRCInput::RC_text
+/* rc_text is now unused */
+#define RC_TEXT    (CRCInput::RC_MaxRC + 1)
+#else
+/* ...while other receivers use the vol- key for that, so rc_split is unused */
+#define RC_SPLIT   (CRCInput::RC_MaxRC + 1)
+#define RC_TEXT     CRCInput::RC_text
 #endif
 
 typedef enum /* object type */
@@ -238,10 +211,11 @@ const char *ObjectType[] =
 #define NoServicesFound 3
 
 /* framebuffer stuff */
-static fb_pixel_t *lfb = NULL;
-static fb_pixel_t *lbb = NULL;
+static fb_pixel_t *lfb = 0;
+static fb_pixel_t *lbb = 0;
 struct fb_var_screeninfo var_screeninfo;
 struct fb_fix_screeninfo fix_screeninfo;
+int stride;
 
 /* freetype stuff */
 FT_Library      library;
@@ -583,13 +557,12 @@ char versioninfo[16];
 int hotlist[10];
 int maxhotlist;
 
-int pig, rc, fb, lcd;
+int lcd;
 int sx, ex, sy, ey;
 int PosX, PosY, StartX, StartY;
 int lastpage;
 int inputcounter;
-int zoommode[2], screenmode[2], transpmode[2], hintmode, nofirst, savedscreenmode[2], showflof, show39, showl25, prevscreenmode[2];
-bool boxed, oldboxed;
+int zoommode, screenmode, transpmode, hintmode, boxed, nofirst, savedscreenmode, showflof, show39, showl25, prevscreenmode;
 char dumpl25;
 int catch_row, catch_col, catched_page, pagecatching;
 int prev_100, prev_10, next_10, next_100;
@@ -1240,18 +1213,8 @@ const unsigned short defaultcolors[] =	/* 0x0bgr */
 	0x420, 0x210, 0x420, 0x000, 0x000
 };
 
-fb_pixel_t argb[] = {
-	0xff000000, 0xff000000, 0xff000000, 0xff000000,
-	0xff000000, 0xff000000, 0xff000000, 0xff000000,
-	0xff000000, 0xff000000, 0xff000000, 0xff000000,
-	0xff000000, 0xff000000, 0xff000000, 0xff000000,
-	0xff000000, 0xff000000, 0xff000000, 0xff000000,
-	0xff000000, 0xff000000, 0xff000000, 0xff000000,
-	0xff000000, 0xff000000, 0xff000000, 0xff000000,
-	0xff000000, 0xff000000, 0xff000000, 0xff000000,
-	0xff000000, 0xff000000, 0xc0000000, 0x00000000,
-	0x33000000
-};
+/* filled in setcolors() */
+fb_pixel_t bgra[SIZECOLTABLE];
 
 /* old 8bit color table */
 unsigned short rd0[] = {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0x00<<8, 0x00<<8, 0x00<<8, 0,      0      };
@@ -1728,37 +1691,38 @@ const char lcd_digits[] =
 };
 #endif
 /* functions */
-static void ConfigMenu(int Init);
-static void CleanUp();
-static void PageInput(int Number);
-static void ColorKey(int);
-static void PageCatching();
-static void CatchNextPage(int, int);
-static void GetNextPageOne(int up);
-static void GetNextSubPage(int offset);
-static void SwitchZoomMode();
-static void SwitchScreenMode(int newscreenmode);
-static void SwitchTranspMode();
-static void SwitchHintMode();
-static void CreateLine25();
-static void CopyBB2FB();
-static void RenderCatchedPage();
-static void RenderCharFB(int Char, tstPageAttr *Attribute);
-static void RenderCharBB(int Char, tstPageAttr *Attribute);
-static void RenderCharLCD(int Digit, int XPos, int YPos);
-static void RenderMessage(int Message);
-static void RenderPage();
-static void DecodePage();
-static int  Init(int source);
-static int  GetNationalSubset(const char *country_code);
-static int  GetTeletextPIDs();
-static int  GetRCCode();
-static int  eval_triplet(int iOData, tstCachedPage *pstCachedPage,
+void ConfigMenu(int Init);
+void CleanUp();
+void PageInput(int Number);
+void ColorKey(int);
+void PageCatching();
+void CatchNextPage(int, int);
+void GetNextPageOne(int up);
+void GetNextSubPage(int offset);
+void SwitchZoomMode();
+void SwitchScreenMode(int newscreenmode);
+void SwitchTranspMode();
+void SwitchHintMode();
+void CreateLine25();
+void CopyBB2FB();
+void RenderCatchedPage();
+void RenderCharFB(int Char, tstPageAttr *Attribute);
+void RenderCharBB(int Char, tstPageAttr *Attribute);
+void RenderCharLCD(int Digit, int XPos, int YPos);
+void RenderMessage(int Message);
+void RenderPage();
+void DecodePage();
+void UpdateLCD();
+int  Init(int source);
+int  GetNationalSubset(const char *country_code);
+int  GetTeletextPIDs();
+int  GetRCCode();
+int  eval_triplet(int iOData, tstCachedPage *pstCachedPage,
 						unsigned char *pAPx, unsigned char *pAPy,
 						unsigned char *pAPx0, unsigned char *pAPy0,
 						unsigned char *drcssubp, unsigned char *gdrcssubp,
 						signed char *endcol, tstPageAttr *attrPassive, unsigned char* pagedata);
-static void eval_object(int iONr, tstCachedPage *pstCachedPage,
+void eval_object(int iONr, tstCachedPage *pstCachedPage,
 					  unsigned char *pAPx, unsigned char *pAPy,
 					  unsigned char *pAPx0, unsigned char *pAPy0,
 					  tObjType ObjType, unsigned char* pagedata);

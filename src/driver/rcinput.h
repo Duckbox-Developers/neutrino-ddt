@@ -267,6 +267,9 @@ class CRCInput
 			RC_prog4	= KEY_PROG4,
 			RC_media	= KEY_MEDIA,
 			RC_search	= KEY_SEARCH,
+			RC_nextsong	= KEY_NEXTSONG,
+			RC_previoussong	= KEY_PREVIOUSSONG,
+			RC_bookmarks	= KEY_BOOKMARKS,
 
 			RC_power_on	= KEY_POWERON,
 			RC_power_off	= KEY_POWEROFF,

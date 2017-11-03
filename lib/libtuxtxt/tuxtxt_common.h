@@ -363,7 +363,7 @@ void tuxtxt_clear_cache(void)
 	tuxtxt_cache.bttok      = 0;
 	tuxtxt_cache.cached_pages  = 0;
 	tuxtxt_cache.page_receiving = -1;
-	tuxtxt_cache.vtxtpid = 0;
+	tuxtxt_cache.vtxtpid = -1;
 	memset(&tuxtxt_cache.subpagetable, 0xFF, sizeof(tuxtxt_cache.subpagetable));
 	memset(&tuxtxt_cache.basictop, 0, sizeof(tuxtxt_cache.basictop));
 	memset(&tuxtxt_cache.adip, 0, sizeof(tuxtxt_cache.adip));
@@ -695,8 +695,8 @@ void *tuxtxt_CacheThread(void * /*arg*/)
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 	sem_init(&inject_sem, 0, 0);
 #endif
-	printf("TuxTxt running thread...(%04x)\n",tuxtxt_cache.vtxtpid);
 	set_threadname("tuxtxt:cache");
+	printf("TuxTxt running thread...(%04x)\n",tuxtxt_cache.vtxtpid);
 	tuxtxt_cache.receiving = 1;
 	nice(3);
 	while (!stop_cache)
@@ -1201,7 +1201,7 @@ void *tuxtxt_CacheThread(void * /*arg*/)
 int tuxtxt_start_thread(int source = 0);
 int tuxtxt_start_thread(int source)
 {
-	if (!tuxtxt_cache.vtxtpid)
+	if (tuxtxt_cache.vtxtpid == -1)
 		return 0;
 
 	tuxtxt_cache.thread_starting = 1;
@@ -1262,15 +1262,6 @@ int tuxtxt_stop_thread()
 	}
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 	clear_inject_queue();
-#endif
-#if 0
-	if (tuxtxt_cache.dmx != -1)
-	{
-		//ioctl(tuxtxt_cache.dmx, DMX_STOP);
-
-//        close(tuxtxt_cache.dmx);
-  	}
-//	tuxtxt_cache.dmx = -1;
 #endif
 #if 1//TUXTXT_DEBUG
 	printf("TuxTxt stopped service %x\n", tuxtxt_cache.vtxtpid);

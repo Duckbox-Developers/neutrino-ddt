@@ -49,6 +49,7 @@ install_DATA =	accept.png \
 		properties.png \
 		radio.png \
 		rc_910.jpg \
+		rc_ax_hd51.png \
 		rc_cst_v1.jpg \
 		rc_cst_v2.png \
 		rc_cst_v3.png \
@@ -57,6 +58,7 @@ install_DATA =	accept.png \
 		rc_cst_v6.png \
 		rc_spark_old.jpg \
 		rc_spark_new.jpg \
+		rc_mutant_hd51.png \
 		record.png \
 		reload.png \
 		remove.png \

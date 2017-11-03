@@ -24,8 +24,9 @@
 #include <config.h>
 #endif
 
-#include <driver/lcdd.h>
+#include <driver/simple_display.h>
 #include <driver/framebuffer.h>
+#include <system/set_threadname.h>
 
 #include <global.h>
 #include <neutrino.h>
@@ -34,6 +35,7 @@
 #include <unistd.h>
 //#include <math.h>
 #include <sys/stat.h>
+
 #if HAVE_SPARK_HARDWARE
 #include <aotom_main.h>
 #define DISPLAY_DEV "/dev/vfd"
@@ -42,14 +44,43 @@
 static bool usb_icon = false;
 static bool timer_icon = false;
 #endif
+
 #if HAVE_AZBOX_HARDWARE
 #define DISPLAY_DEV "/proc/vfd"
 #define LED_DEV "/proc/led"
 #endif
+
 #if HAVE_GENERIC_HARDWARE
 #define DISPLAY_DEV "/dev/null"
 static bool usb_icon = false;
 static bool timer_icon = false;
+#endif
+
+#if HAVE_ARM_HARDWARE
+#define DISPLAY_DEV "/dev/dbox/oled0"
+#include <zapit/zapit.h>
+#include <system/helpers.h>
+static bool usb_icon = false;
+static bool timer_icon = false;
+static int proc_put(const char *path, bool state)
+{
+	int ret, ret2;
+	int pfd = open(path, O_WRONLY);
+	char *value;
+	if (state)
+		value="1";
+	else
+		value="0";
+	if (pfd < 0)
+		return pfd;
+	ret = write(pfd, value, 1);
+	ret2 = close(pfd);
+	if (ret2 < 0)
+		return ret2;
+	return ret;
+}
+#else
+static int proc_put(const char *path, bool state) {}
 #endif
 
 static char volume = 0;
@@ -232,6 +263,9 @@ void CLCD::showServicename(std::string name, bool)
 	strncpy(display_text, name.c_str(), sizeof(display_text) - 1);
 	display_text[sizeof(display_text) - 1] = '\0';
 	upd_display = true;
+#if HAVE_ARM_HARDWARE
+	wake_up();
+#endif
 }
 
 #if HAVE_SPARK_HARDWARE
@@ -313,8 +347,8 @@ void CLCD::showTime(bool force)
 		if (force || last_display || (hour != t->tm_hour) || (minute != t->tm_min)) {
 			hour = t->tm_hour;
 			minute = t->tm_min;
-			int ret = -1;
 #if HAVE_SPARK_HARDWARE
+			int ret = -1;
 			now += t->tm_gmtoff;
 			int fd = dev_open();
 #if 0 /* VFDSETTIME is broken and too complicated anyway -> use VFDSETTIME2 */
@@ -331,7 +365,11 @@ void CLCD::showTime(bool force)
 #endif
 			close(fd);
 #endif
+#if HAVE_ARM_HARDWARE
+			if (mode == MODE_STANDBY || ( g_settings.lcd_info_line && (MODE_TVRADIO == mode)))
+#else
 			if (ret < 0 && servicename.empty())
+#endif
 			{
 				if (g_info.hw_caps->display_xres < 5)
 					sprintf(timestr, "%02d%02d", hour, minute);
@@ -364,8 +402,17 @@ void CLCD::showTime(bool force)
 			setled(red, green);
 }
 
-void CLCD::showRCLock(int)
+void CVFD::showRCLock(int duration)
 {
+	if (g_info.hw_caps->display_type != HW_DISPLAY_LINE_TEXT || !g_settings.lcd_notify_rclock)
+	{
+		sleep(duration);
+		return;
+	}
+
+	display(g_Locale->getText(LOCALE_RCLOCK_LOCKED));
+	sleep(duration);
+	display(display_text);
 }
 
 /* update is default true, the mute code sets it to false
@@ -393,7 +440,14 @@ void CLCD::showVolume(const char vol, const bool update)
 			SetIcons(SPARK_MUTE, 0);
 		sprintf(s, vol_fmt[type], volume);
 	}
+#if HAVE_ARM_HARDWARE
+	if (g_info.hw_caps->display_type == HW_DISPLAY_LINE_TEXT)
+		sprintf(s,"%.*s", volume*g_info.hw_caps->display_xres/100, "================");
+#endif
 	display(s);
+#if HAVE_ARM_HARDWARE
+	wake_up();
+#endif
 	vol_active = true;
 }
 
@@ -410,6 +464,9 @@ void CLCD::showMenuText(const int, const char *text, const int, const bool)
 	strncpy(display_text, tmp.c_str(), sizeof(display_text) - 1);
 	display_text[sizeof(display_text) - 1] = '\0';
 	upd_display = true;
+#if HAVE_ARM_HARDWARE
+	wake_up();
+#endif
 }
 
 void CLCD::showAudioTrack(const std::string &, const std::string & title, const std::string &)
@@ -417,6 +474,9 @@ void CLCD::showAudioTrack(const std::string &, const std::string & title, const 
 	if (mode != MODE_AUDIO)
 		return;
 	ShowText(title.c_str());
+#if HAVE_ARM_HARDWARE
+	wake_up();
+#endif
 }
 
 void CLCD::showAudioPlayMode(AUDIOMODES)
@@ -462,11 +522,14 @@ void CLCD::setMode(const MODES m, const char * const)
 		showclock = true;
 		showTime();
 	}
+#if HAVE_ARM_HARDWARE
+	wake_up();
+#endif
 }
 
 void CLCD::setBrightness(int dimm)
 {
-#ifndef HAVE_GENERIC_HARDWARE
+#if HAVE_SPARK_HARDWARE
 	switch(dimm) {
 	case 15:
 	case 14: dimm = 7; break;
@@ -503,6 +566,12 @@ void CLCD::setBrightness(int dimm)
 
 		close(fd);
 	}
+#elif HAVE_ARM_HARDWARE
+	std::string value = to_string(255/15*dimm);
+	int pfd = open("/proc/stb/lcd/oled_brightness", O_WRONLY);
+	if (pfd)
+		write(pfd, value.c_str(), value.length());
+	close(pfd);
 #endif
 }
 
@@ -553,10 +622,17 @@ void CLCD::togglePower(void)
 		Clear();
 	else
 		showTime(true);
-	if (g_info.hw_caps->display_type == HW_DISPLAY_LINE_TEXT) {
+
+	if (g_info.hw_caps->display_type == HW_DISPLAY_LINE_TEXT)
+	{
 		last_toggle_state_power = 1 - last_toggle_state_power;
-		setlcdparameter((mode == MODE_STANDBY) ? g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] : (mode == MODE_SHUTDOWN) ? g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] : g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS],
-				last_toggle_state_power);
+
+		if (mode == MODE_STANDBY)
+			setlcdparameter(g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS], last_toggle_state_power);
+		else if (mode == MODE_SHUTDOWN)
+			setlcdparameter(g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS], last_toggle_state_power);
+		else
+			setlcdparameter(g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS], last_toggle_state_power);
 	}
 }
 
@@ -631,14 +707,14 @@ void CLCD::count_down() {
 	}
 }
 
-void CLCD::setlcdparameter(int dimm, const int power)
+void CLCD::setlcdparameter(int dimm, const int _power)
 {
 	if(dimm < 0)
 		dimm = 0;
 	else if(dimm > 15)
 		dimm = 15;
 
-	if(!power)
+	if(!_power)
 		dimm = 0;
 
 	if(brightness == dimm)
@@ -652,7 +728,7 @@ printf("CLCD::setlcdparameter dimm %d power %d\n", dimm, power);
 
 void CLCD::SetIcons(int icon, bool on)
 {
-#ifndef HAVE_GENERIC_HARDWARE
+#if HAVE_SPARK_HARDWARE
 	struct aotom_ioctl_data d;
 	d.u.icon.icon_nr = icon;
 	if (on == true)
@@ -667,18 +743,20 @@ void CLCD::SetIcons(int icon, bool on)
 			perror("[neutrino] SetIcons() VFDICONDISPLAYONOFF");
 		close(fd);
 	}
+#else
+	//nothing
 #endif
 }
 void CLCD::ShowDiskLevel()
 {
-#ifndef HAVE_GENERIC_HARDWARE
+#if !HAVE_GENERIC_HARDWARE && !HAVE_ARM_HARDWARE
 	int hdd_icons[9] ={24, 23, 21, 20, 19, 18, 17, 16, 22};
 	int percent, digits, i, j;
 	uint64_t t, u;
 	if (get_fs_usage(g_settings.network_nfs_recordingdir.c_str(), t, u))
 	{
 		SetIcons(SPARK_HDD, true);
-		percent = (int)((u * 1000ULL) / t + 60); 
+		percent = (int)((u * 1000ULL) / t + 60);
 		digits = percent / 125;
 		if (percent > 1050)
 			digits = 9;
@@ -687,7 +765,7 @@ void CLCD::ShowDiskLevel()
 		{
 			for (i=0; i<digits; i++)
 				SetIcons(hdd_icons[i], true);
-						
+
 			for (j=i; j < 9; j++)
 				SetIcons(hdd_icons[j], false);
 		}
@@ -701,7 +779,7 @@ void CLCD::ShowDiskLevel()
 }
 void CLCD::UpdateIcons()
 {
-#ifndef HAVE_GENERIC_HARDWARE
+#if HAVE_SPARK_HARDWARE
 	CFrontend *aktFE = CFEManager::getInstance()->getLiveFE();
 	SetIcons(SPARK_SAT, aktFE->isSat(aktFE->getCurrentDeliverySystem()));
 	SetIcons(SPARK_CAB, aktFE->isCable(aktFE->getCurrentDeliverySystem()));
@@ -709,7 +787,8 @@ void CLCD::UpdateIcons()
 
 	ShowDiskLevel();
 	SetIcons(SPARK_USB, usb_icon);
-
+#endif
+#if HAVE_SPARK_HARDWARE || HAVE_ARM_HARDWARE
 	CZapitChannel * chan = CZapit::getInstance()->GetCurrentChannel();
 	if (chan)
 	{
@@ -730,24 +809,28 @@ void CLCD::ShowIcon(fp_icon i, bool on)
 	{
 		case FP_ICON_CAM1:
 			led_r = on;
-			if (g_info.hw_caps->display_type == HW_DISPLAY_LINE_TEXT)
+			if (g_info.hw_caps->display_type == HW_DISPLAY_LINE_TEXT) {
 				SetIcons(SPARK_REC1, on);
+				proc_put("/proc/stb/lcd/symbol_recording",on);}
 			else
 				setled(led_r, -1); /* switch instant on / switch off if disabling */
 			break;
 		case FP_ICON_PLAY:
 			led_g = on;
-			if (g_info.hw_caps->display_type == HW_DISPLAY_LINE_TEXT)
+			if (g_info.hw_caps->display_type == HW_DISPLAY_LINE_TEXT) {
 				SetIcons(SPARK_PLAY, on);
+				proc_put("/proc/stb/lcd/symbol_playback",on);}
 			else
 				setled(-1, led_g);
 			break;
 		case FP_ICON_USB:
 			usb_icon = on;
 			SetIcons(SPARK_USB, on);
+			proc_put("/proc/stb/lcd/symbol_usb",on);
 			break;
 		case FP_ICON_HDD:
 			SetIcons(SPARK_HDD, on);
+			proc_put("/proc/stb/lcd/symbol_hdd",on);
 			break;
 		case FP_ICON_PAUSE:
 			SetIcons(SPARK_PAUSE, on);
@@ -764,12 +847,14 @@ void CLCD::ShowIcon(fp_icon i, bool on)
 			break;
 		case FP_ICON_LOCK:
 			SetIcons(SPARK_CA, on);
+			proc_put("/proc/stb/lcd/symbol_scrambled",on);
 			break;
 		case FP_ICON_RADIO:
 			SetIcons(SPARK_AUDIO, on);
 			break;
 		case FP_ICON_TV:
 			SetIcons(SPARK_TVMODE_LOG, on);
+			proc_put("/proc/stb/lcd/symbol_tv",on);
 			break;
 		case FP_ICON_HD:
 			SetIcons(SPARK_DOUBLESCREEN, on);
@@ -777,6 +862,7 @@ void CLCD::ShowIcon(fp_icon i, bool on)
 		case FP_ICON_CLOCK:
 			timer_icon = on;
 			SetIcons(SPARK_CLOCK, on);
+			proc_put("/proc/stb/lcd/symbol_timeshift",on);
 			break;
 		default:
 			break;

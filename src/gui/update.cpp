@@ -351,6 +351,13 @@ bool CFlashUpdate::selectHttpImage(void)
 		}
 	}
 #endif
+#if HAVE_ARM_HARDWARE
+	if ((fileType <= '2') && (filename.substr(filename.find_last_of(".") + 1) == "tgz"))
+	{
+		// manipulate fileType for tgz-packages
+		fileType = 'Z';
+	}
+#endif
 #ifdef DEBUG
 	printf("[update] filename %s type %c newVersion %s md5 %s\n", filename.c_str(), fileType, newVersion.c_str(), file_md5.c_str());
 #endif
@@ -438,6 +445,10 @@ bool CFlashUpdate::checkVersion4Update()
 		for(size_t i=0; i<sizeof(filters)/sizeof(filters[0]) ;i++)
 			UpdatesFilter.addFilter(filters[i]);
 
+#if HAVE_ARM_HARDWARE
+		UpdatesFilter.addFilter("tgz");
+#endif
+
 		UpdatesBrowser.Filter = &UpdatesFilter;
 
 		CFile * file_selected = NULL;
@@ -479,6 +490,14 @@ bool CFlashUpdate::checkVersion4Update()
 			//!always leave here!
 			return false;
 		}
+#if HAVE_ARM_HARDWARE
+		//tgz package install:
+		else if (file_selected->getType() == CFile::FILE_TGZ_PACKAGE){
+			fileType = 'Z';
+			//!always leave here!
+			return true;
+		}
+#endif
 		//set internal filetype
 		char const * ptr = rindex(filename.c_str(), '.');
 		if(ptr) {
@@ -627,6 +646,104 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 			free(buffer);
 		}
 	}
+#if HAVE_ARM_HARDWARE
+	else if (fileType == 'Z')
+	{
+		showGlobalStatus(100);
+
+		// create settings package
+		int copy_settings = ShowMsg(LOCALE_MESSAGEBOX_INFO, LOCALE_FLASHUPDATE_COPY_SETTINGS, CMsgBox::mbrYes, CMsgBox::mbYes | CMsgBox::mbNo, NEUTRINO_ICON_UPDATE);
+		if (copy_settings == CMsgBox::mbrYes)
+		{
+			CHintBox hintBox(LOCALE_MESSAGEBOX_INFO, LOCALE_SETTINGS_BACKUP);
+			hintBox.paint();
+			/*
+			   Settings tarball is created in /tmp directory.
+			   ofgwrite will copy this tarball to new rootfs.
+			   It's untared at first start of new image.
+			*/
+			my_system(3, "/bin/backup.sh", "/tmp", "backup_flash.tar.gz");
+			hintBox.hide();
+		}
+
+		// get active partition
+		char c[2] = {0};
+		FILE *f;
+		f = fopen("/sys/firmware/devicetree/base/chosen/kerneldev", "r");
+		if (f)
+		{
+			if (fseek(f, -2, SEEK_END) == 0)
+			{
+				c[0] = fgetc(f);
+				printf("[update] Current partition: %s\n", c);
+			}
+		}
+
+		// select partition
+		int selected = 0;
+		CMenuSelectorTarget *selector = new CMenuSelectorTarget(&selected);
+
+		CMenuWidget m(LOCALE_FLASHUPDATE_CHOOSE_PARTITION, NEUTRINO_ICON_SETTINGS);
+		m.addItem(GenericMenuSeparator);
+		CMenuForwarder *mf;
+
+		for (int i = 1; i < 4+1; i++)
+		{
+			bool active = !strcmp(c, to_string(i).c_str());
+			std::string m_title = "Partition " + to_string(i);
+			mf = new CMenuForwarder(m_title, true, NULL, selector, to_string(i).c_str(), CRCInput::convertDigitToKey(i));
+			mf->iconName_Info_right = active ? NEUTRINO_ICON_CHECKMARK : NULL;
+			m.addItem(mf, active);
+		}
+
+		m.enableSaveScreen(true);
+		m.exec(NULL, "");
+
+		delete selector;
+
+		printf("[update] Flash into partition %d\n", selected);
+
+		int restart = CMsgBox::mbNo;
+
+		std::string ofgwrite_options("");
+		if (selected > 0 && strcmp(c, to_string(selected).c_str()))
+		{
+			// align ofgwrite options
+			ofgwrite_options = "-m" + to_string(selected);
+			printf("[update] ofgwrite_options: %s\n", ofgwrite_options.c_str());
+
+			// start selected partition?
+			restart = ShowMsg(LOCALE_MESSAGEBOX_INFO, LOCALE_FLASHUPDATE_START_SELECTED_PARTITION, CMsgBox::mbrYes, CMsgBox::mbYes | CMsgBox::mbNo, NEUTRINO_ICON_UPDATE);
+			if (restart == CMsgBox::mbrYes)
+			{
+				std::string startup_new = "/boot/STARTUP_" + to_string(selected);
+				printf("[update] Start selected partition %d (%s)\n", selected, startup_new.c_str());
+#ifndef DRYRUN
+				CFileHelpers fh;
+				fh.copyFile(startup_new.c_str(), "/boot/STARTUP");
+#endif
+			}
+		}
+
+		ShowHint(LOCALE_MESSAGEBOX_INFO, LOCALE_FLASHUPDATE_START_OFGWRITE);
+		hide();
+
+		const char ofgwrite_tgz[] = "/bin/ofgwrite_tgz";
+		printf("[update] calling %s %s %s %s\n", ofgwrite_tgz, g_settings.update_dir.c_str(), filename.c_str(), ofgwrite_options.c_str());
+#ifndef DRYRUN
+		my_system(4, ofgwrite_tgz, g_settings.update_dir.c_str(), filename.c_str(), ofgwrite_options.c_str());
+
+		/*
+		   TODO: fix osd-flickering
+		   Neutrino is clearing framebuffer, so ofgwrite's gui is cleared too.
+		*/
+
+		if (restart == CMsgBox::mbrYes)
+			CNeutrinoApp::getInstance()->exec(NULL, "reboot");
+#endif
+		return menu_return::RETURN_EXIT_ALL;
+	}
+#endif
 	else // not image, install
 	{
 		const char install_sh[] = "/bin/install.sh";

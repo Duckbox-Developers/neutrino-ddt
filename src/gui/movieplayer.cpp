@@ -198,8 +198,6 @@ void CMoviePlayerGui::Init(void)
 	tsfilefilter.addFilter("wav");
 	tsfilefilter.addFilter("asf");
 	tsfilefilter.addFilter("aiff");
-	tsfilefilter.addFilter("mp4");
-	tsfilefilter.addFilter("mov");
 #endif
 	tsfilefilter.addFilter("mpg");
 	tsfilefilter.addFilter("mpeg");
@@ -207,14 +205,11 @@ void CMoviePlayerGui::Init(void)
 	tsfilefilter.addFilter("mpv");
 	tsfilefilter.addFilter("vob");
 	tsfilefilter.addFilter("m2ts");
+	tsfilefilter.addFilter("mp4");
+	tsfilefilter.addFilter("mov");
 	tsfilefilter.addFilter("m3u");
 	tsfilefilter.addFilter("m3u8");
 	tsfilefilter.addFilter("pls");
-	tsfilefilter.addFilter("vdr");
-#ifdef HAVE_SPARK_HARDWARE
-	tsfilefilter.addFilter("flv");
-	tsfilefilter.addFilter("wmv");
-#endif
 	tsfilefilter.addFilter("iso");
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 	tsfilefilter.addFilter("trp");
@@ -284,6 +279,9 @@ void CMoviePlayerGui::cutNeutrino()
 	if (isUPNP)
 		return;
 
+#if 0
+	CZapit::getInstance()->setMoviePlayer(true);// let CCamManager::SetMode know, the call is from MoviePlayer
+#endif
 	g_Zapit->lockPlayBack();
 
 #ifdef HAVE_AZBOX_HARDWARE
@@ -437,7 +435,9 @@ int CMoviePlayerGui::exec(CMenuTarget * parent, const std::string & actionKey)
 		CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
 		CVFD::getInstance()->showServicename(file_name.c_str());
 		if (timeshift != TSHIFT_MODE_OFF) {
+			CVFD::getInstance()->ShowIcon(FP_ICON_TIMESHIFT, true);
 			PlayFile();
+			CVFD::getInstance()->ShowIcon(FP_ICON_TIMESHIFT, false);
 			break;
 		}
 		do {
@@ -1123,9 +1123,24 @@ bool CMoviePlayerGui::getLiveUrl(const std::string &url, const std::string &scri
 	}
 	std::string _script = script;
 
+#if 0
 	if (_script.find("/") == std::string::npos)
-		_script = g_settings.livestreamScriptPath + "/" + _script;
-
+	{
+		std::string _s = g_settings.livestreamScriptPath + "/" + _script;
+		printf("[%s:%s:%d] script: %s\n", __file__, __func__, __LINE__, _s.c_str());
+		if (!file_exists(_s.c_str()))
+		{
+			_s = std::string(WEBTVDIR_VAR) + "/" + _script;
+			printf("[%s:%s:%d] script: %s\n", __file__, __func__, __LINE__, _s.c_str());
+		}
+		if (!file_exists(_s.c_str()))
+		{
+			_s = std::string(WEBTVDIR) + "/" + _script;
+			printf("[%s:%s:%d] script: %s\n", __file__, __func__, __LINE__, _s.c_str());
+		}
+		_script = _s;
+	}
+#endif
 	size_t pos = _script.find(".lua");
 	if (!file_exists(_script.c_str()) || (pos == std::string::npos) || (_script.length()-pos != 4)) {
 		printf(">>>>> [%s:%s:%d] script error\n", __file__, __func__, __LINE__);
@@ -1542,7 +1557,6 @@ void CMoviePlayerGui::PlayFileLoop(void)
 	int ss,mm,hh;
 #if HAVE_COOL_HARDWARE
 	int eof = 0;
-	int lastpos = 0;
 	int eof2 = 0;
 	int position_tmp = 0;
 #endif
@@ -1583,15 +1597,17 @@ void CMoviePlayerGui::PlayFileLoop(void)
 #else
 				CVFD::getInstance()->showPercentOver(file_prozent);
 #endif
-#if HAVE_DUCKBOX_HARDWARE
-				ss = position/1000;
-				hh = ss/3600;
-				ss -= hh * 3600;
-				mm = ss/60;
-				ss -= mm * 60;
-				std::string Value = to_string(hh/10) + to_string(hh%10) + ":" + to_string(mm/10) + to_string(mm%10) + ":" + to_string(ss/10) + to_string(ss%10);
-				CVFD::getInstance()->ShowText(Value.c_str());
-#endif
+				if (g_info.hw_caps->display_xres > 8)
+				{
+					ss = position/1000;
+					hh = ss/3600;
+					ss -= hh * 3600;
+					mm = ss/60;
+					ss -= mm * 60;
+					std::string Value = to_string(hh/10) + to_string(hh%10) + ":" + to_string(mm/10) + to_string(mm%10) + ":" + to_string(ss/10) + to_string(ss%10);
+					CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8);
+					CVFD::getInstance()->showMenuText(0, Value.c_str(), -1, true);
+				}
 
 				playback->GetSpeed(speed);
 				/* at BOF lib set speed 1, check it */
@@ -1666,8 +1682,10 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			{
 				videoDecoder->setBlank(false);
 				screensaver(false);
-				//ignore first keypress stop - just quit the screensaver and call infoviewer
-				if (msg == CRCInput::RC_stop) {
+#if 0				//ignore first keypress stop - just quit the screensaver and call infoviewer
+				if (msg <= CRCInput::RC_MaxRC) {
+#endif
+				if (msg <= CRCInput::RC_stop) {
 					g_RCInput->clearRCMsg();
 					callInfoViewer();
 					continue;
@@ -1678,6 +1696,9 @@ void CMoviePlayerGui::PlayFileLoop(void)
 
 		if (msg == (neutrino_msg_t) g_settings.mpkey_plugin) {
 			g_Plugins->startPlugin_by_name(g_settings.movieplayer_plugin.c_str ());
+#if 0
+		} else if ((msg == (neutrino_msg_t) g_settings.mpkey_stop) || msg == CRCInput::RC_home) {
+#endif
 		} else if (msg == (neutrino_msg_t) g_settings.mpkey_stop) {
 			playstate = CMoviePlayerGui::STOPPED;
 			keyPressed = CMoviePlayerGui::PLUGIN_PLAYSTATE_STOP;
@@ -1830,6 +1851,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 				playback->SetSpeed(speed);
 			}
 			updateLcd();
+
 			if (timeshift == TSHIFT_MODE_OFF)
 				callInfoViewer();
 		} else if (msg == (neutrino_msg_t) g_settings.mpkey_bookmark) {
@@ -2456,6 +2478,9 @@ void CMoviePlayerGui::handleMovieBrowser(neutrino_msg_t msg, int /*position*/)
 		newComHintBox.movePosition(newx, newy);
 		return;
 	}
+#if 0
+	else if ((msg == (neutrino_msg_t) g_settings.mpkey_stop) || msg == CRCInput::RC_home) {
+#endif
 	else if (msg == (neutrino_msg_t) g_settings.mpkey_stop) {
 		// if we have a movie information, try to save the stop position
 		printf("CMoviePlayerGui::handleMovieBrowser: stop, isMovieBrowser %d p_movie_info %p\n", isMovieBrowser, p_movie_info);
@@ -3064,7 +3089,7 @@ void CMoviePlayerGui::showSubtitle(neutrino_msg_data_t data)
 			size_t start = 0, end = 0;
 			/* split string with \N as newline */
 			std::string delim("\\N");
-			while ((end = str.find(delim, start)) != std::string::npos) {
+			while ((end = str.find(delim, start)) != string::npos) {
 				subtext.push_back(str.substr(start, end - start));
 				start = end + 2;
 			}
@@ -3386,7 +3411,6 @@ void CMoviePlayerGui::makeScreenShot(bool autoshot, bool forcover)
 	if (autoshot && (autoshot_done || !g_settings.auto_cover))
 		return;
 
-#ifdef SCREENSHOT
 	bool cover = autoshot || g_settings.screenshot_cover || forcover;
 	char ending[(sizeof(int)*2) + 6] = ".jpg";
 	if (!cover)
@@ -3436,9 +3460,10 @@ void CMoviePlayerGui::makeScreenShot(bool autoshot, bool forcover)
 			sc->SetSize(w, h);
 		}
 	}
-	sc->Start();
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	sc->Start("-r 320 -j 75");
 #else
-	(void)forcover;
+	sc->Start();
 #endif
 	if (autoshot)
 		autoshot_done = true;

@@ -100,7 +100,7 @@ class CMoviePlayerGui : public CMenuTarget
 	std::string livestreamInfo2;
 
 	CFrameBuffer * frameBuffer;
-	int            m_LastMode;	
+	int            m_LastMode;
 
 	std::string	cookie_header;
 	std::string	info_1, info_2;

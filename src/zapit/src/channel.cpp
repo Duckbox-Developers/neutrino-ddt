@@ -197,6 +197,29 @@ unsigned char CZapitChannel::getServiceType(bool real)
 			ST_DIGITAL_RADIO_SOUND_SERVICE : ST_DIGITAL_TELEVISION_SERVICE;	
 }
 
+bool CZapitChannel::isUHD()
+{
+	switch(serviceType) {
+		case 0x1f:
+			return true;
+		case ST_DIGITAL_TELEVISION_SERVICE:
+		case 0x19:
+		{
+			std::string uhd = "UHD";
+			if(strstr(name.c_str(),uhd.c_str()))
+				return true;
+			uhd = "4K";
+			if(strstr(name.c_str(),uhd.c_str()))
+				return true;
+			uhd = "4k";
+			if(strstr(name.c_str(),uhd.c_str()))
+				return true;
+		}
+		default:
+			return false;
+	}
+}
+
 bool CZapitChannel::isHD()
 {
 	switch(serviceType) {
