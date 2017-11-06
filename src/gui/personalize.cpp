@@ -850,7 +850,7 @@ void CPersonalizeGui::addSeparator(CMenuWidget &widget, const neutrino_locale_t 
 		menu_item_t to_add_sep = {&widget, GenericMenuSeparatorLine, false, locale_text, NULL, item_mode, NULL, DCOND_MODE_NONE };
 		v_item.push_back(to_add_sep);
 	} else {
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if 1
 		menu_item_t to_add_sep = {&widget, new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, locale_text, true), false, locale_text, NULL, item_mode, NULL, DCOND_MODE_NONE };
 #else
 		menu_item_t to_add_sep = {&widget, new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, locale_text), false, locale_text, NULL, item_mode, NULL, DCOND_MODE_NONE };
