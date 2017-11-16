@@ -544,9 +544,9 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 	int box_width2 = box_width-(spaceoffset+xpos);
 
 #if BOXMODEL_UFS910
-	if(channel->getVideoPid() || IS_WEBTV(channel->getChannelID())) {
+	if(channel->getVideoPid() || IS_WEBCHAN(channel->getChannelID())) {
 #else
-	if((channel->getVideoPid() || IS_WEBTV(channel->getChannelID())) && !(videoDecoder->getBlank())) {
+	if((channel->getVideoPid() || IS_WEBCHAN(channel->getChannelID())) && !(videoDecoder->getBlank())) {
 #endif
 		 videoDecoder->getPictureInfo(xres, yres, framerate);
 		 if (yres == 1088)
@@ -761,7 +761,7 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 
 		g_Font[font_info]->RenderString(xpos, ypos, box_width, buf, COL_MENUCONTENT_TEXT);
 
-		snprintf(buf, sizeof(buf), "%s", IS_WEBTV(channel->getChannelID()) ? g_Locale->getText(LOCALE_WEBTV_HEAD) :
+		snprintf(buf, sizeof(buf), "%s", IS_WEBCHAN(channel->getChannelID()) ? g_Locale->getText(LOCALE_WEBTV_HEAD) :
 				CServiceManager::getInstance()->GetSatelliteName(channel->getSatellitePosition()).c_str());
 		g_Font[font_info]->RenderString (xpos+spaceoffset, ypos, box_width2, buf, COL_MENUCONTENT_TEXT);
 

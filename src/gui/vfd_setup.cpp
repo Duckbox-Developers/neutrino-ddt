@@ -177,17 +177,11 @@ int CVfdSetup::showSetup()
 		oj->setHint("", LOCALE_MENU_HINT_VFD_INFOLINE);
 		vfds->addItem(oj);
 
-<<<<<<< HEAD
 #if HAVE_DUCKBOX_HARDWARE
 		vfds->addItem(new CMenuOptionNumberChooser(LOCALE_LCDMENU_VFD_SCROLL, &g_settings.lcd_vfd_scroll, true, 0, 999, this, 0, 0, NONEXISTANT_LOCALE, true));
 #elif HAVE_SPARK_HARDWARE
 		vfds->addItem(new CMenuOptionNumberChooser(LOCALE_LCDMENU_VFD_SCROLL, &g_settings.lcd_vfd_scroll, (g_info.hw_caps->display_type == HW_DISPLAY_LINE_TEXT), 0, 999, this, 0, 0, NONEXISTANT_LOCALE, true));
 #else
-		oj = new CMenuOptionChooser(LOCALE_LCDMENU_SCROLL, &g_settings.lcd_scroll, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, vfd_enabled);
-		oj->setHint("", LOCALE_MENU_HINT_VFD_SCROLL);
-		vfds->addItem(oj);
-#endif
-=======
 		//scroll options
 		if (file_exists("/proc/stb/lcd/scroll_repeats"))
 		{
@@ -205,7 +199,7 @@ int CVfdSetup::showSetup()
 			oj->setHint("", LOCALE_MENU_HINT_VFD_SCROLL);
 			vfds->addItem(oj);
 		}
->>>>>>> 8acb4a4f67aae200322ea399d9a11c91d4fcea6d
+#endif
 
 		//notify rc-lock
 		oj = new CMenuOptionChooser(LOCALE_LCDMENU_NOTIFY_RCLOCK, &g_settings.lcd_notify_rclock, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, vfd_enabled);
@@ -350,11 +344,11 @@ bool CVfdSetup::changeNotify(const neutrino_locale_t OptionName, void * /* data 
 #if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
 	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_LEDCONTROLER_MODE_TV)) {
 		CVFD::getInstance()->setled();
-#endif
 	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_LEDCONTROLER_BACKLIGHT_TV)) {
 		CVFD::getInstance()->setBacklight(g_settings.backlight_tv);
 	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_LCDMENU_SCROLL) || ARE_LOCALES_EQUAL(OptionName, LOCALE_LCDMENU_SCROLL_REPEATS)) {
 		CVFD::getInstance()->setScrollMode(g_settings.lcd_scroll);
+#endif
 	}
 
 	return false;

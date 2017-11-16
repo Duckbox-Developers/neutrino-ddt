@@ -3431,9 +3431,6 @@ void CMoviePlayerGui::makeScreenShot(bool autoshot, bool forcover)
 	if (autoshot && (autoshot_done || !g_settings.auto_cover))
 		return;
 
-#ifndef SCREENSHOT
-	(void)forcover; // avoid compiler warning
-#else
 	bool cover = autoshot || g_settings.screenshot_cover || forcover;
 	char ending[(sizeof(int)*2) + 6] = ".jpg";
 	if (!cover)

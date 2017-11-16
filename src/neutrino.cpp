@@ -2476,7 +2476,9 @@ TIMER_START();
 	CVFD::getInstance()->Clear();
 	CVFD::getInstance()->ShowText(start_text);
 	CVFD::getInstance()->setBacklight(g_settings.backlight_tv);
+#if !HAVE_DUCKBOX_HARDWARE
 	CVFD::getInstance()->setScrollMode(g_settings.lcd_scroll);
+#endif
 
 #if HAVE_DUCKBOX_HARDWARE
 	CVFD::getInstance()->ClearIcons();
