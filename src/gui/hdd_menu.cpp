@@ -212,7 +212,7 @@ void CHDDMenuHandler::getBlkIds()
 			if (strncmp(mnt->mnt_fsname, "/dev/sd", 7) && strncmp(mnt->mnt_fsname, "/dev/hd", 7))
 				continue;
 #if HAVE_ARM_HARDWARE
-			if (strncmp(hdd.devname.c_str(), "mmcblk", 6) == 0)
+			if (strncmp(mnt->mnt_fsname, "mmcblk", 6) == 0)
 				continue;
 #endif
 			hdd_s hdd;
