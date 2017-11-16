@@ -326,7 +326,7 @@ int CChannelList::doChannelMenu(void)
 	CMenuSelectorTarget * selector = new CMenuSelectorTarget(&select);
 
 	bool empty = (*chanlist).empty();
-	bool allow_edit = (bouquet && bouquet->zapitBouquet && !bouquet->zapitBouquet->bOther && !bouquet->zapitBouquet->bWebtv);
+	bool allow_edit = (bouquet && bouquet->zapitBouquet && !bouquet->zapitBouquet->bOther && (!bouquet->zapitBouquet->bWebtv && !bouquet->zapitBouquet->bWebradio));
 	bool got_history = (CNeutrinoApp::getInstance()->channelList->getLastChannels().size() > 1);
 
 	int i = 0;
@@ -668,7 +668,7 @@ int CChannelList::show()
 			}
 		}
 		else if(!edit_state && !empty && msg == (neutrino_msg_t) g_settings.key_record) { //start direct recording from channellist
-			if((g_settings.recording_type != CNeutrinoApp::RECORDING_OFF) && SameTP() /* && !IS_WEBTV((*chanlist)[selected]->getChannelID()) */) {
+			if((g_settings.recording_type != CNeutrinoApp::RECORDING_OFF) && SameTP() /* && !IS_WEBCHAN((*chanlist)[selected]->getChannelID()) */) {
 				printf("[neutrino channellist] start direct recording...\n");
 				hide();
 				if (!CRecordManager::getInstance()->Record((*chanlist)[selected]->getChannelID())) {
@@ -728,7 +728,7 @@ int CChannelList::show()
 		}
 		else if (CNeutrinoApp::getInstance()->listModeKey(msg)) {
 			if (!edit_state) {
-				//FIXME: what about LIST_MODE_WEBTV?
+				//FIXME: what about LIST_MODE_WEB?
 				int newmode = msg == CRCInput::RC_sat ? LIST_MODE_SAT : LIST_MODE_FAV;
 				CNeutrinoApp::getInstance()->SetChannelMode(newmode);
 				res = CHANLIST_CHANGE_MODE;
@@ -1580,7 +1580,7 @@ void CChannelList::paintDetails(int index)
 	else
 		p_event = &(*chanlist)[index]->currentEvent;
 
-	if (/* !IS_WEBTV((*chanlist)[index]->getChannelID()) && */ p_event && !p_event->description.empty()) {
+	if (/* !IS_WEBCHAN((*chanlist)[index]->getChannelID()) && */ p_event && !p_event->description.empty()) {
 		char cNoch[50] = {0}; // UTF-8
 		char cSeit[50] = {0}; // UTF-8
 
@@ -1644,10 +1644,10 @@ void CChannelList::paintDetails(int index)
 		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_DESCR]->RenderString(x+ full_width- OFFSET_INNER_MID- seit_len, ypos_a + fheight              , seit_len, cSeit, colored_event_C ? COL_COLORED_EVENTS_TEXT : COL_MENUCONTENTDARK_TEXT);
 		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_DESCR]->RenderString(x+ full_width- OFFSET_INNER_MID- noch_len, ypos_a + fdescrheight+ fheight, noch_len, cNoch, colored_event_C ? COL_COLORED_EVENTS_TEXT : COL_MENUCONTENTDARK_TEXT);
 	}
-	else if (IS_WEBTV((*chanlist)[index]->getChannelID())) {
+	else if (IS_WEBCHAN((*chanlist)[index]->getChannelID())) {
 		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->RenderString(x+ OFFSET_INNER_MID, ypos_a + fheight, full_width - 3*OFFSET_INNER_MID, (*chanlist)[index]->getDesc(), colored_event_C ? COL_COLORED_EVENTS_TEXT : COL_MENUCONTENTDARK_TEXT, 0, true);
 	}
-	if (IS_WEBTV((*chanlist)[index]->getChannelID())) {
+	if (IS_WEBCHAN((*chanlist)[index]->getChannelID())) {
 		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->RenderString(x+ OFFSET_INNER_MID, ypos_a + 2*fheight + (g_settings.channellist_foot == 0) ? 0 : fdescrheight, full_width - 3*OFFSET_INNER_MID, (*chanlist)[index]->getUrl(), COL_MENUCONTENTDARK_TEXT, 0, true);
 	} else if(g_settings.channellist_foot == 0) {
 		transponder t;
@@ -1820,7 +1820,7 @@ void CChannelList::paintButtonBar(bool is_current)
 			//manage record button
 			if (g_settings.recording_type == RECORDING_OFF)
 				continue;
-			if (IS_WEBTV(channel_id))
+			if (IS_WEBCHAN(channel_id))
 				continue;
 			if (!displayNext){
 				if (do_record){
@@ -1838,7 +1838,7 @@ void CChannelList::paintButtonBar(bool is_current)
 		if (i == 5) {
 			//manage pip button
 #ifdef ENABLE_PIP
-			if (!is_current || IS_WEBTV(channel_id))
+			if (!is_current || IS_WEBCHAN(channel_id))
 #endif
 				continue;
 		}
@@ -2298,7 +2298,7 @@ bool CChannelList::SameTP(t_channel_id channel_id)
 	bool iscurrent = true;
 
 	if(CNeutrinoApp::getInstance()->recordingstatus) {
-		if (IS_WEBTV(channel_id))
+		if (IS_WEBCHAN(channel_id))
 			return true;
 
 		CZapitChannel * channel = CServiceManager::getInstance()->FindChannel(channel_id);
@@ -2318,7 +2318,7 @@ bool CChannelList::SameTP(CZapitChannel * channel)
 		if(channel == NULL)
 			channel = (*chanlist)[selected];
 
-		if (IS_WEBTV(channel->getChannelID()))
+		if (IS_WEBCHAN(channel->getChannelID()))
 			return true;
 
 		iscurrent = CFEManager::getInstance()->canTune(channel);

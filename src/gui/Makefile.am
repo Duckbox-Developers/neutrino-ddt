@@ -99,7 +99,6 @@ libneutrino_gui_a_SOURCES = \
 	settings_manager.cpp \
 	sleeptimer.cpp \
 	start_wizard.cpp \
-	streaminfo2.cpp \
 	subchannel_select.cpp \
 	themes.cpp \
 	timeosd.cpp \
@@ -130,6 +129,14 @@ endif
 if ENABLE_GRAPHLCD
 libneutrino_gui_a_SOURCES += \
 	glcdsetup.cpp
+endif
+
+if BOXTYPE_COOL
+libneutrino_gui_a_SOURCES += \
+	streaminfo1.cpp
+else
+libneutrino_gui_a_SOURCES += \
+	streaminfo2.cpp
 endif
 
 if ENABLE_EXTUPDATE

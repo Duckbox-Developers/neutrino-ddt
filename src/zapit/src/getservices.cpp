@@ -262,6 +262,11 @@ CZapitChannel* CServiceManager::FindChannelFuzzy(const t_channel_id channel_id,
 	return NULL;
 }
 
+CZapitChannel* CServiceManager::GetCurrentChannel(void)
+{
+	return CZapit::getInstance()->GetCurrentChannel();
+}
+
 bool CServiceManager::GetAllRadioChannels(ZapitChannelList &list, int flags)
 {
 	list.clear();
@@ -308,7 +313,17 @@ bool CServiceManager::GetAllWebTVChannels(ZapitChannelList &list, int flags)
 {
 	list.clear();
 	for (channel_map_iterator_t it = allchans.begin(); it != allchans.end(); ++it) {
-		if ((it->second.flags & flags) && !it->second.getUrl().empty())
+		if ((it->second.flags & flags) && !it->second.getUrl().empty() && (it->second.getServiceType() == ST_DIGITAL_TELEVISION_SERVICE))
+			list.push_back(&(it->second));
+	}
+	return (!list.empty());
+}
+
+bool CServiceManager::GetAllWebRadioChannels(ZapitChannelList &list, int flags)
+{
+	list.clear();
+	for (channel_map_iterator_t it = allchans.begin(); it != allchans.end(); ++it) {
+		if ((it->second.flags & flags) && !it->second.getUrl().empty() && (it->second.getServiceType() == ST_DIGITAL_RADIO_SOUND_SERVICE))
 			list.push_back(&(it->second));
 	}
 	return (!list.empty());

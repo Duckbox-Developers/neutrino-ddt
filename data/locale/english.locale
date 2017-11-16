@@ -4,7 +4,7 @@ EPGMenu.epgplus EPG-Timelines (EPG-Plus)
 EPGMenu.eventinfo Details current program
 EPGMenu.eventlist Eventlist current programm
 EPGMenu.head EPG - Program information
-EPGMenu.streaminfo Technical information
+EPGMenu.streaminfo Technical informations
 EPGPlus.actions Actions
 EPGPlus.bybouquet_mode by bouquet
 EPGPlus.bypage_mode by page
@@ -230,6 +230,7 @@ bouquetname.new New channels
 bouquetname.other Unknown provider
 bouquetname.removed Removed channels
 bouquetname.uhdtv UHD channels
+bouquetname.webradio WebRadio channels
 bouquetname.webtv WebTV channels
 buildinfo.compiled_on Build Host
 buildinfo.compiled_with Compiler version
@@ -944,6 +945,7 @@ lcdmenu.head VFD/LED Settings
 lcdmenu.lcdcontroler Brightness
 lcdmenu.notify_rclock Notify when RC is locked
 lcdmenu.scroll Enable text scroll
+lcdmenu.scroll_repeats Enable text scroll and repeats
 lcdmenu.statusline status line
 lcdmenu.statusline.both volume and playtime
 lcdmenu.statusline.playtime playtime
@@ -2384,7 +2386,7 @@ sleeptimerbox.hint2 The STB will shutdown after this time.
 sleeptimerbox.hint3 The STB will shutdown, if remote not used.
 sleeptimerbox.title Sleeptimer
 sleeptimerbox.title2 Inactivity shutdown timer
-streaminfo.aratio Aspect Ratio
+streaminfo.aratio Aspect ratio
 streaminfo.aratio_unknown unknown
 streaminfo.audiotype Audiotype
 streaminfo.audiotype_unknown unknown
@@ -2393,11 +2395,11 @@ streaminfo.bitrate Bitrate
 streaminfo.casystems Conditional access systems
 streaminfo.framerate Framerate
 streaminfo.framerate_unknown unknown
-streaminfo.head Stream-Information
+streaminfo.head Technical informations
 streaminfo.not_available not available
 streaminfo.osd_resolution OSD resolution
 streaminfo.resolution Resolution
-streaminfo.signal Receipt signal
+streaminfo.signal Tuner
 streaminfo.videosystem Videosystem
 streaming.busy One or several recording processes are active.\nIf you encounter this message and no recording is active, please restart GUI.
 streaming.dir_not_writable The recording directory is not writable.\nRecording will not work.

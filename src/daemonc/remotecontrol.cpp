@@ -125,7 +125,7 @@ int CRemoteControl::handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t data
 //printf("[neutrino] timeout EVT_ZAP current %llx data %llx\n", current_channel_id, *(t_channel_id *)data);
 			if ((*(t_channel_id *)data) != current_channel_id) {
 				g_InfoViewer->chanready = 0;
-				if (!IS_WEBTV(current_channel_id))
+				if (!IS_WEBCHAN(current_channel_id))
 					g_Sectionsd->setServiceStopped();
 				CMoviePlayerGui::getInstance().stopPlayBack();
 				g_Zapit->zapTo_serviceID_NOWAIT(current_channel_id );
@@ -349,7 +349,7 @@ int CRemoteControl::handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t data
 	else if (msg == NeutrinoMessages::EVT_TUNE_COMPLETE) {
 		t_channel_id chid = *(t_channel_id *)data;
 		printf("CRemoteControl::handleMsg: EVT_TUNE_COMPLETE (%016" PRIx64 ")\n", chid);
-		if(chid && !IS_WEBTV(chid))
+		if(chid && !IS_WEBCHAN(chid))
 			g_Sectionsd->setServiceChanged(chid, false);
  		return messages_return::handled;
 	}
@@ -544,6 +544,12 @@ void CRemoteControl::processAPIDnames()
 #endif
 	if ( has_unresolved_ctags )
 	{
+		if ( current_EPGid == 0 ){
+			const CSectionsdClient::CurrentNextInfo info_CN = g_InfoViewer->getCurrentNextInfo();
+			if ((info_CN.current_uniqueKey >> 16) == (current_channel_id & 0xFFFFFFFFFFFFULL)){
+				current_EPGid = info_CN.current_uniqueKey;
+			}
+		}
 		if ( current_EPGid != 0 )
 		{
 			CSectionsdClient::ComponentTagList tags;
@@ -726,7 +732,7 @@ void CRemoteControl::zapTo_ChannelID(const t_channel_id channel_id, const std::s
 		g_RCInput->killTimer(scrambled_timer);
 		//dvbsub_pause(true);
 		CZapit::getInstance()->Abort();
-		if (!IS_WEBTV(channel_id))
+		if (!IS_WEBCHAN(channel_id))
 			g_Sectionsd->setServiceStopped();
 		CMoviePlayerGui::getInstance().stopPlayBack();
 		g_Zapit->zapTo_serviceID_NOWAIT(channel_id);
@@ -763,6 +769,7 @@ void CRemoteControl::stopvideo()
 
 void CRemoteControl::radioMode()
 {
+printf("CRemoteControl::radioMode\n");
 	g_Zapit->setMode( CZapitClient::MODE_RADIO );
 }
 

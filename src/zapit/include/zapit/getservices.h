@@ -134,6 +134,8 @@ class CServiceManager
 		CZapitChannel* FindChannelFuzzy(const t_channel_id channel_id,
 						const t_satellite_position pos, const freq_id_t freq);
 
+		CZapitChannel * GetCurrentChannel(void);
+
 		std::string GetServiceName(t_channel_id channel_id);
 
 		tallchans* GetAllChannels(){ return &allchans; };
@@ -142,6 +144,7 @@ class CServiceManager
 		bool GetAllHDChannels(ZapitChannelList &list, int flags = CZapitChannel::PRESENT);
 		bool GetAllUHDChannels(ZapitChannelList &list, int flags = CZapitChannel::PRESENT);
 		bool GetAllWebTVChannels(ZapitChannelList &list, int flags = CZapitChannel::PRESENT);
+		bool GetAllWebRadioChannels(ZapitChannelList &list, int flags = CZapitChannel::PRESENT);
 		bool GetAllSatelliteChannels(ZapitChannelList &list, t_satellite_position position, int flags = CZapitChannel::PRESENT);
 		bool GetAllTransponderChannels(ZapitChannelList &list, transponder_id_t tpid, int flags = CZapitChannel::PRESENT);
 		bool GetAllUnusedChannels(ZapitChannelList &list, int flags = CZapitChannel::PRESENT);

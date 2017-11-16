@@ -49,16 +49,8 @@ install_DATA =	accept.png \
 		properties.png \
 		radio.png \
 		rc_910.jpg \
-		rc_ax_hd51.png \
-		rc_cst_v1.jpg \
-		rc_cst_v2.png \
-		rc_cst_v3.png \
-		rc_cst_v4.png \
-		rc_cst_v5.png \
-		rc_cst_v6.png \
 		rc_spark_old.jpg \
 		rc_spark_new.jpg \
-		rc_mutant_hd51.png \
 		record.png \
 		reload.png \
 		remove.png \
@@ -90,6 +82,20 @@ install_DATA =	accept.png \
 		wget.png \
 		x_red.png \
 		zap.png
+
+if BOXTYPE_COOL
+install_DATA += rc_cst_v1.jpg \
+		rc_cst_v2.png \
+		rc_cst_v3.png \
+		rc_cst_v4.png \
+		rc_cst_v5.png \
+		rc_cst_v6.png
+endif
+
+if BOXTYPE_ARMBOX
+install_DATA += rc_ax_hd51.png \
+		rc_mutant_hd51.png
+endif
 
 # file manager
 install_DATA +=	chmod.png \

@@ -51,6 +51,7 @@
 #include <driver/display.h>
 
 #include <system/debug.h>
+#include <system/helpers.h>
 #include <cs_api.h>
 
 
@@ -158,18 +159,25 @@ int CVfdSetup::showSetup()
 			mf = new CMenuDForwarder(LOCALE_LEDCONTROLER_BACKLIGHT, true, NULL, blMenu, NULL, CRCInput::RC_yellow);
 			mf->setHint("", LOCALE_MENU_HINT_BACKLIGHT);
 			vfds->addItem(mf);
+
+			vfds->addItem(GenericMenuSeparatorLine);
 		}
 
-		vfds->addItem(GenericMenuSeparatorLine);
+		CMenuOptionChooser* oj;
+		if (g_info.hw_caps->display_has_statusline)
+		{
+			//status line options
+			oj = new CMenuOptionChooser(LOCALE_LCDMENU_STATUSLINE, &g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME], LCDMENU_STATUSLINE_OPTIONS, LCDMENU_STATUSLINE_OPTION_COUNT, vfd_enabled);
+			oj->setHint("", LOCALE_MENU_HINT_VFD_STATUSLINE);
+			vfds->addItem(oj);
+		}
 
-		//status and info line options
-		CMenuOptionChooser* oj = new CMenuOptionChooser(LOCALE_LCDMENU_STATUSLINE, &g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME], LCDMENU_STATUSLINE_OPTIONS, LCDMENU_STATUSLINE_OPTION_COUNT, vfd_enabled);
-		oj->setHint("", LOCALE_MENU_HINT_VFD_STATUSLINE);
-		CMenuOptionChooser* lcd_clock_channelname_menu = new CMenuOptionChooser(LOCALE_LCD_INFO_LINE, &g_settings.lcd_info_line, LCD_INFO_OPTIONS, LCD_INFO_OPTION_COUNT, vfd_enabled);
-		lcd_clock_channelname_menu->setHint("", LOCALE_MENU_HINT_VFD_INFOLINE);
+		//info line options
+		oj = new CMenuOptionChooser(LOCALE_LCD_INFO_LINE, &g_settings.lcd_info_line, LCD_INFO_OPTIONS, LCD_INFO_OPTION_COUNT, vfd_enabled);
+		oj->setHint("", LOCALE_MENU_HINT_VFD_INFOLINE);
 		vfds->addItem(oj);
-		vfds->addItem(lcd_clock_channelname_menu);
 
+<<<<<<< HEAD
 #if HAVE_DUCKBOX_HARDWARE
 		vfds->addItem(new CMenuOptionNumberChooser(LOCALE_LCDMENU_VFD_SCROLL, &g_settings.lcd_vfd_scroll, true, 0, 999, this, 0, 0, NONEXISTANT_LOCALE, true));
 #elif HAVE_SPARK_HARDWARE
@@ -179,7 +187,27 @@ int CVfdSetup::showSetup()
 		oj->setHint("", LOCALE_MENU_HINT_VFD_SCROLL);
 		vfds->addItem(oj);
 #endif
+=======
+		//scroll options
+		if (file_exists("/proc/stb/lcd/scroll_repeats"))
+		{
+			// allow to set scroll_repeats
+			CMenuOptionNumberChooser * nc = new CMenuOptionNumberChooser(LOCALE_LCDMENU_SCROLL_REPEATS, &g_settings.lcd_scroll, vfd_enabled, 0, 999, this);
+			nc->setLocalizedValue(0);
+			nc->setLocalizedValueName(LOCALE_OPTIONS_OFF);
+			nc->setHint("", LOCALE_MENU_HINT_VFD_SCROLL);
+			vfds->addItem(nc);
+		}
+		else
+		{
+			// simple on/off chooser
+			oj = new CMenuOptionChooser(LOCALE_LCDMENU_SCROLL, &g_settings.lcd_scroll, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, vfd_enabled, this);
+			oj->setHint("", LOCALE_MENU_HINT_VFD_SCROLL);
+			vfds->addItem(oj);
+		}
+>>>>>>> 8acb4a4f67aae200322ea399d9a11c91d4fcea6d
 
+		//notify rc-lock
 		oj = new CMenuOptionChooser(LOCALE_LCDMENU_NOTIFY_RCLOCK, &g_settings.lcd_notify_rclock, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, vfd_enabled);
 		oj->setHint("", LOCALE_MENU_HINT_VFD_NOTIFY_RCLOCK);
 		vfds->addItem(oj);
@@ -325,6 +353,8 @@ bool CVfdSetup::changeNotify(const neutrino_locale_t OptionName, void * /* data 
 #endif
 	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_LEDCONTROLER_BACKLIGHT_TV)) {
 		CVFD::getInstance()->setBacklight(g_settings.backlight_tv);
+	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_LCDMENU_SCROLL) || ARE_LOCALES_EQUAL(OptionName, LOCALE_LCDMENU_SCROLL_REPEATS)) {
+		CVFD::getInstance()->setScrollMode(g_settings.lcd_scroll);
 	}
 
 	return false;

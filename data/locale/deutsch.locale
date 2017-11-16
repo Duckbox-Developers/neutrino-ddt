@@ -230,6 +230,7 @@ bouquetname.new Neue Kanäle
 bouquetname.other Unbekannter Provider
 bouquetname.removed Gelöschte Kanäle
 bouquetname.uhdtv UHD-Kanäle
+bouquetname.webradio WebRadio-Kanäle
 bouquetname.webtv WebTV-Kanäle
 buildinfo.compiled_on Build Host
 buildinfo.compiled_with Compiler Version
@@ -944,6 +945,7 @@ lcdmenu.head VFD/LED Einstellungen
 lcdmenu.lcdcontroler Helligkeit
 lcdmenu.notify_rclock Benachrichtigung bei FB-Sperre
 lcdmenu.scroll Laufschrift
+lcdmenu.scroll_repeats Laufschrift und Wiederholungen
 lcdmenu.statusline Statuszeile
 lcdmenu.statusline.both Lautstärke/Fortschritt
 lcdmenu.statusline.playtime Sendungsfortschritt
@@ -2397,7 +2399,7 @@ streaminfo.head Technische Informationen
 streaminfo.not_available nicht verfügbar
 streaminfo.osd_resolution OSD-Auflösung
 streaminfo.resolution Auflösung
-streaminfo.signal Empfangssignal
+streaminfo.signal Tuner
 streaminfo.videosystem Videosystem
 streaming.busy Einer oder mehrere Aufnahmeprozesse sind aktiv.\nSollte die Aufnahme eigentlich beendet sein,\nschafft ein Neustart der GUI Abhilfe.
 streaming.dir_not_writable Das Aufnahmeverzeichnis ist nicht beschreibbar.\nAufnahmen sind daher nicht möglich.

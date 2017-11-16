@@ -209,6 +209,7 @@ void CRCInput::open(bool recheck)
 		return;
 	}
 
+#if !HAVE_GENERIC_HARDWARE
 	while ((dentry = readdir(dir)) != NULL)
 	{
 		id.path = "/dev/input/" + std::string(dentry->d_name);
@@ -249,6 +250,7 @@ void CRCInput::open(bool recheck)
 		indev.push_back(id);
 	}
 	closedir(dir);
+#endif
 	id.path = "/tmp/neutrino.input";
 	if (! checkpath(id)) {
 		id.fd = ::open(id.path.c_str(), O_RDWR|O_NONBLOCK|O_CLOEXEC);
