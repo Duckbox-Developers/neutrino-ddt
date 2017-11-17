@@ -29,7 +29,7 @@
 #define KEY_TTZOOM	KEY_FN_2
 #define KEY_REVEAL	KEY_FN_D
 
-#ifdef HAVE_SH4_HARDWARE
+#if HAVE_SH4_HARDWARE
 #define MARK_FB(a, b, c, d) if (p == lfb) CFrameBuffer::getInstance()->mark(a, b, (a) + (c), (b) + (d))
 #else
 #define MARK_FB(a, b, c, d)
@@ -5606,7 +5606,7 @@ void CopyBB2FB()
 	/* copy backbuffer to framebuffer */
 	if (!zoommode)
 	{
-#ifdef HAVE_SH4_HARDWARE
+#if HAVE_SH4_HARDWARE
 		f->blit2FB(lbb, var_screeninfo.xres, var_screeninfo.yres, 0, 0, 0, 0, true);
 #elif defined(HAVE_COOL_HARDWARE)
 		f->fbCopyArea(var_screeninfo.xres, var_screeninfo.yres, 0, 0, 0, var_screeninfo.yres);
@@ -5705,7 +5705,7 @@ void CopyBB2FB()
 		for (swtmp=0; swtmp<= screenwidth;swtmp++)
 			*(dst + stride * (fontheight + i) + swtmp) =  bgra[fillcolor];
 	}
-#ifdef HAVE_SH4_HARDWARE
+#if HAVE_SH4_HARDWARE
 	f->mark(0, 0, var_screeninfo.xres, var_screeninfo.yres);
 	f->blit();
 #endif
