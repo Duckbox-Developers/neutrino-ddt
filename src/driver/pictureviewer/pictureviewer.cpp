@@ -537,7 +537,7 @@ void CPictureViewer::getSize(const char* name, int* width, int *height)
 	}
 }
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& ChannelName, std::string & name, int *width, int *height)
 {
 	char strChanId[16];

@@ -483,7 +483,7 @@ bool CUserMenu::showUserMenu(neutrino_msg_t msg)
 			menu_item->setHint(NEUTRINO_ICON_HINT_RELOAD_CHANNELS, LOCALE_MENU_HINT_RESTART_TUNER);
 			break;
 		}
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 		case SNeutrinoSettings::ITEM_THREE_D_MODE:
 		{
 			keyhelper.get(&key,&icon);

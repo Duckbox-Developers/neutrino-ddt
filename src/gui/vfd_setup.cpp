@@ -113,7 +113,7 @@ const CMenuOptionChooser::keyval LCD_INFO_OPTIONS[LCD_INFO_OPTION_COUNT] =
 	{ 0, LOCALE_LCD_INFO_LINE_CHANNEL },
 	{ 1, LOCALE_LCD_INFO_LINE_CLOCK }
 };
-#if HAVE_DUCKBOX_HARDWARE || HAVE_SPARK_HARDWARE
+#if HAVE_SH4_HARDWARE
 #define OPTIONS_OFF_ON_OPTION_COUNT 2
 const CMenuOptionChooser::keyval OPTIONS_OFF_ON_OPTIONS[OPTIONS_OFF_ON_OPTION_COUNT] =
 {
@@ -341,7 +341,7 @@ bool CVfdSetup::changeNotify(const neutrino_locale_t OptionName, void * /* data 
 		CVFD::getInstance()->setBrightnessDeepStandby(brightnessdeepstandby);
 	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_LCDMENU_DIM_BRIGHTNESS)) {
 		CVFD::getInstance()->setBrightness(g_settings.lcd_setting_dim_brightness);
-#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
+#if !HAVE_SH4_HARDWARE
 	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_LEDCONTROLER_MODE_TV)) {
 		CVFD::getInstance()->setled();
 	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_LEDCONTROLER_BACKLIGHT_TV)) {

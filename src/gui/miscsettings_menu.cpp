@@ -43,7 +43,7 @@
 #include <gui/plugins.h>
 #include <gui/sleeptimer.h>
 #include <gui/zapit_setup.h>
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 #include <gui/kerneloptions.h>
 #endif
 
@@ -188,7 +188,7 @@ const CMenuOptionChooser::keyval CHANNELLIST_NEW_ZAP_MODE_OPTIONS[CHANNELLIST_NE
 };
 
 #ifdef CPU_FREQ
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 #define CPU_FREQ_OPTION_COUNT 6
 const CMenuOptionChooser::keyval_ext CPU_FREQ_OPTIONS[CPU_FREQ_OPTION_COUNT] =
 {
@@ -342,7 +342,7 @@ int CMiscMenue::showMiscSettingsMenu()
 	mf->setHint("", LOCALE_MENU_HINT_MISC_CPUFREQ);
 	misc_menue.addItem(mf);
 #endif /*CPU_FREQ*/
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	// kerneloptions
 	CKernelOptions kernelOptions;
 	mf = new CMenuForwarder(LOCALE_KERNELOPTIONS_HEAD, true, NULL, &kernelOptions, NULL, CRCInput::RC_6);
@@ -667,7 +667,7 @@ void CMiscMenue::showMiscSettingsMenuCPUFreq(CMenuWidget *ms_cpu)
 
 	CCpuFreqNotifier * cpuNotifier = new CCpuFreqNotifier();
 	ms_cpu->addItem(new CMenuOptionChooser(LOCALE_CPU_FREQ_NORMAL, &g_settings.cpufreq, CPU_FREQ_OPTIONS, CPU_FREQ_OPTION_COUNT, true, cpuNotifier));
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	ms_cpu->addItem(new CMenuOptionChooser(LOCALE_CPU_FREQ_STANDBY, &g_settings.standby_cpufreq, CPU_FREQ_OPTIONS_STANDBY, CPU_FREQ_OPTION_STANDBY_COUNT, true));
 #else
 	ms_cpu->addItem(new CMenuOptionChooser(LOCALE_CPU_FREQ_STANDBY, &g_settings.standby_cpufreq, CPU_FREQ_OPTIONS, CPU_FREQ_OPTION_COUNT, true));

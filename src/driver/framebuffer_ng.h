@@ -74,7 +74,7 @@ typedef struct gradientData_t
 #if HAVE_GENERIC_HARDWARE
 #define USE_OPENGL 1
 #endif
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 #include <linux/stmfb.h>
 #endif
 
@@ -188,7 +188,7 @@ class CFrameBuffer : public sigc::trackable
 		void setBlendMode(uint8_t mode = 1);
 		void setBlendLevel(int level);
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 		void setMixerColor(uint32_t mixer_background);
 #endif
 
@@ -296,7 +296,7 @@ class CFrameBuffer : public sigc::trackable
 		void setBorderColor(fb_pixel_t col = 0);
 		fb_pixel_t getBorderColor(void);
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	private:
 		bool autoBlitStatus;
 		pthread_t autoBlitThreadId;

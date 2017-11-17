@@ -519,11 +519,11 @@ void CLuaInstance::runScript(const char *fileName, std::vector<std::string> *arg
 		}
 	}
 	lua_setglobal(lua, "arg");
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	CFrameBuffer::getInstance()->autoBlit();
 #endif
 	status = lua_pcall(lua, 0, LUA_MULTRET, 0);
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	CFrameBuffer::getInstance()->autoBlit(false);
 #endif
 	if (result_code)
@@ -793,7 +793,7 @@ int CLuaInstance::GetInput(lua_State *L)
 #if 1
 int CLuaInstance::Blit(lua_State *)
 {
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	CFrameBuffer::getInstance()->autoBlit(false);
 #endif
 	return 0;
@@ -801,7 +801,7 @@ int CLuaInstance::Blit(lua_State *)
 #else
 int CLuaInstance::Blit(lua_State *L)
 {
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	CFrameBuffer::getInstance()->autoBlit(false);
 #endif
 	CLuaData *W = CheckData(L, 1);

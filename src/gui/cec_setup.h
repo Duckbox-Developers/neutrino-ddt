@@ -46,7 +46,7 @@ class CCECSetup : public CMenuTarget, CChangeObserver
 	public:	
 		CCECSetup();
 		~CCECSetup();
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 		void setCECSettings(bool);
 #else
 		void setCECSettings();

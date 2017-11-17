@@ -293,7 +293,7 @@ bool checkLongPress(uint32_t key)
 
 int CKeybindSetup::showKeySetup()
 {
-#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
+#if !HAVE_SH4_HARDWARE
 	//save original rc hardware selection and initialize text strings
 	int org_remote_control_hardware = g_settings.remote_control_hardware;
 	char RC_HW_str[4][32];
@@ -363,7 +363,7 @@ int CKeybindSetup::showKeySetup()
 	cc->setHint("", LOCALE_MENU_HINT_LONGKEYPRESS_DURATION);
 	keySettings->addItem(cc);
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	g_settings.accept_other_remotes = access("/etc/lircd_predata_lock", R_OK) ? 1 : 0;
 	CMenuOptionChooser *mc = new CMenuOptionChooser(LOCALE_KEYBINDINGMENU_ACCEPT_OTHER_REMOTES,
 		&g_settings.accept_other_remotes, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this,
@@ -371,7 +371,7 @@ int CKeybindSetup::showKeySetup()
 	mc->setHint("", LOCALE_MENU_HINT_ACCEPT_OTHER_REMOTES);
 	keySettings->addItem(mc);
 #endif
-#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
+#if !HAVE_SH4_HARDWARE
 	if (RC_HW_SELECT) {
 		CMenuOptionChooser * mc = new CMenuOptionChooser(LOCALE_KEYBINDINGMENU_REMOTECONTROL_HARDWARE,
 			&g_settings.remote_control_hardware, KEYBINDINGMENU_REMOTECONTROL_HARDWARE_OPTIONS, KEYBINDINGMENU_REMOTECONTROL_HARDWARE_OPTION_COUNT, true, NULL,
@@ -399,7 +399,7 @@ int CKeybindSetup::showKeySetup()
 
 	int res = keySettings->exec(NULL, "");
 
-#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
+#if !HAVE_SH4_HARDWARE
 	//check if rc hardware selection has changed before leaving the menu
 	if (org_remote_control_hardware != g_settings.remote_control_hardware) {
 		g_RCInput->CRCInput::set_rc_hw();
@@ -626,7 +626,7 @@ void CKeybindSetup::showKeyBindSpecialSetup(CMenuWidget *bindSettings_special)
 
 bool CKeybindSetup::changeNotify(const neutrino_locale_t OptionName, void * /* data */)
 {
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_KEYBINDINGMENU_ACCEPT_OTHER_REMOTES)) {
 		struct sockaddr_un sun;
 		memset(&sun, 0, sizeof(sun));

@@ -162,7 +162,7 @@ void CFbAccel::waitForIdle(void)
 	printf("STB04GFX_ENGINE_SYNC took %lld us\n", (te.tv_sec * 1000000LL + te.tv_usec) - (ts.tv_sec * 1000000LL + ts.tv_usec));
 #endif
 }
-#elif HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#elif HAVE_SH4_HARDWARE
 
 static int bpafd = -1;
 static size_t lbb_sz = 1920 * 1080;	/* offset from fb start in 'pixels' */
@@ -186,7 +186,7 @@ CFbAccel::CFbAccel(CFrameBuffer *_fb)
 	init();
 	lastcol = 0xffffffff;
 	lbb = fb->lfb;	/* the memory area to draw to... */
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	if (fb->available < 12*1024*1024)
 	{
 		/* for old installations that did not upgrade their module config
@@ -279,7 +279,7 @@ CFbAccel::CFbAccel(CFrameBuffer *_fb)
 
 CFbAccel::~CFbAccel()
 {
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	if (backbuffer)
 	{
 		fprintf(stderr, "CFbAccel: unmap backbuffer\n");
@@ -308,7 +308,7 @@ CFbAccel::~CFbAccel()
 
 void CFbAccel::update()
 {
-#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
+#if !HAVE_SH4_HARDWARE
 	int needmem = fb->stride * fb->yRes * 2;
 	if (fb->available >= needmem)
 	{
@@ -357,7 +357,7 @@ void CFbAccel::paintRect(const int x, const int y, const int dx, const int dy, c
 	/* the GXA seems to do asynchronous rendering, so we add a sync marker
 	   to which the fontrenderer code can synchronize */
 	add_gxa_sync_marker();
-#elif HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#elif HAVE_SH4_HARDWARE
 	if (dx <= 0 || dy <= 0)
 		return;
 
@@ -581,7 +581,7 @@ void CFbAccel::paintLine(int xa, int ya, int xb, int yb, const fb_pixel_t col)
 #if !HAVE_TRIPLEDRAGON
 void CFbAccel::blit2FB(void *fbbuff, uint32_t width, uint32_t height, uint32_t xoff, uint32_t yoff, uint32_t xp, uint32_t yp, bool transp)
 {
-#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
+#if !HAVE_SH4_HARDWARE
 	int  xc, yc;
 	xc = (width > fb->xRes) ? fb->xRes : width;
 	yc = (height > fb->yRes) ? fb->yRes : height;
@@ -607,7 +607,7 @@ void CFbAccel::blit2FB(void *fbbuff, uint32_t width, uint32_t height, uint32_t x
 
 		return;
 	}
-#elif HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#elif HAVE_SH4_HARDWARE
 	int x, y, dw, dh;
 	x = xoff;
 	y = yoff;
@@ -740,7 +740,7 @@ void CFbAccel::setupGXA()
 }
 #endif
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 void CFbAccel::blitBB2FB(int fx0, int fy0, int fx1, int fy1, int tx0, int ty0, int tx1, int ty1)
 {
 	STMFBIO_BLT_DATA  bltData;
@@ -809,7 +809,7 @@ void CFbAccel::blitBoxFB(int x0, int y0, int x1, int y1, fb_pixel_t color)
 	}
 }
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 void CFbAccel::blit()
 {
 #ifdef ENABLE_GRAPHLCD
@@ -1017,7 +1017,7 @@ void CFbAccel::mark(int, int, int, int)
 }
 #endif
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 void CFbAccel::blitBPA2FB(unsigned char *mem, SURF_FMT fmt, int w, int h, int x, int y, int pan_x, int pan_y, int fb_x, int fb_y, int fb_w, int fb_h, bool transp)
 {
 	if (w < 1 || h < 1)
@@ -1111,7 +1111,7 @@ void CFbAccel::blitArea(int /*src_width*/, int /*src_height*/, int /*fb_x*/, int
 }
 #endif
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 void CFbAccel::resChange(void)
 {
 	if (ioctl(fb->fd, FBIOGET_VSCREENINFO, &s) == -1)
@@ -1274,7 +1274,7 @@ int CFbAccel::setMode(void)
 		       si->xres, si->yres, si->bits_per_pixel);
 	}
 #endif
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	/* it's all fake... :-) */
 	si->xres = si->xres_virtual = DEFAULT_XRES;
 	si->yres = si->yres_virtual = DEFAULT_YRES;

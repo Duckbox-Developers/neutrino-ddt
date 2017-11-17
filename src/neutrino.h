@@ -120,7 +120,7 @@ private:
 	void standbyMode( bool bOnOff, bool fromDeepStandby = false );
 	void getAnnounceEpgName(CTimerd::RecordingInfo * eventinfo, std::string &name);
 
-#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
+#if !HAVE_SH4_HARDWARE
 	void ExitRun(int can_shutdown = 0);
 #endif
 	void RealRun();
@@ -238,7 +238,7 @@ public:
 	CPersonalizeGui & getPersonalizeGui() { return personalize; }
 	bool getChannellistIsVisible() { return channelList_painted; }
 	void zapTo(t_channel_id channel_id);
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	enum {
 		SHUTDOWN,
 		REBOOT

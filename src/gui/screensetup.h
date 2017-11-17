@@ -50,7 +50,7 @@ class CScreenSetup : public CMenuTarget
     int BoxWidth;
     int x_coord[2];
     int y_coord[2];
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
     std::string coord[2];
     int x_coord_bak[2];
     int y_coord_bak[2];
@@ -68,7 +68,7 @@ class CScreenSetup : public CMenuTarget
     void paint();
     void paintBorderUL();
     void paintBorderLR();
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
     void updateCoords();
 #else
     void paintCoords();
@@ -79,7 +79,7 @@ class CScreenSetup : public CMenuTarget
 	
  public:
     CScreenSetup();
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
     void showBorder(t_channel_id cid);
     void hideBorder();
     void resetBorder(t_channel_id cid);

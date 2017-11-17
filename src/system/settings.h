@@ -185,7 +185,7 @@ struct SNeutrinoSettings
 	int analog_mode2;
 	int video_43mode;
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	int hdmi_mode;
 	int psi_contrast;
 	int psi_saturation;
@@ -243,7 +243,7 @@ struct SNeutrinoSettings
 	//audio
 	int audio_AnalogMode;
 	int audio_DolbyDigital;
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	int audio_mixer_volume_analog;
 	int audio_mixer_volume_spdif;
 	int audio_mixer_volume_hdmi;
@@ -265,7 +265,7 @@ struct SNeutrinoSettings
 	int hdmi_cec_mode;
 	int hdmi_cec_view_on;
 	int hdmi_cec_standby;
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	int hdmi_cec_broadcast;
 #endif
 	int enabled_video_modes[VIDEOMENU_VIDEOMODE_OPTION_COUNT];
@@ -510,7 +510,7 @@ struct SNeutrinoSettings
 	int recording_audio_pids_std;
 	int recording_audio_pids_alt;
 	int recording_audio_pids_ac3;
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	int recording_bufsize;
 	int recording_bufsize_dmx;
 #endif
@@ -610,7 +610,7 @@ struct SNeutrinoSettings
 	int screenshot_format;
 	int screenshot_cover;
 	int screenshot_mode;
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	int screenshot_res;
 	int screenshot_png_compression;
 	int screenshot_backbuffer;
@@ -678,7 +678,7 @@ struct SNeutrinoSettings
 	int repeat_genericblocker;
 #define LONGKEYPRESS_OFF 499
 	int longkeypress_duration;
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	int accept_other_remotes;
 #endif
 	int remote_control_hardware;
@@ -706,7 +706,7 @@ struct SNeutrinoSettings
 	int screen_EndX_lcd_1;
 	int screen_EndY_lcd_1;
 	int osd_resolution;
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	int screen_StartX_int;
 	int screen_StartY_int;
 	int screen_EndX_int;
@@ -814,7 +814,7 @@ struct SNeutrinoSettings
 	int lcd_info_line;
 	std::string lcd_setting_dim_time;
 	int lcd_setting_dim_brightness;
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	int lcd_vfd_scroll;
 #endif
 	int led_tv_mode;

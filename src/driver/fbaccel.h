@@ -35,7 +35,7 @@
 #include <OpenThreads/ScopedLock>
 #include <OpenThreads/Thread>
 #include <OpenThreads/Condition>
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 #include <linux/stmfb.h>
 #include <bpamem.h>
 #endif
@@ -87,7 +87,7 @@ class CFbAccel
 		void setBorderColor(fb_pixel_t col = 0);
 		fb_pixel_t getBorderColor(void) { return borderColor; };
 		void ClearFB(void);
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 		void blitBPA2FB(unsigned char *mem, SURF_FMT fmt, int w, int h, int x = 0, int y = 0, int pan_x = -1, int pan_y = -1, int fb_x = -1, int fb_y = -1, int fb_w = -1, int fb_h = -1, bool transp = false);
 #endif
 };

@@ -49,7 +49,7 @@
 #ifdef HAVE_COOL_HARDWARE
 #include <cnxtfb.h>
 #endif
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 #include <linux/stmfb.h>
 #include <png.h>
 #endif
@@ -187,7 +187,7 @@ CFrameBuffer::CFrameBuffer()
 	memset(green, 0, 256*sizeof(__u16));
 	memset(blue, 0, 256*sizeof(__u16));
 	memset(trans, 0, 256*sizeof(__u16));
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	autoBlitStatus = false;
 	autoBlitThreadId = 0;
 #endif
@@ -243,7 +243,7 @@ void CFrameBuffer::init(const char * const)
 	useBackground(false);
 	m_transparent = m_transparent_default;
 	accel = new CFbAccel(this);
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	setMixerColor(g_settings.video_mixer_color);
 #endif
 	return;
@@ -252,7 +252,7 @@ void CFrameBuffer::init(const char * const)
 
 CFrameBuffer::~CFrameBuffer()
 {
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	autoBlit(false);
 #endif
 	active = false; /* keep people/infoclocks from accessing */
@@ -292,7 +292,7 @@ unsigned int CFrameBuffer::getStride() const
 	return stride;
 }
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 unsigned int CFrameBuffer::getScreenWidth(bool real)
 {
 	if(real)
@@ -432,7 +432,7 @@ void CFrameBuffer::setTransparency( int /*tr*/ )
 }
 #endif
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 /* original interfaceL: 1 == pixel alpha, 2 == global alpha premultiplied */
 void CFrameBuffer::setBlendMode(uint8_t mode)
 {
@@ -1424,7 +1424,7 @@ void CFrameBuffer::displayRGB(unsigned char *rgbbuff, int x_size, int y_size, in
 	cs_free_uncached(fbbuff);
 }
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 CFrameBuffer::Mode3D CFrameBuffer::get3DMode()
 {
 	return mode3D;
@@ -1664,7 +1664,7 @@ void CFrameBuffer::blit()
 	accel->blit();
 }
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 void CFrameBuffer::blitBPA2FB(unsigned char *mem, SURF_FMT fmt, int w, int h, int x, int y, int pan_x, int pan_y, int fb_x, int fb_y, int fb_w, int fb_h, int transp)
 {
 	accel->blitBPA2FB(mem, fmt, w, h, x, y, pan_x, pan_y, fb_x, fb_y, fb_w, fb_h, transp);

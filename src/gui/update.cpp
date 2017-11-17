@@ -961,7 +961,7 @@ void CFlashExpert::readmtd(int preadmtd)
 	}
 
 	bool skipCheck = false;
-#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE && !BOXMODEL_CS_HD2
+#if !HAVE_SH4_HARDWARE && !BOXMODEL_CS_HD2
 	if ((std::string)g_settings.update_dir == "/tmp")
 		skipCheck = true;
 #else

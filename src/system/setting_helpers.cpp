@@ -290,7 +290,7 @@ bool CColorSetupNotifier::changeNotify(const neutrino_locale_t, void *)
 	return false;
 }
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 bool CAudioSetupNotifier::changeNotify(const neutrino_locale_t OptionName, void *data)
 #else
 bool CAudioSetupNotifier::changeNotify(const neutrino_locale_t OptionName, void *)
@@ -319,7 +319,7 @@ bool CAudioSetupNotifier::changeNotify(const neutrino_locale_t OptionName, void 
 	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_CLOCKREC)) {
 		//.Clock recovery enable/disable
 		// FIXME add code here.
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_MIXER_VOLUME_ANALOG)) {
 			audioDecoder->setMixerVolume("Analog", (long)(*((int *)(data))));
 	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_MIXER_VOLUME_HDMI)) {
@@ -390,7 +390,7 @@ printf("CSubtitleChangeExec::exec: TTX, pid %x page %x lang %s\n", pid, page, pt
 			playback->SetSubtitlePid(0);
 			playback->SetTeletextPid(pid);
 			tuxtx_set_pid(pid, page, ptr);
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 			tuxtx_main(pid, page, 0, true);
 #else
 			tuxtx_main(pid, page, 0);

@@ -21,7 +21,7 @@
 	Boston, MA  02110-1301, USA.
 */
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 #include "fb_generic_sti_ddt.h"
 #else
 #include "fb_generic.h"

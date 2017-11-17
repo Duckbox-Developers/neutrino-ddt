@@ -70,7 +70,7 @@ CAudioSelectMenuHandler::~CAudioSelectMenuHandler()
 
 }
 
-#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
+#if !HAVE_SH4_HARDWARE
 // -- this is a copy from neutrino.cpp!!
 #define AUDIOMENU_ANALOGOUT_OPTION_COUNT 3
 const CMenuOptionChooser::keyval AUDIOMENU_ANALOGOUT_OPTIONS[AUDIOMENU_ANALOGOUT_OPTION_COUNT] =
@@ -103,7 +103,7 @@ int CAudioSelectMenuHandler::exec(CMenuTarget* parent, const std::string &action
 		}
 		perc_str[sel] = to_string(perc_val[sel]) + "%";
 
-#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
+#if !HAVE_SH4_HARDWARE
 		int vol =  CZapit::getInstance()->GetVolume();
 		/* keep resulting volume = (vol * percent)/100 not more than 115 */
 		if (vol * perc_val[sel] > 11500)
@@ -190,7 +190,7 @@ int CAudioSelectMenuHandler::doMenu ()
 		AudioSelector->addItem(fw, sel_apid == i);
 	}
 	unsigned int shortcut_num = p_count;
-#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
+#if !HAVE_SH4_HARDWARE
 	if (p_count)
 		AudioSelector->addItem(GenericMenuSeparatorLine);
 

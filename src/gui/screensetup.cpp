@@ -43,7 +43,7 @@
 
 #include <driver/fontrenderer.h>
 #include <driver/rcinput.h>
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 #include <driver/screen_max.h>
 #endif
 #include <system/settings.h>
@@ -52,7 +52,7 @@
 #include <global.h>
 #include <neutrino.h>
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 struct borderFrame { int sx, sy, ex, ey; };
 static std::map<t_channel_id, borderFrame> borderMap;
 #define BORDER_CONFIG_FILE CONFIGDIR "/zapit/borders.conf"
@@ -68,7 +68,7 @@ inline unsigned int make16color(__u32 rgb)
 CScreenSetup::CScreenSetup()
 {
 	frameBuffer = CFrameBuffer::getInstance();
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	screenheight = frameBuffer->getScreenHeight(true);
 	screenwidth = frameBuffer->getScreenWidth(true);
 	startX = g_settings.screen_StartX_int;
@@ -81,7 +81,7 @@ CScreenSetup::CScreenSetup()
 #endif
 }
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 int CScreenSetup::exec(CMenuTarget* parent, const std::string &action)
 {
 	if (!m) {
@@ -420,7 +420,7 @@ int CScreenSetup::exec(CMenuTarget* parent, const std::string &)
 
 void CScreenSetup::hide()
 {
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	frameBuffer->paintBackgroundBox(0, 0, screenwidth, screenheight);
 	if (channel_id)
 		showBorder(channel_id);
@@ -436,7 +436,7 @@ void CScreenSetup::hide()
 	frameBuffer->blit();
 }
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 bool CScreenSetup::loadBorder(t_channel_id cid)
 {
 	loadBorders();

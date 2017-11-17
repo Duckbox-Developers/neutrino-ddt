@@ -113,7 +113,7 @@
 #include "gui/themes.h"
 #include "gui/timerlist.h"
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 #include "gui/screensetup.h"
 #endif
 #include <system/set_threadname.h>
@@ -393,13 +393,13 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.analog_mode1 = configfile.getInt32("analog_mode1", (int)ANALOG_SD_RGB_SCART); // default RGB
 	g_settings.analog_mode2 = configfile.getInt32("analog_mode2", (int)ANALOG_SD_YPRPB_CINCH); // default YPBPR
 #endif
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	g_settings.hdmi_mode = configfile.getInt32("hdmi_mode", (int)COLORFORMAT_HDMI_RGB);
 #endif
 	g_settings.hdmi_cec_mode = configfile.getInt32("hdmi_cec_mode", 0); // default off
 	g_settings.hdmi_cec_view_on = configfile.getInt32("hdmi_cec_view_on", 0); // default off
 	g_settings.hdmi_cec_standby = configfile.getInt32("hdmi_cec_standby", 0); // default off
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	g_settings.hdmi_cec_broadcast = configfile.getInt32("hdmi_cec_broadcast", 0); // default off
 	g_settings.psi_contrast = configfile.getInt32("video_psi_contrast", 128);
 	g_settings.psi_saturation = configfile.getInt32("video_psi_saturation", 128);
@@ -417,7 +417,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	if (g_settings.start_volume >= 0)
 		g_settings.current_volume = g_settings.start_volume;
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	g_settings.audio_mixer_volume_analog = configfile.getInt32("audio_mixer_volume_analog", 50);
 	g_settings.audio_mixer_volume_hdmi = configfile.getInt32("audio_mixer_volume_hdmi", 75);
 	g_settings.audio_mixer_volume_spdif = configfile.getInt32("audio_mixer_volume_spdif", 75);
@@ -464,7 +464,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	}
 
 	g_settings.cpufreq = configfile.getInt32("cpufreq", 0);
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	g_settings.standby_cpufreq = configfile.getInt32("standby_cpufreq", 0);
 #else
 	g_settings.standby_cpufreq = configfile.getInt32("standby_cpufreq", 100);
@@ -737,7 +737,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.recording_stream_subtitle_pids  = configfile.getBool("recordingmenu.stream_subtitle_pids", true);
 	g_settings.recording_stream_pmt_pid        = configfile.getBool("recordingmenu.stream_pmt_pid"      , false);
 	g_settings.recording_filename_template     = configfile.getString("recordingmenu.filename_template" , "%C_%T_%d_%t");
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	g_settings.recording_bufsize               = configfile.getInt32("recording_bufsize", 4);
 	g_settings.recording_bufsize_dmx           = configfile.getInt32("recording_bufsize_dmx", 2);
 #endif
@@ -795,14 +795,14 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.key_playbutton = configfile.getInt32("key_playbutton", 0);
 	g_settings.timeshift_pause = configfile.getInt32( "timeshift_pause", 1 );
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	g_settings.screenshot_png_compression = configfile.getInt32( "screenshot_png_compression", 1);
 	g_settings.screenshot_backbuffer = configfile.getInt32( "screenshot_backbuffer", 1);
 #endif
 	g_settings.screenshot_count = configfile.getInt32( "screenshot_count",  1);
 	g_settings.screenshot_format = configfile.getInt32( "screenshot_format",  1);
 	g_settings.screenshot_cover = configfile.getInt32( "screenshot_cover",  0);
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	g_settings.screenshot_mode = configfile.getInt32( "screenshot_mode",  1 /* video */);
 	g_settings.screenshot_res = configfile.getInt32( "screenshot_res",  2 /* = osd resolution */);
 #else
@@ -940,7 +940,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.lcd_setting_dim_time = configfile.getString("lcd_dim_time","0");
 	g_settings.lcd_setting_dim_brightness = configfile.getInt32("lcd_dim_brightness", 0);
 	g_settings.lcd_info_line = configfile.getInt32("lcd_info_line", 0);//channel name or clock
-#if HAVE_DUCKBOX_HARDWARE || HAVE_SPARK_HARDWARE
+#if HAVE_SH4_HARDWARE
 	g_settings.lcd_vfd_scroll = configfile.getInt32("lcd_vfd_scroll", 1);
 #endif
 
@@ -1096,7 +1096,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 
 void CNeutrinoApp::setScreenSettings()
 {
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	g_settings.screen_width = frameBuffer->getScreenWidth(true) - 1;
 	g_settings.screen_height = frameBuffer->getScreenHeight(true) - 1;
 #else
@@ -1147,7 +1147,7 @@ void CNeutrinoApp::setScreenSettings()
 		    }
 		break;
 	}
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	g_settings.screen_StartX_int = g_settings.screen_StartX;
 	g_settings.screen_StartY_int = g_settings.screen_StartY;
 	g_settings.screen_EndX_int = g_settings.screen_EndX;
@@ -1241,7 +1241,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32( "video_Mode", g_settings.video_Mode );
 	configfile.setInt32( "analog_mode1", g_settings.analog_mode1 );
 	configfile.setInt32( "analog_mode2", g_settings.analog_mode2 );
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	configfile.setInt32( "hdmi_mode", g_settings.hdmi_mode );
 #endif
 	configfile.setInt32( "video_Format", g_settings.video_Format );
@@ -1249,7 +1249,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32( "hdmi_cec_mode", g_settings.hdmi_cec_mode );
 	configfile.setInt32( "hdmi_cec_view_on", g_settings.hdmi_cec_view_on );
 	configfile.setInt32( "hdmi_cec_standby", g_settings.hdmi_cec_standby );
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	configfile.setInt32( "hdmi_cec_broadcast", g_settings.hdmi_cec_broadcast );
 	configfile.setInt32( "video_psi_contrast", g_settings.psi_contrast );
 	configfile.setInt32( "video_psi_saturation", g_settings.psi_saturation );
@@ -1262,7 +1262,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32( "current_volume", g_settings.current_volume );
 	configfile.setInt32( "current_volume_step", g_settings.current_volume_step );
 	configfile.setInt32( "start_volume", g_settings.start_volume );
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	configfile.setInt32("audio_mixer_volume_analog", g_settings.audio_mixer_volume_analog);
 	configfile.setInt32("audio_mixer_volume_hdmi", g_settings.audio_mixer_volume_hdmi);
 	configfile.setInt32("audio_mixer_volume_spdif", g_settings.audio_mixer_volume_spdif);
@@ -1499,7 +1499,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setBool  ("shutdown_timer_record_type"          , g_settings.shutdown_timer_record_type    );
 
 	configfile.setBool  ("recordingmenu.stream_vtxt_pid"      , g_settings.recording_stream_vtxt_pid      );
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	configfile.setInt32 ("recording_bufsize"                  , g_settings.recording_bufsize);
 	configfile.setInt32 ("recording_bufsize_dmx"              , g_settings.recording_bufsize_dmx);
 #endif
@@ -1544,7 +1544,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32( "record_hours", g_settings.record_hours );
 	configfile.setInt32( "timeshift_hours", g_settings.timeshift_hours );
 	//printf("set: key_unlock =============== %d\n", g_settings.key_unlock);
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	configfile.setInt32( "screenshot_png_compression", g_settings.screenshot_png_compression );
 	configfile.setInt32( "screenshot_backbuffer", g_settings.screenshot_backbuffer);
 #endif
@@ -1552,7 +1552,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32( "screenshot_format", g_settings.screenshot_format );
 	configfile.setInt32( "screenshot_cover", g_settings.screenshot_cover );
 	configfile.setInt32( "screenshot_mode", g_settings.screenshot_mode );
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	configfile.setInt32( "screenshot_res", g_settings.screenshot_res );
 #else
 	configfile.setInt32( "screenshot_video", g_settings.screenshot_video );
@@ -1649,7 +1649,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setString("lcd_dim_time", g_settings.lcd_setting_dim_time);
 	configfile.setInt32("lcd_dim_brightness", g_settings.lcd_setting_dim_brightness);
 	configfile.setInt32("lcd_info_line", g_settings.lcd_info_line);//channel name or clock
-#if HAVE_DUCKBOX_HARDWARE || HAVE_SPARK_HARDWARE
+#if HAVE_SH4_HARDWARE
 	configfile.setInt32("lcd_vfd_scroll", g_settings.lcd_vfd_scroll);
 #endif
 
@@ -2124,7 +2124,7 @@ void CNeutrinoApp::CmdParser(int argc, char **argv)
 		else {
 			dprintf(DEBUG_NORMAL, "Usage: neutrino [-u | --enable-update] "
 					      "[-v | --verbose 0..3]\n");
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 			exit(CNeutrinoApp::REBOOT);
 #else
 			exit(1);
@@ -2394,7 +2394,7 @@ void wake_up(bool &wakeup)
 	/* not platform specific - this is created by the init process */
 	else if (access("/tmp/.timer_wakeup", F_OK) == 0) {
 		wakeup = true;
-#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
+#if !HAVE_SH4_HARDWARE
 		unlink("/tmp/.timer_wakeup");
 #endif
 	}
@@ -2429,12 +2429,12 @@ TIMER_START();
 	g_Locale        = new CLocaleManager;
 
 	int loadSettingsErg = loadSetup(NEUTRINO_SETTINGS_FILE);
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	cpuFreq = new cCpuFreqManager();
 	cpuFreq->SetCpuFreq(g_settings.cpufreq * 1000 * 1000);
 #endif
 	wake_up( timer_wakeup );
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	CCECSetup cecsetup;
 	cecsetup.setCECSettings(true);
 #endif
@@ -2553,7 +2553,7 @@ TIMER_START();
 #endif
 
 	//timer start
-#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
+#if !HAVE_SH4_HARDWARE
 	timer_wakeup = false;//init
 	wake_up( timer_wakeup );
 
@@ -2578,7 +2578,7 @@ TIMER_START();
 	pthread_create (&timer_thread, NULL, timerd_main_thread, (void *)&timer_wakeup);
 	timerd_thread_started = true;
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	audioSetupNotifier->changeNotify(LOCALE_AUDIOMENU_MIXER_VOLUME_ANALOG, &g_settings.audio_mixer_volume_analog);
 	audioSetupNotifier->changeNotify(LOCALE_AUDIOMENU_MIXER_VOLUME_SPDIF, &g_settings.audio_mixer_volume_spdif);
 	audioSetupNotifier->changeNotify(LOCALE_AUDIOMENU_MIXER_VOLUME_HDMI, &g_settings.audio_mixer_volume_hdmi);
@@ -2586,7 +2586,7 @@ TIMER_START();
 	powerManager = new cPowerManager;
 	powerManager->Open();
 
-#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
+#if !HAVE_SH4_HARDWARE
 	cpuFreq = new cCpuFreqManager();
 	cpuFreq->SetCpuFreq(g_settings.cpufreq * 1000 * 1000);
 #endif
@@ -2699,7 +2699,7 @@ TIMER_START();
 	cCA::GetInstance()->setCheckLiveSlot(g_settings.ci_check_live);
 	//InitZapper();
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	C3DSetup::getInstance()->exec(NULL, "zapped");
 	CPSISetup::getInstance()->blankScreen(false);
 #endif
@@ -2724,7 +2724,7 @@ TIMER_STOP("################################## after all #######################
 	RealRun();
 
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	ExitRun(CNeutrinoApp::REBOOT);
 #else
 	ExitRun(g_info.hw_caps->can_shutdown);
@@ -2769,7 +2769,7 @@ void CNeutrinoApp::showInfo()
 	StartSubtitles();
 }
 
-#if HAVE_DUCKBOX_HARDWARE || HAVE_SPARK_HARDWARE
+#if HAVE_SH4_HARDWARE
 static void check_timer()
 {
 	CTimerd::TimerList tmpTimerList;
@@ -2794,7 +2794,7 @@ void CNeutrinoApp::showMainMenu()
 	int old_mode = g_settings.epg_scan_mode;
 	int old_save_mode = g_settings.epg_save_mode;
 	mainMenu->exec(NULL, "");
-#if HAVE_DUCKBOX_HARDWARE || HAVE_SPARK_HARDWARE
+#if HAVE_SH4_HARDWARE
 	CVFD::getInstance()->UpdateIcons();
 #endif
 	InfoClock->enableInfoClock(true);
@@ -2868,7 +2868,7 @@ void CNeutrinoApp::RealRun()
 			continue;
 #endif
 
-#if HAVE_DUCKBOX_HARDWARE || HAVE_SPARK_HARDWARE
+#if HAVE_SH4_HARDWARE
 		check_timer();
 #endif
 		if (mode == mode_radio) {
@@ -2925,7 +2925,7 @@ void CNeutrinoApp::RealRun()
 					showMainMenu();
 				}
 			}
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 			else if( ( msg == (neutrino_msg_t) g_settings.key_quickzap_up ) || ( msg == (neutrino_msg_t) g_settings.key_quickzap_down ) || ( msg == CRCInput::RC_page_up ) || ( msg == CRCInput::RC_page_down ) )
 #else
 			else if( ( msg == (neutrino_msg_t) g_settings.key_quickzap_up ) || ( msg == (neutrino_msg_t) g_settings.key_quickzap_down ) )
@@ -2973,7 +2973,7 @@ void CNeutrinoApp::RealRun()
 #ifdef SCREENSHOT
 			else if (msg == (neutrino_msg_t) g_settings.key_screenshot) {
 				for(int i = 0; i < g_settings.screenshot_count; i++) {
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 					CVFD::getInstance()->ShowText("SCREENSHOT");
 					CHintBox *hintbox = NULL;
 					if (g_settings.screenshot_mode == 1)
@@ -2984,7 +2984,7 @@ void CNeutrinoApp::RealRun()
 					CScreenShot * sc = new CScreenShot("", (CScreenShot::screenshot_format_t)g_settings.screenshot_format);
 					sc->MakeFileName(CZapit::getInstance()->GetCurrentChannelID());
 					sc->Start();
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 					if (hintbox) {
 						hintbox->hide();
 						delete hintbox;
@@ -3163,7 +3163,7 @@ void CNeutrinoApp::RealRun()
 					CMediaPlayerMenu::getInstance()->exec(NULL, "inetplayer");
 					break;
 				}
-#if HAVE_DUCKBOX_HARDWARE || HAVE_SPARK_HARDWARE
+#if HAVE_SH4_HARDWARE
 				CVFD::getInstance()->UpdateIcons();
 #endif
 			}
@@ -3463,16 +3463,16 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 		if(g_settings.audio_AnalogMode < 0 || g_settings.audio_AnalogMode > 2)
 			g_settings.audio_AnalogMode = 0;
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 		C3DSetup::getInstance()->exec(NULL, "zapped");
 #endif
-#if HAVE_DUCKBOX_HARDWARE || HAVE_SPARK_HARDWARE
+#if HAVE_SH4_HARDWARE
 		CVFD::getInstance()->UpdateIcons();
 #endif
 #ifdef ENABLE_GRAPHLCD
 		nGLCD::Update();
 #endif
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 		{
 			CScreenSetup cSS;
 			cSS.showBorder(CZapit::getInstance()->GetCurrentChannelID());
@@ -3587,7 +3587,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 					new_msg = NeutrinoMessages::SHUTDOWN;
 			}
 			else {
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 				if((mode != mode_standby) && (g_settings.shutdown_real) && recordingstatus)
 					timer_wakeup = true;
 #endif
@@ -3981,7 +3981,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 		if(CStreamManager::getInstance()->StreamStatus())
 			skipShutdownTimer = true;
 		if(!skipShutdownTimer) {
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 			timer_wakeup = true;
 			ExitRun(CNeutrinoApp::SHUTDOWN);
 #else
@@ -3996,7 +3996,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 	else if( msg == NeutrinoMessages::REBOOT ) {
 		FILE *f = fopen("/tmp/.reboot", "w");
 		fclose(f);
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 		ExitRun(CNeutrinoApp::REBOOT);
 #else
 		ExitRun();
@@ -4135,7 +4135,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 //		ShowHint(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_EXTRA_ZAPIT_SDT_CHANGED),
 //				CMsgBox::mbrBack,CMsgBox::mbBack, NEUTRINO_ICON_INFO);
 	}
-#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
+#if !HAVE_SH4_HARDWARE
 	else if (msg == NeutrinoMessages::EVT_HDMI_CEC_VIEW_ON) {
 		if(g_settings.hdmi_cec_view_on)
 			videoDecoder->SetCECAutoView(g_settings.hdmi_cec_view_on);
@@ -4384,7 +4384,7 @@ void CNeutrinoApp::ExitRun(int can_shutdown)
 	delete SHTDCNT::getInstance();
 	stop_video();
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	if (can_shutdown == SHUTDOWN) {
 		CCECSetup cecsetup;
 		cecsetup.setCECSettings(false);
@@ -4551,7 +4551,7 @@ void CNeutrinoApp::standbyMode( bool bOnOff, bool fromDeepStandby )
 	lockStandbyCall = true;
 
 	if( bOnOff ) {
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 		CCECSetup cecsetup;
 		cecsetup.setCECSettings(false);
 #endif
@@ -4652,7 +4652,7 @@ void CNeutrinoApp::standbyMode( bool bOnOff, bool fromDeepStandby )
 #ifdef ENABLE_GRAPHLCD
 		nGLCD::StandbyMode(false);
 #endif
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 		if (!timer_wakeup) {
 			CCECSetup cecsetup;
 			cecsetup.setCECSettings(true);
@@ -4818,7 +4818,7 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 		ShowMsg(LOCALE_SETTINGS_HELP, LOCALE_RECORDINGMENU_HELP, CMsgBox::mbrBack, CMsgBox::mbBack);
 	}
 	else if(actionKey=="shutdown") {
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 		ExitRun(CNeutrinoApp::SHUTDOWN);
 #else
 		ExitRun(1);
@@ -4829,7 +4829,7 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 		FILE *f = fopen("/tmp/.reboot", "w");
 		if (f)
 			fclose(f);
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 		ExitRun(CNeutrinoApp::REBOOT);
 #else
 		ExitRun();
@@ -4963,14 +4963,14 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 			for(int i = 3; i < 256; i++)
 				close(i);
 			execvp(global_argv[0], global_argv); // no return if successful
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 			exit(CNeutrinoApp::REBOOT);
 #else
 			exit(1);
 #endif
 		}
 	}
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	else if(actionKey == "3dmode") {
 		C3DSetup::getInstance()->exec(parent, "");
 		return menu_return::RETURN_EXIT_ALL;
@@ -5125,7 +5125,7 @@ void sighandler (int signum)
 		delete SHTDCNT::getInstance();
 		stop_video();
 		//_exit(0);
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 		exit(CNeutrinoApp::SHUTDOWN);
 #else
 		exit(0);
@@ -5230,7 +5230,7 @@ void CNeutrinoApp::loadKeys(const char * fname)
 	g_settings.repeat_blocker = tconfig.getInt32("repeat_blocker", 450);
 	g_settings.repeat_genericblocker = tconfig.getInt32("repeat_genericblocker", 100);
 	g_settings.longkeypress_duration = tconfig.getInt32("longkeypress_duration", LONGKEYPRESS_OFF);
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	g_settings.accept_other_remotes = tconfig.getInt32( "accept_other_remotes", 1);
 #endif
 
@@ -5316,7 +5316,7 @@ void CNeutrinoApp::saveKeys(const char * fname)
 	tconfig.setInt32( "repeat_blocker", g_settings.repeat_blocker );
 	tconfig.setInt32( "repeat_genericblocker", g_settings.repeat_genericblocker );
 	tconfig.setInt32( "longkeypress_duration", g_settings.longkeypress_duration );
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	tconfig.setInt32("accept_other_remotes", g_settings.accept_other_remotes);
 #endif
 

@@ -250,7 +250,7 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 			break;
 		case STREAM:
 		case RECORD:
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 			INFO("RECORD/STREAM(%d): fe_num %d rec_dmx %d", mode, frontend ? frontend->getNumber() : -1, channel->getRecordDemux());
 			source = frontend->getNumber();
 			demux = source;

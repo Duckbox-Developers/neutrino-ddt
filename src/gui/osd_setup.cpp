@@ -1546,7 +1546,7 @@ bool COsdSetup::changeNotify(const neutrino_locale_t OptionName, void * data)
 		CInfoClock::getInstance()->ClearDisplay();
 		FileTimeOSD->Init();
 	}
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_SCREENSHOT_PLANES)) {
 		if (g_settings.screenshot_mode == 3) {
 			screenshot_res = g_settings.screenshot_res;
@@ -1645,7 +1645,7 @@ void COsdSetup::showOsdScreenShotSetup(CMenuWidget *menu_screenshot)
 	mc->setHint("", LOCALE_MENU_HINT_SCREENSHOT_FORMAT);
 	menu_screenshot->addItem(mc);
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE || HAVE_ARM_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
 	mc = new CMenuOptionChooser(LOCALE_SCREENSHOT_PLANES, &g_settings.screenshot_mode, SCREENSHOT_PLANE_OPTIONS, SCREENSHOT_PLANE_OPTION_COUNT, true, this);
 	mc->setHint("", LOCALE_MENU_HINT_SCREENSHOT_PLANES);
 #else
@@ -1654,7 +1654,7 @@ void COsdSetup::showOsdScreenShotSetup(CMenuWidget *menu_screenshot)
 #endif
 	menu_screenshot->addItem(mc);
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	if (g_settings.screenshot_mode == 3)
 		screenshot_res = g_settings.screenshot_res;
 	else
@@ -1665,7 +1665,7 @@ void COsdSetup::showOsdScreenShotSetup(CMenuWidget *menu_screenshot)
 	menu_screenshot->addItem(mc);
 #endif
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	mc = new CMenuOptionChooser(LOCALE_SCREENSHOT_RES, &screenshot_res, SCREENSHOT_RES_OPTIONS, SCREENSHOT_RES_OPTION_COUNT, g_settings.screenshot_mode == 3);
 	mc->setHint("", LOCALE_MENU_HINT_SCREENSHOT_RES);
 #else
@@ -1673,7 +1673,7 @@ void COsdSetup::showOsdScreenShotSetup(CMenuWidget *menu_screenshot)
 	mc->setHint("", LOCALE_MENU_HINT_SCREENSHOT_SCALE);
 #endif
 	menu_screenshot->addItem(mc);
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	screenshot_res_chooser = mc;
 #endif
 
