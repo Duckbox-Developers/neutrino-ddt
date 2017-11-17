@@ -5595,7 +5595,7 @@ void CopyBB2FB()
 {
 	fb_pixel_t *src, *dst, *topsrc;
 	int fillcolor, i, screenwidth, swtmp;
-#if defined(HAVE_SPARK_HARDWARE) || defined(HAVE_COOL_HARDWARE) || defined(HAVE_DUCKBOX_HARDWARE)
+#if defined(HAVE_SH4_HARDWARE) || defined(HAVE_COOL_HARDWARE)
 	CFrameBuffer *f = CFrameBuffer::getInstance();
 #endif
 
@@ -5660,7 +5660,7 @@ void CopyBB2FB()
 	if (screenmode == 1)
 	{
 		screenwidth = ( TV43STARTX );
-#if defined(HAVE_SPARK_HARDWARE) || defined(HAVE_DUCKBOX_HARDWARE)
+#if defined(HAVE_SH4_HARDWARE)
 		int cx = var_screeninfo.xres - TV43STARTX;	/* x start */
 		int cw = TV43STARTX;				/* width */
 		int cy = StartY;
