@@ -48,9 +48,6 @@ install_DATA =	accept.png \
 		popup.png \
 		properties.png \
 		radio.png \
-		rc_910.jpg \
-		rc_spark_old.jpg \
-		rc_spark_new.jpg \
 		record.png \
 		reload.png \
 		remove.png \
@@ -95,6 +92,15 @@ endif
 if BOXTYPE_ARMBOX
 install_DATA += rc_ax_hd51.png \
 		rc_mutant_hd51.png
+endif
+
+if BOXTYPE_SPARK
+install_DATA += rc_spark_old.jpg \
+		rc_spark_new.jpg
+endif
+
+if BOXTYPE_DUCKBOX
+install_DATA += rc_910.jpg
 endif
 
 # file manager
