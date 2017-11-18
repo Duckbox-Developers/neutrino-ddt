@@ -455,7 +455,7 @@ int CVideoSettings::showVideoSetup()
 			if (VIDEOMENU_VIDEOMODE_OPTIONS[i].key != -1)
 				videomodes.addItem(new CMenuOptionChooser(VIDEOMENU_VIDEOMODE_OPTIONS[i].valname, &g_settings.enabled_video_modes[i], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, &anotify));
 
-		vs_videomodes_fw = new CMenuForwarder(LOCALE_VIDEOMENU_ENABLED_MODES, true, NULL, &videomodes, NULL, CRCInput::RC_red);
+		vs_videomodes_fw = new CMenuForwarder(LOCALE_VIDEOMENU_ENABLED_MODES, true, NULL, &videomodes, NULL, CRCInput::RC_mode);
 		vs_videomodes_fw->setHint("", LOCALE_MENU_HINT_VIDEO_MODES);
 
 #ifdef BOXMODEL_CS_HD2
@@ -469,34 +469,42 @@ int CVideoSettings::showVideoSetup()
 #endif
 	}
 
-	neutrino_locale_t tmp_locale = NONEXISTANT_LOCALE;
-	/* TODO: check the locale */
-	if (vs_analg_ch != NULL || vs_scart_ch != NULL || vs_chinch_ch != NULL)
-		tmp_locale = LOCALE_VIDEOMENU_TV_SCART;
-	//---------------------------------------
-	videosetup->addIntroItems(LOCALE_MAINSETTINGS_VIDEO, tmp_locale);
-	//---------------------------------------
-	//videosetup->addItem(vs_scart_sep);	  //separator scart
-	if (vs_analg_ch != NULL)
-		videosetup->addItem(vs_analg_ch); //analog option
-	if (vs_scart_ch != NULL)
-		videosetup->addItem(vs_scart_ch); //scart
-	if (vs_chinch_ch != NULL)
-		videosetup->addItem(vs_chinch_ch);//chinch
-	//if (tmp_locale != NONEXISTANT_LOCALE)
-	//	videosetup->addItem(GenericMenuSeparatorLine);
+	if (vs_colorformat_analog || vs_colorformat_hdmi) {
+		videosetup->addIntroItems(LOCALE_MAINSETTINGS_VIDEO, LOCALE_VIDEOMENU_COLORFORMAT);
+		if (vs_colorformat_analog)
+			videosetup->addItem(vs_colorformat_analog);
+		if (vs_colorformat_hdmi)
+			videosetup->addItem(vs_colorformat_hdmi);
+		videosetup->addItem(GenericMenuSeparatorLine);
+	} else {
+		neutrino_locale_t tmp_locale = NONEXISTANT_LOCALE;
+		/* TODO: check the locale */
+		if (vs_analg_ch != NULL || vs_scart_ch != NULL || vs_chinch_ch != NULL)
+			tmp_locale = LOCALE_VIDEOMENU_TV_SCART;
+		//---------------------------------------
+		videosetup->addIntroItems(LOCALE_MAINSETTINGS_VIDEO, tmp_locale);
+		//---------------------------------------
+		//videosetup->addItem(vs_scart_sep);	  //separator scart
+		if (vs_analg_ch != NULL)
+			videosetup->addItem(vs_analg_ch); //analog option
+		if (vs_scart_ch != NULL)
+			videosetup->addItem(vs_scart_ch); //scart
+		if (vs_chinch_ch != NULL)
+			videosetup->addItem(vs_chinch_ch);//chinch
+		//if (tmp_locale != NONEXISTANT_LOCALE)
+		//	videosetup->addItem(GenericMenuSeparatorLine);
+	}
 	//---------------------------------------
 	videosetup->addItem(vs_43mode_ch);	  //4:3 mode
 	videosetup->addItem(vs_dispformat_ch);	  //display format
 	videosetup->addItem(vs_videomodes_ch);	  //video system
 	if (vs_dbdropt_ch != NULL)
 		videosetup->addItem(vs_dbdropt_ch);	  //dbdr options
-	if (vs_videomodes_fw != NULL) {
+	if (vs_videomodes_fw != NULL)
 		videosetup->addItem(vs_videomodes_fw);	  //video modes submenue
 #ifdef BOXMODEL_CS_HD2
-		videosetup->addItem(vs_automodes_fw);	  //video auto modes submenue
+	videosetup->addItem(vs_automodes_fw);	  //video auto modes submenue
 #endif
-	}
 
 #if HAVE_SH4_HARDWARE
 	CColorSetupNotifier *colorSetupNotifier = new CColorSetupNotifier();
