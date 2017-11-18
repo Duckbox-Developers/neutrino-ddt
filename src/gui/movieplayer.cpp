@@ -1404,11 +1404,10 @@ bool CMoviePlayerGui::PlayFileStart(void)
 		repeat_mode = REPEAT_OFF;
 		return false;
 	} else {
-		numpida = 0;
+		numpida = REC_MAX_APIDS;
 		playback->FindAllPids(apids, ac3flags, &numpida, language);
-		if (p_movie_info){
-			if(!numpida && !p_movie_info->audioPids.empty())
-				numpida = p_movie_info->audioPids.size();
+		if (p_movie_info)
+		{
 			for (unsigned int i = 0; i < numpida; i++) {
 				unsigned int j, asize = p_movie_info->audioPids.size();
 				for (j = 0; j < asize && p_movie_info->audioPids[j].AudioPid != apids[i]; j++);
@@ -1421,7 +1420,9 @@ bool CMoviePlayerGui::PlayFileStart(void)
 					p_movie_info->audioPids.push_back(pids);
 				}
 			}
-		}else{
+		}
+		else
+		{
 			for (unsigned int i = 0; i < numpida; i++)
 				if (apids[i] == playback->GetAPid()) {
 				CZapit::getInstance()->SetVolumePercent((ac3flags[i] > 2) ? g_settings.audio_volume_percent_ac3 : g_settings.audio_volume_percent_pcm);
@@ -2278,7 +2279,7 @@ bool CMoviePlayerGui::getAudioName(int apid, std::string &apidtitle)
 {
 	if (p_movie_info == NULL)
 	{
-		numpida = 0;
+		numpida = REC_MAX_APIDS;
 		playback->FindAllPids(apids, ac3flags, &numpida, language);
 		for (unsigned int count = 0; count < numpida; count++)
 			if(apid == apids[count]){
@@ -2290,7 +2291,7 @@ bool CMoviePlayerGui::getAudioName(int apid, std::string &apidtitle)
 	{
 		if (!isMovieBrowser)
 		{
-			numpida = 0;
+			numpida = REC_MAX_APIDS;
 			playback->FindAllPids(apids, ac3flags, &numpida, language);
 			for (unsigned int count = 0; count < numpida; count++)
 				if(apid == apids[count]){
@@ -2347,12 +2348,10 @@ void CMoviePlayerGui::addAudioFormat(int count, std::string &apidtitle, bool& en
 	}
 }
 
-void CMoviePlayerGui::getCurrentAudioName(bool file_player, std::string &audioname)
+void CMoviePlayerGui::getCurrentAudioName(bool /* file_player */, std::string &audioname)
 {
-	if (file_player) {
-		numpida = 0;
-		playback->FindAllPids(apids, ac3flags, &numpida, language);
-	}
+	numpida = REC_MAX_APIDS;
+	playback->FindAllPids(apids, ac3flags, &numpida, language);
 	if (numpida && !currentapid)
 		currentapid = apids[0];
 	for (unsigned int count = 0; count < numpida; count++)
@@ -3193,11 +3192,8 @@ unsigned int CMoviePlayerGui::getAPID(void)
 
 unsigned int CMoviePlayerGui::getAPIDCount(void)
 {
-	if (!is_file_player && numpida)
-		return numpida;
-
 	unsigned int count = 0;
-	numpida = 0;
+	numpida = REC_MAX_APIDS;
 	playback->FindAllPids(apids, ac3flags, &numpida, language);
 	for (unsigned int i = 0; i < numpida; i++) {
 		if (i != count) {
