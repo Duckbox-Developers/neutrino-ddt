@@ -494,7 +494,7 @@ bool CUserMenu::showUserMenu(neutrino_msg_t msg)
 #endif
 		case SNeutrinoSettings::ITEM_RASS:
 		{
-			if (!(neutrino->getMode() == CNeutrinoApp::mode_radio && g_Radiotext && g_Radiotext->haveRASS()))
+			if (!(CNeutrinoApp::getInstance()->getMode() == NeutrinoModes::mode_radio && g_Radiotext && g_Radiotext->haveRASS()))
 				continue;
 			keyhelper.get(&key,&icon);
 			menu_item = new CMenuForwarder(LOCALE_RASS_HEAD, true, NULL, neutrino, "rass", key, icon);
