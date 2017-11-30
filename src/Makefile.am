@@ -194,14 +194,21 @@ neutrino_LDADD += \
 	$(top_builddir)/src/lcddisplay/liblcddisplay.a
 endif
 
+neutrino_LDADD += \
+	@AVFORMAT_LIBS@ \
+	@AVUTIL_LIBS@ \
+	@AVCODEC_LIBS@ \
+	@SWSCALE_LIBS@
+endif
+
 if BOXMODEL_RASPI
 neutrino_LDADD += \
 	-L/opt/vc/lib/ -lbcm_host -lvcos -lvchiq_arm -lpthread -lrt
 endif
 
 if BOXTYPE_COOL
-bin_PROGRAMS += uncooloff
-uncooloff_SOURCES = uncooloff.c
+bin_PROGRAMS += shutdown_helper
+shutdown_helper_SOURCES = shutdown_helper.c
 # if BOXMODEL_CS_HD2
 # else
 # noinst_PROGRAMS = uncoolinit

@@ -250,7 +250,7 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 			break;
 		case STREAM:
 		case RECORD:
-#if HAVE_SH4_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
 			INFO("RECORD/STREAM(%d): fe_num %d rec_dmx %d", mode, frontend ? frontend->getNumber() : -1, channel->getRecordDemux());
 			source = frontend->getNumber();
 			demux = source;
@@ -279,6 +279,7 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 
 	//INFO("source %d old mask %d new mask %d force update %s", source, oldmask, newmask, force_update ? "yes" : "no");
 
+#if ! HAVE_COOL_HARDWARE
 	/* stop decoding if record stops unless it's the live channel. TODO:PIP? */
 	/* all the modes: RECORD, STREAM, PIP except PLAY now stopping here !! */
 	if (mode && start == false && source != cDemux::GetSource(0)) {
@@ -292,6 +293,7 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 			channel_map.erase(channel_id);
 		}
 	}
+#endif
 
 	if((oldmask != newmask) || force_update) {
 		cam->setCaMask(newmask);

@@ -333,6 +333,9 @@ void CEpgScan::EnterStandby()
 	if (standby) {
 		CZapit::getInstance()->SetCurrentChannelID(live_channel_id);
 		CNeutrinoApp::getInstance()->standbyToStandby();
+
+		if (g_settings.epg_save && g_settings.epg_save_standby)
+			CNeutrinoApp::getInstance()->saveEpg(NeutrinoModes::mode_standby);
 	}
 }
 
@@ -344,7 +347,7 @@ void CEpgScan::Next()
 #endif
 	next_chid = 0;
 
-	if (!standby && CNeutrinoApp::getInstance()->getMode() == NeutrinoMessages::mode_standby)
+	if (!standby && CNeutrinoApp::getInstance()->getMode() == NeutrinoModes::mode_standby)
 		return;
 	if (CRecordManager::getInstance()->RecordingStatus() || CStreamManager::getInstance()->StreamStatus())
 		return;

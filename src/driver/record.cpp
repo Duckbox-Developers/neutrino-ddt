@@ -229,10 +229,20 @@ record_error_msg_t CRecordInstance::Start(CZapitChannel * channel)
 	}
 	for (unsigned int i = 0; i < recMovieInfo->audioPids.size(); i++) {
 		apids[numpids++] = recMovieInfo->audioPids[i].AudioPid;
-		if(channel->getAudioChannel(i)->audioChannelType == CZapitAudioChannel::EAC3){
-			psi.addPid(recMovieInfo->audioPids[i].AudioPid, EN_TYPE_AUDIO_EAC3, recMovieInfo->audioPids[i].atype, channel->getAudioChannel(i)->description.c_str());
-		}else
-			psi.addPid(recMovieInfo->audioPids[i].AudioPid, EN_TYPE_AUDIO, recMovieInfo->audioPids[i].atype, channel->getAudioChannel(i)->description.c_str());
+		switch (channel->getAudioChannel(i)->audioChannelType) {
+			case CZapitAudioChannel::EAC3:
+				psi.addPid(recMovieInfo->audioPids[i].AudioPid, EN_TYPE_AUDIO_EAC3, recMovieInfo->audioPids[i].atype, channel->getAudioChannel(i)->description.c_str());
+				break;
+			case CZapitAudioChannel::AAC:
+				psi.addPid(recMovieInfo->audioPids[i].AudioPid, EN_TYPE_AUDIO_AAC, recMovieInfo->audioPids[i].atype, channel->getAudioChannel(i)->description.c_str());
+				break;
+			case CZapitAudioChannel::AACPLUS:
+				psi.addPid(recMovieInfo->audioPids[i].AudioPid, EN_TYPE_AUDIO_AACP, recMovieInfo->audioPids[i].atype, channel->getAudioChannel(i)->description.c_str());
+				break;
+			default:
+				psi.addPid(recMovieInfo->audioPids[i].AudioPid, EN_TYPE_AUDIO, recMovieInfo->audioPids[i].atype, channel->getAudioChannel(i)->description.c_str());
+				break;
+		}
 
 		if (numpids >= REC_MAX_APIDS)
 			break;
@@ -1355,7 +1365,7 @@ int CRecordManager::handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t data
 			return messages_return::handled;
 		}
 		else if(data == check_timer) {
-			if(CNeutrinoApp::getInstance()->getMode() != NeutrinoMessages::mode_standby) {
+			if(CNeutrinoApp::getInstance()->getMode() != NeutrinoModes::mode_standby) {
 				mutex.lock();
 				int have_err = 0;
 				for(recmap_iterator_t it = recmap.begin(); it != recmap.end(); it++)
@@ -1672,12 +1682,12 @@ bool CRecordManager::CutBackNeutrino(const t_channel_id channel_id, CFrontend * 
 		return false;
 
 	int mode = channel->getServiceType() != ST_DIGITAL_RADIO_SOUND_SERVICE ?
-		NeutrinoMessages::mode_tv : NeutrinoMessages::mode_radio;
+		NeutrinoModes::mode_tv : NeutrinoModes::mode_radio;
 
 	printf("%s channel_id %" PRIx64 " mode %d\n", __func__, channel_id, mode);
 
 	last_mode = CNeutrinoApp::getInstance()->getMode();
-	if(last_mode == NeutrinoMessages::mode_standby && recmap.empty()) {
+	if(last_mode == NeutrinoModes::mode_standby && recmap.empty()) {
 		g_Zapit->setStandby(false); // this zap to live_channel_id
 		/* wait for zapit wakeup */
 		g_Zapit->getMode();
@@ -1721,8 +1731,8 @@ bool CRecordManager::CutBackNeutrino(const t_channel_id channel_id, CFrontend * 
 		else {
 			printf("%s mode %d last_mode %d getLastMode %d\n", __FUNCTION__, mode, last_mode, CNeutrinoApp::getInstance()->getLastMode());
 			StopAutoRecord(false);
-			if (mode != last_mode && (last_mode != NeutrinoMessages::mode_standby || mode != CNeutrinoApp::getInstance()->getLastMode())) {
-				CNeutrinoApp::getInstance()->handleMsg( NeutrinoMessages::CHANGEMODE , mode | NeutrinoMessages::norezap );
+			if (mode != last_mode && (last_mode != NeutrinoModes::mode_standby || mode != CNeutrinoApp::getInstance()->getLastMode())) {
+				CNeutrinoApp::getInstance()->handleMsg( NeutrinoMessages::CHANGEMODE , mode | NeutrinoModes::norezap );
 				mode_changed = true;
 			}
 
@@ -1755,15 +1765,15 @@ bool CRecordManager::CutBackNeutrino(const t_channel_id channel_id, CFrontend * 
 
 		/* after this zapit send EVT_RECORDMODE_ACTIVATED, so neutrino getting NeutrinoMessages::EVT_RECORDMODE */
 		g_Zapit->setRecordMode( true );
-		if(last_mode == NeutrinoMessages::mode_standby)
+		if(last_mode == NeutrinoModes::mode_standby)
 			g_Zapit->stopPlayBack();
 		if ((live_channel_id == channel_id) && g_Radiotext)
 			g_Radiotext->radiotext_stop();
 		/* in case channel_id == live_channel_id */
 		CStreamManager::getInstance()->StopStream(channel_id);
 	}
-	if(last_mode == NeutrinoMessages::mode_standby) {
-		//CNeutrinoApp::getInstance()->handleMsg( NeutrinoMessages::CHANGEMODE , NeutrinoMessages::mode_standby);
+	if(last_mode == NeutrinoModes::mode_standby) {
+		//CNeutrinoApp::getInstance()->handleMsg( NeutrinoMessages::CHANGEMODE , NeutrinoModes::mode_standby);
 		g_RCInput->postMsg( NeutrinoMessages::CHANGEMODE , last_mode);
 	} else if(!ret && mode_changed /*mode != last_mode*/)
 		CNeutrinoApp::getInstance()->handleMsg( NeutrinoMessages::CHANGEMODE , last_mode);
@@ -1780,7 +1790,7 @@ void CRecordManager::RestoreNeutrino(void)
 	/* after this zapit send EVT_RECORDMODE_DEACTIVATED, so neutrino getting NeutrinoMessages::EVT_RECORDMODE */
 	g_Zapit->setRecordMode( false );
 
-	if((CNeutrinoApp::getInstance()->getMode() != NeutrinoMessages::mode_standby) && StopSectionsd)
+	if((CNeutrinoApp::getInstance()->getMode() != NeutrinoModes::mode_standby) && StopSectionsd)
 		g_Sectionsd->setPauseScanning(false);
 }
 

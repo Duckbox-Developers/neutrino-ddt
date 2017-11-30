@@ -173,6 +173,7 @@ void CLCD::wake_up()
 
 void* CLCD::TimeThread(void *)
 {
+	set_threadname("n:boxdisplay"); /* to not confuse with TV display */
 	while (CLCD::getInstance()->thread_running) {
 		sleep(1);
 		if (g_info.hw_caps->display_type == HW_DISPLAY_LINE_TEXT) {
@@ -322,7 +323,9 @@ void CLCD::showTime(bool force)
 		if (force || last_display || (switch_name_time_cnt == 0 && ((hour != t->tm_hour) || (minute != t->tm_min)))) {
 			hour = t->tm_hour;
 			minute = t->tm_min;
+#if !HAVE_ARM_HARDWARE
 			int ret = -1;
+#endif
 #if HAVE_SPARK_HARDWARE
 			now += t->tm_gmtoff;
 			int fd = dev_open();
@@ -395,6 +398,8 @@ void CLCD::showVolume(const char vol, const bool update)
 	/* char is unsigned, so vol is never < 0 */
 	if (volume > 100)
 		volume = 100;
+
+	ShowIcon(FP_ICON_MUTE, muted);
 
 	if (muted)
 	{
@@ -792,6 +797,7 @@ void CLCD::UpdateIcons()
 	{
 		ShowIcon(FP_ICON_HD,chan->isHD());
 		ShowIcon(FP_ICON_LOCK,!chan->camap.empty());
+		ShowIcon(FP_ICON_SCRAMBLED, chan->scrambled);
 		if (chan->getAudioChannel() != NULL)
 		{
 			ShowIcon(FP_ICON_DD, chan->getAudioChannel()->audioChannelType == CZapitAudioChannel::AC3);
@@ -865,6 +871,12 @@ void CLCD::ShowIcon(fp_icon i, bool on)
 			timer_icon = on;
 			SetIcons(SPARK_CLOCK, on);
 			proc_put("/proc/stb/lcd/symbol_timeshift", on);
+			break;
+		case FP_ICON_MUTE:
+			proc_put("/proc/stb/lcd/symbol_mute", on);
+			break;
+		case FP_ICON_SCRAMBLED:
+			proc_put("/proc/stb/lcd/symbol_scrambled", on);
 			break;
 		default:
 			break;

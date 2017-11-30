@@ -255,8 +255,8 @@ void CMoviePlayerGui::Init(void)
 	isLuaPlay = false;
 	haveLuaInfoFunc = false;
 	blockedFromPlugin = false;
-	m_screensaver = false;
-	m_idletime = time(NULL);
+
+	CScreenSaver::getInstance()->resetIdleTime();
 }
 
 void CMoviePlayerGui::cutNeutrino()
@@ -292,22 +292,22 @@ void CMoviePlayerGui::cutNeutrino()
 	g_Zapit->setStandby(true);
 #endif
 
-	int new_mode = NeutrinoMessages::mode_unknown;
+	int new_mode = NeutrinoModes::mode_unknown;
 	m_LastMode = CNeutrinoApp::getInstance()->getMode();
 	printf("%s: old mode %d\n", __func__, m_LastMode);fflush(stdout);
 	if (isWebChannel)
 	{
-		bool isRadioMode = (m_LastMode == NeutrinoMessages::mode_radio || m_LastMode == NeutrinoMessages::mode_webradio);
-		new_mode = (isRadioMode) ? NeutrinoMessages::mode_webradio : NeutrinoMessages::mode_webtv;
-		m_LastMode |= NeutrinoMessages::norezap;
+		bool isRadioMode = (m_LastMode == NeutrinoModes::mode_radio || m_LastMode == NeutrinoModes::mode_webradio);
+		new_mode = (isRadioMode) ? NeutrinoModes::mode_webradio : NeutrinoModes::mode_webtv;
+		m_LastMode |= NeutrinoModes::norezap;
 	}
 	else
 	{
-		new_mode = NeutrinoMessages::mode_ts;
+		new_mode = NeutrinoModes::mode_ts;
 	}
 	printf("%s: new mode %d\n", __func__, new_mode);fflush(stdout);
 	printf("%s: save mode %x\n", __func__, m_LastMode);fflush(stdout);
-	CNeutrinoApp::getInstance()->handleMsg(NeutrinoMessages::CHANGEMODE, NeutrinoMessages::norezap | new_mode);
+	CNeutrinoApp::getInstance()->handleMsg(NeutrinoMessages::CHANGEMODE, NeutrinoModes::norezap | new_mode);
 }
 
 void CMoviePlayerGui::restoreNeutrino()
@@ -344,14 +344,14 @@ void CMoviePlayerGui::restoreNeutrino()
 #endif
 	printf("%s: restore mode %x\n", __func__, m_LastMode);fflush(stdout);
 #if 0
-	if (m_LastMode == NeutrinoMessages::mode_tv)
+	if (m_LastMode == NeutrinoModes::mode_tv)
 		g_RCInput->postMsg(NeutrinoMessages::EVT_PROGRAMLOCKSTATUS, 0x200, false);
 #endif
-	if (m_LastMode != NeutrinoMessages::mode_unknown)
+	if (m_LastMode != NeutrinoModes::mode_unknown)
 		CNeutrinoApp::getInstance()->handleMsg(NeutrinoMessages::CHANGEMODE, m_LastMode);
 
 #if 0
-	if (m_LastMode == NeutrinoMessages::mode_tv) {
+	if (m_LastMode == NeutrinoModes::mode_tv) {
 		CZapitChannel *channel = CZapit::getInstance()->GetCurrentChannel();
 		if (channel && channel->scrambled)
 			CZapit::getInstance()->Rezap();
@@ -1135,7 +1135,6 @@ bool CMoviePlayerGui::getLiveUrl(const std::string &url, const std::string &scri
 	}
 	std::string _script = script;
 
-#if 0
 	if (_script.find("/") == std::string::npos)
 	{
 		std::string _s = g_settings.livestreamScriptPath + "/" + _script;
@@ -1152,7 +1151,6 @@ bool CMoviePlayerGui::getLiveUrl(const std::string &url, const std::string &scri
 		}
 		_script = _s;
 	}
-#endif
 	size_t pos = _script.find(".lua");
 	if (!file_exists(_script.c_str()) || (pos == std::string::npos) || (_script.length()-pos != 4)) {
 		printf(">>>>> [%s:%s:%d] script error\n", __file__, __func__, __LINE__);
@@ -1682,26 +1680,26 @@ void CMoviePlayerGui::PlayFileLoop(void)
 		showSubtitle(0);
 #endif
 
+		if (msg <= CRCInput::RC_MaxRC)
+			CScreenSaver::getInstance()->resetIdleTime();
+
 		if (playstate == CMoviePlayerGui::PAUSE && (msg == CRCInput::RC_timeout || msg == NeutrinoMessages::EVT_TIMER))
 		{
-			int delay = time(NULL) - m_idletime;
-			int screensaver_delay = g_settings.screensaver_delay;
-			if (screensaver_delay != 0 && delay > screensaver_delay*60 && !m_screensaver) {
+			if (CScreenSaver::getInstance()->canStart() && !CScreenSaver::getInstance()->isActive())
+			{
 				videoDecoder->setBlank(true);
-				screensaver(true);
+				CScreenSaver::getInstance()->Start();
 			}
 		}
 		else
 		{
-			m_idletime = time(NULL);
-			if (m_screensaver)
+			if (CScreenSaver::getInstance()->isActive())
 			{
 				videoDecoder->setBlank(false);
-				screensaver(false);
-#if 0				//ignore first keypress stop - just quit the screensaver and call infoviewer
-				if (msg <= CRCInput::RC_MaxRC) {
-#endif
-				if (msg <= CRCInput::RC_stop) {
+				CScreenSaver::getInstance()->Stop();
+				if (msg <= CRCInput::RC_MaxRC)
+				{
+					//ignore first keypress - just quit the screensaver and call infoviewer
 					g_RCInput->clearRCMsg();
 					callInfoViewer();
 					continue;
@@ -3518,19 +3516,4 @@ size_t CMoviePlayerGui::GetReadCount()
 		res = this_read - last_read;
 	last_read = this_read;
 	return (size_t) res;
-}
-
-void CMoviePlayerGui::screensaver(bool on)
-{
-	if (on)
-	{
-		m_screensaver = true;
-		CScreenSaver::getInstance()->Start();
-	}
-	else
-	{
-		CScreenSaver::getInstance()->Stop();
-		m_screensaver = false;
-		m_idletime = time(NULL);
-	}
 }

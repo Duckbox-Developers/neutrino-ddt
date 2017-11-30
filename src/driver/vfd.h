@@ -164,14 +164,16 @@ class CVFD
 		void Lock();
 		void Unlock();
 		void Clear();
-		void ShowIcon(fp_icon icon, bool show);
-#if HAVE_DUCKBOX_HARDWARE
+#if !HAVE_DUCKBOX_HARDWARE
+		void UpdateIcons() { return; }
+#else
 		void repaintIcons();
 		void UpdateIcons();
 		void ShowScrollText(char * str);
 		static void* ThreadScrollText(void * arg);
 		void ClearIcons();
 #endif
+		void ShowIcon(fp_icon icon, bool show);
 		void ShowText(const char *str);
 		void ShowNumber(int number);
 		void wake_up();
