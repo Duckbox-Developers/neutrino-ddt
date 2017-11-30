@@ -197,7 +197,9 @@ endif
 neutrino_LDADD += \
 	@AVFORMAT_LIBS@ \
 	@AVUTIL_LIBS@ \
-	@AVCODEC_LIBS@ \
+	@AVCODEC_LIBS@
+
+if BOXTYPE_ARMBOX
 	@SWSCALE_LIBS@
 endif
 
