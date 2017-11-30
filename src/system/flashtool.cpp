@@ -444,7 +444,7 @@ void CFlashTool::reboot()
 {
 	::reboot(RB_AUTOBOOT);
 #if HAVE_SH4_HARDWARE
-	::exit(CNeutrinoApp::REBOOT);
+	::exit(CNeutrinoApp::EXIT_REBOOT);
 #else
 	::exit(0);
 #endif

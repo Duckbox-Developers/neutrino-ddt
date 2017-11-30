@@ -3639,7 +3639,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 	{
 		g_volume->setVolume(msg);
 #if HAVE_DUCKBOX_HARDWARE
-		if((mode == mode_tv) || (mode == mode_radio)) {
+		if((mode == NeutrinoModes::mode_tv) || (mode == NeutrinoModes::mode_radio)) {
 			CVFD::getInstance()->showServicename(channelList->getActiveChannelName());
 		}
 #endif
