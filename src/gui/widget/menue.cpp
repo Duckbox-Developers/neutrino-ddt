@@ -1322,7 +1322,7 @@ void CMenuWidget::setMenuPos(const int& menu_width)
 		case MENU_POS_TOP_LEFT: 
 			y = offy + scr_y + OFFSET_INNER_MID;
 			x = offx + scr_x + OFFSET_INNER_MID;
-			x += DETAILSLINE_WIDTH;
+			x += g_settings.show_menu_hints_line ? DETAILSLINE_WIDTH : 0; //NI
 			break;
 			
 		case MENU_POS_TOP_RIGHT: 
@@ -1333,7 +1333,7 @@ void CMenuWidget::setMenuPos(const int& menu_width)
 		case MENU_POS_BOTTOM_LEFT: 
 			y = /*offy +*/ scr_y + scr_h - real_h - OFFSET_INNER_MID;
 			x = offx + scr_x + OFFSET_INNER_MID;
-			x += DETAILSLINE_WIDTH;
+			x += g_settings.show_menu_hints_line ? DETAILSLINE_WIDTH : 0; //NI
 			break;
 			
 		case MENU_POS_BOTTOM_RIGHT: 

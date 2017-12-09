@@ -68,6 +68,9 @@ class COsdSetup : public CMenuTarget, public CChangeObserver
 		int screenshot_res;
 		CMenuOptionChooser *screenshot_res_chooser;
 
+		//NI
+		int show_menu_hints_line;
+
 		int showOsdSetup();
  		void showOsdMenueColorSetup(CMenuWidget *menu_colors);
 		void showOsdFontSizeSetup(CMenuWidget *menu_fonts);

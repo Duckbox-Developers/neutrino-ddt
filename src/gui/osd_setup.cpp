@@ -103,6 +103,9 @@ COsdSetup::COsdSetup(int wizard_mode)
 	width = 40;
 	show_menu_hints = 0;
 	show_tuner_icon = 0;
+
+	//NI
+	show_menu_hints_line = 0;
 }
 
 COsdSetup::~COsdSetup()
@@ -1170,6 +1173,12 @@ void COsdSetup::showOsdMenusSetup(CMenuWidget *menu_menus)
 	mc = new CMenuOptionChooser(LOCALE_SETTINGS_MENU_HINTS, &show_menu_hints, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this);
 	mc->setHint("", LOCALE_MENU_HINT_MENU_HINTS);
 	submenu_menus->addItem(mc);
+
+	//NI menu hints line (details_line) should always be last entry here
+	show_menu_hints_line = g_settings.show_menu_hints_line;
+	mc = new CMenuOptionChooser(LOCALE_SETTINGS_MENU_HINTS_LINE, &show_menu_hints_line, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this);
+	mc->setHint("", LOCALE_MENU_HINT_MENU_HINTS_LINE);
+	submenu_menus->addItem(mc);
 }
 
 #define HDD_STATFS_OPTION_COUNT 3
@@ -1539,6 +1548,13 @@ bool COsdSetup::changeNotify(const neutrino_locale_t OptionName, void * data)
 	else if(ARE_LOCALES_EQUAL(OptionName, LOCALE_EXTRA_VOLUME_DIGITS)) {
 		CVolumeHelper::getInstance()->refresh();
 		return false;
+	}
+	//NI menu_hints_line
+	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_SETTINGS_MENU_HINTS_LINE))
+	{
+		submenu_menus->hide();
+		g_settings.show_menu_hints_line = * (int*) data;
+		return true;
 	}
 	else if ((ARE_LOCALES_EQUAL(OptionName, LOCALE_MISCSETTINGS_INFOCLOCK)) ||
 		 (ARE_LOCALES_EQUAL(OptionName, LOCALE_CLOCK_SIZE_HEIGHT)) ||
