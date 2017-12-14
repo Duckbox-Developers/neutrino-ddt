@@ -285,8 +285,15 @@ void CImageInfo::InitInfoData()
 #endif
 
 	string version_string = config.getString("version", "");
-#ifdef IMAGE_VERSION
-	version_string = IMAGE_VERSION;
+#ifdef PACKAGE_VERSION
+#if HAVE_SH4_HARDWARE
+	version_string = "SH4-Release : ";
+#elif HAVE_ARM_HARDWARE
+	version_string = "ARM-Release : ";
+#else
+	version_string = "Release : ";
+#endif
+	version_string += PACKAGE_VERSION;
 #else
 	bool is_version_code = true;
 	for (size_t i=0; i<version_string.size(); i++){
