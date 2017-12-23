@@ -1800,7 +1800,6 @@ bool CZapit::ParseCommand(CBasicMessage::Header &rmsg, int connfd)
 				SendEvent(CZapitClient::EVT_ZAP_FAILED, &lock_channel_id, sizeof(lock_channel_id));
 			lock_channel_id = 0;
 		}
-
 		SendCmdReady(connfd);
 		break;
 	}

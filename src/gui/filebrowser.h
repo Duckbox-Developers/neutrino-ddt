@@ -135,6 +135,8 @@ public:
 		return false;
 	};
 	void Clear(void) { Filter.clear();};
+	size_t size(void) { return Filter.size();};
+	std::string getFilter(int i) { return Filter.at(i);};
 };
 //------------------------------------------------------------------------
 
@@ -219,7 +221,7 @@ class CFileBrowser
 		~CFileBrowser();
 
 		bool		exec(const char * const dirname);
-		bool		playlist_manager(CFileList &playlist,unsigned int playing);
+		bool		playlist_manager(CFileList &playlist, unsigned int playing, bool is_audio_player = false);
 		CFile		*getSelectedFile();
 		
 		inline const CFileList & getSelectedFiles(void) const

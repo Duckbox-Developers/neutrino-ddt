@@ -96,7 +96,7 @@ static keyvals usermenu_items[] =
 	{ SNeutrinoSettings::ITEM_GAMES,		LOCALE_MAINMENU_GAMES,			usermenu_show },
 	{ SNeutrinoSettings::ITEM_SCRIPTS,		LOCALE_MAINMENU_SCRIPTS,		usermenu_show },
 	{ SNeutrinoSettings::ITEM_YOUTUBE,		LOCALE_MOVIEPLAYER_YTPLAYBACK,		usermenu_show },
-	{ SNeutrinoSettings::ITEM_FILEPLAY,		LOCALE_MOVIEPLAYER_FILEPLAYBACK,	usermenu_show },
+	{ SNeutrinoSettings::ITEM_FILEPLAY_VIDEO,	LOCALE_MOVIEPLAYER_FILEPLAYBACK_VIDEO,	usermenu_show },
 	{ SNeutrinoSettings::ITEM_TOOLS,		LOCALE_MAINMENU_TOOLS,			usermenu_show },
 	{ SNeutrinoSettings::ITEM_LUA,                  LOCALE_MAINMENU_LUA,			usermenu_show },
 	{ SNeutrinoSettings::ITEM_HDDMENU,		LOCALE_HDD_SETTINGS,			usermenu_show },
@@ -109,6 +109,7 @@ static keyvals usermenu_items[] =
 	{ SNeutrinoSettings::ITEM_RASS,			LOCALE_RASS_HEAD,			usermenu_show_not },
 	{ SNeutrinoSettings::ITEM_TUNER_RESTART,	LOCALE_SERVICEMENU_RESTART_TUNER,	usermenu_show },
 	{ SNeutrinoSettings::ITEM_THREE_D_MODE,		LOCALE_THREE_D_SETTINGS,		usermenu_show_three_d_mode },
+	{ SNeutrinoSettings::ITEM_FILEPLAY_AUDIO,	LOCALE_MOVIEPLAYER_FILEPLAYBACK_AUDIO,	usermenu_show },
 	{ SNeutrinoSettings::ITEM_MAX,			NONEXISTANT_LOCALE,			usermenu_show }
 };
 

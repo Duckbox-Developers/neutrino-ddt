@@ -165,6 +165,8 @@ bool CUserMenu::showUserMenu(neutrino_msg_t msg)
 	std::string txt = g_settings.usermenu[button]->title;
 	if (button < COL_BUTTONMAX && txt.empty())
 		txt = g_Locale->getText(user_menu[button].caption);
+	if (txt.empty())
+		txt = g_Locale->getText(LOCALE_USERMENU_HEAD);
 
 	CMenuWidget *menu = new CMenuWidget(txt, (button < COL_BUTTONMAX) ? user_menu[button].menu_icon_def : "", width);
 	if (menu == NULL)
@@ -404,10 +406,17 @@ bool CUserMenu::showUserMenu(neutrino_msg_t msg)
 			menu_item->setHint(NEUTRINO_ICON_HINT_YTPLAY, LOCALE_MENU_HINT_YTPLAY);
 			break;
 		}
-		case SNeutrinoSettings::ITEM_FILEPLAY:
+		case SNeutrinoSettings::ITEM_FILEPLAY_VIDEO:
 		{
 			keyhelper.get(&key,&icon);
-			menu_item = new CMenuForwarder(LOCALE_MOVIEPLAYER_FILEPLAYBACK, !_mode_ts, NULL, neutrino, "fileplayback", key, icon);
+			menu_item = new CMenuForwarder(LOCALE_MOVIEPLAYER_FILEPLAYBACK_VIDEO, !_mode_ts, NULL, neutrino, "fileplayback_video", key, icon);
+			menu_item->setHint(NEUTRINO_ICON_HINT_FILEPLAY, LOCALE_MENU_HINT_FILEPLAY);
+			break;
+		}
+		case SNeutrinoSettings::ITEM_FILEPLAY_AUDIO:
+		{
+			keyhelper.get(&key,&icon);
+			menu_item = new CMenuForwarder(LOCALE_MOVIEPLAYER_FILEPLAYBACK_AUDIO, !_mode_ts, NULL, neutrino, "fileplayback_audio", key, icon);
 			menu_item->setHint(NEUTRINO_ICON_HINT_FILEPLAY, LOCALE_MENU_HINT_FILEPLAY);
 			break;
 		}
@@ -652,11 +661,6 @@ const char *CUserMenu::getUserMenuButtonName(int button, bool &active, bool retu
 					return_title = true;
 				active = true;
 				continue;
-#if 0
-			case SNeutrinoSettings::ITEM_RASS:
-				if (!(CNeutrinoApp::getInstance()->getMode() == NeutrinoModes::mode_radio && g_Radiotext && g_Radiotext->haveRASS()))
-					continue;
-#endif
 			default:
 				if(loc == NONEXISTANT_LOCALE && !text)
 					loc = CUserMenuSetup::getLocale(item);

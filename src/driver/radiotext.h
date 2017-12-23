@@ -51,10 +51,12 @@
 #include <OpenThreads/Condition>
 #include <map>
 
-#define ENABLE_RASS 1
-
 typedef unsigned char uchar;
 typedef unsigned int uint;
+
+extern const char *ConfigDir;
+extern const char *DataDir;
+extern char *ReplayFile;
 
 #define RT_MEL 65
 #define tr(a) a
@@ -74,44 +76,9 @@ private:
 
 	//Radiotext
 	void RadioStatusMsg(void);
-	void RassDecode(uchar *Data, int Length);
 	bool DividePes(unsigned char *data, int length, int *substart, int *subend);
-	void RassShow(char *filename, unsigned char *md5sum = NULL);
-	void RassShow(int slidenumber, unsigned char *md5sum = NULL);
-	void RassUpdate(char *filename, int slidenumber = -1);
-	void RassPaint(int slidenumber = -1, bool blit = true);
-	neutrino_msg_t RassShow_prev(void);
-	neutrino_msg_t RassShow_next(void);
-	neutrino_msg_t RassShow_left(void);
-	neutrino_msg_t RassShow_right(void);
-	neutrino_msg_t RassShow_category(int);
-	neutrino_msg_t RassChangeSelection(int slidenumber);
 
 	uint pid;
-	uint lastRassPid;
-	unsigned char last_md5sum[16];
-
-	CFrameBuffer *framebuffer;
-	int iconWidth;
-	int iconHeight;
-
-	bool Rass_interactive_mode;
-
-	struct slideinfo { unsigned char md5sum[16]; };
-
-	class RASS_slides
-	{
-		private:
-			OpenThreads::Mutex mutex;
-			std::map<int, slideinfo> sim;
-		public:
-			bool set(int, slideinfo);
-			unsigned char *exists(int);
-			void clear(void);
-	};
-	RASS_slides slides;
-	int Rass_current_slide;
-	int Rass_first_slide;
 
 	OpenThreads::Mutex mutex;
 	OpenThreads::Mutex pidmutex;
@@ -124,7 +91,6 @@ public:
 	CRadioText(void);
 	~CRadioText(void);
 	int  PES_Receive(unsigned char *data, int len);
-	int  RassImage(int QArchiv, int QKey, bool DirUp);
 	void EnableRadioTextProcessing(const char *Titel, bool replay = false);
 	void DisableRadioTextProcessing();
 	void RadiotextDecode(uchar *Data, int Length);
@@ -138,8 +104,6 @@ public:
 
 	void radiotext_stop(void);
 	bool haveRadiotext(void) {return have_radiotext; }
-	bool haveRASS(void) { return lastRassPid; }
-	void RASS_interactive_mode(void);
 
 	cDemux *audioDemux;
 
@@ -157,9 +121,7 @@ public:
 	int S_RtBgTra;
 	int S_RtFgCol;
 	int S_RtDispl;
-	int S_RassText;
 	int S_RtMsgItems;
-//	uint32_t rt_color[9];
 	int S_Verbose;
 
 	// Radiotext
@@ -174,14 +136,6 @@ public:
 	int RT_OsdTOTemp;
 	char RDS_PTYN[9];
 	char *RT_Titel, *RTp_Titel;
-
-#if ENABLE_RASS
-	// Rass ...
-	int Rass_Show;			// -1=No, 0=Yes, 1=display
-	int Rass_Archiv;		// -1=Off, 0=Index, 1000-9990=Slidenr.
-	bool Rass_Flags[11][4];		// Slides+Gallery existent
-#endif
-
 };
 
 // Radiotext-Memory
@@ -228,7 +182,7 @@ struct rtp_classes {
     char *phone_Studio;			// 40
     char *email_Hotline;		// 44
     char *email_Studio;			// 45
-// to be continued ...
+// to be continue...
 };
 
 #endif //__RADIO_AUDIO_H

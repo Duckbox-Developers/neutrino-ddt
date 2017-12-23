@@ -544,6 +544,13 @@ extra.tp_mod_auto QAM/AUTO
 extra.tp_pilot Pilot
 extra.tp_pilot_auto Auto (HW)
 extra.tp_pilot_auto_sw Auto (SW)
+extra.tp_plc PLM Code
+extra.tp_pli Stream ID
+extra.tp_plm PLS Modus
+extra.tp_plm_combo Combo
+extra.tp_plm_gold Gold
+extra.tp_plm_root Root (Standard)
+extra.tp_plm_unk Unbekannt
 extra.tp_pol Polarisation
 extra.tp_pol_h H
 extra.tp_pol_l L
@@ -983,6 +990,7 @@ mainmenu.games Spiele
 mainmenu.head Hauptmenü
 mainmenu.lua Lua-Plugins
 mainmenu.media Multimedia
+mainmenu.mediaplayer Mediaplayer
 mainmenu.movieplayer Movieplayer
 mainmenu.pausesectionsd EPG auslesen
 mainmenu.pictureviewer Bildbetrachter
@@ -1153,7 +1161,7 @@ menu.hint_inet_radio Internetradio
 menu.hint_info Systeminformationen anzeigen.
 menu.hint_infobar_back Ändern Sie die Hintergrundfarbe für die Infobar
 menu.hint_infobar_buttons_usertitle Erzwingt die benutzerdefinierten Titel der Farbtasten
-menu.hint_infobar_casys ein: zeigt alle Aktiven farbig, Mini: einzelnes Symbol ob gesperrt, Diskret: alle Aktiven CA-Systeme
+menu.hint_infobar_casys ein: zeigt alle CA-Systeme; diskret: zeigt nur aktive CA-Systeme; mini: einzelnes Symbol in der Fußleiste
 menu.hint_infobar_casys_color Ändern Sie die Hintergrundfarbe für die CA-Systemanzeige der Infobar
 menu.hint_infobar_casys_dotmatrix ein: CA-Systemanzeige mit Punktematrix im Hintergrund
 menu.hint_infobar_casys_frame ein: CA-Systemanzeige mit Rahmen
@@ -1622,8 +1630,8 @@ miscsettings.infobar_buttons_usertitle Benutzertitel für Farbtasten
 miscsettings.infobar_casystem_display CA-Systemanzeige
 miscsettings.infobar_casystem_dotmatrix CA-Anzeige mit Punktematrix
 miscsettings.infobar_casystem_frame CA-Anzeige mit Rahmen
-miscsettings.infobar_casystem_mini Mini
-miscsettings.infobar_casystem_mode Diskret
+miscsettings.infobar_casystem_mini mini
+miscsettings.infobar_casystem_mode diskret
 miscsettings.infobar_disp Logo-Anzeige
 miscsettings.infobar_disp_0 Kanalname [Kanalnummer]
 miscsettings.infobar_disp_1 Kanalnummer, Kanalname [Logo]
@@ -1907,7 +1915,8 @@ movieplayer.bookmarkname Bookmark Name
 movieplayer.bookmarkname_hint1 Geben Sie den Namen für das neue Lesezeichen ein
 movieplayer.bookmarkname_hint2 
 movieplayer.chapters Kapitel
-movieplayer.fileplayback Abspielen (Multiformat)
+movieplayer.fileplayback_audio Multiformat-Audiowiedergabe
+movieplayer.fileplayback_video Multiformat-Videowiedergabe
 movieplayer.head Movieplayer
 movieplayer.help_additional Weitere benutzerdefinierte Tastenbelegungen sind unter "Hauptmenü" > "Einstellungen" > "Tasten" > "Bearbeiten" > "Movieplayer" zu finden.\n\nWährend der Wiedergabe von Filmen sind im Hauptmenü einige Menüpunkte deaktiviert.
 movieplayer.help_button_1 1 Minute zurück
@@ -2360,6 +2369,7 @@ servicemenu.restarting_tuner Tuner wird neu gestartet
 servicemenu.scants Kanalsuche
 servicemenu.update Software-Aktualisierung
 settings.backup System-Einstellungen sichern
+settings.backup_dir Nach %s sichern?\n"Nein" wählt ein anderes Verzeichnis
 settings.backup_failed Sicherung fehlgeschlagen!
 settings.help Hilfe
 settings.menu_hints Hinweise anzeigen
@@ -2512,7 +2522,7 @@ timing.volumebar Lautstärkeanzeige
 tunersetup.cable Kabel (DVB-C)
 tunersetup.hybrid Hybrid (DVB-C/T/T2)
 tunersetup.mode Betriebsmodus
-tunersetup.power 5V Versorgung bei DVB-T/T2 Kanälen
+tunersetup.power 5V-Versorgung bei DVB-T/T2 Kanälen
 tunersetup.terr Terrestrisch (DVB-T/T2)
 tmdb.api_key TMDb API Schlüssel
 tmdb.enabled TMDb-Unterstützung

@@ -333,6 +333,9 @@ bool CNit::ParseSatelliteDescriptor(SatelliteDeliverySystemDescriptor * sd, Tran
 	memset(&feparams, 0, sizeof(feparams));
 	feparams.polarization = sd->getPolarization();
 	feparams.pilot = ZPILOT_AUTO;
+	feparams.plp_id = 0;
+	feparams.pls_code = 1;
+	feparams.pls_mode = PLS_Root;
 
 	switch (modulation_system) {
 	case 0: // DVB-S
@@ -437,7 +440,7 @@ bool CNit::ParseTerrestrialDescriptor(TerrestrialDeliverySystemDescriptor * sd, 
 	if(feparams.frequency > 1000*1000)
 		feparams.frequency /= 1000;
 
-	freq_id_t freq = CREATE_FREQ_ID(feparams.frequency, true);
+	freq_id_t freq = (freq_id_t) (feparams.frequency/(1000*1000));
 	transponder_id_t TsidOnid = CREATE_TRANSPONDER_ID64(
 			freq, satellitePosition, tsinfo->getOriginalNetworkId(), tsinfo->getTransportStreamId());
 
@@ -468,7 +471,7 @@ bool CNit::ParseTerrestrial2Descriptor(T2DeliverySystemDescriptor * sd, Transpor
 		for (T2FrequencyConstIterator T2freq = (*cell)->getCentreFrequencies()->begin(); T2freq != (*cell)->getCentreFrequencies()->end(); ++T2freq)
 		{
 			feparams.frequency = (*T2freq) * 10;
-			freq_id_t freq = CREATE_FREQ_ID(feparams.frequency, true);
+			freq_id_t freq = (freq_id_t) (feparams.frequency/(1000*1000));
 			transponder_id_t TsidOnid = CREATE_TRANSPONDER_ID64(
 				freq, satellitePosition, tsinfo->getOriginalNetworkId(), tsinfo->getTransportStreamId());
 

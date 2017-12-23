@@ -330,7 +330,11 @@ static SNeutrinoSettings::usermenu_t usermenu_default[] = {
 	{ CRCInput::RC_green,           "6",                                    "",     "green"         },
 	{ CRCInput::RC_yellow,          "7,31",                                 "",     "yellow"        },
 	{ CRCInput::RC_blue,            "12,11,20,21,19,14,29,30,15",           "",     "blue"          },
+#if HAVE_ARM_HARDWARE
+	{ CRCInput::RC_playpause,       "9",                                    "",     "5"             },
+#else
 	{ CRCInput::RC_play,            "9",                                    "",     "5"             },
+#endif
 	{ CRCInput::RC_audio,           "27",                                   "",     "6"             },
 #if HAVE_SPARK_HARDWARE
 	{ CRCInput::RC_timer,           "19",                                   "",     "7"             },
@@ -923,6 +927,8 @@ int CNeutrinoApp::loadSetup(const char * fname)
 
 	g_settings.font_scaling_x = configfile.getInt32("font_scaling_x", 100);
 	g_settings.font_scaling_y = configfile.getInt32("font_scaling_y", 100);
+
+	g_settings.backup_dir = configfile.getString("backup_dir", "/media");
 
 	g_settings.update_dir = configfile.getString("update_dir", "/tmp");
 	g_settings.update_dir_opkg = configfile.getString("update_dir_opkg", g_settings.update_dir);
@@ -1631,6 +1637,8 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setString("softupdate_proxyserver"   , g_settings.softupdate_proxyserver   );
 	configfile.setString("softupdate_proxyusername" , g_settings.softupdate_proxyusername );
 	configfile.setString("softupdate_proxypassword" , g_settings.softupdate_proxypassword );
+
+	configfile.setString("backup_dir", g_settings.backup_dir);
 
 	configfile.setString("update_dir", g_settings.update_dir);
 	configfile.setString("update_dir_opkg", g_settings.update_dir_opkg);
@@ -2360,8 +2368,10 @@ void CNeutrinoApp::InitSectiondClient()
 #include <cs_frontpanel.h>
 #endif
 
-void wake_up(bool &wakeup)
+bool is_wakeup()
 {
+	bool wakeup = false;
+
 #if HAVE_COOL_HARDWARE
 #ifndef FP_IOCTL_CLEAR_WAKEUP_TIMER
 #define FP_IOCTL_CLEAR_WAKEUP_TIMER 10
@@ -2382,6 +2392,7 @@ void wake_up(bool &wakeup)
 		close(fd);
 	}
 #endif
+
 	/* prioritize proc filesystem */
 	if (access("/proc/stb/fp/was_timer_wakeup", F_OK) == 0)
 	{
@@ -2406,11 +2417,14 @@ void wake_up(bool &wakeup)
 	}
 	printf("[timerd] wakeup from standby: %s\n", wakeup ? "yes" : "no");
 
-	if(!wakeup){
+	if (!wakeup)
+	{
 		puts("[neutrino.cpp] executing " NEUTRINO_LEAVE_DEEPSTANDBY_SCRIPT ".");
 		if (my_system(NEUTRINO_LEAVE_DEEPSTANDBY_SCRIPT) != 0)
 			perror(NEUTRINO_LEAVE_DEEPSTANDBY_SCRIPT " failed");
 	}
+
+	return wakeup;
 }
 
 int CNeutrinoApp::run(int argc, char **argv)
@@ -2559,24 +2573,19 @@ TIMER_START();
 #endif
 
 	//timer start
-#if !HAVE_SH4_HARDWARE
-	timer_wakeup = false;//init
-	wake_up( timer_wakeup );
+	timer_wakeup = (timer_wakeup && g_settings.shutdown_timer_record_type);
+	g_settings.shutdown_timer_record_type = false;
 
+#if !HAVE_SH4_HARDWARE
 	init_cec_setting = true;
-	if(!(g_settings.shutdown_timer_record_type && timer_wakeup && g_settings.hdmi_cec_mode)){
+	if(!(timer_wakeup && g_settings.hdmi_cec_mode))
+	{
 		//init cec settings
 		CCECSetup cecsetup;
 		cecsetup.setCECSettings();
 		init_cec_setting = false;
 	}
 #endif
-	timer_wakeup = (timer_wakeup && g_settings.shutdown_timer_record_type);
-	g_settings.shutdown_timer_record_type = false;
-
-	/* todo: check if this is necessary
-	pthread_create (&timer_thread, NULL, timerd_main_thread, (void *) (timer_wakeup && g_settings.shutdown_timer_record_type));
-	 */
 	// The thread argument sets a pointer to Neutrinos timer_wakeup. *pointer is set to true
 	// when timerd is ready, so save the real timer_wakeup value and restore it later. --martii
 	bool timer_wakup_real = timer_wakeup;
@@ -3134,7 +3143,7 @@ void CNeutrinoApp::RealRun()
 				CMediaPlayerMenu * multimedia_menu = CMediaPlayerMenu::getInstance();
 				multimedia_menu->exec(NULL, "");
 			}
-			else if( msg == CRCInput::RC_video ) {
+			else if( msg == CRCInput::RC_video || msg == CRCInput::RC_playpause) {
 				//open moviebrowser via media player menu object
 				if (g_settings.recording_type != CNeutrinoApp::RECORDING_OFF)
 					CMediaPlayerMenu::getInstance()->exec(NULL, "moviebrowser");
@@ -4260,7 +4269,7 @@ void CNeutrinoApp::ExitRun(int exit_code)
 			struct tm *tm = localtime(&t);
 			char date[30];
 			strftime(date, sizeof(date), "%c", tm);
-			printf("timer_wakeup: %s (%ld)\n", date, timer_minutes * 60);
+			printf("wakeup_time: %s (%ld)\n", date, timer_minutes * 60);
 
 			/* prioritize proc filesystem */
 			if (access("/proc/stb/fp/wakeup_time", F_OK) == 0)
@@ -5083,7 +5092,11 @@ void CNeutrinoApp::loadKeys(const char * fname)
 
 	g_settings.key_list_start = tconfig.getInt32( "key_list_start", (unsigned int)CRCInput::RC_nokey );
 	g_settings.key_list_end = tconfig.getInt32( "key_list_end", (unsigned int)CRCInput::RC_nokey );
+#if HAVE_ARM_HARDWARE
+	g_settings.key_timeshift = tconfig.getInt32( "key_timeshift", CRCInput::RC_nokey ); // FIXME
+#else
 	g_settings.key_timeshift = tconfig.getInt32( "key_timeshift", CRCInput::RC_pause );
+#endif
 	g_settings.key_unlock = tconfig.getInt32( "key_unlock", CRCInput::RC_setup );
 	g_settings.key_screenshot = tconfig.getInt32( "key_screenshot", (unsigned int)CRCInput::RC_nokey );
 #ifdef ENABLE_PIP
@@ -5111,9 +5124,14 @@ void CNeutrinoApp::loadKeys(const char * fname)
 
 	g_settings.mpkey_rewind = tconfig.getInt32( "mpkey.rewind", CRCInput::RC_rewind );
 	g_settings.mpkey_forward = tconfig.getInt32( "mpkey.forward", CRCInput::RC_forward );
-	g_settings.mpkey_pause = tconfig.getInt32( "mpkey.pause", CRCInput::RC_pause );
 	g_settings.mpkey_stop = tconfig.getInt32( "mpkey.stop", CRCInput::RC_stop );
+#if HAVE_ARM_HARDWARE
+	g_settings.mpkey_play = tconfig.getInt32( "mpkey.play", CRCInput::RC_playpause );
+	g_settings.mpkey_pause = tconfig.getInt32( "mpkey.pause", CRCInput::RC_playpause );
+#else
 	g_settings.mpkey_play = tconfig.getInt32( "mpkey.play", CRCInput::RC_play );
+	g_settings.mpkey_pause = tconfig.getInt32( "mpkey.pause", CRCInput::RC_pause );
+#endif
 	g_settings.mpkey_audio = tconfig.getInt32( "mpkey.audio", CRCInput::RC_green );
 	g_settings.mpkey_time = tconfig.getInt32( "mpkey.time", CRCInput::RC_timeshift );
 	g_settings.mpkey_bookmark = tconfig.getInt32( "mpkey.bookmark", CRCInput::RC_yellow );

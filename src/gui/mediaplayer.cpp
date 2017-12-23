@@ -140,7 +140,6 @@ int CMediaPlayerMenu::initMenuMedia(CMenuWidget *m, CPersonalizeGui *p)
 	
 	bool enabled = !CMoviePlayerGui::getInstance().Playing();
 
-#if !HAVE_ARM_HARDWARE
 	//audio player
 	CMenuForwarder *fw_audio = new CMenuForwarder(LOCALE_MAINMENU_AUDIOPLAYER, enabled, NULL, this, "audioplayer", CRCInput::RC_red);
 	fw_audio->setHint(NEUTRINO_ICON_HINT_APLAY, LOCALE_MENU_HINT_APLAY);
@@ -150,7 +149,6 @@ int CMediaPlayerMenu::initMenuMedia(CMenuWidget *m, CPersonalizeGui *p)
 	CMenuForwarder *fw_inet = new CMenuForwarder(LOCALE_INETRADIO_NAME, enabled, NULL, this, "inetplayer", CRCInput::RC_green);
 	fw_inet->setHint(NEUTRINO_ICON_HINT_INET_RADIO, LOCALE_MENU_HINT_INET_RADIO);
 	personalize->addItem(multimedia_menu, fw_inet, &g_settings.personalize[SNeutrinoSettings::P_MEDIA_INETPLAY]);
-#endif
 
 	//pictureviewer
 	CMenuForwarder *fw_pviewer = new CMenuForwarder(LOCALE_MAINMENU_PICTUREVIEWER, true, NULL, new CPictureViewerGui(), NULL, CRCInput::RC_yellow);
@@ -179,13 +177,18 @@ int CMediaPlayerMenu::initMenuMedia(CMenuWidget *m, CPersonalizeGui *p)
 	fw_mbrowser->setHint(NEUTRINO_ICON_HINT_MB, LOCALE_MENU_HINT_MB);
 	personalize->addItem(multimedia_menu, fw_mbrowser, &g_settings.personalize[SNeutrinoSettings::P_MPLAYER_MBROWSER]);
 
-	//fileplayback
-	CMenuForwarder *fw_fileplay = new CMenuForwarder(LOCALE_MOVIEPLAYER_FILEPLAYBACK, true, NULL, &CMoviePlayerGui::getInstance(), "fileplayback", CRCInput::RC_1);
-	fw_fileplay->setHint(NEUTRINO_ICON_HINT_FILEPLAY, LOCALE_MENU_HINT_FILEPLAY);
-	personalize->addItem(multimedia_menu, fw_fileplay, &g_settings.personalize[SNeutrinoSettings::P_MPLAYER_FILEPLAY]);
+	//fileplayback video
+	CMenuForwarder *fw_fileplay_video = new CMenuForwarder(LOCALE_MOVIEPLAYER_FILEPLAYBACK_VIDEO, true, NULL, &CMoviePlayerGui::getInstance(), "fileplayback_video", CRCInput::RC_1);
+	fw_fileplay_video->setHint(NEUTRINO_ICON_HINT_FILEPLAY, LOCALE_MENU_HINT_FILEPLAY);
+	personalize->addItem(multimedia_menu, fw_fileplay_video, &g_settings.personalize[SNeutrinoSettings::P_MPLAYER_FILEPLAY_VIDEO]);
+
+	//fileplayback audio
+	CMenuForwarder *fw_fileplay_audio = new CMenuForwarder(LOCALE_MOVIEPLAYER_FILEPLAYBACK_AUDIO, true, NULL, &CMoviePlayerGui::getInstance(), "fileplayback_audio", CRCInput::RC_2);
+	fw_fileplay_audio->setHint(NEUTRINO_ICON_HINT_FILEPLAY, LOCALE_MENU_HINT_FILEPLAY);
+	personalize->addItem(multimedia_menu, fw_fileplay_audio, &g_settings.personalize[SNeutrinoSettings::P_MPLAYER_FILEPLAY_AUDIO]);
 
 	//ytplayback
-	CMenuForwarder *fw_ytplay = new CMenuForwarder(LOCALE_MOVIEPLAYER_YTPLAYBACK, g_settings.youtube_enabled, NULL, &CMoviePlayerGui::getInstance(), "ytplayback", CRCInput::RC_2);
+	CMenuForwarder *fw_ytplay = new CMenuForwarder(LOCALE_MOVIEPLAYER_YTPLAYBACK, g_settings.youtube_enabled, NULL, &CMoviePlayerGui::getInstance(), "ytplayback", CRCInput::RC_3);
 	fw_ytplay->setHint(NEUTRINO_ICON_HINT_YTPLAY, LOCALE_MENU_HINT_YTPLAY);
 	personalize->addItem(multimedia_menu, fw_ytplay, &g_settings.personalize[SNeutrinoSettings::P_MPLAYER_YTPLAY]);
 

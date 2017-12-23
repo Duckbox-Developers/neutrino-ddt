@@ -67,7 +67,7 @@
 #if ((DVB_API_VERSION > 5) || (DVB_API_VERSION == 5 && DVB_API_VERSION_MINOR > 6))
 #define _HAVE_DVB57 1
 #else
-#if HAVE_SPARK_HARDWARE
+#if HAVE_SH4_HARDWARE
 #ifdef WARN_DVBAPI
 #warning DVB_API < 5.7 -- no DVB-T2/DTMB support.
 #endif
@@ -106,6 +106,13 @@ typedef enum {
 	ZPILOT_AUTO_SW
 } zapit_pilot_t;
 
+typedef enum {
+	PLS_Root,
+	PLS_Gold,
+	PLS_Combo,
+	PLS_Unknown
+} fe_pls_mode_t;
+
 typedef struct {
 	delivery_system_t	delsys;
 	uint32_t		frequency;
@@ -127,7 +134,9 @@ typedef struct {
 	enum fe_interleaving	interleaving;
 #endif
 	uint8_t			polarization;
-	uint8_t			plp_id;
+	uint8_t			plp_id; //0-255
+	fe_pls_mode_t	pls_mode;
+	uint32_t		pls_code; //0-262142
 } FrontendParameters;
 
 typedef struct frontend_config {

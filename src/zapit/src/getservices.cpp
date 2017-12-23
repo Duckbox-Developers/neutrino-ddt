@@ -380,6 +380,7 @@ void CServiceManager::ParseTransponders(xmlNodePtr node, t_satellite_position sa
 		t_original_network_id original_network_id = xmlGetNumericAttribute(node, "on", 16);
 		feparams.frequency = xmlGetNumericAttribute(node, "frq", 0);
 		feparams.inversion = (fe_spectral_inversion) xmlGetNumericAttribute(node, "inv", 0);
+		feparams.plp_id = (uint8_t) xmlGetNumericAttribute(node, "pli", 0);
 
 		const char *system = xmlGetAttribute(node, "sys");
 		if (system) {
@@ -397,7 +398,7 @@ void CServiceManager::ParseTransponders(xmlNodePtr node, t_satellite_position sa
 					feparams.delsys = DVB_C;
 				
 			} else if (CFrontend::isTerr(delsys)) {
-				feparams.delsys = DVB_T;
+				feparams.delsys = delsys;
 			}
 		}
 
@@ -414,6 +415,11 @@ void CServiceManager::ParseTransponders(xmlNodePtr node, t_satellite_position sa
 				feparams.frequency = (int) 1000 * (int) round ((double) feparams.frequency / (double) 1000);
 			/* TODO: add xml tag ? */
 			feparams.pilot = ZPILOT_AUTO_SW;
+			feparams.plp_id = xmlGetNumericAttribute(node, "pli", 0);
+			feparams.pls_mode = (fe_pls_mode_t) xmlGetNumericAttribute(node, "plm", 0);
+			feparams.pls_code = xmlGetNumericAttribute(node, "plc", 0);
+			if (feparams.pls_code == 0)
+				feparams.pls_code = 1;
 		}
 		else if (CFrontend::isTerr(delsys)) {
 			//<TS id="0001" on="7ffd" frq="650000" inv="2" bw="3" hp="9" lp="9" con="6" tm="2" gi="0" hi="4" sys="6">
@@ -426,8 +432,8 @@ void CServiceManager::ParseTransponders(xmlNodePtr node, t_satellite_position sa
 			feparams.guard_interval = (fe_guard_interval_t) xmlGetNumericAttribute(node, "gi", 0);
 			feparams.hierarchy = (fe_hierarchy_t) xmlGetNumericAttribute(node, "hi", 0);
 
-			if (feparams.frequency > 1000*1000)
-				feparams.frequency = feparams.frequency/1000; //transponderlist was read from tuxbox
+			if (feparams.frequency < 1000*1000)
+				feparams.frequency = feparams.frequency*1000;
 		}
 		else if (CFrontend::isCable(delsys)) {
 			feparams.fec_inner = (fe_code_rate_t) xmlGetNumericAttribute(node, "fec", 0);
@@ -438,7 +444,9 @@ void CServiceManager::ParseTransponders(xmlNodePtr node, t_satellite_position sa
 				feparams.frequency = feparams.frequency/1000; //transponderlist was read from tuxbox
 		}
 
-		freq_id_t freq = CREATE_FREQ_ID(feparams.frequency, !CFrontend::isSat(delsys));
+		freq_id_t freq = CREATE_FREQ_ID(feparams.frequency, CFrontend::isCable(delsys));
+		if (CFrontend::isTerr(delsys))
+			freq = (freq_id_t) (feparams.frequency/(1000*1000));
 
 		transponder_id_t tid = CREATE_TRANSPONDER_ID64(freq, satellitePosition,original_network_id,transport_stream_id);
 		transponder t(tid, feparams);
@@ -614,6 +622,10 @@ void CServiceManager::ParseSatTransponders(delivery_system_t delsys, xmlNodePtr 
 			feparams.frequency = xmlGetNumericAttribute(tps, "centre_frequency", 0);
 		feparams.inversion = INVERSION_AUTO;
 
+		feparams.plp_id = 0; // NO_STREAM_ID_FILTER = ~0U, seems not suitable here
+		feparams.pls_mode = PLS_Root;
+		feparams.pls_code = 1;
+
 		if (CFrontend::isCable(delsys)) {
 			const char *system = xmlGetAttribute(tps, "system");
 			if (system) {
@@ -705,6 +717,11 @@ void CServiceManager::ParseSatTransponders(delivery_system_t delsys, xmlNodePtr 
 #endif
 			feparams.fec_inner = (fe_code_rate_t) xml_fec;
 			feparams.frequency = (int) 1000 * (int) round ((double) feparams.frequency / (double) 1000);
+			feparams.plp_id = xmlGetNumericAttribute(tps, "is_id", 0);
+			feparams.pls_mode = (fe_pls_mode_t) xmlGetNumericAttribute(tps, "pls_mode", 0);
+			feparams.pls_code = xmlGetNumericAttribute(tps, "pls_code", 0);
+			if (feparams.pls_code == 0)
+				feparams.pls_code = 1;
 		}
 		else if (CFrontend::isTerr(delsys)) {
 			const char *system = xmlGetAttribute(tps, "system");
@@ -728,7 +745,7 @@ void CServiceManager::ParseSatTransponders(delivery_system_t delsys, xmlNodePtr 
 				}
 			} else {
 				// Set some sane defaults.
-				feparams.delsys = DVB_T;
+				feparams.delsys = DVB_T2;
 			}
 
 			feparams.bandwidth = (fe_bandwidth_t) xmlGetNumericAttribute(tps, "bandwidth", 0);
@@ -746,13 +763,16 @@ void CServiceManager::ParseSatTransponders(delivery_system_t delsys, xmlNodePtr 
 							xmlGetNumericAttribute(tps, "hierarchy", 0);
 			feparams.plp_id = (uint8_t)
 							xmlGetNumericAttribute(tps, "plp_id", 0);
-			if (feparams.frequency > 1000*1000)
-				feparams.frequency /= 1000; // old transponder list
+			if (feparams.frequency < 1000*1000)
+				feparams.frequency *= 1000;
 		}
 		else	/* we'll probably crash sooner or later, so write to STDERR... */
 			fprintf(stderr, "[getservices] %s: unknown delivery system %d!\n", __func__, delsys);
 
-		freq_id_t freq = CREATE_FREQ_ID(feparams.frequency, !CFrontend::isSat(delsys));
+		freq_id_t freq = CREATE_FREQ_ID(feparams.frequency, CFrontend::isCable(delsys));
+		if (CFrontend::isTerr(delsys))
+			freq = (freq_id_t) (feparams.frequency/(1000*1000));
+
 		feparams.polarization &= 7;
 
 		transponder_id_t tid = CREATE_TRANSPONDER_ID64(freq, satellitePosition, fake_nid, fake_tid);

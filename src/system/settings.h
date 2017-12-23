@@ -414,8 +414,8 @@ struct SNeutrinoSettings
 		P_MSER_BOUQUET_EDIT,
 		P_MSER_RESET_CHANNELS,
 		P_MSER_RESTART,
-		P_MSER_RELOAD_PLUGINS,
 		P_MSER_RESTART_TUNER,
+		P_MSER_RELOAD_PLUGINS,
 		P_MSER_SERVICE_INFOMENU,
 		P_MSER_SOFTUPDATE,
 
@@ -429,8 +429,8 @@ struct SNeutrinoSettings
 
 		//movieplayer menu
 		P_MPLAYER_MBROWSER,
-		P_MPLAYER_FILEPLAY,
-		P_MPLAYER_INETPLAY,
+		P_MPLAYER_FILEPLAY_VIDEO,
+		P_MPLAYER_FILEPLAY_AUDIO,
 		P_MPLAYER_YTPLAY,
 
 		//feature keys
@@ -737,6 +737,8 @@ struct SNeutrinoSettings
 	int flashupdate_createimage_add_spare;
 	int flashupdate_createimage_add_kernel;
 
+	std::string	backup_dir;
+
 	std::string	update_dir;
 	std::string	update_dir_opkg;
 
@@ -933,7 +935,7 @@ struct SNeutrinoSettings
 		ITEM_GAMES = 20,
 		ITEM_SCRIPTS = 21,
 		ITEM_YOUTUBE = 22,
-		ITEM_FILEPLAY = 23,
+		ITEM_FILEPLAY_VIDEO = 23,
 		ITEM_TOOLS = 24,
 		ITEM_LUA = 25,
 		ITEM_HDDMENU = 26,
@@ -946,6 +948,7 @@ struct SNeutrinoSettings
 		ITEM_RASS = 33,
 		ITEM_TUNER_RESTART = 34,
 		ITEM_THREE_D_MODE = 35,
+		ITEM_FILEPLAY_AUDIO = 36,
 		ITEM_MAX // MUST be always the last in the list
 	} USER_ITEM;
 
@@ -1092,6 +1095,9 @@ class CScanSettings
 		int		sat_TP_delsys;
 		int		sat_TP_mod;
 		int		sat_TP_pilot;
+		std::string	sat_TP_pli;
+		std::string	sat_TP_plc;
+		int		sat_TP_plm;
 
 		std::string	cableName;
 		int		cable_TP_mod;
@@ -1110,6 +1116,7 @@ class CScanSettings
 		int		terrestrial_TP_hierarchy;
 		int		terrestrial_TP_transmit_mode;
 		int		terrestrial_TP_delsys;
+		std::string	terrestrial_TP_pli;
 
 		CScanSettings();
 

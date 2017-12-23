@@ -199,10 +199,8 @@ void CRCInput::open(bool recheck)
 	/* close() takes the lock, too... */
 	OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(mutex);
 
-	unsigned long evbit;
 	struct in_dev id;
 	DIR *dir;
-	struct dirent *dentry;
 	dir = opendir("/dev/input");
 	if (! dir) {
 		printf("[rcinput:%s] opendir failed: %m\n", __func__);
@@ -210,6 +208,8 @@ void CRCInput::open(bool recheck)
 	}
 
 #if !HAVE_GENERIC_HARDWARE
+	unsigned long evbit;
+	struct dirent *dentry;
 	while ((dentry = readdir(dir)) != NULL)
 	{
 		id.path = "/dev/input/" + std::string(dentry->d_name);
@@ -1738,6 +1738,10 @@ const char * CRCInput::getSpecialKeyName(const unsigned int key)
 				return "previous song";
 			case RC_bookmarks:
 				return "bookmarks";
+			case RC_program:
+				return "program";
+			case RC_playpause:
+				return "play / pause";
 			default:
 				printf("unknown key: %d (0x%x) \n", key, key);
 				return "unknown";

@@ -267,6 +267,9 @@ void CHintBox::addHintItem(const std::string& Text, const int& text_mode, const 
 	/* set required font and line height */
 	Font* item_font = !font_text ? hb_font : font_text;
 
+	/* set picon */
+	string picon = Picon;
+
 	/* pre define required info height depends of lines and minimal needed height*/
 	int line_breaks = CTextBox::getLines(Text);
 	int h_font = item_font->getHeight();
@@ -278,7 +281,7 @@ void CHintBox::addHintItem(const std::string& Text, const int& text_mode, const 
 
 	int txt_mode = text_mode;
 	/* remove CENTER mode if picon defined */
-	if (!Picon.empty() && (txt_mode & CTextBox::CENTER)){
+	if (!picon.empty() && (txt_mode & CTextBox::CENTER)){
 		txt_mode &= ~CTextBox::CENTER;
 	}
 
@@ -315,7 +318,7 @@ void CHintBox::addHintItem(const std::string& Text, const int& text_mode, const 
 								color_text);
 
 	/* define picon and disable bg */
-	info_box->setPicture(Picon);
+	info_box->setPicture(picon);
 	info_box->doPaintBg(false);
 
 	/* recalculate new hintbox dimensions and position*/

@@ -900,7 +900,7 @@ int CChannelList::show()
 			moveChannelToBouquet();
 		}
 #ifdef ENABLE_PIP
-		else if (!empty && ((msg == CRCInput::RC_play) || (msg == (neutrino_msg_t) g_settings.key_pip_close))) {
+		else if (!empty && ((msg == CRCInput::RC_play) || (msg == CRCInput::RC_playpause) || (msg == (neutrino_msg_t) g_settings.key_pip_close))) {
 			if(SameTP()) {
 				if (CZapit::getInstance()->GetPipChannelID() == (*chanlist)[selected]->getChannelID()) {
 					g_Zapit->stopPip();
@@ -1501,7 +1501,10 @@ void CChannelList::virtual_zap_mode(bool up)
 		g_RCInput->getMsg(&msg, &data, 15*10); // 15 seconds, not user changable
 
 		if ((msg == CRCInput::RC_left) || (msg == CRCInput::RC_right)) {
-			channel = bouquetList->Bouquets[bactive]->channelList->getPrevNextChannel(msg, sl);
+			if (!bouquetList->Bouquets.empty())
+				channel = bouquetList->Bouquets[bactive]->channelList->getPrevNextChannel(msg, sl);
+			else
+				channel = CNeutrinoApp::getInstance()->channelList->getPrevNextChannel(msg, sl);
 			bactive = bouquetList->getActiveBouquetNumber();
 		}
 		else if (msg == CRCInput::RC_up || msg == CRCInput::RC_down) {

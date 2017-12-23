@@ -481,8 +481,9 @@ void CMovieBrowser::initGlobalSettings(void)
 	m_settings.browserRowWidth[7] = m_defaultRowWidth[m_settings.browserRowItem[7]];
 	m_settings.browserRowWidth[8] = m_defaultRowWidth[m_settings.browserRowItem[8]];
 
-	m_settings.ts_only = 0;
 	m_settings.browserAdditional = 0;
+
+	m_settings.ts_only = 0;
 	m_settings.ytmode = cYTFeedParser::MOST_POPULAR;
 	m_settings.ytorderby = cYTFeedParser::ORDERBY_PUBLISHED;
 	m_settings.ytresults = 10;
@@ -2238,7 +2239,7 @@ bool CMovieBrowser::onButtonPressBrowserList(neutrino_msg_t msg)
 		scrollBrowserItem(false, true);
 	else if ((msg == (neutrino_msg_t)g_settings.key_pagedown) || (msg == CRCInput::RC_right))
 		scrollBrowserItem(true, true);
-	else if (msg == CRCInput::RC_play)
+	else if (msg == CRCInput::RC_play || msg == CRCInput::RC_playpause)
 		markItem(m_pcBrowser);
 	else
 		result = false;
@@ -2262,7 +2263,7 @@ bool CMovieBrowser::onButtonPressLastPlayList(neutrino_msg_t msg)
 		m_pcLastPlay->scrollPageUp(1);
 	else if (msg == (neutrino_msg_t)g_settings.key_pagedown)
 		m_pcLastPlay->scrollPageDown(1);
-	else if (msg == CRCInput::RC_play)
+	else if (msg == CRCInput::RC_play || msg == CRCInput::RC_playpause)
 		markItem(m_pcLastPlay);
 	else
 		result = false;
@@ -2286,7 +2287,7 @@ bool CMovieBrowser::onButtonPressLastRecordList(neutrino_msg_t msg)
 		m_pcLastRecord->scrollPageUp(1);
 	else if (msg == (neutrino_msg_t)g_settings.key_pagedown)
 		m_pcLastRecord->scrollPageDown(1);
-	else if (msg == CRCInput::RC_play)
+	else if (msg == CRCInput::RC_play || msg == CRCInput::RC_playpause)
 		markItem(m_pcLastRecord);
 	else
 		result = false;

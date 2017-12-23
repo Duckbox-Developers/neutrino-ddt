@@ -830,7 +830,7 @@ void CControlAPI::InfoCGI(CyhookHandler *hh)
 		if (hh->ParamList["1"] == "streaminfo")		// print streaminfo
 			SendStreamInfo(hh);
 		else if (hh->ParamList["1"] == "version")	// send version file
-			hh->SendFile(TARGET_PREFIX "/.version");
+			hh->SendFile("/.version");
 		else if (hh->ParamList["1"] == "httpdversion")	// print httpd version typ (just for compatibility)
 			hh->Write("3");
 		else if (hh->ParamList["1"] == "nhttpd_version")// print nhttpd version
@@ -2060,7 +2060,7 @@ void CControlAPI::EpgCGI(CyhookHandler *hh)
 //-----------------------------------------------------------------------------
 void CControlAPI::VersionCGI(CyhookHandler *hh)
 {
-	hh->SendFile(TARGET_PREFIX "/.version");
+	hh->SendFile("/.version");
 }
 //-----------------------------------------------------------------------------
 void CControlAPI::ReloadNeutrinoSetupCGI(CyhookHandler *hh)

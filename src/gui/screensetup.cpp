@@ -315,6 +315,9 @@ int CScreenSetup::exec(CMenuTarget* parent, const std::string &)
 
 				if (g_InfoViewer) /* recalc infobar position */
 					g_InfoViewer->start();
+				if (CNeutrinoApp::getInstance()->channelList)
+					CNeutrinoApp::getInstance()->channelList->ResetModules();
+
 				loop = false;
 				break;
 			}

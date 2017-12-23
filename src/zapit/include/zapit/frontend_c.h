@@ -154,6 +154,7 @@ class CFrontend
 
 		uint32_t			deliverySystemMask;
 		uint32_t			forcedSystemMask;
+		bool				isMultistream;
 		//fe_delivery_system_t deliverySystems[MAX_DELSYS];
 		//uint32_t numDeliverySystems;
 		t_channel_id		channel_id;
@@ -188,6 +189,7 @@ class CFrontend
 
 		~CFrontend(void);
 
+		static fe_pls_mode_t		getPLSMode(const uint8_t pls_mode);
 		static fe_code_rate_t		getCodeRate(const uint8_t fec_inner, delivery_system_t delsys);
 		static fe_hierarchy_t		getHierarchy(const uint8_t hierarchy);
 		static fe_transmit_mode_t	getTransmissionMode(const uint8_t transmission_mode);
@@ -246,7 +248,7 @@ class CFrontend
 		bool				tuneChannel(CZapitChannel *channel, bool nvod);
 		bool				retuneChannel(void);
 
-		t_channel_id		getChannelID(void) { return channel_id; }
+		t_channel_id			getChannelID(void) { return channel_id; }
 		void				setChannelID(t_channel_id ID) { channel_id = ID; }
 
 		fe_code_rate_t 			getCFEC ();
