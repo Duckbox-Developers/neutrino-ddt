@@ -501,15 +501,6 @@ bool CUserMenu::showUserMenu(neutrino_msg_t msg)
 			break;
 		}
 #endif
-		case SNeutrinoSettings::ITEM_RASS:
-		{
-			if (!(CNeutrinoApp::getInstance()->getMode() == NeutrinoModes::mode_radio && g_Radiotext && g_Radiotext->haveRASS()))
-				continue;
-			keyhelper.get(&key,&icon);
-			menu_item = new CMenuForwarder(LOCALE_RASS_HEAD, true, NULL, neutrino, "rass", key, icon);
-			menu_item->setHint(NEUTRINO_ICON_HINT_RASS, LOCALE_MENU_HINT_RASS);
-			break;
-		}
 #if !HAVE_SPARK_HARDWARE
 		case SNeutrinoSettings::ITEM_CAM:
 		{

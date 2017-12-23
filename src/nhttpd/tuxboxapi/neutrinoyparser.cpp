@@ -481,7 +481,7 @@ std::string CNeutrinoYParser::func_get_bouquets_with_epg(CyhookHandler *hh, std:
 				, channel->getName().c_str()
 			);
 
-		yresult += string_printf("\n&nbsp;&nbsp;<a href=\"/control/build_playlist?id="PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS"\"><img src=\"/images/vlc.png\" alt=\"VLC-Link\" style=\"border: 0px\" /></a>",channel->getChannelID());
+		yresult += string_printf("\n&nbsp;&nbsp;<a href=\"/control/build_playlist?id=" PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS "\"><img src=\"/images/vlc.png\" alt=\"VLC-Link\" style=\"border: 0px\" /></a>",channel->getChannelID());
 
 		yresult += "</td></tr></table>\n</td>\n</tr>\n";
 

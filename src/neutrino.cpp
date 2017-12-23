@@ -583,7 +583,6 @@ int CNeutrinoApp::loadSetup(const char * fname)
 
 	g_settings.infobar_show_tuner = configfile.getInt32("infobar_show_tuner", 1 );
 	g_settings.radiotext_enable = configfile.getBool("radiotext_enable"          , false);
-	g_settings.radiotext_rass_dir = configfile.getString("radiotext_rass_dir", "/tmp/cache");
 	//audio
 	g_settings.audio_AnalogMode = configfile.getInt32( "audio_AnalogMode", 0 );
 	g_settings.audio_DolbyDigital    = configfile.getBool("audio_DolbyDigital"   , false);
@@ -1392,7 +1391,6 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32("infobar_show_dd_available"  , g_settings.infobar_show_dd_available  );
 	configfile.setInt32("infobar_show_tuner"  , g_settings.infobar_show_tuner  );
 	configfile.setBool("radiotext_enable"          , g_settings.radiotext_enable);
-	configfile.setString("radiotext_rass_dir", g_settings.radiotext_rass_dir);
 	//audio
 	configfile.setInt32( "audio_AnalogMode", g_settings.audio_AnalogMode );
 	configfile.setBool("audio_DolbyDigital"   , g_settings.audio_DolbyDigital   );
@@ -2368,10 +2366,8 @@ void CNeutrinoApp::InitSectiondClient()
 #include <cs_frontpanel.h>
 #endif
 
-bool is_wakeup()
+void wake_up(bool &wakeup)
 {
-	bool wakeup = false;
-
 #if HAVE_COOL_HARDWARE
 #ifndef FP_IOCTL_CLEAR_WAKEUP_TIMER
 #define FP_IOCTL_CLEAR_WAKEUP_TIMER 10
@@ -2423,8 +2419,6 @@ bool is_wakeup()
 		if (my_system(NEUTRINO_LEAVE_DEEPSTANDBY_SCRIPT) != 0)
 			perror(NEUTRINO_LEAVE_DEEPSTANDBY_SCRIPT " failed");
 	}
-
-	return wakeup;
 }
 
 int CNeutrinoApp::run(int argc, char **argv)
@@ -2670,7 +2664,7 @@ TIMER_START();
 	time_t timerd_wait = time_monotonic_ms();
 	while (!timer_wakeup)
 		usleep(100);
-	dprintf(DEBUG_NORMAL, "had to wait %ld ms for timerd start...\n", time_monotonic_ms() - timerd_wait);
+	dprintf(DEBUG_NORMAL, "had to wait %" PRId64 " ms for timerd start...\n", time_monotonic_ms() - timerd_wait);
 	timer_wakeup = timer_wakup_real;
 	InitTimerdClient();
 
@@ -4841,13 +4835,6 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 		frameBuffer->Clear();
 		CMediaPlayerMenu * media = CMediaPlayerMenu::getInstance();
 		media->exec(NULL, actionKey);
-		return menu_return::RETURN_EXIT_ALL;
-	}
-	else if(actionKey=="rass") {
-		frameBuffer->Clear();
-		CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
-		if (g_Radiotext)
-			g_Radiotext->RASS_interactive_mode();
 		return menu_return::RETURN_EXIT_ALL;
 	}
 	else if(actionKey=="restart") {

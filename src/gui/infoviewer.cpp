@@ -1108,7 +1108,7 @@ void CInfoViewer::loop(bool show_dot)
 		} else if ((msg == NeutrinoMessages::EVT_TIMER) && (data == sec_timer_id)) {
 			// doesn't belong here, but easiest way to check for a change ...
 			if (is_visible && showButtonBar)
-				infoViewerBB->showIcon_CA_Status(0);
+				infoViewerBB->paint_ca_icons(0);
 			showSNR ();
 			if (timeset)
 				clock->paint(CC_SAVE_SCREEN_NO);
