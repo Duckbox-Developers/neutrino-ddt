@@ -137,7 +137,7 @@ int CSettingsManager::exec(CMenuTarget* parent, const std::string &actionKey)
 
 		struct statfs s;
 		int ret = ::statfs(g_settings.backup_dir.c_str(), &s);
-		if (ret == 0 && s.f_type != 0x72b6L) /*jffs2*/
+		if(ret == 0 /*&& s.f_type != 0x72b6L*/) /*jffs2*/
 		{
 			CHintBox * hintBox = new CHintBox(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_SETTINGS_BACKUP));
 			hintBox->paint();
