@@ -2424,6 +2424,7 @@ void wake_up(bool &wakeup)
 int CNeutrinoApp::run(int argc, char **argv)
 {
 	set_threadname("CNeutrinoApp::run");
+	neutrino_start_time = time_monotonic();
 
 	puts("[neutrino] executing " NEUTRINO_APP_START_SCRIPT ".");
 	if (my_system(NEUTRINO_APP_START_SCRIPT) != 0)

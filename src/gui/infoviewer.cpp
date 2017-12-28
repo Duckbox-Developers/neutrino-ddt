@@ -1739,10 +1739,10 @@ void CInfoViewer::display_Info(const char *current, const char *next,
 
 	int currTimeW = 0;
 	int nextTimeW = 0;
-	if (runningRest)
-		currTimeW = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO]->getRenderWidth(runningRest)*2;
+	if (runningRest) /* 10 is the space between title and time, might be good if this would be scaled...  */
+		currTimeW = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO]->getRenderWidth(runningRest) + 10;
 	if (nextDuration)
-		nextTimeW = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO]->getRenderWidth(nextDuration)*2;
+		nextTimeW = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO]->getRenderWidth(nextDuration)+ 10;
 	int currTimeX = BoxEndX - currTimeW - 10;
 	int nextTimeX = BoxEndX - nextTimeW - 10;
 
@@ -1753,9 +1753,9 @@ void CInfoViewer::display_Info(const char *current, const char *next,
 	//current event
 	if (current && update_current){
 		if (txt_cur_event == NULL)
-			txt_cur_event = new CComponentsTextTransp(NULL, xStart, CurrInfoY - height, currTimeX - xStart - 5, height);
+			txt_cur_event = new CComponentsTextTransp(NULL, xStart, CurrInfoY - height, currTimeX - xStart, height);
 		else
-			txt_cur_event->setDimensionsAll(xStart, CurrInfoY - height, currTimeX - xStart - 5, height);
+			txt_cur_event->setDimensionsAll(xStart, CurrInfoY - height, currTimeX - xStart, height);
 
 		txt_cur_event->setText(current, CTextBox::NO_AUTO_LINEBREAK, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO], colored_event_C ? COL_COLORED_EVENTS_TEXT : COL_INFOBAR_TEXT);
 		if (txt_cur_event->isPainted())
@@ -1789,9 +1789,9 @@ void CInfoViewer::display_Info(const char *current, const char *next,
 	if (next && update_next)
 	{
 		if (txt_next_event == NULL)
-			txt_next_event = new CComponentsTextTransp(NULL, xStart, NextInfoY, nextTimeX - xStart - 5, height);
+			txt_next_event = new CComponentsTextTransp(NULL, xStart, NextInfoY, nextTimeX - xStart, height);
 		else
-			txt_next_event->setDimensionsAll(xStart, NextInfoY, nextTimeX - xStart - 5, height);
+			txt_next_event->setDimensionsAll(xStart, NextInfoY, nextTimeX - xStart, height);
 		txt_next_event->setText(next, CTextBox::NO_AUTO_LINEBREAK, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO], colored_event_N ? COL_COLORED_EVENTS_TEXT : COL_INFOBAR_TEXT);
 		if (txt_next_event->isPainted())
 			txt_next_event->hide();

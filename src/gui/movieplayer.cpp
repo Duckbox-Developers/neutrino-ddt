@@ -374,13 +374,9 @@ void CMoviePlayerGui::restoreNeutrino()
 	printf("%s: restoring done.\n", __func__);fflush(stdout);
 }
 
-static bool running = false;
 int CMoviePlayerGui::exec(CMenuTarget * parent, const std::string & actionKey)
 {
 	printf("[movieplayer] actionKey=%s\n", actionKey.c_str());
-	if (running)
-		return menu_return::RETURN_EXIT_ALL;
-	running = true;
 
 	if (parent)
 		parent->hide();
@@ -476,7 +472,6 @@ int CMoviePlayerGui::exec(CMenuTarget * parent, const std::string & actionKey)
 		haveLuaInfoFunc = false;
 	}
 	else {
-		running = false;
 		return menu_return::RETURN_REPAINT;
 	}
 
@@ -508,8 +503,6 @@ int CMoviePlayerGui::exec(CMenuTarget * parent, const std::string & actionKey)
 	}
 
 	CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
-
-	running = false;
 
 	if (timeshift != TSHIFT_MODE_OFF){
 		timeshift = TSHIFT_MODE_OFF;
@@ -1400,7 +1393,6 @@ bool CMoviePlayerGui::PlayFileStart(void)
 #if 0
 	clearSubtitle();
 #endif
-	playback->SetTeletextPid(-1);
 
 	printf("IS FILE PLAYER: %s\n", is_file_player ?  "true": "false" );
 	playback->Open(is_file_player ? PLAYMODE_FILE : PLAYMODE_TS);
@@ -3178,7 +3170,7 @@ void CMoviePlayerGui::showSubtitle(neutrino_msg_data_t data)
 			size_t start = 0, end = 0;
 			/* split string with \N as newline */
 			std::string delim("\\N");
-			while ((end = str.find(delim, start)) != string::npos) {
+			while ((end = str.find(delim, start)) != std::string::npos) {
 				subtext.push_back(str.substr(start, end - start));
 				start = end + 2;
 			}
