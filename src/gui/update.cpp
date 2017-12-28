@@ -122,6 +122,7 @@ extern int allow_flash;
 #define MTD_DEVICE_OF_UPDATE_PART      "/dev/mtd3"
 #endif
 #endif
+#endif
 
 int pinghost  (const std::string &hostname, std::string *ip = NULL);
 
