@@ -263,7 +263,6 @@ if (i < 0) { fprintf(stderr, "RT %s: i < 0 (%d)\n", __FUNCTION__, i); break; }
 									have_radiotext = true;
 									/* fall through */
 								case 0x46:			// RTplus-Tags
-								case 0xda:			// RASS
 								case 0x07:			// PTY
 								case 0x3e:			// PTYN
 								case 0x02:			// PS
@@ -319,8 +318,6 @@ if (i < 0) { fprintf(stderr, "RT %s: i < 0 (%d)\n", __FUNCTION__, i); break; }
 									if (S_Verbose >= 2)
 										printf("(RDS-MEC '%02x') -> RDS_PsPtynDecode - %d\n", mec, index);
 									RDS_PsPtynDecode(false, mtext, index);	// PS
-									break;
-								case 0xda:
 									break;
 								}
 							}
