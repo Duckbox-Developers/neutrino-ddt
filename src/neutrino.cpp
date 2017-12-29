@@ -901,7 +901,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.flashupdate_createimage_add_spare  = configfile.getInt32( "flashupdate_createimage_add_spare",  0);
 	g_settings.flashupdate_createimage_add_kernel = configfile.getInt32( "flashupdate_createimage_add_kernel", 1);
 
-	g_settings.image_settings_backup_path = configfile.getString("image_settings_backup_path", "/swap/backup");
+
 	g_settings.softupdate_url_file      = configfile.getString("softupdate_url_file", "/var/etc/update.urls");
 	g_settings.softupdate_proxyserver   = configfile.getString("softupdate_proxyserver", "" );
 	g_settings.softupdate_proxyusername = configfile.getString("softupdate_proxyusername", "" );
@@ -927,7 +927,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.font_scaling_x = configfile.getInt32("font_scaling_x", 100);
 	g_settings.font_scaling_y = configfile.getInt32("font_scaling_y", 100);
 
-	g_settings.backup_dir = configfile.getString("backup_dir", "/media");
+	g_settings.backup_dir = configfile.getString("backup_dir", "/swap/backup");
 
 	g_settings.update_dir = configfile.getString("update_dir", "/tmp");
 	g_settings.update_dir_opkg = configfile.getString("update_dir_opkg", g_settings.update_dir);
@@ -1618,7 +1618,6 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32 ("softupdate_mode"          , g_settings.softupdate_mode          );
 	configfile.setBool("apply_kernel", g_settings.apply_kernel);
 	configfile.setBool("apply_settings", g_settings.apply_settings);
-	configfile.setString("image_settings_backup_path", g_settings.image_settings_backup_path);
 	configfile.setString("softupdate_url_file"      , g_settings.softupdate_url_file      );
 	configfile.setInt32 ("softupdate_name_mode_apply", g_settings.softupdate_name_mode_apply);
 	configfile.setInt32 ("softupdate_name_mode_backup", g_settings.softupdate_name_mode_backup);
