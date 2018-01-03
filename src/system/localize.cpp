@@ -48,10 +48,8 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#define ISO_639_TAB DATADIR "/iso-codes/iso-639.tab"
 //static const char * iso639filename = "/usr/share/iso-codes/iso-639.tab";
-//static const char * iso639filename = "/share/iso-codes/iso-639.tab";
-static const char * iso639filename = ISO_639_TAB;
+static const char * iso639filename = "/share/iso-codes/iso-639.tab";
 
 #define DEFAULT_LOCALE "english"
 
