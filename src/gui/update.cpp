@@ -86,8 +86,9 @@ extern int allow_flash;
 #define gTmpPath "/tmp/"
 #define gUserAgent "neutrino/softupdater 1.0"
 
-#if HAVE_DUCKBOX_HARDWARE
 #define LIST_OF_UPDATES_LOCAL_FILENAME "update.list"
+
+#if HAVE_DUCKBOX_HARDWARE
 #define UPDATE_LOCAL_FILENAME          "update.img"
 #define RELEASE_CYCLE                  "2.0"
 #define FILEBROWSER_UPDATE_FILTER      "img"
@@ -108,9 +109,16 @@ extern int allow_flash;
 #define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd999"
 #endif
 #else
+#if HAVE_SPARK_HARDWARE
+#define FILEBROWSER_UPDATE_FILTER      "zip"
+#define RELEASE_CYCLE                  "2.0"
+#define MTD_OF_WHOLE_IMAGE              999
+#define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd999"
+#else
 // TODO: move this mess below to libstb-hal
 #if HAVE_ARM_HARDWARE
 #define FILEBROWSER_UPDATE_FILTER      "tgz"
+#define RELEASE_CYCLE                  "2.0"
 #define MTD_OF_WHOLE_IMAGE              999
 #define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd999"
 #else
@@ -120,6 +128,7 @@ extern int allow_flash;
 #define MTD_DEVICE_OF_UPDATE_PART      "/dev/mtd0"
 #else
 #define MTD_DEVICE_OF_UPDATE_PART      "/dev/mtd3"
+#endif
 #endif
 #endif
 #endif
