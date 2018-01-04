@@ -2070,7 +2070,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 #if 0
 			clearSubtitle();
 #endif
-#if HAVE_SPARK_HARDWARE
+#if HAVE_SH4_HARDWARE
 		} else if (msg == CRCInput::RC_text) {
 			int pid = playback->GetFirstTeletextPid();
 			if (pid > -1) {
