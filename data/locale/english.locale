@@ -259,7 +259,7 @@ channellist.foot_sort_alpha Sorted[Alpha]
 channellist.foot_sort_chnum Sorted[Number]
 channellist.foot_sort_freq Sorted[Freq]
 channellist.foot_sort_sat Sorted[Sat]
-channellist.hdicon Show HD icon
+channellist.hdicon Show HD/UHD icon
 channellist.head All Services
 channellist.history History
 channellist.history_clear Clear History
@@ -1077,7 +1077,7 @@ menu.hint_channellist_epg_align EPG event align
 menu.hint_channellist_extended Show current event progress bar
 menu.hint_channellist_fonts Change channel list font sizes
 menu.hint_channellist_foot Show additional information\nin bottom box
-menu.hint_channellist_hdicon Show HD icons in channel list
+menu.hint_channellist_hdicon Show HD/UHD icons in channel list
 menu.hint_channellist_mode Use the selected channel list mode on startup if last mode is TV
 menu.hint_channellist_mode_radio Use the selected channel list mode on startup if last mode is Radio
 menu.hint_channellist_setup Configure channel list GUI options

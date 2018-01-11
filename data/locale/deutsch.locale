@@ -259,7 +259,7 @@ channellist.foot_sort_alpha Sortiert[alpha]
 channellist.foot_sort_chnum Sortiert[nummer]
 channellist.foot_sort_freq Sortiert[freq]
 channellist.foot_sort_sat Sortiert[sat]
-channellist.hdicon HD Icon anzeigen
+channellist.hdicon HD/UHD Icon anzeigen
 channellist.head Alle Kanäle
 channellist.history Verlauf
 channellist.history_clear Verlauf löschen
@@ -1077,7 +1077,7 @@ menu.hint_channellist_epg_align Legen Sie fest, wie der Text für das EPG in der
 menu.hint_channellist_extended Bei aktivierter Funktion wird vor dem Sendernamen ein Balken eingeblendet, der den Sendungsfortschritt anzeigt
 menu.hint_channellist_fonts Ändern Sie die Schriftgrößen in der Kanalliste
 menu.hint_channellist_foot Definiert, welche Informationen im unteren Sendungsfenster angezeigt werden sollen
-menu.hint_channellist_hdicon Zeigt HD Symbol in der Kanalliste
+menu.hint_channellist_hdicon Zeigt HD/UHD Symbol in der Kanalliste
 menu.hint_channellist_mode Wählen Sie die Start-Kanalliste im TV-Modus
 menu.hint_channellist_mode_radio Wählen Sie die Start-Kanalliste im Radio-Modus
 menu.hint_channellist_setup Wählen Sie die Anzeigeoptionen für die Kanalliste

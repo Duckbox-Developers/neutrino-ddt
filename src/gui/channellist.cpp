@@ -1958,6 +1958,8 @@ void CChannelList::paintItem(int pos, const bool firstpaint)
 		const char *hd_icon = NULL;
 		if(chan->isHD() && g_settings.channellist_hdicon)
 			hd_icon = NEUTRINO_ICON_RESOLUTION_HD;
+		if(chan->isUHD() && g_settings.channellist_hdicon)
+			hd_icon = NEUTRINO_ICON_RESOLUTION_UHD;
 
 		//set webtv icon
 		const char *webtv_icon = NULL;
