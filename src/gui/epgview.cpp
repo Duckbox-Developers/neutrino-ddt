@@ -1127,7 +1127,7 @@ int CEpgData::show(const t_channel_id channel_id, uint64_t a_id, time_t* a_start
 						printf("timerd not available\n");
 				}
 				break;
-			case CRCInput::RC_info:
+			case CRCInput::RC_green:
 			{
 				if (g_settings.tmdb_enabled)
 				{
@@ -1236,6 +1236,7 @@ int CEpgData::show(const t_channel_id channel_id, uint64_t a_id, time_t* a_start
 				showPos=0;
 				break;
 #else
+			case CRCInput::RC_info:
 			case CRCInput::RC_help:
 #endif
 
@@ -1467,18 +1468,18 @@ const struct button_label EpgButtons[][EpgButtonsMax] =
 {
 	{ // full view
 		{ NEUTRINO_ICON_BUTTON_RED, LOCALE_TIMERBAR_RECORDEVENT },
+		{ NEUTRINO_ICON_BUTTON_GREEN, LOCALE_CHANNELLIST_ADDITIONAL },
 		{ NEUTRINO_ICON_BUTTON_YELLOW, LOCALE_TIMERBAR_CHANNELSWITCH },
-		{ NEUTRINO_ICON_BUTTON_BLUE, LOCALE_EPGVIEWER_MORE_SCREENINGS_SHORT },
-		{ NEUTRINO_ICON_BUTTON_INFO_SMALL, LOCALE_CHANNELLIST_ADDITIONAL }
+		{ NEUTRINO_ICON_BUTTON_BLUE, LOCALE_EPGVIEWER_MORE_SCREENINGS_SHORT }
 	},
 	{ // w/o followscreenings
 		{ NEUTRINO_ICON_BUTTON_RED, LOCALE_TIMERBAR_RECORDEVENT },
-		{ NEUTRINO_ICON_BUTTON_YELLOW, LOCALE_TIMERBAR_CHANNELSWITCH },
-		{ NEUTRINO_ICON_BUTTON_INFO_SMALL, LOCALE_CHANNELLIST_ADDITIONAL }
+		{ NEUTRINO_ICON_BUTTON_GREEN, LOCALE_CHANNELLIST_ADDITIONAL },
+		{ NEUTRINO_ICON_BUTTON_YELLOW, LOCALE_TIMERBAR_CHANNELSWITCH }
 	},
 	{ // movieplayer mode
 		{ NEUTRINO_ICON_BUTTON_RED, LOCALE_EPG_SAVING },
-		{ NEUTRINO_ICON_BUTTON_INFO_SMALL, LOCALE_CHANNELLIST_ADDITIONAL }
+		{ NEUTRINO_ICON_BUTTON_GREEN, LOCALE_CHANNELLIST_ADDITIONAL }
 	}
 };
 
@@ -1523,9 +1524,9 @@ void CEpgData::showTimerEventBar (bool pshow, bool adzap, bool mp_info)
 		if (!fscr)
 			c--; // reduce blue button
 		if (g_settings.recording_type != CNeutrinoApp::RECORDING_OFF)
-			::paintButtons(x, y, w, c, EpgButtons[fscr ? 0 : 1], w, h, "", false, COL_MENUFOOT_TEXT, adzap ? adzap_button.c_str() : NULL, 1);
+			::paintButtons(x, y, w, c, EpgButtons[fscr ? 0 : 1], w, h, "", false, COL_MENUFOOT_TEXT, adzap ? adzap_button.c_str() : NULL, 2);
 		else
-			::paintButtons(x, y, w, c, &EpgButtons[fscr ? 0 : 1][1], w, h, "", false, COL_MENUFOOT_TEXT, adzap ? adzap_button.c_str() : NULL, 0);
+			::paintButtons(x, y, w, c, &EpgButtons[fscr ? 0 : 1][1], w, h, "", false, COL_MENUFOOT_TEXT, adzap ? adzap_button.c_str() : NULL, 1);
 	}
 
 	//frameBuffer->blit();
