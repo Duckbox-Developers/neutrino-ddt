@@ -508,7 +508,11 @@ void CChannelList::calcSize()
 
 	// calculate height (the infobox below mainbox is handled outside height)
 	if (g_settings.channellist_show_infobox)
+	{
 		info_height = 2*fheight + fdescrheight + 2*OFFSET_INNER_SMALL;
+		if (g_settings.channellist_foot == 2)
+			info_height = 2*fheight + 2*OFFSET_INNER_SMALL; 
+	}
 	else
 		info_height = 0;
 	height = minitv_is_active ? frameBuffer->getScreenHeight() : frameBuffer->getScreenHeightRel();
@@ -1646,8 +1650,8 @@ void CChannelList::paintDetails(int index)
 	else if (IS_WEBCHAN((*chanlist)[index]->getChannelID())) {
 		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->RenderString(x+ OFFSET_INNER_MID, ypos_a + fheight, full_width - 3*OFFSET_INNER_MID, (*chanlist)[index]->getDesc(), colored_event_C ? COL_COLORED_EVENTS_TEXT : COL_MENUCONTENTDARK_TEXT, 0, true);
 	}
-	if (g_settings.channellist_foot == 0 && IS_WEBCHAN((*chanlist)[index]->getChannelID())) {
-		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->RenderString(x+ OFFSET_INNER_MID, ypos_a + 2*fheight + fdescrheight, full_width - 3*OFFSET_INNER_MID, (*chanlist)[index]->getUrl(), COL_MENUCONTENTDARK_TEXT, 0, true);
+	if (IS_WEBCHAN((*chanlist)[index]->getChannelID())) {
+		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->RenderString(x+ OFFSET_INNER_MID, ypos_a + 2*fheight + (g_settings.channellist_foot == 0) ? 0 : fdescrheight, full_width - 3*OFFSET_INNER_MID, (*chanlist)[index]->getUrl(), COL_MENUCONTENTDARK_TEXT, 0, true);
 	} else if(g_settings.channellist_foot == 0) {
 		transponder t;
 		CServiceManager::getInstance()->GetTransponder((*chanlist)[index]->getTransponderId(), t);
