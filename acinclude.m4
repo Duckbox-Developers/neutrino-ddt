@@ -55,7 +55,7 @@ if test "$TARGET" = "native"; then
 	fi
 	targetprefix=$prefix
 	TARGET_PREFIX=$prefix
-#	AC_DEFINE_UNQUOTED(TARGET_PREFIX, "$TARGET_PREFIX", [The targets prefix])
+	AC_DEFINE_UNQUOTED(TARGET_PREFIX, "$TARGET_PREFIX", [The targets prefix])
 elif test "$TARGET" = "cdk"; then
 	AC_MSG_RESULT(cdk)
 
@@ -135,10 +135,10 @@ if test "$TARGET" = "cdk"; then
 	libdir="\${prefix}/lib"
 	mntdir="\${prefix}/mnt"
 	targetdatadir="\${TARGET_PREFIX}/share"
-	targetsysconfdir="\${TARGET_PREFIX}/etc"
-	targetlocalstatedir="\${TARGET_PREFIX}/var"
+	targetsysconfdir="\/etc"
+	targetlocalstatedir="\/var"
 	targetlibdir="\${TARGET_PREFIX}/lib"
-	targetmntdir="\${TARGET_PREFIX}/mnt"
+	targetmntdir="\/mnt"
 else
 	mntdir="/mnt" # hack
 fi
