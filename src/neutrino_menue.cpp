@@ -192,7 +192,7 @@ void CNeutrinoApp::InitMenuMain()
 	personalize.addItem(MENU_MAIN, mf, &g_settings.personalize[SNeutrinoSettings::P_MAIN_LUA]);
 #else
 	bool show_plugins = g_Plugins->hasPlugin(CPlugins::P_TYPE_NO_GAME);
-	mf = new CMenuForwarder(LOCALE_MAINMENU_LUA, show_plugins, NULL, new CPluginList(LOCALE_MAINMENU_LUA, CPlugins::P_TYPE_NO_GAME));
+	mf = new CMenuForwarder(LOCALE_PERSONALIZE_PLUGINS, show_plugins, NULL, new CPluginList(LOCALE_PERSONALIZE_PLUGINS, CPlugins::P_TYPE_NO_GAME));
 	mf->setHint(NEUTRINO_ICON_HINT_SCRIPTS, LOCALE_MENU_HINT_LUA);
 	personalize.addItem(MENU_MAIN, mf, &g_settings.personalize[SNeutrinoSettings::P_MAIN_LUA]);
 #endif
