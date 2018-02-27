@@ -303,7 +303,11 @@ int CBEBouquetWidget::exec(CMenuTarget* parent, const std::string & /*actionKey*
 					renameBouquet();
 			}
 		}
+#if HAVE_ARM_HARDWARE
+		else if (msg == CRCInput::RC_play)
+#else
 		else if (msg == CRCInput::RC_pause)
+#endif
 		{
 			if (selected < Bouquets->size()) /* Bouquets->size() might be 0 */
 			{
