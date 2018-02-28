@@ -3137,13 +3137,13 @@ void CNeutrinoApp::RealRun()
 				CMediaPlayerMenu * multimedia_menu = CMediaPlayerMenu::getInstance();
 				multimedia_menu->exec(NULL, "");
 			}
-			else if( msg == CRCInput::RC_video || msg == CRCInput::RC_playpause) {
+			else if( msg == CRCInput::RC_video) {
 				//open moviebrowser via media player menu object
 				if (g_settings.recording_type != CNeutrinoApp::RECORDING_OFF)
 					CMediaPlayerMenu::getInstance()->exec(NULL, "moviebrowser");
 				CVFD::getInstance()->UpdateIcons();
 			}
-			else if( msg == CRCInput::RC_play ) {
+			else if( msg == CRCInput::RC_play || msg == CRCInput::RC_playpause ) {
 				switch (g_settings.key_playbutton)
 				{
 				default:

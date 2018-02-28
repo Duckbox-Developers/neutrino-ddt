@@ -1651,7 +1651,6 @@ void CMoviePlayerGui::PlayFileLoop(void)
 		bool handle_key_play = true;
 		bool handle_key_pause = true;
 
-#if 0		//bisectional jumps
 		if (g_settings.mpkey_play == g_settings.mpkey_pause)
 		{
 			if (playstate == CMoviePlayerGui::PLAY)
@@ -1660,6 +1659,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 				handle_key_pause = false;
 		}
 
+#if 0		//bisectional jumps
 		if (bisection_loop > -1)
 			bisection_loop++;
 		if (bisection_loop > bisection_loop_max)
