@@ -523,31 +523,20 @@ void CMoviePlayerGui::updateLcd()
 	else
 		name = pretty_name;
 
-	switch (playstate) {
+	switch (playstate)
+	{
 		case CMoviePlayerGui::PAUSE:
-#if !defined(BOXMODEL_UFS910) \
- && !defined(BOXMODEL_UFS912) \
- && !defined(BOXMODEL_UFS913) \
- && !defined(BOXMODEL_UFS922) \
- && !defined(BOXMODEL_FORTIS_HDBOX) \
- && !defined(BOXMODEL_OCTAGON1008) \
- && !defined(BOXMODEL_HS7110) \
- && !defined(BOXMODEL_HS7810A) \
- && !defined(BOXMODEL_HS7119) \
- && !defined(BOXMODEL_HS7819) \
- && !defined(BOXMODEL_IPBOX9900) \
- && !defined(BOXMODEL_IPBOX99) \
- && !defined(BOXMODEL_IPBOX55)
-			lcd = "|| ";
-#else
-			lcd = "";
-#endif
-			if (speed < 0) {
+			if (speed < 0)
+			{
 				sprintf(tmp, "%dx<| ", abs(speed));
 				lcd = tmp;
-			} else if (speed > 0) {
+			}
+			else if (speed > 0)
+			{
 				sprintf(tmp, "%dx|> ", abs(speed));
 				lcd = tmp;
+			}
+			else
 #if !defined(BOXMODEL_UFS910) \
  && !defined(BOXMODEL_UFS912) \
  && !defined(BOXMODEL_UFS913) \
@@ -562,10 +551,8 @@ void CMoviePlayerGui::updateLcd()
  && !defined(BOXMODEL_IPBOX9900) \
  && !defined(BOXMODEL_IPBOX99) \
  && !defined(BOXMODEL_IPBOX55)
-			} else
 				lcd = "|| ";
 #else
-			} else
 				lcd = "";
 #endif
 			break;
@@ -597,6 +584,8 @@ void CMoviePlayerGui::updateLcd()
  && !defined(BOXMODEL_IPBOX99) \
  && !defined(BOXMODEL_IPBOX55)
 			lcd = "> ";
+#else
+			lcd = "";
 #endif
 			break;
 		default:
