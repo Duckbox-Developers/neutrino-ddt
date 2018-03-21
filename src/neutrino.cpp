@@ -2748,7 +2748,7 @@ void CNeutrinoApp::quickZap(int msg)
 	else
 		ret = channelList->quickZap(msg);
 	if (!ret) {
-		res = channelList->numericZap(g_settings.key_zaphistory);
+		res = channelList->showLiveBouquet(g_settings.key_zaphistory);
 		StartSubtitles(res < 0);
 	}
 }
@@ -2962,9 +2962,7 @@ void CNeutrinoApp::RealRun()
 				numericZap(msg);
 			}
 			else if (msg == (neutrino_msg_t) g_settings.key_zaphistory || msg == (neutrino_msg_t) g_settings.key_current_transponder) {
-				InfoClock->disableInfoClock();
-				numericZap(msg);
-				InfoClock->enableInfoClock();
+				showChannelList(msg);
 			}
 #ifdef SCREENSHOT
 			else if (msg == (neutrino_msg_t) g_settings.key_screenshot) {
@@ -3095,8 +3093,7 @@ void CNeutrinoApp::RealRun()
 				StartSubtitles();
 			}
 			else if (CRCInput::isNumeric(msg)) {
-				numericZap( msg );
-
+				numericZap(msg);
 			}
 			/* FIXME ??? */
 			else if (CRCInput::isNumeric(msg) && g_RemoteControl->director_mode ) {
@@ -3265,7 +3262,7 @@ int CNeutrinoApp::showChannelList(const neutrino_msg_t _msg, bool from_menu)
 			SetChannelMode(LIST_MODE_PROV);
 		nNewChannel = bouquetList->exec(true);
 	} else if (msg == (neutrino_msg_t) g_settings.key_zaphistory || msg == (neutrino_msg_t) g_settings.key_current_transponder) {
-		channelList->numericZap(msg);
+		channelList->showLiveBouquet(msg);
 	}
 _repeat:
 	printf("CNeutrinoApp::showChannelList: nNewChannel %d\n", nNewChannel);fflush(stdout);
