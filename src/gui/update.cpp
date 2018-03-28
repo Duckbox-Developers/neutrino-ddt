@@ -99,8 +99,8 @@ extern int allow_flash;
 #define MTD_OF_WHOLE_IMAGE              6
 #define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd6"
 #elif BOXMODEL_CUBEREVO_3000HD
-#define MTD_OF_WHOLE_IMAGE              5
-#define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd5"
+#define MTD_OF_WHOLE_IMAGE              6
+#define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd6"
 #elif BOXMODEL_UFS922
 #define MTD_OF_WHOLE_IMAGE              4
 #define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd4"
