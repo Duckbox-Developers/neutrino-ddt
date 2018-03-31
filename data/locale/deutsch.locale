@@ -787,6 +787,16 @@ glcd.color.magenta Magenta
 glcd.color.red Rot
 glcd.color.white Weiss
 glcd.color.yellow Gelb
+glcd.color.orange Orange
+glcd.color.light_gray Hellgrau
+glcd.color.gray Grau
+glcd.color.dark_gray Dunkelgrau
+glcd.color.dark_red Dunkelrot
+glcd.color.dark_green Dunkelgrün
+glcd.color.dark_blue Dunkelblau
+glcd.color.purple Purple
+glcd.color.mint Mint
+glcd.color.golden Golden
 glcd.enable GraphLCD aktiv
 glcd.font Schrift
 glcd.head GraphLCD
