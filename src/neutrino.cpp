@@ -64,16 +64,11 @@
 #include <driver/display.h>
 #include <driver/radiotext.h>
 #include <driver/scanepg.h>
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE || HAVE_ARM_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
 #include "gui/3dsetup.h"
 #endif
 
-<<<<<<< HEAD
-#if !HAVE_GENERIC_HARDWARE && !HAVE_ARM_HARDWARE
-#include "gui/3dsetup.h"
-=======
 #if !HAVE_GENERIC_HARDWARE && ! HAVE_ARM_HARDWARE
->>>>>>> 1400425... enable OSD 3D Modes for armbox
 #include "gui/psisetup.h"
 #endif
 
