@@ -130,7 +130,8 @@ neutrino_LDADD = \
 	-lutil \
 	-lOpenThreads \
 	-lrt -lpthread \
-	-ldl -lblkid
+	-ldl -lblkid \
+	-lz
 
 if ENABLE_GRAPHLCD
 neutrino_LDADD += -lglcddrivers -lglcdgraphics -lusb-1.0
