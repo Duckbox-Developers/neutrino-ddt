@@ -653,7 +653,11 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.osd_colorsettings_advanced_mode = configfile.getBool("osd_colorsettings_advanced_mode", false);
 
 #ifdef ENABLE_GRAPHLCD
+#ifdef BOXMODEL_VUSOLO4K
+	g_settings.glcd_enable = configfile.getInt32("glcd_enable", 1);
+#else
 	g_settings.glcd_enable = configfile.getInt32("glcd_enable", 0);
+#endif
 	g_settings.glcd_color_fg = configfile.getInt32("glcd_color_fg", GLCD::cColor::White);
 	g_settings.glcd_color_bg = configfile.getInt32("glcd_color_bg", GLCD::cColor::Black);
 	g_settings.glcd_color_bar = configfile.getInt32("glcd_color_bar", GLCD::cColor::Blue);
