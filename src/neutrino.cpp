@@ -674,7 +674,11 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.glcd_font = configfile.getString("glcd_font", FONTDIR "/neutrino.ttf");
 	g_settings.glcd_brightness = configfile.getInt32("glcd_brightness", 75);
 	g_settings.glcd_brightness_standby = configfile.getInt32("glcd_brightness_standby", 45);
+#ifdef BOXMODEL_VUSOLO4K
+	g_settings.glcd_scroll_speed = configfile.getInt32("glcd_scroll_speed", 2);
+#else
 	g_settings.glcd_scroll_speed = configfile.getInt32("glcd_scroll_speed", 5);
+#endif
 #endif
 
 	//personalize
