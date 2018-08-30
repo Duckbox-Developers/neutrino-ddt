@@ -53,13 +53,6 @@ static bool supportblendingflags = true;
 #define P(x, y) do { displaylist[ptr++] = x; displaylist[ptr++] = y; } while (0)
 #define C(x) P(x, 0)
 
-#ifdef BOXMODEL_VUSOLO4K
-#ifndef FBIO_BLIT
-#define FBIO_SET_MANUAL_BLIT _IOW('F', 0x21, __u8)
-#define FBIO_BLIT 0x22
-#endif
-#endif
-
 static int fb_fd = -1;
 static int exec_list(void);
 
@@ -101,18 +94,6 @@ CFbAccelARM::CFbAccelARM()
 	{
 		supportblendingflags = false;
 	}
-
-#ifdef BOXMODEL_VUSOLO4K
-	if (ioctl(fb_fd, FBIO_BLIT) < 0)
-		perror("FBIO_BLIT");
-	unsigned char tmp;
-	tmp = 1;
-	if (ioctl(fb_fd, FBIO_SET_MANUAL_BLIT, &tmp)<0)
-		perror("FBIO_SET_MANUAL_BLIT (on)");
-	tmp = 0;
-	if (ioctl(fb_fd, FBIO_SET_MANUAL_BLIT, &tmp)<0)
-		perror("FBIO_SET_MANUAL_BLIT (off)");
-#endif
 
 #ifdef FORCE_NO_BLENDING_ACCELERATION
 	/* hardware doesn't allow us to detect whether the opcode is working */
