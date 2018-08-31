@@ -196,6 +196,14 @@ void CSectionsdClient::readSIfromXML(const char * epgxmlname)
 	close_connection();
 }
 
+void CSectionsdClient::readSIfromIPTVXML(const char * url)
+{
+	send(sectionsd::readSIfromIPTVXML, (char*) url, strlen(url));
+
+	readResponse();
+	close_connection();
+}
+
 void CSectionsdClient::writeSI2XML(const char * epgxmlname)
 {
 	send(sectionsd::writeSI2XML, (char*) epgxmlname, strlen(epgxmlname));
