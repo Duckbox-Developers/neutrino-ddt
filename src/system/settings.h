@@ -349,7 +349,7 @@ struct SNeutrinoSettings
 
 	std::list<std::string> webtv_xml;
 	std::list<std::string> webradio_xml;
-	std::list<std::string> web_epg;
+	std::list<std::string> xmltv_xml; // see http://wiki.xmltv.org/
 
 #ifdef ENABLE_GRAPHLCD
 	int glcd_enable;
