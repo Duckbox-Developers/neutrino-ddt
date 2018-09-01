@@ -1144,12 +1144,13 @@ int CHDDMenuHandler::formatDevice(std::string dev)
 	sfdisk  = find_executable("sfdisk");
 	sgdisk  = find_executable("sgdisk");
 	tune2fs = find_executable("tune2fs");
-	if (! sfdisk.empty()) {
+
+	if (! sgdisk.empty()) {
+		snprintf(cmd, sizeof(cmd), "%s -Z -N 0 %s", sgdisk.c_str(), devname.c_str());
+	}
+	else if (! sfdisk.empty()) {
 		std::string conf = "echo 'label: gpt\n;' | ";
 		snprintf(cmd, sizeof(cmd), "%s %s -f %s", conf.c_str(), sfdisk.c_str(), devname.c_str());
-	}
-	else if (! sgdisk.empty()) {
-		snprintf(cmd, sizeof(cmd), "%s -Z -N 0 %s", sgdisk.c_str(), devname.c_str());
 	}
 	else if (! fdisk.empty()) {
 		snprintf(cmd, sizeof(cmd), "%s -u %s", fdisk.c_str(), devname.c_str());
