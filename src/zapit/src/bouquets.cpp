@@ -840,21 +840,20 @@ void CBouquetManager::loadWebchannels(int mode)
 
 	for (std::list<std::string>::iterator it = webchannels_xml->begin(); it != webchannels_xml->end(); ++it)
 	{
-		std::string url = (*it);
-		std::string tmp_name = tmpnam (NULL);
-		std::string extension = getFileExt(url);
-		tmp_name = tmp_name + "." + extension;
+		std::string _url = (*it);
+		std::string extension = getFileExt(_url);
+		std::string tmp_name = genTmpName(extension,8);
 		bool remove_tmp = false;
 
-		if (url.compare(0,1,"/") == 0)
-			tmp_name = url;
+		if (_url.compare(0,1,"/") == 0)
+			tmp_name = _url;
 		else {
-			if (::downloadUrl(url,tmp_name))
+			if (::downloadUrl(_url,tmp_name))
 				remove_tmp = true;}
 
 		if (!access(tmp_name.c_str(), R_OK))
 		{
-			INFO("Loading %s from %s ...", (mode == MODE_WEBTV) ? "webtv" : "webradio", url.c_str());
+			INFO("Loading %s from %s ...", (mode == MODE_WEBTV) ? "webtv" : "webradio", _url.c_str());
 
 			// check for extension
 			bool e2tv = false;

@@ -644,9 +644,8 @@ void *insertEventsfromHttp(void * data)
 		pthread_exit(NULL);
 	}
 	std::string url = (char *) data;
-	std::string tmp_name = tmpnam (NULL);
 	std::string url_ext = getFileExt(url);
-	tmp_name = tmp_name + "." + url_ext;
+	std::string tmp_name = genTmpName(url_ext,8);
 
 	int64_t now = time_monotonic_ms();
 

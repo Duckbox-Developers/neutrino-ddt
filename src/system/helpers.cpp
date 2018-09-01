@@ -1472,6 +1472,25 @@ bool parseJsonFromString(string& jData, Json::Value *root, string *errMsg)
 	return ret;
 }
 
+std::string genTmpName(std::string suffix,unsigned int length)
+{
+	const char alphanum[] =
+	    "0123456789"
+	    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	    "abcdefghijklmnopqrstuvwxyz";
+	int stringLength = sizeof(alphanum) - 1;
+	std::string Str;
+	unsigned int i;
+	Str.append("/tmp/");
+	for( i = 0; i < length; ++i)
+	{
+		Str += alphanum[rand() % stringLength];
+	}
+	Str += ".";
+	Str += suffix;
+	return Str;
+}
+
 // curl
 static void *myrealloc(void *ptr, size_t size)
 {
