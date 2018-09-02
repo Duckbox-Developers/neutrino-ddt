@@ -332,7 +332,7 @@ static SNeutrinoSettings::usermenu_t usermenu_default[] = {
 	{ CRCInput::RC_green,           "6",                                    "",     "green"         },
 	{ CRCInput::RC_yellow,          "7,31",                                 "",     "yellow"        },
 	{ CRCInput::RC_blue,            "12,11,20,21,19,14,29,30,15",           "",     "blue"          },
-#if HAVE_ARM_HARDWARE
+#if BOXMODEL_HD51
 	{ CRCInput::RC_playpause,       "9",                                    "",     "5"             },
 #else
 	{ CRCInput::RC_play,            "9",                                    "",     "5"             },
@@ -5163,7 +5163,7 @@ void CNeutrinoApp::loadKeys(const char * fname)
 	g_settings.mpkey_rewind = tconfig.getInt32( "mpkey.rewind", CRCInput::RC_rewind );
 	g_settings.mpkey_forward = tconfig.getInt32( "mpkey.forward", CRCInput::RC_forward );
 	g_settings.mpkey_stop = tconfig.getInt32( "mpkey.stop", CRCInput::RC_stop );
-#if HAVE_ARM_HARDWARE
+#if BOXMODEL_HD51
 	g_settings.mpkey_play = tconfig.getInt32( "mpkey.play", CRCInput::RC_playpause );
 	g_settings.mpkey_pause = tconfig.getInt32( "mpkey.pause", CRCInput::RC_playpause );
 #else
