@@ -5132,6 +5132,8 @@ void CNeutrinoApp::loadKeys(const char * fname)
 	g_settings.key_list_end = tconfig.getInt32( "key_list_end", (unsigned int)CRCInput::RC_nokey );
 #if BOXMODEL_HD51
 	g_settings.key_timeshift = tconfig.getInt32( "key_timeshift", CRCInput::RC_nokey ); // FIXME
+#elif BOXMODEL_VUSOLO4K
+	g_settings.key_timeshift = tconfig.getInt32( "key_timeshift", CRCInput::RC_playpause );
 #else
 	g_settings.key_timeshift = tconfig.getInt32( "key_timeshift", CRCInput::RC_pause );
 #endif
@@ -5165,6 +5167,9 @@ void CNeutrinoApp::loadKeys(const char * fname)
 	g_settings.mpkey_stop = tconfig.getInt32( "mpkey.stop", CRCInput::RC_stop );
 #if BOXMODEL_HD51
 	g_settings.mpkey_play = tconfig.getInt32( "mpkey.play", CRCInput::RC_playpause );
+	g_settings.mpkey_pause = tconfig.getInt32( "mpkey.pause", CRCInput::RC_playpause );
+#elif BOXMODEL_VUSOLO4K
+	g_settings.mpkey_play = tconfig.getInt32( "mpkey.play", CRCInput::RC_play );
 	g_settings.mpkey_pause = tconfig.getInt32( "mpkey.pause", CRCInput::RC_playpause );
 #else
 	g_settings.mpkey_play = tconfig.getInt32( "mpkey.play", CRCInput::RC_play );
