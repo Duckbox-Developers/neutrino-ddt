@@ -32,8 +32,8 @@
 #include <OpenThreads/ReentrantMutex>
 
 #ifdef BOXMODEL_VUSOLO4K
-#define MAX_FE          12
-#define MAX_ADAPTERS    12
+#define MAX_FE          16
+#define MAX_ADAPTERS    4
 #else
 #define MAX_FE          4
 #define MAX_ADAPTERS    4
