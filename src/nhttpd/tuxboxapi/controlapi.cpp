@@ -1573,7 +1573,7 @@ void CControlAPI::GetBouquetsCGI(CyhookHandler *hh)
 				channel_count = g_bouquetManager->Bouquets[i]->radioChannels.size() + g_bouquetManager->Bouquets[i]->tvChannels.size();
 		}
 		if (channel_count && (!g_bouquetManager->Bouquets[i]->bHidden || show_hidden) && (!fav || g_bouquetManager->Bouquets[i]->bUser)) {
-			bouquet = std::string(g_bouquetManager->Bouquets[i]->bFav ? g_Locale->getText(LOCALE_FAVORITES_BOUQUETNAME) : g_bouquetManager->Bouquets[i]->Name.c_str());
+			bouquet = std::string(g_bouquetManager->Bouquets[i]->bName.c_str());
 			if (encode)
 				bouquet = encodeString(bouquet); // encode (URLencode) the bouquetname
 			if (outType == plain)
@@ -1728,7 +1728,7 @@ void CControlAPI::epgDetailList(CyhookHandler *hh)
 
 		for (int i = start_bouquet; i < bouquet_size; i++) {
 			channels = mode == CZapitClient::MODE_RADIO ? g_bouquetManager->Bouquets[i]->radioChannels : g_bouquetManager->Bouquets[i]->tvChannels;
-			std::string bouquet = std::string(g_bouquetManager->Bouquets[i]->bFav ? g_Locale->getText(LOCALE_FAVORITES_BOUQUETNAME) : g_bouquetManager->Bouquets[i]->Name.c_str());
+			std::string bouquet = std::string(g_bouquetManager->Bouquets[i]->bName.c_str());
 			bouquet = encodeString(bouquet); // encode (URLencode) the bouquetname
 			std::string res_channels = "";
 

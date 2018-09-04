@@ -230,8 +230,8 @@ std::string  CNeutrinoYParser::func_get_bouquets_as_dropdown(CyhookHandler *, st
 		sel=(nr==(i+1)) ? "selected=\"selected\"" : "";
 		if(!channels.empty() && (!g_bouquetManager->Bouquets[i]->bHidden || do_show_hidden == "true"))
 			yresult += string_printf("<option value=%u %s>%s</option>\n", i + 1, sel.c_str(),
-				std::string(g_bouquetManager->Bouquets[i]->bFav ? g_Locale->getText(LOCALE_FAVORITES_BOUQUETNAME) :g_bouquetManager->Bouquets[i]->Name.c_str()).c_str());
-			//yresult += string_printf("<option value=%u %s>%s</option>\n", i + 1, sel.c_str(), (encodeString(std::string(g_bouquetManager->Bouquets[i]->Name.c_str()))).c_str());
+				std::string(g_bouquetManager->Bouquets[i]->bName.c_str()).c_str());
+			//yresult += string_printf("<option value=%u %s>%s</option>\n", i + 1, sel.c_str(), (encodeString(std::string(g_bouquetManager->Bouquets[i]->bName.c_str()))).c_str());
 	}
 	return yresult;
 }
@@ -259,7 +259,7 @@ std::string  CNeutrinoYParser::func_get_bouquets_as_templatelist(CyhookHandler *
 #else
 		if(!channels.empty() && (!g_bouquetManager->Bouquets[i]->bHidden || do_show_hidden == "true")) {
 #endif
-			yresult += string_printf(ytemplate.c_str(), i + 1, g_bouquetManager->Bouquets[i]->bFav ? g_Locale->getText(LOCALE_FAVORITES_BOUQUETNAME) : g_bouquetManager->Bouquets[i]->Name.c_str());
+			yresult += string_printf(ytemplate.c_str(), i + 1, g_bouquetManager->Bouquets[i]->bName.c_str());
 			yresult += "\r\n";
 		}
 	}
@@ -1213,9 +1213,9 @@ std::string  CNeutrinoYParser::func_bouquet_editor_main(CyhookHandler *hh, std::
 			yresult += string_printf(para.c_str(), classname, akt.c_str(),
 				i + 1, lock_action.c_str(), lock_img.c_str(), lock_alt.c_str(), //lock
 				i + 1, hidden_action.c_str(), hidden_img.c_str(), hidden_alt.c_str(), //hhidden
-				i + 1, bouquet->Name.c_str(), bouquet->Name.c_str(), //link
-				i + 1, bouquet->Name.c_str(), //rename
-				i + 1, bouquet->Name.c_str(), //delete
+				i + 1, bouquet->bName.c_str(), bouquet->bName.c_str(), //link
+				i + 1, bouquet->bName.c_str(), //rename
+				i + 1, bouquet->bName.c_str(), //delete
 				down_show.c_str(), i + 1, //down arrow
 				up_show.c_str(), i + 1); //up arrow
 		}
