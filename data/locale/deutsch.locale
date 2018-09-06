@@ -293,6 +293,8 @@ channellist.since seit
 channellist.start Start
 ci.check_live_slot CI-Slot auf Live-TV Nutzung prüfen
 ci.clock CI Takt (Mhz)
+ci.clock_high hoch
+ci.clock_normal normal
 ci.empty Kein CAM im Slot
 ci.ignore_msg CA Meldungen ignorieren
 ci.init_failed CAM-Init fehlgeschlagen

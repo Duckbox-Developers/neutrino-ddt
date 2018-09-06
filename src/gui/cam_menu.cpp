@@ -54,6 +54,12 @@
 #include <zapit/zapit.h>
 #include <driver/abstime.h>
 
+#define CI_CLOCK_OPTION_COUNT 2
+static const CMenuOptionChooser::keyval CI_CLOCK_OPTIONS[CI_CLOCK_OPTION_COUNT] = {
+	{ 6, LOCALE_CI_CLOCK_NORMAL },
+	{ 7, LOCALE_CI_CLOCK_HIGH }
+};
+
 void CCAMMenuHandler::init(void)
 {
 	hintBox = NULL;
@@ -112,7 +118,13 @@ int CCAMMenuHandler::doMainMenu()
 	int CiSlots = ca ? ca->GetNumberCISlots() : 0;
 	if(CiSlots) {
 		cammenu->addItem( new CMenuOptionChooser(LOCALE_CI_RESET_STANDBY, &g_settings.ci_standby_reset, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true));
+#if HAVE_ARM_HARDWARE
+		cammenu->addItem( new CMenuOptionChooser(LOCALE_CI_CLOCK, &g_settings.ci_clock, CI_CLOCK_OPTIONS, CI_CLOCK_OPTION_COUNT, true, this));
+#else
+#if !HAVE_SH4_HARDWARE
 		cammenu->addItem( new CMenuOptionNumberChooser(LOCALE_CI_CLOCK, &g_settings.ci_clock, true, 6, 12, this));
+#endif
+#endif
 	}
 	cammenu->addItem( new CMenuOptionChooser(LOCALE_CI_IGNORE_MSG, &g_settings.ci_ignore_messages, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true));
 	cammenu->addItem( new CMenuOptionChooser(LOCALE_CI_SAVE_PINCODE, &g_settings.ci_save_pincode, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this));
