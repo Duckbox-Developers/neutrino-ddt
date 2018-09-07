@@ -95,7 +95,7 @@ install_DATA += rc_ax_hd51.png \
 endif
 
 if BOXMODEL_VUSOLO4K
-install_DATA += rc_vusolo4k.jpg
+install_DATA += rc_vusolo4k.png
 endif
 
 if BOXTYPE_SPARK
