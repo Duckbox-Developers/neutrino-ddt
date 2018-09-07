@@ -527,10 +527,10 @@ start-block~remote
 		{=if-equal:{=var-get:boxtype=}~SPARK 7162~		{=include-block:Y_Blocks.txt;rc_spark_new=}~
 		{=if-equal:{=var-get:boxtype=}~AX-Technologies HD51~{=include-block:Y_Blocks.txt;rc_ax_hd51=}~
 		{=if-equal:{=var-get:boxtype=}~Mutant HD51~	{=include-block:Y_Blocks.txt;rc_mutant_hd51=}~
-
+		{=if-equal:{=var-get:boxtype=}~VU SOLO4K~	{=include-block:Y_Blocks.txt;rc_vusolo4k=}~
 
 		{=comment:fallback~=}				{=include-block:Y_Blocks.txt;rc_ufs910=}
-		=}=}=}=}=}=}=}=}=}=}=}=}=}=}
+		=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
 ~
 	{=if-equal:{=var-get:yfbtype=}~1~	{=include-block:Y_Blocks.txt;rc_cst_v1=}~
 	{=if-equal:{=var-get:yfbtype=}~2~	{=include-block:Y_Blocks.txt;rc_cst_v2=}~
@@ -542,12 +542,13 @@ start-block~remote
 	{=if-equal:{=var-get:yfbtype=}~8~	{=include-block:Y_Blocks.txt;rc_cst_v6=}~
 	{=if-equal:{=var-get:yfbtype=}~9~	{=include-block:Y_Blocks.txt;rc_ax_hd51=}~
 	{=if-equal:{=var-get:yfbtype=}~10~	{=include-block:Y_Blocks.txt;rc_mutant_hd51=}~
+	{=if-equal:{=var-get:yfbtype=}~11~	{=include-block:Y_Blocks.txt;rc_vusolo4k=}~
 	{=if-equal:{=var-get:yfbtype=}~-3~	{=include-block:Y_Blocks.txt;rc_ufs910=}~
 	{=if-equal:{=var-get:yfbtype=}~-2~	{=include-block:Y_Blocks.txt;rc_spark_old=}~
 	{=if-equal:{=var-get:yfbtype=}~-1~	{=include-block:Y_Blocks.txt;rc_spark_new=}~
 
 	{=comment:fallback~=}			{=include-block:Y_Blocks.txt;rc_ufs910=}
-	=}=}=}=}=}=}=}=}=}=}=}=}=}
+	=}=}=}=}=}=}=}=}=}=}=}=}=}=}
 =}
 end-block~remote
 
@@ -1154,3 +1155,56 @@ start-block~rc_mutant_hd51
 <area shape="rect" coords="124,554,148,570" href="javascript:rcsim('KEY_PAUSE')" />
 </map>
 end-block~rc_mutant_hd51
+
+# ------ Remote VU Solo 4K
+start-block~rc_vusolo4k
+<img src="images/rc_vusolo4k.png" usemap="#rc"/>
+<map name="rc" id="rc">
+<!--<area shape="circle" coords="33,28,15" id="113" alt="v1_mute" href="javascript:rcsim('KEY_POWER_TV');">-->
+<area shape="circle" coords="105,28,15" id ="116" alt="Power" href="javascript:rcsim('KEY_POWER');">
+<area shape="circle" coords="33,53,15" id ="388" alt="text" href="javascript:rcsim('KEY_TEXT');">
+<area shape="circle" coords="58,53,15" id ="370" alt="subtitle" href="javascript:rcsim('KEY_SUB');">
+<!--<area shape="circle" coords="82,53,15" id ="102" alt="v1_home" href="javascript:rcsim('KEY_HOME');">-->
+<!--<area shape="circle" coords="105,53,15" id ="107" alt="v1_end" href="javascript:rcsim('107');">-->
+<area shape="circle" coords="105,53,15" id ="107" alt="mute" href="javascript:rcsim('KEY_MUTE');">
+<area shape="circle" coords="38,79,15" id ="2" alt="1" href="javascript:rcsim('KEY_1');">
+<area shape="circle" coords="70,79,15" id ="3" alt="2" href="javascript:rcsim('KEY_2');">
+<area shape="circle" coords="102,79,15" id ="4" alt="3" href="javascript:rcsim('KEY_3');">
+<area shape="circle" coords="38,106,15" id ="5" alt="4" href="javascript:rcsim('KEY_4');">
+<area shape="circle" coords="70,106,15" id ="6" alt="5" href="javascript:rcsim('KEY_5');">
+<area shape="circle" coords="102,106,15" id ="7" alt="6" href="javascript:rcsim('KEY_6');">
+<area shape="circle" coords="38,133,15" id ="8" alt="7" href="javascript:rcsim('KEY_7');">
+<area shape="circle" coords="70,133,15" id ="9" alt="8" href="javascript:rcsim('KEY_8');">
+<area shape="circle" coords="102,133,15" id ="10" alt="9" href="javascript:rcsim('9');">
+<area shape="circle" coords="38,161,15" id ="412" alt="previous" href="javascript:rcsim('KEY_PREVIOUS');">
+<area shape="circle" coords="70,161,15" id ="11" alt="0" href="javascript:rcsim('KEY_0');">
+<area shape="circle" coords="102,161,15" id ="407" alt="next" href="javascript:rcsim('KEY_NEXT');">
+<area shape="circle" coords="33,186,15" id ="398" alt="red" href="javascript:rcsim('KEY_RED');">
+<area shape="circle" coords="58,186,15" id ="399" alt="green" href="javascript:rcsim('KEY_GREEN');">
+<area shape="circle" coords="82,186,15" id ="400" alt="yellow" href="javascript:rcsim('KEY_YELLOW');">
+<area shape="circle" coords="105,186,15" id ="401" alt="blue" href="javascript:rcsim('KEY_BLUE');">
+<area shape="circle" coords="70,213,15" id ="103" alt="up" href="javascript:rcsim('KEY_UP');">
+<area shape="circle" coords="70,283,15" id ="108" alt="down" href="javascript:rcsim('KEY_DOWN');">
+<area shape="circle" coords="35,248,15" id ="105" alt="left" href="javascript:rcsim('KEY_LEFT');">
+<area shape="circle" coords="105,248,15" id ="106" alt="right" href="javascript:rcsim('KEY_RIGHT');">
+<area shape="circle" coords="70,248,20" id ="352" alt="OK" href="javascript:rcsim('KEY_OK');">
+<area shape="circle" coords="40,307,15" id ="115" alt="volume up" href="javascript:rcsim('KEY_VOLUMEUP');">
+<area shape="circle" coords="40,338,13" id ="114" alt="volume down" href="javascript:rcsim('KEY_VOLUMEDOWN');">
+<area shape="circle" coords="70,310,15" id ="174" alt="exit" href="javascript:rcsim('KEY_HOME');">
+<area shape="circle" coords="70,334,15" id ="358" alt="epg" href="javascript:rcsim('KEY_INFO');"><!-- KEY_INFO = KEY_EPG -->
+<area shape="circle" coords="99,307,15" id ="402" alt="channelup" href="javascript:rcsim('KEY_PAGEUP');">
+<area shape="circle" coords="99,338,15" id ="403" alt="channeldown" href="javascript:rcsim('KEY_PAGEDOWN');">
+<area shape="circle" coords="36,362,15" id ="139" alt="menu" href="javascript:rcsim('KEY_MENU');">
+<area shape="circle" coords="59,362,15" id ="393" alt="videoaltlast" href="javascript:rcsim('KEY_FAVORITES');">
+<area shape="circle" coords="81,362,15" id ="392" alt="audio" href="javascript:rcsim('KEY_AUDIO');">
+<area shape="circle" coords="104,362,15" id ="138" alt="help" href="javascript:rcsim('KEY_HELP');">
+<area shape="circle" coords="36,390,15" id ="168" alt="rewind" href="javascript:rcsim('KEY_REWIND');">
+<area shape="circle" coords="59,390,15" id ="207" alt="play" href="javascript:rcsim('KEY_PLAY');">
+<area shape="circle" coords="81,390,15" id ="119" alt="pause" href="javascript:rcsim('KEY_PAUSE');">
+<area shape="circle" coords="104,390,15" id ="208" alt="forward" href="javascript:rcsim('KEY_FORWARD');">
+<area shape="circle" coords="36,422,15" id ="377" alt="tv" href="javascript:rcsim('KEY_TV');">
+<area shape="circle" coords="59,422,15" id ="167" alt="record" href="javascript:rcsim('KEY_RECORD');">
+<area shape="circle" coords="81,422,15" id ="128" alt="stop" href="javascript:rcsim('KEY_STOP');">
+<area shape="circle" coords="104,422,15" id ="385" alt="radio" href="javascript:rcsim('KEY_RADIO');">
+</map>
+end-block~rc_vusolo4k
