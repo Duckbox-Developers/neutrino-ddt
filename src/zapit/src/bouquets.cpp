@@ -928,10 +928,11 @@ void CBouquetManager::loadWebchannels(int mode)
 			{
 				std::ifstream infile;
 				char cLine[1024];
-				std::string desc;
+				std::string desc = "";
 				std::string title = "";
 				std::string group = "";
 				std::string epgid = "";
+				std::string alogo = "";
 				CZapitBouquet* pbouquet = NULL;
 
 				infile.open(tmp_name.c_str(), std::ifstream::in);
@@ -957,6 +958,7 @@ void CBouquetManager::loadWebchannels(int mode)
 						title = "";
 						group = "";
 						desc = "";
+						alogo = "";
 
 						if (iColon >= 0 && iComma >= 0 && iComma > iColon)
 						{
@@ -967,6 +969,7 @@ void CBouquetManager::loadWebchannels(int mode)
 							desc = ReadMarkerValue(strInfoLine, TVG_INFO_NAME_MARKER);
 							group = ReadMarkerValue(strInfoLine, GROUP_NAME_MARKER);
 							epgid = ReadMarkerValue(strInfoLine, TVG_INFO_ID_MARKER);
+							alogo = ReadMarkerValue(strInfoLine, TVG_INFO_LOGO_MARKER);
 						}
 
 						pbouquet = addBouquetIfNotExist((mode == MODE_WEBTV) ? "WebTV" : "WebRadio");
@@ -1009,6 +1012,8 @@ void CBouquetManager::loadWebchannels(int mode)
 								}
 								CZapitChannel * channel = new CZapitChannel(title.c_str(), chid, url, desc.c_str(), chid, epg_script.c_str(), mode);
 								CServiceManager::getInstance()->AddChannel(channel);
+								if (!alogo.empty())
+									channel->setAlternateLogo(dlTmpName(alogo));
 								channel->flags = CZapitChannel::UPDATED;
 								if (gbouquet)
 									gbouquet->addService(channel);
