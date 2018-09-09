@@ -3255,16 +3255,16 @@ void CControlAPI::xmltvepgCGI(CyhookHandler *hh)
 
 void CControlAPI::xmltvm3uCGI(CyhookHandler *hh)
 {
-    hh->outStart();
-    std::string result = "";
+	hh->outStart();
+	std::string result = "";
 
-    int mode = NeutrinoAPI->Zapit->getMode();
-    // build url
-    std::string url = "";
-    if(!hh->ParamList["host"].empty())
-        url = "http://"+hh->ParamList["host"];
-    else
-        url = "http://"+hh->HeaderList["Host"];
+	int mode = NeutrinoAPI->Zapit->getMode();
+	// build url
+	std::string url = "";
+	if (!hh->ParamList["host"].empty())
+		url = "http://" + hh->ParamList["host"];
+	else
+		url = "http://" + hh->HeaderList["Host"];
 
 	std::string lurl = url;
     /* strip off optional custom port */
@@ -3289,13 +3289,13 @@ void CControlAPI::xmltvm3uCGI(CyhookHandler *hh)
                 CZapitChannel * channel = chanlist[j];
 				std::string bouq_name = g_bouquetManager->Bouquets[i]->Name;
 				std::string chan_id_short = string_printf(PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS, channel->getChannelID() & 0xFFFFFFFFFFFFULL);
-                result += "#EXTINF:-1 tvg-id=\""+chan_id_short+"\" tvg-logo=\""+lurl+NeutrinoAPI->getLogoFile(channel->getChannelID())+"\" group-title=\""+bouq_name+"\","+channel->getName()+"\n";
-                result += url+string_printf(PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS, channel->getChannelID())+"\n";
-            }
-        }
-    }
+				result += "#EXTINF:-1 tvg-id=\"" + chan_id_short + "\" tvg-logo=\"" + lurl + NeutrinoAPI->getLogoFile(channel->getChannelID()) + "\" group-title=\"" + bouq_name + "\"," + channel->getName() + "\n";
+				result += url + string_printf(PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS, channel->getChannelID()) + "\n";
+			}
+		}
+	}
 
-    hh->SendResult(result);
+	hh->SendResult(result);
 }
 //-------------------------------------------------------------------------
 #if 0
