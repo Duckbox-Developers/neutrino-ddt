@@ -3259,37 +3259,38 @@ void CControlAPI::xmltvm3uCGI(CyhookHandler *hh)
 	std::string result = "";
 
 	int mode = NeutrinoAPI->Zapit->getMode();
-	// build url
-	std::string url = "";
+
+	std::string host = "";
 	if (!hh->ParamList["host"].empty())
-		url = "http://" + hh->ParamList["host"];
+		host = "http://" + hh->ParamList["host"];
 	else
-		url = "http://" + hh->HeaderList["Host"];
+		host = "http://" + hh->HeaderList["Host"];
 
-	std::string lurl = url;
-    /* strip off optional custom port */
-    if (url.rfind(":") != 4)
-        url = url.substr(0, url.rfind(":"));
+	// build url
+	std::string url = host;
+	/* strip off optional custom port */
+	if (url.rfind(":") != 4)
+		url = url.substr(0, url.rfind(":"));
 
-    url += ":31339/id=";
+	url += ":31339/id=";
 
-    result += "#EXTM3U\n";
+	result += "#EXTM3U\n";
 
-    for (int i = 0; i < (int) g_bouquetManager->Bouquets.size(); i++)
-    {
-        ZapitChannelList chanlist;
-        if (mode == CZapitClient::MODE_RADIO)
-            g_bouquetManager->Bouquets[i]->getRadioChannels(chanlist);
-        else
-            g_bouquetManager->Bouquets[i]->getTvChannels(chanlist);
-        if(!chanlist.empty() && !g_bouquetManager->Bouquets[i]->bHidden && g_bouquetManager->Bouquets[i]->bUser)
-        {
-            for(int j = 0; j < (int) chanlist.size(); j++)
-            {
-                CZapitChannel * channel = chanlist[j];
-				std::string bouq_name = g_bouquetManager->Bouquets[i]->Name;
+	for (int i = 0; i < (int) g_bouquetManager->Bouquets.size(); i++)
+	{
+		ZapitChannelList chanlist;
+		if (mode == CZapitClient::MODE_RADIO)
+			g_bouquetManager->Bouquets[i]->getRadioChannels(chanlist);
+		else
+			g_bouquetManager->Bouquets[i]->getTvChannels(chanlist);
+		if (!chanlist.empty() && !g_bouquetManager->Bouquets[i]->bHidden && g_bouquetManager->Bouquets[i]->bUser)
+		{
+			for (int j = 0; j < (int) chanlist.size(); j++)
+			{
+				CZapitChannel *channel = chanlist[j];
+				std::string bouq_name = g_bouquetManager->Bouquets[i]->bName;
 				std::string chan_id_short = string_printf(PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS, channel->getChannelID() & 0xFFFFFFFFFFFFULL);
-				result += "#EXTINF:-1 tvg-id=\"" + chan_id_short + "\" tvg-logo=\"" + lurl + NeutrinoAPI->getLogoFile(channel->getChannelID()) + "\" group-title=\"" + bouq_name + "\"," + channel->getName() + "\n";
+				result += "#EXTINF:-1 tvg-id=\"" + chan_id_short + "\" tvg-logo=\"" + host + NeutrinoAPI->getLogoFile(channel->getChannelID()) + "\" group-title=\"" + bouq_name + "\"," + channel->getName() + "\n";
 				result += url + string_printf(PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS, channel->getChannelID()) + "\n";
 			}
 		}
