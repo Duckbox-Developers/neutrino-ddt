@@ -617,6 +617,15 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 				goto found;
 		}
 	}
+	if (cc) {
+		if (!cc->getAlternateLogo().empty())
+		{
+			std::string lname = dlTmpName(cc->getAlternateLogo());
+			tmp = lname;
+			cc->setAlternateLogo(lname);
+			goto found;
+		}
+	}
 	logo_map[channel_id].name = "";
 	pthread_mutex_unlock(&logo_map_mutex);
 	return false;
