@@ -157,6 +157,7 @@ inline bool file_exists(const std::string file) { return file_exists(file.c_str(
 std::string readFile(std::string file);
 
 std::string genTmpName(std::string suffix,unsigned int length);
+std::string dlTmpName(std::string url);
 
 // curl
 struct MemoryStruct {
