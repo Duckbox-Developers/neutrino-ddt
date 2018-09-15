@@ -913,7 +913,7 @@ void CBouquetManager::loadWebchannels(int mode)
 						CZapitBouquet* gbouquet = pbouquet;
 						if (genre)
 						{
-						std::string bname = prov ? std::string(std::string(prov) + " ") + genre : genre;
+							std::string bname = prov ? std::string(std::string(prov) + " ") + genre : genre;
 							gbouquet = addBouquetIfNotExist(bname);
 							if (mode == MODE_WEBTV)
 								gbouquet->bWebtv = true;
