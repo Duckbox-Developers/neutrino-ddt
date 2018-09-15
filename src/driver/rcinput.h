@@ -72,6 +72,10 @@
 #define KEY_BLUE         0x191
 #endif
 
+#ifndef KEY_PLAYPAUSE_LONG
+#define KEY_PLAYPAUSE_LONG 0X4A4
+#endif
+
 #ifndef KEY_GAMES
 #define KEY_GAMES        0x1a1   /* Media Select Games */
 #endif
@@ -277,6 +281,9 @@ class CRCInput
 			RC_bookmarks	= KEY_BOOKMARKS,
 			RC_program	= KEY_PROGRAM,
 			RC_playpause	= KEY_PLAYPAUSE,
+#ifdef BOXMODEL_HD51
+			RC_playpause_long = KEY_PLAYPAUSE_LONG,
+#endif
 
 			RC_power_on	= KEY_POWERON,
 			RC_power_off	= KEY_POWEROFF,

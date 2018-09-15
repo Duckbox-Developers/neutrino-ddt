@@ -5134,7 +5134,7 @@ void CNeutrinoApp::loadKeys(const char * fname)
 	g_settings.key_list_start = tconfig.getInt32( "key_list_start", (unsigned int)CRCInput::RC_nokey );
 	g_settings.key_list_end = tconfig.getInt32( "key_list_end", (unsigned int)CRCInput::RC_nokey );
 #if BOXMODEL_HD51
-	g_settings.key_timeshift = tconfig.getInt32( "key_timeshift", CRCInput::RC_nokey ); // FIXME
+	g_settings.key_timeshift = tconfig.getInt32( "key_timeshift", CRCInput::RC_playpause_long ); // FIXME
 #elif BOXMODEL_VUSOLO4K
 	g_settings.key_timeshift = tconfig.getInt32( "key_timeshift", CRCInput::RC_playpause );
 #else

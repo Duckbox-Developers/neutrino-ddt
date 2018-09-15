@@ -1746,6 +1746,10 @@ const char * CRCInput::getSpecialKeyName(const unsigned int key)
 				return "program";
 			case RC_playpause:
 				return "play / pause";
+#ifdef BOXMODEL_HD51
+			case RC_playpause_long:
+				return "play / pause long";
+#endif
 			default:
 				printf("unknown key: %d (0x%x) \n", key, key);
 				return "unknown";
