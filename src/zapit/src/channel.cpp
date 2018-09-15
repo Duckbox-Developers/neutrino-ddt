@@ -110,7 +110,7 @@ void CZapitChannel::Init()
 	bLockCount = 0;
 	bLocked = DEFAULT_CH_LOCKED;
 	bUseCI = false;
-	thrLogo = NULL;
+	thrLogo = 0;
 	altlogo = "";
 }
 

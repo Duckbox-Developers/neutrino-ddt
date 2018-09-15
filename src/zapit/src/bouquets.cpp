@@ -878,61 +878,63 @@ void CBouquetManager::loadWebchannels(int mode)
 
 			if (xml)
 			{
-			xmlDocPtr parser = parseXmlFile(tmp_name.c_str());
-			if (parser == NULL)
-				continue;
+				xmlDocPtr parser = parseXmlFile(tmp_name.c_str());
+				if (parser == NULL)
+					continue;
 
-			xmlNodePtr l0 = xmlDocGetRootElement(parser);
-			xmlNodePtr l1 = xmlChildrenNode(l0);
+				xmlNodePtr l0 = xmlDocGetRootElement(parser);
+				xmlNodePtr l1 = xmlChildrenNode(l0);
 				if (l1)
 				{
-				CZapitBouquet* pbouquet = NULL;
-				const char *prov = xmlGetAttribute(l0, "name");
-				if (!prov)
-					prov = (mode == MODE_WEBTV) ? "WebTV" : "WebRadio";
-				pbouquet = addBouquetIfNotExist(prov);
-				if (mode == MODE_WEBTV)
-					pbouquet->bWebtv = true;
-				else
-					pbouquet->bWebradio = true;
-
+					CZapitBouquet* pbouquet = NULL;
+					const char *prov = xmlGetAttribute(l0, "name");
+					if (!prov)
+						prov = (mode == MODE_WEBTV) ? "WebTV" : "WebRadio";
+					pbouquet = addBouquetIfNotExist(prov);
+					if (mode == MODE_WEBTV) {
+						pbouquet->bWebtv = true;
+					}
+					else
+					{
+						pbouquet->bWebradio = true;
+					}
 					while ((xmlGetNextOccurence(l1, (mode == MODE_WEBTV) ? "webtv" : "webradio")))
 					{
-					const char *title = xmlGetAttribute(l1, "title");
-					const char *url = xmlGetAttribute(l1, "url");
-					const char *desc = xmlGetAttribute(l1, "description");
-					const char *genre = xmlGetAttribute(l1, "genre");
-					const char *epgid = xmlGetAttribute(l1, "epgid");
-					const char *script = xmlGetAttribute(l1, "script");
-					t_channel_id epg_id = 0;
-					if (epgid)
-						epg_id = strtoull(epgid, NULL, 16);
+						const char *title = xmlGetAttribute(l1, "title");
+						const char *url = xmlGetAttribute(l1, "url");
+						const char *desc = xmlGetAttribute(l1, "description");
+						const char *genre = xmlGetAttribute(l1, "genre");
+						const char *epgid = xmlGetAttribute(l1, "epgid");
+						const char *script = xmlGetAttribute(l1, "script");
+						t_channel_id epg_id = 0;
+						if (epgid)
+							epg_id = strtoull(epgid, NULL, 16);
 
-					CZapitBouquet* gbouquet = pbouquet;
+						CZapitBouquet* gbouquet = pbouquet;
 						if (genre)
 						{
 						std::string bname = prov ? std::string(std::string(prov) + " ") + genre : genre;
-						gbouquet = addBouquetIfNotExist(bname);
-						if (mode == MODE_WEBTV)
-							gbouquet->bWebtv = true;
-						else
-							gbouquet->bWebradio = true;
-					}
+							gbouquet = addBouquetIfNotExist(bname);
+							if (mode == MODE_WEBTV)
+								gbouquet->bWebtv = true;
+							else
+								gbouquet->bWebradio = true;
+						}
 						if (title && url)
 						{
-						t_channel_id chid = create_channel_id64(0, 0, 0, 0, 0, url);
-						CZapitChannel * channel = new CZapitChannel(title, chid, url, desc, epg_id, script, mode);
-						CServiceManager::getInstance()->AddChannel(channel);
-						channel->flags = CZapitChannel::UPDATED;
-						if (gbouquet)
-							gbouquet->addService(channel);
-					}
+							t_channel_id chid = create_channel_id64(0, 0, 0, 0, 0, url);
+							CZapitChannel * channel = new CZapitChannel(title, chid, url, desc, epg_id, script, mode);
+							CServiceManager::getInstance()->AddChannel(channel);
+							channel->flags = CZapitChannel::UPDATED;
+							if (gbouquet)
+								gbouquet->addService(channel);
+						}
 
-					l1 = xmlNextNode(l1);
+						l1 = xmlNextNode(l1);
+					}
 				}
+				xmlFreeDoc(parser);
 			}
-			xmlFreeDoc(parser);
-		}
 			else if(m3u)
 			{
 				std::ifstream infile;
