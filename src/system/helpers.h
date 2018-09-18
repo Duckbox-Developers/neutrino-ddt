@@ -156,8 +156,9 @@ inline bool file_exists(const std::string file) { return file_exists(file.c_str(
 
 std::string readFile(std::string file);
 
-std::string genTmpName(std::string suffix,unsigned int length);
-std::string dlTmpName(std::string url);
+std::string randomString(unsigned int length = 10);
+std::string randomFile(std::string suffix = "tmp", std::string directory = "/tmp", unsigned int length = 10);
+std::string downloadUrlToRandomFile(std::string url, std::string directory = "/tmp", unsigned int length = 10);
 
 // curl
 struct MemoryStruct {

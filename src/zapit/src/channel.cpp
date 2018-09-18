@@ -21,6 +21,8 @@
  */
 
 #include <cstdio>
+
+#include <global.h>
 #include <system/helpers.h>
 #include <zapit/zapit.h>
 #include <zapit/channel.h>
@@ -442,11 +444,9 @@ void CZapitChannel::setThrAlternateLogo(const std::string &pLogo)
 void* CZapitChannel::LogoThread(void* channel)
 {
 	CZapitChannel *cc = (CZapitChannel *)channel;
-	std::string lname = cc->getAlternateLogo();
-	cc->setAlternateLogo(dlTmpName(lname));
+	if (cc)
+		cc->setAlternateLogo(downloadUrlToRandomFile(cc->getAlternateLogo(), LOGODIR_TMP));
 
 	pthread_exit(0);
-
 	return NULL;
-
 }
