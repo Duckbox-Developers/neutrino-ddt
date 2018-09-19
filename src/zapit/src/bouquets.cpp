@@ -1023,7 +1023,8 @@ void CBouquetManager::loadWebchannels(int mode)
 								}
 								CZapitChannel * channel = new CZapitChannel(title.c_str(), chid, url, desc.c_str(), chid, epg_script.c_str(), mode);
 								CServiceManager::getInstance()->AddChannel(channel);
-#if HAVE_ARM_HARDWARE
+
+#if defined HAVE_ARM_HARDWARE && !defined BOXMODEL_VUSOLO4K
 								if (!alogo.empty())
 									channel->setThrAlternateLogo(alogo);
 #else
