@@ -806,6 +806,15 @@ void CBouquetManager::clearAll(bool user)
 	if (!user)
 		Bouquets = tmplist;
 	remainChannels = NULL;
+	if(thrLogo != 0)
+	{
+		pthread_cancel(thrLogo);
+		pthread_join(thrLogo, NULL);
+		thrLogo = 0;
+	}
+	pthread_mutex_lock (&mutex);
+	LogoList.clear();
+	pthread_mutex_unlock (&mutex);
 }
 
 void CBouquetManager::deletePosition(t_satellite_position satellitePosition)
@@ -1029,7 +1038,9 @@ void CBouquetManager::loadWebchannels(int mode)
 								if (!alogo.empty())
 								{
 									channel->setAlternateLogo(alogo);
+									pthread_mutex_lock (&mutex);
 									LogoList.push_back(channel);
+									pthread_mutex_unlock (&mutex);
 								}
 								channel->flags = CZapitChannel::UPDATED;
 								if (gbouquet)
@@ -1124,6 +1135,7 @@ void CBouquetManager::loadLogos()
 void* CBouquetManager::LogoThread(void* _logolist)
 {
 	set_threadname(__func__);
+	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
 	pthread_mutex_lock (&mutex);
 	ZapitChannelList *LogoList = (ZapitChannelList *)_logolist;
 	for (ZapitChannelList::iterator it = LogoList->begin(); it != LogoList->end(); ++it)
