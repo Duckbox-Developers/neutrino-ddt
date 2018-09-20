@@ -2660,9 +2660,10 @@ videomenu.videoformat_43 4:3
 videomenu.videomode Digital video mode
 webtv.head WebTV
 webtv.xml WebTV files
-webtv.xml.add Add WebTV file
-webtv.xml.del Remove WebTV file
-webtv.xml.reload Reload WebTV files
+webtv.xml.add Add
+webtv.xml.del Remove
+webtv.xml.enter Enter
+webtv.xml.reload Reload
 window_size Window size in %
 wizard.initial_settings Initial settings found
 wizard.install_settings Do you want to install channels for Astra 19.2°E?

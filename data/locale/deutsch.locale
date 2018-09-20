@@ -2660,9 +2660,10 @@ videomenu.videoformat_43 4:3
 videomenu.videomode Videosystem
 webtv.head WebTV
 webtv.xml WebTV-Dateien
-webtv.xml.add WebTV-Datei hinzufügen
-webtv.xml.del WebTV-Datei entfernen
-webtv.xml.reload WebTV-Dateien neu laden
+webtv.xml.add Hinzufügen
+webtv.xml.del Entfernen
+webtv.xml.enter Eintragen
+webtv.xml.reload Neu laden
 window_size Fenstergröße in %
 wizard.initial_settings Grundeinstellungen gefunden
 wizard.install_settings Kanalliste für Astra 19.2°E installieren?
