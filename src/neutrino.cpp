@@ -2546,6 +2546,7 @@ TIMER_START();
 		dprintf(DEBUG_NORMAL, "Loading of scan settings failed. Using defaults.\n");
 
 	CFileHelpers::getInstance()->removeDir(LOGODIR_TMP);
+	CFileHelpers::getInstance()->removeDir(COVERDIR_TMP);
 
 	/* set service manager options before starting zapit */
 	CServiceManager::getInstance()->KeepNumbers(g_settings.keep_channel_numbers);
