@@ -102,7 +102,7 @@ int CWebTVSetup::exec(CMenuTarget* parent, const std::string & actionKey)
 
 			if (entry.compare(dirname) != 0)
 			{
-				m->addItem(new CMenuForwarder(entry, true, NULL, this, "c"));
+				f->setName(entry);
 				changed = true;
 			}
 		}
