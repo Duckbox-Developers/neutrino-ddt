@@ -68,17 +68,20 @@ int CWebTVSetup::exec(CMenuTarget* parent, const std::string & actionKey)
 {
 	int res = menu_return::RETURN_REPAINT;
 
-	if(actionKey == "d" /* delete */) {
+	if(actionKey == "d" /* delete */)
+	{
 		selected = m->getSelected();
-		if (selected >= item_offset) {
+		if (selected >= item_offset)
+		{
 			m->removeItem(selected);
-		    m->hide();
+			m->hide();
 			selected = m->getSelected();
 			changed = true;
 		}
 		return res;
 	}
-	if(actionKey == "c" /* change */) {
+	if(actionKey == "c" /* change */)
+	{
 		CFileBrowser fileBrowser;
 		CFileFilter fileFilter;
 		fileFilter.addFilter("xml");
@@ -90,21 +93,24 @@ int CWebTVSetup::exec(CMenuTarget* parent, const std::string & actionKey)
 		CMenuForwarder *f = static_cast<CMenuForwarder*>(item);
 		std::string dirname(f->getName());
 		dirname = dirname.substr(0, dirname.rfind('/'));
-		if (fileBrowser.exec(dirname.c_str())) {
+		if (fileBrowser.exec(dirname.c_str()))
+		{
 			f->setName(fileBrowser.getSelectedFile()->Name);
 			g_settings.last_webtv_dir = dirname;
 			changed = true;
 		}
 		return res;
 	}
-	if(actionKey == "a" /* add */) {
+	if(actionKey == "a" /* add */)
+	{
 		CFileBrowser fileBrowser;
 		CFileFilter fileFilter;
 		fileFilter.addFilter("xml");
 		fileFilter.addFilter("tv");
 		fileFilter.addFilter("m3u");
 		fileBrowser.Filter = &fileFilter;
-		if (fileBrowser.exec(g_settings.last_webtv_dir.c_str()) == true) {
+		if (fileBrowser.exec(g_settings.last_webtv_dir.c_str()) == true)
+		{
 			std::string s = fileBrowser.getSelectedFile()->Name;
 			m->addItem(new CMenuForwarder(s, true, NULL, this, "c"));
 			g_settings.last_webtv_dir = s.substr(0, s.rfind('/')).c_str();
@@ -112,7 +118,8 @@ int CWebTVSetup::exec(CMenuTarget* parent, const std::string & actionKey)
 		}
 		return res;
 	}
-	if (actionKey == "e" /* enter */) {
+	if (actionKey == "e" /* enter */)
+	{
 		std::string tpl = "http://xxx.xxx.xxx.xxx/control/xmltv.m3u";
 		std::string entry = tpl;
 
@@ -127,11 +134,13 @@ int CWebTVSetup::exec(CMenuTarget* parent, const std::string & actionKey)
 		}
 		return res;
 	}
-	if(actionKey == "r" /* reload */) {
+	if(actionKey == "r" /* reload */)
+	{
 		changed = true;
 		return menu_return::RETURN_EXIT_ALL;
 	}
-	if (actionKey == "script_path") {
+	if (actionKey == "script_path")
+	{
 		const char *action_str = "ScriptPath";
 		chooserDir(g_settings.livestreamScriptPath, false, action_str);
 		return res;
@@ -158,7 +167,7 @@ int CWebTVSetup::Show()
 	m->addIntroItems(LOCALE_WEBTV_HEAD, LOCALE_LIVESTREAM_HEAD);
 
 	bool _mode_webtv = (CNeutrinoApp::getInstance()->getMode() == NeutrinoModes::mode_webtv) &&
-				(!CZapit::getInstance()->GetCurrentChannel()->getScriptName().empty());
+	                   (!CZapit::getInstance()->GetCurrentChannel()->getScriptName().empty());
 
 	CMenuForwarder *mf;
 	int shortcut = 1;
@@ -179,18 +188,20 @@ int CWebTVSetup::Show()
 
 	int res = m->exec(NULL, "");
 	m->hide();
-	if (changed) {
-			CHintBox hint(LOCALE_MESSAGEBOX_INFO, LOCALE_SERVICEMENU_RELOAD_HINT);
-			hint.paint();
-			g_settings.webtv_xml.clear();
-			for (int i = item_offset; i < m->getItemsCount(); i++) {
-				CMenuItem *item = m->getItem(i);
-				CMenuForwarder *f = static_cast<CMenuForwarder*>(item);
-				g_settings.webtv_xml.push_back(f->getName());
-			}
-			g_Zapit->reinitChannels();
-			changed = false;
-			hint.hide();
+	if (changed)
+	{
+		CHintBox hint(LOCALE_MESSAGEBOX_INFO, LOCALE_SERVICEMENU_RELOAD_HINT);
+		hint.paint();
+		g_settings.webtv_xml.clear();
+		for (int i = item_offset; i < m->getItemsCount(); i++)
+		{
+			CMenuItem *item = m->getItem(i);
+			CMenuForwarder *f = static_cast<CMenuForwarder*>(item);
+			g_settings.webtv_xml.push_back(f->getName());
+		}
+		g_Zapit->reinitChannels();
+		changed = false;
+		hint.hide();
 	}
 
 	delete m;
@@ -220,8 +231,8 @@ int CWebTVResolution::Show()
 
 	CMenuOptionChooser *mc;
 	mc = new CMenuOptionChooser(LOCALE_LIVESTREAM_RESOLUTION, &g_settings.livestreamResolution,
-				    LIVESTREAM_RESOLUTION_OPTIONS, LIVESTREAM_RESOLUTION_OPTION_COUNT,
-				    true, NULL, CRCInput::RC_nokey, NULL, true);
+	                            LIVESTREAM_RESOLUTION_OPTIONS, LIVESTREAM_RESOLUTION_OPTION_COUNT,
+	                            true, NULL, CRCInput::RC_nokey, NULL, true);
 	m->addItem(mc);
 
 	int oldRes = g_settings.livestreamResolution;
@@ -230,10 +241,12 @@ int CWebTVResolution::Show()
 	delete m;
 
 	bool _mode_webtv = (CNeutrinoApp::getInstance()->getMode() == NeutrinoModes::mode_webtv) &&
-				(!CZapit::getInstance()->GetCurrentChannel()->getScriptName().empty());
-	if (oldRes != g_settings.livestreamResolution && _mode_webtv) {
+	                   (!CZapit::getInstance()->GetCurrentChannel()->getScriptName().empty());
+	if (oldRes != g_settings.livestreamResolution && _mode_webtv)
+	{
 		CZapitChannel * cc = CZapit::getInstance()->GetCurrentChannel();
-		if (cc && IS_WEBCHAN(cc->getChannelID())) {
+		if (cc && IS_WEBCHAN(cc->getChannelID()))
+		{
 			CMoviePlayerGui::getInstance().stopPlayBack();
 			CMoviePlayerGui::getInstance().PlayBackgroundStart(cc->getUrl(), cc->getName(), cc->getChannelID(), cc->getScriptName());
 		}

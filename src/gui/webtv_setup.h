@@ -29,28 +29,28 @@
 
 class CWebTVSetup : public CMenuTarget
 {
-	private:
-		int width;
-		int selected;
-		int item_offset;
-		bool changed;
-		CMenuWidget *m;
-	public:
-		CWebTVSetup();
-		int exec(CMenuTarget* parent, const std::string & actionKey);
-		int Show();
+private:
+	int width;
+	int selected;
+	int item_offset;
+	bool changed;
+	CMenuWidget *m;
+public:
+	CWebTVSetup();
+	int exec(CMenuTarget* parent, const std::string & actionKey);
+	int Show();
 };
 
 class CWebTVResolution : public CMenuTarget
 {
-	private:
-		int width;
-		CMenuWidget *m;
-	public:
-		CWebTVResolution();
-		const char *getResolutionValue();
-		int exec(CMenuTarget* parent, const std::string & actionKey);
-		int Show();
+private:
+	int width;
+	CMenuWidget *m;
+public:
+	CWebTVResolution();
+	const char *getResolutionValue();
+	int exec(CMenuTarget* parent, const std::string & actionKey);
+	int Show();
 };
 
 #endif
