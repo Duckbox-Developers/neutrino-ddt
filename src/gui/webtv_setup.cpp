@@ -44,17 +44,6 @@ CWebTVSetup::CWebTVSetup()
 	changed = false;
 }
 
-const CMenuOptionChooser::keyval_ext LIVESTREAM_RESOLUTION_OPTIONS[] =
-{
-	{ 1920, NONEXISTANT_LOCALE, "1920x1080" },
-	{ 1280, NONEXISTANT_LOCALE, "1280x720"  },
-	{ 854,  NONEXISTANT_LOCALE, "854x480"   },
-	{ 640,  NONEXISTANT_LOCALE, "640x360"   },
-	{ 426,  NONEXISTANT_LOCALE, "426x240"   },
-	{ 128,  NONEXISTANT_LOCALE, "128x72"    }
-};
-#define LIVESTREAM_RESOLUTION_OPTION_COUNT (sizeof(LIVESTREAM_RESOLUTION_OPTIONS)/sizeof(CMenuOptionChooser::keyval_ext))
-
 #define CWebTVSetupFooterButtonCount 4
 static const struct button_label CWebTVSetupFooterButtons[CWebTVSetupFooterButtonCount] =
 {
@@ -233,6 +222,17 @@ CWebTVResolution::CWebTVResolution()
 {
 	width = 40;
 }
+
+const CMenuOptionChooser::keyval_ext LIVESTREAM_RESOLUTION_OPTIONS[] =
+{
+	{ 1920, NONEXISTANT_LOCALE, "1920x1080" },
+	{ 1280, NONEXISTANT_LOCALE, "1280x720"  },
+	{ 854,  NONEXISTANT_LOCALE, "854x480"   },
+	{ 640,  NONEXISTANT_LOCALE, "640x360"   },
+	{ 426,  NONEXISTANT_LOCALE, "426x240"   },
+	{ 128,  NONEXISTANT_LOCALE, "128x72"    }
+};
+#define LIVESTREAM_RESOLUTION_OPTION_COUNT (sizeof(LIVESTREAM_RESOLUTION_OPTIONS)/sizeof(CMenuOptionChooser::keyval_ext))
 
 int CWebTVResolution::exec(CMenuTarget* parent, const std::string& /*actionKey*/)
 {
