@@ -1591,6 +1591,7 @@ menu.hint_volume_pos Select volume indicator position
 menu.hint_volume_size Select volume indicator height
 menu.hint_webtv_setup WebTV channels configured here will be available in the standard channel lists.
 menu.hint_window_size Channellist, EPG-infos and some other windows are scaled by this factor
+menu.hint_xmltv_setup Configure XMLTV files with EPG data to describe TV listings
 menu.hint_youtube_dev_id Type your YouTube Dev ID. An empty input disables YouTube support
 menu.hint_youtube_enabled Enable or disable YouTube support
 menu.hint_ytplay Play selected YouTube feeds
@@ -2676,6 +2677,12 @@ wizard.welcome_head Welcome to the Setup Wizard
 wizard.welcome_text Neutrino is designed for set-top boxes and is maintained by the Tuxbox community and lives from the support of users and many volontary contributors./nIf you need help or have  suggestions, found bugs, please feel free to contact us.\nSupport pages or Contact and / or Web addresses can be found in the main menu under "Information".\nNext steps will guide you through initial installation of the device.\nImportant: Your set-top box can be conveniently controlled\nwith the web interface for timer management or live TV on the Web browser.\nDo not make it accessible to untrusted networks!\nDo you want to continue?
 word.from from
 word.in in
+xmltv.head XMLTV
+xmltv.xml XMLTV files
+xmltv.xml.add Add
+xmltv.xml.del Remove
+xmltv.xml.enter Enter
+xmltv.xml.reload Reload
 youtube.dev_id YouTube Dev ID
 youtube.enabled YouTube support
 zapit.scantype scan for services
