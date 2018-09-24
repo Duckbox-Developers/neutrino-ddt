@@ -97,7 +97,7 @@ int CMediaPlayerSetup::showMediaPlayerSetup()
 	mf->setHint(NEUTRINO_ICON_HINT_PICVIEW, LOCALE_MENU_HINT_PICTUREVIEWER_SETUP);
 	mediaSetup->addItem(mf);
 
-	mediaSetup->addItem(GenericMenuSeparator);
+	mediaSetup->addItem(new CMenuSeparator(CMenuSeparator::LINE));
 
 	CWebTVSetup wsetup;
 	mf = new CMenuForwarder(LOCALE_WEBTV_HEAD, true, NULL, &wsetup, "show_menu", CRCInput::RC_yellow);
