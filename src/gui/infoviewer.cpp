@@ -1115,21 +1115,25 @@ void CInfoViewer::loop(bool show_dot)
 			res = messages_return::cancel_all;
 			hideIt = true;
 		} else if ((msg == NeutrinoMessages::EVT_TIMER) && (data == sec_timer_id)) {
-			// doesn't belong here, but easiest way to check for a change ...
-			if (is_visible && showButtonBar)
-				infoViewerBB->paint_ca_icons(0);
-			showSNR ();
-			if (timeset)
-				clock->paint(CC_SAVE_SCREEN_NO);
-			showRecordIcon (show_dot);
-			show_dot = !show_dot;
-			showInfoFile();
-			if ((g_settings.radiotext_enable) && (CNeutrinoApp::getInstance()->getMode() == NeutrinoModes::mode_radio))
-				showRadiotext();
+			if (frameBuffer->getActive())
+			{
+				showSNR ();
+				// doesn't belong here, but easiest way to check for a change ...
+				if (is_visible && showButtonBar)
+					infoViewerBB->paint_ca_icons(0);
+				if (timeset) {
+					clock->paint(CC_SAVE_SCREEN_NO);
+				}
+				showRecordIcon (show_dot);
+				show_dot = !show_dot;
+				showInfoFile();
+				if ((g_settings.radiotext_enable) && (CNeutrinoApp::getInstance()->getMode() == NeutrinoModes::mode_radio))
+					showRadiotext();
 
-			infoViewerBB->showIcon_16_9();
-			//infoViewerBB->paint_ca_icons(0);
-			infoViewerBB->showIcon_Resolution();
+				infoViewerBB->showIcon_16_9();
+				//infoViewerBB->paint_ca_icons(0);
+				infoViewerBB->showIcon_Resolution();
+			}
 		} else if ((msg == NeutrinoMessages::EVT_RECORDMODE) && 
 			   (CMoviePlayerGui::getInstance().timeshift) && (CRecordManager::getInstance()->GetRecordCount() == 1)) {
 			res = CNeutrinoApp::getInstance()->handleMsg(msg, data);
