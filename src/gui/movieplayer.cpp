@@ -1673,7 +1673,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 #else
 				CVFD::getInstance()->showPercentOver(file_prozent);
 #endif
-				if (g_info.hw_caps->display_xres > 8)
+				if (g_info.hw_caps->display_xres >= 8)
 				{
 					ss = position/1000;
 					hh = ss/3600;
