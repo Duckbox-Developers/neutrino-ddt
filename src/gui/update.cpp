@@ -720,7 +720,7 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 			if (restart == CMsgBox::mbrYes)
 			{
 				if(g_settings.hdmi_cec_standby){
-					videoDecoder->SetCECAutoStandby(false);
+					videoDecoder->SetCECMode((VIDEO_HDMI_CEC_MODE)0);
 				}
 				std::string startup_new = "/boot/STARTUP_" + to_string(selected);
 				dprintf(DEBUG_NORMAL, "[update] Start selected partition %d (%s)\n", selected, startup_new.c_str());
