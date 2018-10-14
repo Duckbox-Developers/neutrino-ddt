@@ -278,6 +278,7 @@ struct SNeutrinoSettings
 	int hdmi_cec_mode;
 	int hdmi_cec_view_on;
 	int hdmi_cec_standby;
+	int hdmi_cec_volume;
 #if HAVE_SH4_HARDWARE
 	int hdmi_cec_broadcast;
 #endif

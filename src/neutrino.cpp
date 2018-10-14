@@ -412,6 +412,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.hdmi_cec_mode = configfile.getInt32("hdmi_cec_mode", 0); // default off
 	g_settings.hdmi_cec_view_on = configfile.getInt32("hdmi_cec_view_on", 0); // default off
 	g_settings.hdmi_cec_standby = configfile.getInt32("hdmi_cec_standby", 0); // default off
+	g_settings.hdmi_cec_volume = configfile.getInt32("hdmi_cec_volume", 0);
 #if HAVE_SH4_HARDWARE
 	g_settings.hdmi_cec_broadcast = configfile.getInt32("hdmi_cec_broadcast", 0); // default off
 	g_settings.psi_contrast = configfile.getInt32("video_psi_contrast", 128);
@@ -1294,6 +1295,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32( "hdmi_cec_mode", g_settings.hdmi_cec_mode );
 	configfile.setInt32( "hdmi_cec_view_on", g_settings.hdmi_cec_view_on );
 	configfile.setInt32( "hdmi_cec_standby", g_settings.hdmi_cec_standby );
+	configfile.setInt32( "hdmi_cec_volume", g_settings.hdmi_cec_volume );
 #if HAVE_SH4_HARDWARE
 	configfile.setInt32( "hdmi_cec_broadcast", g_settings.hdmi_cec_broadcast );
 	configfile.setInt32( "video_psi_contrast", g_settings.psi_contrast );
@@ -3007,6 +3009,13 @@ void CNeutrinoApp::RealRun()
 								showInfo();
 							break;
 						case SNeutrinoSettings::VOLUME:
+#if HAVE_ARM_HARDWARE
+							if (g_settings.hdmi_cec_volume)
+							{
+								(msg == (neutrino_msg_t) g_settings.key_volumeup || msg == CRCInput::RC_right) ? hdmi_cec::getInstance()->vol_up() : hdmi_cec::getInstance()->vol_down();
+							}
+							else
+#endif
 							g_volume->setVolume(msg);
 							break;
 						default: /* SNeutrinoSettings::ZAP */
@@ -3136,6 +3145,13 @@ void CNeutrinoApp::RealRun()
 							showInfo();
 						break;
 					case SNeutrinoSettings::VOLUME:
+#if HAVE_ARM_HARDWARE
+						if (g_settings.hdmi_cec_volume)
+						{
+							(msg == (neutrino_msg_t) g_settings.key_volumeup || msg == CRCInput::RC_right) ? hdmi_cec::getInstance()->vol_up() : hdmi_cec::getInstance()->vol_down();
+						}
+						else
+#endif
 						g_volume->setVolume(msg);
 						break;
 					default: /* SNeutrinoSettings::ZAP */
@@ -3705,6 +3721,13 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 	}
 	else if ((msg == CRCInput::RC_plus) || (msg == CRCInput::RC_minus))
 	{
+#if HAVE_ARM_HARDWARE
+		if (g_settings.hdmi_cec_volume)
+		{
+			(msg == (neutrino_msg_t) g_settings.key_volumeup || msg == CRCInput::RC_right) ? hdmi_cec::getInstance()->vol_up() : hdmi_cec::getInstance()->vol_down();
+		}
+		else
+#endif
 		g_volume->setVolume(msg);
 #if HAVE_DUCKBOX_HARDWARE
 		if((mode == NeutrinoModes::mode_tv) || (mode == NeutrinoModes::mode_radio)) {
@@ -3720,15 +3743,36 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 		}
 		else {
 			//mute
+#if HAVE_ARM_HARDWARE
+			if (g_settings.hdmi_cec_volume)
+			{
+				hdmi_cec::getInstance()->toggle_mute();
+			}
+			else
+#endif
 			g_audioMute->AudioMute(!current_muted, true);
 		}
 		return messages_return::handled;
 	}
 	else if( msg == CRCInput::RC_mute_on ) {
+#if HAVE_ARM_HARDWARE
+		if (g_settings.hdmi_cec_volume)
+		{
+			hdmi_cec::getInstance()->toggle_mute();
+		}
+		else
+#endif
 		g_audioMute->AudioMute(true, true);
 		return messages_return::handled;
 	}
 	else if( msg == CRCInput::RC_mute_off ) {
+#if HAVE_ARM_HARDWARE
+		if (g_settings.hdmi_cec_volume)
+		{
+			hdmi_cec::getInstance()->toggle_mute();
+		}
+		else
+#endif
 		g_audioMute->AudioMute(false, true);
 		return messages_return::handled;
 	}
