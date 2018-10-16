@@ -2225,7 +2225,9 @@ void CMovieBrowser::scrollBrowserItem(bool next, bool page)
 	if (show_mode == MB_SHOW_YT && !next && ytparser.HavePrev() && m_pcBrowser->getSelectedLine() == 0)
 		mode = cYTFeedParser::PREV;
 	if (mode >= 0) {
-		CHintBox loadBox(LOCALE_MOVIEPLAYER_YTPLAYBACK, g_Locale->getText(LOCALE_MOVIEBROWSER_SCAN_FOR_MOVIES));
+		CHintBox loadBox(LOCALE_MOVIEPLAYER_YTPLAYBACK,	(show_mode == MB_SHOW_YT)
+			? g_Locale->getText(LOCALE_MOVIEBROWSER_SCAN_FOR_VIDEOS)
+			: g_Locale->getText(LOCALE_MOVIEBROWSER_SCAN_FOR_MOVIES), 450);
 		loadBox.paint();
 		ytparser.Cleanup();
 		loadYTitles(mode, m_settings.ytsearch, m_settings.ytvid);
@@ -4263,7 +4265,9 @@ bool CMovieBrowser::showYTMenu(bool calledExternally)
 	}
 
 	if (reload) {
-		CHintBox loadBox(LOCALE_MOVIEPLAYER_YTPLAYBACK, g_Locale->getText(LOCALE_MOVIEBROWSER_SCAN_FOR_MOVIES));
+		CHintBox loadBox(LOCALE_MOVIEPLAYER_YTPLAYBACK,	(show_mode == MB_SHOW_YT)
+			? g_Locale->getText(LOCALE_MOVIEBROWSER_SCAN_FOR_VIDEOS)
+			: g_Locale->getText(LOCALE_MOVIEBROWSER_SCAN_FOR_MOVIES), 450);
 		loadBox.paint();
 		ytparser.Cleanup();
 		loadYTitles(newmode, m_settings.ytsearch, m_settings.ytvid);
