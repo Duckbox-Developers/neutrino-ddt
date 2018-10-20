@@ -50,6 +50,7 @@
 #include <OpenThreads/Thread>
 #include <OpenThreads/Condition>
 #include <map>
+#include <sigc++/signal.h>
 
 typedef unsigned char uchar;
 typedef unsigned int uint;
@@ -61,7 +62,7 @@ extern char *ReplayFile;
 #define RT_MEL 65
 #define tr(a) a
 
-class CRadioText : public OpenThreads::Thread
+class CRadioText : public OpenThreads::Thread, public sigc::trackable
 {
 
 private:
@@ -104,6 +105,7 @@ public:
 
 	void radiotext_stop(void);
 	bool haveRadiotext(void) {return have_radiotext; }
+	sigc::signal<void> OnAfterDecodeLine;
 
 	cDemux *audioDemux;
 
