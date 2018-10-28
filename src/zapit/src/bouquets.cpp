@@ -1288,7 +1288,7 @@ void CBouquetManager::readEPGMapping()
 			if(channel_id && epg_id){
 				EpgIDMapping[channel_id]=epg_id;
 			}
-			if(channel_id && ((xmlepg != NULL) && (xmlepg[0] == '\0'))){
+			if(channel_id && ((xmlepg != NULL) && (xmlepg[0] != '\0'))){
 				EpgXMLMapping[channel_id]=xmlepg;
 			}
 			epgmap = xmlNextNode(epgmap);
