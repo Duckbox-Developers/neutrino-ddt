@@ -281,7 +281,7 @@ class CRCInput
 			RC_bookmarks	= KEY_BOOKMARKS,
 			RC_program	= KEY_PROGRAM,
 			RC_playpause	= KEY_PLAYPAUSE,
-#ifdef BOXMODEL_HD51
+#ifdef BOXMODEL_HD51 || BOXMODEL_HD60
 			RC_playpause_long = KEY_PLAYPAUSE_LONG,
 #endif
 
