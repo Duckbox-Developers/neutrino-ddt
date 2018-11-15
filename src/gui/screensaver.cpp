@@ -252,6 +252,14 @@ bool CScreenSaver::ReadDir()
 
 void CScreenSaver::paint()
 {
+	if (scr_clock)
+	{
+		scr_clock->Stop();
+		scr_clock->kill();
+	}
+	if (g_settings.screensaver_mode == SCR_MODE_IMAGE && v_bg_files.empty())
+		m_frameBuffer->paintBackground();
+
 	if (g_settings.screensaver_mode == SCR_MODE_IMAGE && !v_bg_files.empty()){
 
 		if( (index >= v_bg_files.size()) || (access(v_bg_files.at(index).c_str(), F_OK)) )
@@ -276,14 +284,12 @@ void CScreenSaver::paint()
 		if (!scr_clock){
 			scr_clock = new CComponentsFrmClock(1, 1, NULL, "%H:%M:%S", "%H:%M %S", true,
 						1, NULL, CC_SHADOW_OFF, COL_BLACK, COL_BLACK);
+			scr_clock->setCornerType(CORNER_NONE);
 			scr_clock->setClockFont(g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_NUMBER]);
 			scr_clock->disableSaveBg();
 			scr_clock->doPaintBg(true);
 		}
-		if (scr_clock->isPainted())
-			scr_clock->Stop();
 
-		scr_clock->kill();
 		scr_clock->setTextColor(clr.i_color);
 
 		//check position and size use only possible available screen size
