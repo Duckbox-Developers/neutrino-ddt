@@ -45,6 +45,11 @@ libneutrino_driver_a_SOURCES = \
 	streamts.cpp \
 	volume.cpp
 
+if ENABLE_LCD4LINUX
+libneutrino_driver_a_SOURCES += \
+	lcd4l.cpp
+endif
+
 if ENABLE_GRAPHLCD
 libneutrino_driver_a_SOURCES += \
 	nglcd.cpp
