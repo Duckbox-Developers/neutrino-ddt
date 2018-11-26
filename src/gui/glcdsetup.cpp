@@ -200,6 +200,14 @@ bool GLCD_Menu::changeNotify (const neutrino_locale_t OptionName, void *Data)
 	return true;
 }
 
+#define ONOFFSEC_OPTION_COUNT 4
+static const CMenuOptionChooser::keyval ONOFFSEC_OPTIONS[ONOFFSEC_OPTION_COUNT] = {
+	{ 0, LOCALE_OPTIONS_OFF },
+	{ 1, LOCALE_OPTIONS_ON },
+	{ 2, LOCALE_CLOCK_SECONDS },
+	{ 3, LOCALE_AUDIOMENU_MIXER_VOLUME_ANALOG }
+};
+
 void GLCD_Menu::GLCD_Menu_Settings()
 {
 	int color_bg = color2index(g_settings.glcd_color_bg);
@@ -242,7 +250,7 @@ void GLCD_Menu::GLCD_Menu_Settings()
 				&g_settings.glcd_brightness, true, 0, 100, this));
 	m.addItem(GenericMenuSeparatorLine);
 	m.addItem(new CMenuOptionChooser(LOCALE_GLCD_TIME_IN_STANDBY, &g_settings.glcd_time_in_standby,
-				OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this,
+				ONOFFSEC_OPTIONS, ONOFFSEC_OPTION_COUNT, true, this,
 				CRCInput::convertDigitToKey(shortcut++)));
 	m.addItem(new CMenuOptionNumberChooser(LOCALE_GLCD_SIZE_TIME_STANDBY,
 				&g_settings.glcd_percent_time_standby, true, 0, 100, this));

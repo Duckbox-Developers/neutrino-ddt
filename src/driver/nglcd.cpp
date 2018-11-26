@@ -34,6 +34,7 @@
 #include <hardware_caps.h>
 #include <driver/nglcd.h>
 #include <eitd/sectionsd.h>
+#include <math.h>
 
 static const char * kDefaultConfigFile = "/etc/graphlcd.conf";
 static nGLCD *nglcd = NULL;
@@ -119,6 +120,79 @@ nGLCD *nGLCD::getInstance()
 	return nglcd;
 }
 
+void nGLCD::LcdAnalogClock(int posx,int posy,int dia)
+{
+	int tm_,th_,mx_,my_,hx_,hy_;
+	double pi_ = 3.1415926535897932384626433832795, mAngleInRad, mAngleSave, hAngleInRad;
+
+	tm_ = tm->tm_min;
+	th_ = tm->tm_hour;
+
+	mAngleInRad = ((6 * tm_) * (2*pi_ / 360));
+	mAngleSave = mAngleInRad;
+	mAngleInRad -= pi_/2;
+
+	mx_ = int((dia * 0.7 * cos(mAngleInRad)));
+	my_ = int((dia * 0.7 * sin(mAngleInRad)));
+
+	hAngleInRad = ((30 * th_)* (2*pi_ / 360));
+	hAngleInRad += mAngleSave / 12;
+	hAngleInRad -= pi_/2;
+	hx_ = int((dia * 0.4 * cos(hAngleInRad)));
+	hy_ = int((dia * 0.4 * sin(hAngleInRad)));
+
+	std::string a_clock = "";
+
+	a_clock = ICONSDIR "/a_clock.png";
+	if (access(a_clock.c_str(), F_OK) != 0)
+		a_clock = ICONSDIR "/a_clock.png";
+
+	int lcd_a_clock_width = 0, lcd_a_clock_height = 0;
+	g_PicViewer->getSize(a_clock.c_str(), &lcd_a_clock_width, &lcd_a_clock_height);
+	if (lcd_a_clock_width && lcd_a_clock_height)
+	{
+		showImage(a_clock, (uint32_t) lcd_a_clock_width, (uint32_t) lcd_a_clock_height,
+			0, 0, (uint32_t) nglcd->bitmap->Width(), (uint32_t) nglcd->bitmap->Height(), false, false);
+
+		lcd->SetScreen(bitmap->Data(), bitmap->Width(), bitmap->Height());
+		lcd->Refresh(true);
+	}
+
+	// hour
+	bitmap->DrawLine(posx,posy-8,posx+hx_,posy+hy_, g_settings.glcd_color_fg);
+	bitmap->DrawLine(posx,posy-7,posx+hx_,posy+hy_, g_settings.glcd_color_fg);
+	bitmap->DrawLine(posx,posy-6,posx+hx_,posy+hy_, g_settings.glcd_color_fg);
+	bitmap->DrawLine(posx,posy-5,posx+hx_,posy+hy_, g_settings.glcd_color_fg);
+	bitmap->DrawLine(posx,posy-4,posx+hx_,posy+hy_, g_settings.glcd_color_fg);
+	bitmap->DrawLine(posx,posy-3,posx+hx_,posy+hy_, g_settings.glcd_color_fg);
+	bitmap->DrawLine(posx,posy-2,posx+hx_,posy+hy_, g_settings.glcd_color_fg);
+	bitmap->DrawLine(posx,posy-1,posx+hx_,posy+hy_, g_settings.glcd_color_fg);
+	bitmap->DrawLine(posx+1,posy,posx+hx_,posy+hy_, g_settings.glcd_color_fg);
+	bitmap->DrawLine(posx,posy+1,posx+hx_,posy+hy_, g_settings.glcd_color_fg);
+	bitmap->DrawLine(posx,posy+2,posx+hx_,posy+hy_, g_settings.glcd_color_fg);
+	bitmap->DrawLine(posx,posy+3,posx+hx_,posy+hy_, g_settings.glcd_color_fg);
+	bitmap->DrawLine(posx,posy+4,posx+hx_,posy+hy_, g_settings.glcd_color_fg);
+	bitmap->DrawLine(posx,posy+5,posx+hx_,posy+hy_, g_settings.glcd_color_fg);
+	bitmap->DrawLine(posx,posy+6,posx+hx_,posy+hy_, g_settings.glcd_color_fg);
+	bitmap->DrawLine(posx,posy+7,posx+hx_,posy+hy_, g_settings.glcd_color_fg);
+	bitmap->DrawLine(posx,posy+8,posx+hx_,posy+hy_, g_settings.glcd_color_fg);
+
+	// minute
+	bitmap->DrawLine(posx,posy-6,posx+mx_,posy+my_, g_settings.glcd_color_fg);
+	bitmap->DrawLine(posx,posy-5,posx+mx_,posy+my_, g_settings.glcd_color_fg);
+	bitmap->DrawLine(posx,posy-4,posx+mx_,posy+my_, g_settings.glcd_color_fg);
+	bitmap->DrawLine(posx,posy-3,posx+mx_,posy+my_, g_settings.glcd_color_fg);
+	bitmap->DrawLine(posx,posy-2,posx+mx_,posy+my_, g_settings.glcd_color_fg);
+	bitmap->DrawLine(posx,posy-1,posx+mx_,posy+my_, g_settings.glcd_color_fg);
+	bitmap->DrawLine(posx+1,posy,posx+mx_,posy+my_, g_settings.glcd_color_fg);
+	bitmap->DrawLine(posx,posy+1,posx+mx_,posy+my_, g_settings.glcd_color_fg);
+	bitmap->DrawLine(posx,posy+2,posx+mx_,posy+my_, g_settings.glcd_color_fg);
+	bitmap->DrawLine(posx,posy+3,posx+mx_,posy+my_, g_settings.glcd_color_fg);
+	bitmap->DrawLine(posx,posy+4,posx+mx_,posy+my_, g_settings.glcd_color_fg);
+	bitmap->DrawLine(posx,posy+5,posx+mx_,posy+my_, g_settings.glcd_color_fg);
+	bitmap->DrawLine(posx,posy+6,posx+mx_,posy+my_, g_settings.glcd_color_fg);
+}
+
 void nGLCD::Exec() {
 	if (!lcd)
 		return;
@@ -156,7 +230,13 @@ void nGLCD::Exec() {
 	if (doStandbyTime) {
 		if (percent_time_standby) {
 
-			std::string Time = strftime("%H:%M", tm);
+			std::string Time;
+			if (g_settings.glcd_time_in_standby == 3)
+				LcdAnalogClock(bitmap->Width()/2, bitmap->Height()/2, 200);
+			else if (g_settings.glcd_time_in_standby == 2)
+				Time = strftime("%H:%M:%S", tm);
+			else
+				Time = strftime("%H:%M", tm);
 
 			bitmap->DrawText(std::max(2,(bitmap->Width() - 4 - font_time_standby.Width(Time))/2),
 				(bitmap->Height() - font_time_standby.Height(Time))/2, bitmap->Width() - 1, Time,
@@ -168,6 +248,10 @@ void nGLCD::Exec() {
 	}
 
 	if (CNeutrinoApp::getInstance()->recordingstatus) {
+		bitmap->DrawRectangle(0, 0, bitmap->Width() - 1, bitmap->Height() - 1, GLCD::cColor::Red, false);
+		bitmap->DrawRectangle(1, 1, bitmap->Width() - 2, bitmap->Height() - 2, GLCD::cColor::Red, false);
+	} else
+	if (CNeutrinoApp::getInstance()->isMuted()) {
 		bitmap->DrawRectangle(0, 0, bitmap->Width() - 1, bitmap->Height() - 1, g_settings.glcd_color_bar, false);
 		bitmap->DrawRectangle(1, 1, bitmap->Width() - 2, bitmap->Height() - 2, g_settings.glcd_color_bar, false);
 	}
@@ -687,6 +771,13 @@ void nGLCD::StandbyMode(bool b) {
 		} else {
 			nglcd->doStandbyTime = false;
 			nglcd->doStandby = b;
+		}
+		if (b) {
+			nglcd->doScrollChannel = false;
+			nglcd->doScrollEpg = false;
+		} else {
+			nglcd->doScrollChannel = true;
+			nglcd->doScrollEpg = true;
 		}
 		nglcd->doMirrorOSD = false;
 		nglcd->UpdateBrightness();

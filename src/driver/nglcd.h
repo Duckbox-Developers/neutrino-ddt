@@ -107,6 +107,7 @@ class nGLCD
 		bool getBoundingBox(uint32_t *buffer,
 			int width, int height,
 			int &bb_x, int &bb_y, int &bb_width, int &bb_height);
+		void LcdAnalogClock(int posx,int posy,int dia);
 		void Exec();
 		void Run(void);
 		static void* Run(void *);
