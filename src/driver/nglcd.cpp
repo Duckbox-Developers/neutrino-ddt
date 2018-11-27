@@ -250,10 +250,22 @@ void nGLCD::Exec() {
 	if (CNeutrinoApp::getInstance()->recordingstatus) {
 		bitmap->DrawRectangle(0, 0, bitmap->Width() - 1, bitmap->Height() - 1, GLCD::cColor::Red, false);
 		bitmap->DrawRectangle(1, 1, bitmap->Width() - 2, bitmap->Height() - 2, GLCD::cColor::Red, false);
+		bitmap->DrawRectangle(2, 2, bitmap->Width() - 3, bitmap->Height() - 3, GLCD::cColor::Red, false);
+#if defined BOXMODEL_VUSOLO4K
+		bitmap->DrawRectangle(3, 3, bitmap->Width() - 4, bitmap->Height() - 4, GLCD::cColor::Red, false);
+		bitmap->DrawRectangle(4, 4, bitmap->Width() - 5, bitmap->Height() - 5, GLCD::cColor::Red, false);
+		bitmap->DrawRectangle(5, 5, bitmap->Width() - 6, bitmap->Height() - 6, GLCD::cColor::Red, false);
+#endif
 	} else
 	if (CNeutrinoApp::getInstance()->isMuted()) {
-		bitmap->DrawRectangle(0, 0, bitmap->Width() - 1, bitmap->Height() - 1, g_settings.glcd_color_bar, false);
-		bitmap->DrawRectangle(1, 1, bitmap->Width() - 2, bitmap->Height() - 2, g_settings.glcd_color_bar, false);
+		bitmap->DrawRectangle(0, 0, bitmap->Width() - 1, bitmap->Height() - 1, GLCD::cColor::Blue, false);
+		bitmap->DrawRectangle(1, 1, bitmap->Width() - 2, bitmap->Height() - 2, GLCD::cColor::Blue, false);
+		bitmap->DrawRectangle(2, 2, bitmap->Width() - 3, bitmap->Height() - 3, GLCD::cColor::Blue, false);
+#if defined BOXMODEL_VUSOLO4K
+		bitmap->DrawRectangle(3, 3, bitmap->Width() - 4, bitmap->Height() - 4, GLCD::cColor::Blue, false);
+		bitmap->DrawRectangle(4, 4, bitmap->Width() - 5, bitmap->Height() - 5, GLCD::cColor::Blue, false);
+		bitmap->DrawRectangle(5, 5, bitmap->Width() - 6, bitmap->Height() - 6, GLCD::cColor::Blue, false);
+#endif
 	}
 
 	int off = percent_space;
