@@ -200,11 +200,11 @@ bool GLCD_Menu::changeNotify (const neutrino_locale_t OptionName, void *Data)
 	return true;
 }
 
-#define ONOFFSEC_OPTION_COUNT 4
+#define ONOFFSEC_OPTION_COUNT 3
 static const CMenuOptionChooser::keyval ONOFFSEC_OPTIONS[ONOFFSEC_OPTION_COUNT] = {
 	{ 0, LOCALE_OPTIONS_OFF },
 	{ 1, LOCALE_OPTIONS_ON },
-	{ 2, LOCALE_CLOCK_SECONDS },
+//	{ 2, LOCALE_CLOCK_SECONDS },
 	{ 3, LOCALE_AUDIOMENU_MIXER_VOLUME_ANALOG }
 };
 
