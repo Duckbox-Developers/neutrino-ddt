@@ -991,7 +991,7 @@ bool CInfoViewer::showLivestreamInfo()
 			std::string title = "";
 			std::vector<std::string> keys, values;
 			cPlayback *playback = CMoviePlayerGui::getInstance().getPlayback();
-			if (playback)
+			if (playback && playback->IsPlaying())
 				playback->GetMetadata(keys, values);
 			size_t count = keys.size();
 			if (count > 0)
