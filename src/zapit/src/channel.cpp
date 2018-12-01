@@ -215,10 +215,10 @@ bool CZapitChannel::isUHD()
 		case ST_DIGITAL_TELEVISION_SERVICE:
 		case 0x19:
 		{
-			if (strstr(name.c_str(), "UHD") || (strstr(name.c_str(), "4k")))
+			if (strstr(name.c_str(), "UHD"))
 				return true;
-			else
-				return false;
+			if (strstr(name.c_str(), "4k"))
+				return true;
 		}
 		default:
 			return false;

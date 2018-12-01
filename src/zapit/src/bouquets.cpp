@@ -765,6 +765,8 @@ int CBouquetManager::existsUBouquet(char const * const name, bool myfav)
 			if (Bouquets[i]->bFav)
 				return (int)i;
 		}
+		else if (Bouquets[i]->bUser && (Bouquets[i]->Name == name))
+			return (int)i;
 		else if (Bouquets[i]->bUser && (Bouquets[i]->bName == name))
 			return (int)i;
 	}
@@ -874,27 +876,29 @@ void CBouquetManager::loadWebchannels(int mode)
 		std::string tmp_name = randomFile(extension, LOGODIR_TMP);
 		bool remove_tmp = false;
 
-		if (filename.compare(0,1,"/") == 0)
+		if (filename.compare(0, 1, "/") == 0)
 			tmp_name = filename;
-		else {
-			if (::downloadUrl(filename,tmp_name))
-				remove_tmp = true;}
+		else
+		{
+			if (::downloadUrl(filename, tmp_name))
+				remove_tmp = true;
+		}
 
 		if (!access(tmp_name.c_str(), R_OK))
 		{
 			INFO("Loading %s from %s ...", (mode == MODE_WEBTV) ? "webtv" : "webradio", filename.c_str());
 
 			// check for extension
-			bool e2tv = false;
 			bool xml = false;
 			bool m3u = false;
+			bool e2tv = false;
 
-			if( strcasecmp("tv", extension.c_str()) == 0)
-				e2tv = true;
-			if( strcasecmp("m3u", extension.c_str()) == 0)
-				m3u = true;
-			if( strcasecmp("xml", extension.c_str()) == 0)
+			if (strcasecmp("xml", extension.c_str()) == 0)
 				xml = true;
+			if (strcasecmp("m3u", extension.c_str()) == 0)
+				m3u = true;
+			if (strcasecmp("tv", extension.c_str()) == 0)
+				e2tv = true;
 
 			if (xml)
 			{
@@ -911,13 +915,11 @@ void CBouquetManager::loadWebchannels(int mode)
 					if (!prov)
 						prov = (mode == MODE_WEBTV) ? "WebTV" : "WebRadio";
 					pbouquet = addBouquetIfNotExist(prov);
-					if (mode == MODE_WEBTV) {
+					if (mode == MODE_WEBTV)
 						pbouquet->bWebtv = true;
-					}
 					else
-					{
 						pbouquet->bWebradio = true;
-					}
+
 					while ((xmlGetNextOccurence(l1, (mode == MODE_WEBTV) ? "webtv" : "webradio")))
 					{
 						const char *title = xmlGetAttribute(l1, "title");
@@ -955,7 +957,7 @@ void CBouquetManager::loadWebchannels(int mode)
 				}
 				xmlFreeDoc(parser);
 			}
-			else if(m3u)
+			else if (m3u)
 			{
 				std::ifstream infile;
 				char cLine[1024];
@@ -1010,7 +1012,6 @@ void CBouquetManager::loadWebchannels(int mode)
 							pbouquet->bWebradio = true;
 
 					}
-
 					else if (strLine[0] != '#')
 					{
 						char *url = NULL;
@@ -1126,11 +1127,9 @@ void CBouquetManager::loadWebchannels(int mode)
 
 						}
 					}
-
 					fclose(f);
 				}
 			}
-
 		}
 		if (remove_tmp)
 			remove(tmp_name.c_str());
@@ -1285,7 +1284,8 @@ void CBouquetManager::readEPGMapping()
 		if(epgmap)
 			epgmap = xmlChildrenNode(epgmap);
 
-		while (epgmap) {
+		while (epgmap)
+		{
 			const char *channelid = xmlGetAttribute(epgmap, "channel_id");
 			const char *epgid = xmlGetAttribute(epgmap, "new_epg_id");
 			const char *xmlepg = xmlGetData(epgmap); // returns empty string, not NULL if nothing found
