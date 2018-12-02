@@ -63,7 +63,7 @@ void CComponentsDetailsLine::initVarDline(	const int& x_pos, const int& y_pos_to
 	h_mark_down 	= h_mark_down_ - 2*shadow_w;
 
 	//CComponentsDetailsLine
-	dl_w 	= CFrameBuffer::getInstance()->scale2Res(2); //NI
+	dl_w 	= CFrameBuffer::getInstance()->scale2Res(2);
 
 	cc_body_gradient_enable = false;
 }
@@ -90,7 +90,6 @@ CComponentsDetailsLine::~CComponentsDetailsLine()
 //paint details line with current parameters
 void CComponentsDetailsLine::paint(bool do_save_bg)
 {
-	//NI
 	if (!g_settings.show_menu_hints_line) return;
 
 	hide();

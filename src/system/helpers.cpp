@@ -1539,7 +1539,7 @@ size_t WriteMemoryCallback(void *ptr, size_t size, size_t nmemb, void *data)
 	struct MemoryStruct *mem = (struct MemoryStruct *)data;
 
 	mem->memory = (char *)myrealloc(mem->memory, mem->size + realsize + 1);
-	if (mem->memory) 
+	if (mem->memory)
 	{
 		memcpy(&(mem->memory[mem->size]), ptr, realsize);
 		mem->size += realsize;
@@ -1552,7 +1552,7 @@ size_t CurlWriteToString(void *ptr, size_t size, size_t nmemb, void *data)
 {
         std::string* pStr = (std::string*) data;
         pStr->append((char*) ptr, nmemb);
-	
+
         return size*nmemb;
 }
 
@@ -1570,7 +1570,7 @@ bool getUrl(std::string& url, std::string& answer, std::string userAgent, unsign
 	curl_easy_setopt(curl_handle, CURLOPT_NOSIGNAL, (long)1);
 	curl_easy_setopt(curl_handle, CURLOPT_SSL_VERIFYPEER, false);
 	curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, userAgent.c_str());
-	
+
 	if (!g_settings.softupdate_proxyserver.empty()) {
 		curl_easy_setopt(curl_handle, CURLOPT_PROXY, g_settings.softupdate_proxyserver.c_str());
 		if (!g_settings.softupdate_proxyusername.empty()) {
@@ -1581,17 +1581,17 @@ bool getUrl(std::string& url, std::string& answer, std::string userAgent, unsign
 
 	char cerror[CURL_ERROR_SIZE];
 	curl_easy_setopt(curl_handle, CURLOPT_ERRORBUFFER, cerror);
-	
+
 	CURLcode httpres = curl_easy_perform(curl_handle);
 
 	curl_easy_cleanup(curl_handle);
 
-	if (httpres != 0 || answer.empty()) 
+	if (httpres != 0 || answer.empty())
 	{
 		dprintf(DEBUG_NORMAL, "getUrl: error: %s\n", cerror);
 		return false;
 	}
-	
+
 	return true;
 }
 
@@ -1602,7 +1602,7 @@ bool downloadUrl(std::string url, std::string file, std::string userAgent, unsig
 	CURL * curl_handle = curl_easy_init();
 
 	FILE * fp = fopen(file.c_str(), "wb");
-	if (fp == NULL) 
+	if (fp == NULL)
 	{
 		perror(file.c_str());
 		return false;
@@ -1634,7 +1634,7 @@ bool downloadUrl(std::string url, std::string file, std::string userAgent, unsig
 	curl_easy_cleanup(curl_handle);
 	fclose(fp);
 
-	if (httpres != 0) 
+	if (httpres != 0)
 	{
 		dprintf(DEBUG_NORMAL, "curl error: %s\n", cerror);
 		unlink(file.c_str());

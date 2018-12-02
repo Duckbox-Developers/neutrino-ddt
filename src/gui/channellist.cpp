@@ -2555,7 +2555,7 @@ void CChannelList::paint_events(CChannelEventList &evtlist)
 		}
 		i++;
 	}
-	if(	channelsPainted)
+	if(channelsPainted)
 		frameBuffer->blit();
 }
 
