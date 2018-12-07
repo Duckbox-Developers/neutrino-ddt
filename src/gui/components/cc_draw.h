@@ -295,7 +295,7 @@ class CCDraw : public COSDFader, public CComponentsSignals
 		 * 			will be reset after callt paint() method
 		 * @see		allowPaint(), isPainted(), firstpaint, is_painted
 		*/
-		virtual void forceRePaint(){firstPaint = true; is_painted = false;};
+		void forceRePaint(){firstPaint = true; is_painted = false;};
 
 		///set color gradient on/off, returns true if gradient mode was changed
 		bool enableColBodyGradient(const int& enable_mode, const fb_pixel_t& sec_color = 255 /*=COL_BACKGROUND*/, const int& direction = 1 /*CFrameBuffer::gradientVertical*/);
