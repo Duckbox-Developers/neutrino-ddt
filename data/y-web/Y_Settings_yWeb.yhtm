@@ -27,7 +27,7 @@ function do_submit(){
 }
 function do_init(){
 	val = "{=ini-get:%(CONFIGDIR)/Y-Web.conf;fb;0~open=}";
-	var sel=2;
+	var sel=3;
 	switch(val){
 		case "-3":	// ufs910
 		case "-2":	// spark old
