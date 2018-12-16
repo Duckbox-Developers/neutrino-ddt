@@ -82,6 +82,7 @@
 #define NEUTRINO_ICON_DD		"dd"
 #define NEUTRINO_ICON_DD_AVAIL		"dd_avail"
 #define NEUTRINO_ICON_DD_GREY		"dd_gray"
+#define NEUTRINO_ICON_EDIT		"edit"
 #define NEUTRINO_ICON_ERROR		"error"
 #define NEUTRINO_ICON_FEATURES		"features"
 #define NEUTRINO_ICON_GAMES		"games"
