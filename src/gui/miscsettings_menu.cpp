@@ -92,7 +92,7 @@ int CMiscMenue::exec(CMenuTarget* parent, const std::string &actionKey)
 	if(actionKey == "epgdir")
 	{
 		const char *action_str = "epg";
-		if(chooserDir(g_settings.epg_dir, true, action_str))
+		if(chooserDir(g_settings.epg_dir, false, action_str))
 			CNeutrinoApp::getInstance()->SendSectionsdConfig();
 
 		return menu_return::RETURN_REPAINT;
