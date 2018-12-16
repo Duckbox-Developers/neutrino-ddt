@@ -204,7 +204,7 @@ CKeyboardInput::CKeyboardInput(const neutrino_locale_t Name, std::string* Value,
 	valueString = Value;
 	inputSize = Size;
 
-	iconfile = Icon ? Icon : "";
+	iconfile = Icon ? Icon : NEUTRINO_ICON_EDIT;
 
 	observ = Observ;
 	hint_1 = Hint_1;
@@ -227,7 +227,7 @@ CKeyboardInput::CKeyboardInput(const std::string &Name, std::string *Value, int 
 	valueString = Value;
 	inputSize = Size;
 
-	iconfile = Icon ? Icon : "";
+	iconfile = Icon ? Icon : NEUTRINO_ICON_EDIT;
 
 	observ = Observ;
 	hint_1 = Hint_1;
@@ -250,7 +250,7 @@ CKeyboardInput::CKeyboardInput(const std::string &Name, std::string *Value, int 
 	valueString = Value;
 	inputSize = Size;
 
-	iconfile = Icon ? Icon : "";
+	iconfile = Icon ? Icon : NEUTRINO_ICON_EDIT;
 
 	observ = Observ;
 	hint_1 = NONEXISTANT_LOCALE;
