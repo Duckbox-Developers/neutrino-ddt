@@ -31,7 +31,7 @@
 #include <stdlib.h>
 #include <dirent.h>
 #include <string>
-#include <system/helpers.h>
+#include <sys/stat.h>
 
 #include <system/helpers.h>
 
@@ -718,7 +718,8 @@ static void write_indexxml_footer(FILE *fd)
 
 void writeEventsToFile(const char *epgdir)
 {
-	if(check_dir(epgdir)){
+	struct stat my_stat;
+	if(stat(epgdir, &my_stat) != 0){
 		return;
 	}
 
