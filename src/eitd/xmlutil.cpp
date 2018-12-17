@@ -718,8 +718,12 @@ static void write_indexxml_footer(FILE *fd)
 
 void writeEventsToFile(const char *epgdir)
 {
+#if defined (BOXMODEL_UFS910) || defined (BOXMODEL_UFS922)
+	if (checkdir(epgdir)) {
+#else
 	struct stat my_stat;
-	if(stat(epgdir, &my_stat) != 0){
+	if (stat(epgdir, &my_stat) != 0) {
+#endif
 		return;
 	}
 
