@@ -50,7 +50,7 @@
 #include <zapit/zapit.h>
 #include <gui/movieplayer.h>
 #include <eitd/sectionsd.h>
-#include <video.h>
+#include <hardware/video.h>
 
 #include "lcd4l.h"
 

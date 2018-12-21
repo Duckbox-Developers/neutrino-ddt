@@ -15,7 +15,7 @@
 #include <zlib.h>
 #endif
 
-#include <zapit/include/dmx.h>
+#include <hardware/dmx.h>
 #include <system/set_threadname.h>
 
 tuxtxt_cache_struct tuxtxt_cache;

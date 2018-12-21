@@ -50,7 +50,7 @@
 #include <gui/pictureviewer.h>
 #include <system/debug.h>
 #include <global.h>
-#include <video.h>
+#include <hardware/video.h>
 #include <cs_api.h>
 
 extern cVideo * videoDecoder;

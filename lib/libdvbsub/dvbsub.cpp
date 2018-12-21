@@ -10,7 +10,7 @@
 #include <cerrno>
 #include <map>
 
-#include <zapit/include/dmx.h>
+#include <hardware/dmx.h>
 #include <driver/framebuffer.h>
 
 #include <poll.h>
