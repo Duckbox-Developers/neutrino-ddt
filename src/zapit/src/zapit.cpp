@@ -54,8 +54,6 @@
 #include <zapit/zapit.h>
 #include <xmlinterface.h>
 
-#include <ca_cs.h>
-
 #include <zapit/satconfig.h>
 #include <zapit/femanager.h>
 
@@ -66,6 +64,7 @@
 #endif
 
 #include <hardware/audio.h>
+#include <hardware/ca.h>
 #include <hardware/dmx.h>
 #include <hardware/video.h>
 
