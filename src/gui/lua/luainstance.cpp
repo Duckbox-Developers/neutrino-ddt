@@ -36,12 +36,8 @@
 #include <driver/pictureviewer/pictureviewer.h>
 #include <driver/fontrenderer.h>
 #include <neutrino.h>
-#if HAVE_COOL_HARDWARE
-#include <video_cs.h>
-#endif
-#if USE_STB_HAL
-#include <video_hal.h>
-#endif
+
+#include <hardware/video.h>
 
 #include "luainstance.h"
 #include "lua_cc_header.h"
@@ -183,8 +179,8 @@ static void set_lua_variables(lua_State *L)
 		{ "SCROLLBAR",			MAGIC_COLOR | (COL_SCROLLBAR) },
 		{ "SCROLLBAR_ACTIVE",		MAGIC_COLOR | (COL_SCROLLBAR_ACTIVE) },
 		{ "SCROLLBAR_PASSIVE",		MAGIC_COLOR | (COL_SCROLLBAR_PASSIVE) },
-		{ "PROGRESSBAR_ACTIVE",		MAGIC_COLOR | (COL_PROGRESSBAR_ACTIVE_PLUS_0) }, //NI
-		{ "PROGRESSBAR_PASSIVE",	MAGIC_COLOR | (COL_PROGRESSBAR_PASSIVE_PLUS_0) }, //NI
+		{ "PROGRESSBAR_ACTIVE",		MAGIC_COLOR | (COL_PROGRESSBAR_ACTIVE_PLUS_0) },
+		{ "PROGRESSBAR_PASSIVE",	MAGIC_COLOR | (COL_PROGRESSBAR_PASSIVE_PLUS_0) },
 		{ "BACKGROUND",			MAGIC_COLOR | (COL_BACKGROUND) },
 		{ "DARK_RED",			MAGIC_COLOR | (COL_DARK_RED0) },
 		{ "DARK_GREEN",			MAGIC_COLOR | (COL_DARK_GREEN0) },
