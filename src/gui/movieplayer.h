@@ -43,7 +43,7 @@
 #include <gui/timeosd.h>
 #include <driver/record.h>
 #include <zapit/channel.h>
-#include <playback.h>
+#include <hardware/playback.h>
 
 #include <stdio.h>
 
