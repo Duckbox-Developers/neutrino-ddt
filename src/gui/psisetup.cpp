@@ -48,7 +48,7 @@
 #include <global.h>
 #include <neutrino.h>
 
-#include <video.h>
+#include <hardware/video.h>
 
 extern cVideo * videoDecoder;
 

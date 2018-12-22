@@ -81,7 +81,7 @@
 #include <algorithm>
 #include <iconv.h>
 #include <libdvbsub/dvbsub.h>
-#include <audio.h>
+#include <hardware/audio.h>
 #ifdef ENABLE_GRAPHLCD
 #include <driver/nglcd.h>
 bool glcd_play = false;
