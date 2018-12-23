@@ -49,7 +49,6 @@
 
 #include <config.h>
 
-#include <playback.h>
 #include <global.h>
 #include <neutrino.h>
 #include <gui/widget/stringinput.h>

@@ -36,9 +36,9 @@
 #include <global.h>
 #include <gui/widget/menue.h>
 #include <zapit/client/zapittypes.h>
-#include <playback.h>
+#include <hardware/playback.h>
 #if HAVE_SH4_HARDWARE
-#include <audio.h>
+#include <hardware/audio.h>
 #endif
 
 #include <string>
