@@ -134,7 +134,7 @@ select {
 						<option value="8">CST HD-2 | Trinity Duo</option>
 						<option value="9">AX | HD51</option>
 						<option value="10">Mutant | HD51</option>
-						<option value="11">VU+ | Solo 4K</option>
+						<option value="11">VU | Solo 4K</option>
 					</select>
 				</td>
 			</tr>
