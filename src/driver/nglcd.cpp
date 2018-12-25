@@ -598,7 +598,12 @@ void nGLCD::Run(void)
 					static uint32_t *fbp = fb->getFrameBufferPointer();
 					int lcd_width = bitmap->Width();
 					int lcd_height = bitmap->Height();
+#ifdef BOXMODEL_VUSOLO4K
+					unsigned int fb_stride = fb->getStride()/4;
+					if (!showImage(fbp, fb_stride, fb_height, 0, 0, lcd_width, lcd_height, false)) {
+#else
 					if (!showImage(fbp, fb_width, fb_height, 0, 0, lcd_width, lcd_height, false)) {
+#endif
 						usleep(500000);
 					} else {
 						lcd->SetScreen(bitmap->Data(), lcd_width, lcd_height);

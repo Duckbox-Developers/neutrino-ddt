@@ -17,6 +17,9 @@ README
 COPYING
 INSTALL
 
+git-*
+go_*
+
 ### objects and libs
 .libs
 .deps

@@ -283,6 +283,7 @@ class CFrameBuffer : public sigc::trackable
 		virtual void set3DMode(Mode3D);
 		virtual Mode3D get3DMode(void);
 		enum Mode3D mode3D;
+		void blit();
 /* Remove this when pu/fb-setmode branch is merged to master */
 #define SCALE2RES_DEFINED
 		virtual int scale2Res(int size) { return size; };
@@ -339,7 +340,6 @@ class CFrameBuffer : public sigc::trackable
 		void setFbArea(int element, int _x=0, int _y=0, int _dx=0, int _dy=0);
 		void fbNoCheck(bool noCheck) { fb_no_check = noCheck; }
 		void doPaintMuteIcon(bool mode) { do_paint_mute_icon = mode; }
-		void blit(void) {}
 		sigc::signal<void> OnAfterSetPallette;
 		const char *fb_name;
 };
