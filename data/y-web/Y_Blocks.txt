@@ -1175,7 +1175,7 @@ start-block~rc_vu_solo4k
 <area shape="circle" coords="102,106,10" id ="7" alt="6" href="javascript:rcsim('KEY_6');">
 <area shape="circle" coords="38,133,10" id ="8" alt="7" href="javascript:rcsim('KEY_7');">
 <area shape="circle" coords="70,133,10" id ="9" alt="8" href="javascript:rcsim('KEY_8');">
-<area shape="circle" coords="102,133,10" id ="10" alt="9" href="javascript:rcsim('9');">
+<area shape="circle" coords="102,133,10" id ="10" alt="9" href="javascript:rcsim('KEY_9');">
 <area shape="circle" coords="38,161,10" id ="412" alt="previous" href="javascript:rcsim('KEY_PREVIOUS');">
 <area shape="circle" coords="70,161,10" id ="11" alt="0" href="javascript:rcsim('KEY_0');">
 <area shape="circle" coords="102,161,10" id ="407" alt="next" href="javascript:rcsim('KEY_NEXT');">
