@@ -257,15 +257,16 @@ CNeutrinoApp::CNeutrinoApp()
 : configfile('\t')
 {
 	standby_pressed_at.tv_sec = 0;
+#if USE_STB_HAL
+	/* this needs to happen before the framebuffer is set up */
+	hal_api_init();
+#endif
+
 	osd_resolution_tmp        = -1;
 	frameBufferInitialized    = false;
 
 	frameBuffer = CFrameBuffer::getInstance();
 	frameBuffer->setIconBasePath(ICONSDIR);
-#if USE_STB_HAL
-	/* this needs to happen before the framebuffer is set up */
-	hal_api_init();
-#endif
 	SetupFrameBuffer();
 
 	mode 			= NeutrinoModes::mode_unknown;
