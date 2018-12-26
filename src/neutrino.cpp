@@ -264,7 +264,7 @@ CNeutrinoApp::CNeutrinoApp()
 	frameBuffer->setIconBasePath(ICONSDIR);
 #if USE_STB_HAL
 	/* this needs to happen before the framebuffer is set up */
-	init_td_api();
+	hal_api_init();
 #endif
 	SetupFrameBuffer();
 
