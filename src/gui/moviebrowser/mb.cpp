@@ -3292,6 +3292,7 @@ int CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 	CKeyboardInput epgUserInput(LOCALE_MOVIEBROWSER_INFO_INFO1,            &movie_info->epgInfo1, 20);
 	CKeyboardInput countryUserInput(LOCALE_MOVIEBROWSER_INFO_PRODCOUNTRY,  &movie_info->productionCountry, 11);
 
+	std::string neverplayed = "---";
 	CDateInput     dateUserDateInput(LOCALE_MOVIEBROWSER_INFO_LENGTH,      &movie_info->dateOfLastPlay);
 	CDateInput     recUserDateInput(LOCALE_MOVIEBROWSER_INFO_LENGTH,       &movie_info->file.Time);
 	CIntInput      lengthUserIntInput(LOCALE_MOVIEBROWSER_INFO_LENGTH,     (int *)&movie_info->length, 3);
@@ -3319,8 +3320,8 @@ int CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 	movieInfoMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_INFO_CHANNEL,        true, movie_info->channelName,       &channelUserInput, NULL,            CRCInput::RC_9));
 	movieInfoMenu.addItem(GenericMenuSeparatorLine);
 	movieInfoMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_INFO_PATH,           false, dirItNr));
-	movieInfoMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_INFO_PREVPLAYDATE,   false, dateUserDateInput.getValue()));
 	movieInfoMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_INFO_RECORDDATE,     false, recUserDateInput.getValue()));
+	movieInfoMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_INFO_PREVPLAYDATE,   false, (movie_info->dateOfLastPlay == 0) ? neverplayed : dateUserDateInput.getValue()));
 	movieInfoMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_INFO_SIZE,           false, size));
 	movieInfoMenu.addItem(GenericMenuSeparatorLine);
 	movieInfoMenu.addItem(rate);
@@ -3757,9 +3758,16 @@ bool CMovieBrowser::getMovieInfoItem(MI_MOVIE_INFO& movie_info, MB_INFO_ITEM ite
 			*item_string = str_tmp;
 			break;
 		case MB_INFO_PREVPLAYDATE: 			// 		= 12,
-			tm_tmp = localtime(&movie_info.dateOfLastPlay);
-			snprintf(str_tmp, sizeof(str_tmp),"%02d.%02d.%02d",tm_tmp->tm_mday,(tm_tmp->tm_mon)+ 1, tm_tmp->tm_year >= 100 ? tm_tmp->tm_year-100 : tm_tmp->tm_year);
-			*item_string = str_tmp;
+			if (movie_info.dateOfLastPlay == 0)
+			{
+				*item_string = "---";
+			}
+			else
+			{
+				tm_tmp = localtime(&movie_info.dateOfLastPlay);
+				snprintf(str_tmp, sizeof(str_tmp),"%02d.%02d.%02d",tm_tmp->tm_mday,(tm_tmp->tm_mon)+ 1, tm_tmp->tm_year >= 100 ? tm_tmp->tm_year-100 : tm_tmp->tm_year);
+				*item_string = str_tmp;
+			}
 			break;
 
 		case MB_INFO_RECORDDATE: 			// 		= 13,
