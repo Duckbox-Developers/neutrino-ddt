@@ -2398,7 +2398,7 @@ void CMoviePlayerGui::addAudioFormat(int count, std::string &apidtitle, bool& en
 			break;
 		case 6: /*DTS*/
 			apidtitle.append(" (DTS)");
-#if ! defined(HAVE_SPARK_HARDWARE) && ! defined (BOXMODEL_CS_HD2)
+#if ! defined (BOXMODEL_CS_HD2)
 			enabled = false;
 #endif
 			break;
