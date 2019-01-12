@@ -334,6 +334,11 @@ static void clear_queue()
 }
 
 #if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
+#if HAVE_ARM_HARDWARE
+extern "C" void dvbsub_ass_clear(void);
+extern "C" void dvbsub_ass_write(AVCodecContext *c, AVSubtitle *sub, int pid);
+extern "C" void dvbsub_write(AVSubtitle *sub, int64_t pts);
+#endif
 struct ass_data
 {
 	AVCodecContext *c;
@@ -342,7 +347,6 @@ struct ass_data
 	ass_data(AVCodecContext *_c, AVSubtitle *_sub, int _pid) : c(_c),pid(_pid) { memcpy(&sub, _sub, sizeof(sub));}
 };
 
-extern "C" void dvbsub_ass_clear(void);
 void dvbsub_ass_clear(void)
 {
 	OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(ass_mutex);
@@ -600,7 +604,6 @@ static void *ass_reader_thread(void *)
 	pthread_exit(NULL);
 }
 
-extern "C" void dvbsub_ass_write(AVCodecContext *c, AVSubtitle *sub, int pid);
 void dvbsub_ass_write(AVCodecContext *c, AVSubtitle *sub, int pid)
 {
 	if (ass_reader_running) {
@@ -613,7 +616,6 @@ void dvbsub_ass_write(AVCodecContext *c, AVSubtitle *sub, int pid)
 
 #endif
 
-extern "C" void dvbsub_write(AVSubtitle *sub, int64_t pts);
 void dvbsub_write(AVSubtitle *sub, int64_t pts)
 {
 	pthread_mutex_lock(&packetMutex);
