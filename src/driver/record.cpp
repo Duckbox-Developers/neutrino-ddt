@@ -201,7 +201,7 @@ record_error_msg_t CRecordInstance::Start(CZapitChannel * channel)
 {
 	time_t msg_start_time = time(0);
 	CHintBox hintBox(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_RECORDING_START));
-	if ((!(autoshift && g_settings.auto_timeshift)) && g_settings.recording_startstop_msg)
+	if ((!(autoshift && g_settings.timeshift_auto)) && g_settings.recording_startstop_msg)
 		hintBox.paint();
 
 	wakeup_hdd(Directory.c_str());
@@ -329,7 +329,7 @@ bool CRecordInstance::Stop(bool remove_event)
 	recMovieInfo->length = (end_time - start_time + 30) / 60;
 
 	CHintBox hintBox(LOCALE_MESSAGEBOX_INFO, rec_stop_msg.c_str());
-	if ((!(autoshift && g_settings.auto_timeshift)) && g_settings.recording_startstop_msg)
+	if ((!(autoshift && g_settings.timeshift_auto)) && g_settings.recording_startstop_msg)
 		hintBox.paint();
 
 	printf("%s: channel %" PRIx64 " recording_id %d\n", __func__, channel_id, recording_id);
@@ -343,7 +343,7 @@ bool CRecordInstance::Stop(bool remove_event)
 
         CCamManager::getInstance()->Stop(channel_id, CCamManager::RECORD);
 
-        if((autoshift && g_settings.auto_delete) /* || autoshift_delete*/) {
+        if((autoshift && gg_settings.timeshift_delete) /* || autoshift_delete*/) {
 		snprintf(buf,sizeof(buf), "nice -n 20 rm -f \"%s.ts\" &", filename);
 		my_system(3, "/bin/sh", "-c", buf);
 		snprintf(buf,sizeof(buf), "%s.xml", filename);
@@ -1351,8 +1351,8 @@ int CRecordManager::handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t data
 {
 	if(msg == NeutrinoMessages::EVT_ZAP_COMPLETE) {
 		g_RCInput->killTimer (shift_timer);
-		if (g_settings.auto_timeshift) {
-			int delay = g_settings.auto_timeshift;
+		if (g_settings.timeshift_auto) {
+			int delay = g_settings.timeshift_auto;
 			shift_timer = g_RCInput->addTimer(delay*1000*1000, true);
 			g_InfoViewer->handleMsg(NeutrinoMessages::EVT_RECORDMODE, 1);
 		}
@@ -1403,7 +1403,7 @@ void CRecordManager::StartTimeshift()
 #endif
 		bool tstarted = false;
 		/* start temporary timeshift if enabled and not running, but dont start second record */
-		if (g_settings.temp_timeshift) {
+		if (g_settings.timeshift_temp) {
 			if (!FindTimeshift()) {
 				res = StartAutoRecord();
 				tmode = "timeshift"; // record just started
@@ -1418,7 +1418,7 @@ void CRecordManager::StartTimeshift()
 		if(res)
 		{
 			CMoviePlayerGui::getInstance().exec(NULL, tmode);
-			if(g_settings.temp_timeshift && tstarted && autoshift)
+			if(g_settings.timeshift_temp && tstarted && autoshift)
 				ShowMenu();
 		}
 	}
@@ -2059,7 +2059,7 @@ bool CStreamRec::Stop(bool remove_event)
 
 	time_t end_time = time_monotonic();
 	CHintBox hintBox(LOCALE_MESSAGEBOX_INFO, rec_stop_msg.c_str());
-	if ((!(autoshift && g_settings.auto_timeshift)) && g_settings.recording_startstop_msg)
+	if ((!(autoshift && g_settings.timeshift_auto)) && g_settings.recording_startstop_msg)
 		hintBox.paint();
 
 	printf("%s: Stopping...\n", __FUNCTION__);
@@ -2095,7 +2095,7 @@ record_error_msg_t CStreamRec::Record()
 	APIDList apid_list;
 
 	CHintBox hintBox(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_RECORDING_START));
-	if ((!(autoshift && g_settings.auto_timeshift)) && g_settings.recording_startstop_msg)
+	if ((!(autoshift && g_settings.timeshift_auto)) && g_settings.recording_startstop_msg)
 		hintBox.paint();
 
 	printf("%s: channel %" PRIx64 " recording_id %d\n", __func__, channel_id, recording_id);

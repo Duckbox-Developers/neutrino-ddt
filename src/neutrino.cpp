@@ -734,9 +734,9 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.downloadcache_dir = configfile.getString( "downloadcache_dir", g_settings.network_nfs_recordingdir.c_str());
 	g_settings.last_webtv_dir = configfile.getString( "last_webtv_dir", CONFIGDIR);
 
-	g_settings.temp_timeshift = configfile.getInt32( "temp_timeshift", 0 );
-	g_settings.auto_timeshift = configfile.getInt32( "auto_timeshift", 0 );
-	g_settings.auto_delete = configfile.getInt32( "auto_delete", 1 );
+	g_settings.timeshift_temp = configfile.getInt32( "timeshift_temp", 0 );
+	g_settings.timeshift_auto = configfile.getInt32( "timeshift_auto", 0 );
+	g_settings.timeshift_delete = configfile.getInt32( "timeshift_delete", 1 );
 
 	std::string timeshiftDir;
 	if(g_settings.timeshiftdir.empty()) {
@@ -753,7 +753,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 
 	CRecordManager::getInstance()->SetTimeshiftDirectory(timeshiftDir.c_str());
 
-	if(g_settings.auto_delete) {
+	if(g_settings.timeshift_delete) {
 		if(g_settings.timeshiftdir == g_settings.network_nfs_recordingdir) {
 			DIR *d = opendir(timeshiftDir.c_str());
 			if(d){
@@ -1627,11 +1627,13 @@ void CNeutrinoApp::saveSetup(const char * fname)
 
 	configfile.setInt32 ("key_playbutton", g_settings.key_playbutton );
 	configfile.setInt32( "timeshift_pause", g_settings.timeshift_pause );
-	configfile.setInt32( "temp_timeshift", g_settings.temp_timeshift );
-	configfile.setInt32( "auto_timeshift", g_settings.auto_timeshift );
-	configfile.setInt32( "auto_delete", g_settings.auto_delete );
+	configfile.setInt32( "timeshift_temp", g_settings.timeshift_temp );
+	configfile.setInt32( "timeshift_auto", g_settings.timeshift_auto );
+	configfile.setInt32( "timeshift_delete", g_settings.timeshift_delete );
+
 	configfile.setInt32( "record_hours", g_settings.record_hours );
 	configfile.setInt32( "timeshift_hours", g_settings.timeshift_hours );
+
 	//printf("set: key_unlock =============== %d\n", g_settings.key_unlock);
 #if HAVE_SH4_HARDWARE
 	configfile.setInt32( "screenshot_png_compression", g_settings.screenshot_png_compression );

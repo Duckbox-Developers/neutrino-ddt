@@ -423,8 +423,6 @@ eventlistbar.channelswitch schedule
 eventlistbar.eventsort sorting
 eventlistbar.recordevent record
 extra.add_to_bouquet Add to bouquet
-extra.auto_delete Auto-delete
-extra.auto_timeshift Auto-record, sec (0 = disable)
 extra.cache_txt Cache teletext
 extra.chadded The current channel has been added to selected bouquet.\n
 extra.chalreadyinbq The current channel is already in selected bouquet.\n
@@ -495,8 +493,10 @@ extra.sms_channel SMS-mode channel
 extra.sms_movie SMS-mode movie
 extra.south South
 extra.start_tostandby Startup to standby
-extra.temp_timeshift Temporary timeshift
+extra.timeshift_auto Automatic recording, sec (0 = disable)
+extra.timeshift_delete Automatic deletion
 extra.timeshift_pause Timeshift pause
+extra.timeshift_temp Temporary timeshift
 extra.tp_bandwidth Bandwidth
 extra.tp_bandwidth_10mhz 10Mhz
 extra.tp_bandwidth_1_712mhz 1.712Mhz
