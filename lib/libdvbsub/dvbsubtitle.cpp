@@ -380,6 +380,7 @@ int cDvbSubtitleConverter::Action(void)
 		return -1;
 	}
 
+#if HAVE_SH4_HARDWARE
 	min_x = min_y = 0;
 	max_x = 720;
 	max_y = 576;
@@ -391,6 +392,7 @@ int cDvbSubtitleConverter::Action(void)
 		max_y = avctx->height;
 		dbgconverter("cDvbSubtitleConverter::Action: Display Definition: min_x=%d min_y=%d max_x=%d max_y=%d\n", min_x, min_y, max_x, max_y);
 	}
+#endif
 
 	Lock();
 	if (cDvbSubtitleBitmaps *sb = bitmaps->First()) {
