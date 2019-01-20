@@ -1498,7 +1498,7 @@ int CHDDDestExec::exec(CMenuTarget* /*parent*/, const std::string&)
 	if (g_settings.hdd_sleep > 0 && g_settings.hdd_sleep < 60)
 		g_settings.hdd_sleep = 60;
 
-	if (have_hdidle) {
+	if (have_hdidle && g_settings.hdd_sleep > 0) {
 		system("kill $(pidof hd-idle)");
 		int sleep_seconds = g_settings.hdd_sleep;
 		switch (sleep_seconds) {
