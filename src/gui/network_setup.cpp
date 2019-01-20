@@ -369,7 +369,7 @@ int CNetworkSetup::showNetworkSetup()
 	mf = new CMenuForwarder(LOCALE_FLASHUPDATE_PROXYSERVER_SEP, true, NULL, &proxy, NULL, CRCInput::RC_0);
 	mf->setHint("", LOCALE_MENU_HINT_NET_PROXY);
 	networkSettings->addItem(mf);
-#if 0
+#if 1
 	//services
 	mf = new CMenuForwarder(LOCALE_NETWORKMENU_SERVICES, true, NULL, &services, NULL, CRCInput::RC_1);
 	mf->setHint("", LOCALE_MENU_HINT_NET_SERVICES);
