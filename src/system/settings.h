@@ -505,7 +505,7 @@ struct SNeutrinoSettings
 	int recording_audio_pids_std;
 	int recording_audio_pids_alt;
 	int recording_audio_pids_ac3;
-#if HAVE_SH4_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
 	int recording_bufsize;
 	int recording_bufsize_dmx;
 #endif

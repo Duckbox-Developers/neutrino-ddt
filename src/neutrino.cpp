@@ -786,7 +786,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.recording_stream_subtitle_pids  = configfile.getBool("recordingmenu.stream_subtitle_pids", true);
 	g_settings.recording_stream_pmt_pid        = configfile.getBool("recordingmenu.stream_pmt_pid"      , false);
 	g_settings.recording_filename_template     = configfile.getString("recordingmenu.filename_template" , "%C_%T_%d_%t");
-#if HAVE_SH4_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
 	g_settings.recording_bufsize               = configfile.getInt32("recording_bufsize", 4);
 	g_settings.recording_bufsize_dmx           = configfile.getInt32("recording_bufsize_dmx", 2);
 #endif
@@ -1580,7 +1580,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setBool  ("shutdown_timer_record_type"          , g_settings.shutdown_timer_record_type    );
 
 	configfile.setBool  ("recordingmenu.stream_vtxt_pid"      , g_settings.recording_stream_vtxt_pid      );
-#if HAVE_SH4_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
 	configfile.setInt32 ("recording_bufsize"                  , g_settings.recording_bufsize);
 	configfile.setInt32 ("recording_bufsize_dmx"              , g_settings.recording_bufsize_dmx);
 #endif
