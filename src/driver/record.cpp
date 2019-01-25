@@ -343,7 +343,7 @@ bool CRecordInstance::Stop(bool remove_event)
 
         CCamManager::getInstance()->Stop(channel_id, CCamManager::RECORD);
 
-        if((autoshift && gg_settings.timeshift_delete) /* || autoshift_delete*/) {
+        if((autoshift && g_settings.timeshift_delete) /* || autoshift_delete*/) {
 		snprintf(buf,sizeof(buf), "nice -n 20 rm -f \"%s.ts\" &", filename);
 		my_system(3, "/bin/sh", "-c", buf);
 		snprintf(buf,sizeof(buf), "%s.xml", filename);
