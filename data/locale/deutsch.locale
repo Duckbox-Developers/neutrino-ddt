@@ -335,7 +335,7 @@ colormenu.fade Ein-/Ausblenden
 colormenu.font Verwendete Schriftart
 colormenu.font_sub Untertitel-Schriftart
 colormenu.font_ttx Teletext Schriftart
-colormenu.menucolors Farben
+colormenu.menucolors Themes
 colormenu.osd_preset Monitor Auswahl
 colormenu.osd_resolution OSD-Auflösung
 colormenu.progressbar_active Farbe des aktiven Teil

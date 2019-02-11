@@ -335,7 +335,7 @@ colormenu.fade Fade GUI
 colormenu.font Select GUI font
 colormenu.font_sub Select Subtitle font
 colormenu.font_ttx Select Teletext font
-colormenu.menucolors Colors
+colormenu.menucolors Themes
 colormenu.osd_preset TV preset
 colormenu.osd_resolution OSD resolution
 colormenu.progressbar_active Active part color
