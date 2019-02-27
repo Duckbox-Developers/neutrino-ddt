@@ -2117,7 +2117,7 @@ bool CSdtThread::addServices()
 /* helper function for the housekeeping-thread */
 static void print_meminfo(void)
 {
-	if (!sections_debug >= DEBUG_DEBUG)
+	if (!(sections_debug >= DEBUG_DEBUG))
 		return;
 
 	comp_malloc_stats(NULL);
