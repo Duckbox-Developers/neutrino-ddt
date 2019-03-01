@@ -1304,6 +1304,8 @@ void CEpgData::hide()
 	frameBuffer->paintBackgroundBoxRel(sx, sy, ox, oy);
 	frameBuffer->blit();
 	showTimerEventBar (false);
+
+	remove("/tmp/tmdb.jpg");
 }
 
 void CEpgData::GetEPGData(const t_channel_id channel_id, uint64_t id, time_t* startzeit, bool clear )
