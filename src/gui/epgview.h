@@ -36,6 +36,7 @@
 #include <driver/rcinput.h>
 #include <system/settings.h>
 
+#include <gui/tmdb.h>
 #include <driver/movieinfo.h>
 #include "widget/menue.h"
 #include "widget/navibar.h"
@@ -50,6 +51,8 @@ class CEpgData
 		CChannelEventList	evtlist;
 		CChannelEventList	followlist;
 		CEPGData		epgData;
+		cTmdb			*tmdb;
+
 		CComponentsHeader	*header;
 		CNaviBar 		*Bottombox;
 		CProgressBar 		*pb;

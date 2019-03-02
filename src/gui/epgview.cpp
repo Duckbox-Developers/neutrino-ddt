@@ -50,7 +50,6 @@
 #include <gui/moviebrowser/mb.h>
 #include <gui/movieplayer.h>
 #include <gui/pictureviewer.h>
-#include <gui/tmdb.h>
 #include <driver/record.h>
 #include <driver/fontrenderer.h>
 
@@ -58,8 +57,6 @@
 #include <zapit/getservices.h>
 #include <eitd/sectionsd.h>
 #include <timerdclient/timerdclient.h>
-
-#define TMDB_COVER "/tmp/tmdb.jpg"
 
 extern CPictureViewer * g_PicViewer;
 
@@ -125,12 +122,14 @@ CEpgData::CEpgData()
 {
 	bigFonts 	= false;
 	frameBuffer 	= CFrameBuffer::getInstance();
-	tmdb_active 	= false;
 	mp_movie_info 	= NULL;
 	header     	= NULL;
 	Bottombox 	= NULL;
 	pb		= NULL;
 	font_title	= NULL;
+
+	tmdb = cTmdb::getInstance();
+	tmdb_active = false;
 }
 
 CEpgData::~CEpgData()
@@ -242,7 +241,8 @@ void CEpgData::showText(int startPos, int ypos, bool has_cover, bool fullClear)
 	medlineheight = g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO1]->getHeight();
 	medlinecount = sb / medlineheight;
 
-	std::string cover = "/tmp/tmdb.jpg"; //todo: maybe add a getCover()-function to tmdb class
+	Font* font = g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2];
+	std::string cover = tmdb->getCover();
 	int cover_max_width = ox/4; //25%
 	int cover_max_height = sb-(2*OFFSET_INNER_MID);
 	int cover_width = 0;
@@ -1139,7 +1139,7 @@ int CEpgData::show(const t_channel_id channel_id, uint64_t a_id, time_t* a_start
 				{
 					showPos = 0;
 					if (!tmdb_active) {
-						cTmdb* tmdb = new cTmdb(epgData.title);
+						tmdb->setTitle(epgData.title);
 						if ((tmdb->getResults() > 0) && (!tmdb->getDescription().empty())) {
 							epgText_saved = epgText;
 							epgText.clear();
@@ -1156,7 +1156,6 @@ int CEpgData::show(const t_channel_id channel_id, uint64_t a_id, time_t* a_start
 						} else {
 							ShowMsg(LOCALE_MESSAGEBOX_INFO, LOCALE_EPGVIEWER_NODETAILED, CMsgBox::mbrOk , CMsgBox::mbrOk);
 						}
-						delete tmdb;
 					} else {
 						epgText = epgText_saved;
 						textCount = epgText.size();
@@ -1307,7 +1306,9 @@ void CEpgData::hide()
 	frameBuffer->blit();
 	showTimerEventBar (false);
 
-	remove(TMDB_COVER);
+	// tmdb
+	tmdb_active = false;
+	tmdb->cleanup();
 }
 
 void CEpgData::GetEPGData(const t_channel_id channel_id, uint64_t id, time_t* startzeit, bool clear )
