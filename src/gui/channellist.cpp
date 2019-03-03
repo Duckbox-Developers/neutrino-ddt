@@ -178,14 +178,14 @@ void CChannelList::updateEvents(unsigned int from, unsigned int to)
 	CChannelEventList events;
 	if (displayNext) {
 		time_t atime = time(NULL);
-        if (g_settings.channellist_primetime && primetime)
-        {
-            struct tm * timeinfo;
-            timeinfo = localtime (&atime);
-            timeinfo->tm_hour = 20;
-            timeinfo->tm_min = 0;
-            atime = mktime(timeinfo);
-        }
+		if (g_settings.channellist_primetime && primetime)
+		{
+			struct tm * timeinfo;
+			timeinfo = localtime (&atime);
+			timeinfo->tm_hour = 20;
+			timeinfo->tm_min = 0;
+			atime = mktime(timeinfo);
+		}
 		unsigned int count;
 		for (count = from; count < to; count++) {
 			CEitManager::getInstance()->getEventsServiceKey((*chanlist)[count]->getEpgID(), events);
@@ -885,14 +885,16 @@ int CChannelList::show()
 			} else {
 				if (g_settings.channellist_additional)
 					displayList = !displayList;
-				else {
-                    if (primetime && displayNext)
-                        primetime = 0;
-                    else {
-                            primetime = 0;
-                            displayNext = !displayNext;
-                        }
+				else
+				{
+					if (primetime && displayNext)
+						primetime = 0;
+					else
+					{
+						primetime = 0;
+						displayNext = !displayNext;
 					}
+				}
 
 				paint();
 			}
@@ -912,16 +914,18 @@ int CChannelList::show()
 					oldselected = selected;
 					paint();
 				} else {
-                        if (g_settings.channellist_primetime) {
-                            if (displayNext && !primetime)
-                                primetime = 1;
-                            else {
-                                primetime = 1;
-                                displayNext = !displayNext;
+					if (g_settings.channellist_primetime)
+					{
+						if (displayNext && !primetime)
+							primetime = 1;
+						else
+						{
+							primetime = 1;
+							displayNext = !displayNext;
+						}
+						paint();
+					}
 				}
-                            paint();
-                        }
-                    }
 			}
 		}
 		else if (!empty && edit_state && move_state != beMoving && msg == CRCInput::RC_stop )
@@ -1886,14 +1890,15 @@ void CChannelList::paintButtonBar(bool is_current)
 				}
 			} else
 			{
-                if (g_settings.channellist_primetime)
-                {
-                    if (displayNext && primetime)
-                        Button[bcnt].locale = LOCALE_INFOVIEWER_NOW;
-                    else
-                        Button[bcnt].locale = LOCALE_CHANNELLIST_PRIMETIME;
-                } else
-                    continue;
+				if (g_settings.channellist_primetime)
+				{
+					if (displayNext && primetime)
+						Button[bcnt].locale = LOCALE_INFOVIEWER_NOW;
+					else
+						Button[bcnt].locale = LOCALE_CHANNELLIST_PRIMETIME;
+				}
+				else
+					continue;
 			}
 		}
 		if (i == 3) {
@@ -2622,7 +2627,7 @@ void CChannelList::showdescription(int index)
 	CZapitChannel* chan = (*chanlist)[index];
 	CChannelEvent *p_event = &chan->currentEvent;
 	if (displayNext && primetime)
-        p_event = &chan->nextEvent;
+		p_event = &chan->nextEvent;
 	epgData.info1.clear();
 	epgData.info2.clear();
 	epgText.clear();
