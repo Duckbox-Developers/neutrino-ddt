@@ -132,6 +132,7 @@ private:
 	bool vlist; // "virtual" list, not bouquet
 	bool displayNext;
 	bool displayList;
+	bool primetime;
 	bool minitv_is_active;
 
 	bool headerNew;

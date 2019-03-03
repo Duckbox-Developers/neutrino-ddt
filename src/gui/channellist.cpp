@@ -178,6 +178,14 @@ void CChannelList::updateEvents(unsigned int from, unsigned int to)
 	CChannelEventList events;
 	if (displayNext) {
 		time_t atime = time(NULL);
+        if (g_settings.channellist_primetime && primetime)
+        {
+            struct tm * timeinfo;
+            timeinfo = localtime (&atime);
+            timeinfo->tm_hour = 20;
+            timeinfo->tm_min = 0;
+            atime = mktime(timeinfo);
+        }
 		unsigned int count;
 		for (count = from; count < to; count++) {
 			CEitManager::getInstance()->getEventsServiceKey((*chanlist)[count]->getEpgID(), events);
@@ -473,6 +481,7 @@ int CChannelList::exec()
 {
 	displayNext = 0; // always start with current events
 	displayList = 1; // always start with event list
+	primetime  = 0;
 	int nNewChannel = show();
 	if ( nNewChannel > -1 && nNewChannel < (int) (*chanlist).size()) {
 		if(this->historyMode && (*chanlist)[nNewChannel]) {
@@ -876,8 +885,14 @@ int CChannelList::show()
 			} else {
 				if (g_settings.channellist_additional)
 					displayList = !displayList;
-				else
-					displayNext = !displayNext;
+				else {
+                    if (primetime && displayNext)
+                        primetime = 0;
+                    else {
+                            primetime = 0;
+                            displayNext = !displayNext;
+                        }
+					}
 
 				paint();
 			}
@@ -896,7 +911,17 @@ int CChannelList::show()
 					CNeutrinoApp::getInstance()->SetChannelMode(mode);
 					oldselected = selected;
 					paint();
+				} else {
+                        if (g_settings.channellist_primetime) {
+                            if (displayNext && !primetime)
+                                primetime = 1;
+                            else {
+                                primetime = 1;
+                                displayNext = !displayNext;
 				}
+                            paint();
+                        }
+                    }
 			}
 		}
 		else if (!empty && edit_state && move_state != beMoving && msg == CRCInput::RC_stop )
@@ -1860,7 +1885,16 @@ void CChannelList::paintButtonBar(bool is_current)
 						break;
 				}
 			} else
-				continue;
+			{
+                if (g_settings.channellist_primetime)
+                {
+                    if (displayNext && primetime)
+                        Button[bcnt].locale = LOCALE_INFOVIEWER_NOW;
+                    else
+                        Button[bcnt].locale = LOCALE_CHANNELLIST_PRIMETIME;
+                } else
+                    continue;
+			}
 		}
 		if (i == 3) {
 			//manage now/next button
@@ -1870,7 +1904,7 @@ void CChannelList::paintButtonBar(bool is_current)
 				else
 					Button[bcnt].locale = LOCALE_FONTMENU_EVENTLIST;
 			} else {
-				if (displayNext)
+				if (displayNext && !primetime)
 					Button[bcnt].locale = LOCALE_INFOVIEWER_NOW;
 				else
 					Button[bcnt].locale = LOCALE_INFOVIEWER_NEXT;
@@ -2333,7 +2367,8 @@ void CChannelList::paintBody()
 	if (g_settings.channellist_additional)
 	{
 		// disable displayNext
-		displayNext = false;
+		if (!g_settings.channellist_primetime)
+            displayNext = false;
 		// paint background for right box
 		frameBuffer->paintBoxRel(x+width,y+theight+pig_height,infozone_width,infozone_height,COL_MENUCONTENT_PLUS_0);
 	}
@@ -2586,6 +2621,8 @@ void CChannelList::showdescription(int index)
 	ffheight = g_Font[eventFont]->getHeight();
 	CZapitChannel* chan = (*chanlist)[index];
 	CChannelEvent *p_event = &chan->currentEvent;
+	if (displayNext && primetime)
+        p_event = &chan->nextEvent;
 	epgData.info1.clear();
 	epgData.info2.clear();
 	epgText.clear();
