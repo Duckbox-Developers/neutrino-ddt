@@ -49,6 +49,10 @@
 #include <gui/nfs.h>
 #endif
 
+#ifdef ENABLE_GRAPHLCD
+#include <driver/nglcd.h>
+#endif
+
 #include <gui/components/cc.h>
 #include <gui/widget/buttons.h>
 #include <gui/widget/icons.h>
@@ -187,44 +191,44 @@ const struct button_label AudioPlayerButtons[][4] =
 		{ NEUTRINO_ICON_BUTTON_STOP	, LOCALE_AUDIOPLAYER_STOP			},
 		{ NEUTRINO_ICON_BUTTON_BACKWARD	, LOCALE_AUDIOPLAYER_REWIND			},
 		{ NEUTRINO_ICON_BUTTON_PAUSE	, LOCALE_AUDIOPLAYER_PAUSE			},
-		{ NEUTRINO_ICON_BUTTON_FORWARD	, LOCALE_AUDIOPLAYER_FASTFORWARD		},
+		{ NEUTRINO_ICON_BUTTON_FORWARD	, LOCALE_AUDIOPLAYER_FASTFORWARD		}
 	},
 	{
 		{ NEUTRINO_ICON_BUTTON_RED	, LOCALE_AUDIOPLAYER_DELETE			},
 		{ NEUTRINO_ICON_BUTTON_GREEN	, LOCALE_AUDIOPLAYER_ADD			},
 		{ NEUTRINO_ICON_BUTTON_YELLOW	, LOCALE_AUDIOPLAYER_DELETEALL			},
-		{ NEUTRINO_ICON_BUTTON_BLUE	, LOCALE_AUDIOPLAYER_SHUFFLE			},
+		{ NEUTRINO_ICON_BUTTON_BLUE	, LOCALE_AUDIOPLAYER_SHUFFLE			}
 	},
 	{
 		{ NEUTRINO_ICON_BUTTON_GREEN	, LOCALE_AUDIOPLAYER_JUMP_BACKWARDS		},
-		{ NEUTRINO_ICON_BUTTON_BLUE	, LOCALE_AUDIOPLAYER_JUMP_FORWARDS		},
+		{ NEUTRINO_ICON_BUTTON_BLUE	, LOCALE_AUDIOPLAYER_JUMP_FORWARDS		}
 	},
 	{
 		{ NEUTRINO_ICON_BUTTON_GREEN	, LOCALE_AUDIOPLAYER_JUMP_BACKWARDS		},
-		{ NEUTRINO_ICON_BUTTON_BLUE	, LOCALE_AUDIOPLAYER_JUMP_FORWARDS		},
+		{ NEUTRINO_ICON_BUTTON_BLUE	, LOCALE_AUDIOPLAYER_JUMP_FORWARDS		}
 	},
 	{
 		{ NEUTRINO_ICON_BUTTON_GREEN	, LOCALE_AUDIOPLAYER_SAVE_PLAYLIST		},
-		{ NEUTRINO_ICON_BUTTON_YELLOW	, LOCALE_AUDIOPLAYER_BUTTON_SELECT_TITLE_BY_ID	},
+		{ NEUTRINO_ICON_BUTTON_YELLOW	, LOCALE_AUDIOPLAYER_BUTTON_SELECT_TITLE_BY_ID	}
 	},
 	{
 		{ NEUTRINO_ICON_BUTTON_GREEN	, LOCALE_AUDIOPLAYER_SAVE_PLAYLIST		},
-		{ NEUTRINO_ICON_BUTTON_YELLOW	, LOCALE_AUDIOPLAYER_BUTTON_SELECT_TITLE_BY_NAME},
+		{ NEUTRINO_ICON_BUTTON_YELLOW	, LOCALE_AUDIOPLAYER_BUTTON_SELECT_TITLE_BY_NAME}
 	},
 	{
 		{ NEUTRINO_ICON_BUTTON_STOP	, LOCALE_AUDIOPLAYER_STOP			},
-		{ NEUTRINO_ICON_BUTTON_PAUSE	, LOCALE_AUDIOPLAYER_PAUSE			},
+		{ NEUTRINO_ICON_BUTTON_PAUSE	, LOCALE_AUDIOPLAYER_PAUSE			}
 	},
 	{
 		{ NEUTRINO_ICON_BUTTON_GREEN	, LOCALE_AUDIOPLAYER_ADD			},
-		{ NEUTRINO_ICON_BUTTON_BLUE	, LOCALE_INETRADIO_NAME				},
+		{ NEUTRINO_ICON_BUTTON_BLUE	, LOCALE_INETRADIO_NAME				}
 	},
 	{
 		{ NEUTRINO_ICON_BUTTON_RED	, LOCALE_AUDIOPLAYER_DELETE			},
 		{ NEUTRINO_ICON_BUTTON_GREEN	, LOCALE_AUDIOPLAYER_ADD			},
 		{ NEUTRINO_ICON_BUTTON_YELLOW	, LOCALE_AUDIOPLAYER_DELETEALL			},
-		{ NEUTRINO_ICON_BUTTON_BLUE	, LOCALE_INETRADIO_NAME				},
-	},
+		{ NEUTRINO_ICON_BUTTON_BLUE	, LOCALE_INETRADIO_NAME				}
+	}
 };
 
 int CAudioPlayerGui::exec(CMenuTarget* parent, const std::string &actionKey)
@@ -2231,6 +2235,9 @@ void CAudioPlayerGui::updateTimes(const bool force)
 		{
 			CVFD::getInstance()->showAudioProgress(uint8_t(100 * m_time_played / m_time_total));
 		}
+#ifdef ENABLE_GRAPHLCD
+		nGLCD::lockChannel(m_curr_audiofile.MetaData.artist, m_curr_audiofile.MetaData.title, uint8_t(100 * m_time_played / m_time_total));
+#endif
 	}
 }
 
@@ -2241,24 +2248,39 @@ void CAudioPlayerGui::paintLCD()
 		case CAudioPlayerGui::STOP:
 			CVFD::getInstance()->showAudioPlayMode(CVFD::AUDIO_MODE_STOP);
 			CVFD::getInstance()->showAudioProgress(0);
+#ifdef ENABLE_GRAPHLCD
+			nGLCD::unlockChannel();
+#endif
 			break;
 		case CAudioPlayerGui::PLAY:
 			CVFD::getInstance()->showAudioPlayMode(CVFD::AUDIO_MODE_PLAY);
 			CVFD::getInstance()->showAudioTrack(m_curr_audiofile.MetaData.artist, m_curr_audiofile.MetaData.title, m_curr_audiofile.MetaData.album);
 			if (m_curr_audiofile.FileType != CFile::STREAM_AUDIO && m_time_total != 0)
 				CVFD::getInstance()->showAudioProgress(uint8_t(100 * m_time_played / m_time_total));
+#ifdef ENABLE_GRAPHLCD
+			nGLCD::lockChannel(m_curr_audiofile.MetaData.artist, m_curr_audiofile.MetaData.title, uint8_t(100 * m_time_played / m_time_total));
+#endif
 			break;
 		case CAudioPlayerGui::PAUSE:
 			CVFD::getInstance()->showAudioPlayMode(CVFD::AUDIO_MODE_PAUSE);
 			CVFD::getInstance()->showAudioTrack(m_curr_audiofile.MetaData.artist, m_curr_audiofile.MetaData.title, m_curr_audiofile.MetaData.album);
+#ifdef ENABLE_GRAPHLCD
+			nGLCD::lockChannel(m_curr_audiofile.MetaData.artist, m_curr_audiofile.MetaData.title, uint8_t(100 * m_time_played / m_time_total));
+#endif
 			break;
 		case CAudioPlayerGui::FF:
 			CVFD::getInstance()->showAudioPlayMode(CVFD::AUDIO_MODE_FF);
 			CVFD::getInstance()->showAudioTrack(m_curr_audiofile.MetaData.artist, m_curr_audiofile.MetaData.title, m_curr_audiofile.MetaData.album);
+#ifdef ENABLE_GRAPHLCD
+			nGLCD::lockChannel(m_curr_audiofile.MetaData.artist, m_curr_audiofile.MetaData.title, uint8_t(100 * m_time_played / m_time_total));
+#endif
 			break;
 		case CAudioPlayerGui::REV:
 			CVFD::getInstance()->showAudioPlayMode(CVFD::AUDIO_MODE_REV);
 			CVFD::getInstance()->showAudioTrack(m_curr_audiofile.MetaData.artist, m_curr_audiofile.MetaData.title, m_curr_audiofile.MetaData.album);
+#ifdef ENABLE_GRAPHLCD
+			nGLCD::lockChannel(m_curr_audiofile.MetaData.artist, m_curr_audiofile.MetaData.title, uint8_t(100 * m_time_played / m_time_total));
+#endif
 			break;
 	}
 }
