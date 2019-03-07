@@ -324,6 +324,9 @@ int CAudioPlayerGui::exec(CMenuTarget* parent, const std::string &actionKey)
 
 	CNeutrinoApp::getInstance()->StartSubtitles();
 
+#ifdef ENABLE_GRAPHLCD
+	nGLCD::unlockChannel();
+#endif
 	return res;
 }
 
@@ -2249,7 +2252,7 @@ void CAudioPlayerGui::paintLCD()
 			CVFD::getInstance()->showAudioPlayMode(CVFD::AUDIO_MODE_STOP);
 			CVFD::getInstance()->showAudioProgress(0);
 #ifdef ENABLE_GRAPHLCD
-			nGLCD::unlockChannel();
+			nGLCD::lockChannel(g_Locale->getText(LOCALE_AUDIOPLAYER_NAME), g_Locale->getText(LOCALE_AUDIOPLAYER_STOP));
 #endif
 			break;
 		case CAudioPlayerGui::PLAY:
