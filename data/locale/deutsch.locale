@@ -1283,6 +1283,8 @@ menu.hint_language Menü-Sprache, Zeitzone, bevorzugte Tonspuren, Untertitel-Spr
 menu.hint_last_radio Wählen Sie den Start-Sender im Radio-Modus
 menu.hint_last_tv Wählen Sie den Start-Sender im TV-Modus
 menu.hint_last_use Speichert den aktuellen Kanal beim Herunterfahren der Box
+menu.hint_lcd4l_brightness Regelt die Helligkeit des externen Displays im Normalbetrieb
+menu.hint_lcd4l_brightness_standby Regelt die Helligkeit des externen Displays im Standby-Modus
 menu.hint_lcd4l_clock_a Zeigt im Standby-Betrieb eine Analog-Uhr anstatt einer Digital-Uhr
 menu.hint_lcd4l_convert Konvertiert Umlaute für die eingebaute LCD4Linux-Schriftart
 menu.hint_lcd4l_logodir Verzeichnis für Senderlogos\nBei ungültigem Eintrag Fallback auf Standard-Logoverzeichnis

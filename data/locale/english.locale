@@ -1283,6 +1283,8 @@ menu.hint_language OSD language, timezone\nPrefered audio and subtitles language
 menu.hint_last_radio Start box on selected channel\nif last mode is Radio
 menu.hint_last_tv Start box on selected channel\nif last mode is TV
 menu.hint_last_use Start box on last used channel
+menu.hint_lcd4l_brightness Adjusts the brightness of external display in normal mode
+menu.hint_lcd4l_brightness_standby Adjusts the brightness of external display in standby mode
 menu.hint_lcd4l_clock_a Shows an analog clock instead of a digital clock on display at standby
 menu.hint_lcd4l_convert Convert umlauts for the built-in LCD4Linux font
 menu.hint_lcd4l_logodir Logo directory.\nFallback to default on invalid entry.
