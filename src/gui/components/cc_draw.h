@@ -371,7 +371,7 @@ class CCDraw : public COSDFader, public CComponentsSignals
 		 restore last displayed background before item was painted and
 		 ensures demage of already existing screen buffers too.
 		*/
-		void hide();
+		virtual void hide();
 
 		/**Erase or paint over rendered objects without restore of background, it's similar to paintBackgroundBoxRel() known
 		 * from CFrameBuffer but with possiblity to define color, default color is COL_BACKGROUND_PLUS_0 (empty background)
