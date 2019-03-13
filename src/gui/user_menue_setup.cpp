@@ -53,7 +53,7 @@
 #include <system/debug.h>
 
 static bool usermenu_show = true;
-static bool usermenu_show_not = false;
+//static bool usermenu_show_not = false;
 #if HAVE_SH4_HARDWARE
 static bool usermenu_show_three_d_mode = true;
 #else

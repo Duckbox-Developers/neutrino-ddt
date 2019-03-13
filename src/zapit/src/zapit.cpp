@@ -2295,7 +2295,7 @@ bool CZapit::StartPlayBack(CZapitChannel *thisChannel)
 	return true;
 }
 
-bool CZapit::StopPlayBack(bool send_pmt, bool blank)
+bool CZapit::StopPlayBack(bool send_pmt, bool __attribute__ ((unused)) blank)
 {
 	INFO("standby %d playing %d forced %d send_pmt %d", standby, playing, playbackStopForced, send_pmt);
 	if(send_pmt)

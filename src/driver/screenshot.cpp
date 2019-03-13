@@ -258,7 +258,7 @@ void CScreenShot::cleanupThread(void *arg)
 #endif
 
 /* start ::run in new thread to save file in selected format */
-bool CScreenShot::Start(const std::string custom_cmd)
+bool CScreenShot::Start(const std::string __attribute__ ((unused)) custom_cmd)
 {
 #if HAVE_SH4_HARDWARE
 	std::string cmd = "/bin/grab ";

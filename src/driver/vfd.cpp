@@ -86,7 +86,7 @@ struct vfd_ioctl_data {
 
 static void write_to_vfd(unsigned int DevType, struct vfd_ioctl_data * data, bool force = false)
 {
-	int file_closed = 0;
+	int __attribute__ ((unused)) file_closed = 0;
 	if (blocked) {
 		if (file_vfd > -1) {
 			blocked_counter++;
@@ -840,7 +840,7 @@ printf("CVFD::showVolume: %d, bar %d\n", (int) vol, pp);
 	}
 }
 
-void CVFD::showPercentOver(const unsigned char perc, const bool /*perform_update*/, const MODES origin)
+void CVFD::showPercentOver(const unsigned char __attribute__ ((unused)) perc, const bool /*perform_update*/, const MODES __attribute__ ((unused)) origin)
 {
 #if HAVE_DUCKBOX_HARDWARE
 	return;

@@ -504,8 +504,8 @@ void CRemoteControl::processAPIDnames()
 #endif
 	for(unsigned int count=0; count< current_PIDs.APIDs.size(); count++)
 	{
-		const char *iso = getISO639Description(current_PIDs.APIDs[count].desc);
 #ifdef APID_DEBUG
+		const char *iso = getISO639Description(current_PIDs.APIDs[count].desc);
 		printf("apid=%04x/%s/%s ", current_PIDs.APIDs[count].pid, current_PIDs.APIDs[count].desc, iso);
 #endif
 		if ( current_PIDs.APIDs[count].component_tag != 0xFF )
