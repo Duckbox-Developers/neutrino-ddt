@@ -1236,7 +1236,6 @@ void CStreamInfo2::paintCASystem(int xpos, int ypos)
 
 	std::string casys[NUM_CAIDS] = {"Irdeto:", "Betacrypt:", "Seca:", "Viaccess:", "Nagra:", "Conax: ", "Cryptoworks:", "Videoguard:", "Biss:", "DreCrypt:", "PowerVU:", "Tandberg:"};
 	bool caids[NUM_CAIDS];
-	int array[NUM_CAIDS];
 	char tmp[100];
 
 	CZapitChannel *channel = CZapit::getInstance()->GetCurrentChannel();
@@ -1245,7 +1244,6 @@ void CStreamInfo2::paintCASystem(int xpos, int ypos)
 
 	for (int i = 0; i < NUM_CAIDS; i++)
 	{
-		array[i] = g_FixedFont[font_small]->getRenderWidth(casys[i]);
 		caids[i] = false;
 	}
 
@@ -1263,8 +1261,6 @@ void CStreamInfo2::paintCASystem(int xpos, int ypos)
 		}
 		fclose(f);
 	}
-
-	int off = 0;
 
 	for (casys_map_iterator_t it = channel->camap.begin(); it != channel->camap.end(); ++it)
 	{
@@ -1315,12 +1311,9 @@ void CStreamInfo2::paintCASystem(int xpos, int ypos)
 			snprintf(tmp, sizeof(tmp), " 0x%04X", (*it));
 			casys[idx] += tmp;
 			caids[idx] = true;
-			if (off < array[idx])
-				off = array[idx];
 		}
 	}
 
-	off += OFFSET_INNER_SMALL;
 	bool cryptsystems = true;
 	for (int ca_id = 0; ca_id < NUM_CAIDS; ca_id++)
 	{
