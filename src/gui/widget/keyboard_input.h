@@ -29,6 +29,7 @@
 #include <system/localize.h>
 
 #include <string>
+#include <sigc++/signal.h>
 
 #define KEY_ROWS 4
 #define KEY_COLUMNS 14
@@ -59,7 +60,7 @@ class CInputString
 		std::string &getValue();
 };
 
-class CKeyboardInput : public CMenuTarget
+class CKeyboardInput : public CMenuTarget,  public sigc::trackable
 {
 	protected:
 		CFrameBuffer	*frameBuffer;
@@ -138,6 +139,7 @@ class CKeyboardInput : public CMenuTarget
 		virtual std::string &getValue(void);
 
 		void forceSaveScreen(bool enable);
+		sigc::signal<void> OnAfterSave;
 };
 
 #endif
