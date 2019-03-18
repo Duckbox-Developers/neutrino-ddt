@@ -249,9 +249,7 @@ end-block~snip_show_wait
 # ------- Wiki Help display
 #<img src="/images/help.gif" align="bottom" />
 start-block~wiki_help
-<!--
 <a href="https://wiki.tuxbox-neutrino.org/wiki/{=var-get:help_url=}" target="_blank" title="get help from https://wiki.tuxbox-neutrino.org">?</a>
--->
 end-block~wiki_help
 
 # ------- work menu
