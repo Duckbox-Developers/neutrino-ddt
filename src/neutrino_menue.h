@@ -195,6 +195,9 @@ enum MN_WIDGET_ID
 	//network services
 	MN_WIDGET_ID_NETWORKSETUP_SERVICES,
 
+	//options select menue
+	MN_WIDGET_ID_MENU_SELECT_STRING,
+
 	MN_WIDGET_ID_MAX
 };
 
