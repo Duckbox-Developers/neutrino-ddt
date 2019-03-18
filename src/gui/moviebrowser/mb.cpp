@@ -91,8 +91,6 @@ typedef struct dirent64 dirent_struct;
 #define NUMBER_OF_MOVIES_LAST 40 // This is the number of movies shown in last recored and last played list
 #define MOVIE_SMSKEY_TIMEOUT 800
 
-cTmdb* tmdb;
-
 #define MESSAGEBOX_BROWSER_ROW_ITEM_COUNT 22
 const CMenuOptionChooser::keyval MESSAGEBOX_BROWSER_ROW_ITEM[MESSAGEBOX_BROWSER_ROW_ITEM_COUNT] =
 {
@@ -269,9 +267,6 @@ CMovieBrowser::~CMovieBrowser()
 
 	if (m_header)
 		delete m_header;
-
-	if (tmdb)
-		delete tmdb;
 }
 
 void CMovieBrowser::clearListLines()
@@ -428,8 +423,6 @@ void CMovieBrowser::init(void)
 
 	m_doRefresh = false;
 	m_doLoadMovies = false;
-
-	tmdb = cTmdb::getInstance();
 }
 
 void CMovieBrowser::initGlobalSettings(void)
@@ -1980,12 +1973,15 @@ bool CMovieBrowser::onButtonPressMainFrame(neutrino_msg_t msg)
 					extension = "." + extension;
 					str_replace(extension, ".jpg", cover_file);
 					printf("TMDB: %s : %s\n",m_movieSelectionHandler->file.Name.c_str(),cover_file.c_str());
+					cTmdb* tmdb = cTmdb::getInstance();
 					tmdb->setTitle(m_movieSelectionHandler->epgTitle);
 					if ((tmdb->getResults() > 0) && (tmdb->hasCover())) {
 						if (!cover_file.empty())
 							if (tmdb->getSmallCover(cover_file))
 								refresh();
 					}
+					if (tmdb)
+						tmdb = NULL;
 				}
 			}
 		}
