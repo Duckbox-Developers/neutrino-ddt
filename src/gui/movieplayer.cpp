@@ -80,8 +80,6 @@
 #include <sstream>
 #include <algorithm>
 #include <iconv.h>
-#include <ctime>
-#include <iomanip>
 #include <libdvbsub/dvbsub.h>
 #include <hardware/audio.h>
 #ifdef ENABLE_GRAPHLCD
@@ -3503,33 +3501,21 @@ void CMoviePlayerGui::makeScreenShot(bool autoshot, bool forcover)
 		snprintf(ending, sizeof(ending) - 1, "_%x.jpg", position);
 
 	std::string fname = file_name;
-	std::string tmp_str;
-
 	if (p_movie_info)
 		fname = p_movie_info->file.Name;
 
 	/* quick check we have file and not url as file name */
 	if (fname.c_str()[0] != '/') {
 		if (autoshot)
-		{
 			autoshot_done = true;
-			return;
-		}
-		cover = false;
-		autoshot = false;
-		forcover = false;
-		std::time_t t = std::time(NULL);
-		std::tm tm = *std::localtime(&t);
-		std::stringstream ss;
-		ss << std::put_time(&tm, "%Y%m%d_%H%M%S");
-		tmp_str = ss.str();
+		return;
 	}
-	tmp_str += ending;
+
 	std::string::size_type pos = fname.find_last_of('.');
 	if (pos != std::string::npos) {
-		fname.replace(pos, fname.length(), tmp_str.c_str());
+		fname.replace(pos, fname.length(), ending);
 	} else
-		fname += tmp_str;
+		fname += ending;
 
 	if (autoshot && !access(fname.c_str(), F_OK)) {
 		printf("CMoviePlayerGui::makeScreenShot: cover [%s] already exist..\n", fname.c_str());
