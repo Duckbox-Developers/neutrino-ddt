@@ -178,5 +178,7 @@ std::string decodeUrl(std::string url);
 bool getUrl(std::string &url, std::string &answer, const std::string userAgent = " ", unsigned int timeout = 60);
 bool downloadUrl(std::string url, std::string file, const std::string userAgent = " ", unsigned int timeout = 60);
 
+bool isDigitWord(std::string str);
+
 //
 #endif
