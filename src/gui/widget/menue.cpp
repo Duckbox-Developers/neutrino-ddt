@@ -1196,7 +1196,9 @@ void CMenuWidget::calcSize()
 	if (neededWidth > width - frameBuffer->scale2Res(48)) {
 		width = neededWidth + frameBuffer->scale2Res(48)+1;
 	}
-	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
+
+	initHeader();
+	hheight = header->getHeight();
 
 	int heightCurrPage=0;
 	page_start.clear();
@@ -1303,8 +1305,11 @@ void CMenuWidget::paint()
 
 	if (CInfoClock::getInstance()->isRun())
 		CInfoClock::getInstance()->disableInfoClock();
+
 	calcSize();
+
 	CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8 /*, nameString.c_str()*/);
+
 
 	/* prepare footer:
 	 * We must prepare footer, to get current footer dimensions,
@@ -1315,16 +1320,7 @@ void CMenuWidget::paint()
 	OnBeforePaint();
 
 	// paint head
-	if (header == NULL){
-		header = new CComponentsHeader(x, y, width + scrollbar_width, hheight, getName(), iconfile);
-		header->enableShadow(CC_SHADOW_RIGHT | CC_SHADOW_CORNER_TOP_RIGHT | CC_SHADOW_CORNER_BOTTOM_RIGHT);
-		header->setOffset(OFFSET_INNER_MID);
-	}
-	header->setCaption(getName());
-	header->setColorAll(COL_FRAME_PLUS_0, COL_MENUHEAD_PLUS_0, COL_SHADOW_PLUS_0);
-	header->setCaptionColor(COL_MENUHEAD_TEXT);
-	header->enableColBodyGradient(g_settings.theme.menu_Head_gradient, COL_MENUCONTENT_PLUS_0);
-	header->enableGradientBgCleanUp(savescreen);
+	initHeader();
 	header->paint(CC_SAVE_SCREEN_NO);
 
 	// paint body background
@@ -1338,6 +1334,20 @@ void CMenuWidget::paint()
 	// Finally paint footer if buttons are defined.
 	if (footer && fbutton_count)
 		footer->paint(CC_SAVE_SCREEN_NO);
+}
+
+void CMenuWidget::initHeader()
+{
+	if (!header){
+		header = new CComponentsHeader(x, y, width + scrollbar_width, 0, getName(), iconfile);
+		header->enableShadow(CC_SHADOW_RIGHT | CC_SHADOW_CORNER_TOP_RIGHT | CC_SHADOW_CORNER_BOTTOM_RIGHT);
+		header->setOffset(OFFSET_INNER_MID);
+	}
+	header->setCaption(getName());
+	header->setColorAll(COL_FRAME_PLUS_0, COL_MENUHEAD_PLUS_0, COL_SHADOW_PLUS_0);
+	header->setCaptionColor(COL_MENUHEAD_TEXT);
+	header->enableColBodyGradient(g_settings.theme.menu_Head_gradient, COL_MENUCONTENT_PLUS_0);
+	header->enableGradientBgCleanUp(savescreen);
 }
 
 void CMenuWidget::setMenuPos(const int& menu_width)
