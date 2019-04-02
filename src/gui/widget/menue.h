@@ -221,7 +221,7 @@ class CMenuSeparator : public CMenuItem
 			ALIGN_CENTER	= 4,
 			ALIGN_LEFT	= 8,
 			ALIGN_RIGHT	= 16,
-			SUB_HEAD	= 32
+			SUB_HEAD	= 0 //32 deprecated and invalid, only here for compatibility //TODO: remove global
 		};
 
 
@@ -534,8 +534,9 @@ class CMenuWidget : public CMenuTarget, public CComponentsSignals
 		CComponentsDetailsLine	*details_line;
 		CComponentsInfoBox	*info_box;
 		int			hint_height;
-		CComponentsHeader 	*header;
+		CComponentsHeader 	*header, *sub_header;
 		CComponentsFooter 	*footer;
+		std::string		subhead_text;
 		unsigned int saveScreen_width ;
 		unsigned int saveScreen_height;
 		unsigned int saveScreen_y;
@@ -591,6 +592,7 @@ class CMenuWidget : public CMenuTarget, public CComponentsSignals
 		void restoreScreen();
 		void setMenuPos(const int& menu_width);
 		void initHeader();
+		void initSubHeader();
 
 	public:
 		CMenuWidget();
