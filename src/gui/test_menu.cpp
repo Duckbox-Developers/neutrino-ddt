@@ -1109,7 +1109,7 @@ int CTestMenu::showTestMenu()
 	char rev[255];
 	sprintf(rev, "Test menu, System revision %d %s", system_rev, system_rev == 0 ? "WARNING - INVALID" : "");
 	CMenuWidget w_test(rev /*"Test menu"*/, NEUTRINO_ICON_INFO, width, MN_WIDGET_ID_TESTMENU);
-	w_test.addIntroItems();
+	w_test.addIntroItems("Subhead");
 	
 	//hardware
 	CMenuWidget * w_hw = new CMenuWidget("Hardware Test", NEUTRINO_ICON_INFO, width, MN_WIDGET_ID_TESTMENU_HARDWARE);
@@ -1136,6 +1136,18 @@ int CTestMenu::showTestMenu()
 
 	//restart gui
 	w_test.addItem(new CMenuForwarder(LOCALE_SERVICEMENU_RESTART   , true, NULL, CNeutrinoApp::getInstance(), "restart", CRCInput::RC_standby));
+
+	w_test.addItem(GenericMenuSeparatorLine);
+
+	w_test.addItem(new CMenuSeparator(CMenuSeparator::STRING, "String Separator"));
+	w_test.addItem(new CMenuSeparator(CMenuSeparator::STRING | CMenuSeparator::LINE, "String Line Separator"));
+
+	w_test.addItem(new CMenuSeparator(CMenuSeparator::SUB_HEAD, "Sub Title"));
+
+	w_test.addItem(new CMenuSeparator(CMenuSeparator::SUB_HEAD | CMenuSeparator::ALIGN_LEFT, "Sub Title L"));
+	w_test.addItem(new CMenuSeparator(CMenuSeparator::SUB_HEAD | CMenuSeparator::ALIGN_RIGHT, "Sub Title R"));
+
+
 
 	//footer buttons
 	static const struct button_label footerButtons[2] = {
