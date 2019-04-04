@@ -310,7 +310,7 @@ _TUXBOX_APPS_LIB_PKGCONFIG($1,$2)
 
 AC_DEFUN([TUXBOX_BOXTYPE], [
 AC_ARG_WITH(boxtype,
-	AS_HELP_STRING([--with-boxtype], [valid values: tripledragon, coolstream, spark, azbox, generic, armbox, duckbox, spark7162]),
+	AS_HELP_STRING([--with-boxtype], [valid values: tripledragon, coolstream, spark, azbox, generic, armbox, duckbox, spark7162, mipsbox]),
 	[case "${withval}" in
 		tripledragon|coolstream|azbox|generic|armbox)
 			BOXTYPE="$withval"
@@ -371,6 +371,10 @@ AC_ARG_WITH(boxtype,
 			BOXTYPE="armbox"
 			BOXMODEL="$withval"
 		;;
+		vuduo)
+			BOXTYPE="mipsbox"
+			BOXMODEL="$withval"
+		;;
 		*)
 			AC_MSG_ERROR([bad value $withval for --with-boxtype])
 		;;
@@ -382,6 +386,7 @@ AC_ARG_WITH(boxmodel,
 AS_HELP_STRING([], [valid for duckbox: ufs910, ufs912, ufs913, ufs922, atevio7500, fortis_hdbox, octagon1008, hs7110, hs7810a, hs7119, hs7819, dp7000, cuberevo, cuberevo_mini, cuberevo_mini2, cuberevo_250hd, cuberevo_2000hd, cuberevo_3000hd, ipbox9900, ipbox99, ipbox55, arivalink200, tf7700, hl101])
 AS_HELP_STRING([], [valid for spark: spark, spark7162])
 AS_HELP_STRING([], [valid for armbox: hd51, hd60, vusolo4k])
+AS_HELP_STRING([], [valid for mipsbox: vuduo])
 AS_HELP_STRING([], [valid for generic: raspi]),
 	[case "${withval}" in
 		hd1|hd2)
@@ -424,6 +429,13 @@ AS_HELP_STRING([], [valid for generic: raspi]),
 				AC_MSG_ERROR([unknown model $withval for boxtype $BOXTYPE])
 			fi
 		;;
+		vuduo)
+			if test "$BOXTYPE" = "mipsbox"; then
+				BOXMODEL="$withval"
+			else
+				AC_MSG_ERROR([unknown model $withval for boxtype $BOXTYPE])
+			fi
+		;;
 		raspi)
 			if test "$BOXTYPE" = "generic"; then
 				BOXMODEL="$withval"
@@ -446,6 +458,7 @@ AM_CONDITIONAL(BOXTYPE_SPARK, test "$BOXTYPE" = "spark")
 AM_CONDITIONAL(BOXTYPE_GENERIC, test "$BOXTYPE" = "generic")
 AM_CONDITIONAL(BOXTYPE_DUCKBOX, test "$BOXTYPE" = "duckbox")
 AM_CONDITIONAL(BOXTYPE_ARMBOX, test "$BOXTYPE" = "armbox")
+AM_CONDITIONAL(BOXTYPE_MIPSBOX, test "$BOXTYPE" = "mipsbox")
 
 AM_CONDITIONAL(BOXMODEL_CS_HD1, test "$BOXMODEL" = "hd1")
 AM_CONDITIONAL(BOXMODEL_CS_HD2, test "$BOXMODEL" = "hd2")
@@ -500,6 +513,8 @@ elif test "$BOXTYPE" = "generic"; then
 	AC_DEFINE(HAVE_GENERIC_HARDWARE, 1, [building for a generic device like a standard PC])
 elif test "$BOXTYPE" = "armbox"; then
 	AC_DEFINE(HAVE_ARM_HARDWARE, 1, [building for an armbox])
+elif test "$BOXTYPE" = "mipsbox"; then
+	AC_DEFINE(HAVE_MIPS_HARDWARE, 1, [building for an mipsbox])
 fi
 
 # TODO: do we need more defines?
@@ -568,6 +583,9 @@ elif test "$BOXMODEL" = "hd60"; then
 	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution])
 elif test "$BOXMODEL" = "vusolo4k"; then
 	AC_DEFINE(BOXMODEL_VUSOLO4K, 1, [vusolo4k])
+	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution])
+elif test "$BOXMODEL" = "vuduo"; then
+	AC_DEFINE(BOXMODEL_VUDUO, 1, [vuduo])
 	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution])
 elif test "$BOXMODEL" = "raspi"; then
 	AC_DEFINE(BOXMODEL_RASPI, 1, [raspberry pi])
