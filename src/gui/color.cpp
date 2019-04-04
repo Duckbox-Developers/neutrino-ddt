@@ -33,6 +33,10 @@
 #include <config.h>
 #endif
 
+#if !HAVE_ARM_HARDWARE
+#include <cstdlib>
+#endif
+
 #include <gui/color.h>
 #include <stdio.h>
 #include <math.h>
