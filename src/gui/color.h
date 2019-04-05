@@ -177,7 +177,10 @@ typedef struct {
 	uint8_t max;
 } col_range_t;
 
+#if HAVE_SH4_HARDWARE
+fb_pixel_t getRandomColor(col_range_t range_r, col_range_t range_g, col_range_t range_b, uint8_t Alpha = 0);
+#else
 fb_pixel_t getRandomColor(col_range_t range_r = {1,255}, col_range_t range_g = {1,255}, col_range_t range_b = {1,255}, uint8_t Alpha = 0);
-
+#endif
 
 #endif

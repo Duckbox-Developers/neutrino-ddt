@@ -555,8 +555,18 @@ void CCDraw::paintFbItems(bool do_save_bg)
 				frameBuffer->paintBackgroundBoxRel(fbdata.x, fbdata.y, fbdata.dx, fbdata.dy);
 				v_fbdata[i].is_painted = true;
 				if (CCDraw_debug)
+				{
+#if HAVE_SH4_HARDWARE
+					col_range_t range_r, range_g, range_b;
+					range_r.min = 1; range_r.max = 255;
+					range_g.min = 1; range_g.max = 255;
+					range_b.min = 1; range_b.max = 255;
+					frameBuffer->paintBoxFrame(fbdata.x, fbdata.y, fbdata.dx, fbdata.dy, 1, getRandomColor(range_r, range_g, range_b));
+#else
 					frameBuffer->paintBoxFrame(fbdata.x, fbdata.y, fbdata.dx, fbdata.dy, 1, COL_RANDOM);
+#endif
 				}
+			}
 		}
 		if (fbtype == CC_FBDATA_TYPE_SHADOW_BOX && ((!is_painted || !fbdata.is_painted)|| shadow_force || force_paint_bg)) {
 			if (fbdata.enabled) {
@@ -689,7 +699,17 @@ void CCDraw::paintFbItems(bool do_save_bg)
 			}
 		}
 		if (CCDraw_debug)
+		{
+#if HAVE_SH4_HARDWARE
+			col_range_t range_r, range_g, range_b;
+			range_r.min = 255; range_r.max = 255;
+			range_g.min = 1; range_g.max = 255;
+			range_b.min = 1; range_b.max = 255;
+			frameBuffer->paintBoxFrame(fbdata.x, fbdata.y, fbdata.dx, fbdata.dy, 1, getRandomColor(range_r, range_g, range_b));
+#else
 			frameBuffer->paintBoxFrame(fbdata.x, fbdata.y, fbdata.dx, fbdata.dy, 1, getRandomColor({255, 255}, {1,255}, {1, 255}));
+#endif
+		}
 	}
 
 	//set is_painted attribut. if any layer was painted set it to true;

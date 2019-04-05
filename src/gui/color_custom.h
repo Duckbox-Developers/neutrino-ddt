@@ -57,6 +57,8 @@
 #define COL_BLACK	(CFrameBuffer::getInstance()->realcolor[0x11])
 #endif
 
+#if !HAVE_SH4_HARDWARE
 #define COL_RANDOM	(getRandomColor())
+#endif
 
 #endif
