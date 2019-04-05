@@ -323,7 +323,7 @@ void CLCD::showTime(bool force)
 		if (force || last_display || (switch_name_time_cnt == 0 && ((hour != t->tm_hour) || (minute != t->tm_min)))) {
 			hour = t->tm_hour;
 			minute = t->tm_min;
-#if !HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+#if !HAVE_ARM_HARDWARE
 			int ret = -1;
 #endif
 #if HAVE_SPARK_HARDWARE

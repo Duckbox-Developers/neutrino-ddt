@@ -137,7 +137,7 @@ CHDDMenuHandler* CHDDMenuHandler::getInstance()
 int CHDDMenuHandler::filterDevName(const char * name)
 {
 	if (((name[0] == 's' || name[0] == 'h') && (name[1] == 'd' || name[1] == 'r'))
-#if !HAVE_ARM_HARDWARE && !HAVE_MIPS_HARDWARE
+#if !HAVE_ARM_HARDWARE
 		|| !strncmp(name, "mmcblk", 6)
 #endif
 	)
