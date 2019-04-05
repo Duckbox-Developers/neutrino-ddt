@@ -74,7 +74,7 @@ CScreenShot::CScreenShot(const std::string fname, screenshot_format_t fmt)
 	yres = 0;
 	get_video = g_settings.screenshot_mode & 1;
 	get_osd = g_settings.screenshot_mode & 2;
-#if HAVE_GENERIC_HARDWARE || HAVE_ARM_HARDWARE
+#if HAVE_GENERIC_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	scale_to_video = (g_settings.screenshot_mode == 3);
 #else
 	scale_to_video = (g_settings.screenshot_mode == 3) & (g_settings.screenshot_res & 1);

@@ -50,7 +50,7 @@ static const CMenuOptionChooser::keyval THREE_D_OPTIONS[THREE_D_OPTIONS_COUNT] =
 	{CFrameBuffer::Mode3D_off,		LOCALE_THREE_D_OFF },
 	{CFrameBuffer::Mode3D_SideBySide,	LOCALE_THREE_D_SIDESIDE },
 	{CFrameBuffer::Mode3D_TopAndBottom,	LOCALE_THREE_D_TOPBOTTOM }
-#if !HAVE_ARM_HARDWARE
+#if !HAVE_ARM_HARDWARE && !HAVE_MIPS_HARDWARE
 	,
 	{CFrameBuffer::Mode3D_Tile,		LOCALE_THREE_D_TILE }
 #endif
@@ -61,7 +61,7 @@ static C3DSetup::threeDList tdl[THREE_D_OPTIONS_COUNT] =
 	{ NULL, "off",		CFrameBuffer::Mode3D_off },
 	{ NULL, "sidebyside",	CFrameBuffer::Mode3D_SideBySide },
 	{ NULL, "topandbottom",	CFrameBuffer::Mode3D_TopAndBottom }
-#if !HAVE_ARM_HARDWARE
+#if !HAVE_ARM_HARDWARE && !HAVE_MIPS_HARDWARE
 	,
 	{ NULL, "tile",		CFrameBuffer::Mode3D_Tile }
 #endif

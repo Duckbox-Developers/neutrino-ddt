@@ -1346,7 +1346,7 @@ void CRCInput::getMsg_us(neutrino_msg_t * msg, neutrino_msg_data_t * data, uint6
 					now_pressed -= (t2.tv_usec + t2.tv_sec * 1000000ULL);
 				}
 				SHTDCNT::getInstance()->resetSleepTimer();
-#if HAVE_ARM_HARDWARE
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 				if ((ev.code == 0 || ev.code == 1) && ev.value && firstKey)
 					continue;
 #endif
@@ -1804,7 +1804,7 @@ int CRCInput::translate(int code)
 			return RC_page_up;
 		case KEY_CHANNELDOWN:
 			return RC_page_down;
-#ifdef HAVE_ARM_HARDWARE
+#ifdef HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 		case KEY_VIDEO:
 			return RC_favorites;
 #endif

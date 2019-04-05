@@ -15,7 +15,7 @@
 
 #include <poll.h>
 
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 extern "C" {
 #include <ass/ass.h>
 }
@@ -34,14 +34,14 @@ extern "C" {
 Debug sub_debug;
 static PacketQueue packet_queue;
 static PacketQueue bitmap_queue;
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 static PacketQueue ass_queue;
 static sem_t ass_sem;
 #endif
 
 static pthread_t threadReader;
 static pthread_t threadDvbsub;
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 static pthread_t threadAss = 0;
 #endif
 
@@ -50,7 +50,7 @@ static pthread_mutex_t readerMutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t packetCond = PTHREAD_COND_INITIALIZER;
 static pthread_mutex_t packetMutex = PTHREAD_MUTEX_INITIALIZER;
 
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 static OpenThreads::Mutex ass_mutex;
 static std::map<int,ASS_Track*> ass_map;
 static ASS_Library *ass_library = NULL;
@@ -59,7 +59,7 @@ static ASS_Track *ass_track = NULL;
 #endif
 
 static int reader_running;
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 static int ass_reader_running;
 #endif
 static int dvbsub_running;
@@ -67,14 +67,14 @@ static int dvbsub_paused = true;
 static int dvbsub_pid;
 static int dvbsub_stopped;
 static int pid_change_req;
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 static bool isEplayer = false;
 #endif
 
 cDvbSubtitleConverter *dvbSubtitleConverter;
 static void* reader_thread(void *arg);
 static void* dvbsub_thread(void* arg);
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 static void* ass_reader_thread(void *arg);
 #endif
 static void clear_queue();
@@ -104,7 +104,7 @@ int dvbsub_init() {
 		return -1;
 	}
 
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	ass_reader_running = true;
 	sem_init(&ass_sem, 0, 0);
 	trc = pthread_create(&threadAss, 0, ass_reader_thread, NULL);
@@ -127,7 +127,7 @@ int dvbsub_pause()
 
 		printf("[dvb-sub] paused\n");
 	}
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(ass_mutex);
 	ass_track = NULL;
 #endif
@@ -135,13 +135,13 @@ int dvbsub_pause()
 	return 0;
 }
 
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 int dvbsub_start(int pid, bool _isEplayer)
 #else
 int dvbsub_start(int pid)
 #endif
 {
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	isEplayer = _isEplayer;
 	if (isEplayer && !dvbsub_paused)
 		return 0;
@@ -162,7 +162,7 @@ int dvbsub_start(int pid)
 	}
 printf("[dvb-sub] start, stopped %d pid %x\n", dvbsub_stopped, dvbsub_pid);
 	if(dvbsub_pid > -1) {
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 		if (isEplayer) {
 			OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(ass_mutex);
 			std::map<int,ASS_Track*>::iterator it = ass_map.find(dvbsub_pid);
@@ -207,7 +207,7 @@ int dvbsub_getpid()
 
 void dvbsub_setpid(int pid)
 {
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	if (!isEplayer && !pid)
 #else
 	if (!pid)
@@ -258,7 +258,7 @@ int dvbsub_close()
 		pthread_detach(threadDvbsub);
 		threadDvbsub = 0;
 	}
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	if (ass_reader_running) {
 		ass_reader_running = false;
 		sem_post(&ass_sem);
@@ -275,7 +275,7 @@ extern void getPlayerPts(int64_t *);
 
 void dvbsub_get_stc(int64_t * STC)
 {
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE // requires libeplayer3
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE // requires libeplayer3
 	if (isEplayer) {
 		getPlayerPts(STC);
 		return;
@@ -333,8 +333,8 @@ static void clear_queue()
 	pthread_mutex_unlock(&packetMutex);
 }
 
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
-#if HAVE_ARM_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 extern "C" void dvbsub_ass_clear(void);
 extern "C" void dvbsub_ass_write(AVCodecContext *c, AVSubtitle *sub, int pid);
 extern "C" void dvbsub_write(AVSubtitle *sub, int64_t pts);
@@ -454,7 +454,7 @@ static std::string ass_subtitle_header_custom(void) {
 // Copyright (c) 2010 Aurelien Jacobs <aurel@gnuage.org>
 #endif
 
-#if HAVE_ARM_HARDWARE
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 // Thes functions below are based on ffmpeg-3.0.7/libavcodec/ass.c,
 // Copyright (c) 2010 Aurelien Jacobs <aurel@gnuage.org>
 
@@ -685,7 +685,7 @@ static void* reader_thread(void * /*arg*/)
 		pfds[0].events = POLLIN;
 		char _tmp[64];
 
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 		if (isEplayer) {
 			poll(pfds, 1, -1);
 			while (0 > read(pfds[0].fd, _tmp, sizeof(tmp)));
@@ -796,7 +796,7 @@ static void* dvbsub_thread(void* /*arg*/)
 		dvbSubtitleConverter = new cDvbSubtitleConverter;
 
 	int timeout = 1000000;
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	CFrameBuffer *fb = CFrameBuffer::getInstance();
 #if HAVE_SH4_HARDWARE
 	int xres = fb->getScreenWidth(true);
@@ -814,7 +814,7 @@ static void* dvbsub_thread(void* /*arg*/)
 #endif
 
 	while(dvbsub_running) {
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 		if (ass_track) {
 			usleep(100000); // FIXME ... should poll instead
 

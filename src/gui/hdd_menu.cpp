@@ -137,7 +137,7 @@ CHDDMenuHandler* CHDDMenuHandler::getInstance()
 int CHDDMenuHandler::filterDevName(const char * name)
 {
 	if (((name[0] == 's' || name[0] == 'h') && (name[1] == 'd' || name[1] == 'r'))
-#if !HAVE_ARM_HARDWARE
+#if !HAVE_ARM_HARDWARE && !HAVE_MIPS_HARDWARE
 		|| !strncmp(name, "mmcblk", 6)
 #endif
 	)
@@ -211,7 +211,7 @@ void CHDDMenuHandler::getBlkIds()
 		{
 			if (strncmp(mnt->mnt_fsname, "/dev/sd", 7) && strncmp(mnt->mnt_fsname, "/dev/hd", 7))
 				continue;
-#if HAVE_ARM_HARDWARE
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 			if (strncmp(mnt->mnt_fsname, "mmcblk", 6) == 0)
 				continue;
 #endif
@@ -1538,13 +1538,13 @@ int CHDDDestExec::exec(CMenuTarget* /*parent*/, const std::string&)
 
 		if (removable) {
 			// show USB icon, no need for hdparm/hd-idle
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 			CVFD::getInstance()->ShowIcon(FP_ICON_USB, true);
 #endif
 			printf("CHDDDestExec: /dev/%s is not a hdd, no sleep needed\n", namelist[i]->d_name);
 		} else {
 			//show HDD icon and set hdparm for all hdd's
-#if HAVE_DUCKBOX_HARDWARE || HAVE_ARM_HARDWARE
+#if HAVE_DUCKBOX_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 			CVFD::getInstance()->ShowIcon(FP_ICON_HDD, true);
 #endif
 			if (!have_hdidle && have_hdparm) {

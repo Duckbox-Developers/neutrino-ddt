@@ -3,7 +3,7 @@
 int dvbsub_init();
 int dvbsub_stop();
 int dvbsub_close();
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 int dvbsub_start(int pid, bool _isEplayer = false);
 #else
 int dvbsub_start(int pid);

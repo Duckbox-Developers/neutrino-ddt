@@ -288,6 +288,8 @@ void CImageInfo::InitInfoData()
 	version_string = "SH4-Release : ";
 #elif HAVE_ARM_HARDWARE
 	version_string = "ARM-Release : ";
+#elif HAVE_MIPS_HARDWARE
+	version_string = "MIPS-Release : ";
 #else
 	version_string = "Release : ";
 #endif
