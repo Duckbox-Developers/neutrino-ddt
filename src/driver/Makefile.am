@@ -129,7 +129,7 @@ if BOXTYPE_MIPSBOX
 libneutrino_driver_a_SOURCES += \
 	fb_generic.cpp \
 	fb_accel.cpp \
-	fb_accel_arm.cpp \
+	fb_accel_mips.cpp \
 	simple_display.cpp
 endif
 

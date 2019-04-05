@@ -226,4 +226,21 @@ class CFbAccelARM
 		Mode3D get3DMode(void);
 };
 
+class CFbAccelMIPS
+	: public CFbAccel
+{
+	private:
+		fb_pixel_t *backbuffer;
+	public:
+		CFbAccelMIPS();
+		~CFbAccelMIPS();
+		fb_pixel_t * getBackBufferPointer() const;
+		int setMode(unsigned int xRes, unsigned int yRes, unsigned int bpp);
+		int scale2Res(int size);
+		bool fullHdAvailable();
+		void setOsdResolutions();
+		void set3DMode(Mode3D);
+		Mode3D get3DMode(void);
+};
+
 #endif
