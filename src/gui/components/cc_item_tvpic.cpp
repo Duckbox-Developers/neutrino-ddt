@@ -108,7 +108,7 @@ void CComponentsPIP::paint(bool do_save_bg)
 #endif
 	}
 	else{ //paint an alternate image if no tv mode available
-		CComponentsPicture pic = CComponentsPicture (pig_x, pig_y, pig_w, pig_h, pic_name, NULL, false, col_frame, col_frame);
+		CComponentsPicture pic = CComponentsPicture (pig_x, pig_y, pig_w, pig_h, pic_name, NULL, CC_SHADOW_OFF, col_frame, col_frame);
 		pic.doPaintBg(false);
 		int w, h;
 		pic.getSize(&w, &h);
