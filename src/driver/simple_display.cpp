@@ -64,13 +64,6 @@ static bool usb_icon = false;
 static bool timer_icon = false;
 #endif
 
-#if HAVE_MIPS_HARDWARE
-#define DISPLAY_DEV "/dev/dbox/oled0"
-#include <zapit/zapit.h>
-static bool usb_icon = false;
-static bool timer_icon = false;
-#endif
-
 static char volume = 0;
 //static char percent = 0;
 static bool power = true;
