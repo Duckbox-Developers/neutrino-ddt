@@ -1804,7 +1804,7 @@ int CRCInput::translate(int code)
 			return RC_page_up;
 		case KEY_CHANNELDOWN:
 			return RC_page_down;
-#ifdef HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 		case KEY_VIDEO:
 			return RC_favorites;
 #endif
