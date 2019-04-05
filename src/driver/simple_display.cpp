@@ -550,9 +550,12 @@ void CLCD::setBrightness(int dimm)
 
 		close(fd);
 	}
-#elif HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+#elif HAVE_ARM_HARDWARE
 	std::string value = to_string(255/15*dimm);
 	proc_put("/proc/stb/lcd/oled_brightness", value.c_str(), value.length());
+#elif HAVE_MIPS_HARDWARE
+	std::string value = to_string(255/15*dimm);
+	proc_put("/proc/stb/fp/oled_brightness", value.c_str(), value.length());
 #else
 	(void)dimm; // avoid compiler warning
 #endif
