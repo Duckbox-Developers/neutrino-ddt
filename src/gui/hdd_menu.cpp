@@ -70,7 +70,7 @@
 #define BLKID_BIN    "/sbin/blkid"
 #define EJECT_BIN    "/bin/eject"
 
-#define MDEV_MOUNT	"/lib/mdev/fs/mount"
+#define MDEV_MOUNT	"/etc/mdev/mdev-mount.sh "
 #define MOUNT_BASE	"/media/"
 
 #define HDD_NOISE_OPTION_COUNT 4
@@ -1287,7 +1287,7 @@ _remount:
 #ifndef ASSUME_MDEV
 	f = fopen("/proc/sys/kernel/hotplug", "w");
 	if(f) {
-		fprintf(f, "/sbin/hotplug\n");
+		fprintf(f, "/sbin/mdev\n");
 		fclose(f);
 	}
 #endif
