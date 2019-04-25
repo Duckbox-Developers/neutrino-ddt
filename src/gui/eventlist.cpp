@@ -153,10 +153,9 @@ void CEventList::UpdateTimerList(void)
 // Function: HasTimerConflicts
 // search for timer conflicts for given time 
 // return: true if found any conflict, you can watch with parameter epg_ID
-bool CEventList::HasTimerConflicts(time_t starttime, time_t duration, event_id_t * epg_ID)
+bool CEventList::HasTimerConflicts(time_t starttime, time_t duration, event_id_t *epg_ID)
 {	
 	for(uint i= 0; i < timerlist.size(); i++)
-		
 	{			
 		if(timerlist[i].stopTime > starttime-timerPre && timerlist[i].alarmTime < starttime+duration+timerPost)
 		{
@@ -166,7 +165,7 @@ bool CEventList::HasTimerConflicts(time_t starttime, time_t duration, event_id_t
 	}
 	
 	*epg_ID = 0;
-	return  false;
+	return false;
 }
 
 void CEventList::readEvents(const t_channel_id channel_id)
@@ -798,17 +797,21 @@ void CEventList::paintItem(unsigned int pos, t_channel_id channel_idI)
 		t_channel_id channel_tmp = m_showChannel ? evtlist[currpos].channelID : channel_idI;
 		int timerID = -1;
 		CTimerd::CTimerEventTypes etype = isScheduled(channel_tmp, &evtlist[currpos],&timerID);
-		const char * icontype = etype == CTimerd::TIMER_ZAPTO ? NEUTRINO_ICON_ZAP : 0;
-		if(etype == CTimerd::TIMER_RECORD){
-			icontype = NEUTRINO_ICON_REC;// NEUTRINO_ICON_RECORDING_EVENT_MARKER
-		}else if (etype == CTimerd::TIMER_REMOTEBOX){
+		const char *icontype = NULL;
+		if (etype == CTimerd::TIMER_ZAPTO)
+			icontype = NEUTRINO_ICON_ZAP;
+		else if (etype == CTimerd::TIMER_RECORD)
+			icontype = NEUTRINO_ICON_REC;
+		else if (etype == CTimerd::TIMER_REMOTEBOX)
 			icontype = NEUTRINO_ICON_REC_GRAY; // do we need another icon for remote timers?
-		}else{
+		else
+		{
 			if (timerID > 0 && CRecordManager::getInstance()->CheckRecordingId_if_Timeshift(timerID))
 				icontype = NEUTRINO_ICON_AUTO_SHIFT;
 		}
 		int iw = 0, ih = 0;
-		if(icontype != 0) {
+		if (icontype != NULL)
+		{
 			frameBuffer->getIconSize(icontype, &iw, &ih);
 			frameBuffer->paintIcon(icontype, x + OFFSET_INNER_MID, ypos + OFFSET_INNER_MIN + smallfont_height, largefont_height);
 			iw += OFFSET_INNER_MID;
