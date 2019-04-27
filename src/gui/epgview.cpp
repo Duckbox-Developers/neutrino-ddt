@@ -1174,16 +1174,19 @@ int CEpgData::show(const t_channel_id channel_id, uint64_t a_id, time_t* a_start
 						CAdZapMenu::getInstance()->exec(NULL, "enable");
 						loop = false;
 
-						if(g_settings.adzap_zapOnActivation == SNeutrinoSettings::ADZAP_ZAP_TO_LAST)
+						if (g_settings.adzap_zapOnActivation == SNeutrinoSettings::ADZAP_ZAP_TO_LAST)
+						{
 							CNeutrinoApp::getInstance()->channelList->numericZap(g_settings.key_lastchannel);
-						else if(g_settings.adzap_zapOnActivation == SNeutrinoSettings::ADZAP_ZAP_TO_START){
-								int mode = CNeutrinoApp::getInstance()->getMode();
-								bool isRadioMode = (mode == NeutrinoModes::mode_radio || mode == NeutrinoModes::mode_webradio);
-								const t_channel_id cur_channel_id = isRadioMode ? g_settings.startchannelradio_id : g_settings.startchanneltv_id;
-								if(cur_channel_id != channel_id)
-									CNeutrinoApp::getInstance()->channelList->zapTo_ChannelID(cur_channel_id, true);
-								else
-									CNeutrinoApp::getInstance()->channelList->numericZap(g_settings.key_lastchannel);
+						}
+						else if (g_settings.adzap_zapOnActivation == SNeutrinoSettings::ADZAP_ZAP_TO_START)
+						{
+							int mode = CNeutrinoApp::getInstance()->getMode();
+							bool isRadioMode = (mode == NeutrinoModes::mode_radio || mode == NeutrinoModes::mode_webradio);
+							const t_channel_id cur_channel_id = isRadioMode ? g_settings.startchannelradio_id : g_settings.startchanneltv_id;
+							if (cur_channel_id != channel_id)
+								CNeutrinoApp::getInstance()->channelList->zapTo_ChannelID(cur_channel_id, true);
+							else
+								CNeutrinoApp::getInstance()->channelList->numericZap(g_settings.key_lastchannel);
 						}
 					}
 					//CTimerdClient timerdclient;
