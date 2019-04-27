@@ -542,7 +542,7 @@ int CTimerList::exec(CMenuTarget* parent, const std::string & actionKey)
 		timerNew.announceTime=timerNew.alarmTime-60;
 		CTimerd::EventInfo eventinfo;
 		CTimerd::RecordingInfo recinfo;
-		eventinfo.epgID=0;
+		eventinfo.epg_id=0;
 		eventinfo.epg_starttime=0;
 		eventinfo.channel_id=timerNew.channel_id;
 		eventinfo.apids = TIMERD_APIDS_CONF;
@@ -560,7 +560,7 @@ int CTimerList::exec(CMenuTarget* parent, const std::string & actionKey)
 				return menu_return::RETURN_REPAINT;
 			if (timerNew.eventType==CTimerd::TIMER_RECORD)
 			{
-				recinfo.epgID=0;
+				recinfo.epg_id=0;
 				recinfo.epg_starttime=0;
 				recinfo.channel_id=timerNew.channel_id;
 				recinfo.apids=TIMERD_APIDS_CONF;
@@ -852,7 +852,7 @@ void CTimerList::RemoteBoxTimerList(CTimerd::TimerList &rtimerlist)
 				rtimer.alarmTime = (time_t) atoll(remotetimers[i]["alarm"][0].get("digits","").asString().c_str());
 				rtimer.announceTime = (time_t) atoll(remotetimers[i]["announce"][0].get("digits","").asString().c_str());
 				rtimer.stopTime = (time_t) atoll(remotetimers[i]["stop"][0].get("digits","").asString().c_str());
-				sscanf(remotetimers[i].get("epg_id","").asString().c_str(), SCANF_CHANNEL_ID_TYPE, &rtimer.epgID);
+				sscanf(remotetimers[i].get("epg_id","").asString().c_str(), SCANF_CHANNEL_ID_TYPE, &rtimer.epg_id);
 				sscanf(remotetimers[i].get("channel_id","").asString().c_str(),	SCANF_CHANNEL_ID_TYPE, &rtimer.channel_id);
 				strncpy(rtimer.epgTitle,remotetimers[i].get("title","").asString().c_str(),sizeof(rtimer.epgTitle));
 				rtimer.epgTitle[sizeof(rtimer.epgTitle) - 1] = 0;
@@ -1007,7 +1007,7 @@ int CTimerList::show()
 						std::string title = "";
 						char buf1[1024];
 						CEPGData epgdata;
-						CEitManager::getInstance()->getEPGid(timerlist[selected].epgID, timerlist[selected].epg_starttime, &epgdata);
+						CEitManager::getInstance()->getEPGid(timerlist[selected].epg_id, timerlist[selected].epg_starttime, &epgdata);
 						memset(buf1, '\0', sizeof(buf1));
 						if (!epgdata.title.empty())
 							title = "(" + epgdata.title + ")\n";
@@ -1060,9 +1060,9 @@ int CTimerList::show()
 				if (timer->eventType == CTimerd::TIMER_RECORD || timer->eventType == CTimerd::TIMER_REMOTEBOX || timer->eventType == CTimerd::TIMER_ZAPTO)
 				{
 					hide();
-					if (timer->epgID != 0)
+					if (timer->epg_id != 0)
 					{
-						res = g_EpgData->show(timer->channel_id, timer->epgID, &timer->epg_starttime);
+						res = g_EpgData->show(timer->channel_id, timer->epg_id, &timer->epg_starttime);
 						update = true;
 					}
 					else
@@ -1272,10 +1272,10 @@ void CTimerList::paintItem(int pos)
 				}
 				zAddData += ')';
 			}
-			if (timer.epgID!=0)
+			if (timer.epg_id!=0)
 			{
 				CEPGData epgdata;
-				if (CEitManager::getInstance()->getEPGid(timer.epgID, timer.epg_starttime, &epgdata))
+				if (CEitManager::getInstance()->getEPGid(timer.epg_id, timer.epg_starttime, &epgdata))
 				{
 					zAddData += " : ";
 					zAddData += epgdata.title;
@@ -1866,10 +1866,10 @@ bool CTimerList::askUserOnRemoteTimerConflict(time_t announceTime, time_t stopTi
 		timerbuf += CTimerList::convertTimerType2String(it->eventType);
 		timerbuf += " (";
 		timerbuf += CTimerList::convertChannelId2String(it->channel_id); // UTF-8
-		if (it->epgID != 0)
+		if (it->epg_id != 0)
 		{
 			CEPGData epgdata;
-			if (CEitManager::getInstance()->getEPGid(it->epgID, it->epg_starttime, &epgdata))
+			if (CEitManager::getInstance()->getEPGid(it->epg_id, it->epg_starttime, &epgdata))
 			{
 				timerbuf += ":";
 				timerbuf += epgdata.title;
@@ -1918,10 +1918,10 @@ bool askUserOnTimerConflict(time_t announceTime, time_t stopTime, t_channel_id c
 			timerbuf += CTimerList::convertTimerType2String(it->eventType);
 			timerbuf += " (";
 			timerbuf += CTimerList::convertChannelId2String(it->channel_id); // UTF-8
-			if (it->epgID != 0)
+			if (it->epg_id != 0)
 			{
 				CEPGData epgdata;
-				if (CEitManager::getInstance()->getEPGid(it->epgID, it->epg_starttime, &epgdata))
+				if (CEitManager::getInstance()->getEPGid(it->epg_id, it->epg_starttime, &epgdata))
 				{
 					timerbuf += ":";
 					timerbuf += epgdata.title;

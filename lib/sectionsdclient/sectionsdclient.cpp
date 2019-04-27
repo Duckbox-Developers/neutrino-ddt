@@ -244,7 +244,7 @@ void CSectionsdClient::dumpStatus()
 }
 
 #if 0
-bool CSectionsdClient::getComponentTagsUniqueKey(const event_id_t uniqueKey, CSectionsdClient::ComponentTagList& tags)
+bool CSectionsdClient::getComponentTagsUniqueKey(const t_event_id uniqueKey, CSectionsdClient::ComponentTagList& tags)
 {
 	if (send(sectionsd::ComponentTagsUniqueKey, (char*)&uniqueKey, sizeof(uniqueKey)))
 	{
@@ -285,7 +285,7 @@ bool CSectionsdClient::getComponentTagsUniqueKey(const event_id_t uniqueKey, CSe
 	}
 }
 
-bool CSectionsdClient::getLinkageDescriptorsUniqueKey(const event_id_t uniqueKey, CSectionsdClient::LinkageDescriptorList& descriptors)
+bool CSectionsdClient::getLinkageDescriptorsUniqueKey(const t_event_id uniqueKey, CSectionsdClient::LinkageDescriptorList& descriptors)
 {
 	if (send(sectionsd::LinkageDescriptorsUniqueKey, (char*)&uniqueKey, sizeof(uniqueKey)))
 	{
@@ -370,16 +370,16 @@ bool CSectionsdClient::getCurrentNextServiceKey(const t_channel_id channel_id, C
 		char* dp = pData;
 
 		// current
-		current_next.current_uniqueKey = *((event_id_t *)dp);
-		dp+= sizeof(event_id_t);
+		current_next.current_uniqueKey = *((t_event_id *)dp);
+		dp+= sizeof(t_event_id);
 		current_next.current_zeit = *(CSectionsdClient::sectionsdTime*) dp;
 		dp+= sizeof(CSectionsdClient::sectionsdTime);
 		current_next.current_name = dp;
 		dp+=strlen(dp)+1;
 
 		// next
-		current_next.next_uniqueKey = *((event_id_t *)dp);
-		dp+= sizeof(event_id_t);
+		current_next.next_uniqueKey = *((t_event_id *)dp);
+		dp+= sizeof(t_event_id);
 		current_next.next_zeit = *(CSectionsdClient::sectionsdTime*) dp;
 		dp+= sizeof(CSectionsdClient::sectionsdTime);
 		current_next.next_name = dp;
@@ -421,7 +421,7 @@ CChannelEventList CSectionsdClient::getChannelEvents(const bool tv_mode, t_chann
 			{
 				CChannelEvent aEvent;
 
-				aEvent.eventID = *((event_id_t *) dp);
+				aEvent.eventID = *((t_event_id *) dp);
 				dp+=sizeof(aEvent.eventID);
 
 				aEvent.startTime = *((time_t *) dp);
@@ -488,7 +488,7 @@ bool CSectionsdClient::getEventsServiceKeySearchAdd(CChannelEventList& eList,con
 			{
 				CChannelEvent aEvent;
 
-				aEvent.eventID = *((event_id_t *) dp);
+				aEvent.eventID = *((t_event_id *) dp);
 				dp+=sizeof(aEvent.eventID);
 
 				aEvent.startTime = *((time_t *) dp);
@@ -534,7 +534,7 @@ CChannelEventList CSectionsdClient::getEventsServiceKey(const t_channel_id chann
 			{
 				CChannelEvent aEvent;
 
-				aEvent.eventID = *((event_id_t *) dp);
+				aEvent.eventID = *((t_event_id *) dp);
 				dp+=sizeof(aEvent.eventID);
 
 				aEvent.startTime = *((time_t *) dp);
@@ -656,7 +656,7 @@ bool CSectionsdClient::getActualEPGServiceKey(const t_channel_id channel_id, CEP
 
 			char* dp = pData;
 
-			epgdata->eventID = *((event_id_t *)dp);
+			epgdata->eventID = *((t_event_id *)dp);
 			dp+= sizeof(epgdata->eventID);
 
 			epgdata->title = dp;
@@ -694,7 +694,7 @@ bool CSectionsdClient::getActualEPGServiceKey(const t_channel_id channel_id, CEP
 	return false;
 }
 
-bool CSectionsdClient::getEPGid(const event_id_t eventid, const time_t starttime, CEPGData * epgdata)
+bool CSectionsdClient::getEPGid(const t_event_id eventid, const time_t starttime, CEPGData * epgdata)
 {
 	sectionsd::commandGetEPGid msg;
 
@@ -712,7 +712,7 @@ bool CSectionsdClient::getEPGid(const event_id_t eventid, const time_t starttime
 
 			char* dp = pData;
 
-			epgdata->eventID = *((event_id_t *)dp);
+			epgdata->eventID = *((t_event_id *)dp);
 			dp+= sizeof(epgdata->eventID);
 
 			epgdata->title = dp;
@@ -749,7 +749,7 @@ bool CSectionsdClient::getEPGid(const event_id_t eventid, const time_t starttime
 	return false;
 }
 
-bool CSectionsdClient::getEPGidShort(const event_id_t eventid, CShortEPGData * epgdata)
+bool CSectionsdClient::getEPGidShort(const t_event_id eventid, CShortEPGData * epgdata)
 {
 	if (send(sectionsd::epgEPGidShort, (char*)&eventid, sizeof(eventid)))
 	{
