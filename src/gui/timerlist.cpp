@@ -1061,7 +1061,7 @@ int CTimerList::show()
 			CTimerd::responseGetTimer* timer=&timerlist[selected];
 			if (timer!=NULL)
 			{
-				if (timer->eventType == CTimerd::TIMER_RECORD || timer->eventType == CTimerd::TIMER_REMOTEBOX || timer->eventType == CTimerd::TIMER_ZAPTO)
+				if (timer->eventType == CTimerd::TIMER_RECORD || timer->eventType == CTimerd::TIMER_ZAPTO || timer->eventType == CTimerd::TIMER_REMOTEBOX)
 				{
 					hide();
 					if (timer->epg_id != 0)
@@ -1418,7 +1418,7 @@ void CTimerList::paintFoot()
 		if (timer != NULL)
 		{
 			//replace info button with dummy if timer is not type REC or ZAP
-			if (timer->eventType == CTimerd::TIMER_RECORD || timer->eventType == CTimerd::TIMER_REMOTEBOX || timer->eventType == CTimerd::TIMER_ZAPTO)
+			if (timer->eventType == CTimerd::TIMER_RECORD || timer->eventType == CTimerd::TIMER_ZAPTO || timer->eventType == CTimerd::TIMER_REMOTEBOX)
 				TimerListButtons[4].button = NEUTRINO_ICON_BUTTON_INFO_SMALL;
 			else
 				TimerListButtons[4].button = NEUTRINO_ICON_BUTTON_DUMMY_SMALL;
