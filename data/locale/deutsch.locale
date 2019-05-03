@@ -2592,7 +2592,7 @@ tmdb.info TMDb-Info
 tmdb.read_data Suche TMDb-Daten ...
 unicable.lnb Unicable Eingang
 unicable.pin Unicable PIN
-unicable.pin_hint PIN (1 - 255) für Benutzer Frequenz\n0 bedeutet inaktiv / aus
+unicable.pin_hint PIN (1 - 255) für Benutzerfrequenz\n0 bedeutet inaktiv / aus
 unicable.qrg Unicable Frequenz
 unicable.scr Unicable SCR
 unit.decimal ,
