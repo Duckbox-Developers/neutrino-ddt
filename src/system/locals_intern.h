@@ -2613,6 +2613,8 @@ const char * locale_real_names[] =
 	"tmdb.info",
 	"tmdb.read_data",
 	"unicable.lnb",
+	"unicable.pin",
+	"unicable.pin_hint",
 	"unicable.qrg",
 	"unicable.scr",
 	"unit.decimal",
