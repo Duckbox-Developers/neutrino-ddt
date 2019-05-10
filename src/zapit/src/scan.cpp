@@ -60,6 +60,7 @@ CServiceScan::CServiceScan()
 {
 	started = false;
 	running = false;
+	abort_scan = false;
 
 	cable_nid = 0;
 #ifdef ENABLE_FASTSCAN
