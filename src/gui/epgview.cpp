@@ -1173,6 +1173,18 @@ int CEpgData::show(const t_channel_id channel_id, uint64_t a_id, time_t* a_start
 					{
 						CAdZapMenu::getInstance()->exec(NULL, "enable");
 						loop = false;
+
+						std::string tmp_msg;
+						tmp_msg  = g_Locale->getText(LOCALE_WORD_IN);
+						tmp_msg += " ";
+						tmp_msg += to_string(g_settings.adzap_zapBackPeriod / 60);
+						tmp_msg += " ";
+						tmp_msg += g_Locale->getText(LOCALE_UNIT_SHORT_MINUTE);
+
+						if (g_settings.adzap_zapOnActivation != SNeutrinoSettings::ADZAP_ZAP_OFF)
+							CAdZapMenu::getInstance()->Zap_On_Activation(channel_id);
+
+						ShowMsg(LOCALE_ADZAP, tmp_msg, CMsgBox::mbrBack, CMsgBox::mbBack, NEUTRINO_ICON_INFO);
 					}
 					//CTimerdClient timerdclient;
 					else if (g_Timerd->isTimerdAvailable())
