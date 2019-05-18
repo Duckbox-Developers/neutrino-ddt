@@ -98,6 +98,10 @@ if BOXMODEL_VUSOLO4K
 install_DATA += rc_vu_solo4k.png
 endif
 
+if BOXMODEL_VUDUO4K
+install_DATA += rc_vu_solo4k.png
+endif
+
 if BOXTYPE_SPARK
 install_DATA += rc_spark_old.jpg \
 		rc_spark_new.jpg

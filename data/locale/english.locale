@@ -1296,7 +1296,7 @@ menu.hint_lcd4l_convert Convert umlauts for the built-in LCD4Linux font
 menu.hint_lcd4l_logodir Logo directory.\nFallback to default on invalid entry.
 menu.hint_lcd4l_skin Switch between modes
 menu.hint_lcd4l_skin_radio Switch the mode, when Radio-Mode is activated
-menu.hint_lcd4l_support Activate/deactivate LCD4Linux\nSupported displays: Pearl DPF, Samsung DPF, VU+SOLO4K, PNG
+menu.hint_lcd4l_support Activate/deactivate LCD4Linux\nSupported displays: Pearl DPF, Samsung DPF, VU+SOLO4K/VU+DUO4K, PNG
 menu.hint_leds_blink Blinking LEDs in deep-standby
 menu.hint_leds_deepstandby LEDs state in deeps-standby mode
 menu.hint_leds_record LEDs state when box recording

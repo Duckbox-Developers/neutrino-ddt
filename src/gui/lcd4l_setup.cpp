@@ -167,8 +167,8 @@ int CLCD4lSetup::show()
 			enable_brightness = false;
 			max_brightness = 0;
 			break;
-#if defined BOXMODEL_VUSOLO4K
-		case 2: // VU Solo4K
+#if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K
+		case 2: // VU Solo4K / VU Duo4k
 			enable_brightness = true;
 			max_brightness = 10;
 			break;
