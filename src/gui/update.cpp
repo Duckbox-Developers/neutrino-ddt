@@ -501,8 +501,8 @@ bool CFlashUpdate::checkVersion4Update()
 			return false;
 		}
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
-		//tgz package install:
-		else if (file_selected->getType() == CFile::FILE_TGZ_PACKAGE){
+		//tgz or zip package install:
+		if (file_selected->getType() == CFile::FILE_TGZ_PACKAGE || file_selected->getType() == CFile::FILE_ZIP_PACKAGE) {
 			fileType = 'Z';
 			//!always leave here!
 			return true;
