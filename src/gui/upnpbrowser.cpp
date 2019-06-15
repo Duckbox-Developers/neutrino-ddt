@@ -250,7 +250,7 @@ bool CUpnpBrowserGui::discoverDevices()
 	try {
 		m_devices = m_socket->Discover("urn:schemas-upnp-org:service:ContentDirectory:1");
 	}
-	catch (std::runtime_error error)
+	catch (std::runtime_error& error)
 	{
 		hintbox.hide();
 		DisplayErrorMessage(error.what());
@@ -285,7 +285,7 @@ bool CUpnpBrowserGui::getResults(std::string id, unsigned int start, unsigned in
 	{
 		results=m_devices[m_selecteddevice].SendSOAP("urn:schemas-upnp-org:service:ContentDirectory:1", "Browse", attribs);
 	}
-	catch (std::runtime_error error)
+	catch (std::runtime_error& error)
 	{
 		DisplayErrorMessage(error.what());
 		return false;
