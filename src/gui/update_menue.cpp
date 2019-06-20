@@ -44,6 +44,7 @@
 #include "gui/opkg_manager.h"
 #include <gui/widget/icons.h>
 #include <driver/screen_max.h>
+#include <driver/record.h>
 #include <system/debug.h>
 #include <system/flashtool.h>
 #include <system/helpers.h>
@@ -88,16 +89,18 @@ int CSoftwareUpdate::showSoftwareUpdate()
 		inetkey = CRCInput::convertDigitToKey(1);
 	}
 
+	bool allow_update = !CRecordManager::getInstance()->RecordingStatus() || CRecordManager::getInstance()->TimeshiftOnly();
+
 	CFlashUpdate flash;
 	//online update
 	if (file_exists(g_settings.softupdate_url_file.c_str())) {
-		update_item = new CMenuForwarder(LOCALE_FLASHUPDATE_CHECKUPDATE_INTERNET, true, NULL, &flash, "inet", inetkey);
+		update_item = new CMenuForwarder(LOCALE_FLASHUPDATE_CHECKUPDATE_INTERNET, allow_update, NULL, &flash, "inet", inetkey);
 		update_item->setHint("", LOCALE_MENU_HINT_SOFTUPDATE_CHECK);
 		softUpdate.addItem(update_item);
 	}
 
 	//local update
-	update_item = new CMenuForwarder(LOCALE_FLASHUPDATE_CHECKUPDATE_LOCAL, true, NULL, &flash, "local", CRCInput::RC_green);
+	update_item = new CMenuForwarder(LOCALE_FLASHUPDATE_CHECKUPDATE_LOCAL, allow_update, NULL, &flash, "local", CRCInput::RC_green);
 	update_item->setHint("", LOCALE_MENU_HINT_SOFTUPDATE_CHECK_LOCAL);
 	softUpdate.addItem(update_item);
 
