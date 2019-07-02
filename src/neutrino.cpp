@@ -4317,14 +4317,10 @@ void CNeutrinoApp::ExitRun(int exit_code)
 		SDT_ReloadChannels();
 
 	dprintf(DEBUG_INFO, "exit\n");
-<<<<<<< HEAD
-=======
-	OnShutDown();
 
 	//cleanup progress bar cache
 	CProgressBarCache::pbcClear();
 
->>>>>>> 8e5292abc... neutrino.cpp: fix memleak with progressbar cache
 	StopSubtitles();
 	stopPlayBack();
 
