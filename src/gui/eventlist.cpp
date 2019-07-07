@@ -567,6 +567,8 @@ int CEventList::exec(const t_channel_id channel_id, const std::string& channelna
 			if(in_search) {
 				in_search = false;
 				m_showChannel = false;
+				infozone_background = false;
+				oldEventID = -1;
 				paintHead(channel_id, channelname);
 				readEvents(epg_id);
 				paint(channel_id);
