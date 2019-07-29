@@ -245,6 +245,8 @@ class CMoviePlayerGui : public CMenuTarget
 #if 0
 	void selectSubtitle();
 	bool convertSubtitle(std::string &text);
+#endif
+#if HAVE_ARM_HARDWARE
 	void selectChapter();
 #endif
 	void selectAutoLang();
