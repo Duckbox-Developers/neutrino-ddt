@@ -527,11 +527,12 @@ start-block~remote
 		{=if-equal:{=var-get:boxtype=}~Mutant HD51~		{=include-block:Y_Blocks.txt;rc_mutant_hd51=}~
 		{=if-equal:{=var-get:boxtype=}~VU+ SOLO4K~		{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 		{=if-equal:{=var-get:boxtype=}~VU+ DUO4K~		{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
+		{=if-equal:{=var-get:boxtype=}~VU+ ULTIMO4K~		{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 		{=if-equal:{=var-get:boxtype=}~VU+ DUO~			{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 		{=if-equal:{=var-get:boxtype=}~VU+ ZERO4K~		{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 
 		{=comment:fallback~=}				{=include-block:Y_Blocks.txt;rc_ufs910=}
-		=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
+		=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
 ~
 	{=if-equal:{=var-get:yfbtype=}~1~	{=include-block:Y_Blocks.txt;rc_cst_v1=}~
 	{=if-equal:{=var-get:yfbtype=}~2~	{=include-block:Y_Blocks.txt;rc_cst_v2=}~
@@ -547,12 +548,13 @@ start-block~remote
 	{=if-equal:{=var-get:yfbtype=}~12~	{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 	{=if-equal:{=var-get:yfbtype=}~13~	{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 	{=if-equal:{=var-get:yfbtype=}~14~	{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
+	{=if-equal:{=var-get:yfbtype=}~15~	{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 	{=if-equal:{=var-get:yfbtype=}~-3~	{=include-block:Y_Blocks.txt;rc_ufs910=}~
 	{=if-equal:{=var-get:yfbtype=}~-2~	{=include-block:Y_Blocks.txt;rc_spark_old=}~
 	{=if-equal:{=var-get:yfbtype=}~-1~	{=include-block:Y_Blocks.txt;rc_spark_new=}~
 
 	{=comment:fallback~=}			{=include-block:Y_Blocks.txt;rc_ufs910=}
-	=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
+	=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
 =}
 end-block~remote
 
@@ -1160,7 +1162,7 @@ start-block~rc_mutant_hd51
 </map>
 end-block~rc_mutant_hd51
 
-# ------ Remote VU+ Solo/Duo/Zero 4K
+# ------ Remote VU+ Solo 4K/Duo 4K/Ultimo 4K/Zero 4K
 start-block~rc_vu_solo4k
 <img src="images/rc_vu_solo4k.png" usemap="#rc"/>
 <map name="rc" id="rc">
