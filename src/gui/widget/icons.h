@@ -115,10 +115,12 @@
 #define NEUTRINO_ICON_SHELL		"shell"
 #define NEUTRINO_ICON_STREAMING		"streaming"
 #define NEUTRINO_ICON_TIMER		"timer"
+#if 0
 #define NEUTRINO_ICON_TUNER_1		"tuner_1"
 #define NEUTRINO_ICON_TUNER_2		"tuner_2"
 #define NEUTRINO_ICON_TUNER_3		"tuner_3"
 #define NEUTRINO_ICON_TUNER_4		"tuner_4"
+#endif
 #define NEUTRINO_ICON_UPDATE		"softupdate"
 #define NEUTRINO_ICON_UPNP		"upnp"
 #define NEUTRINO_ICON_VIDEO		"video"
