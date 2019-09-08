@@ -455,7 +455,16 @@ int CScanSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 	}
 	else if((loc = actionKey.find("config_frontend", 0)) != std::string::npos)
 	{
-		int number = actionKey.at(15) - '0';
+//		int number = actionKey.at(15) - '0';
+
+		std::string actionKey_tmp;
+		for (int i = 15; i < actionKey.length(); ++i) {
+			int test = actionKey.at(i) - '0';
+			actionKey_tmp += to_string(test);
+//			printf("[neutrino] >>>>>>>>> %s (%d) <<<<<<<<<\n", actionKey_tmp.c_str(), test);
+		}
+		int number = atoi(actionKey_tmp.c_str());
+
 		printf("[neutrino] CScanSetup::%s %s, fe %d\n", __FUNCTION__, actionKey.c_str(), number);
 		return showFrontendSetup(number);
 	}
