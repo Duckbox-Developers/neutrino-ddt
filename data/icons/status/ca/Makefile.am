@@ -34,6 +34,9 @@ install_DATA = \
 	via_green.png \
 	via_white.png \
 	via_yellow.png \
+	vmx_green.png \
+	vmx_white.png \
+	vmx_yellow.png \
 	x_green.png \
 	x_white.png \
 	x_yellow.png
