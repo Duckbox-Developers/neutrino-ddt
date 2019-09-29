@@ -511,7 +511,7 @@ std::string CNeutrinoAPI::getCryptInfoAsString(void)
 	OpenThreads::ScopedPointerLock<OpenThreads::Mutex> lock(pmutex);
 	CZapitChannel * channel = CZapit::getInstance()->GetCurrentChannel();
 	if(channel) {
-                for (unsigned short i = 0; i < 11; i++) {
+                for (unsigned short i = 0; i < 13; i++) {
                         for(casys_map_iterator_t it = channel->camap.begin(); it != channel->camap.end(); ++it) {
                                 int caid = (*it) & 0xFF00;
                                 if(caid == caids[i])
