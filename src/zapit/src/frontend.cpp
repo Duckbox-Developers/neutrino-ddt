@@ -1222,7 +1222,7 @@ bool CFrontend::buildProperties(const FrontendParameters *feparams, struct dtv_p
 	case FEC_2_3:
 		fec = FEC_2_3;
 		if (feparams->delsys == DVB_S2 && feparams->modulation == PSK_8)
-#if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K || BOXMODEL_VUZERO4K
+#if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K || BOXMODEL_VUZERO4K || BOXMODEL_VUUNO4KSE
 			pilot = PILOT_AUTO;
 #else
 			pilot = PILOT_ON;
@@ -1231,7 +1231,7 @@ bool CFrontend::buildProperties(const FrontendParameters *feparams, struct dtv_p
 	case FEC_3_4:
 		fec = FEC_3_4;
 		if (feparams->delsys == DVB_S2 && feparams->modulation == PSK_8)
-#if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K || BOXMODEL_VUZERO4K
+#if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K || BOXMODEL_VUZERO4K || BOXMODEL_VUUNO4KSE
 			pilot = PILOT_AUTO;
 #else
 			pilot = PILOT_ON;
@@ -1243,7 +1243,7 @@ bool CFrontend::buildProperties(const FrontendParameters *feparams, struct dtv_p
 	case FEC_5_6:
 		fec = FEC_5_6;
 		if (feparams->delsys == DVB_S2 && feparams->modulation == PSK_8)
-#if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K || BOXMODEL_VUZERO4K
+#if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K || BOXMODEL_VUZERO4K || BOXMODEL_VUUNO4KSE
 			pilot = PILOT_AUTO;
 #else
 			pilot = PILOT_ON;
@@ -1261,7 +1261,7 @@ bool CFrontend::buildProperties(const FrontendParameters *feparams, struct dtv_p
 	case FEC_3_5:
 		fec = FEC_3_5;
 		if (feparams->delsys == DVB_S2 && feparams->modulation == PSK_8)
-#if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K || BOXMODEL_VUZERO4K
+#if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K || BOXMODEL_VUZERO4K || BOXMODEL_VUUNO4KSE
 			pilot = PILOT_AUTO;
 #else
 			pilot = PILOT_ON;
@@ -1725,7 +1725,7 @@ uint32_t CFrontend::sendEN50494TuningCommand(const uint32_t frequency, const int
 		}
 		fop(ioctl, FE_SET_VOLTAGE, SEC_VOLTAGE_18);
 		usleep(20 * 1000);		/* en50494 says: >4ms and < 22 ms */
-		sendDiseqcCommand(&cmd, 120);	/* en50494 says: >2ms and < 60 ms -- it seems we must add the lengthe of telegramm itself (~65ms) */
+		sendDiseqcCommand(&cmd, 80);	/* en50494 says: >2ms and < 60 ms -- it seems we must add the lengthe of telegramm itself (~65ms) */
 		fop(ioctl, FE_SET_VOLTAGE, unicable_lowvolt);
 	}
 	return ret;
@@ -1762,7 +1762,7 @@ uint32_t CFrontend::sendEN50607TuningCommand(const uint32_t frequency, const int
 				high_band;					/* high_band  == 0x01 */
 			fop(ioctl, FE_SET_VOLTAGE, SEC_VOLTAGE_18);
 			usleep(20 * 1000);					/* en50494 says: >4ms and < 22 ms */
-			sendDiseqcCommand(&cmd, 120);				/* en50494 says: >2ms and < 60 ms -- it seems we must add the lengthe of telegramm itself (~65ms) */
+			sendDiseqcCommand(&cmd, 80);				/* en50494 says: >2ms and < 60 ms -- it seems we must add the lengthe of telegramm itself (~65ms) */
 			fop(ioctl, FE_SET_VOLTAGE, unicable_lowvolt);
 		}
 		return ret;

@@ -678,7 +678,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.osd_colorsettings_advanced_mode = configfile.getBool("osd_colorsettings_advanced_mode", false);
 
 #ifdef ENABLE_GRAPHLCD
-#if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K
+#if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4KSE
 	g_settings.glcd_enable = configfile.getInt32("glcd_enable", 1);
 #else
 	g_settings.glcd_enable = configfile.getInt32("glcd_enable", 0);
@@ -699,7 +699,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.glcd_font = configfile.getString("glcd_font", FONTDIR "/neutrino.ttf");
 	g_settings.glcd_brightness = configfile.getInt32("glcd_brightness", 75);
 	g_settings.glcd_brightness_standby = configfile.getInt32("glcd_brightness_standby", 45);
-#if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K
+#if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4KSE
 	g_settings.glcd_scroll_speed = configfile.getInt32("glcd_scroll_speed", 2);
 #else
 	g_settings.glcd_scroll_speed = configfile.getInt32("glcd_scroll_speed", 5);
@@ -5255,7 +5255,7 @@ void CNeutrinoApp::loadKeys(const char * fname)
 	g_settings.key_list_end = tconfig->getInt32( "key_list_end", (unsigned int)CRCInput::RC_nokey );
 #if BOXMODEL_HD51 || BOXMODEL_HD60
 	g_settings.key_timeshift = tconfig->getInt32( "key_timeshift", CRCInput::RC_playpause_long ); // FIXME
-#elif BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K || BOXMODEL_VUZERO4K || BOXMODEL_VUDUO
+#elif BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K || BOXMODEL_VUZERO4K || BOXMODEL_VUDUO || BOXMODEL_VUUNO4KSE
 	g_settings.key_timeshift = tconfig->getInt32( "key_timeshift", CRCInput::RC_playpause );
 #else
 	g_settings.key_timeshift = tconfig->getInt32( "key_timeshift", CRCInput::RC_pause );
@@ -5291,7 +5291,7 @@ void CNeutrinoApp::loadKeys(const char * fname)
 #if BOXMODEL_HD51 || BOXMODEL_HD60
 	g_settings.mpkey_play = tconfig->getInt32( "mpkey.play", CRCInput::RC_playpause );
 	g_settings.mpkey_pause = tconfig->getInt32( "mpkey.pause", CRCInput::RC_playpause );
-#elif BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K || BOXMODEL_VUZERO4K || BOXMODEL_VUDUO
+#elif BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K || BOXMODEL_VUZERO4K || BOXMODEL_VUDUO || BOXMODEL_VUUNO4KSE
 	g_settings.mpkey_play = tconfig->getInt32( "mpkey.play", CRCInput::RC_play );
 	g_settings.mpkey_pause = tconfig->getInt32( "mpkey.pause", CRCInput::RC_playpause );
 #else

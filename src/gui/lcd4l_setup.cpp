@@ -167,8 +167,8 @@ int CLCD4lSetup::show()
 			enable_brightness = false;
 			max_brightness = 0;
 			break;
-#if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K
-		case 2: // VU+ SOLO 4K / VU+ DUO 4K / VU+ ULTIMO 4K
+#if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4KSE
+		case 2: // VU+ SOLO 4K / VU+ DUO 4K / VU+ ULTIMO 4K / VU+ UNO 4K SE
 			enable_brightness = true;
 			max_brightness = 10;
 			break;
