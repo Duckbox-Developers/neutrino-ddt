@@ -531,9 +531,10 @@ start-block~remote
 		{=if-equal:{=var-get:boxtype=}~VU+ DUO~			{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 		{=if-equal:{=var-get:boxtype=}~VU+ ZERO4K~		{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 		{=if-equal:{=var-get:boxtype=}~VU+ UNO4KSE~		{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
+		{=if-equal:{=var-get:boxtype=}~VU+ UNO4K~		{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 
 		{=comment:fallback~=}				{=include-block:Y_Blocks.txt;rc_ufs910=}
-		=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
+		=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
 ~
 	{=if-equal:{=var-get:yfbtype=}~1~	{=include-block:Y_Blocks.txt;rc_cst_v1=}~
 	{=if-equal:{=var-get:yfbtype=}~2~	{=include-block:Y_Blocks.txt;rc_cst_v2=}~
@@ -551,12 +552,13 @@ start-block~remote
 	{=if-equal:{=var-get:yfbtype=}~14~	{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 	{=if-equal:{=var-get:yfbtype=}~15~	{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 	{=if-equal:{=var-get:yfbtype=}~16~	{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
+	{=if-equal:{=var-get:yfbtype=}~17~	{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 	{=if-equal:{=var-get:yfbtype=}~-3~	{=include-block:Y_Blocks.txt;rc_ufs910=}~
 	{=if-equal:{=var-get:yfbtype=}~-2~	{=include-block:Y_Blocks.txt;rc_spark_old=}~
 	{=if-equal:{=var-get:yfbtype=}~-1~	{=include-block:Y_Blocks.txt;rc_spark_new=}~
 
 	{=comment:fallback~=}			{=include-block:Y_Blocks.txt;rc_ufs910=}
-	=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
+	=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
 =}
 end-block~remote
 

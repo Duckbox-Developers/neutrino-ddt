@@ -248,7 +248,7 @@ void nGLCD::Exec() {
 	}
 
 	if (CNeutrinoApp::getInstance()->recordingstatus) {
-#if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4KSE
+#if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4KSE || BOXMODEL_VUUNO4K
 		for (int bx = 0; bx < 6; bx++) {
 #else
 		for (int bx = 0; bx < 3; bx++) {
@@ -257,7 +257,7 @@ void nGLCD::Exec() {
 		}
 	} else
 	if (CNeutrinoApp::getInstance()->isMuted()) {
-#if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4KSE
+#if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4KSE || BOXMODEL_VUUNO4K
 		for (int bx = 0; bx < 6; bx++) {
 #else
 		for (int bx = 0; bx < 3; bx++) {

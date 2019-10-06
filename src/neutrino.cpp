@@ -5255,7 +5255,7 @@ void CNeutrinoApp::loadKeys(const char * fname)
 	g_settings.key_list_end = tconfig->getInt32( "key_list_end", (unsigned int)CRCInput::RC_nokey );
 #if BOXMODEL_HD51 || BOXMODEL_HD60
 	g_settings.key_timeshift = tconfig->getInt32( "key_timeshift", CRCInput::RC_playpause_long ); // FIXME
-#elif BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K || BOXMODEL_VUZERO4K || BOXMODEL_VUDUO || BOXMODEL_VUUNO4KSE
+#elif BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K || BOXMODEL_VUZERO4K || BOXMODEL_VUDUO || BOXMODEL_VUUNO4KSE || BOXMODEL_VUUNO4K
 	g_settings.key_timeshift = tconfig->getInt32( "key_timeshift", CRCInput::RC_playpause );
 #else
 	g_settings.key_timeshift = tconfig->getInt32( "key_timeshift", CRCInput::RC_pause );
@@ -5291,7 +5291,7 @@ void CNeutrinoApp::loadKeys(const char * fname)
 #if BOXMODEL_HD51 || BOXMODEL_HD60
 	g_settings.mpkey_play = tconfig->getInt32( "mpkey.play", CRCInput::RC_playpause );
 	g_settings.mpkey_pause = tconfig->getInt32( "mpkey.pause", CRCInput::RC_playpause );
-#elif BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K || BOXMODEL_VUZERO4K || BOXMODEL_VUDUO || BOXMODEL_VUUNO4KSE
+#elif BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K || BOXMODEL_VUZERO4K || BOXMODEL_VUDUO || BOXMODEL_VUUNO4KSE || BOXMODEL_VUUNO4K
 	g_settings.mpkey_play = tconfig->getInt32( "mpkey.play", CRCInput::RC_play );
 	g_settings.mpkey_pause = tconfig->getInt32( "mpkey.pause", CRCInput::RC_playpause );
 #else
