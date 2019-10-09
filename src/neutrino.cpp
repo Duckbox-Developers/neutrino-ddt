@@ -697,9 +697,16 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.glcd_time_in_standby = configfile.getInt32("glcd_time_in_standby", 1);
 	g_settings.glcd_show_logo = configfile.getInt32("glcd_show_logo", 1);
 	g_settings.glcd_font = configfile.getString("glcd_font", FONTDIR "/neutrino.ttf");
+#if BOXMODEL_VUUNO4KSE
+	g_settings.glcd_brightness = configfile.getInt32("glcd_brightness", 25);
+	g_settings.glcd_brightness_standby = configfile.getInt32("glcd_brightness_standby", 5);
+#else
 	g_settings.glcd_brightness = configfile.getInt32("glcd_brightness", 75);
 	g_settings.glcd_brightness_standby = configfile.getInt32("glcd_brightness_standby", 45);
-#if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4KSE
+#endif
+#if BOXMODEL_VUUNO4KSE
+	g_settings.glcd_scroll_speed = configfile.getInt32("glcd_scroll_speed", 1);
+#elif BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K
 	g_settings.glcd_scroll_speed = configfile.getInt32("glcd_scroll_speed", 2);
 #else
 	g_settings.glcd_scroll_speed = configfile.getInt32("glcd_scroll_speed", 5);

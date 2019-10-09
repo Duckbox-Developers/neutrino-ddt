@@ -1,6 +1,9 @@
 installdir = $(ICONSDIR)
 
 install_DATA = \
+	bc_green.png \
+	bc_white.png \
+	bc_yellow.png \
 	biss_green.png \
 	biss_white.png \
 	biss_yellow.png \
