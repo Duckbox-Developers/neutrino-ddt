@@ -168,6 +168,7 @@ class CRCInput
 		bool		*timer_wakeup;
 		__u16 rc_last_key;
 		OpenThreads::Mutex mutex;
+		OpenThreads::Mutex timer_mutex;
 
 		void open(bool recheck = false);
 		bool checkpath(in_dev id);
