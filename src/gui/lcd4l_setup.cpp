@@ -66,7 +66,7 @@ const CMenuOptionChooser::keyval_ext LCD4L_DPF_TYPE_OPTIONS[] =
 {
 	{ 0, NONEXISTANT_LOCALE, "Pearl"},
 	{ 1, NONEXISTANT_LOCALE, "Samsung"},
-	{ 2, NONEXISTANT_LOCALE, "VUSolo4K"},
+	{ 2, NONEXISTANT_LOCALE, "VUPLUS4K"},
 	{ 3, NONEXISTANT_LOCALE, "PNG"}
 };
 #define LCD4L_DPF_TYPE_OPTION_COUNT (sizeof(LCD4L_DPF_TYPE_OPTIONS)/sizeof(CMenuOptionChooser::keyval_ext))
@@ -168,7 +168,7 @@ int CLCD4lSetup::show()
 			max_brightness = 0;
 			break;
 #if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4KSE
-		case 2: // VU+ SOLO 4K / VU+ DUO 4K / VU+ ULTIMO 4K / VU+ UNO 4K SE
+		case 2: // VUPLUS4K
 			enable_brightness = true;
 			max_brightness = 10;
 			break;
