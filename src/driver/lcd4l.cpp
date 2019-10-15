@@ -692,7 +692,7 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 				break;
 #if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4KSE || BOXMODEL_VUUNO4K
 			case 2:
-				DPF_Type = "VUSolo4K_";
+				DPF_Type = "VUPLUS4K_";
 				break;
 #endif
 			case 1:
