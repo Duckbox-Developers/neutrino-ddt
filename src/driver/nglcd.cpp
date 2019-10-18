@@ -131,15 +131,24 @@ void nGLCD::LcdAnalogClock(int posx,int posy,int dia)
 	mAngleInRad = ((6 * tm_) * (2*pi_ / 360));
 	mAngleSave = mAngleInRad;
 	mAngleInRad -= pi_/2;
-
+#if BOXMODEL_VUUNO4KSE
+	mx_ = int((dia * 0.55 * cos(mAngleInRad)));
+	my_ = int((dia * 0.55 * sin(mAngleInRad)));
+#else
 	mx_ = int((dia * 0.7 * cos(mAngleInRad)));
 	my_ = int((dia * 0.7 * sin(mAngleInRad)));
+#endif
 
 	hAngleInRad = ((30 * th_)* (2*pi_ / 360));
 	hAngleInRad += mAngleSave / 12;
 	hAngleInRad -= pi_/2;
+#if BOXMODEL_VUUNO4KSE
+	hx_ = int((dia * 0.25 * cos(hAngleInRad)));
+	hy_ = int((dia * 0.25 * sin(hAngleInRad)));
+#else
 	hx_ = int((dia * 0.4 * cos(hAngleInRad)));
 	hy_ = int((dia * 0.4 * sin(hAngleInRad)));
+#endif
 
 	std::string a_clock = "";
 
