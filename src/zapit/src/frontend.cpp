@@ -366,11 +366,8 @@ void CFrontend::getFEInfo(void)
 				deliverySystemMask |= DVB_S;
 				break;
 			case SYS_DVBS2:
-				deliverySystemMask |= DVB_S2;
-				isMultistream = info.caps & FE_CAN_MULTISTREAM;
-				break;
 			case SYS_DVBS2X:
-				deliverySystemMask |= DVB_S2; // should be later DVB_S2X
+				deliverySystemMask |= DVB_S2;
 				isMultistream = info.caps & FE_CAN_MULTISTREAM;
 				break;
 			case SYS_DTMB:
@@ -393,6 +390,7 @@ void CFrontend::getFEInfo(void)
 		case FE_QPSK:
 			deliverySystemMask |= DVB_S;
 			deliverySystemMask |= DVB_S2;
+			deliverySystemMask |= DVB_S2X;
 			break;
 		case FE_OFDM:
 			deliverySystemMask |= DVB_T;
@@ -945,6 +943,7 @@ void CFrontend::getDelSys(delivery_system_t delsys, int f, int m, const char *&f
 		mod = "QPSK";
 		break;
 	case DVB_S2:
+	case DVB_S2X:
 		sys = "DVB-S2";
 		switch (m) {
 		case QPSK:
@@ -1078,6 +1077,7 @@ fe_delivery_system_t CFrontend::getFEDeliverySystem(delivery_system_t Delsys)
 		delsys = SYS_DVBS;
 		break;
 	case DVB_S2:
+	case DVB_S2X:
 		delsys = SYS_DVBS2;
 		break;
 	case DVB_T:
@@ -1137,6 +1137,7 @@ uint32_t CFrontend::getXMLDeliverySystem(delivery_system_t delsys)
 		delnr = 0;
 		break;
 	case DVB_S2:
+	case DVB_S2X:
 		delnr = 1;
 		break;
 	case DVB_C:
@@ -1309,6 +1310,7 @@ bool CFrontend::buildProperties(const FrontendParameters *feparams, struct dtv_p
 	switch (feparams->delsys) {
 	case DVB_S:
 	case DVB_S2:
+	case DVB_S2X:
 		if (feparams->delsys == DVB_S2) {
 			nrOfProps	= FE_DVBS2_PROPS;
 			memcpy(cmdseq.props, dvbs2_cmdargs, sizeof(dvbs2_cmdargs));
@@ -1826,6 +1828,7 @@ int CFrontend::setParameters(transponder *TP, bool nowait)
 	switch (feparams.delsys) {
 	case DVB_S:
 	case DVB_S2:
+	case DVB_S2X:
 		if (freq < lnbSwitch) {
 			high_band = false;
 			freq_offset = lnbOffsetLow;
