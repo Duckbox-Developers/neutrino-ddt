@@ -345,7 +345,7 @@ void CFrontend::getFEInfo(void)
 	if (ret == 0) {
 		for (uint32_t i = 0; i < prop[0].u.buffer.len; i++) {
 			if (i >= MAX_DELSYS) {
-				printf("ERROR: too many delivery systems on frontend %d/%d", adapter, fenumber);
+				printf("ERROR: too many delivery systems on frontend %d/%d\n", adapter, fenumber);
 				break;
 			}
 
@@ -369,11 +369,15 @@ void CFrontend::getFEInfo(void)
 				deliverySystemMask |= DVB_S2;
 				isMultistream = info.caps & FE_CAN_MULTISTREAM;
 				break;
+			case SYS_DVBS2X:
+				deliverySystemMask |= DVB_S2; // should be later DVB_S2X
+				isMultistream = info.caps & FE_CAN_MULTISTREAM;
+				break;
 			case SYS_DTMB:
 				deliverySystemMask |= DTMB;
 				break;
 			default:
-				printf("ERROR: too many delivery systems on frontend %d/%d", adapter, fenumber);
+				printf("ERROR: delivery system unknown on frontend %d/%d (delivery_system: %d)\n", adapter, fenumber, (fe_delivery_system_t)prop[0].u.buffer.data[i]);
 				continue;
 			}
 

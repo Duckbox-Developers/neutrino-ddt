@@ -409,7 +409,8 @@ typedef enum fe_delivery_system {
 	SYS_DAB,
 	SYS_DVBT2,
 	SYS_TURBO,
-	SYS_DVBC_ANNEX_C
+	SYS_DVBC_ANNEX_C,
+	SYS_DVBS2X = 21
 } fe_delivery_system_t;
 
 /* backward compatibility */
