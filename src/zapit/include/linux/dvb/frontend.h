@@ -164,7 +164,25 @@ typedef enum fe_code_rate {
 	FEC_AUTO,
 	FEC_3_5,
 	FEC_9_10,
-	FEC_2_5
+	FEC_2_5,
+	FEC_13_45=13,
+	FEC_9_20=14,
+	FEC_11_20=15,
+	FEC_23_36=16,
+	FEC_25_36=17,
+	FEC_13_18=18,
+	FEC_26_45=19,
+	FEC_28_45=20,
+	FEC_7_9=21,
+	FEC_77_90=22,
+	FEC_32_45=23,
+	FEC_11_15=24,
+	FEC_1_2_L=25,
+	FEC_8_15_L=26,
+	FEC_3_5_L=27,
+	FEC_2_3_L=28,
+	FEC_5_9_L=29,
+	FEC_26_45_L=30
 } fe_code_rate_t;
 
 
