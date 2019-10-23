@@ -610,7 +610,7 @@ elif test "$BOXMODEL" = "vuuno4k"; then
 elif test "$BOXMODEL" = "vuduo"; then
 	AC_DEFINE(BOXMODEL_VUDUO, 1, [vuduo])
 	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution])
-elif test "$BOXMODEL" = "hd51"; then
+elif test "$BOXMODEL" = "zgemmah7"; then
 	AC_DEFINE(BOXMODEL_ZGEMMAH7, 1, [zgemmah7])
 	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution])
 elif test "$BOXMODEL" = "raspi"; then
