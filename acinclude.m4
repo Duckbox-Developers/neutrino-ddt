@@ -368,7 +368,7 @@ AC_ARG_WITH(boxtype,
 			BOXTYPE="duckbox"
 			BOXMODEL="$withval"
 		;;
-		hd51|hd60|vusolo4k|vuduo4k|vuultimo4k|vuzero4k|vuuno4kse|vuuno4k|zgemmah7)
+		hd51|hd60|vusolo4k|vuduo4k|vuultimo4k|vuzero4k|vuuno4kse|vuuno4k|h7)
 			BOXTYPE="armbox"
 			BOXMODEL="$withval"
 		;;
@@ -386,7 +386,7 @@ AC_ARG_WITH(boxmodel,
 	AS_HELP_STRING([--with-boxmodel], [valid for coolstream: hd1, hd2])
 AS_HELP_STRING([], [valid for duckbox: ufs910, ufs912, ufs913, ufs922, atevio7500, fortis_hdbox, octagon1008, hs7110, hs7810a, hs7119, hs7819, dp7000, cuberevo, cuberevo_mini, cuberevo_mini2, cuberevo_250hd, cuberevo_2000hd, cuberevo_3000hd, ipbox9900, ipbox99, ipbox55, arivalink200, tf7700, hl101])
 AS_HELP_STRING([], [valid for spark: spark, spark7162])
-AS_HELP_STRING([], [valid for armbox: hd51, hd60, vusolo4k, vuduo4k, vuultimo4k, vuzero4k, vuuno4kse, vuuno4k, zgemmah7])
+AS_HELP_STRING([], [valid for armbox: hd51, hd60, vusolo4k, vuduo4k, vuultimo4k, vuzero4k, vuuno4kse, vuuno4k, h7])
 AS_HELP_STRING([], [valid for mipsbox: vuduo])
 AS_HELP_STRING([], [valid for generic: raspi]),
 	[case "${withval}" in
@@ -423,7 +423,7 @@ AS_HELP_STRING([], [valid for generic: raspi]),
 				AC_MSG_ERROR([unknown model $withval for boxtype $BOXTYPE])
 			fi
 		;;
-		hd51|hd60|vusolo4k|vuduo4k|vuultimo4k|vuzero4k|vuuno4kse|vuuno4k|zgemmah7)
+		hd51|hd60|vusolo4k|vuduo4k|vuultimo4k|vuzero4k|vuuno4kse|vuuno4k|h7)
 			if test "$BOXTYPE" = "armbox"; then
 				BOXMODEL="$withval"
 			else
@@ -501,7 +501,7 @@ AM_CONDITIONAL(BOXMODEL_VUUNO4KSE, test "$BOXMODEL" = "vuuno4kse")
 AM_CONDITIONAL(BOXMODEL_VUUNO4K, test "$BOXMODEL" = "vuuno4k")
 AM_CONDITIONAL(BOXMODEL_VUDUO, test "$BOXMODEL" = "vuduo")
 AM_CONDITIONAL(BOXMODEL_VUZERO4K, test "$BOXMODEL" = "vuzero4k")
-AM_CONDITIONAL(BOXMODEL_ZGEMMAH7, test "$BOXMODEL" = "zgemmah7")
+AM_CONDITIONAL(BOXMODEL_H7, test "$BOXMODEL" = "h7")
 
 AM_CONDITIONAL(BOXMODEL_RASPI, test "$BOXMODEL" = "raspi")
 
@@ -610,8 +610,8 @@ elif test "$BOXMODEL" = "vuuno4k"; then
 elif test "$BOXMODEL" = "vuduo"; then
 	AC_DEFINE(BOXMODEL_VUDUO, 1, [vuduo])
 	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution])
-elif test "$BOXMODEL" = "zgemmah7"; then
-	AC_DEFINE(BOXMODEL_ZGEMMAH7, 1, [zgemmah7])
+elif test "$BOXMODEL" = "h7"; then
+	AC_DEFINE(BOXMODEL_H7, 1, [h7])
 	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution])
 elif test "$BOXMODEL" = "raspi"; then
 	AC_DEFINE(BOXMODEL_RASPI, 1, [raspberry pi])
