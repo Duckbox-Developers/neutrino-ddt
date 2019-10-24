@@ -46,10 +46,10 @@ function do_init(){
 		case "11":	// vu+ solo 4k
 		case "12":	// vu+ duo 4k
 		case "13":	// vu+ ultimo 4k
-		case "14"	// vu+ duo
-		case "15"	// vu+ zero 4k
-		case "16"	// vu+ uno 4k se
-		case "17"	// vu+ uno 4k
+		case "14":	// vu+ duo
+		case "15":	// vu+ zero 4k
+		case "16":	// vu+ uno 4k se
+		case "17":	// vu+ uno 4k
 		case "18":	// zgemma h7
 			sel=(sel*1+val*1);
 			break;
