@@ -522,6 +522,7 @@ extra.tp_delsys_dtmb DTMB
 extra.tp_delsys_dvbc DVB-C
 extra.tp_delsys_dvbs DVB-S
 extra.tp_delsys_dvbs2 DVB-S2
+extra.tp_delsys_dvbs2x DVB-S2X
 extra.tp_delsys_dvbt DVB-T
 extra.tp_delsys_dvbt2 DVB-T2
 extra.tp_delsys_isdbc ISDB-C
@@ -551,13 +552,16 @@ extra.tp_hierarchy_none None
 extra.tp_mod Modulation
 extra.tp_mod_128 QAM/128
 extra.tp_mod_16 QAM/16
+extra.tp_mod_16a 16APSK
 extra.tp_mod_256 QAM/256
 extra.tp_mod_32 QAM/32
+extra.tp_mod_32a 32APSK
 extra.tp_mod_4 QPSK
 extra.tp_mod_4_nr QAM/4-NR
 extra.tp_mod_64 QAM/64
 extra.tp_mod_8 8PSK
-extra.tp_mod_auto QAM/AUTO
+extra.tp_mod_8a 8APSK
+extra.tp_mod_auto AUTO
 extra.tp_pilot Pilot
 extra.tp_pilot_auto Auto (HW)
 extra.tp_pilot_auto_sw Auto (SW)

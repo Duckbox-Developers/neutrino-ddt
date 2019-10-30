@@ -28,6 +28,7 @@
 
 /* zapit */
 #include "zapittypes.h"
+#include <zapit/frontend_c.h>
 #include <connection/basicclient.h>
 
 #define CHANNEL_NAME_SIZE 40
@@ -56,12 +57,12 @@ class CZapitClient:public CBasicClient
 			EVT_SCAN_FAILED,
 			EVT_SCAN_NUM_TRANSPONDERS,
 			EVT_SCAN_REPORT_NUM_SCANNED_TRANSPONDERS,
- 			EVT_SCAN_REPORT_FREQUENCYP,
- 			EVT_SCAN_SERVICENAME,
- 			EVT_SCAN_FOUND_A_CHAN,
- 			EVT_SCAN_FOUND_TV_CHAN,
- 			EVT_SCAN_FOUND_RADIO_CHAN,
- 			EVT_SCAN_FOUND_DATA_CHAN,
+			EVT_SCAN_REPORT_FREQUENCYP,
+			EVT_SCAN_SERVICENAME,
+			EVT_SCAN_FOUND_A_CHAN,
+			EVT_SCAN_FOUND_TV_CHAN,
+			EVT_SCAN_FOUND_RADIO_CHAN,
+			EVT_SCAN_FOUND_DATA_CHAN,
 			EVT_SCAN_SATELLITE,
 			EVT_SCAN_NUM_CHANNELS,
 			EVT_SCAN_PROVIDER,
@@ -95,13 +96,13 @@ class CZapitClient:public CBasicClient
 			BM_CREATESATELLITEBOUQUET
 		};
 
-  	enum scanType
-  		{
-  			ST_TVRADIO,
-  			ST_TV,
-  			ST_RADIO,
-  			ST_ALL
-  		};
+	enum scanType
+		{
+			ST_TVRADIO,
+			ST_TV,
+			ST_RADIO,
+			ST_ALL
+		};
 
 	typedef enum channelsMode_
 		{
@@ -151,9 +152,9 @@ class CZapitClient:public CBasicClient
 	struct responseGetBouquets
 	{
 		unsigned int bouquet_nr;
-		char	 name[30];
-		bool	 locked;
-		bool	 hidden;
+		char	name[30];
+		bool	locked;
+		bool	hidden;
 	};
 
 	typedef std::vector<responseGetBouquets> BouquetList;
@@ -162,7 +163,7 @@ class CZapitClient:public CBasicClient
 	{
 		unsigned int nr;
 		t_channel_id channel_id;
-		char	 name[CHANNEL_NAME_SIZE];
+		char name[CHANNEL_NAME_SIZE];
 		t_satellite_position satellitePosition;
 		unsigned char service_type;
 	};
@@ -184,12 +185,12 @@ class CZapitClient:public CBasicClient
 #define DESC_MAX_LEN 38 //component descriptor name length + " (AC3)"
 	struct responseGetAPIDs
 	{
-		uint32_t    pid;
-		char    desc[DESC_MAX_LEN];
-		int     is_ac3;
-		int     is_aac;
-		int     is_eac3;
-		int     component_tag;
+		uint32_t pid;
+		char desc[DESC_MAX_LEN];
+		int  is_ac3;
+		int  is_aac;
+		int  is_eac3;
+		int  component_tag;
 	};
 
 	typedef std::vector<responseGetAPIDs> APIDList;
@@ -211,16 +212,16 @@ class CZapitClient:public CBasicClient
 			t_original_network_id onid;
 			t_service_id           sid;
 			t_transport_stream_id tsid;
-			unsigned short	vpid;
-			unsigned short  vtype;
-			unsigned short	apid;
-			unsigned short	pcrpid;
-			unsigned short	vtxtpid;
-			unsigned int	tsfrequency;
-			unsigned char	polarisation;
-			unsigned char	diseqc;
-			unsigned short  pmtpid;
-			unsigned short  pmt_version;
+			unsigned short vpid;
+			unsigned short vtype;
+			unsigned short apid;
+			unsigned short pcrpid;
+			unsigned short vtxtpid;
+			unsigned int   tsfrequency;
+			unsigned char  polarisation;
+			unsigned char  diseqc;
+			unsigned short pmtpid;
+			unsigned short pmt_version;
 			uint32_t	rate;
 			fe_code_rate	fec;
 		};
@@ -246,11 +247,11 @@ class CZapitClient:public CBasicClient
 		unsigned int  sig;
 		unsigned int  snr;
 		unsigned long ber;
-		// maybe later... 
-		// int          has_lock;
-		// int          has_signal;
-		// int          has_sync;
-		// int          has_carrier;
+		// maybe later...
+		// int   has_lock;
+		// int   has_signal;
+		// int   has_sync;
+		// int   has_carrier;
 	};
 
 
@@ -339,8 +340,8 @@ class CZapitClient:public CBasicClient
 	/* reloads channels and services*/
 	void reinitChannels();
 
-  	/* called when sectionsd updates currentservices.xml */
-  	void reloadCurrentServices();
+	/* called when sectionsd updates currentservices.xml */
+	void reloadCurrentServices();
 
 	/* get current APID-List */
 	void getPIDS( responseGetPIDs& pids );
@@ -382,6 +383,9 @@ class CZapitClient:public CBasicClient
 
 	/* send diseqc 1.2 motor command */
 	void sendMotorCommand(uint8_t cmdtype, uint8_t address, uint8_t cmd, uint8_t num_parameters, uint8_t param1, uint8_t param2);
+	
+	//CFrontend GetLiveFrontend() { return live_fe; };
+
 
 	/****************************************/
 	/*					*/
@@ -421,7 +425,7 @@ class CZapitClient:public CBasicClient
 	void setScanBouquetMode(const bouquetMode mode);
 
 	/* set Scan-Type for channel search */
-  	//void setScanType(const scanType mode);
+	//void setScanType(const scanType mode);
 
 	/* get FrontEnd Signal Params */ 
 	//void getFESignal (struct responseFESignal& f);
@@ -532,6 +536,5 @@ class CZapitClient:public CBasicClient
 
 #define PAL	0
 #define NTSC	1
-
 
 #endif
