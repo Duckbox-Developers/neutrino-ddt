@@ -195,7 +195,25 @@ typedef enum dvb_fec {
 	f3_5,
 	f4_5,
 	f9_10,
-	fNone = 15
+	fNone = 15,
+	f13_45,
+	f9_20,
+	f11_20,
+	f23_36,
+	f25_36,
+	f13_18,
+	f26_45,
+	f28_45,
+	f7_9,
+	f77_90,
+	f32_45,
+	f11_15,
+	f1_2_L,
+	f8_15_L,
+	f3_5_L,
+	f2_3_L,
+	f5_9_L,
+	f26_45_L
 } dvb_fec_t;
 
 static fe_sec_voltage_t unicable_lowvolt = SEC_VOLTAGE_13;
@@ -552,6 +570,60 @@ fe_code_rate_t CFrontend::getCodeRate(const uint8_t fec_inner, delivery_system_t
 			break;
 		case f9_10:
 			fec = FEC_9_10;
+			break;
+		case f13_45:
+			fec = FEC_13_45;
+			break;
+		case f9_20:
+			fec = FEC_9_20;
+			break;
+		case f11_20:
+			fec = FEC_11_20;
+			break;
+		case f23_36:
+			fec = FEC_23_36;
+			break;
+		case f25_36:
+			fec = FEC_25_36;
+			break;
+		case f13_18:
+			fec = FEC_13_18;
+			break;
+		case f26_45:
+			fec = FEC_26_45;
+			break;
+		case f28_45:
+			fec = FEC_28_45;
+			break;
+		case f7_9:
+			fec = FEC_7_9;
+			break;
+		case f77_90:
+			fec = FEC_77_90;
+			break;
+		case f32_45:
+			fec = FEC_32_45;
+			break;
+		case f11_15:
+			fec = FEC_11_15;
+			break;
+		case f1_2_L:
+			fec = FEC_1_2_L;
+			break;
+		case f8_15_L:
+			fec = FEC_8_15_L;
+			break;
+		case f3_5_L:
+			fec = FEC_3_5_L;
+			break;
+		case f2_3_L:
+			fec = FEC_2_3_L;
+			break;
+		case f5_9_L:
+			fec = FEC_5_9_L;
+			break;
+		case f26_45_L:
+			fec = FEC_26_45_L;
 			break;
 		default:
 			if (zapit_debug)
@@ -928,6 +1000,62 @@ void CFrontend::getXMLDelsysFEC(fe_code_rate_t xmlfec, delivery_system_t & delsy
 	case FEC_S2_8PSK_9_10:
 		fec = FEC_9_10;
 		break;
+#if 0 // TODO
+	case FEC_13_45:
+		fec = FEC_13_45;
+		break;
+	case FEC_9_20:
+		fec = FEC_9_20;
+		break;
+	case FEC_11_20:
+		fec = FEC_11_20;
+		break;
+	case FEC_23_36:
+		fec = FEC_23_36;
+		break;
+	case FEC_25_36:
+		fec = FEC_25_36;
+		break;
+	case FEC_13_18:
+		fec = FEC_13_18;
+		break;
+	case FEC_26_45:
+		fec = FEC_26_45;
+		break;
+	case FEC_28_45:
+		fec = FEC_28_45;
+		break;
+	case FEC_7_9:
+		fec = FEC_7_9;
+		break;
+	case FEC_77_90:
+		fec = FEC_77_90;
+		break;
+	case FEC_32_45:
+		fec = FEC_32_45;
+		break;
+	case FEC_11_15:
+		fec = FEC_11_15;
+		break;
+	case FEC_1_2_L:
+		fec = FEC_1_2_L;
+		break;
+	case FEC_8_15_L:
+		fec = FEC_8_15_L;
+		break;
+	case FEC_3_5_L:
+		fec = FEC_3_5_L;
+		break;
+	case FEC_2_3_L:
+		fec = FEC_2_3_L;
+		break;
+	case FEC_5_9_L:
+		fec = FEC_5_9_L;
+		break;
+	case FEC_26_45_L:
+		fec = FEC_26_45_L;
+		break;
+#endif
 	default:
 		printf("[frontend] getXMLDelsysFEC: unknown FEC: %d !!!\n", xmlfec);
 		/* fall through */
@@ -1071,6 +1199,60 @@ void CFrontend::getDelSys(delivery_system_t delsys, int f, int m, const char *&f
 		fec = "0";
 		break;
 #endif
+	case FEC_13_45:
+		fec = "13/45";
+		break;
+	case FEC_9_20:
+		fec = "9/20";
+		break;
+	case FEC_11_20:
+		fec = "11/20";
+		break;
+	case FEC_23_36:
+		fec = "23/36";
+		break;
+	case FEC_25_36:
+		fec = "25/36";
+		break;
+	case FEC_13_18:
+		fec = "13/18";
+		break;
+	case FEC_26_45:
+		fec = "26/45";
+		break;
+	case FEC_28_45:
+		fec = "28/45";
+		break;
+	case FEC_7_9:
+		fec = "7/9";
+		break;
+	case FEC_77_90:
+		fec = "77/90";
+		break;
+	case FEC_32_45:
+		fec = "32/45";
+		break;
+	case FEC_11_15:
+		fec = "11/15";
+		break;
+	case FEC_1_2_L:
+		fec = "1/2L";
+		break;
+	case FEC_8_15_L:
+		fec = "8/15L";
+		break;
+	case FEC_3_5_L:
+		fec = "3/5L";
+		break;
+	case FEC_2_3_L:
+		fec = "2/3L";
+		break;
+	case FEC_5_9_L:
+		fec = "5/9L";
+		break;
+	case FEC_26_45_L:
+		fec = "26/45L";
+		break;
 	default:
 		INFO("[frontend] getDelSys: unknown FEC: %d !!!\n", f);
 		/* fall through */
@@ -1299,6 +1481,60 @@ bool CFrontend::buildProperties(const FrontendParameters *feparams, struct dtv_p
 		fec = FEC_NONE;
 		break;
 #endif
+	case FEC_13_45:
+		fec = FEC_13_45;
+		break;
+	case FEC_9_20:
+		fec = FEC_9_20;
+		break;
+	case FEC_11_20:
+		fec = FEC_11_20;
+		break;
+	case FEC_23_36:
+		fec = FEC_23_36;
+		break;
+	case FEC_25_36:
+		fec = FEC_25_36;
+		break;
+	case FEC_13_18:
+		fec = FEC_13_18;
+		break;
+	case FEC_26_45:
+		fec = FEC_26_45;
+		break;
+	case FEC_28_45:
+		fec = FEC_28_45;
+		break;
+	case FEC_7_9:
+		fec = FEC_7_9;
+		break;
+	case FEC_77_90:
+		fec = FEC_77_90;
+		break;
+	case FEC_32_45:
+		fec = FEC_32_45;
+		break;
+	case FEC_11_15:
+		fec = FEC_11_15;
+		break;
+	case FEC_1_2_L:
+		fec = FEC_1_2_L;
+		break;
+	case FEC_8_15_L:
+		fec = FEC_8_15_L;
+		break;
+	case FEC_3_5_L:
+		fec = FEC_3_5_L;
+		break;
+	case FEC_2_3_L:
+		fec = FEC_2_3_L;
+		break;
+	case FEC_5_9_L:
+		fec = FEC_5_9_L;
+		break;
+	case FEC_26_45_L:
+		fec = FEC_26_45_L;
+		break;
 	default:
 		INFO("[fe%d/%d] DEMOD: unknown FEC: %d\n", adapter, fenumber, fec_inner);
 		/* fall through */
