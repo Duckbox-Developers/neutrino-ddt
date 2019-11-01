@@ -1074,8 +1074,21 @@ void CFrontend::getDelSys(delivery_system_t delsys, int f, int m, const char *&f
 		mod = "QPSK";
 		break;
 	case DVB_S2:
-	case DVB_S2X:
 		sys = "DVB-S2";
+		switch (m) {
+		case QPSK:
+			mod = "QPSK";
+			break;
+		case PSK_8:
+			mod = "8PSK";
+			break;
+		default:
+			printf("[frontend] unknown modulation %d!\n", m);
+			mod = "UNKNOWN";
+		}
+		break;
+	case DVB_S2X:
+		sys = "DVB-S2X";
 		switch (m) {
 		case QPSK:
 			mod = "QPSK";
@@ -1563,7 +1576,7 @@ bool CFrontend::buildProperties(const FrontendParameters *feparams, struct dtv_p
 	case DVB_S:
 	case DVB_S2:
 	case DVB_S2X:
-		if (feparams->delsys == DVB_S2) {
+		if (feparams->delsys == DVB_S2 || feparams->delsys == DVB_S2X) {
 			nrOfProps	= FE_DVBS2_PROPS;
 			memcpy(cmdseq.props, dvbs2_cmdargs, sizeof(dvbs2_cmdargs));
 
