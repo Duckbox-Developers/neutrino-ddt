@@ -63,7 +63,7 @@ extern int zapit_debug;
 #define SYMBOL_RATE	4
 #define DELIVERY_SYSTEM 5
 #define INNER_FEC	6
-// DVB-S/S2 specific
+// DVB-S/S2/S2X specific
 #define PILOTS		7
 #define ROLLOFF		8
 #define MIS		9
@@ -86,74 +86,74 @@ extern int zapit_debug;
 
 /* stolen from dvb.c from vlc */
 static const struct dtv_property dvbs_cmdargs[] = {
-	{ DTV_CLEAR,		{0,0,0}, { 0			},0 },
-	{ DTV_FREQUENCY,	{0,0,0}, { 0			},0 },
-	{ DTV_MODULATION,	{0,0,0}, { QPSK			},0 },
-	{ DTV_INVERSION,	{0,0,0}, { INVERSION_AUTO	},0 },
-	{ DTV_SYMBOL_RATE,	{0,0,0}, { 27500000		},0 },
-	{ DTV_DELIVERY_SYSTEM,	{0,0,0}, { SYS_DVBS		},0 },
-	{ DTV_INNER_FEC,	{0,0,0}, { FEC_AUTO		},0 },
-	{ DTV_TUNE,		{0,0,0}, { 0			},0 }
+	{ DTV_CLEAR,		{0,0,0}, { 0			}, 0 },
+	{ DTV_FREQUENCY,	{0,0,0}, { 0			}, 0 },
+	{ DTV_MODULATION,	{0,0,0}, { QPSK			}, 0 },
+	{ DTV_INVERSION,	{0,0,0}, { INVERSION_AUTO	}, 0 },
+	{ DTV_SYMBOL_RATE,	{0,0,0}, { 27500000		}, 0 },
+	{ DTV_DELIVERY_SYSTEM,	{0,0,0}, { SYS_DVBS		}, 0 },
+	{ DTV_INNER_FEC,	{0,0,0}, { FEC_AUTO		}, 0 },
+	{ DTV_TUNE,		{0,0,0}, { 0			}, 0 }
 };
 
 static const struct dtv_property dvbs2_cmdargs[] = {
-	{ DTV_CLEAR,		{0,0,0}, { 0			},0 },
-	{ DTV_FREQUENCY,	{}, { 0			},0 },
-	{ DTV_MODULATION,	{}, { PSK_8		} ,0},
-	{ DTV_INVERSION,	{}, { INVERSION_AUTO	} ,0},
-	{ DTV_SYMBOL_RATE,	{}, { 27500000		} ,0},
-	{ DTV_DELIVERY_SYSTEM,	{}, { SYS_DVBS2		} ,0},
-	{ DTV_INNER_FEC,	{}, { FEC_AUTO		} ,0},
-	{ DTV_PILOT,		{}, { PILOT_AUTO	} ,0},
-	{ DTV_ROLLOFF,		{}, { ROLLOFF_AUTO	} ,0},
-	{ DTV_STREAM_ID,	{}, { NO_STREAM_ID_FILTER } ,0},
-	{ DTV_TUNE,		{}, { 0			} ,0 }
+	{ DTV_CLEAR,		{0,0,0}, { 0			}, 0 },
+	{ DTV_FREQUENCY,	{}     , { 0			}, 0 },
+	{ DTV_MODULATION,	{}     , { PSK_8		}, 0 },
+	{ DTV_INVERSION,	{}     , { INVERSION_AUTO	}, 0 },
+	{ DTV_SYMBOL_RATE,	{}     , { 27500000		}, 0 },
+	{ DTV_DELIVERY_SYSTEM,	{}     , { SYS_DVBS2		}, 0 },
+	{ DTV_INNER_FEC,	{}     , { FEC_AUTO		}, 0 },
+	{ DTV_PILOT,		{}     , { PILOT_AUTO		}, 0 },
+	{ DTV_ROLLOFF,		{}     , { ROLLOFF_AUTO		}, 0 },
+	{ DTV_STREAM_ID,	{}     , { NO_STREAM_ID_FILTER	}, 0 },
+	{ DTV_TUNE,		{}     , { 0			}, 0 }
 };
 
 static const struct dtv_property dvbc_cmdargs[] = {
-	{ DTV_CLEAR,		{0,0,0}, { 0		} ,0},
-	{ DTV_FREQUENCY,	{}, { 0			} ,0},
-	{ DTV_MODULATION,	{}, { QAM_AUTO		} ,0},
-	{ DTV_INVERSION,	{}, { INVERSION_AUTO	} ,0},
-	{ DTV_SYMBOL_RATE,	{}, { 27500000		} ,0},
-	{ DTV_DELIVERY_SYSTEM,	{}, { SYS_DVBC_ANNEX_AC	} ,0},
-	{ DTV_INNER_FEC,	{}, { FEC_AUTO		} ,0},
-	{ DTV_TUNE,		{}, { 0			}, 0}
+	{ DTV_CLEAR,		{0,0,0}, { 0			}, 0 },
+	{ DTV_FREQUENCY,	{}     , { 0			}, 0 },
+	{ DTV_MODULATION,	{}     , { QAM_AUTO		}, 0 },
+	{ DTV_INVERSION,	{}     , { INVERSION_AUTO	}, 0 },
+	{ DTV_SYMBOL_RATE,	{}     , { 27500000		}, 0 },
+	{ DTV_DELIVERY_SYSTEM,	{}     , { SYS_DVBC_ANNEX_AC	}, 0 },
+	{ DTV_INNER_FEC,	{}     , { FEC_AUTO		}, 0 },
+	{ DTV_TUNE,		{}     , { 0			}, 0 }
 };
 
 static const struct dtv_property dvbt_cmdargs[] = {
-	{ DTV_CLEAR,		{0,0,0}, { 0		} ,0},
-	{ DTV_FREQUENCY,	{}, { 0			} ,0},
-	{ DTV_MODULATION,	{}, { QAM_AUTO		} ,0},
-	{ DTV_INVERSION,	{}, { INVERSION_AUTO	} ,0},
-	{ DTV_BANDWIDTH_HZ,	{}, { 8000000		} ,0},
-	{ DTV_DELIVERY_SYSTEM,	{}, { SYS_DVBT		} ,0},
-	{ DTV_CODE_RATE_HP,	{}, { FEC_AUTO		} ,0},
-	{ DTV_CODE_RATE_LP,	{}, { FEC_AUTO		} ,0},
-	{ DTV_TRANSMISSION_MODE,{}, { TRANSMISSION_MODE_AUTO}, 0},
-	{ DTV_GUARD_INTERVAL,	{}, { GUARD_INTERVAL_AUTO}, 0},
-	{ DTV_HIERARCHY,	{}, { HIERARCHY_AUTO	}, 0},
-	{ DTV_TUNE,		{}, { 0			}, 0}
+	{ DTV_CLEAR,		{0,0,0}, { 0			}, 0 },
+	{ DTV_FREQUENCY,	{}     , { 0			}, 0 },
+	{ DTV_MODULATION,	{}     , { QAM_AUTO		}, 0 },
+	{ DTV_INVERSION,	{}     , { INVERSION_AUTO	}, 0 },
+	{ DTV_BANDWIDTH_HZ,	{}     , { 8000000		}, 0 },
+	{ DTV_DELIVERY_SYSTEM,	{}     , { SYS_DVBT		}, 0 },
+	{ DTV_CODE_RATE_HP,	{}     , { FEC_AUTO		}, 0 },
+	{ DTV_CODE_RATE_LP,	{}     , { FEC_AUTO		}, 0 },
+	{ DTV_TRANSMISSION_MODE,{}     , { TRANSMISSION_MODE_AUTO }, 0 },
+	{ DTV_GUARD_INTERVAL,	{}     , { GUARD_INTERVAL_AUTO	}, 0 },
+	{ DTV_HIERARCHY,	{}     , { HIERARCHY_AUTO	}, 0 },
+	{ DTV_TUNE,		{}     , { 0			}, 0 }
 };
 
 static const struct dtv_property dvbt2_cmdargs[] = {
-	{ DTV_CLEAR,		{0,0,0}, { 0		} ,0},
-	{ DTV_FREQUENCY,	{}, { 0			} ,0},
-	{ DTV_MODULATION,	{}, { QAM_AUTO		} ,0},
-	{ DTV_INVERSION,	{}, { INVERSION_AUTO	} ,0},
-	{ DTV_BANDWIDTH_HZ,	{}, { 8000000		} ,0},
-	{ DTV_DELIVERY_SYSTEM,	{}, { SYS_DVBT2		} ,0},
-	{ DTV_CODE_RATE_HP,	{}, { FEC_AUTO		} ,0},
-	{ DTV_CODE_RATE_LP,	{}, { FEC_AUTO		} ,0},
-	{ DTV_TRANSMISSION_MODE,{}, { TRANSMISSION_MODE_AUTO}, 0},
-	{ DTV_GUARD_INTERVAL,	{}, { GUARD_INTERVAL_AUTO}, 0},
-	{ DTV_HIERARCHY,	{}, { HIERARCHY_AUTO	}, 0},
+	{ DTV_CLEAR,		{0,0,0}, { 0			},0 },
+	{ DTV_FREQUENCY,	{}     , { 0			},0 },
+	{ DTV_MODULATION,	{}     , { QAM_AUTO		},0 },
+	{ DTV_INVERSION,	{}     , { INVERSION_AUTO	},0 },
+	{ DTV_BANDWIDTH_HZ,	{}     , { 8000000		},0 },
+	{ DTV_DELIVERY_SYSTEM,	{}     , { SYS_DVBT2		},0 },
+	{ DTV_CODE_RATE_HP,	{}     , { FEC_AUTO		},0 },
+	{ DTV_CODE_RATE_LP,	{}     , { FEC_AUTO		},0 },
+	{ DTV_TRANSMISSION_MODE,{}     , { TRANSMISSION_MODE_AUTO }, 0 },
+	{ DTV_GUARD_INTERVAL,	{}     , { GUARD_INTERVAL_AUTO	}, 0 },
+	{ DTV_HIERARCHY,	{}     , { HIERARCHY_AUTO	}, 0 },
 #if defined DTV_STREAM_ID
-	{ DTV_STREAM_ID,	{}, { NO_STREAM_ID_FILTER } ,0},
+	{ DTV_STREAM_ID,	{}     , { NO_STREAM_ID_FILTER	} ,0},
 #elif defined DTV_DVBT2_PLP_ID
-	{ DTV_DVBT2_PLP_ID,	{}, { NO_STREAM_ID_FILTER } ,0},
+	{ DTV_DVBT2_PLP_ID,	{}     , { NO_STREAM_ID_FILTER	} ,0},
 #endif
-	{ DTV_TUNE,		{}, { 0			}, 0}
+	{ DTV_TUNE,		{}     , { 0			}, 0}
 };
 
 #define diff(x,y)	(max(x,y) - min(x,y))
@@ -171,15 +171,15 @@ static const struct dtv_property dvbt2_cmdargs[] = {
 			timer_start);			\
 	if(tmin > timer_msec) tmin = timer_msec;	\
 	if(tmax < timer_msec) tmax = timer_msec;	\
-	printf("[fe%d/%d] %s: %u msec (min %u max %u)\n",	\
-		 adapter, fenumber, label, timer_msec, tmin, tmax);
+	printf("[fe%d/%d] %s: %u msec (min %u max %u)\n", \
+		adapter, fenumber, label, timer_msec, tmin, tmax);
 
 #define SETCMD(c, d) {					\
 	prop[cmdseq.num].cmd = (c);			\
 	prop[cmdseq.num].u.data = (d);			\
 	if (cmdseq.num++ > DTV_IOCTL_MAX_MSGS) {	\
-		printf("ERROR: too many tuning commands on frontend %d/%d", adapter, fenumber);\
-		return;				\
+		printf("ERROR: too many tuning commands on frontend %d/%d", adapter, fenumber); \
+		return;					\
 	}						\
 }
 
@@ -226,33 +226,34 @@ static fe_sec_voltage_t unicable_lowvolt = SEC_VOLTAGE_13;
 CFrontend::CFrontend(int Number, int Adapter)
 {
 	DBG("[fe%d/%d] New frontend on adapter %d\n", Adapter, Number, Adapter);
-	fd		= -1;
-	fenumber	= Number;
-	adapter		= Adapter;
-	slave		= false; /* is set in frontend->setMasterSlave() */
-	standby		= true;
-	locked		= false;
-	usecount	= 0;
+	fd			= -1;
+	fenumber		= Number;
+	adapter			= Adapter;
+	slave			= false; /* is set in frontend->setMasterSlave() */
+	standby			= true;
+	locked			= false;
+	usecount		= 0;
 
-	femode		= FE_MODE_INDEPENDENT;
-	masterkey	= 0;
+	femode			= FE_MODE_INDEPENDENT;
+	masterkey		= 0;
 
-	tuned					= false;
-	uncommitedInput				= 255;
+	tuned			= false;
+	uncommitedInput		= 255;
 
 	currentDiseqc		= 255;
 	config.diseqcType	= NO_DISEQC;
 	config.diseqcRepeats	= 0;
-	config.uni_scr = 0;        /* the unicable SCR address 0-7 */
-	config.uni_qrg = 0;        /* the unicable frequency in MHz */
-	config.uni_lnb = 0;        /* for two-position switches */
-	config.uni_pin = -1;       /* for MDU setups */
-	config.highVoltage = false;
-	config.motorRotationSpeed = 0; //in 0.1 degrees per second
+	config.uni_scr		= 0;		/* the unicable SCR address 0-7 */
+	config.uni_qrg		= 0;		/* the unicable frequency in MHz */
+	config.uni_lnb		= 0;		/* for two-position switches */
+	config.uni_pin		= -1;		/* for MDU setups */
+	config.highVoltage	= false;
+	config.motorRotationSpeed = 0;		//in 0.1 degrees per second
 
-	feTimeout = 40;
-	currentVoltage = SEC_VOLTAGE_OFF;
-	currentToneMode = SEC_TONE_ON;
+	feTimeout		= 40;
+	currentVoltage		= SEC_VOLTAGE_OFF;
+	currentToneMode		= SEC_TONE_ON;
+
 	/* some broken hardware (a coolstream neo on my desk) does not lower
 	 * the voltage below 18V without enough DC load on the coax cable.
 	 * with unicable bus setups, there is no DC load on the coax... leading
@@ -285,6 +286,7 @@ bool CFrontend::Open(bool init)
 	if (adapter == -1) {
 		deliverySystemMask |= DVB_S;
 		deliverySystemMask |= DVB_S2;
+		deliverySystemMask |= DVB_S2X;
 		info.type = FE_QPSK;
 		strcpy(info.name, "dummyfe");
 		return false;
@@ -297,9 +299,7 @@ bool CFrontend::Open(bool init)
 			mutex.unlock();
 			return false;
 		}
-
 		getFEInfo();
-
 	}
 
 	currentTransponder.setTransponderId(0);
@@ -627,7 +627,7 @@ fe_code_rate_t CFrontend::getCodeRate(const uint8_t fec_inner, delivery_system_t
 			break;
 		default:
 			if (zapit_debug)
-				printf("no valid fec for DVB-S2 set.. !!\n");
+				printf("No valid fec for DVB-S2/DVB-S2X set!\n");
 			/* fall through */
 		case fAuto:
 			fec = FEC_AUTO;
@@ -804,7 +804,7 @@ fe_status_t CFrontend::getStatus(void) const
 	return (fe_status_t) (event.status & FE_HAS_LOCK);
 }
 
-#if 0 
+#if 0
 //never used
 FrontendParameters CFrontend::getFrontend(void) const
 {
@@ -837,7 +837,7 @@ uint16_t CFrontend::getSignalNoiseRatio(void) const
 	return snr;
 }
 
-#if 0 
+#if 0
 //never used
 uint32_t CFrontend::getUncorrectedBlocks(void) const
 {
@@ -1083,7 +1083,7 @@ void CFrontend::getDelSys(delivery_system_t delsys, int f, int m, const char *&f
 			mod = "8PSK";
 			break;
 		default:
-			printf("[frontend] unknown modulation %d!\n", m);
+			printf("[frontend] unknown DVB-S2 modulation %d!\n", m);
 			mod = "UNKNOWN";
 		}
 		break;
@@ -1106,7 +1106,7 @@ void CFrontend::getDelSys(delivery_system_t delsys, int f, int m, const char *&f
 			mod = "32APSK";
 			break;
 		default:
-			printf("[frontend] unknown modulation %d!\n", m);
+			printf("[frontend] unknown DVB-S2X modulation %d!\n", m);
 			mod = "UNKNOWN";
 		}
 		break;
@@ -1116,7 +1116,7 @@ void CFrontend::getDelSys(delivery_system_t delsys, int f, int m, const char *&f
 	case DTMB:
 		switch(delsys) {
 		case DVB_C:
-			sys = "DVB-C(Annex A)";
+			sys = "DVB-C (Annex A)";
 			break;
 		case DVB_T:
 			sys = "DVB-T";
@@ -1577,29 +1577,30 @@ bool CFrontend::buildProperties(const FrontendParameters *feparams, struct dtv_p
 	case DVB_S2:
 	case DVB_S2X:
 		if (feparams->delsys == DVB_S2 || feparams->delsys == DVB_S2X) {
-			nrOfProps	= FE_DVBS2_PROPS;
+			nrOfProps			= FE_DVBS2_PROPS;
 			memcpy(cmdseq.props, dvbs2_cmdargs, sizeof(dvbs2_cmdargs));
 
 			cmdseq.props[MODULATION].u.data	= feparams->modulation;
 			cmdseq.props[ROLLOFF].u.data	= feparams->rolloff;
 			cmdseq.props[PILOTS].u.data	= pilot;
-			cmdseq.props[MIS].u.data = feparams->plp_id | (feparams->pls_code << 8) | (feparams->pls_mode << 26);
-			if (zapit_debug) printf("[fe%d/%d] tuner pilot %d (feparams %d)\n", adapter, fenumber, pilot, feparams->pilot);
+			cmdseq.props[MIS].u.data	= feparams->plp_id | (feparams->pls_code << 8) | (feparams->pls_mode << 26);
+			if (zapit_debug)
+				printf("[fe%d/%d] tuner pilot %d (feparams %d)\n", adapter, fenumber, pilot, feparams->pilot);
 		} else {
 			memcpy(cmdseq.props, dvbs_cmdargs, sizeof(dvbs_cmdargs));
-			nrOfProps	= FE_DVBS_PROPS;
+			nrOfProps			= FE_DVBS_PROPS;
 		}
-		cmdseq.props[FREQUENCY].u.data	= feparams->frequency;
-		cmdseq.props[SYMBOL_RATE].u.data= feparams->symbol_rate;
-		cmdseq.props[INNER_FEC].u.data	= fec; /*_inner*/ ;
+		cmdseq.props[FREQUENCY].u.data		= feparams->frequency;
+		cmdseq.props[SYMBOL_RATE].u.data	= feparams->symbol_rate;
+		cmdseq.props[INNER_FEC].u.data		= fec; /*_inner*/ ;
 		break;
 	case DVB_C:
 		memcpy(cmdseq.props, dvbc_cmdargs, sizeof(dvbc_cmdargs));
-		cmdseq.props[FREQUENCY].u.data	= feparams->frequency;
-		cmdseq.props[MODULATION].u.data	= feparams->modulation;
-		cmdseq.props[SYMBOL_RATE].u.data= feparams->symbol_rate;
-		cmdseq.props[INNER_FEC].u.data	= fec_inner;
-		nrOfProps			= FE_DVBC_PROPS;
+		cmdseq.props[FREQUENCY].u.data		= feparams->frequency;
+		cmdseq.props[MODULATION].u.data		= feparams->modulation;
+		cmdseq.props[SYMBOL_RATE].u.data	= feparams->symbol_rate;
+		cmdseq.props[INNER_FEC].u.data		= fec_inner;
+		nrOfProps				= FE_DVBC_PROPS;
 		break;
 	case DVB_T:
 	case DTMB:
@@ -1649,7 +1650,7 @@ bool CFrontend::buildProperties(const FrontendParameters *feparams, struct dtv_p
 							currentVoltage == SEC_VOLTAGE_18,
 							config.uni_lnb);
 
-	cmdseq.num	+= nrOfProps;
+	cmdseq.num += nrOfProps;
 
 	return true;
 }
@@ -2593,9 +2594,7 @@ double calcAzimuth(double SatLon, double SiteLat, double SiteLon, int Height_ove
 
 double calcDeclination(double SiteLat, double Azimuth, double Elevation)
 {
-	return Deg(ASIN(SIN(Radians(Elevation)) * SIN(Radians(SiteLat)) + COS(Radians(Elevation)) * COS(Radians(SiteLat)) + COS(Radians(Azimuth))
-		   )
-	    );
+	return Deg(ASIN(SIN(Radians(Elevation)) * SIN(Radians(SiteLat)) + COS(Radians(Elevation)) * COS(Radians(SiteLat)) + COS(Radians(Azimuth))));
 }
 
 double calcSatHourangle(double Azimuth, double Elevation, double Declination, double Lat)
