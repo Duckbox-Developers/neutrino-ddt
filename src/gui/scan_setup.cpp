@@ -480,7 +480,7 @@ int CScanSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 //		int number = actionKey.at(15) - '0';
 
 		std::string actionKey_tmp;
-		for (int i = 15; i < actionKey.length(); ++i) {
+		for (unsigned int i = 15; i < actionKey.length(); ++i) {
 			int test = actionKey.at(i) - '0';
 			actionKey_tmp += to_string(test);
 //			printf("[neutrino] >>>>>>>>> %s (%d) <<<<<<<<<\n", actionKey_tmp.c_str(), test);
