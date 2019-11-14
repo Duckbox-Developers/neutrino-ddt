@@ -542,12 +542,6 @@ void CMoviePlayerGui::updateLcd()
  && !defined(BOXMODEL_UFS913) \
  && !defined(BOXMODEL_UFS922) \
  && !defined(BOXMODEL_OCTAGON1008) \
- && !defined(BOXMODEL_HS7110) \
- && !defined(BOXMODEL_HS7420) \
- && !defined(BOXMODEL_HS7810A) \
- && !defined(BOXMODEL_HS7119) \
- && !defined(BOXMODEL_HS7429) \
- && !defined(BOXMODEL_HS7819) \
  && !defined(BOXMODEL_IPBOX9900) \
  && !defined(BOXMODEL_IPBOX99) \
  && !defined(BOXMODEL_IPBOX55)
@@ -573,12 +567,6 @@ void CMoviePlayerGui::updateLcd()
  && !defined(BOXMODEL_UFS922) \
  && !defined(BOXMODEL_FORTIS_HDBOX) \
  && !defined(BOXMODEL_OCTAGON1008) \
- && !defined(BOXMODEL_HS7110) \
- && !defined(BOXMODEL_HS7420) \
- && !defined(BOXMODEL_HS7810A) \
- && !defined(BOXMODEL_HS7119) \
- && !defined(BOXMODEL_HS7429) \
- && !defined(BOXMODEL_HS7819) \
  && !defined(BOXMODEL_CUBEREVO_MINI2) \
  && !defined(BOXMODEL_IPBOX9900) \
  && !defined(BOXMODEL_IPBOX99) \
