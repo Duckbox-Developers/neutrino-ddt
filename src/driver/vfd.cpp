@@ -436,7 +436,6 @@ printf("CVFD::setlcdparameter dimm %d power %d\n", dimm, power);
 #else
 // Brightness
 	struct vfd_ioctl_data data;
-#if 1 // !defined (BOXMODEL_HS7819) // fix me
 	memset(&data, 0, sizeof(struct vfd_ioctl_data));
 	data.start = brightness & 0x07;
 	data.length = 0;
@@ -636,7 +635,6 @@ void CVFD::showTime(bool force)
 			if(force || ( switch_name_time_cnt == 0 && ((hour != t->tm_hour) || (minute != t->tm_min))) ) {
 				hour = t->tm_hour;
 				minute = t->tm_min;
-#if 1 // !defined (BOXMODEL_HS7819) // fix me
 #if defined (BOXMODEL_OCTAGON1008)
 				ShowIcon(ICON_COLON2, true);
 #elif defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_CUBEREVO_250HD)
@@ -645,23 +643,11 @@ void CVFD::showTime(bool force)
 				strftime(timestr, 6, "%H:%M", t);
 #endif
 				ShowText(timestr);
-#else //HS7810A or HS7819, string should not scroll // fix me
-				strftime(timestr, 6, "%H:%M", t);
-				struct vfd_ioctl_data data;
-				memset(data.data, ' ', 6);
-				memcpy (data.data, timestr, 6);
-				data.start = 0;
-				data.length = 5;
-				write_to_vfd(VFDDISPLAYCHARS, &data);
-#endif
 				if (support_text) {
 					strftime(timestr, 20, "%H:%M", t);
 					ShowText(timestr);
 				} else if (support_numbers && has_led_segment) {
 					ShowNumber((t->tm_hour*100) + t->tm_min);
-#ifdef BOXMODEL_CS_HD2
-					ioctl(fd, IOC_FP_SET_COLON, 0x01);
-#endif
 				}
 			}
 		}
