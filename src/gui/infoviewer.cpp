@@ -2411,11 +2411,13 @@ void CInfoViewer::showAnalogClock(int posx,int posy,int dia)
 	else
 		frameBuffer->RestoreScreen(posx-dia, posy-dia, 2*dia, 2*dia, analogclock_buf);
 
+	frameBuffer->paintLine(posx,posy-3,posx+hx,posy+hy,COL_MENUHEAD_TEXT);
 	frameBuffer->paintLine(posx,posy-2,posx+hx,posy+hy,COL_MENUHEAD_TEXT);
 	frameBuffer->paintLine(posx,posy-1,posx+hx,posy+hy,COL_MENUHEAD_TEXT);
 	frameBuffer->paintLine(posx,posy,posx+hx,posy+hy,COL_MENUHEAD_TEXT);
 	frameBuffer->paintLine(posx,posy+1,posx+hx,posy+hy,COL_MENUHEAD_TEXT);
 	frameBuffer->paintLine(posx,posy+2,posx+hx,posy+hy,COL_MENUHEAD_TEXT);
+	frameBuffer->paintLine(posx,posy+3,posx+hx,posy+hy,COL_MENUHEAD_TEXT);
 
 	frameBuffer->paintLine(posx,posy-2,posx+mx,posy+my,COL_MENUHEAD_TEXT);
 	frameBuffer->paintLine(posx,posy-1,posx+mx,posy+my,COL_MENUHEAD_TEXT);
