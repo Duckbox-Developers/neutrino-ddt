@@ -2414,16 +2414,18 @@ void CInfoViewer::showAnalogClock(int posx,int posy,int dia)
 	frameBuffer->paintLine(posx,posy-3,posx+hx,posy+hy,COL_MENUHEAD_TEXT);
 	frameBuffer->paintLine(posx,posy-2,posx+hx,posy+hy,COL_MENUHEAD_TEXT);
 	frameBuffer->paintLine(posx,posy-1,posx+hx,posy+hy,COL_MENUHEAD_TEXT);
-	frameBuffer->paintLine(posx,posy,posx+hx,posy+hy,COL_MENUHEAD_TEXT);
+	frameBuffer->paintLine(posx+1,posy,posx+hx,posy+hy,COL_MENUHEAD_TEXT);
 	frameBuffer->paintLine(posx,posy+1,posx+hx,posy+hy,COL_MENUHEAD_TEXT);
 	frameBuffer->paintLine(posx,posy+2,posx+hx,posy+hy,COL_MENUHEAD_TEXT);
 	frameBuffer->paintLine(posx,posy+3,posx+hx,posy+hy,COL_MENUHEAD_TEXT);
 
+	frameBuffer->paintLine(posx,posy-3,posx+mx,posy+my,COL_MENUHEAD_TEXT);
 	frameBuffer->paintLine(posx,posy-2,posx+mx,posy+my,COL_MENUHEAD_TEXT);
 	frameBuffer->paintLine(posx,posy-1,posx+mx,posy+my,COL_MENUHEAD_TEXT);
-	frameBuffer->paintLine(posx,posy,posx+mx,posy+my,COL_MENUHEAD_TEXT);
+	frameBuffer->paintLine(posx+1,posy,posx+mx,posy+my,COL_MENUHEAD_TEXT);
 	frameBuffer->paintLine(posx,posy+1,posx+mx,posy+my,COL_MENUHEAD_TEXT);
 	frameBuffer->paintLine(posx,posy+2,posx+mx,posy+my,COL_MENUHEAD_TEXT);
+	frameBuffer->paintLine(posx,posy+3,posx+mx,posy+my,COL_MENUHEAD_TEXT);
 
 	frameBuffer->paintLine(posx,posy,posx+sx,posy+sy,COL_COLORED_EVENTS_TEXT);
 }
