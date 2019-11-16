@@ -592,7 +592,8 @@ void CInfoViewer::showMovieTitle(const int playState, const t_channel_id &Channe
 			showAnalogClock(BoxEndX - analogclock_offset - analogclock_size/2, BoxEndY - analogclock_offset - analogclock_size/2, analogclock_size/2);
 		else
 			clock->paint(CC_SAVE_SCREEN_NO);
-	}	showRecordIcon (show_dot);
+	}
+	showRecordIcon (show_dot);
 	show_dot = !show_dot;
 
 	if (!zap_mode)
