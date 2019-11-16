@@ -482,7 +482,6 @@ printf("CVFD::setlcdparameter dimm %d power %d\n", dimm, power);
 	data.length = 0;
 	write_to_vfd(VFDDISPLAYWRITEONOFF, &data, true);
 #endif
-#endif
 }
 
 void CVFD::setlcdparameter(void)
