@@ -236,6 +236,7 @@ struct SNeutrinoSettings
 	int infobar_show_channeldesc;
 	int infobar_subchan_disp_pos;
 	int infobar_buttons_usertitle;
+	int infobar_analogclock;
 	int fan_speed;
 	int infobar_show;
 	int infobar_show_channellogo;
