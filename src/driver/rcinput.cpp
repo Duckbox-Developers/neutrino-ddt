@@ -1757,7 +1757,7 @@ const char * CRCInput::getSpecialKeyName(const unsigned int key)
 				return "program";
 			case RC_playpause:
 				return "play / pause";
-#if BOXMODEL_BRE2ZE4k || BOXMODEL_HD51 || BOXMODEL_H7
+#if BOXMODEL_BRE2ZE4K || BOXMODEL_HD51 || BOXMODEL_H7
 			case RC_playpause_long:
 				return "play / pause long";
 #endif
