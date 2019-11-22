@@ -378,7 +378,7 @@ AC_ARG_WITH(boxmodel,
 	AS_HELP_STRING([--with-boxmodel], [valid for coolstream: hd1, hd2])
 AS_HELP_STRING([], [valid for duckbox: ufs910, ufs912, ufs913, ufs922, atevio7500, fortis_hdbox, octagon1008, cuberevo, cuberevo_mini, cuberevo_mini2, cuberevo_250hd, cuberevo_2000hd, cuberevo_3000hd, ipbox9900, ipbox99, ipbox55, tf7700])
 AS_HELP_STRING([], [valid for spark: spark, spark7162])
-AS_HELP_STRING([], [valid for armbox: bre2ze4k hd51, vusolo4k, vuduo4k, vuultimo4k, vuzero4k, vuuno4kse, vuuno4k, h7])
+AS_HELP_STRING([], [valid for armbox: bre2ze4k, hd51, vusolo4k, vuduo4k, vuultimo4k, vuzero4k, vuuno4kse, vuuno4k, h7])
 AS_HELP_STRING([], [valid for mipsbox: vuduo])
 AS_HELP_STRING([], [valid for generic: raspi]),
 	[case "${withval}" in
