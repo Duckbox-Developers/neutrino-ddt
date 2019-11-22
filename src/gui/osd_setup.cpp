@@ -736,7 +736,7 @@ int COsdSetup::showOsdSetup()
 	mc->setHint("", LOCALE_MENU_HINT_ROUNDED_CORNERS);
 	osd_menu->addItem(mc);
 #endif
-#if !HAVE_ARM_HARDWARE //FIXME: not work on AX/HD51
+#if !HAVE_ARM_HARDWARE //FIXME: not work on AX/HD51, H7, BRE2ZE4K
 	// fade windows
 	mc = new CMenuOptionChooser(LOCALE_COLORMENU_FADE, &g_settings.widget_fade, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true );
 	mc->setHint("", LOCALE_MENU_HINT_FADE);
