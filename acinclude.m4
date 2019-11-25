@@ -548,37 +548,34 @@ elif test "$BOXMODEL" = "tf7700"; then
 	AC_DEFINE(BOXMODEL_TF7700, 1, [tf7700])
 elif test "$BOXMODEL" = "bre2ze4k"; then
 	AC_DEFINE(BOXMODEL_BRE2ZE4K, 1, [bre2ze4k])
-	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution])
 elif test "$BOXMODEL" = "hd51"; then
 	AC_DEFINE(BOXMODEL_HD51, 1, [hd51])
-	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution])
 elif test "$BOXMODEL" = "vusolo4k"; then
 	AC_DEFINE(BOXMODEL_VUSOLO4K, 1, [vusolo4k])
-	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution])
 elif test "$BOXMODEL" = "vuduo4k"; then
 	AC_DEFINE(BOXMODEL_VUDUO4K, 1, [vuduo4k])
-	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution])
 elif test "$BOXMODEL" = "vuultimo4k"; then
 	AC_DEFINE(BOXMODEL_VUULTIMO4K, 1, [vuultimo4k])
-	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution])
 elif test "$BOXMODEL" = "vuzero4k"; then
 	AC_DEFINE(BOXMODEL_VUZERO4K, 1, [vuzero4k])
-	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution])
 elif test "$BOXMODEL" = "vuuno4kse"; then
 	AC_DEFINE(BOXMODEL_VUUNO4KSE, 1, [vuuno4kse])
-	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution])
 elif test "$BOXMODEL" = "vuuno4k"; then
 	AC_DEFINE(BOXMODEL_VUUNO4K, 1, [vuuno4k])
-	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution])
 elif test "$BOXMODEL" = "vuduo"; then
 	AC_DEFINE(BOXMODEL_VUDUO, 1, [vuduo])
-	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution])
 elif test "$BOXMODEL" = "h7"; then
 	AC_DEFINE(BOXMODEL_H7, 1, [h7])
-	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution])
 elif test "$BOXMODEL" = "raspi"; then
 	AC_DEFINE(BOXMODEL_RASPI, 1, [raspberry pi])
 fi
+
+# Support Boxmodel with OSD-Resolution
+case "$BOXMODEL" in
+	bre2ze4k|hd51|vusolo4k|vuduo4k|vuultimo4k|vuzero4k|vuuno4kse|vuuno4k|vuduo|h7)
+		AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable to change osd resolution])
+	;;
+esac
 ])
 
 dnl backward compatiblity
