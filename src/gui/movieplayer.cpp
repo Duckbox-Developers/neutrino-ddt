@@ -903,9 +903,11 @@ bool CMoviePlayerGui::StartWebtv(void)
 #endif
 
 	playback->Open(is_file_player ? PLAYMODE_FILE : PLAYMODE_TS);
-
+##if HAVE_ARM_HARDWARE
+#	bool res = playback->Start(file_name, cookie_header, second_file_name);//url with cookies and optional second audio file
+#else
 	bool res = playback->Start((char *) file_name.c_str(), cookie_header);//url with cookies
-
+#endif
 	playback->SetSpeed(1);
 	if (!res) {
 		playback->Close();
@@ -1022,7 +1024,7 @@ bool CMoviePlayerGui::luaGetUrl(const std::string &script, const std::string &fi
 	bool haveurl = false;
 	if ( !root.isObject() ) {
 		for (Json::Value::iterator it = root.begin(); it != root.end(); ++it) {
-			info.url=""; info.name=""; info.header=""; info.bandwidth = 1; info.resolution=""; info.res1 = 1;
+			info.url=""; info.url2=""; info.name=""; info.header=""; info.bandwidth = 1; info.resolution=""; info.res1 = 1;
 			tmp = "0";
 			Json::Value object_it = *it;
 			for (Json::Value::iterator iti = object_it.begin(); iti != object_it.end(); iti++) {
@@ -1030,6 +1032,9 @@ bool CMoviePlayerGui::luaGetUrl(const std::string &script, const std::string &fi
 				if (name=="url") {
 					info.url = (*iti).asString();
 					haveurl = true;
+				//url2 for separate audio file
+				} else if (name=="url2") {
+					info.url2 = (*iti).asString();
 				} else if (name=="name") {
 					info.name = (*iti).asString();
 				}
@@ -1054,12 +1059,15 @@ bool CMoviePlayerGui::luaGetUrl(const std::string &script, const std::string &fi
 	}
 	if (root.isObject()) {
 		for (Json::Value::iterator it = root.begin(); it != root.end(); ++it) {
-			info.url=""; info.name=""; info.header=""; info.bandwidth = 1; info.resolution=""; info.res1 = 1;
+			info.url=""; info.url2=""; info.name=""; info.header=""; info.bandwidth = 1; info.resolution=""; info.res1 = 1;
 			tmp = "0";
 			std::string name = it.name();
 			if (name=="url") {
 				info.url = (*it).asString();
 				haveurl = true;
+			//url2 for separate audio file
+			} else if (name=="url2") {
+				info.url2 = (*it).asString();
 			} else if (name=="name") {
 				info.name = (*it).asString();
 			} else if (name=="header") {
@@ -1120,6 +1128,7 @@ bool CMoviePlayerGui::selectLivestream(std::vector<livestream_info_t> &streamLis
 			_info = &(streamList[i]);
 			if (_info->res1 == _res) {
 				info->url        = _info->url;
+				info->url2        = _info->url2;
 				info->name       = _info->name;
 				info->header     = _info->header;
 				info->resolution = _info->resolution;
@@ -1151,7 +1160,7 @@ bool CMoviePlayerGui::selectLivestream(std::vector<livestream_info_t> &streamLis
 	return false;
 }
 
-bool CMoviePlayerGui::getLiveUrl(const std::string &url, const std::string &script, std::string &realUrl, std::string &_pretty_name, std::string &info1, std::string &info2, std::string &header)
+bool CMoviePlayerGui::getLiveUrl(const std::string &url, const std::string &script, std::string &realUrl, std::string &_pretty_name, std::string &info1, std::string &info2, std::string &header, std::string &url2)
 {
 	std::vector<livestream_info_t> liveStreamList;
 	livestream_info_t info;
@@ -1208,6 +1217,9 @@ bool CMoviePlayerGui::getLiveUrl(const std::string &url, const std::string &scri
 	if (!info.header.empty()) {
 		header = info.header;
 	}
+	if (!info.url2.empty()) {
+		url2 = info.url2;
+	}
 
 #if 0
 	if (!info.resolution.empty())
@@ -1262,9 +1274,11 @@ bool CMoviePlayerGui::PlayBackgroundStart(const std::string &file, const std::st
 	}
 
 	std::string realUrl;
+	std::string Url2;
 	std::string _pretty_name = name;
 	cookie_header.clear();
-	if (!getLiveUrl(file, script, realUrl, _pretty_name, livestreamInfo1, livestreamInfo2, cookie_header)) {
+	second_file_name.clear();
+	if (!getLiveUrl(file, script, realUrl, _pretty_name, livestreamInfo1, livestreamInfo2, cookie_header,Url2)) {
 		return false;
 	}
 
@@ -1276,6 +1290,7 @@ bool CMoviePlayerGui::PlayBackgroundStart(const std::string &file, const std::st
 	instance_bg->is_file_player = true;
 	instance_bg->isHTTP = true;
 	instance_bg->file_name = realUrl;
+	instance_bg->second_file_name = Url2;
 	instance_bg->pretty_name = _pretty_name;
 	instance_bg->cookie_header = cookie_header;
 
@@ -1424,8 +1439,11 @@ bool CMoviePlayerGui::PlayFileStart(void)
 		showStartingHint = true;
 		pthread_create(&thrStartHint, NULL, CMoviePlayerGui::ShowStartHint, this);
 	}
+#if HAVE_ARM_HARDWARE
+	bool res = playback->Start((char *) file_name.c_str(), vpid, vtype, currentapid, currentac3, duration,"",second_file_name);
+#else
 	bool res = playback->Start((char *) file_name.c_str(), vpid, vtype, currentapid, currentac3, duration);
-
+#endif
 	if (thrStartHint) {
 		showStartingHint = false;
 		pthread_join(thrStartHint, NULL);
