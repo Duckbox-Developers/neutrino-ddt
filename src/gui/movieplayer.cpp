@@ -903,8 +903,8 @@ bool CMoviePlayerGui::StartWebtv(void)
 #endif
 
 	playback->Open(is_file_player ? PLAYMODE_FILE : PLAYMODE_TS);
-##if HAVE_ARM_HARDWARE
-#	bool res = playback->Start(file_name, cookie_header, second_file_name);//url with cookies and optional second audio file
+#if HAVE_ARM_HARDWARE
+	bool res = playback->Start(file_name, cookie_header, second_file_name);//url with cookies and optional second audio file
 #else
 	bool res = playback->Start((char *) file_name.c_str(), cookie_header);//url with cookies
 #endif
