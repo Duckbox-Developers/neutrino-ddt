@@ -576,6 +576,27 @@ case "$BOXMODEL" in
 		AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable to change osd resolution])
 	;;
 esac
+
+# all vuplus BOXMODELs
+case "$BOXMODEL" in
+	vusolo4k|vuduo4k|vuultimo4k|vuuno4k|vuuno4kse|vuzero4k|vuduo)
+		AC_DEFINE(BOXMODEL_VUPLUS_ALL, 1, [vuplus_all])
+	;;
+esac
+
+# all vuplus arm BOXMODELs
+case "$BOXMODEL" in
+	vusolo4k|vuduo4k|vuultimo4k|vuuno4k|vuuno4kse|vuzero4k)
+		AC_DEFINE(BOXMODEL_VUPLUS_ARM, 1, [vuplus_arm])
+	;;
+esac
+
+# all vuplus mips BOXMODELs
+case "$BOXMODEL" in
+	vuduo)
+		AC_DEFINE(BOXMODEL_VUPLUS_MIPS, 1, [vuplus_mips])
+	;;
+esac
 ])
 
 dnl backward compatiblity
