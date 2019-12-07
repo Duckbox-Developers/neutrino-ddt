@@ -403,7 +403,6 @@ and add to neutrino playlist
 //	curl_free(dir_escaped);
 	url += dirname;
 	std::cout << "[FileBrowser] SC URL: " << url << std::endl;
-	url = str_replace(" ", "%20", url);
 	CURL *curl_handle;
 	CURLcode httpres;
 	/* init the curl session */
@@ -480,6 +479,10 @@ printf("CFileBrowser::readDir_sc: read done, size %d\n", (int)answer.size());
 						const char *eptr = xmlGetAttribute(element, "name");
 						if(eptr)
 							file.Name = eptr;
+						std::string fname_temp = file.Name;
+						fname_temp = str_replace(" ", "%20", fname_temp);
+						fname_temp = str_replace("&", "%26", fname_temp);
+						file.Name = fname_temp;
 						file.Url = sc_get_genre + file.Name;
 						file.Size = 0;
 						file.Time = 0;
@@ -1220,6 +1223,11 @@ void CFileBrowser::paintItem(unsigned int pos)
 
 	if ( !actual_file->Name.empty() )
 	{
+		std::string fname_temp = actual_file->Name;
+		fname_temp = str_replace("%20", " ", fname_temp);
+		fname_temp = str_replace("%26", "&", fname_temp);
+		actual_file->Name = fname_temp;
+
 		if (currpos == selected)
 			CVFD::getInstance()->showMenuText(0, FILESYSTEM_ENCODING_TO_UTF8_STRING(actual_file->getFileName()).c_str(), -1, true); // UTF-8
 
