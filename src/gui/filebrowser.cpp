@@ -403,6 +403,7 @@ and add to neutrino playlist
 //	curl_free(dir_escaped);
 	url += dirname;
 	std::cout << "[FileBrowser] SC URL: " << url << std::endl;
+	url = str_replace(" ", "%20", url);
 	CURL *curl_handle;
 	CURLcode httpres;
 	/* init the curl session */
