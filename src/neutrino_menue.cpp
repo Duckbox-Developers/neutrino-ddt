@@ -393,11 +393,11 @@ void CNeutrinoApp::InitMenuService()
 
 	CMenuForwarder * mf;
 	// tuner setup
-	if(CFEManager::getInstance()->haveSat() || CFEManager::getInstance()->getFrontendCount() > 1) {
+//	if(CFEManager::getInstance()->haveSat() || CFEManager::getInstance()->getFrontendCount() > 1) {
 		mf = new CMenuForwarder(LOCALE_SATSETUP_FE_SETUP, true, NULL, CScanSetup::getInstance(), "setup_frontend", CRCInput::RC_red);
 		mf->setHint(NEUTRINO_ICON_HINT_SETTINGS, LOCALE_MENU_HINT_SCAN_FESETUP);
 		personalize.addItem(MENU_SERVICE, mf, &g_settings.personalize[SNeutrinoSettings::P_MSER_TUNER]);
-	}
+//	}
 
 	// channel scan
 	mf = new CMenuForwarder(LOCALE_SERVICEMENU_SCANTS    , true, NULL, CScanSetup::getInstance(), "", CRCInput::RC_green);
