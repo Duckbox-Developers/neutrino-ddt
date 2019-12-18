@@ -486,7 +486,7 @@ void CDBoxInfoWidget::paint()
 		nameWidth + 10,
 		nameWidth + 10 + (sizeWidth+10)*1,
 		nameWidth + 10 + (sizeWidth+10)*2,
-		nameWidth + 10 + (sizeWidth+10)*3,
+		nameWidth + 10 + (sizeWidth+10)*3
 	};
 	int widths[] = { 0, sizeWidth, sizeWidth, sizeWidth, percWidth };
 
