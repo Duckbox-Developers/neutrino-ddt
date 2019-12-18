@@ -216,18 +216,13 @@
 		<transponder frequency="586000" bandwidth="0" constellation="6" transmission_mode="2" code_rate_HP="9" code_rate_LP="9" guard_interval="4" hierarchy="0" />	<!-- CH 35 freenet TV 1 -->
 		<transponder frequency="690000" bandwidth="0" constellation="6" transmission_mode="2" code_rate_HP="9" code_rate_LP="9" guard_interval="4" hierarchy="0" />	<!-- CH 48 freenet TV 3 -->
 	</terrestrial>
-	<terrestrial name="Muenster (Stadt)/NRW (DVB-T2)" flags="5">
+	<terrestrial name="Muenster/NRW (DVB-T2)" flags="5">
 		<transponder frequency="498000" bandwidth="0" constellation="6" transmission_mode="2" code_rate_HP="9" code_rate_LP="9" guard_interval="4" hierarchy="0" />	<!-- CH 24 freenet TV 1 -->
 		<transponder frequency="562000" bandwidth="0" constellation="6" transmission_mode="2" code_rate_HP="9" code_rate_LP="9" guard_interval="4" hierarchy="0" />	<!-- CH 32 ARD -->
 		<transponder frequency="578000" bandwidth="0" constellation="6" transmission_mode="2" code_rate_HP="9" code_rate_LP="9" guard_interval="4" hierarchy="0" />	<!-- CH 34 ARD/Dritte -->
 		<transponder frequency="618000" bandwidth="0" constellation="6" transmission_mode="2" code_rate_HP="9" code_rate_LP="9" guard_interval="4" hierarchy="0" />	<!-- CH 39 freenet TV 3 -->
 		<transponder frequency="666000" bandwidth="0" constellation="6" transmission_mode="2" code_rate_HP="9" code_rate_LP="9" guard_interval="4" hierarchy="0" />	<!-- CH 45 ZDF -->
 		<transponder frequency="754000" bandwidth="0" constellation="6" transmission_mode="2" code_rate_HP="9" code_rate_LP="9" guard_interval="4" hierarchy="0" />	<!-- CH 56 freenet TV 2 -->
-	</terrestrial>
-	<terrestrial name="Muenster-Baumberge/NRW (DVB-T2)" flags="5">
-		<transponder frequency="562000" bandwidth="0" constellation="6" transmission_mode="2" code_rate_HP="9" code_rate_LP="9" guard_interval="4" hierarchy="0" />	<!-- CH 32 ARD -->
-		<transponder frequency="578000" bandwidth="0" constellation="6" transmission_mode="2" code_rate_HP="9" code_rate_LP="9" guard_interval="4" hierarchy="0" />	<!-- CH 34 ARD/Dritte -->
-		<transponder frequency="666000" bandwidth="0" constellation="6" transmission_mode="2" code_rate_HP="9" code_rate_LP="9" guard_interval="4" hierarchy="0" />	<!-- CH 45 ZDF -->
 	</terrestrial>
 	<terrestrial name="Nuernberg (Fernmeldeturm) (DVB-T2)" flags="5">
 		<transponder frequency="498000" bandwidth="0" constellation="6" transmission_mode="2" code_rate_HP="9" code_rate_LP="9" guard_interval="4" hierarchy="0" />	<!-- CH 24 freenet TV 2 -->
