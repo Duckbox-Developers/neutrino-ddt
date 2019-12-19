@@ -1258,18 +1258,16 @@ void CVFD::ShowText(const char * str)
 }
 void CVFD::repaintIcons()
 {
-	char * model = g_info.hw_caps->boxname;
-	if(strstr(model, "ufs912") || strstr(model, "ufs913"))
+#if BOXMODEL_UFS912 || BOXMODEL_UFS913
+	bool tmp_icon[16] = {false};
+	printf("VFD repaint icons\n");
+	for (int i = 0x10; i < FP_ICON_MAX; i++)
 	{
-		bool tmp_icon[16] = {false};
-		printf("VFD repaint icons boxmodel: %s\n", model);
-		for (int i = 0x10; i < FP_ICON_MAX; i++)
-		{
-			tmp_icon[i & 0x0F] = active_icon[i & 0x0F];
-			active_icon[i & 0x0F] = false;
-			ShowIcon((fp_icon)i, tmp_icon[i & 0x0F]);
-		}
+		tmp_icon[i & 0x0F] = active_icon[i & 0x0F];
+		active_icon[i & 0x0F] = false;
+		ShowIcon((fp_icon)i, tmp_icon[i & 0x0F]);
 	}
+#endif
 }
 #else
 void CVFD::ShowText(const char * str)
