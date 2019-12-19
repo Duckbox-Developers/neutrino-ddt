@@ -743,7 +743,7 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 				}
 			}
 #else
-			printf("VU+ nicht gefunden.\n");
+			printf("VU+ not found.\n");
 #endif
 			fclose(f);
 		}
