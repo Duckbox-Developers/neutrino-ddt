@@ -508,6 +508,13 @@ void CFEManager::Open()
 	}
 }
 
+void CFEManager::Open(int _fe)
+{
+	CFrontend * fe = getFE(_fe);
+	if (!fe->Locked() && fe->getMode() != CFrontend::FE_MODE_UNUSED)
+		fe->Open(true);
+}
+
 void CFEManager::Close()
 {
 	if(have_locked)
@@ -518,6 +525,13 @@ void CFEManager::Close()
 		if(!fe->Locked())
 			fe->Close();
 	}
+}
+
+void CFEManager::Close(int _fe)
+{
+	CFrontend * fe = getFE(_fe);
+	if(!fe->Locked())
+		fe->Close();
 }
 
 CFrontend * CFEManager::getFE(int index)
