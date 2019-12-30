@@ -91,7 +91,7 @@ extern cVideo * videoDecoder;
 #if !HAVE_SPARK_HARDWARE
 extern CCAMMenuHandler * g_CamHandler;
 #endif
-
+std::string CUserMenu::tmp;
 // 
 #include <system/debug.h>
 
@@ -568,7 +568,6 @@ const char *CUserMenu::getUserMenuButtonName(int button, bool &active, bool retu
 	neutrino_locale_t loc = NONEXISTANT_LOCALE;
 	const char *text = NULL;
 	int mode = CNeutrinoApp::getInstance()->getMode();
-
 	std::vector<std::string> items = ::split(g_settings.usermenu[button]->items, ',');
 	for (std::vector<std::string>::iterator it = items.begin(); it != items.end(); ++it) {
 		int item = -1;
@@ -583,7 +582,8 @@ const char *CUserMenu::getUserMenuButtonName(int button, bool &active, bool retu
 					int nop = g_Plugins->getNumberOfPlugins();
 					for(int count = 0; count < nop; count++) {
 						if (std::string(g_Plugins->getFileName(count)) == *it) {
-							text = g_Plugins->getName(count);
+							tmp = g_Plugins->getName(count);
+							text = tmp.c_str();
 							active = true;
 							break;
 						}
@@ -596,7 +596,7 @@ const char *CUserMenu::getUserMenuButtonName(int button, bool &active, bool retu
 				if (mode == NeutrinoModes::mode_webtv && !CZapit::getInstance()->GetCurrentChannel()->getScriptName().empty()) {
 					if(loc == NONEXISTANT_LOCALE && !text) {
 						CWebTVResolution webtvres;
-						std::string tmp = webtvres.getResolutionValue();
+						tmp = webtvres.getResolutionValue();
 						if (!(videoDecoder->getBlank()))
 						{
 							int xres = 0, yres = 0, framerate;
@@ -643,11 +643,15 @@ const char *CUserMenu::getUserMenuButtonName(int button, bool &active, bool retu
 				continue;
 			case SNeutrinoSettings::ITEM_AUDIO_SELECT:
 				if(loc == NONEXISTANT_LOCALE && !text) {
-					if (mode == NeutrinoModes::mode_webtv)
-						text = CMoviePlayerGui::getInstance(true).CurrentAudioName().c_str(); // use instance_bg
-					else if (!g_RemoteControl->current_PIDs.APIDs.empty())
-						text = g_RemoteControl->current_PIDs.APIDs[
+					if (mode == NeutrinoModes::mode_webtv){
+						tmp = CMoviePlayerGui::getInstance(true).CurrentAudioName(); // use instance_bg.
+						text = tmp.c_str();
+					}
+					else if (!g_RemoteControl->current_PIDs.APIDs.empty()){
+						tmp = g_RemoteControl->current_PIDs.APIDs[
 							g_RemoteControl->current_PIDs.PIDs.selected_apid].desc;
+						text = tmp.c_str();
+					}
 				} else
 					return_title = true;
 				active = true;
