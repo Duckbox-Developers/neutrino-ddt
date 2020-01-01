@@ -34,6 +34,7 @@
 #include <driver/screen_max.h>
 #include "glcdsetup.h"
 #include <mymenu.h>
+#include <system/helpers.h>
 
 #define KEY_GLCD_BLACK			0
 #define KEY_GLCD_WHITE			1
@@ -297,7 +298,7 @@ void GLCD_Menu::GLCD_Menu_Select_Driver()
 		CMenuForwarder* mf;
 		for (int i = 0; i != nGLCD::getInstance()->GetConfigSize() - 1; i++)
 		{
-			mf = new CMenuForwarder(nGLCD::getInstance()->GetConfigName(i), true, NULL, selector, std::to_string(i).c_str());
+			mf = new CMenuForwarder(nGLCD::getInstance()->GetConfigName(i), true, NULL, selector, to_string(i).c_str());
 			m->addItem(mf);
 		}
 
