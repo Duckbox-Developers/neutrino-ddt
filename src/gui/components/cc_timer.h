@@ -85,7 +85,7 @@ class CComponentsTimer : public sigc::trackable
 		*/
 		CComponentsTimer(const int& interval = 1, bool is_nano = false);
 
-		~CComponentsTimer();
+		virtual ~CComponentsTimer();
 
 		/**Starts timer thread
 		* @return
