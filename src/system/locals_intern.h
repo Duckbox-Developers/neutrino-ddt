@@ -327,6 +327,7 @@ const char * locale_real_names[] =
 	"channellist.start",
 	"ci.check_live_slot",
 	"ci.clock",
+	"ci.clock_extra_high",
 	"ci.clock_high",
 	"ci.clock_normal",
 	"ci.empty",

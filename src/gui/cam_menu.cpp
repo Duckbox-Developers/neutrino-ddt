@@ -54,11 +54,20 @@
 #include <zapit/zapit.h>
 #include <driver/abstime.h>
 
+#if BOXMODEL_VUPLUS_ALL
+#define CI_CLOCK_OPTION_COUNT 3
+static const CMenuOptionChooser::keyval CI_CLOCK_OPTIONS[CI_CLOCK_OPTION_COUNT] = {
+	{  6, LOCALE_CI_CLOCK_NORMAL },
+	{  7, LOCALE_CI_CLOCK_HIGH },
+	{ 12, LOCALE_CI_CLOCK_EXTRA_HIGH }
+};
+#else
 #define CI_CLOCK_OPTION_COUNT 2
 static const CMenuOptionChooser::keyval CI_CLOCK_OPTIONS[CI_CLOCK_OPTION_COUNT] = {
 	{ 6, LOCALE_CI_CLOCK_NORMAL },
 	{ 7, LOCALE_CI_CLOCK_HIGH }
 };
+#endif
 
 void CCAMMenuHandler::init(void)
 {

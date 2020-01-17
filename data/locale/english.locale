@@ -300,6 +300,7 @@ channellist.since Since
 channellist.start Starts
 ci.check_live_slot Check CI-slot for live-tv use
 ci.clock CI clock (Mhz)
+ci.clock_extra_high extra high
 ci.clock_high high
 ci.clock_normal normal
 ci.empty No CAM in slot
