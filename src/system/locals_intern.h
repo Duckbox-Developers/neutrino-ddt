@@ -330,6 +330,7 @@ const char * locale_real_names[] =
 	"ci.clock_extra_high",
 	"ci.clock_high",
 	"ci.clock_normal",
+	"ci.delay",
 	"ci.empty",
 	"ci.ignore_msg",
 	"ci.init_failed",
