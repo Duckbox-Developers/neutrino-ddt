@@ -136,6 +136,7 @@ int CCAMMenuHandler::doMainMenu()
 	if(CiSlots) {
 #if BOXMODEL_VUPLUS_ALL
 		cammenu->addItem(new CMenuOptionChooser(LOCALE_CI_DELAY, &g_settings.ci_delay, CI_DELAY_OPTIONS, CI_DELAY_OPTION_COUNT, true, this));
+		cammenu->addItem(new CMenuOptionChooser(LOCALE_CI_RPR, &g_settings.ci_rpr, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true));
 #endif
 		cammenu->addItem(new CMenuOptionChooser(LOCALE_CI_RESET_STANDBY, &g_settings.ci_standby_reset, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true));
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
@@ -588,6 +589,11 @@ bool CCAMMenuHandler::changeNotify(const neutrino_locale_t OptionName, void * Da
 	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_CI_DELAY)) {
 		printf("CCAMMenuHandler::changeNotify: ci_delay %d\n", g_settings.ci_delay);
 		ca->SetCIDelay(g_settings.ci_delay);
+		return true;
+	}
+	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_CI_RPR)) {
+		printf("CCAMMenuHandler::changeNotify: ci_delay %d\n", g_settings.ci_rpr);
+		ca->SetCIRelevantPidsRouting(g_settings.ci_rpr);
 		return true;
 	}
 	else

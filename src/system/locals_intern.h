@@ -339,6 +339,7 @@ const char * locale_real_names[] =
 	"ci.removed",
 	"ci.reset",
 	"ci.reset_standby",
+	"ci.rpr",
 	"ci.save_pincode",
 	"ci.settings",
 	"ci.timeout",

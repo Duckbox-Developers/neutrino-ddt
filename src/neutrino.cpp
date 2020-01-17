@@ -511,17 +511,18 @@ int CNeutrinoApp::loadSetup(const char * fname)
 
 	g_settings.ci_standby_reset = configfile.getInt32("ci_standby_reset", 0);
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
-	g_settings.ci_clock = configfile.getInt32("ci_clock", 6);
+	g_settings.ci_clock = configfile.getInt32("ci_clock", 6);	// TODO: for each slot
 #else
-	g_settings.ci_clock = configfile.getInt32("ci_clock", 9);
+	g_settings.ci_clock = configfile.getInt32("ci_clock", 9);	// TODO: for each slot
 #endif
 #if BOXMODEL_VUPLUS_ALL
 	g_settings.ci_delay = configfile.getInt32("ci_delay", 256);
+	g_settings.ci_rpr = configfile.getInt32("ci_rpr", 0);	// TODO: for each slot
 #endif
-	g_settings.ci_ignore_messages = configfile.getInt32("ci_ignore_messages", 0);
-	g_settings.ci_save_pincode = configfile.getInt32("ci_save_pincode", 0);
+	g_settings.ci_ignore_messages = configfile.getInt32("ci_ignore_messages", 0);	// TODO: for each slot
+	g_settings.ci_save_pincode = configfile.getInt32("ci_save_pincode", 0);		// TODO: for each slot
 	g_settings.ci_check_live = configfile.getInt32("ci_check_live", 0);
-	g_settings.ci_pincode = configfile.getString("ci_pincode", "");
+	g_settings.ci_pincode = configfile.getString("ci_pincode", "");			// TODO: for each slot
 	g_settings.ci_tuner = configfile.getInt32("ci_tuner", -1);
 
 #ifndef CPU_FREQ
@@ -1396,14 +1397,15 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32( "standby_cpufreq", g_settings.standby_cpufreq);
 
 	configfile.setInt32("ci_standby_reset", g_settings.ci_standby_reset);
-	configfile.setInt32("ci_clock", g_settings.ci_clock);
+	configfile.setInt32("ci_clock", g_settings.ci_clock);	// TODO: for each slot
 #if BOXMODEL_VUPLUS_ALL
-	configfile.setInt32("ci_delay", g_settings.ci_delay);
+	configfile.setInt32("ci_delay", g_settings.ci_delay);	// TODO: for each slot
+	configfile.setInt32("ci_rpr", g_settings.ci_rpr);	// TODO: for each slot
 #endif
-	configfile.setInt32("ci_ignore_messages", g_settings.ci_ignore_messages);
-	configfile.setInt32("ci_save_pincode", g_settings.ci_save_pincode);
+	configfile.setInt32("ci_ignore_messages", g_settings.ci_ignore_messages);	// TODO: for each slot
+	configfile.setInt32("ci_save_pincode", g_settings.ci_save_pincode);		// TODO: for each slot
 	configfile.setInt32("ci_check_live", g_settings.ci_check_live);
-	configfile.setString("ci_pincode", g_settings.ci_pincode);
+	configfile.setString("ci_pincode", g_settings.ci_pincode);			// TODO: for each slot
 	configfile.setInt32("ci_tuner", g_settings.ci_tuner);
 
 	configfile.setInt32( "make_hd_list", g_settings.make_hd_list);
@@ -2628,9 +2630,10 @@ TIMER_START();
 	ZapStart_arg.startchannelradio_id = g_settings.startchannelradio_id;
 	ZapStart_arg.uselastchannel = g_settings.uselastchannel;
 	ZapStart_arg.video_mode = g_settings.video_Mode;
-	ZapStart_arg.ci_clock = g_settings.ci_clock;
+	ZapStart_arg.ci_clock = g_settings.ci_clock;	// TODO: for each slot
 #if BOXMODEL_VUPLUS_ALL
-	ZapStart_arg.ci_delay = g_settings.ci_delay;
+	ZapStart_arg.ci_delay = g_settings.ci_delay;	// TODO: for each slot
+	ZapStart_arg.ci_rpr = g_settings.ci_rpr;	// TODO: for each slot
 #endif
 	ZapStart_arg.volume = g_settings.current_volume;
 	ZapStart_arg.webtv_xml = &g_settings.webtv_xml;
