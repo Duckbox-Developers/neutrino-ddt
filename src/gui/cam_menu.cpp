@@ -187,11 +187,13 @@ int CCAMMenuHandler::doMainMenu()
 if (i == 0) { // only for slot 0 valid - fix later
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 			cammenu->addItem(new CMenuOptionChooser(LOCALE_CI_CLOCK, &g_settings.ci_clock[i], CI_CLOCK_OPTIONS, CI_CLOCK_OPTION_COUNT, true, this));
-			cammenu->addItem(new CMenuOptionChooser(LOCALE_CI_RPR, &g_settings.ci_rpr[i], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this));
 #else
 #if !HAVE_SH4_HARDWARE
 			cammenu->addItem(new CMenuOptionNumberChooser(LOCALE_CI_CLOCK, &g_settings.ci_clock[i], true, 6, 12, this));
 #endif
+#endif
+#if BOXMODEL_VUPLUS_ALL
+			cammenu->addItem(new CMenuOptionChooser(LOCALE_CI_RPR, &g_settings.ci_rpr[i], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this));
 #endif
 			cammenu->addItem(new CMenuOptionChooser(LOCALE_CI_IGNORE_MSG, &g_settings.ci_ignore_messages[i], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true));
 			cammenu->addItem(new CMenuOptionChooser(LOCALE_CI_SAVE_PINCODE, &g_settings.ci_save_pincode[i], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this));
