@@ -592,7 +592,7 @@ bool CCAMMenuHandler::changeNotify(const neutrino_locale_t OptionName, void * Da
 		return true;
 	}
 	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_CI_RPR)) {
-		printf("CCAMMenuHandler::changeNotify: ci_delay %d\n", g_settings.ci_rpr);
+		printf("CCAMMenuHandler::changeNotify: ci_rpr %d\n", g_settings.ci_rpr);
 		ca->SetCIRelevantPidsRouting(g_settings.ci_rpr);
 		return true;
 	}
