@@ -241,13 +241,13 @@ void CHDDMenuHandler::getBlkIds()
 	{
 		struct dirent **namelist_part;
 		char blockdir[256];
-		sprintf(blockdir, "/sys/block/%s", namelist[i]->d_name);
+		snprintf(blockdir, sizeof(blockdir), "/sys/block/%s", namelist[i]->d_name) < 0 ? abort() : (void)0;
 		int p = scandir(blockdir, &namelist_part, my_filter, alphasort);
 
 		for (int j = 0; j < p; j++)
 		{
 			char buf[255];
-			sprintf(buf, "/dev/%s", namelist_part[j]->d_name);
+			snprintf(buf, sizeof(buf), "/dev/%s", namelist_part[j]->d_name) < 0 ? abort() : (void)0;
 			if (is_mounted(buf))
 				continue;
 
@@ -764,7 +764,7 @@ bool CHDDMenuHandler::scanDevices()
 		bool isroot = false;
 
 		printf("HDD: checking /sys/block/%s\n", namelist[i]->d_name);
-		snprintf(str, sizeof(str), "/dev/%s", namelist[i]->d_name);
+		snprintf(str, sizeof(str), "/dev/%s", namelist[i]->d_name) < 0 ? abort() : (void)0;
 		int fd = open(str, O_RDONLY);
 		if (fd >= 0) {
 			if (ioctl(fd, BLKGETSIZE64, &bytes))
@@ -787,11 +787,11 @@ bool CHDDMenuHandler::scanDevices()
 
 		megabytes = bytes/1000000;
 
-		snprintf(str, sizeof(str), "/sys/block/%s/device/vendor", namelist[i]->d_name);
+		snprintf(str, sizeof(str), "/sys/block/%s/device/vendor", namelist[i]->d_name) < 0 ? abort() : (void)0;
 		FILE * f = fopen(str, "r");
 		if(!f) {
 			printf("Cant open %s\n", str);
-			snprintf(str, sizeof(str), "/sys/block/%s/device/type", namelist[i]->d_name);
+			snprintf(str, sizeof(str), "/sys/block/%s/device/type", namelist[i]->d_name) < 0 ? abort() : (void)0;
 			f = fopen(str, "r");
 		}
 		if (f) {
@@ -804,13 +804,13 @@ bool CHDDMenuHandler::scanDevices()
 
 		/* the Tripledragon only has kernel 2.6.12 available.... :-( */
 		if (oldkernel)
-			snprintf(str, sizeof(str), "/proc/ide/%s/model", namelist[i]->d_name);
+			snprintf(str, sizeof(str), "/proc/ide/%s/model", namelist[i]->d_name) < 0 ? abort() : (void)0;
 		else
-			snprintf(str, sizeof(str), "/sys/block/%s/device/model", namelist[i]->d_name);
+			snprintf(str, sizeof(str), "/sys/block/%s/device/model", namelist[i]->d_name) < 0 ? abort() : (void)0;
 		f = fopen(str, "r");
 		if(!f) {
 			printf("Cant open %s\n", str);
-			snprintf(str, sizeof(str), "/sys/block/%s/device/name", namelist[i]->d_name);
+			snprintf(str, sizeof(str), "/sys/block/%s/device/name", namelist[i]->d_name) < 0 ? abort() : (void)0;
 			f = fopen(str, "r");
 		}
 		if (f) {
@@ -819,7 +819,7 @@ bool CHDDMenuHandler::scanDevices()
 		}
 #if 0
 		int removable = 0;
-		snprintf(str, sizeof(str), "/sys/block/%s/removable", namelist[i]->d_name);
+		snprintf(str, sizeof(str), "/sys/block/%s/removable", namelist[i]->d_name) < 0 ? abort() : (void)0;
 		f = fopen(str, "r");
 		if(!f) {
 			printf("Cant open %s\n", str);
@@ -839,7 +839,7 @@ bool CHDDMenuHandler::scanDevices()
 			hdd_list.push_back(hdd);
 		}
 
-		snprintf(str, sizeof(str), "%s %s %ld %s", vendor, model, (long)(megabytes < 10000 ? megabytes : megabytes/1000), megabytes < 10000 ? "MB" : "GB");
+		snprintf(str, sizeof(str), "%s %s %ld %s", vendor, model, (long)(megabytes < 10000 ? megabytes : megabytes/1000), megabytes < 10000 ? "MB" : "GB") < 0 ? abort() : (void)0;
 		printf("HDD: %s\n", str);
 		devtitle[namelist[i]->d_name] = str;
 
@@ -1527,7 +1527,7 @@ int CHDDDestExec::exec(CMenuTarget* /*parent*/, const std::string&)
 		removable = 0;
 		printf("CHDDDestExec: checking /sys/block/%s\n", namelist[i]->d_name);
 
-		sprintf(str, "/sys/block/%s/removable", namelist[i]->d_name);
+		snprintf(str, sizeof(str), "/sys/block/%s/removable", namelist[i]->d_name) < 0 ? abort() : (void)0;
 		f = fopen(str, "r");
 		if (!f) {
 			printf("Can't open %s\n", str);
@@ -1554,7 +1554,7 @@ int CHDDDestExec::exec(CMenuTarget* /*parent*/, const std::string&)
 				char M_opt[50],S_opt[50], opt[100];
 				snprintf(S_opt, sizeof(S_opt), "-S%d", g_settings.hdd_sleep);
 				snprintf(M_opt, sizeof(M_opt), "-M%d", g_settings.hdd_noise);
-				snprintf(opt, sizeof(opt), "/dev/%s",namelist[i]->d_name);
+				snprintf(opt, sizeof(opt), "/dev/%s",namelist[i]->d_name) < 0 ? abort() : (void)0;
 
 				if (have_nonbb_hdparm)
 					my_system(4, hdparm, M_opt, S_opt, opt);
