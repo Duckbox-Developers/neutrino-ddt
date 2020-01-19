@@ -612,7 +612,7 @@ bool CCAMMenuHandler::changeNotify(const neutrino_locale_t OptionName, void * Da
 		int enabled = *(int *) Data;
 		if (!enabled) {
 			for (unsigned int i = 0; i < ca->GetNumberCISlots(); i++) {
-				printf("CCAMMenuHandler::changeNotify: clear saved pincode[i]\n", i);
+				printf("CCAMMenuHandler::changeNotify: clear saved pincode[%d]\n", i);
 				g_settings.ci_pincode[i].clear();
 			}
 		}
