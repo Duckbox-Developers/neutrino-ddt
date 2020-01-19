@@ -567,6 +567,7 @@ void CMoviePlayerGui::updateLcd()
  && !defined(BOXMODEL_UFS922) \
  && !defined(BOXMODEL_FORTIS_HDBOX) \
  && !defined(BOXMODEL_OCTAGON1008) \
+ && !defined(BOXMODEL_CUBEREVO_MINI) \
  && !defined(BOXMODEL_CUBEREVO_MINI2) \
  && !defined(BOXMODEL_CUBEREVO_3000HD) \
  && !defined(BOXMODEL_IPBOX9900) \
