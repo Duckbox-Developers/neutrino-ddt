@@ -191,6 +191,7 @@ int CPSISetup::exec (CMenuTarget * parent, const std::string &)
 	{
 		case CRCInput::RC_up:
 			direction = -1;
+			/* fall through */
 		case CRCInput::RC_down:
 			if (selected + direction > -1 && selected + direction < PSI_SCALE_COUNT)
 			{
@@ -227,6 +228,7 @@ int CPSISetup::exec (CMenuTarget * parent, const std::string &)
 					psi_list[i].value = psi_list[i].value_old;
 					videoDecoder->SetControl(psi_list[selected].control, psi_list[selected].value);
 				}
+			/* fall through */
 		case CRCInput::RC_ok:
 			if (selected != PSI_RESET)
 			{
@@ -237,6 +239,7 @@ int CPSISetup::exec (CMenuTarget * parent, const std::string &)
 				g_settings.psi_tint = psi_list[PSI_TINT].value;
 				break;
 			}
+			/* fall through */
 		case CRCInput::RC_red:
 			for (i = 0; i < PSI_RESET; i++)
 			{
