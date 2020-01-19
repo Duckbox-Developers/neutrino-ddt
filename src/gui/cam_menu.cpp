@@ -54,8 +54,6 @@
 #include <zapit/zapit.h>
 #include <driver/abstime.h>
 
-int CISlot = 0;
-
 #if BOXMODEL_VUPLUS_ALL
 #define CI_CLOCK_OPTION_COUNT 3
 static const CMenuOptionChooser::keyval CI_CLOCK_OPTIONS[CI_CLOCK_OPTION_COUNT] = {
@@ -184,7 +182,6 @@ int CCAMMenuHandler::doMainMenu()
 			snprintf(tmp, sizeof(tmp), "ca_ci_reset%d", i);
 			cammenu->addItem(new CMenuForwarder(LOCALE_CI_RESET, true, NULL, this, tmp));
 			memset(name1,0,sizeof(name1));
-if (i == 0) { // only for slot 0 valid - fix later
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 			cammenu->addItem(new CMenuOptionChooser(LOCALE_CI_CLOCK, &g_settings.ci_clock[i], CI_CLOCK_OPTIONS, CI_CLOCK_OPTION_COUNT, true, this));
 #else
@@ -197,7 +194,6 @@ if (i == 0) { // only for slot 0 valid - fix later
 #endif
 			cammenu->addItem(new CMenuOptionChooser(LOCALE_CI_IGNORE_MSG, &g_settings.ci_ignore_messages[i], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true));
 			cammenu->addItem(new CMenuOptionChooser(LOCALE_CI_SAVE_PINCODE, &g_settings.ci_save_pincode[i], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this));
-}
 		} else {
 			snprintf(str1, sizeof(str1), "%s %d", g_Locale->getText(LOCALE_CI_EMPTY), i);
 			tempMenu = new CMenuWidget(str1, NEUTRINO_ICON_SETTINGS);
@@ -597,22 +593,28 @@ bool CCAMMenuHandler::changeNotify(const neutrino_locale_t OptionName, void * Da
 		return true;
 	}
 	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_CI_RPR)) {
-		printf("CCAMMenuHandler::changeNotify: ci_rpr[%d] %d\n", CISlot, g_settings.ci_rpr[CISlot]);
-		ca->SetCIRelevantPidsRouting(g_settings.ci_rpr[CISlot]);
+		for (unsigned int i = 0; i < ca->GetNumberCISlots(); i++) {
+			printf("CCAMMenuHandler::changeNotify: ci_rpr[%d] %d\n", i, g_settings.ci_rpr[i]);
+			ca->SetCIRelevantPidsRouting(g_settings.ci_rpr[i], i);
+		}
 		return true;
 	}
 	else
 #endif
 	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_CI_CLOCK)) {
-		printf("CCAMMenuHandler::changeNotify: ci_clock[%d] %d\n", CISlot, g_settings.ci_clock[CISlot]);
-		ca->SetTSClock(g_settings.ci_clock[CISlot] * 1000000);
+		for (unsigned int i = 0; i < ca->GetNumberCISlots(); i++) {
+			printf("CCAMMenuHandler::changeNotify: ci_clock[%d] %d\n", i, g_settings.ci_clock[i]);
+			ca->SetTSClock(g_settings.ci_clock[i] * 1000000, i);
+		}
 		return true;
 	}
 	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_CI_SAVE_PINCODE)) {
 		int enabled = *(int *) Data;
 		if (!enabled) {
-			printf("CCAMMenuHandler::changeNotify: clear saved pincode\n");
-			g_settings.ci_pincode[CISlot].clear();
+			for (unsigned int i = 0; i < ca->GetNumberCISlots(); i++) {
+				printf("CCAMMenuHandler::changeNotify: clear saved pincode[i]\n", i);
+				g_settings.ci_pincode[i].clear();
+			}
 		}
 	}
 	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_CI_CHECK_LIVE_SLOT)) {
