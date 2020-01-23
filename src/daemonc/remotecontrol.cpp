@@ -304,7 +304,7 @@ int CRemoteControl::handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t data
 #endif
 			char *p = new char[sizeof(t_channel_id)];
 			memcpy(p, &current_channel_id, sizeof(t_channel_id));
-			g_RCInput->postMsg(NeutrinoMessages::EVT_ZAP_GOTPIDS, (const neutrino_msg_data_t)p, false); 
+			g_RCInput->postMsg(NeutrinoMessages::EVT_ZAP_GOTPIDS, (neutrino_msg_data_t)p, false);
 
 			processAPIDnames();
 		}
@@ -386,7 +386,7 @@ void CRemoteControl::getSubChannels()
 
 				char *p = new char[sizeof(t_channel_id)];
 				memcpy(p, &current_channel_id, sizeof(t_channel_id));
-				g_RCInput->postMsg(NeutrinoMessages::EVT_ZAP_GOT_SUBSERVICES, (const neutrino_msg_data_t)p, false); // data is pointer to allocated memory
+				g_RCInput->postMsg(NeutrinoMessages::EVT_ZAP_GOT_SUBSERVICES, (neutrino_msg_data_t)p, false); // data is pointer to allocated memory
 			}
 		}
 	}
@@ -428,7 +428,7 @@ void CRemoteControl::getNVODs()
 
 			char *p = new char[sizeof(t_channel_id)];
 			memcpy(p, &current_channel_id, sizeof(t_channel_id));
-			g_RCInput->postMsg(NeutrinoMessages::EVT_ZAP_GOT_SUBSERVICES, (const neutrino_msg_data_t)p, false); // data is pointer to allocated memory
+			g_RCInput->postMsg(NeutrinoMessages::EVT_ZAP_GOT_SUBSERVICES, (neutrino_msg_data_t)p, false); // data is pointer to allocated memory
 
 			if ( selected_subchannel == -1 )
 			{
@@ -613,7 +613,7 @@ void CRemoteControl::processAPIDnames()
 
 	char *p = new char[sizeof(t_channel_id)];
 	memcpy(p, &current_channel_id, sizeof(t_channel_id));
-	g_RCInput->postMsg(NeutrinoMessages::EVT_ZAP_GOTAPIDS, (const neutrino_msg_data_t)p, false); // data is pointer to allocated memory
+	g_RCInput->postMsg(NeutrinoMessages::EVT_ZAP_GOTAPIDS, (neutrino_msg_data_t)p, false); // data is pointer to allocated memory
 }
 
 
