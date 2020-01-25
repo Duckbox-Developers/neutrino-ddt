@@ -166,7 +166,7 @@ CUpnpBrowserGui::~CUpnpBrowserGui()
 		delete dline; dline = NULL;
 	}
 	if (image)
-		delete image, image = NULL;
+		delete image; image = NULL;
 }
 
 int CUpnpBrowserGui::exec(CMenuTarget* parent, const std::string & /*actionKey*/)
