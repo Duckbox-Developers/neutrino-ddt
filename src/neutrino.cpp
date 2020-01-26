@@ -5873,7 +5873,6 @@ static struct __key_rename key_rename[] = {
 	{ "screen_StartY_lcd",	"screen_StartY_lcd_0" },
 	{ "screen_EndX_lcd",	"screen_EndX_lcd_0" },
 	{ "screen_EndY_lcd",	"screen_EndY_lcd_0" },
-	{ "timing.infobar_movieplayer",	"timing.infobar_player" },
 	{ "ci_clock", "ci_clock_0" },
 	{ "ci_save_pincode", "ci_save_pincode_0" },
 	{ "ci_pincode", "ci_pincode_0" },
