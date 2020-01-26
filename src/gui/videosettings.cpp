@@ -604,7 +604,7 @@ int CVideoSettings::showVideoSetup()
 #endif
 
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
-	CMenuOptionChooser * zm = new CMenuOptionChooser(LOCALE_VIDEOMENU_ZAPPINGMODE, &g_settings.zappingmode, VIDEOMENU_ZAPPINGMODE_OPTIONS, VIDEOMENU_ZAPPINGMODE_OPTION_COUNT, true, this);
+	CMenuOptionChooser * zm = new CMenuOptionChooser(LOCALE_VIDEOMENU_ZAPPINGMODE, &g_settings.zappingmode, VIDEOMENU_ZAPPINGMODE_OPTIONS, VIDEOMENU_ZAPPINGMODE_OPTION_COUNT, true, this, CRCInput::RC_yellow);
 	videosetup->addItem(zm);
 #endif
 
