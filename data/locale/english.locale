@@ -1647,6 +1647,7 @@ menu.hint_video_scart_mode Select analog output mode for SCART connectors
 menu.hint_video_sdosd Enable/disable OSD display on SD output (scart, cinch)
 menu.hint_video_three_d Change the channel-specific 3D settings
 menu.hint_video_tint Change picture tint
+menu.hint_video_zappingmode Select black screen or still picture while zapping
 menu.hint_volume Configure Volume GUI options
 menu.hint_volume_digits Numeric display of the volumebar on/off
 menu.hint_volume_pos Select volume indicator position

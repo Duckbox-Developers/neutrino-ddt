@@ -605,6 +605,7 @@ int CVideoSettings::showVideoSetup()
 
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	CMenuOptionChooser * zm = new CMenuOptionChooser(LOCALE_VIDEOMENU_ZAPPINGMODE, &g_settings.zappingmode, VIDEOMENU_ZAPPINGMODE_OPTIONS, VIDEOMENU_ZAPPINGMODE_OPTION_COUNT, true, this, CRCInput::RC_yellow);
+	zm->setHint("", LOCALE_MENU_HINT_VIDEO_ZAPPINGMODE);
 	videosetup->addItem(zm);
 #endif
 
@@ -785,7 +786,6 @@ bool CVideoSettings::changeNotify(const neutrino_locale_t OptionName, void * /* 
 		videoDecoder->SetColorFormat((COLOR_FORMAT) g_settings.hdmi_mode);
 	}
 #endif
-
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_VIDEOMENU_ZAPPINGMODE)) {
 		videoDecoder->SetControl(VIDEO_CONTROL_ZAPPING_MODE, g_settings.zappingmode);
