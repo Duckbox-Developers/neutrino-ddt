@@ -1647,7 +1647,7 @@ menu.hint_video_scart_mode Wählen Sie den Modus des Ausgangssignals für den SC
 menu.hint_video_sdosd Aktivieren/Deaktivieren der OSD Anzeige am Analogausgang (Scart, Cinch)
 menu.hint_video_three_d Ändert die kanalspezifischen 3D-Einstellungen
 menu.hint_video_tint Ändert den Farbton
-menu.hint_video_zappingmode Wählen Sie, ob eine schwarzes Bild oder ein Standbild beim Umschalten gezeigt werden aoll
+menu.hint_video_zappingmode Wählen Sie, ob ein schwarzes Bild oder ein Standbild beim Umschalten gezeigt werden soll
 menu.hint_volume Wählen Sie die Anzeigeoptionen für die Lautstärke
 menu.hint_volume_digits Zifferndarstellung der Lautstärkeanzeige ein- oder ausschalten
 menu.hint_volume_pos Wählen Sie die Position der Lautstärkeanzeige aus
