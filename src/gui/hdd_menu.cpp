@@ -241,13 +241,13 @@ void CHDDMenuHandler::getBlkIds()
 	{
 		struct dirent **namelist_part;
 		char blockdir[256];
-		snprintf(blockdir, sizeof(blockdir), "/sys/block/%s", namelist[i]->d_name) < 0 ? abort() : (void)0;
+		snprintf(blockdir, sizeof(blockdir), "/sys/block/%s", namelist[i]->d_name);
 		int p = scandir(blockdir, &namelist_part, my_filter, alphasort);
 
 		for (int j = 0; j < p; j++)
 		{
 			char buf[255];
-			snprintf(buf, sizeof(buf), "/dev/%s", namelist_part[j]->d_name) < 0 ? abort() : (void)0;
+			snprintf(buf, sizeof(buf), "/dev/%s", namelist_part[j]->d_name);
 			if (is_mounted(buf))
 				continue;
 
@@ -1527,7 +1527,7 @@ int CHDDDestExec::exec(CMenuTarget* /*parent*/, const std::string&)
 		removable = 0;
 		printf("CHDDDestExec: checking /sys/block/%s\n", namelist[i]->d_name);
 
-		snprintf(str, sizeof(str), "/sys/block/%s/removable", namelist[i]->d_name) < 0 ? abort() : (void)0;
+		snprintf(str, sizeof(str), "/sys/block/%s/removable", namelist[i]->d_name);
 		f = fopen(str, "r");
 		if (!f) {
 			printf("Can't open %s\n", str);
