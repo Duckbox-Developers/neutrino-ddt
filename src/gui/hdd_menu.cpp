@@ -1551,10 +1551,10 @@ int CHDDDestExec::exec(CMenuTarget* /*parent*/, const std::string&)
 				printf("CHDDDestExec: noise %d sleep %d /dev/%s\n",
 					 g_settings.hdd_noise, g_settings.hdd_sleep, namelist[i]->d_name);
 
-				char M_opt[50],S_opt[50], opt[100];
+				char M_opt[50],S_opt[50], opt[261];
 				snprintf(S_opt, sizeof(S_opt), "-S%d", g_settings.hdd_sleep);
 				snprintf(M_opt, sizeof(M_opt), "-M%d", g_settings.hdd_noise);
-				snprintf(opt, sizeof(opt), "/dev/%s",namelist[i]->d_name) < 0 ? abort() : (void)0;
+				snprintf(opt, sizeof(opt), "/dev/%s",namelist[i]->d_name);
 
 				if (have_nonbb_hdparm)
 					my_system(4, hdparm, M_opt, S_opt, opt);
