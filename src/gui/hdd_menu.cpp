@@ -240,13 +240,13 @@ void CHDDMenuHandler::getBlkIds()
 	for(int i = 0; i < n; i++)
 	{
 		struct dirent **namelist_part;
-		char blockdir[256];
+		char blockdir[281];
 		snprintf(blockdir, sizeof(blockdir), "/sys/block/%s", namelist[i]->d_name);
 		int p = scandir(blockdir, &namelist_part, my_filter, alphasort);
 
 		for (int j = 0; j < p; j++)
 		{
-			char buf[255];
+			char buf[281];
 			snprintf(buf, sizeof(buf), "/dev/%s", namelist_part[j]->d_name);
 			if (is_mounted(buf))
 				continue;
@@ -1483,7 +1483,7 @@ ret1:
 
 int CHDDDestExec::exec(CMenuTarget* /*parent*/, const std::string&)
 {
-	char str[256];
+	char str[281];
 	FILE * f;
 	int removable = 0;
 	struct dirent **namelist;
