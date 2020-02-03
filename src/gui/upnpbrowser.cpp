@@ -162,11 +162,14 @@ void CUpnpBrowserGui::Init()
 CUpnpBrowserGui::~CUpnpBrowserGui()
 {
 	delete m_socket;
-	if (dline){
-		delete dline; dline = NULL;
+	if (dline) {
+		delete dline;
+		dline = NULL;
 	}
-	if (image)
-		delete image; image = NULL;
+	if (image) {
+		delete image;
+		image = NULL;
+	}
 }
 
 int CUpnpBrowserGui::exec(CMenuTarget* parent, const std::string & /*actionKey*/)
