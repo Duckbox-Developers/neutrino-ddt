@@ -1786,6 +1786,9 @@ void CMoviePlayerGui::PlayFileLoop(void)
 #endif
 		} else if (msg == (neutrino_msg_t) g_settings.mpkey_stop) {
 			playstate = CMoviePlayerGui::STOPPED;
+#if HAVE_SH4_HARDWARE
+			playback->RequestAbort();
+#endif
 			keyPressed = CMoviePlayerGui::PLUGIN_PLAYSTATE_STOP;
 			ClearQueue();
 		} else if ((!filelist.empty() && msg == (neutrino_msg_t) CRCInput::RC_ok)) {
