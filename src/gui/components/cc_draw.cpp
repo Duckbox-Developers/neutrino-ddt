@@ -615,7 +615,7 @@ void CCDraw::paintFbItems(bool do_save_bg)
 						*  Paint of background image is prefered, next steps will be ignored!
 						*/
 						if (!cc_body_image.empty()){
-							if (g_PicViewer->DisplayImage(cc_body_image, fbdata.x, fbdata.y, fbdata.dx, fbdata.dy)){
+							if (g_PicViewer->DisplayImage(cc_body_image, fbdata.x, fbdata.y, fbdata.dx, fbdata.dy, CFrameBuffer::TM_NONE)){
 								// catch screen and store into paint cache
 								fbdata.pixbuf = getScreen(fbdata.x, fbdata.y, fbdata.dx, fbdata.dy);
 								fbdata.is_painted = true;
