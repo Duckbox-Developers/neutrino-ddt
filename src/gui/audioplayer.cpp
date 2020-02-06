@@ -1648,17 +1648,18 @@ void CAudioPlayerGui::paintHead()
 	m_frameBuffer->blit();
 }
 
-void CAudioPlayerGui::paintFoot()
-{
-	if (m_screensaver)
-		return;
-
-	const struct button_label SecondLineButtons[3] =
+	#define BUTTON_LABEL_COUNT 3
+	const struct button_label SecondLineButtons[BUTTON_LABEL_COUNT] =
 	{
 		{ NEUTRINO_ICON_BUTTON_OKAY,	LOCALE_AUDIOPLAYER_PLAY		},
 		{ NEUTRINO_ICON_BUTTON_HELP,	LOCALE_AUDIOPLAYER_KEYLEVEL	},
 		{ NEUTRINO_ICON_BUTTON_INFO,	LOCALE_PICTUREVIEWER_HEAD	}
 	};
+
+void CAudioPlayerGui::paintFoot()
+{
+	if (m_screensaver)
+		return;
 
 	int radius = RADIUS_LARGE;
 	int button_y = m_y + m_height - OFFSET_SHADOW - m_info_height - OFFSET_INTER - OFFSET_SHADOW - 2*m_button_height;
@@ -1677,7 +1678,7 @@ void CAudioPlayerGui::paintFoot()
 	m_frameBuffer->paintBoxRel(m_x, button_y, m_width, 2*m_button_height, COL_MENUFOOT_PLUS_0, radius, (m_show_playlist ? CORNER_BOTTOM : CORNER_ALL));
 
 	if (!m_playlist.empty())
-		::paintButtons(button_x, button_y + m_button_height, button_width, 3, SecondLineButtons, button_width, m_button_height);
+		::paintButtons(button_x, button_y + m_button_height, button_width, BUTTON_LABEL_COUNT, SecondLineButtons, button_width, m_button_height);
 
 	if (m_key_level == 0)
 	{
