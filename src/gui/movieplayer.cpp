@@ -3288,6 +3288,9 @@ bool CMoviePlayerGui::setAPID(unsigned int i) {
 		playback->SetAPid(currentapid, currentac3);
 		CZapit::getInstance()->SetVolumePercent((ac3flags[i] > 2) ? g_settings.audio_volume_percent_ac3 : g_settings.audio_volume_percent_pcm);
 
+		if (!isMovieBrowser)
+			return (i < numpida);
+
 		for (unsigned int a = 0; a < p_movie_info->audioPids.size(); a++) {
 			if (p_movie_info->audioPids[a].AudioPid == currentapid) {
 				p_movie_info->audioPids[a].selected = 1;
