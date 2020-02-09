@@ -31,9 +31,8 @@
 #include <config.h>
 #endif
 
-#include "gui/widget/menue.h"
-#include "gui/components/cc.h"
-#include <driver/fontrenderer.h>
+#include <gui/widget/menue.h>
+#include <gui/components/cc.h>
 
 typedef int info_type_id_t;
 
@@ -45,7 +44,6 @@ typedef struct build_info_t
 
 } build_info_struct_t;
 
-
 class CBuildInfo :  public CMenuTarget, public CComponentsWindow
 {
 	private:
@@ -53,8 +51,7 @@ class CBuildInfo :  public CMenuTarget, public CComponentsWindow
 		Font* font;
 		void initVarBuildInfo();
 		void InitInfoItems();
-		void Scroll(bool scrollDown);
-
+		
 		bool GetData();
 	public:
 		
