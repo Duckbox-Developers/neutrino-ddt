@@ -237,7 +237,7 @@ class CMoviePlayerGui : public CMenuTarget
 	void fillPids();
 	bool getAudioName(int pid, std::string &apidtitle);
 	void getCurrentAudioName( bool file_player, std::string &audioname);
-	void addAudioFormat(int count, std::string &apidtitle);
+	void addAudioFormat(int count, std::string &apidtitle, bool& enabled );
 
 	void handleMovieBrowser(neutrino_msg_t msg, int position = 0);
 	bool SelectFile();
@@ -283,7 +283,7 @@ class CMoviePlayerGui : public CMenuTarget
 	std::string	pretty_name;
 	int exec(CMenuTarget* parent, const std::string & actionKey);
 	bool Playing() { return playing; };
-	std::string CurrentAudioName() { getCurrentAudioName(true, currentaudioname); return currentaudioname; };
+	std::string CurrentAudioName() { return currentaudioname; };
 	int GetSpeed() { return speed; }
 	int GetPosition() { return position; }
 	int GetDuration() { return duration; }

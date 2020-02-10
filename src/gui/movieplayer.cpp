@@ -1476,7 +1476,7 @@ bool CMoviePlayerGui::PlayFileStart(void)
 		{
 			for (unsigned int i = 0; i < numpida; i++)
 				if (apids[i] == playback->GetAPid()) {
-				CZapit::getInstance()->SetVolumePercent((ac3flags[i] == 0) ? g_settings.audio_volume_percent_pcm : g_settings.audio_volume_percent_ac3);
+				CZapit::getInstance()->SetVolumePercent((ac3flags[i] > 2) ? g_settings.audio_volume_percent_ac3 : g_settings.audio_volume_percent_pcm);
 				break;
 			}
 		}
@@ -1547,9 +1547,6 @@ bool CMoviePlayerGui::PlayFileStart(void)
 			playback->SetSpeed(1);
 		}
 	}
-
-	playback->SetAPid(currentapid, currentac3);
-
 	getCurrentAudioName(is_file_player, currentaudioname);
 	if (is_file_player)
 		selectAutoLang();
@@ -2395,15 +2392,18 @@ bool CMoviePlayerGui::getAudioName(int apid, std::string &apidtitle)
 	return false;
 }
 
-void CMoviePlayerGui::addAudioFormat(int count, std::string &apidtitle)
+void CMoviePlayerGui::addAudioFormat(int count, std::string &apidtitle, bool& enabled)
 {
-	if (isMovieBrowser) // p_movie_info already contains audio format
-		return;
-
+	enabled = true;
 	switch(ac3flags[count])
 	{
 		case 1: /*AC3,EAC3*/
-			apidtitle.append(" (AC3)");
+			if (apidtitle.find("AC3") == std::string::npos)
+				apidtitle.append(" (AC3)");
+			break;
+		case 2: /*teletext*/
+			apidtitle.append(" (Teletext)");
+			enabled = false;
 			break;
 		case 3: /*MP2*/
 			apidtitle.append(" (MP2)");
@@ -2416,9 +2416,12 @@ void CMoviePlayerGui::addAudioFormat(int count, std::string &apidtitle)
 			break;
 		case 6: /*DTS*/
 			apidtitle.append(" (DTS)");
+#if ! defined (BOXMODEL_CS_HD2)
+			enabled = false;
+#endif
 			break;
-		case 7: /*EAC3*/
-			apidtitle.append(" (EAC3)");
+		case 7: /*MLP*/
+			apidtitle.append(" (MLP)");
 			break;
 		default:
 			break;
@@ -2427,10 +2430,17 @@ void CMoviePlayerGui::addAudioFormat(int count, std::string &apidtitle)
 
 void CMoviePlayerGui::getCurrentAudioName(bool /* file_player */, std::string &audioname)
 {
-	numpida = getAPIDCount();
+	numpida = REC_MAX_APIDS;
+	playback->FindAllPids(apids, ac3flags, &numpida, language);
 	if (numpida && !currentapid)
 		currentapid = apids[0];
-	audioname = getAPIDDesc(getAPID()).c_str();
+	for (unsigned int count = 0; count < numpida; count++)
+		if(currentapid == apids[count]){
+			if (getAudioName(apids[count], audioname))
+				return;
+			audioname = language[count];
+			return;
+		}
 }
 
 void CMoviePlayerGui::selectAudioPid()
@@ -3276,7 +3286,7 @@ bool CMoviePlayerGui::setAPID(unsigned int i) {
 		currentapid = apids[i];
 		currentac3 = ac3flags[i];
 		playback->SetAPid(currentapid, currentac3);
-		CZapit::getInstance()->SetVolumePercent((ac3flags[i] == 0) ? g_settings.audio_volume_percent_pcm : g_settings.audio_volume_percent_ac3 );
+		CZapit::getInstance()->SetVolumePercent((ac3flags[i] > 2) ? g_settings.audio_volume_percent_ac3 : g_settings.audio_volume_percent_pcm);
 
 		if (!isMovieBrowser)
 			return (i < numpida);
@@ -3294,14 +3304,11 @@ bool CMoviePlayerGui::setAPID(unsigned int i) {
 
 std::string CMoviePlayerGui::getAPIDDesc(unsigned int i)
 {
-	if ((int)i == -1)
-		return "";
 	std::string apidtitle;
 	if (i < numpida)
 		getAudioName(apids[i], apidtitle);
-	if (apidtitle.empty() || apidtitle == "und" )
-		apidtitle = "Stream " + to_string((int)i);
-	addAudioFormat(i, apidtitle);
+	if (apidtitle == "")
+		apidtitle = "Stream " + to_string(i);
 	return apidtitle;
 }
 
@@ -3322,14 +3329,25 @@ unsigned int CMoviePlayerGui::getAPID(void)
 
 unsigned int CMoviePlayerGui::getAPIDCount(void)
 {
+	unsigned int count = 0;
 	numpida = REC_MAX_APIDS;
 	playback->FindAllPids(apids, ac3flags, &numpida, language);
 	for (unsigned int i = 0; i < numpida; i++) {
-		if (language[i].empty() || language[i] == "und" )
-			language[i] = "Stream " + to_string(i);
-		language[i] = getISO639Description(language[i].c_str());
-		addAudioFormat(i, language[i]);
+		if (i != count) {
+			apids[count] = apids[i];
+			ac3flags[count] = ac3flags[i];
+			language[count] = language[i];
+		}
+		if (language[i].empty()) {
+			language[i] = "Stream ";
+			language[i] += to_string(count);
+		}
+		bool ena = false;
+		addAudioFormat(i, language[i], ena);
+		if (ena)
+			count++;
 	}
+	numpida = count;
 	return numpida;
 }
 
@@ -3424,9 +3442,12 @@ void CMoviePlayerGui::selectAutoLang()
 				std::map<std::string, std::string>::const_iterator it;
 				for (it = iso639.begin(); it != iso639.end(); ++it) {
 					if (g_settings.pref_lang[i] == it->second && strncasecmp(language[j].c_str(), it->first.c_str(), 3) == 0) {
+						bool enabled = true;
+						// TODO: better check of supported
 						std::string audioname;
-						addAudioFormat(j, audioname);
-						pref_idx = j;
+						addAudioFormat(j, audioname, enabled);
+						if (enabled)
+							pref_idx = j;
 						break;
 					}
 				}
