@@ -1548,7 +1548,9 @@ bool CMoviePlayerGui::PlayFileStart(void)
 		}
 	}
 
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	playback->SetAPid(currentapid, currentac3);
+#endif
 
 	getCurrentAudioName(is_file_player, currentaudioname);
 	if (is_file_player)
