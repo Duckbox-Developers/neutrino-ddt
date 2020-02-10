@@ -245,7 +245,7 @@ int CAudioSelectMenuHandler::doMenu ()
 				CZapitDVBSub* sd = reinterpret_cast<CZapitDVBSub*>(s);
 				// printf("[neutrino] adding DVB subtitle %s pid %x\n", sd->ISO639_language_code.c_str(), sd->pId);
 				snprintf(spid,sizeof(spid), "DVB:%d", sd->pId);
-				snprintf(item,sizeof(item), "DVB: %s (pid %x)", sd->ISO639_language_code.c_str(), sd->pId);
+				snprintf(item,sizeof(item), "DVB: %s (pid %x)", getISO639Description(sd->ISO639_language_code.c_str()), sd->pId);
 				ena = sd->pId != (is_mp ? mp->getCurrentSubPid(CZapitAbsSub::DVB) : dvbsub_getpid());
 			} else if (s->thisSubType == CZapitAbsSub::TTX) {
 				CZapitTTXSub* sd = reinterpret_cast<CZapitTTXSub*>(s);
@@ -253,12 +253,12 @@ int CAudioSelectMenuHandler::doMenu ()
 				int page = ((sd->teletext_magazine_number & 0xFF) << 8) | sd->teletext_page_number;
 				int pid = sd->pId;
 				snprintf(spid,sizeof(spid), "TTX:%d:%03X:%s", sd->pId, page, sd->ISO639_language_code.c_str());
-				snprintf(item,sizeof(item), "TTX: %s (pid %x page %03X)", sd->ISO639_language_code.c_str(), sd->pId, page);
+				snprintf(item,sizeof(item), "TTX: %s (pid %x page %03X)", getISO639Description(sd->ISO639_language_code.c_str()), sd->pId, page);
 				ena = !tuxtx_subtitle_running(&pid, &page, NULL);
 			} else if (is_mp && s->thisSubType == CZapitAbsSub::SUB) {
 				// printf("[neutrino] adding SUB subtitle %s pid %x\n", s->ISO639_language_code.c_str(), s->pId);
 				snprintf(spid,sizeof(spid), "SUB:%d", s->pId);
-				snprintf(item,sizeof(item), "SUB: %s (pid %x)", s->ISO639_language_code.c_str(), s->pId);
+				snprintf(item,sizeof(item), "SUB: %s (pid %x)", getISO639Description(s->ISO639_language_code.c_str()), s->pId);
 				ena = s->pId != mp->getCurrentSubPid(CZapitAbsSub::SUB);
 			} else
 				add = false;
