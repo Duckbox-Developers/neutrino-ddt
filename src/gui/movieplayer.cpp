@@ -1548,12 +1548,11 @@ bool CMoviePlayerGui::PlayFileStart(void)
 		}
 	}
 
-#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
-	playback->SetAPid(currentapid, currentac3);
-#endif
+	if (isMovieBrowser)
+		playback->SetAPid(currentapid, currentac3);
 
 	getCurrentAudioName(is_file_player, currentaudioname);
-	if (is_file_player)
+	if (is_file_player && !isMovieBrowser)
 		selectAutoLang();
 
 	enableOsdElements(MUTE);
