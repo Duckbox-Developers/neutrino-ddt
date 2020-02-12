@@ -518,7 +518,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 #endif
 
 #if BOXMODEL_VUPLUS_ALL
-	g_settings.ci_delay = configfile.getInt32("ci_delay", 256);
+	g_settings.ci_delay = configfile.getInt32("ci_delay", 128);
 	for (unsigned int i = 0; i < cCA::GetInstance()->GetNumberCISlots(); i++) {
 		sprintf(cfg_key, "ci_rpr_%d", i);
 		g_settings.ci_rpr[i] = configfile.getInt32(cfg_key, 9);
