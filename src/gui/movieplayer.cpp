@@ -1529,9 +1529,12 @@ bool CMoviePlayerGui::PlayFileStart(void)
 			}
 			printf("******************* Timeshift %d, position %d, seek to %d seconds\n", timeshift, position, startposition/1000);
 		}
+
+		if (isMovieBrowser)
+			playback->SetAPid(currentapid, currentac3);
+
 		if (/* !is_file_player && */ startposition >= 0)
 			playback->SetPosition(startposition, true);
-
 
 		/* playback->Start() starts paused */
 		if (timeshift == TSHIFT_MODE_REWIND) {
@@ -1547,9 +1550,6 @@ bool CMoviePlayerGui::PlayFileStart(void)
 			playback->SetSpeed(1);
 		}
 	}
-
-	if (isMovieBrowser)
-		playback->SetAPid(currentapid, currentac3);
 
 	getCurrentAudioName(is_file_player, currentaudioname);
 	if (is_file_player && !isMovieBrowser)
