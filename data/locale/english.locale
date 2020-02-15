@@ -1353,7 +1353,7 @@ menu.hint_misc_epg Save/load EPG options, EPG cache options\nEPG save directory
 menu.hint_misc_filebrowser Filesystem encoding, file rights\ndeny directory leave
 menu.hint_misc_general Start to standby, cache teletext, swp rotor\nplugin hdd dir
 menu.hint_misc_kerneloptions Select the kernel modules to be loaded in addition to the standard ones
-menu.hint_misc_onlineservices Configure and control online services like YouTube, SHOUTCast and TMDb
+menu.hint_misc_onlineservices Configure and control online services like SHOUTCast and TMDb
 menu.hint_misc_zapit Initial TV/Radio channels
 menu.hint_movie Play movies
 menu.hint_moviebrowser_fonts Change moviebrowser (My recordings) font sizes
@@ -1655,10 +1655,6 @@ menu.hint_volume_size Select volume indicator height
 menu.hint_webtv_setup WebTV channels configured here will be available in the standard channel lists.
 menu.hint_window_size Channellist, EPG-infos and some other windows are scaled by this factor
 menu.hint_xmltv_setup Configure XMLTV files with EPG data to describe TV listings
-menu.hint_youtube_dev_id Type your YouTube Dev ID. An empty input disables YouTube support
-menu.hint_youtube_enabled Enable or disable YouTube support
-menu.hint_ytplay Play selected YouTube feeds
-menu.hint_ytplay_setup Configure YouTube-specific options, e.g. an upper limit for search results
 menu.hint_zap_cycle When swithing channels, stay in current bouquet
 menu.next Next
 messagebox.accept Do you want to keep the changes?
@@ -1977,31 +1973,6 @@ moviebrowser.update_if_dest_empty_only Copy if destination is empty only
 moviebrowser.use_dir Use directory
 moviebrowser.use_movie_dir Use movie directory
 moviebrowser.use_rec_dir Use record directory
-moviebrowser.yt_cache Downloads
-moviebrowser.yt_cache_add Download of\n%s\nis scheduled.
-moviebrowser.yt_cancel Cancel all
-moviebrowser.yt_cancel_transfer Cancel download?
-moviebrowser.yt_clear Clear
-moviebrowser.yt_completed Completed downloads
-moviebrowser.yt_concurrent_connections Concurrent connections
-moviebrowser.yt_dl_dir YouTube download directory
-moviebrowser.yt_error Failed to load YouTube feed
-moviebrowser.yt_failed Failed downloads
-moviebrowser.yt_history Search history
-moviebrowser.yt_max_history Max search history size
-moviebrowser.yt_max_results Max results to fetch
-moviebrowser.yt_most_popular Most popular today
-moviebrowser.yt_most_popular_all_time Most popular
-moviebrowser.yt_orderby Order by
-moviebrowser.yt_orderby.published publishing date
-moviebrowser.yt_orderby.rating rating
-moviebrowser.yt_orderby.relevance relevance
-moviebrowser.yt_orderby.viewcount view count
-moviebrowser.yt_pending Pending downloads
-moviebrowser.yt_pref_quality Prefered quality
-moviebrowser.yt_region Region
-moviebrowser.yt_related Related videos
-moviebrowser.yt_search Search keyword
 moviecut.cancel Cancel movie editing?
 movieplayer.bookmark Bookmarks
 movieplayer.bookmarkname Bookmarkname
@@ -2031,7 +2002,6 @@ movieplayer.starting Starting playback ...
 movieplayer.titles Titles
 movieplayer.toomanybookmarks There are too many bookmarks.\nYou need to delete one of them first.
 movieplayer.tsplayback Play
-movieplayer.ytplayback YouTube videoplayer
 mpkey.audio Audiotracks
 mpkey.bookmark Bookmarks
 mpkey.forward Forward
@@ -2760,8 +2730,6 @@ xmltv.xml.add Add
 xmltv.xml.del Remove
 xmltv.xml.enter Enter
 xmltv.xml.reload Reload
-youtube.dev_id YouTube Dev ID
-youtube.enabled YouTube support
 zapit.scantype scan for services
 zapit.scantype.all all services
 zapit.scantype.radio only radio
