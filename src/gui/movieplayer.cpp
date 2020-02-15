@@ -2692,11 +2692,7 @@ void CMoviePlayerGui::handleMovieBrowser(neutrino_msg_t msg, int /*position*/)
 			new_bookmark.pos = play_sec;
 			TRACE("[mp] loop length: %d\r\n", new_bookmark.length);
 			if (cMovieInfo.addNewBookmark(p_movie_info, new_bookmark) == true) {
-<<<<<<< HEAD
-				if (!isYT && !isHTTP && !isUPNP)
-=======
-				if (!isHTTP)
->>>>>>> 65aef6d32... remove youtube
+				if (!isHTTP && !isUPNP)
 					cMovieInfo.saveMovieInfo(*p_movie_info);	/* save immediately in xml file */
 				jump_not_until = play_sec + 5;	// avoid jumping for this time
 			}
