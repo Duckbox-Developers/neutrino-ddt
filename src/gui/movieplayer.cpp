@@ -1856,9 +1856,11 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			g_videoSettings->SwitchFormat();
 		} else if (msg == (neutrino_msg_t) CRCInput::RC_home) {
 			playstate = CMoviePlayerGui::STOPPED;
+#if HAVE_SH4_HARDWARE
 			playback->RequestAbort();
-			filelist.clear();
-			repeat_mode = REPEAT_OFF;
+#endif
+			keyPressed = CMoviePlayerGui::PLUGIN_PLAYSTATE_STOP;
+			ClearQueue();
 		} else if (msg == (neutrino_msg_t) g_settings.mpkey_play && handle_key_play) {
 			if (time_forced) {
 				time_forced = false;
