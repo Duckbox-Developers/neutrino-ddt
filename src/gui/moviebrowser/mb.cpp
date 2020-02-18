@@ -1148,7 +1148,7 @@ int CMovieBrowser::paint(void)
 	refreshLCD();
 	if (m_settings.gui == MB_GUI_FILTER)
 		m_settings.gui = MB_GUI_MOVIE_INFO;
-		onSetGUIWindow(m_settings.gui);
+	onSetGUIWindow(m_settings.gui);
 	return (true);
 }
 
