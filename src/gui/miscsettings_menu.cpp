@@ -159,6 +159,7 @@ int CMiscMenue::exec(CMenuTarget* parent, const std::string &actionKey)
 		{
 			printf("Reading epg cache from %s ...\n", g_settings.epg_dir.c_str());
 			g_Sectionsd->readSIfromXML(g_settings.epg_dir.c_str());
+			return menu_return::RETURN_EXIT_ALL;
 		}
 
 		for (std::list<std::string>::iterator it = g_settings.xmltv_xml.begin(); it != g_settings.xmltv_xml.end(); ++it)
