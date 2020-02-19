@@ -971,6 +971,7 @@ int CTimerList::show()
 		{
 			if (timerlist[selected].eventType == CTimerd::TIMER_RECORD )
 			{
+				header->getClockObject()->block();
 				RemoteBoxSelect();
 				if (exec(this,"send_remotetimer"))
 				{
@@ -1045,7 +1046,9 @@ int CTimerList::show()
 		}
 		else if (msg == CRCInput::RC_setup)
 		{
-			update = RemoteBoxSetup();
+			header->getClockObject()->block();
+			RemoteBoxSetup();
+			update = true;
 		}
 		else if (msg == CRCInput::RC_yellow)
 		{
@@ -1070,7 +1073,7 @@ int CTimerList::show()
 					if (timer->epg_id != 0)
 					{
 						res = g_EpgData->show(timer->channel_id, timer->epg_id, &timer->epg_starttime);
-						update = true;
+						//update = true;
 					}
 					else
 						ShowHint(LOCALE_MESSAGEBOX_INFO, LOCALE_EPGVIEWER_NOTFOUND);
@@ -1407,8 +1410,12 @@ void CTimerList::paintHead()
 	if (header == NULL)
 	{
 		header = new CComponentsHeader(x, y, width, header_height, LOCALE_TIMERLIST_NAME, NEUTRINO_ICON_TIMER, CComponentsHeader::CC_BTN_MENU | CComponentsHeader::CC_BTN_EXIT, NULL, CC_SHADOW_ON);
-		header->enableClock(true, " %d.%m.%Y - %H:%M ", NULL, false);
+		header->enableClock(true, " %d.%m.%Y - %H:%M ", " %d.%m.%Y - %H %M ", true);
+		header->getClockObject()->setBlit(false);
 	}
+	else
+	header->getClockObject()->setBlit(false);
+
 	if(!header->isPainted())
 		header->paint(CC_SAVE_SCREEN_NO);
 }
@@ -1439,6 +1446,8 @@ void CTimerList::paintFoot()
 		footer.paintButtons(x, y + height - OFFSET_SHADOW - footer_height, width, footer_height, 2, &(TimerListButtons[1]));
 	else
 		footer.paintButtons(x, y + height - OFFSET_SHADOW - footer_height, width, footer_height, c, TimerListButtons);
+
+	header->getClockObject()->setBlit();
 }
 
 void CTimerList::paint()
