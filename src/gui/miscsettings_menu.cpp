@@ -152,14 +152,13 @@ int CMiscMenue::exec(CMenuTarget* parent, const std::string &actionKey)
 	{
 		return showMiscSettingsMenuOnlineServices();
 	}
-	else if(actionKey == "epg_read_now")
+	else if(actionKey == "epg_read_now" || actionKey == "epg_read_now_usermenu")
 	{
 		struct stat my_stat;
 		if (stat(g_settings.epg_dir.c_str(), &my_stat) == 0)
 		{
 			printf("Reading epg cache from %s ...\n", g_settings.epg_dir.c_str());
 			g_Sectionsd->readSIfromXML(g_settings.epg_dir.c_str());
-			return menu_return::RETURN_EXIT_ALL;
 		}
 
 		for (std::list<std::string>::iterator it = g_settings.xmltv_xml.begin(); it != g_settings.xmltv_xml.end(); ++it)
@@ -168,7 +167,10 @@ int CMiscMenue::exec(CMenuTarget* parent, const std::string &actionKey)
 			g_Sectionsd->readSIfromXMLTV((*it).c_str());
 		}
 
-		return menu_return::RETURN_REPAINT;
+		if (actionKey == "epg_read_now_usermenu")
+			return menu_return::RETURN_EXIT_ALL;
+		else
+			return menu_return::RETURN_REPAINT;
 	}
 
 	return showMiscSettingsMenu();
