@@ -97,24 +97,6 @@
 #define KEY_BOTTOMRIGHT  0x1a5
 #endif
 
-#if BOXMODEL_BRE2ZE4K || BOXMODEL_HD51 || BOXMODEL_H7
-#ifndef KEY_F1
-#define KEY_F1 003B
-#endif
-
-#ifndef KEY_F2
-#define KEY_F2 003C
-#endif
-
-#ifndef KEY_F3
-#define KEY_F3 003D
-#endif
-
-#ifndef KEY_F4
-#define KEY_F4 00E3
-#endif
-#endif // BOXMODEL_BRE2ZE4K || BOXMODEL_HD51 || BOXMODEL_H7
-
 #define KEY_POWERON	KEY_FN_F1
 #define KEY_POWEROFF	KEY_FN_F2
 #define KEY_STANDBYON	KEY_FN_F3
