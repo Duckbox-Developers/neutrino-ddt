@@ -111,7 +111,7 @@
 #endif
 
 #ifndef KEY_F4
-#define KEY_F4 003E
+#define KEY_F4 00E3
 #endif
 #endif // BOXMODEL_BRE2ZE4K || BOXMODEL_HD51 || BOXMODEL_H7
 
