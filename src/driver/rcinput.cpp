@@ -1760,8 +1760,8 @@ const char * CRCInput::getSpecialKeyName(const unsigned int key)
 #if BOXMODEL_BRE2ZE4K || BOXMODEL_HD51 || BOXMODEL_H7
 			case RC_playpause_long:
 				return "play / pause long";
-			case RC_vformat:
-				return "videoformat";
+			case RC_switchvideomode:
+				return "videomode";
 #endif
 			default:
 				printf("unknown key: %d (0x%x) \n", key, key);

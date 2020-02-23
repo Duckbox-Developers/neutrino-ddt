@@ -76,10 +76,6 @@
 #define KEY_PLAYPAUSE_LONG 0x4a4
 #endif
 
-#ifndef KEY_VFORMAT
-#define KEY_VFORMAT 0xe3
-#endif
-
 #ifndef KEY_GAMES
 #define KEY_GAMES        0x1a1   /* Media Select Games */
 #endif
@@ -288,7 +284,7 @@ class CRCInput
 			RC_playpause	= KEY_PLAYPAUSE,
 #if BOXMODEL_BRE2ZE4K || BOXMODEL_HD51 || BOXMODEL_H7
 			RC_playpause_long = KEY_PLAYPAUSE_LONG,
-			RC_vformat = KEY_VFORMAT,
+			RC_switchvideomode = KEY_SWITCHVIDEOMODE,
 #endif
 
 			RC_power_on	= KEY_POWERON,
