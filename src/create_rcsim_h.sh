@@ -10,7 +10,11 @@ cat << EOF
 // rcsim.h - automatically created from driver/rcinput.h
 
 #ifndef KEY_PLAYPAUSE_LONG
-#define KEY_PLAYPAUSE_LONG 0x4A4
+#define KEY_PLAYPAUSE_LONG 0x4a4
+#endif
+
+#ifndef KEY_VFORMAT
+#define KEY_VFORMAT 0xe3
 #endif
 
 #ifndef KEY_GAMES
