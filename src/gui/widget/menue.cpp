@@ -778,7 +778,7 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 	bool bAllowRepeatLR = false;
 	CVFD::MODES oldLcdMode = CVFD::getInstance()->getMode();
 
-	exit_pressed = false;
+	no_action = false;
 
 	frameBuffer->Lock();
 
@@ -1010,14 +1010,16 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 				break;
 
 			case (CRCInput::RC_home):
-				exit_pressed = true;
+				no_action = true;
 				msg = CRCInput::RC_timeout;
 				break;
 			case (CRCInput::RC_timeout):
+				no_action = true;
 				break;
 			case (CRCInput::RC_setup):
 				//close any menu on menu-key
 				{
+					no_action = true;
 					msg = CRCInput::RC_timeout;
 					retval = menu_return::RETURN_EXIT_ALL;
 				}
