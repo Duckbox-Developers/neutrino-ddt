@@ -1563,10 +1563,8 @@ bool CFrontend::buildProperties(const FrontendParameters *feparams, struct dtv_p
 			pilot = PILOT_OFF;
 			break;
 		case ZPILOT_AUTO:
-			pilot = PILOT_AUTO;
-			break;
-		case ZPILOT_AUTO_SW:
 		default:
+			pilot = PILOT_AUTO;
 			break;
 	}
 

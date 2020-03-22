@@ -414,7 +414,7 @@ void CServiceManager::ParseTransponders(xmlNodePtr node, t_satellite_position sa
 			else
 				feparams.frequency = (int) 1000 * (int) round ((double) feparams.frequency / (double) 1000);
 			/* TODO: add xml tag ? */
-			feparams.pilot = ZPILOT_AUTO_SW;
+			feparams.pilot = ZPILOT_AUTO;
 			feparams.plp_id = xmlGetNumericAttribute(node, "pli", 0);
 			feparams.pls_mode = (fe_pls_mode_t) xmlGetNumericAttribute(node, "plm", 0);
 			feparams.pls_code = xmlGetNumericAttribute(node, "plc", 0);
@@ -656,7 +656,7 @@ void CServiceManager::ParseSatTransponders(delivery_system_t delsys, xmlNodePtr 
 			const char *rolloff = xmlGetAttribute(tps, "rolloff");
 
 			/* TODO: add xml tag ? */
-			feparams.pilot = ZPILOT_AUTO_SW;
+			feparams.pilot = ZPILOT_AUTO;
 			if (system) {
 				uint32_t s = xmlGetNumericAttribute(tps, "system", 0);
 				switch (s) {
