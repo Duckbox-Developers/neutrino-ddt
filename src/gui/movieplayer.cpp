@@ -697,7 +697,7 @@ void CMoviePlayerGui::makeFilename()
 		} else
 			pretty_name = file_name;
 
-		if (pretty_name.substr(0,14)=="videoplayback?") {//youtube name
+		if (pretty_name.substr(0,14)=="videoplayback?") {
 			if (!p_movie_info->epgTitle.empty())
 				pretty_name = p_movie_info->epgTitle;
 			else
