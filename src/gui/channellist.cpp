@@ -2557,7 +2557,7 @@ void CChannelList::paint_events(CChannelEventList &evtlist)
 	ffheight = g_Font[eventFont]->getHeight();
 	frameBuffer->paintBoxRel(x+ width,y+ theight+pig_height, infozone_width, infozone_height,COL_MENUCONTENT_PLUS_0);
 
-	usleep(250);
+	usleep(300);
 
 	char startTime[10];
 	int eventStartTimeWidth = 4 * g_Font[eventFont]->getMaxDigitWidth() + g_Font[eventFont]->getRenderWidth(":") + OFFSET_INNER_SMALL; // use a fixed value
