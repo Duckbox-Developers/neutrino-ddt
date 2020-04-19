@@ -224,7 +224,9 @@ class CFbAccelARM
 		void setOsdResolutions();
 		void set3DMode(Mode3D);
 		Mode3D get3DMode(void);
+#if BOXMODEL_HD51
 		void paintRect(const int x, const int y, const int dx, const int dy, const fb_pixel_t col);
+#endif
 };
 
 class CFbAccelMIPS
