@@ -363,7 +363,7 @@ void CImageInfo::InitInfoData()
 
 	image_info_t www	= {LOCALE_IMAGEINFO_HOMEPAGE,	config.getString("homepage", "n/a")};
 	v_info.push_back(www);
-	image_info_t doc	= {LOCALE_IMAGEINFO_DOKUMENTATION, config.getString("docs", "http://wiki.neutrino-hd.de")};
+	image_info_t doc	= {LOCALE_IMAGEINFO_DOKUMENTATION, config.getString("docs", "http://wiki.tuxbox-neutrino.org")};
 	v_info.push_back(doc);
 	image_info_t forum	= {LOCALE_IMAGEINFO_FORUM,	config.getString("forum", "http://forum.tuxbox.org")};
 	v_info.push_back(forum);
