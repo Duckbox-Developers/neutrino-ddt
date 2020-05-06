@@ -576,6 +576,15 @@ const CMenuOptionChooser::keyval PROGRESSBAR_COLOR_OPTIONS[PROGRESSBAR_COLOR_OPT
 	{ CProgressBar::PB_COLOR,       _LOCALE_PROGRESSBAR_COLOR_FULL },
 };
 
+#define OPTIONS_CHANNELLOGO_POSITION_COUNT 4
+const CMenuOptionChooser::keyval OPTIONS_CHANNELLOGO_POSITION[OPTIONS_CHANNELLOGO_POSITION_COUNT] =
+{
+	{ 0, LOCALE_OPTIONS_OFF },													// off
+	{ CCHeaderTypes::CC_LOGO_RIGHT, LOCALE_CHANNELLIST_EPGTEXT_ALIGN_RIGHT },	// right
+	{ CCHeaderTypes::CC_LOGO_LEFT, LOCALE_CHANNELLIST_EPGTEXT_ALIGN_LEFT }, 	// left
+	{ CCHeaderTypes::CC_LOGO_CENTER, LOCALE_SETTINGS_POS_DEFAULT_CENTER } 		// centered
+};
+
 //show osd setup
 int COsdSetup::showOsdSetup()
 {
@@ -629,6 +638,13 @@ int COsdSetup::showOsdSetup()
 	//progressbar
 	mf = new CMenuDForwarder(LOCALE_MISCSETTINGS_PROGRESSBAR, true, NULL, new CProgressbarSetup(), NULL, CRCInput::convertDigitToKey(shortcut++));
 	mf->setHint("", LOCALE_MENU_HINT_PROGRESSBAR);
+	osd_menu->addItem(mf);
+
+	//NI channellogos
+	CMenuWidget osd_menu_channellogos(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_SETTINGS, width, MN_WIDGET_ID_OSDSETUP_CHANNELLOGOS);
+	showOsdChannellogosSetup(&osd_menu_channellogos);
+	mf = new CMenuForwarder(LOCALE_MISCSETTINGS_CHANNELLOGOS, true, NULL, &osd_menu_channellogos, NULL, CRCInput::convertDigitToKey(shortcut++));
+	mf->setHint("", LOCALE_MENU_HINT_CHANNELLOGOS_SETUP);
 	osd_menu->addItem(mf);
 
 	//infobar
@@ -1237,6 +1253,28 @@ const CMenuOptionChooser::keyval HDD_STATFS_OPTIONS[HDD_STATFS_OPTION_COUNT] =
 	{ SNeutrinoSettings::HDD_STATFS_RECORDING,      LOCALE_HDD_STATFS_RECORDING }
 };
 
+
+//NI channellogos
+void COsdSetup::showOsdChannellogosSetup(CMenuWidget *menu_channellogos)
+{
+	menu_channellogos->addIntroItems(LOCALE_MISCSETTINGS_CHANNELLOGOS);
+
+	CMenuOptionChooser * mc;
+	CMenuForwarder * mf;
+
+	// logo directory
+	mf = new CMenuForwarder(LOCALE_MISCSETTINGS_INFOBAR_LOGO_HDD_DIR, true, g_settings.logo_hdd_dir, this, "logo_dir");
+	mf->setHint("", LOCALE_MENU_HINT_INFOBAR_LOGO_DIR);
+	menu_channellogos->addItem(mf);
+
+	menu_channellogos->addItem(GenericMenuSeparatorLine);
+
+	// show channellogos
+	mc = new CMenuOptionChooser(LOCALE_CHANNELLIST_SHOW_CHANNELLOGO, &g_settings.channellist_show_channellogo, OPTIONS_CHANNELLOGO_POSITION, OPTIONS_CHANNELLOGO_POSITION_COUNT, true);
+	mc->setHint("", LOCALE_MENU_HINT_CHANNELLIST_SHOW_CHANNELLOGO);
+	menu_channellogos->addItem(mc);
+}
+
 //infobar
 void COsdSetup::showOsdInfobarSetup(CMenuWidget *menu_infobar)
 {
@@ -1271,10 +1309,12 @@ void COsdSetup::showOsdInfobarSetup(CMenuWidget *menu_infobar)
 	mc->setHint("", LOCALE_MENU_HINT_INFOBAR_LOGO);
 	menu_infobar->addItem(mc);
 
+#if 0
 	// logo directory
 	mf = new CMenuForwarder(LOCALE_MISCSETTINGS_INFOBAR_LOGO_HDD_DIR, true, g_settings.logo_hdd_dir, this, "logo_dir");
 	mf->setHint("", LOCALE_MENU_HINT_INFOBAR_LOGO_DIR);
 	menu_infobar->addItem(mf);
+#endif
 
 	// satellite/cable provider
 	mc = new CMenuOptionChooser(LOCALE_MISCSETTINGS_INFOBAR_SAT_DISPLAY, &g_settings.infobar_sat_display, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
@@ -1395,10 +1435,13 @@ void COsdSetup::showOsdChanlistSetup(CMenuWidget *menu_chanlist)
 	menu_chanlist->addItem(mc);
 	channellistNotifier->addItem(mc);
 
+//NI
+#if 0
 	//show channel logo
-	mc = new CMenuOptionChooser(LOCALE_CHANNELLIST_SHOW_CHANNELLOGO, &g_settings.channellist_show_channellogo, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
+	mc = new CMenuOptionChooser(LOCALE_CHANNELLIST_SHOW_CHANNELLOGO, &g_settings.channellist_show_channellogo, OPTIONS_CHANNELLOGO_POSITION, OPTIONS_CHANNELLOGO_POSITION_COUNT, true);
 	mc->setHint("", LOCALE_MENU_HINT_CHANNELLIST_SHOW_CHANNELLOGO);
 	menu_chanlist->addItem(mc);
+#endif
 
 	//show numbers
 	mc = new CMenuOptionChooser(LOCALE_CHANNELLIST_SHOW_CHANNELNUMBER, &g_settings.channellist_show_numbers, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
