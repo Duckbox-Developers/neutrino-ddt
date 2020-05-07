@@ -899,11 +899,11 @@ void CEventList::paintHead(t_channel_id _channel_id, std::string _channelname, s
 	}
 	//header->getClockObject()->setCorner(RADIUS_LARGE, CORNER_TOP_RIGHT);
 
-	if (g_settings.channellist_show_channellogo){
-		if (header->isPainted())
-			header->getChannelLogoObject()->hide();
-		header->setChannelLogo(_channel_id,_channelname, (CCHeaderTypes::cc_logo_alignment_t)g_settings.channellist_show_channellogo);
-	}
+	if (header->isPainted())
+		header->getChannelLogoObject()->hide();
+	if (g_settings.channellist_show_channellogo)
+		header->setChannelLogo(_channel_id,_channelname,(CCHeaderTypes::cc_logo_alignment_t)g_settings.channellist_show_channellogo);
+	header->setCaption(_channelname);
 
 	header->paint(CC_SAVE_SCREEN_NO);
 
