@@ -72,6 +72,10 @@
 #define KEY_BLUE         0x191
 #endif
 
+#ifndef KEY_HELP_LONG
+#define KEY_HELP_LONG    0x48a
+#endif
+
 #ifndef KEY_PLAYPAUSE_LONG
 #define KEY_PLAYPAUSE_LONG 0x4a4
 #endif
@@ -212,7 +216,11 @@ class CRCInput
 			RC_minus	= KEY_VOLUMEDOWN,   /* /include/linux/input.h: #define KEY_VOLUMEDOWN		114   */
 			RC_plus		= KEY_VOLUMEUP,     /* /include/linux/input.h: #define KEY_VOLUMEUP		115   */
 			RC_standby	= KEY_POWER,	    /* /include/linux/input.h: #define KEY_POWER		116   */
+#if BOXMODEL_VUPLUS_ALL
+			RC_help		= KEY_HELP_LONG,
+#else
 			RC_help		= KEY_HELP,	    /* /include/linux/input.h: #define KEY_HELP			138   */
+#endif
 			RC_home		= KEY_HOME,	    /* /include/linux/input.h: #define KEY_HOME			102   */
 			RC_setup	= KEY_MENU,	    /* /include/linux/input.h: #define KEY_SETUP		141   */
 			RC_topleft	= KEY_TOPLEFT,	
@@ -235,7 +243,7 @@ class CRCInput
 			RC_radio	= KEY_RADIO,
 			RC_text		= KEY_TEXT,
 #if BOXMODEL_VUPLUS_ALL
-			RC_info		= 0xFFFE,
+			RC_info		= KEY_HELP,
 			RC_epg		= KEY_INFO,
 #else
 			RC_info		= KEY_INFO,
