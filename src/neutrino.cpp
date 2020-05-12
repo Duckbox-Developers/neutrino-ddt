@@ -5386,11 +5386,7 @@ void CNeutrinoApp::loadKeys(const char * fname)
 	g_settings.sms_movie = tconfig->getInt32( "sms_movie", 0 );
 	g_settings.mode_left_right_key_tv = tconfig->getInt32( "mode_left_right_key_tv",  SNeutrinoSettings::ZAP);
 
-#if BOXMODEL_VUPLUS_ALL
-	g_settings.key_help = tconfig->getInt32( "key_help", 0x48a );
-#else
 	g_settings.key_help = tconfig->getInt32( "key_help", CRCInput::RC_help );
-#endif
 	g_settings.key_record = tconfig->getInt32( "key_record", CRCInput::RC_record );
 	g_settings.key_switchformat = tconfig->getInt32("key_switchformat", CRCInput::RC_prev);
 	g_settings.key_next43mode = tconfig->getInt32("key_next43mode", CRCInput::RC_next);
