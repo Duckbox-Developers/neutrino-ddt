@@ -224,8 +224,10 @@ class CFbAccelARM
 		void setOsdResolutions();
 		void set3DMode(Mode3D);
 		Mode3D get3DMode(void);
+#if ENABLE_ARM_ACC
 #if BOXMODEL_BRE2ZE4K || BOXMODEL_HD51 || BOXMODEL_H7
 		void paintRect(const int x, const int y, const int dx, const int dy, const fb_pixel_t col);
+#endif
 #endif
 };
 
