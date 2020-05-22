@@ -409,6 +409,7 @@ void CFbAccelARM::set3DMode(Mode3D m)
 	}
 }
 
+#if ENABLE_ARM_ACC
 #if BOXMODEL_BRE2ZE4K || BOXMODEL_HD51 || BOXMODEL_H7
 void CFbAccelARM::paintRect(const int x, const int y, const int dx, const int dy, const fb_pixel_t col)
 {
@@ -419,4 +420,5 @@ void CFbAccelARM::paintRect(const int x, const int y, const int dx, const int dy
 	mark(x, y, x+dx, y+dy);
 	blit();
 }
+#endif
 #endif
