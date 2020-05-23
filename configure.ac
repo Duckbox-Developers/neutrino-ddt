@@ -414,7 +414,6 @@ src/system/mtdutils/Makefile
 src/system/mtdutils/lib/Makefile
 src/timerd/Makefile
 src/zapit/Makefile
-src/zapit/data/Makefile
 src/zapit/lib/Makefile
 src/zapit/src/Makefile
 ])
