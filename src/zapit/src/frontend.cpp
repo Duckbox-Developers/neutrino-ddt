@@ -244,7 +244,7 @@ CFrontend::CFrontend(int Number, int Adapter)
 	config.diseqcType	= NO_DISEQC;
 	config.diseqcRepeats	= 0;
 	config.uni_scr		= 0;		/* the unicable SCR address 0-7 */
-	config.uni_qrg		= 0;		/* the unicable frequency in MHz */
+	config.uni_freq		= 0;		/* the unicable frequency in MHz */
 	config.uni_lnb		= 0;		/* for two-position switches */
 	config.uni_pin		= 0;		/* for MDU setups */
 	config.highVoltage	= false;
@@ -1967,7 +1967,7 @@ void CFrontend::setInput(t_satellite_position satellitePosition, uint32_t freque
 uint32_t CFrontend::sendEN50494TuningCommand(const uint32_t frequency, const int high_band,
 					     const int horizontal, const int bank)
 {
-	uint32_t bpf = config.uni_qrg;
+	uint32_t bpf = config.uni_freq;
 	int pin = config.uni_pin;
 	if (config.uni_scr < 0 || config.uni_scr > 7) {
 		WARN("uni_scr out of range (%d)", config.uni_scr);
@@ -2010,7 +2010,7 @@ uint32_t CFrontend::sendEN50494TuningCommand(const uint32_t frequency, const int
 
 uint32_t CFrontend::sendEN50607TuningCommand(const uint32_t frequency, const int high_band, const int horizontal, const int bank)
 {
-	uint32_t bpf = config.uni_qrg;
+	uint32_t bpf = config.uni_freq;
 	int pin = config.uni_pin;
 	struct dvb_diseqc_master_cmd cmd = { {0x70, 0x00, 0x00, 0x00, 0x00, 0x00}, 4 };
 

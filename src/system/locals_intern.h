@@ -2653,7 +2653,7 @@ const char * locale_real_names[] =
 	"unicable.lnb",
 	"unicable.pin",
 	"unicable.pin_hint",
-	"unicable.qrg",
+	"unicable.freq",
 	"unicable.scr",
 	"unit.decimal",
 	"unit.long.years",
