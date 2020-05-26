@@ -1095,6 +1095,7 @@ int CScanSetup::showFrontendSetup(int number)
 		setupMenu->addItem(fsatSetup);
 
 		uniSetup	= new CMenuForwarder(LOCALE_SATSETUP_UNI_SETTINGS, (dmode == DISEQC_UNICABLE ? true : dmode == DISEQC_UNICABLE2), NULL, this, "unisetup", CRCInput::convertDigitToKey(shortcut++));
+		uniSetup->setHint("",LOCALE_MENU_HINT_UNI_SETUP);
 		setupMenu->addItem(uniSetup);
 
 		CMenuWidget * rotorMenu = new CMenuWidget(LOCALE_SATSETUP_EXTENDED_MOTOR, NEUTRINO_ICON_SETTINGS, width);
