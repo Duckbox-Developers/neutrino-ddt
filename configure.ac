@@ -224,6 +224,15 @@ if test "$enable_arm_acc" = "yes"; then
 	AC_DEFINE(ENABLE_ARM_ACC,1,[enable arm hardware acceleration])
 fi
 
+AC_ARG_ENABLE(mips-acc,
+	AS_HELP_STRING(--disable-mips-acc,disable mips hardware acceleration),
+	,[enable_mips_acc=yes])
+
+AM_CONDITIONAL(ENABLE_MIPS_ACC,test "$enable_mips_acc" = "yes")
+if test "$enable_mips_acc" = "yes"; then
+	AC_DEFINE(ENABLE_MIPS_ACC,1,[enable mips hardware acceleration])
+fi
+
 AC_ARG_ENABLE(extupdate,
 	AS_HELP_STRING([--enable-extupdate], [enable extended update routine @<:@default=no@:>@]),
 	AC_DEFINE(ENABLE_EXTUPDATE, 1, [enable extended update routine]))
