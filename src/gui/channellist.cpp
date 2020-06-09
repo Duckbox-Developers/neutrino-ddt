@@ -2558,7 +2558,13 @@ void CChannelList::paint_events(CChannelEventList &evtlist)
 	frameBuffer->paintBoxRel(x+ width,y+ theight+pig_height, infozone_width, infozone_height,COL_MENUCONTENT_PLUS_0);
 
 #if ENABLE_ARM_ACC
-#if BOXMODEL_BRE2ZE4K || BOXMODEL_HD51 || BOXMODEL_H7
+#if BOXMODEL_BRE2ZE4K || BOXMODEL_HD51 || BOXMODEL_H7 || BOXMODEL_VUPLUS_ARM
+	usleep(300);
+#endif
+#endif
+
+#if ENABLE_MIPS_ACC
+#if BOXMODEL_VUPLUS_MIPS
 	usleep(300);
 #endif
 #endif
