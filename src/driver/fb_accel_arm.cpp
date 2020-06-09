@@ -471,6 +471,18 @@ void CFbAccelARM::paintRect(const int x, const int y, const int dx, const int dy
 		return;
 
 	bcm_accel_fill(fix.smem_start, screeninfo.xres, screeninfo.yres, stride,x, y, dx, dy,col);
+
+	int line = 0;
+	fb_pixel_t *fbp = getFrameBufferPointer() + (swidth * y);
+	int pos;
+	while (line < dy)
+	{
+		for (pos = x; pos < x + dx; pos++)
+			*(fbp + pos) = col;
+		fbp += swidth;
+		line++;
+	}
+
 	mark(x, y, x+dx, y+dy);
 	blit();
 }
