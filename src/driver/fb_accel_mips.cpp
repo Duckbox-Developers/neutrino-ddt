@@ -58,7 +58,6 @@ static bool supportblendingflags = true;
 static int fb_fd = -1;
 static int exec_list(void);
 
-#if BOXMODEL_VUPLUS_MIPS
 static bool accumulateoperations = false;
 
 bool bcm_accel_has_alphablending()
@@ -224,7 +223,6 @@ void bcm_accel_fill(
 
 	if (!accumulateoperations) exec_list();
 }
-#endif
 
 static int exec_list(void)
 {
@@ -464,7 +462,6 @@ void CFbAccelMIPS::_blit()
 }
 
 #if ENABLE_MIPS_ACC
-#if BOXMODEL_VUPLUS_MIPS
 void CFbAccelMIPS::paintRect(const int x, const int y, const int dx, const int dy, const fb_pixel_t col)
 {
 	if(dx <1 || dy <1 )
@@ -486,5 +483,4 @@ void CFbAccelMIPS::paintRect(const int x, const int y, const int dx, const int d
 	mark(x, y, x+dx, y+dy);
 	blit();
 }
-#endif
 #endif
