@@ -48,7 +48,7 @@
 
 #define LOGTAG "[fb_accel_mips] "
 
-#if ENABLE_ARM_MIPS
+#if ENABLE_MIPS_ACC
 #define FBIO_BLIT   0x22
 #endif
 #define FBIO_ACCEL  0x23
@@ -63,7 +63,7 @@ static bool supportblendingflags = true;
 static int fb_fd = -1;
 static int exec_list(void);
 
-#if ENABLE_ARM_MIPS
+#if ENABLE_MIPS_ACC
 static bool accumulateoperations = false;
 
 bool bcm_accel_has_alphablending()
@@ -251,7 +251,7 @@ static int exec_list(void)
 
 CFbAccelMIPS::CFbAccelMIPS()
 {
-#if ENABLE_ARM_MIPS
+#if ENABLE_MIPS_ACC
 	blit_thread = false;
 #endif
 	fb_name  = "mipsbox framebuffer";
@@ -277,14 +277,14 @@ CFbAccelMIPS::CFbAccelMIPS()
 	/* hardware doesn't allow us to detect whether the opcode is working */
 	supportblendingflags = false;
 #endif
-#if ENABLE_ARM_MIPS
+#if ENABLE_MIPS_ACC
 	OpenThreads::Thread::start();
 #endif
 }
 
 CFbAccelMIPS::~CFbAccelMIPS()
 {
-#if ENABLE_ARM_MIPS
+#if ENABLE_MIPS_ACC
 	if (blit_thread)
 	{
 		blit_thread = false;
@@ -428,7 +428,7 @@ void CFbAccelMIPS::set3DMode(Mode3D m)
 	}
 }
 
-#if ENABLE_ARM_MIPS
+#if ENABLE_MIPS_ACC
 #define BLIT_INTERVAL_MIN 40
 #define BLIT_INTERVAL_MAX 250
 void CFbAccelMIPS::run()
