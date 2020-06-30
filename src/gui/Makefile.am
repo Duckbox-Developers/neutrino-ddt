@@ -1,7 +1,7 @@
 if ENABLE_UPNP
-AM_CPPFLAGS = -fno-rtti -D__STDC_FORMAT_MACROS
+AM_CPPFLAGS = -fno-rtti -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS
 else
-AM_CPPFLAGS = -fno-rtti -fno-exceptions -D__STDC_FORMAT_MACROS
+AM_CPPFLAGS = -fno-rtti -fno-exceptions -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS
 endif
 BUILT_SOURCES = version.h
 version.h:
