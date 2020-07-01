@@ -609,8 +609,8 @@ void *insertEventsfromFile(void * data)
 
 	if (index_parser == NULL) {
 		readEventsFromDir(epg_dir, ev_count);
-		debug(DEBUG_NORMAL, "Reading Information finished after %" PRId64 " milliseconds (%d events)",
-				time_monotonic_ms()-now, ev_count);
+		debug(DEBUG_NORMAL, "Reading Information finished after %" PRId64 " milliseconds (%d events) from %s",
+				time_monotonic_ms()-now, ev_count, epg_dir.c_str());
 		reader_ready = true;
 		pthread_exit(NULL);
 	}
@@ -627,12 +627,13 @@ void *insertEventsfromFile(void * data)
 		epgname = epg_dir + filename;
 		readEventsFromFile(epgname, ev_count);
 
+		debug(DEBUG_NORMAL, "Reading Information finished after %" PRId64 " milliseconds (%d events) from %s",
+			time_monotonic_ms()-now, ev_count, epgname.c_str());
+
 		eventfile = xmlNextNode(eventfile);
 	}
 
 	xmlFreeDoc(index_parser);
-	debug(DEBUG_NORMAL, "Reading Information finished after %" PRId64 " milliseconds (%d events)",
-			time_monotonic_ms()-now, ev_count);
 
 	reader_ready = true;
 
@@ -670,8 +671,8 @@ void *insertEventsfromXMLTV(void * data)
 		pthread_exit(NULL);
 	}
 
-	debug(DEBUG_NORMAL, "Reading Information finished after %" PRId64 " milliseconds (%d events)",
-	       time_monotonic_ms()-now, ev_count);
+	debug(DEBUG_NORMAL, "Reading Information finished after %" PRId64 " milliseconds (%d events) from %s",
+	       time_monotonic_ms()-now, ev_count, url.c_str());
 
 	reader_ready = true;
 
