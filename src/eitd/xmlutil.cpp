@@ -650,7 +650,7 @@ void *insertEventsfromXMLTV(void * data)
 		reader_ready = true;
 		pthread_exit(NULL);
 	}
-	static std::string url = "";
+	std::string url = "";
 	url = (std::string)(char *) data;
 	std::string tmp_name = randomFile(getFileExt(url), "/tmp", 8);
 
