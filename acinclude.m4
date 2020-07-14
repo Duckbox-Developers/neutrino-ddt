@@ -131,15 +131,15 @@ AC_REQUIRE([TUXBOX_APPS])
 
 if test "$TARGET" = "cdk"; then
 	datadir="\${prefix}/share"
-	sysconfdir="\/etc"
-	localstatedir="\/var"
+	sysconfdir="/etc"
+	localstatedir="/var"
 	libdir="\${prefix}/lib"
-	mntdir="\/mnt"
+	mntdir="/mnt"
 	targetdatadir="\${TARGET_PREFIX}/share"
-	targetsysconfdir="\/etc"
-	targetlocalstatedir="\/var"
+	targetsysconfdir="/etc"
+	targetlocalstatedir="/var"
 	targetlibdir="\${TARGET_PREFIX}/lib"
-	targetmntdir="\/mnt"
+	targetmntdir="/mnt"
 else
 	mntdir="/mnt" # hack
 fi
