@@ -476,8 +476,6 @@ int CMoviePlayerGui::exec(CMenuTarget * parent, const std::string & actionKey)
 	}
 
 	while(!isHTTP && !isUPNP && SelectFile()) {
-		CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
-		CVFD::getInstance()->showServicename(file_name.c_str());
 		if (timeshift != TSHIFT_MODE_OFF) {
 			CVFD::getInstance()->ShowIcon(FP_ICON_TIMESHIFT, true);
 			PlayFile();
@@ -492,7 +490,6 @@ int CMoviePlayerGui::exec(CMenuTarget * parent, const std::string & actionKey)
 		}
 		while (repeat_mode || filelist_it != filelist.end());
 	}
-	CVFD::getInstance()->showServicename(CVFD::getInstance()->getServicename());
 
 	bookmarkmanager->flush();
 
@@ -511,12 +508,26 @@ int CMoviePlayerGui::exec(CMenuTarget * parent, const std::string & actionKey)
 	return menu_ret;
 }
 
-void CMoviePlayerGui::updateLcd()
+void CMoviePlayerGui::updateLcd(bool display_playtime)
 {
 #if !HAVE_SPARK_HARDWARE
 	char tmp[20];
 	std::string lcd;
 	std::string name;
+
+	if (display_playtime)
+	{
+		int ss = position/1000;
+		int hh = ss/3600;
+		ss -= hh * 3600;
+		int mm = ss/60;
+		ss -= mm * 60;
+		lcd = to_string(hh/10) + to_string(hh%10) + ":" + to_string(mm/10) + to_string(mm%10) + ":" + to_string(ss/10) + to_string(ss%10);
+
+//		CVFD::getInstance()->setMode(LCD_MODE);
+		CVFD::getInstance()->showMenuText(0, lcd.c_str(), -1, true);
+		return;
+	}
 
 	if (isMovieBrowser && p_movie_info && !p_movie_info->epgTitle.empty() && p_movie_info->epgTitle.size() && strncmp(p_movie_info->epgTitle.c_str(), "not", 3))
 		name = p_movie_info->epgTitle;
@@ -1625,7 +1636,6 @@ void CMoviePlayerGui::PlayFileLoop(void)
 {
 	bool first_start = true;
 	bool update_lcd = true;
-	int ss,mm,hh;
 #if HAVE_COOL_HARDWARE
 	int eof = 0;
 	int eof2 = 0;
@@ -1644,9 +1654,9 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			nGLCD::lockChannel(g_Locale->getText(LOCALE_MOVIEPLAYER_HEAD), file_name.c_str(), file_prozent);
 		}
 #endif
-		if (update_lcd) {
+		if (update_lcd || g_settings.movieplayer_display_playtime) {
 			update_lcd = false;
-			updateLcd();
+			updateLcd(g_settings.movieplayer_display_playtime);
 		}
 		if (first_start) {
 			callInfoViewer();
@@ -1687,18 +1697,6 @@ void CMoviePlayerGui::PlayFileLoop(void)
 #else
 				CVFD::getInstance()->showPercentOver(file_prozent);
 #endif
-				if (g_info.hw_caps->display_xres >= 8)
-				{
-					ss = position/1000;
-					hh = ss/3600;
-					ss -= hh * 3600;
-					mm = ss/60;
-					ss -= mm * 60;
-					std::string Value = to_string(hh/10) + to_string(hh%10) + ":" + to_string(mm/10) + to_string(mm%10) + ":" + to_string(ss/10) + to_string(ss%10);
-					CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8);
-					CVFD::getInstance()->showMenuText(0, Value.c_str(), -1, true);
-				}
-
 				playback->GetSpeed(speed);
 				/* at BOF lib set speed 1, check it */
 				if ((playstate != CMoviePlayerGui::PLAY) && (speed == 1)) {
@@ -2045,10 +2043,10 @@ void CMoviePlayerGui::PlayFileLoop(void)
 		} else if (msg == (neutrino_msg_t) g_settings.mpkey_goto) {
 			bool cancel = true;
 			playback->GetPosition(position, duration);
-			ss = position/1000;
-			hh = ss/3600;
+			int ss = position/1000;
+			int hh = ss/3600;
 			ss -= hh * 3600;
-			mm = ss/60;
+			int mm = ss/60;
 			ss -= mm * 60;
 			std::string Value = to_string(hh/10) + to_string(hh%10) + ":" + to_string(mm/10) + to_string(mm%10) + ":" + to_string(ss/10) + to_string(ss%10);
 			CTimeInput jumpTime (LOCALE_MPKEY_GOTO, &Value, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, NULL, &cancel);
@@ -2064,6 +2062,8 @@ void CMoviePlayerGui::PlayFileLoop(void)
 		} else if (msg == CRCInput::RC_info) {
 			if (fromInfoviewer) {
 				disableOsdElements(NO_MUTE);
+				if (g_settings.movieplayer_display_playtime)
+					updateLcd(false); // force title
 #ifdef ENABLE_LUA
 				if (isLuaPlay && haveLuaInfoFunc) {
 					int xres = 0, yres = 0, aspectRatio = 0, framerate = -1;
@@ -2130,6 +2130,8 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			FileTimeOSD->kill();
 
 			StopSubtitles(true);
+			if (g_settings.movieplayer_display_playtime)
+				updateLcd(false); // force title
 			if (msg == CRCInput::RC_epg)
 				g_EventList->exec(CNeutrinoApp::getInstance()->channelList->getActiveChannel_ChannelID(), CNeutrinoApp::getInstance()->channelList->getActiveChannelName());
 			else if (msg == NeutrinoMessages::SHOW_EPG)
@@ -2178,6 +2180,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			//FIXME do nothing ?
 		} else if (msg == (neutrino_msg_t) CRCInput::RC_setup) {
 			CNeutrinoApp::getInstance()->handleMsg(NeutrinoMessages::SHOW_MAINMENU, 0);
+			update_lcd = true;
 		} else if (msg == CRCInput::RC_red || msg == CRCInput::RC_green || msg == CRCInput::RC_yellow || msg == CRCInput::RC_blue ) {
 			//maybe move FileTimeOSD->kill to Usermenu to simplify this call
 			bool restore = FileTimeOSD->IsVisible();
@@ -2288,6 +2291,8 @@ void CMoviePlayerGui::callInfoViewer(bool init_vzap_it)
 	}
 
 	if (timeshift != TSHIFT_MODE_OFF) {
+		if (g_settings.movieplayer_display_playtime)
+			updateLcd(false); // force title
 		g_InfoViewer->showTitle(CNeutrinoApp::getInstance()->channelList->getActiveChannel());
 		return;
 	}
@@ -2302,7 +2307,6 @@ void CMoviePlayerGui::callInfoViewer(bool init_vzap_it)
 			std::string key = trim(keys[i]);
 			if (movie_info.epgTitle.empty() && !strcasecmp("title", key.c_str())) {
 				movie_info.epgTitle = isUTF8(values[i]) ? values[i] : convertLatin1UTF8(values[i]);
-				CVFD::getInstance()->showServicename(movie_info.epgTitle.c_str());
 				continue;
 			}
 			if (movie_info.channelName.empty() && !strcasecmp("artist", key.c_str())) {
@@ -2343,20 +2347,17 @@ void CMoviePlayerGui::callInfoViewer(bool init_vzap_it)
 		if (channelName.empty())
 			channelName = pretty_name;
 
-		std::string channelTitle = mi->epgTitle;
-		if (channelTitle.empty())
-			channelTitle = pretty_name;
-
-		CVFD::getInstance()->ShowText(channelTitle.c_str());
-
+		if (g_settings.movieplayer_display_playtime)
+			updateLcd(false); // force title
 		g_InfoViewer->showMovieTitle(playstate, mi->epgId >>16, channelName, mi->epgTitle, mi->epgInfo1,
 			duration, position, repeat_mode, init_vzap_it ? 0 /*IV_MODE_DEFAULT*/ : 1 /*IV_MODE_VIRTUAL_ZAP*/);
 		unlink("/tmp/cover.jpg");
 		return;
 	}
 
+	if (g_settings.movieplayer_display_playtime)
+		updateLcd(false); // force title
 	/* not moviebrowser => use the filename as title */
-	CVFD::getInstance()->ShowText(pretty_name.c_str());
 	g_InfoViewer->showMovieTitle(playstate, 0, pretty_name, info_1, info_2, duration, position, repeat_mode);
 	unlink("/tmp/cover.jpg");
 }

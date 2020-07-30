@@ -1358,6 +1358,7 @@ menu.hint_misc_zapit Verwaltung der Start-Kanäle für den TV/Radio-Modus
 menu.hint_movie Wiedergabe von Filmen
 menu.hint_moviebrowser_fonts Ändern Sie die Schriftgrößen im Moviebrowser (Meine Aufnahmen)
 menu.hint_moviebrowser_setup Auswahl- und Anzeigeoptionen einstellen.
+menu.hint_movieplayer_display_playtime Zeigt während der Wiedergabe die Spielzeit anstatt des Fimtitels im VFD
 menu.hint_movieplayer_plugin Wählen Sie ein Plugin, das mit einer Schnellstart-Taste im Movieplayer-Modus gestartet wird
 menu.hint_net_broadcast Ändern Sie die Broadcast-Adresse.\nWenn Sie unsicher sind, verwenden Sie zuletzt .255
 menu.hint_net_dhcp Verwenden Sie einen DHCP-Server für die automatische Vergabe einer IP-Adresse im Netzwerk
@@ -2010,6 +2011,7 @@ movieplayer.bookmarkname Bookmark Name
 movieplayer.bookmarkname_hint1 Geben Sie den Namen für das neue Lesezeichen ein
 movieplayer.bookmarkname_hint2 
 movieplayer.chapters Kapitel
+movieplayer.display_playtime Zeige Spielzeit im VFD/LCD
 movieplayer.fileplayback_audio Multiformat-Audiowiedergabe
 movieplayer.fileplayback_video Multiformat-Videowiedergabe
 movieplayer.head Movieplayer
@@ -2718,7 +2720,7 @@ videomenu.pip_error PiP Startfehler
 videomenu.psi Farbeinstellungen
 videomenu.psi.brightness Helligkeit
 videomenu.psi.contrast Kontrast
-videomenu.psi.reset Standard-Einstellungen
+videomenu.psi.reset Standard
 videomenu.psi.saturation Sättigung
 videomenu.psi.step Videoregler-Schrittweite
 videomenu.psi.tint Farbton

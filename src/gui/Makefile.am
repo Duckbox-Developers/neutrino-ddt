@@ -129,7 +129,8 @@ endif
 
 if BOXTYPE_ARMBOX
 libneutrino_gui_a_SOURCES += \
-	3dsetup.cpp
+	3dsetup.cpp \
+	psisetup.cpp
 endif
 
 if BOXTYPE_MIPSBOX
