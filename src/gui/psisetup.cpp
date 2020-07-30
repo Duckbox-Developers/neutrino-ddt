@@ -83,9 +83,9 @@ static PSI_list
 	, { -1, LOCALE_VIDEOMENU_PSI_RESET, false, NULL, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-#define SLIDERWIDTH 200
-#define SLIDERHEIGHT 15
-#define LOCGAP 5
+#define SLIDERWIDTH CFrameBuffer::getInstance()->scale2Res(200)
+#define SLIDERHEIGHT CFrameBuffer::getInstance()->scale2Res(15)
+#define LOCGAP OFFSET_INNER_MID
 
 CPSISetup::CPSISetup (const neutrino_locale_t Name)
 {
@@ -118,15 +118,15 @@ int CPSISetup::exec (CMenuTarget * parent, const std::string &)
 	neutrino_msg_data_t data;
 
 	locWidth = 0;
-	for (int i = 0; i < PSI_RESET; i++)
+	for (int i = 0; i < PSI_SCALE_COUNT; i++)
 	{
-		int w = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth (g_Locale->getText(psi_list[i].loc)) + 3;	// UTF-8
+		int w = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth (g_Locale->getText(psi_list[i].loc)) + OFFSET_INNER_SMALL;
 		if (w > locWidth)
 			locWidth = w;
 	}
 	locHeight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight ();
 	if (locHeight < SLIDERHEIGHT)
-		locHeight = SLIDERHEIGHT + 2;
+		locHeight = SLIDERHEIGHT + OFFSET_INNER_SMALL;
 
 	sliderOffset = (locHeight - SLIDERHEIGHT) >> 1;
 
@@ -154,12 +154,9 @@ int CPSISetup::exec (CMenuTarget * parent, const std::string &)
 		psi_list[i].y = y + locHeight * i + i * 2;
 		psi_list[i].xBox = psi_list[i].x + SLIDERWIDTH + LOCGAP;
 		psi_list[i].yBox = psi_list[i].y;
-		psi_list[i].xLoc = psi_list[i].x + SLIDERWIDTH + LOCGAP + 2;
+		psi_list[i].xLoc = psi_list[i].x + SLIDERWIDTH + LOCGAP + OFFSET_INNER_SMALL;
 		psi_list[i].yLoc = psi_list[i].y + locHeight - 1;
 	}
-
-	psi_list[PSI_RESET].xLoc = x + 20;
-	psi_list[PSI_RESET].xBox = x;
 
 	for (int i = 0; i < PSI_RESET; i++)
 		psi_list[i].scale->reset ();
@@ -193,7 +190,7 @@ int CPSISetup::exec (CMenuTarget * parent, const std::string &)
 			direction = -1;
 			/* fall through */
 		case CRCInput::RC_down:
-			if (selected + direction > -1 && selected + direction < PSI_SCALE_COUNT)
+			if (selected + direction > -1 && selected + direction < PSI_RESET)
 			{
 				psi_list[selected].selected = false;
 				paintSlider (selected);
@@ -284,8 +281,8 @@ void CPSISetup::paintSlider (int i)
 	else
 	{
 		int fh = f->getHeight();
-		f->RenderString (psi_list[i].x + 2 + fh + fh/8, psi_list[i].yLoc, dx - 2 - fh, g_Locale->getText(psi_list[i].loc), fg_col[psi_list[i].selected]);
-		frameBuffer->paintIcon (NEUTRINO_ICON_BUTTON_RED, psi_list[i].x + 2, psi_list[i].yLoc - fh + fh/4, 0, (6 * fh)/8);
+		frameBuffer->paintIcon (NEUTRINO_ICON_BUTTON_RED, psi_list[i].x, psi_list[i].yLoc - fh + fh/4, 0, (6 * fh)/8);
+		f->RenderString (psi_list[i].xLoc, psi_list[i].yLoc, locWidth, g_Locale->getText(psi_list[i].loc), COL_MENUCONTENT_TEXT);
 	}
 	needsBlit = true;
 }

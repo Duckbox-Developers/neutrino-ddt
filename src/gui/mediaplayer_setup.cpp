@@ -38,6 +38,7 @@
 
 #include <global.h>
 #include <neutrino.h>
+#include <mymenu.h>
 
 #include <gui/widget/icons.h>
 #include <gui/widget/stringinput.h>
@@ -116,6 +117,13 @@ int CMediaPlayerSetup::showMediaPlayerSetup()
 	mf = new CMenuForwarder(LOCALE_MOVIEBROWSER_HEAD, true, NULL, &msetup, "show_menu", CRCInput::convertDigitToKey(shortcut++));
 	mf->setHint(NEUTRINO_ICON_HINT_MB, LOCALE_MENU_HINT_MOVIEBROWSER_SETUP);
 	mediaSetup->addItem(mf);
+
+	mediaSetup->addItem(GenericMenuSeparator);
+
+	CMenuOptionChooser *mc;
+	mc = new CMenuOptionChooser(LOCALE_MOVIEPLAYER_DISPLAY_PLAYTIME, &g_settings.movieplayer_display_playtime, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, g_info.hw_caps->display_xres >= 8);
+	mc->setHint("", LOCALE_MENU_HINT_MOVIEPLAYER_DISPLAY_PLAYTIME);
+	mediaSetup->addItem(mc);
 
 	int res = mediaSetup->exec (NULL, "");
 	selected = mediaSetup->getSelected();

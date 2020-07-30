@@ -198,15 +198,16 @@ struct SNeutrinoSettings
 	int analog_mode1;
 	int analog_mode2;
 	int video_43mode;
-
+#if HAVE_ARM_HARDWARE || HAVE_SH4_HARDWARE
 #if HAVE_SH4_HARDWARE
 	int hdmi_mode;
+	uint32_t video_mixer_color;
+#endif
 	int psi_contrast;
 	int psi_saturation;
 	int psi_brightness;
 	int psi_tint;
 	int psi_step;
-	uint32_t video_mixer_color;
 #endif
 
 #ifdef BOXMODEL_CS_HD2
@@ -917,6 +918,7 @@ struct SNeutrinoSettings
 
 	//movieplayer
 	int   movieplayer_repeat_on;
+	int movieplayer_display_playtime;
 	std::string tmdb_api_key;
 	int tmdb_enabled;
 

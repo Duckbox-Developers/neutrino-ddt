@@ -68,7 +68,7 @@
 #include "gui/3dsetup.h"
 #endif
 
-#if !HAVE_GENERIC_HARDWARE && !HAVE_ARM_HARDWARE
+#if !HAVE_GENERIC_HARDWARE
 #include "gui/psisetup.h"
 #endif
 
@@ -422,14 +422,17 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.hdmi_cec_view_on = configfile.getInt32("hdmi_cec_view_on", 0); // default off
 	g_settings.hdmi_cec_standby = configfile.getInt32("hdmi_cec_standby", 0); // default off
 	g_settings.hdmi_cec_volume = configfile.getInt32("hdmi_cec_volume", 0);
+
+#if HAVE_ARM_HARDWARE || HAVE_SH4_HARDWARE
 #if HAVE_SH4_HARDWARE
 	g_settings.hdmi_cec_broadcast = configfile.getInt32("hdmi_cec_broadcast", 0); // default off
+	g_settings.video_mixer_color = configfile.getInt32("video_mixer_color", 0xff000000);
+#endif
 	g_settings.psi_contrast = configfile.getInt32("video_psi_contrast", 128);
 	g_settings.psi_saturation = configfile.getInt32("video_psi_saturation", 128);
 	g_settings.psi_brightness = configfile.getInt32("video_psi_brightness", 128);
 	g_settings.psi_tint = configfile.getInt32("video_psi_tint", 128);
 	g_settings.psi_step = configfile.getInt32("video_psi_step", 2);
-	g_settings.video_mixer_color = configfile.getInt32("video_mixer_color", 0xff000000);
 #endif
 
 	g_settings.video_Format = configfile.getInt32("video_Format", DISPLAY_AR_16_9);
@@ -1054,6 +1057,11 @@ int CNeutrinoApp::loadSetup(const char * fname)
 
 	//Movie-Player
 	g_settings.movieplayer_repeat_on = configfile.getInt32("movieplayer_repeat_on", CMoviePlayerGui::REPEAT_OFF);
+#if BOXMODEL_BRE2ZE4K || BOXMODEL_H7 //lcd on BRE2ZE4K or H7 can only display Numbers
+	g_settings.movieplayer_display_playtime = configfile.getInt32("movieplayer_display_playtime", 1);
+#else
+	g_settings.movieplayer_display_playtime = configfile.getInt32("movieplayer_display_playtime", 0);
+#endif
 
 #ifdef TMDB_API_KEY
 	g_settings.tmdb_api_key = TMDB_API_KEY;
@@ -1345,14 +1353,17 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32( "hdmi_cec_view_on", g_settings.hdmi_cec_view_on );
 	configfile.setInt32( "hdmi_cec_standby", g_settings.hdmi_cec_standby );
 	configfile.setInt32( "hdmi_cec_volume", g_settings.hdmi_cec_volume );
+
+#if HAVE_ARM_HARDWARE || HAVE_SH4_HARDWARE
 #if HAVE_SH4_HARDWARE
 	configfile.setInt32( "hdmi_cec_broadcast", g_settings.hdmi_cec_broadcast );
+	configfile.setInt32( "video_mixer_color", g_settings.video_mixer_color );
+#endif
 	configfile.setInt32( "video_psi_contrast", g_settings.psi_contrast );
 	configfile.setInt32( "video_psi_saturation", g_settings.psi_saturation );
 	configfile.setInt32( "video_psi_brightness", g_settings.psi_brightness );
 	configfile.setInt32( "video_psi_tint", g_settings.psi_tint );
 	configfile.setInt32( "video_psi_step", g_settings.psi_step );
-	configfile.setInt32( "video_mixer_color", g_settings.video_mixer_color );
 #endif
 
 	if (!g_settings.hdmi_cec_volume)
@@ -1809,6 +1820,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 
 	//Movie-Player
 	configfile.setInt32( "movieplayer_repeat_on", g_settings.movieplayer_repeat_on );
+	configfile.setInt32( "movieplayer_display_playtime", g_settings.movieplayer_display_playtime );
 #ifndef TMDB_API_KEY
 	configfile.setString( "tmdb_api_key", g_settings.tmdb_api_key );
 #endif
@@ -2862,7 +2874,7 @@ TIMER_START();
 #if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	C3DSetup::getInstance()->exec(NULL, "zapped");
 #endif
-#if HAVE_SH4_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
 	CPSISetup::getInstance()->blankScreen(false);
 #endif
 	SHTDCNT::getInstance()->init();
