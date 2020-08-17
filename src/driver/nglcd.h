@@ -33,6 +33,9 @@
 #include <zapit/include/zapit/client/zapittypes.h>
 #include <neutrinoMessages.h>
 
+#define CLAMP(x)    ((x < 0) ? 0 : ((x > 255) ? 255 : x))
+#define SWAP(x,y)	{ x ^= y; y ^= x; x ^= y; }
+
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 #include <glcdgraphics/bitmap.h>
 #include <glcdgraphics/font.h>
@@ -60,7 +63,6 @@ class nGLCD
 		int percent_bar;
 		int percent_logo;
 		int percent_space;
-		GLCD::cBitmap * bitmap;
 		std::string Channel;
 		std::string Epg;
 		std::string stagingChannel;
@@ -114,6 +116,12 @@ class nGLCD
 		static void Lock();
 		static void Unlock();
 	public:
+		enum {
+			BMP = 0,
+			JPG = 1,
+			PNG = 2
+		};
+		GLCD::cBitmap * bitmap;
 		nGLCD();
 		~nGLCD();
 		void DeInit();
@@ -132,6 +140,7 @@ class nGLCD
 		static void SetBrightness(unsigned int b);
 		int GetConfigSize();
 		std::string GetConfigName(int);
+		bool dumpBuffer(fb_pixel_t *s, int format, const char *filename);
 		void UpdateBrightness();
 		int handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t data);
 };

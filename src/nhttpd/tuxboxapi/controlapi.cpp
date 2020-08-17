@@ -34,8 +34,9 @@
 #include <system/configure_network.h>
 #include <cs_api.h>
 #include <global.h>
-#include <neutrino.h>
 #include <gui/plugins.h>//for relodplugins
+#include <neutrino.h>
+#include <driver/display.h>
 #include <driver/screenshot.h>
 #include <gui/rc_lock.h>
 #include <rcsim.h>
@@ -194,6 +195,9 @@ const CControlAPI::TyCgiCall CControlAPI::yCgiCallList[]=
 	{"reloadchannels",	&CControlAPI::ReloadChannelsCGI,	""},
 #ifdef SCREENSHOT
 	{"screenshot",		&CControlAPI::ScreenshotCGI,		""},
+#endif
+#ifdef ENABLE_GRAPHLCD
+	{"glcdscreenshot",	&CControlAPI::GlcdScreenshotCGI,	""},
 #endif
 	// boxcontrol - devices
 	{"volume",		&CControlAPI::VolumeCGI,		"text/plain"},
@@ -2124,6 +2128,23 @@ void CControlAPI::ScreenshotCGI(CyhookHandler *hh)
 #endif
 #endif
 		delete screenshot;
+	}
+}
+#endif
+#ifdef ENABLE_GRAPHLCD
+void CControlAPI::GlcdScreenshotCGI(CyhookHandler *hh)
+{
+	std::string filename = "/tmp/glcdscreenshot.png";
+
+	if(!hh->ParamList["name"].empty())
+		filename = hh->ParamList["name"];
+
+	nGLCD *nglcd = nGLCD::getInstance();
+	if (nglcd) {
+		if (nglcd->dumpBuffer((uint32_t*)nglcd->bitmap->Data(), nGLCD::PNG, filename.c_str()))
+			hh->SendOk();
+		else
+			hh->SendError();
 	}
 }
 #endif
