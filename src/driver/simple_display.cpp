@@ -606,6 +606,7 @@ void CLCD::setBrightnessStandby(int bright)
 		g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] = bright;
 		setlcdparameter();
 	}
+}
 
 int CLCD::getBrightnessStandby()
 {
