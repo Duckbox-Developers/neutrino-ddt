@@ -1031,11 +1031,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 		g_settings.lcd_setting[i] = configfile.getInt32(lcd_setting[i].name, lcd_setting[i].default_value);
 	g_settings.lcd_setting_dim_time = configfile.getString("lcd_dim_time","0");
 	g_settings.lcd_setting_dim_brightness = configfile.getInt32("lcd_dim_brightness", 0);
-#if BOXMODEL_BRE2ZE4K || BOXMODEL_H7 //lcd on BRE2ZE4K or H7 can only display Numbers
-	g_settings.lcd_info_line = configfile.getInt32("lcd_info_line", 1);//default clock you can switch to channel number via menue
-#else
-	g_settings.lcd_info_line = configfile.getInt32("lcd_info_line", 0);//channel name or clock
-#endif
+	g_settings.lcd_info_line = configfile.getInt32("lcd_info_line", g_info.hw_caps->display_type == HW_DISPLAY_LED_NUM);
 #if HAVE_SH4_HARDWARE
 	g_settings.lcd_vfd_scroll = configfile.getInt32("lcd_vfd_scroll", 1);
 #endif
