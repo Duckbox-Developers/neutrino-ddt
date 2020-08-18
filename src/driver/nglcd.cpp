@@ -36,6 +36,10 @@
 #include <eitd/sectionsd.h>
 #include <math.h>
 
+#include "zlib.h"
+#include "png.h"
+#include "jpeglib.h"
+
 static const char * kDefaultConfigFile = "/etc/graphlcd.conf";
 static nGLCD *nglcd = NULL;
 
@@ -949,6 +953,141 @@ void nGLCD::SetBrightness(unsigned int b)
 {
 	if (nglcd)
 		nglcd->SetBrightness(b);
+}
+
+bool nGLCD::dumpBuffer(fb_pixel_t *s, int format, const char *filename)
+{
+	int output_bytes = 4;
+
+	int jpg_quality = 90;
+
+	int xres = bitmap->Width();
+	int yres = bitmap->Height();
+
+	unsigned char *output = (unsigned char *)s;
+
+	FILE *fd = fopen(filename, "wr");
+	if (!fd)
+		return false;
+
+	if(nglcd)
+		nglcd->Lock();
+
+	if (format == BMP) {
+		// write bmp
+		unsigned char hdr[14 + 40];
+		int i = 0;
+#define PUT32(x) hdr[i++] = ((x)&0xFF); hdr[i++] = (((x)>>8)&0xFF); hdr[i++] = (((x)>>16)&0xFF); hdr[i++] = (((x)>>24)&0xFF);
+#define PUT16(x) hdr[i++] = ((x)&0xFF); hdr[i++] = (((x)>>8)&0xFF);
+#define PUT8(x) hdr[i++] = ((x)&0xFF);
+		PUT8('B'); PUT8('M');
+		PUT32((((xres * yres) * 3 + 3) &~ 3) + 14 + 40);
+		PUT16(0); PUT16(0); PUT32(14 + 40);
+		PUT32(40); PUT32(xres); PUT32(yres);
+		PUT16(1);
+		PUT16(output_bytes*8); // bits
+		PUT32(0); PUT32(0); PUT32(0); PUT32(0); PUT32(0); PUT32(0);
+#undef PUT32
+#undef PUT16
+#undef PUT8
+		fwrite(hdr, 1, i, fd);
+
+		int y;
+		for (y=yres-1; y>=0 ; y-=1)
+			fwrite(output + (y * xres * output_bytes), xres * output_bytes, 1, fd);
+	 } else if (format == JPG) {
+		const int row_stride = xres * output_bytes;
+		// write jpg
+		if (output_bytes == 3) // swap bgr<->rgb
+		{
+			int y;
+			//#pragma omp parallel for shared(output)
+			for (y = 0; y < yres; y++)
+			{
+				int xres1 = y * xres * 3;
+				int xres2 = xres1 + 2;
+				int x;
+				for (x = 0; x < xres; x++)
+				{
+					int x2 = x * 3;
+					SWAP(output[x2 + xres1], output[x2 + xres2]);
+				}
+			}
+		}
+		else // swap bgr<->rgb and eliminate alpha channel jpgs are always saved with 24bit without alpha channel
+		{
+			int y;
+			//#pragma omp parallel for shared(output)
+			for (y = 0; y < yres; y++)
+			{
+				unsigned char *scanline = output + (y * row_stride);
+				int x;
+				for (x=0; x<xres; x++)
+				{
+					const int xs = x * 4;
+					const int xd = x * 3;
+					scanline[xd + 0] = scanline[xs + 2];
+					scanline[xd + 1] = scanline[xs + 1];
+					scanline[xd + 2] = scanline[xs + 0];
+				}
+			}
+		}
+
+		struct jpeg_compress_struct cinfo;
+		struct jpeg_error_mgr jerr;
+		JSAMPROW row_pointer[1];
+		cinfo.err = jpeg_std_error(&jerr);
+
+		jpeg_create_compress(&cinfo);
+		jpeg_stdio_dest(&cinfo, fd);
+		cinfo.image_width = xres;
+		cinfo.image_height = yres;
+		cinfo.input_components = 3;
+		cinfo.in_color_space = JCS_RGB;
+		cinfo.dct_method = JDCT_IFAST;
+		jpeg_set_defaults(&cinfo);
+		jpeg_set_quality(&cinfo,jpg_quality, TRUE);
+		jpeg_start_compress(&cinfo, TRUE);
+		while (cinfo.next_scanline < cinfo.image_height)
+		{
+			row_pointer[0] = & output[cinfo.next_scanline * row_stride];
+			(void) jpeg_write_scanlines(&cinfo, row_pointer, 1);
+		}
+		jpeg_finish_compress(&cinfo);
+		jpeg_destroy_compress(&cinfo);
+	 } else if (format == PNG) {
+		// write png
+		png_bytep *row_pointers;
+		png_structp png_ptr;
+		png_infop info_ptr;
+
+		png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, (png_voidp)NULL, (png_error_ptr)NULL, (png_error_ptr)NULL);
+		info_ptr = png_create_info_struct(png_ptr);
+		png_init_io(png_ptr, fd);
+
+		row_pointers=(png_bytep*)malloc(sizeof(png_bytep)*yres);
+
+		int y;
+		//#pragma omp parallel for shared(output)
+		for (y=0; y<yres; y++)
+			row_pointers[y]=output+(y*xres*output_bytes);
+
+		png_set_bgr(png_ptr);
+		png_set_IHDR(png_ptr, info_ptr, xres, yres, 8, ((output_bytes<4)?PNG_COLOR_TYPE_RGB:PNG_COLOR_TYPE_RGBA) , PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
+		png_set_compression_level(png_ptr, Z_BEST_SPEED);
+		png_write_info(png_ptr, info_ptr);
+		png_write_image(png_ptr, row_pointers);
+		png_write_end(png_ptr, info_ptr);
+		png_destroy_write_struct(&png_ptr, &info_ptr);
+
+		free(row_pointers);
+	}
+
+	if(nglcd)
+		nglcd->Unlock();
+
+	fclose(fd);
+	return true;
 }
 
 void nGLCD::Blit()
