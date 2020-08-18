@@ -1038,6 +1038,7 @@ const char * locale_real_names[] =
 	"lcd4l_support_on",
 	"lcd_info_line",
 	"lcd_info_line_channel",
+	"lcd_info_line_channel_no",
 	"lcd_info_line_clock",
 	"lcdcontroler.brightness",
 	"lcdcontroler.brightnessdeepstandby",

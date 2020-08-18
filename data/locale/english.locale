@@ -1011,6 +1011,7 @@ lcd4l_support_off off
 lcd4l_support_on on
 lcd_info_line show in infoline
 lcd_info_line_channel Channelname
+lcd_info_line_channel_no Channelnumber
 lcd_info_line_clock clock
 lcdcontroler.brightness Normal mode
 lcdcontroler.brightnessdeepstandby Deep standby
@@ -1358,7 +1359,7 @@ menu.hint_misc_zapit Initial TV/Radio channels
 menu.hint_movie Play movies
 menu.hint_moviebrowser_fonts Change moviebrowser (My recordings) font sizes
 menu.hint_moviebrowser_setup Set selection and display options.
-menu.hint_movieplayer_display_playtime While playback show playtime instead of movietitle on VFD
+menu.hint_movieplayer_display_playtime While playback show playtime instead of movietitle on VFD/LCD
 menu.hint_movieplayer_plugin Choose a plugin that's executed with the one touch key in movieplayer mode
 menu.hint_net_broadcast Enter broadcast address\nif unsure, use IP address with last .255
 menu.hint_net_dhcp Use DHCP server to auto-configure
@@ -1621,11 +1622,11 @@ menu.hint_vfd_brightnessdeepstandby Brightness in deep-standby mode
 menu.hint_vfd_brightnessdim Auto-dim brightness
 menu.hint_vfd_brightnessstandby Brightness in soft-standby mode
 menu.hint_vfd_defaults Restore default brightness values
-menu.hint_vfd_dimtime Auto-dim time, in seconds
-menu.hint_vfd_infoline Choose what to display in main VFD line
+menu.hint_vfd_dimtime Auto-dim time in seconds for normal mode
+menu.hint_vfd_infoline Choose what to display in main VFD/LCD line
 menu.hint_vfd_notify_rclock Displays a notification when a key is pressed while remote control is locked
 menu.hint_vfd_scroll Enable or disable text scrolling on VFD
-menu.hint_vfd_statusline Choose what to display in short\nVFD status line
+menu.hint_vfd_statusline Choose what to display in short\nVFD/LCD status line
 menu.hint_video Video output, resolution, format\nAspect ratio, fast mode switch options
 menu.hint_video_43mode Display mode for 4:3 content\non 16:9 TV
 menu.hint_video_analog_mode Select analog output mode\nfor SCART and RCA connectors
