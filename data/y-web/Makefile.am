@@ -53,7 +53,6 @@ install_DATA =	channels.js \
 		Y_Settings_automount.yhtm \
 		Y_Settings_Backup.yhtm \
 		Y_Settings_buttons.yhtm \
-		Y_Settings_glcd.yhtm \
 		Y_Settings_lcd.yhtm \
 		Y_Settings_Live.yhtm \
 		Y_Settings_Menue.yhtm \
