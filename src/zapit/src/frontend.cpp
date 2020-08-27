@@ -2250,7 +2250,7 @@ void CFrontend::setDiseqc(int sat_no, const uint8_t pol, const uint32_t frequenc
 #endif
 		}
 
-		if (config.diseqcType >= DISEQC_1_0) {	/* DISEQC 1.0 or 1.1 */
+		if (config.diseqcType == DISEQC_1_0) {	/* DISEQC 1.0 */
 			usleep(delay * 1000);
 			//cmd.msg[0] |= 0x01;	/* repeated transmission */
 			cmd.msg[2] = 0x38;	/* port group = commited switches */
