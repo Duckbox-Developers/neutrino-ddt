@@ -111,6 +111,7 @@ libneutrino_gui_a_SOURCES = \
 	vfd_setup.cpp \
 	videosettings.cpp \
 	volumebar.cpp \
+	webradio_setup.cpp \
 	webtv_setup.cpp \
 	xmltv_setup.cpp \
 	zapit_setup.cpp

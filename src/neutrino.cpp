@@ -761,6 +761,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.timeshiftdir = configfile.getString( "timeshiftdir", "" );
 	g_settings.downloadcache_dir = configfile.getString( "downloadcache_dir", g_settings.network_nfs_recordingdir.c_str());
 	g_settings.last_webtv_dir = configfile.getString( "last_webtv_dir", CONFIGDIR);
+	g_settings.last_webradio_dir = configfile.getString( "last_webradio_dir", CONFIGDIR);
 
 	g_settings.timeshift_temp = configfile.getInt32( "timeshift_temp", 0 );
 	g_settings.timeshift_auto = configfile.getInt32( "timeshift_auto", 0 );
@@ -850,8 +851,10 @@ int CNeutrinoApp::loadSetup(const char * fname)
 		}
 	} else {
 		std::string webtv_xml = configfile.getString("webtv_xml", WEBTV_XML);
-		if (file_size(webtv_xml.c_str()))
+		if (file_size(webtv_xml.c_str())) {
 			g_settings.webtv_xml.push_back(webtv_xml);
+			configfile.deleteKey("webtv_xml");
+		}
 	}
 
 	g_settings.webradio_xml.clear();
@@ -861,9 +864,22 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	   because of driver- or firmware-issues or so. Not sure.
 	   So let's avoid loading webradio_xml to get an empty webradio bouquet.
 	*/
-	std::string webradio_xml = configfile.getString("webradio_xml", WEBRADIO_XML);
-	if (file_size(webradio_xml.c_str()))
-		g_settings.webradio_xml.push_back(webradio_xml);
+	int webradio_count = configfile.getInt32("webradio_xml_count", 0);
+	if (webradio_count) {
+		for (int i = 0; i < webradio_count; i++) {
+			std::string k = "webradio_xml_" + to_string(i);
+			std::string webradio_xml = configfile.getString(k, "");
+			if (webradio_xml.empty())
+				continue;
+			g_settings.webradio_xml.push_back(webradio_xml);
+		}
+	} else {
+		std::string webradio_xml = configfile.getString("webradio_xml", WEBRADIO_XML);
+		if (file_size(webradio_xml.c_str())) {
+			g_settings.webradio_xml.push_back(webradio_xml);
+			configfile.deleteKey("webradio_xml");
+		}
+	}
 #endif
 
 	g_settings.xmltv_xml.clear();
@@ -1633,6 +1649,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setString( "timeshiftdir", g_settings.timeshiftdir);
 	configfile.setString( "downloadcache_dir", g_settings.downloadcache_dir);
 	configfile.setString( "last_webtv_dir", g_settings.last_webtv_dir);
+	configfile.setString( "last_webradio_dir", g_settings.last_webradio_dir);
 	configfile.setBool  ("filesystem_is_utf8"                 , g_settings.filesystem_is_utf8             );
 
 	//recording (server + vcr)

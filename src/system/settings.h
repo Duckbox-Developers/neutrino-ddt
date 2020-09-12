@@ -511,6 +511,7 @@ struct SNeutrinoSettings
 	std::string timeshiftdir;
 	std::string downloadcache_dir;
 	std::string last_webtv_dir;
+	std::string last_webradio_dir;
 
 	//recording
 	int  recording_type;

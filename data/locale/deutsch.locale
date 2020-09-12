@@ -276,6 +276,7 @@ channellist.keep_numbers Dauerhafte Kanalnummern
 channellist.make_hdlist Erzeuge Bouquets mit HD- und UHD-Kanälen
 channellist.make_newlist Erzeuge Bouquet mit neuen Kanälen
 channellist.make_removedlist Erzeuge Bouquet mit gelöschten Kanälen
+channellist.make_webradiolist Erzeuge Bouquet mit WebRadio-Kanälen
 channellist.make_webtvlist Erzeuge Bouquet mit WebTV-Kanälen
 channellist.movieplayer_zap Umschalten während der Film-Wiedergabe nicht möglich
 channellist.new_zap_mode Quickzap in Liste
@@ -1335,6 +1336,7 @@ menu.hint_lua Plugins ausführen
 menu.hint_make_hdlist Bei aktiver Option werden Bouquets namens 'HD' und 'UHD' erzeugt, in denen alle HD- bzw. UHD-Sender zusammengefasst sind
 menu.hint_make_newlist Nach einer Kanalsuche wird ein Bouquet namens 'neue Kanäle' erzeugt
 menu.hint_make_removedlist Nach einer Kanalsuche wird ein Bouquet namens 'gelöschte Kanäle' erzeugt
+menu.hint_make_webradiolist Bei aktiver Option wird ein Bouquet namens 'WebRadio' erzeugt, in dem alle WebRadio-Sender zusammengefasst sind
 menu.hint_make_webtvlist Bei aktiver Option wird ein Bouquet namens 'WebTV' erzeugt, in dem alle WebTV-Sender zusammengefasst sind
 menu.hint_manage_settings Sichern, Wiederherstellen und Auslieferungszustand wiederherstellen
 menu.hint_mb Ihre Aufnahmen
@@ -1655,6 +1657,7 @@ menu.hint_volume Wählen Sie die Anzeigeoptionen für die Lautstärke
 menu.hint_volume_digits Zifferndarstellung der Lautstärkeanzeige ein- oder ausschalten
 menu.hint_volume_pos Wählen Sie die Position der Lautstärkeanzeige aus
 menu.hint_volume_size Wählen Sie die Höhe der Lautstärkeanzeige
+menu.hint_webradio_setup Hier konfigurierte WebRadio-Kanäle finden Sie in der Kanalverwaltung.
 menu.hint_webtv_setup Hier konfigurierte WebTV-Kanäle finden Sie in der Kanalverwaltung.
 menu.hint_window_size Kanalliste, EPG-Infos und einige andere Fenster werden mit diesem Faktor skaliert
 menu.hint_xmltv_setup Hier konfigurieren Sie XMLTV-Dateien, die EPG-Daten enthalten
@@ -2742,6 +2745,11 @@ videomenu.zappingmode_mute Schwarzes Bild
 videomenu.zappingmode_hold Standbild
 videomenu.zappingmode_mutetilllock Schwarzes Bild bis lock
 videomenu.zappingmode_holdtilllock Standbild bis lock
+webradio.head WebRadio
+webradio.xml WebRadio-Dateien
+webradio.xml.add Hinzufügen
+webradio.xml.del Entfernen
+webradio.xml.reload Neu laden
 webtv.head WebTV
 webtv.xml WebTV-Dateien
 webtv.xml.add Hinzufügen

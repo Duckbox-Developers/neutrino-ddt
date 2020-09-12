@@ -276,6 +276,7 @@ channellist.keep_numbers Persistent channel numbers
 channellist.make_hdlist Create lists of HD and UHD channels
 channellist.make_newlist Create list of new channels
 channellist.make_removedlist Create list of removed channels
+channellist.make_webradiolist Create list of WebRadio channels
 channellist.make_webtvlist Create list of WebTV channels
 channellist.movieplayer_zap Zap not possible while movie playback
 channellist.new_zap_mode Quickzap in list
@@ -1335,6 +1336,7 @@ menu.hint_lua Run Lua Plugins
 menu.hint_make_hdlist Auto-create HD and UHD channel lists based on\nchannel type and name
 menu.hint_make_newlist Create list of recently added channels
 menu.hint_make_removedlist Create list of recently removed channels
+menu.hint_make_webradiolist Auto-create WebRadio channel list based on\nchannel type and name
 menu.hint_make_webtvlist Auto-create WebTV channel list based on\nchannel type and name
 menu.hint_manage_settings Backup, restore, revert to defaults\nFactory box reset
 menu.hint_mb Your recordings
@@ -1655,6 +1657,7 @@ menu.hint_volume Configure Volume GUI options
 menu.hint_volume_digits Numeric display of the volumebar on/off
 menu.hint_volume_pos Select volume indicator position
 menu.hint_volume_size Select volume indicator height
+menu.hint_webradio_setup WebRadio channels configured here will be available in the standard channel lists.
 menu.hint_webtv_setup WebTV channels configured here will be available in the standard channel lists.
 menu.hint_window_size Channellist, EPG-infos and some other windows are scaled by this factor
 menu.hint_xmltv_setup Configure XMLTV files with EPG data to describe TV listings
@@ -2742,6 +2745,11 @@ videomenu.zappingmode_mute Black screen
 videomenu.zappingmode_hold Hold screen
 videomenu.zappingmode_mutetilllock Black screen till locked
 videomenu.zappingmode_holdtilllock Hold screen till locked
+webradio.head WebRadio
+webradio.xml WebRadio Files
+webradio.xml.add Add
+webradio.xml.del Remove
+webradio.xml.reload Reload
 webtv.head WebTV
 webtv.xml WebTV files
 webtv.xml.add Add
