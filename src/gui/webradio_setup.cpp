@@ -1,7 +1,8 @@
 /*
-	WebTV Setup
+	WebRadio Setup
 
 	(C) 2012-2013 by martii
+	Mod to WebRadio 2017 TangoCash
 
 
 	License: GPL
@@ -34,9 +35,9 @@
 #include <gui/widget/keyboard_input.h>
 #include <zapit/zapit.h>
 #include <neutrino_menue.h>
-#include "webtv_setup.h"
+#include "webradio_setup.h"
 
-CWebTVSetup::CWebTVSetup()
+CWebRadioSetup::CWebRadioSetup()
 {
 	width = 55;
 	selected = -1;
@@ -44,16 +45,15 @@ CWebTVSetup::CWebTVSetup()
 	changed = false;
 }
 
-#define CWebTVSetupFooterButtonCount 4
-static const struct button_label CWebTVSetupFooterButtons[CWebTVSetupFooterButtonCount] =
-{
-	{ NEUTRINO_ICON_BUTTON_RED, LOCALE_WEBTV_XML_DEL },
-	{ NEUTRINO_ICON_BUTTON_GREEN, LOCALE_WEBTV_XML_ADD },
+#define CWebRadioSetupFooterButtonCount 4
+static const struct button_label CWebRadioSetupFooterButtons[CWebRadioSetupFooterButtonCount] = {
+	{ NEUTRINO_ICON_BUTTON_RED, LOCALE_WEBRADIO_XML_DEL },
+	{ NEUTRINO_ICON_BUTTON_GREEN, LOCALE_WEBRADIO_XML_ADD },
 	{ NEUTRINO_ICON_BUTTON_YELLOW, LOCALE_WEBTV_XML_ENTER },
-	{ NEUTRINO_ICON_BUTTON_BLUE, LOCALE_WEBTV_XML_RELOAD }
+	{ NEUTRINO_ICON_BUTTON_BLUE, LOCALE_WEBRADIO_XML_RELOAD }
 };
 
-int CWebTVSetup::exec(CMenuTarget* parent, const std::string & actionKey)
+int CWebRadioSetup::exec(CMenuTarget* parent, const std::string & actionKey)
 {
 	int res = menu_return::RETURN_REPAINT;
 
@@ -102,7 +102,7 @@ int CWebTVSetup::exec(CMenuTarget* parent, const std::string & actionKey)
 			if (fileBrowser.exec(dirname.c_str()))
 			{
 				f->setName(fileBrowser.getSelectedFile()->Name);
-				g_settings.last_webtv_dir = dirname;
+				g_settings.last_webradio_dir = dirname;
 				changed = true;
 			}
 		}
@@ -116,18 +116,18 @@ int CWebTVSetup::exec(CMenuTarget* parent, const std::string & actionKey)
 		fileFilter.addFilter("tv");
 		fileFilter.addFilter("m3u");
 		fileBrowser.Filter = &fileFilter;
-		if (fileBrowser.exec(g_settings.last_webtv_dir.c_str()) == true)
+		if (fileBrowser.exec(g_settings.last_webradio_dir.c_str()) == true)
 		{
 			std::string s = fileBrowser.getSelectedFile()->Name;
 			m->addItem(new CMenuForwarder(s, true, NULL, this, "c"));
-			g_settings.last_webtv_dir = s.substr(0, s.rfind('/')).c_str();
+			g_settings.last_webradio_dir = s.substr(0, s.rfind('/')).c_str();
 			changed = true;
 		}
 		return res;
 	}
 	if (actionKey == "e" /* enter */)
 	{
-		std::string tpl = "http://xxx.xxx.xxx.xxx/control/xmltv.m3u?mode=tv";
+		std::string tpl = "http://xxx.xxx.xxx.xxx/control/xmltv.m3u?mode=radio";
 		std::string entry = tpl;
 
 		CKeyboardInput *e = new CKeyboardInput(LOCALE_WEBTV_XML_ENTER, &entry, 52);
@@ -161,37 +161,33 @@ int CWebTVSetup::exec(CMenuTarget* parent, const std::string & actionKey)
 	return res;
 }
 
-int CWebTVSetup::Show()
+int CWebRadioSetup::Show()
 {
 	item_offset = 0;
 
-	m = new CMenuWidget(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_MOVIEPLAYER, width, MN_WIDGET_ID_WEBTVSETUP);
+	m = new CMenuWidget(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_AUDIOPLAY, width, MN_WIDGET_ID_WEBTVSETUP);
 	m->addKey(CRCInput::RC_red, this, "d");
 	m->addKey(CRCInput::RC_green, this, "a");
 	m->addKey(CRCInput::RC_yellow, this, "e");
 	m->addKey(CRCInput::RC_blue, this, "r");
 
-	m->addIntroItems(LOCALE_WEBTV_HEAD, LOCALE_LIVESTREAM_HEAD);
+	m->addIntroItems(LOCALE_WEBRADIO_HEAD, LOCALE_LIVESTREAM_HEAD);
 
-	bool _mode_webtv = (CNeutrinoApp::getInstance()->getMode() == NeutrinoModes::mode_webtv) &&
-	                   (!CZapit::getInstance()->GetCurrentChannel()->getScriptName().empty());
+	bool _mode_webradio = (CNeutrinoApp::getInstance()->getMode() == NeutrinoModes::mode_webradio) &&
+				(!CZapit::getInstance()->GetCurrentChannel()->getScriptName().empty());
 
 	CMenuForwarder *mf;
 	int shortcut = 1;
-	mf = new CMenuForwarder(LOCALE_LIVESTREAM_SCRIPTPATH, !_mode_webtv, g_settings.livestreamScriptPath, this, "script_path", CRCInput::convertDigitToKey(shortcut++));
+	mf = new CMenuForwarder(LOCALE_LIVESTREAM_SCRIPTPATH, !_mode_webradio, g_settings.livestreamScriptPath, this, "script_path", CRCInput::convertDigitToKey(shortcut++));
 	m->addItem(mf);
-#if 0
-	mf = new CMenuForwarder(LOCALE_LIVESTREAM_RESOLUTION, _mode_webtv, NULL, new CWebTVResolution(), NULL, CRCInput::convertDigitToKey(shortcut++));
-	m->addItem(mf);
-#endif
 
-	m->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_WEBTV_XML));
+	m->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_WEBRADIO_XML));
 
 	item_offset = m->getItemsCount();
-	for (std::list<std::string>::iterator it = g_settings.webtv_xml.begin(); it != g_settings.webtv_xml.end(); ++it)
+	for (std::list<std::string>::iterator it = g_settings.webradio_xml.begin(); it != g_settings.webradio_xml.end(); ++it)
 		m->addItem(new CMenuForwarder(*it, true, NULL, this, "c"));
 
-	m->setFooter(CWebTVSetupFooterButtons, CWebTVSetupFooterButtonCount); //Why we need here an extra buttonbar?
+	m->setFooter(CWebRadioSetupFooterButtons, CWebRadioSetupFooterButtonCount); //Why we need here an extra buttonbar?
 
 	int res = m->exec(NULL, "");
 	m->hide();
@@ -199,12 +195,12 @@ int CWebTVSetup::Show()
 	{
 		CHintBox hint(LOCALE_MESSAGEBOX_INFO, LOCALE_SERVICEMENU_RELOAD_HINT);
 		hint.paint();
-		g_settings.webtv_xml.clear();
+		g_settings.webradio_xml.clear();
 		for (int i = item_offset; i < m->getItemsCount(); i++)
 		{
 			CMenuItem *item = m->getItem(i);
 			CMenuForwarder *f = static_cast<CMenuForwarder*>(item);
-			g_settings.webtv_xml.push_back(f->getName());
+			g_settings.webradio_xml.push_back(f->getName());
 		}
 		g_Zapit->reinitChannels();
 		changed = false;
@@ -214,71 +210,4 @@ int CWebTVSetup::Show()
 	delete m;
 
 	return res;
-}
-
-/* ## CWebTVResolution ############################################# */
-
-CWebTVResolution::CWebTVResolution()
-{
-	width = 40;
-}
-
-const CMenuOptionChooser::keyval_ext LIVESTREAM_RESOLUTION_OPTIONS[] =
-{
-	{ 1920, NONEXISTANT_LOCALE, "1920x1080" },
-	{ 1280, NONEXISTANT_LOCALE, "1280x720"  },
-	{ 854,  NONEXISTANT_LOCALE, "854x480"   },
-	{ 640,  NONEXISTANT_LOCALE, "640x360"   },
-	{ 426,  NONEXISTANT_LOCALE, "426x240"   },
-	{ 128,  NONEXISTANT_LOCALE, "128x72"    }
-};
-#define LIVESTREAM_RESOLUTION_OPTION_COUNT (sizeof(LIVESTREAM_RESOLUTION_OPTIONS)/sizeof(CMenuOptionChooser::keyval_ext))
-
-int CWebTVResolution::exec(CMenuTarget* parent, const std::string& /*actionKey*/)
-{
-	if (parent)
-		parent->hide();
-
-	return Show();
-}
-
-int CWebTVResolution::Show()
-{
-	m = new CMenuWidget(LOCALE_WEBTV_HEAD, NEUTRINO_ICON_MOVIEPLAYER, width, MN_WIDGET_ID_LIVESTREAM_RESOLUTION);
-	m->addIntroItems(LOCALE_LIVESTREAM_HEAD);
-
-	CMenuOptionChooser *mc;
-	mc = new CMenuOptionChooser(LOCALE_LIVESTREAM_RESOLUTION, &g_settings.livestreamResolution,
-	                            LIVESTREAM_RESOLUTION_OPTIONS, LIVESTREAM_RESOLUTION_OPTION_COUNT,
-	                            true, NULL, CRCInput::RC_nokey, NULL, true);
-	m->addItem(mc);
-
-	int oldRes = g_settings.livestreamResolution;
-	int res = m->exec(NULL, "");
-	m->hide();
-	delete m;
-
-	bool _mode_webtv = (CNeutrinoApp::getInstance()->getMode() == NeutrinoModes::mode_webtv) &&
-	                   (!CZapit::getInstance()->GetCurrentChannel()->getScriptName().empty());
-	if (oldRes != g_settings.livestreamResolution && _mode_webtv)
-	{
-		CZapitChannel * cc = CZapit::getInstance()->GetCurrentChannel();
-		if (cc && IS_WEBCHAN(cc->getChannelID()))
-		{
-			CMoviePlayerGui::getInstance().stopPlayBack();
-			CMoviePlayerGui::getInstance().PlayBackgroundStart(cc->getUrl(), cc->getName(), cc->getChannelID(), cc->getScriptName());
-		}
-	}
-
-	return res;
-}
-
-const char *CWebTVResolution::getResolutionValue()
-{
-	for (unsigned int i = 0; i < LIVESTREAM_RESOLUTION_OPTION_COUNT; ++i)
-	{
-		if (g_settings.livestreamResolution == LIVESTREAM_RESOLUTION_OPTIONS[i].key)
-			return LIVESTREAM_RESOLUTION_OPTIONS[i].valname;
-	}
-	return "";
 }

@@ -586,12 +586,17 @@ int CMiscMenue::showMiscSettingsMenuChanlist()
 	ms_chanlist->addIntroItems(LOCALE_MISCSETTINGS_CHANNELLIST);
 
 	bool make_hd_list = g_settings.make_hd_list;
+	bool make_webradio_list = g_settings.make_webradio_list;
 	bool make_webtv_list = g_settings.make_webtv_list;
 	bool show_empty_favorites = g_settings.show_empty_favorites;
 
 	CMenuOptionChooser * mc;
 	mc = new CMenuOptionChooser(LOCALE_CHANNELLIST_MAKE_HDLIST ,     &g_settings.make_hd_list            , OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
 	mc->setHint("", LOCALE_MENU_HINT_MAKE_HDLIST);
+	ms_chanlist->addItem(mc);
+
+	mc = new CMenuOptionChooser(LOCALE_CHANNELLIST_MAKE_WEBRADIOLIST ,  &g_settings.make_webradio_list            , OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
+	mc->setHint("", LOCALE_MENU_HINT_MAKE_WEBRADIOLIST);
 	ms_chanlist->addItem(mc);
 
 	mc = new CMenuOptionChooser(LOCALE_CHANNELLIST_MAKE_WEBTVLIST ,  &g_settings.make_webtv_list            , OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
