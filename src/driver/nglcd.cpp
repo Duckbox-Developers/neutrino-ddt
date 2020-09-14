@@ -223,6 +223,7 @@ void nGLCD::Exec() {
 				GLCD::cFont font_tmp;
 
 				int fw = font_epg.Width(Epg);
+				fw = (fw == 0) ? 1: fw;
 				font_tmp.LoadFT2(g_settings.glcd_font, "UTF-8", fontsize_epg * (bitmap->Width() - 4) / fw);
 				fw = font_tmp.Width(Epg);
 
