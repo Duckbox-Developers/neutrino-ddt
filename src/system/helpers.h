@@ -124,6 +124,7 @@ class CFileHelpers
 uint32_t GetWidth4FB_HW_ACC(const uint32_t _x, const uint32_t _w, const bool max=true);
 #endif
 
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 #if __cplusplus < 201103L
 std::string to_string(int);
 std::string to_string(unsigned int);
@@ -135,6 +136,14 @@ std::string to_string(char);
 #else
 /* hack... */
 #define to_string(x) std::to_string(x)
+#endif
+#else
+template<class C> std::string to_string(C i)
+{
+	std::stringstream s;
+	s << i;
+	return s.str();
+}
 #endif
 
 std::string itoa(int value, int base);
