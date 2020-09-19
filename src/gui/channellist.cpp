@@ -261,7 +261,7 @@ CZapitChannel* CChannelList::getChannel(int number)
 
 CZapitChannel* CChannelList::getChannel(t_channel_id channel_id)
 {
-	if(channel_id != -1 && !(*chanlist).empty()){
+	if(channel_id != std::numeric_limits<t_channel_id>::max() && !(*chanlist).empty()){
 		for (uint32_t i=0; i< (*chanlist).size(); i++) {
 			if ((*chanlist)[i]->getChannelID() == channel_id)
 				return (*chanlist)[i];
