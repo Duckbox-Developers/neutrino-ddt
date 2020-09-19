@@ -2,7 +2,7 @@ if BOXMODEL_CS_HD2
 SUBDIRS = mtdutils
 endif
 
-AM_CXXFLAGS = -fno-rtti -fno-exceptions -D__STDC_FORMAT_MACROS
+AM_CXXFLAGS = -fno-rtti -fno-exceptions -D__STDC_FORMAT_MACROS -std=gnu++0x
 
 AM_CPPFLAGS = \
 	-I$(top_builddir) \
