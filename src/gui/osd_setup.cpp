@@ -1266,6 +1266,12 @@ void COsdSetup::showOsdChannellogosSetup(CMenuWidget *menu_channellogos)
 	mf = new CMenuForwarder(LOCALE_MISCSETTINGS_INFOBAR_LOGO_HDD_DIR, true, g_settings.logo_hdd_dir, this, "logo_dir");
 	mf->setHint("", LOCALE_MENU_HINT_INFOBAR_LOGO_DIR);
 	menu_channellogos->addItem(mf);
+
+	// default logo
+	mc = new CMenuOptionChooser(LOCALE_MISCSETTINGS_INFOBAR_DEFAULT_LOGO, &g_settings.default_logo, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this);
+	mc->setHint("", LOCALE_MENU_HINT_INFOBAR_DEFAULT_LOGO);
+	menu_channellogos->addItem(mc);
+
 #if 0
 	menu_channellogos->addItem(GenericMenuSeparatorLine);
 

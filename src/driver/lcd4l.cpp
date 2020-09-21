@@ -52,6 +52,9 @@
 #include <eitd/sectionsd.h>
 #include <hardware/video.h>
 
+#include <driver/pictureviewer/pictureviewer.h>
+extern CPictureViewer * g_PicViewer;
+
 #include "lcd4l.h"
 
 extern CRemoteControl *g_RemoteControl;
@@ -1022,6 +1025,8 @@ std::string CLCD4l::hexStr(unsigned char* data)
 
 bool CLCD4l::GetLogoName(uint64_t channel_id, std::string channel_name, std::string &logo)
 {
+	return g_PicViewer->GetLogoName(channel_id, channel_name, logo);
+#if 0
 	int h, i, j;
 	char str_channel_id[16];
 	char *upper_name, *lower_name, *p;
@@ -1061,4 +1066,5 @@ bool CLCD4l::GetLogoName(uint64_t channel_id, std::string channel_name, std::str
 	}
 
 	return false;
+#endif
 }

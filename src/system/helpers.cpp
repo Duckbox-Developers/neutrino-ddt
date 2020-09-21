@@ -1725,4 +1725,17 @@ bool isDigitWord(std::string str)
 	return true;
 }
 
-//
+std::string GetSpecialName(std::string NormalName)
+{
+	NormalName = str_replace(" ", "_", NormalName);
+	NormalName = str_replace(",", "-", NormalName);
+	NormalName = str_replace(";", "-", NormalName);
+	NormalName = str_replace(":", "-", NormalName);
+	NormalName = str_replace("*", "-", NormalName);
+	NormalName = str_replace("'", "-", NormalName);
+	NormalName = str_replace("?", "-", NormalName);
+	NormalName = str_replace("|", "-", NormalName);
+	NormalName = str_replace("/", "-", NormalName);
+	NormalName = str_replace("\\", "-", NormalName);
+	return NormalName;
+}

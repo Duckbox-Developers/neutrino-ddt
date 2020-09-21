@@ -939,7 +939,9 @@ bool nGLCD::showImage(uint64_t cid, std::string cname, uint32_t dx, uint32_t dy,
 	int sw, sh;
 
 	if (cid != 1 && g_PicViewer->GetLogoName(cid, cname, logo, &sw, &sh)) {
-		return showImage(logo, (uint32_t) sw, (uint32_t) sh, dx, dy, dw, dh, transp, maximize);
+		std::string logo_tmp = g_settings.logo_hdd_dir + "/picon_default.png";
+		if (logo != logo_tmp)
+			return showImage(logo, (uint32_t) sw, (uint32_t) sh, dx, dy, dw, dh, transp, maximize);
 	}
 	return false;
 }
