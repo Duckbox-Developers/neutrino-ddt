@@ -355,6 +355,7 @@ data/icons/filetypes/Makefile
 data/icons/headers/Makefile
 data/icons/hints/Makefile
 data/icons/locale/Makefile
+data/icons/logo/Makefile
 data/icons/movieplayer/Makefile
 data/icons/radar/Makefile
 data/icons/slider/Makefile
