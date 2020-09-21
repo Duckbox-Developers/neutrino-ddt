@@ -593,8 +593,13 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 			(u_int) cc->getSatellitePosition());
 		strLogoE2[1] = std::string(fname);
 	}
+
+	std::string SpecialChannelName = GetSpecialName(ChannelName);
+
+//	printf("SpecialChannelName: %s\n", SpecialChannelName.c_str());
+
 	/* first the channel-id, then the channelname */
-	std::string strLogoName[2] = { (std::string)strChanId, ChannelName };
+	std::string strLogoName[2] = { (std::string)strChanId, SpecialChannelName };
 	/* first png, then jpg, then gif */
 	std::string strLogoExt[3] = { ".png", ".jpg" , ".gif" };
 	std::string dirs[1] = { g_settings.logo_hdd_dir };
@@ -629,6 +634,17 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 	}
 	logo_map[channel_id].name = "";
 	pthread_mutex_unlock(&logo_map_mutex);
+
+	if (g_settings.default_logo == 1) {
+		std::string logo_tmp = g_settings.logo_hdd_dir + "/picon_default.png";
+		if (channel_id && access(logo_tmp, R_OK) != -1) {
+			if (width && height)
+				getSize(logo_tmp.c_str(), width, height);
+			name = logo_tmp;
+			return true;
+		}
+	}
+
 	return false;
 
 found:
@@ -683,13 +699,17 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 		         (u_int) cc->getSatellitePosition());
 	}
 
+	std::string SpecialChannelName = GetSpecialName(ChannelName);
+
+//	printf("SpecialChannelName: %s\n", SpecialChannelName.c_str());
+
 	for (size_t i = 0; i<(sizeof(fileType) / sizeof(fileType[0])); i++){
 		std::vector<std::string> v_path;
 		std::string id_tmp_path;
 
 		//create filename with channel name (logo_hdd_dir)
 		id_tmp_path = g_settings.logo_hdd_dir + "/";
-		id_tmp_path += ChannelName + fileType[i];
+		id_tmp_path += SpecialChannelName + fileType[i];
 		v_path.push_back(id_tmp_path);
 
 		//create filename with id (logo_hdd_dir)
@@ -716,7 +736,7 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 		if(g_settings.logo_hdd_dir != LOGODIR_VAR){
 			//create filename with channel name (LOGODIR_VAR)
 			id_tmp_path = LOGODIR_VAR "/";
-			id_tmp_path += ChannelName + fileType[i];
+			id_tmp_path += SpecialChannelName + fileType[i];
 			v_path.push_back(id_tmp_path);
 
 			//create filename with id (LOGODIR_VAR)
@@ -743,7 +763,7 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 		if(g_settings.logo_hdd_dir != LOGODIR){
 			//create filename with channel name (LOGODIR)
 			id_tmp_path = LOGODIR "/";
-			id_tmp_path += ChannelName + fileType[i];
+			id_tmp_path += SpecialChannelName + fileType[i];
 			v_path.push_back(id_tmp_path);
 
 			//create filename with id (LOGODIR)
@@ -790,6 +810,17 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 			}
 		}
 	}
+
+	if (g_settings.default_logo == 1) {
+		std::string logo_tmp = g_settings.logo_hdd_dir + "/picon_default.png";
+		if (channel_id && access(logo_tmp, R_OK) != -1) {
+			if (width && height)
+				getSize(logo_tmp.c_str(), width, height);
+			name = logo_tmp;
+			return true;
+		}
+	}
+
 	return false;
 }
 #endif

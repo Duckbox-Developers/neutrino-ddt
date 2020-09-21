@@ -193,5 +193,6 @@ bool downloadUrl(std::string url, std::string file, const std::string userAgent 
 
 bool isDigitWord(std::string str);
 
-//
+std::string GetSpecialName(std::string NormalName);
+
 #endif

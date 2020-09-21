@@ -551,6 +551,7 @@ struct SNeutrinoSettings
 	std::string movieplayer_plugin;
 	std::string plugin_hdd_dir;
 
+	int default_logo;
 	std::string logo_hdd_dir;
 
 	std::string plugins_disabled;
