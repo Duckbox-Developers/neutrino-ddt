@@ -4,6 +4,7 @@ SUBDIRS = \
 	headers \
 	hints \
 	locale \
+	logo \
 	movieplayer \
 	radar \
 	slider \
