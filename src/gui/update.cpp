@@ -718,7 +718,7 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 					break;
 				}
 			}
-#elif BOXMODEL_VUDUO4K
+#elif BOXMODEL_VUDUO4K || BOXMODEL_VUDUO4KSE
 			char buf[256] = "";
 			while(fgets(buf, sizeof(buf), f) != NULL) {
 				if (strstr(buf, "mmcblk0p10") != NULL) {

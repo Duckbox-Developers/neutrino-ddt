@@ -527,6 +527,7 @@ start-block~remote
 		{=if-equal:{=var-get:boxtype=}~Mutant HD51~		{=include-block:Y_Blocks.txt;rc_mutant_hd51=}~
 		{=if-equal:{=var-get:boxtype=}~VU+ SOLO4K~		{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 		{=if-equal:{=var-get:boxtype=}~VU+ DUO4K~		{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
+		{=if-equal:{=var-get:boxtype=}~VU+ DUO4KSE~		{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 		{=if-equal:{=var-get:boxtype=}~VU+ ULTIMO4K~		{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 		{=if-equal:{=var-get:boxtype=}~VU+ DUO~			{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 		{=if-equal:{=var-get:boxtype=}~VU+ ZERO4K~		{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
@@ -536,7 +537,7 @@ start-block~remote
 		{=if-equal:{=var-get:boxtype=}~WWIO BRE2ZE4K~		{=include-block:Y_Blocks.txt;rc_wwio_bre2ze4k=}~
 
 		{=comment:fallback~=}				{=include-block:Y_Blocks.txt;rc_ufs910=}
-		=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
+		=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
 ~
 	{=if-equal:{=var-get:yfbtype=}~1~	{=include-block:Y_Blocks.txt;rc_cst_v1=}~
 	{=if-equal:{=var-get:yfbtype=}~2~	{=include-block:Y_Blocks.txt;rc_cst_v2=}~
@@ -555,14 +556,15 @@ start-block~remote
 	{=if-equal:{=var-get:yfbtype=}~15~	{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 	{=if-equal:{=var-get:yfbtype=}~16~	{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 	{=if-equal:{=var-get:yfbtype=}~17~	{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
-	{=if-equal:{=var-get:yfbtype=}~18~	{=include-block:Y_Blocks.txt;rc_zgemma_h7=}~
-	{=if-equal:{=var-get:yfbtype=}~19~	{=include-block:Y_Blocks.txt;rc_wwio_bre2ze4k=}~
+	{=if-equal:{=var-get:yfbtype=}~18~	{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
+	{=if-equal:{=var-get:yfbtype=}~19~	{=include-block:Y_Blocks.txt;rc_zgemma_h7=}~
+	{=if-equal:{=var-get:yfbtype=}~20~	{=include-block:Y_Blocks.txt;rc_wwio_bre2ze4k=}~
 	{=if-equal:{=var-get:yfbtype=}~-3~	{=include-block:Y_Blocks.txt;rc_ufs910=}~
 	{=if-equal:{=var-get:yfbtype=}~-2~	{=include-block:Y_Blocks.txt;rc_spark_old=}~
 	{=if-equal:{=var-get:yfbtype=}~-1~	{=include-block:Y_Blocks.txt;rc_spark_new=}~
 
 	{=comment:fallback~=}			{=include-block:Y_Blocks.txt;rc_ufs910=}
-	=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
+	=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
 =}
 end-block~remote
 
