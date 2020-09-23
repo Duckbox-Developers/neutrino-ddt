@@ -519,7 +519,6 @@ int CVideoSettings::showVideoSetup()
 	videosetup->addItem(vs_automodes_fw);	  //video auto modes submenue
 #endif
 
-#if HAVE_ARM_HARDWARE || HAVE_SH4_HARDWARE
 #if HAVE_SH4_HARDWARE
 	CColorSetupNotifier *colorSetupNotifier = new CColorSetupNotifier();
 	uint32_t video_mixer_color = g_settings.video_mixer_color;
@@ -572,7 +571,6 @@ int CVideoSettings::showVideoSetup()
 	mf = new CMenuForwarder(LOCALE_VIDEOMENU_MASKSETUP, true, NULL, &channelScreenSetup, NULL, CRCInput::RC_yellow);
 	mf->setHint("", LOCALE_MENU_HINT_VIDEO_MASK);
 	videosetup->addItem(mf);
-#endif
 #endif
 
 #ifdef ENABLE_PIP
