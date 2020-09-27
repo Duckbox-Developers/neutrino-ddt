@@ -539,17 +539,20 @@ void CPictureViewer::getSize(const char* name, int* width, int *height)
 }
 
 #if HAVE_SH4_HARDWARE
-bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& ChannelName, std::string & name, int *width, int *height)
+bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& ChannelName, std::string & name, int *width, int *height, std::string logo_path)
 {
 	char strChanId[16];
 
 	name = "";
 
+	if (logo_path == "")
+		logo_path = logo_hdd_dir;
+
 	pthread_mutex_lock(&logo_map_mutex);
 
-	if ((logo_hdd_dir != g_settings.logo_hdd_dir)) {
+	if ((logo_hdd_dir != logo_path)) {
 		logo_map.clear();
-		logo_hdd_dir = g_settings.logo_hdd_dir;
+		logo_hdd_dir = logo_path;
 	}
 
 	std::map<uint64_t, logo_data>::iterator it;
@@ -602,7 +605,7 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 	std::string strLogoName[2] = { (std::string)strChanId, SpecialChannelName };
 	/* first png, then jpg, then gif */
 	std::string strLogoExt[3] = { ".png", ".jpg" , ".gif" };
-	std::string dirs[1] = { g_settings.logo_hdd_dir };
+	std::string dirs[1] = { logo_path };
 
 	std::string tmp;
 
@@ -636,7 +639,7 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 	pthread_mutex_unlock(&logo_map_mutex);
 
 	if (g_settings.default_logo == 1) {
-		std::string logo_tmp = g_settings.logo_hdd_dir + "/picon_default.png";
+		std::string logo_tmp = logo_path + "/picon_default.png";
 		if (channel_id && access(logo_tmp, R_OK) != -1) {
 			if (width && height)
 				getSize(logo_tmp.c_str(), width, height);
@@ -660,9 +663,12 @@ found:
 	return true;
 }
 #else
-bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& ChannelName, std::string & name, int *width, int *height)
+bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& ChannelName, std::string & name, int *width, int *height, std::string logo_path)
 {
 	std::string fileType[] = { ".png", ".jpg", ".gif" };
+
+	if (logo_path == "")
+		logo_path = logo_hdd_dir;
 
 	//get channel id as string
 	char strChnId[16];
@@ -708,19 +714,19 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 		std::string id_tmp_path;
 
 		//create filename with channel name (logo_hdd_dir)
-		id_tmp_path = g_settings.logo_hdd_dir + "/";
+		id_tmp_path = logo_path + "/";
 		id_tmp_path += SpecialChannelName + fileType[i];
 		v_path.push_back(id_tmp_path);
 
 		//create filename with id (logo_hdd_dir)
-		id_tmp_path = g_settings.logo_hdd_dir + "/";
+		id_tmp_path = logo_path + "/";
 		id_tmp_path += strChnId + fileType[i];
 		v_path.push_back(id_tmp_path);
 
 		if (e2filename1[0] != '\0')
 		{
 			//create E2 filename1
-			id_tmp_path = g_settings.logo_hdd_dir + "/";
+			id_tmp_path = logo_path + "/";
 			id_tmp_path += std::string(e2filename1) + fileType[i];
 			v_path.push_back(id_tmp_path);
 		}
@@ -728,12 +734,12 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 		if (e2filename2[0] != '\0')
 		{
 			//create E2 filename2
-			id_tmp_path = g_settings.logo_hdd_dir + "/";
+			id_tmp_path = logo_path + "/";
 			id_tmp_path += std::string(e2filename2) + fileType[i];
 			v_path.push_back(id_tmp_path);
 		}
 
-		if(g_settings.logo_hdd_dir != LOGODIR_VAR){
+		if(logo_path != LOGODIR_VAR){
 			//create filename with channel name (LOGODIR_VAR)
 			id_tmp_path = LOGODIR_VAR "/";
 			id_tmp_path += SpecialChannelName + fileType[i];
@@ -760,7 +766,7 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 				v_path.push_back(id_tmp_path);
 			}
 		}
-		if(g_settings.logo_hdd_dir != LOGODIR){
+		if(logo_path != LOGODIR){
 			//create filename with channel name (LOGODIR)
 			id_tmp_path = LOGODIR "/";
 			id_tmp_path += SpecialChannelName + fileType[i];
@@ -812,7 +818,7 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 	}
 
 	if (g_settings.default_logo == 1) {
-		std::string logo_tmp = g_settings.logo_hdd_dir + "/picon_default.png";
+		std::string logo_tmp = logo_path + "/picon_default.png";
 		if (channel_id && access(logo_tmp, R_OK) != -1) {
 			if (width && height)
 				getSize(logo_tmp.c_str(), width, height);
