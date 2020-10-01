@@ -272,7 +272,7 @@ static void set_lua_variables(lua_State *L)
 		{ "BUTTON_TEXT",		SNeutrinoSettings::FONT_TYPE_BUTTON_TEXT },
 //		{ "WINDOW_GENERAL",		SNeutrinoSettings::FONT_TYPE_WINDOW_GENERAL },
 //		{ "RADIOTEXT_TITLE",		SNeutrinoSettings::FONT_TYPE_WINDOW_RADIOTEXT_TITLE },
-//		{ "WINDOW_RADIOTEXT_DESC", 	SNeutrinoSettings::FONT_TYPE_WINDOW_RADIOTEXT_DESC },
+//		{ "WINDOW_RADIOTEXT_DESC",	SNeutrinoSettings::FONT_TYPE_WINDOW_RADIOTEXT_DESC },
 		{ NULL, 0 }
 	};
 
