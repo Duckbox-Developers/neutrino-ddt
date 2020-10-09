@@ -281,7 +281,13 @@ AC_ARG_WITH(stb-hal-build,
 	fi
 	HWLIB_CFLAGS="-I$STB_HAL_INC"
 
-AM_CONDITIONAL(USE_STB_HAL, test "$BOXTYPE" != "coolstream")
+AM_CONDITIONAL(USE_STB_HAL,
+	test "$BOXTYPE" = "generic"   ||
+	test "$BOXTYPE" = "duckbox"   ||
+	test "$BOXTYPE" = "armbox"    ||
+	test "$BOXTYPE" = "mipsbox"   ||
+	test "$BOXTYPE" = "spark7162" ||
+	test "$BOXTYPE" = "spark")
 
 # hack, so that framebuffer.h does not need to be included everywhere...
 AC_DEFINE(fb_pixel_t, uint32_t, [hack, so that framebuffer.h does not need to be included everywhere...])
