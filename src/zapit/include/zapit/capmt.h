@@ -46,7 +46,7 @@ class CCam : public CBasicClient
 	private:
 		virtual unsigned char getVersion(void) const;
 		virtual const char *getSocketName(void) const;
-		int camask; 
+		int camask;
 		int *demuxes;
 		int source_demux;
 		uint8_t cabuf[2048];
@@ -67,11 +67,7 @@ class CCam : public CBasicClient
 		bool sendMessage(const char * const data, const size_t length, bool update = false);
 		bool makeCaPmt(CZapitChannel * channel, bool add_private, uint8_t list = CAPMT_ONLY, const CaIdVector &caids = CaIdVector());
 		bool setCaPmt(bool update = false);
-#if ! HAVE_COOL_HARDWARE
 		bool sendCaPmt(uint64_t tpid, uint8_t *rawpmt, int rawlen, uint8_t type, unsigned char scrambled = 0, casys_map_t camap = std::set<int>(), int mode = 0 , bool enable = false);
-#else
-		bool sendCaPmt(uint64_t tpid, uint8_t *rawpmt, int rawlen, uint8_t type);
-#endif
 		int  makeMask(int demux, bool add);
 		int  getCaMask(void) { return camask; }
 		void setCaMask(int mask) { camask = mask; }

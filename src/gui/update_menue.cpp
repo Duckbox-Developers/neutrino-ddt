@@ -123,14 +123,6 @@ int CSoftwareUpdate::showSoftwareUpdate()
 
 	unsigned int nextShortcut = (unsigned int)softUpdate.getNextShortcut();
 
-#ifdef BOXMODEL_CS_HD2
-	softUpdate.addItem(GenericMenuSeparatorLine);
-
-	mf = new CMenuDForwarder(LOCALE_FLASHUPDATE_CREATEIMAGE_MENU, true, NULL, new CFlashExpertSetup(), NULL, CRCInput::convertDigitToKey(nextShortcut));
-	mf->setHint("", LOCALE_MENU_HINT_SOFTUPDATE_CREATEIMAGE_MENU);
-	softUpdate.addItem(mf);
-#endif
-
 	// plugins with software manage integration
 	nextShortcut = (unsigned int)softUpdate.getNextShortcut();
 	softUpdate.integratePlugins(PLUGIN_INTEGRATION_SOFTWARE_MANAGE, nextShortcut);

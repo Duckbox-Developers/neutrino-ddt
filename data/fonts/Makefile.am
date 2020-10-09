@@ -14,7 +14,3 @@ install_DATA = \
 	DejaVuLGCSansMono-Bold.ttf \
 	tuxtxt.ttf \
 	tuxtxt.otb
-
-if BOXMODEL_CS_HD2
-install_DATA += UnDotum.ttf
-endif

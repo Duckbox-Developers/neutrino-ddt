@@ -645,11 +645,7 @@ static void* reader_thread(void * /*arg*/)
 	set_threadname("dvbsub:reader");
 
 	dmx = new cDemux(0);
-#if HAVE_TRIPLEDRAGON
-	dmx->Open(DMX_PES_CHANNEL, NULL, 16*1024);
-#else
 	dmx->Open(DMX_PES_CHANNEL, NULL, 64*1024);
-#endif
 
 	while (reader_running) {
 		if(dvbsub_stopped /*dvbsub_paused*/) {

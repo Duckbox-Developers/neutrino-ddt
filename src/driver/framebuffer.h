@@ -129,11 +129,6 @@ class CFrameBuffer : public sigc::trackable
 		bool	active;
 		static	void switch_signal (int);
 		fb_fix_screeninfo fix;
-#ifdef USE_NEVIS_GXA
-		int		  devmem_fd;		/* to access the GXA register we use /dev/mem */
-		unsigned int	  smem_start;		/* as aquired from the fbdev, the framebuffers physical start address */
-		volatile uint8_t *gxa_base;		/* base address for the GXA's register access */
-#endif /* USE_NEVIS_GXA */
 		bool locked;
 		std::map<std::string, rawIcon> icon_cache;
 		int cache_size;
@@ -173,10 +168,6 @@ class CFrameBuffer : public sigc::trackable
 		~CFrameBuffer();
 
 		static CFrameBuffer* getInstance();
-#ifdef USE_NEVIS_GXA
-		void setupGXA(void);
-#endif
-
 		void init(const char * const fbDevice = "/dev/fb/0");
 		int setMode(unsigned int xRes, unsigned int yRes, unsigned int bpp);
 
@@ -269,12 +260,8 @@ class CFrameBuffer : public sigc::trackable
 		bool Lock(void);
 		void Unlock(void);
 		bool Locked(void) { return locked; };
-#ifdef USE_NEVIS_GXA
-		void add_gxa_sync_marker(void);
-		void waitForIdle(const char* func=NULL);
-#else
 		inline void waitForIdle(const char*) {};
-#endif
+
 		void* convertRGB2FB(unsigned char *rgbbuff, unsigned long x, unsigned long y, int transp = 0xFF);
 		void* convertRGBA2FB(unsigned char *rgbbuff, unsigned long x, unsigned long y);
 		void displayRGB(unsigned char *rgbbuff, int x_size, int y_size, int x_pan, int y_pan, int x_offs, int y_offs, bool clearfb = true, int transp = 0xFF);

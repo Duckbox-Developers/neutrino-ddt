@@ -54,7 +54,7 @@ class CLocaleManager
 
 		char * localeDataMem;
 		char * defaultDataMem;
-		
+
 	public:
 		enum loadLocale_ret_t
 			{

@@ -343,11 +343,8 @@ bool CAudioSetupNotifier::changeNotify(const neutrino_locale_t OptionName, void 
 	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_MIXER_VOLUME_SPDIF)) {
 			audioDecoder->setMixerVolume("SPDIF", (long)(*((int *)(data))));
 #endif
-	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIO_SRS_ALGO) ||
-			ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIO_SRS_NMGR) ||
-			ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIO_SRS_VOLUME)) {
-		audioDecoder->SetSRS(g_settings.srs_enable, g_settings.srs_nmgr_enable, g_settings.srs_algo, g_settings.srs_ref_volume);
 	}
+
 	return false;
 }
 
@@ -599,13 +596,6 @@ int CDataResetNotifier::exec(CMenuTarget* /*parent*/, const std::string& actionK
 		CServiceManager::getInstance()->SatelliteList().clear();
 		CZapit::getInstance()->LoadSettings();
 		CZapit::getInstance()->GetConfig(zapitCfg);
-#ifdef BOXMODEL_CS_HD2
-		/* flag file to erase /var partition on factory reset,
-		   will be done by init scripts */
-		FILE * fp = fopen("/var_init/etc/.reset", "w");
-		if (fp)
-			fclose(fp);
-#endif
 		g_RCInput->postMsg( NeutrinoMessages::REBOOT, 0);
 		ret = menu_return::RETURN_EXIT_ALL;
 	}
@@ -634,30 +624,7 @@ int CDataResetNotifier::exec(CMenuTarget* /*parent*/, const std::string& actionK
 	return ret;
 }
 
-#if HAVE_COOL_HARDWARE
-void CFanControlNotifier::setSpeed(unsigned int speed)
-{
-	printf("FAN Speed %d\n", speed);
-#ifndef BOXMODEL_CS_HD2
-	int cfd = open("/dev/cs_control", O_RDONLY);
-	if(cfd < 0) {
-		perror("Cannot open /dev/cs_control");
-		return;
-	}
-	if (ioctl(cfd, IOC_CONTROL_PWM_SPEED, speed) < 0)
-		perror("IOC_CONTROL_PWM_SPEED");
-
-	close(cfd);
-#endif
-}
-
-bool CFanControlNotifier::changeNotify(const neutrino_locale_t, void * data)
-{
-	unsigned int speed = * (int *) data;
-	setSpeed(speed);
-	return false;
-}
-#elif HAVE_DUCKBOX_HARDWARE
+#if HAVE_DUCKBOX_HARDWARE
 void CFanControlNotifier::setSpeed(unsigned int speed)
 {
 	int cfd;
@@ -753,11 +720,8 @@ bool CAutoModeNotifier::changeNotify(const neutrino_locale_t /*OptionName*/, voi
 					i, VIDEOMENU_VIDEOMODE_OPTIONS[i].key, VIDEO_STD_MAX);
 			continue;
 		}
-#ifdef BOXMODEL_CS_HD2
-		modes[VIDEOMENU_VIDEOMODE_OPTIONS[i].key] = g_settings.enabled_auto_modes[i];
-#else
+
 		modes[VIDEOMENU_VIDEOMODE_OPTIONS[i].key] = g_settings.enabled_video_modes[i];
-#endif
 	}
 	videoDecoder->SetAutoModes(modes);
 	return false;

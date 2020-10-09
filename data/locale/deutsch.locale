@@ -123,13 +123,6 @@ adzap.zap_off aus
 adzap.zap_to_last_channel auf letzten Kanal
 adzap.zap_to_start_channel auf Start-Kanal
 apidselector.head Sprachauswahl
-audio.srs_algo Art
-audio.srs_algo_heavy stark
-audio.srs_algo_light einfach
-audio.srs_algo_normal normal
-audio.srs_iq SRS TruVolume Technologie
-audio.srs_nmgr Noise-Manager
-audio.srs_volume Referenzlautstärke
 audiomenu.PCMOffset Lautstärkeabsenkung PCM
 audiomenu.ac3 AC3 durchleiten
 audiomenu.analog_mode Analog Modus
@@ -658,7 +651,6 @@ filesystem.is.utf8 Dateisystem
 filesystem.is.utf8.option.iso8859.1 ISO-8859-1
 filesystem.is.utf8.option.utf8 UTF-8
 flashupdate.actionreadflash lese Flash
-flashupdate.apply_settings Sollen die aktuellen Einstellungen in das neue Image übernommen werden?
 flashupdate.autocheck Beim Start nach Updates suchen
 flashupdate.cantopenfile kann Datei nicht öffnen
 flashupdate.cantopenmtd kann MTD nicht öffnen
@@ -667,18 +659,6 @@ flashupdate.checkupdate_local Lokales Update
 flashupdate.choose_partition Partition wählen
 flashupdate.copy_image Kopiere Image in den Arbeitsspeicher
 flashupdate.copy_settings Einstellungen ins neue Image übernehmen?
-flashupdate.createimage Image speichern
-flashupdate.createimage_add_env 'env' hinzufügen
-flashupdate.createimage_add_kernel 'kernel' hinzufügen
-flashupdate.createimage_add_root1 Partition 'root1' sichern
-flashupdate.createimage_add_spare 'spare' hinzufügen
-flashupdate.createimage_add_u_boot 'u-boot' hinzufügen
-flashupdate.createimage_add_uldr 'uldr' hinzufügen
-flashupdate.createimage_add_var Datenpartition 'var' sichern
-flashupdate.createimage_menu Aktuelle Software sichern
-flashupdate.createimage_options Einstellungen
-flashupdate.createimage_other Image für %s STB erstellen
-flashupdate.createimage_warning Nachfolgend wird ein Image für die %s STB erstellt.\nDieses Image wird auch nur auf einer %s STB lauffähig sein!\n \nTrotzdem fortsetzten?
 flashupdate.currentversion_sep Installierte Version
 flashupdate.currentversiondate Datum
 flashupdate.currentversiontime Uhrzeit
@@ -699,19 +679,11 @@ flashupdate.install_package Heruntergeladenes Paket installieren?
 flashupdate.md5check Imageprüfung
 flashupdate.md5sumerror Das Image ist fehlerhaft
 flashupdate.menu_apply_kernel Kernel flashen
-flashupdate.menu_apply_settings Settingsübernahme erlauben
 flashupdate.mkfs_create_image Backup erstellen
 flashupdate.mkfs_preparing_files Dateien und Verzeichnisse vorbereiten
 flashupdate.mkfs_using_sumtool Benutze Sumtool
 flashupdate.msgbox Es wurde folgende neue Datei gefunden:\nDatum: %s, %s\nBasisImage: %s\nTyp: %s\n\nWollen Sie diese Version jetzt herunterladen und installieren?
 flashupdate.mtdselector Partitions-Auswahl
-flashupdate.namemode1 Dateiname Settingsfile
-flashupdate.namemode1_default <Org.Name>+settings.img
-flashupdate.namemode1_hostname_time <Hostname>+<Zeit>+settings.img
-flashupdate.namemode1_orgname_time <Org.Name>+<Zeit>+settings.img
-flashupdate.namemode2 Dateiname Sicherung
-flashupdate.namemode2_default <Partition>+<Zeit>.img
-flashupdate.namemode2_hostname_time <Partition>+<Zeit>+<Hostname>.img
 flashupdate.new_found Updates verfügbar!
 flashupdate.new_notfound Keine Updates verfügbar!
 flashupdate.noversion Die Versionsüberprüfung ist nur bei Online-Aktualisierungen möglich.\nTrotzdem fortfahren?
@@ -966,13 +938,11 @@ keybindingmenu.remotecontrol_code_msg2 gleichzeitig betätigen, danach: OK Taste
 keybindingmenu.remotecontrol_code_not_save Der Code der Fernbedienung wurde nicht geändert !
 keybindingmenu.remotecontrol_code_save Neuen Code speichern
 keybindingmenu.remotecontrol_hardware Hardware
-keybindingmenu.remotecontrol_hardware_coolstream CST
 keybindingmenu.remotecontrol_hardware_dbox DBox Nokia (alt)
 keybindingmenu.remotecontrol_hardware_msg_part1 Die Fernbedienung wurde von '
 keybindingmenu.remotecontrol_hardware_msg_part2 ' auf '
 keybindingmenu.remotecontrol_hardware_msg_part3 ' geändert.\nIst dies korrekt?\nBitte die Auswahl innerhalb 15 Sekunden mit der neuen Fernbedienung\nbestätigen. Ansonsten wird die Auswahl zurückgesetzt.
 keybindingmenu.remotecontrol_hardware_philips Philips
-keybindingmenu.remotecontrol_hardware_tripledragon Triple Dragon
 keybindingmenu.repeatblock Anfangsverzögerung
 keybindingmenu.repeatblockgeneric Wiederholungsverzögerung
 keybindingmenu.sort Sortierreihenfolge ändern
@@ -1029,18 +999,6 @@ lcdmenu.statusline.both Lautstärke/Fortschritt
 lcdmenu.statusline.playtime Sendungsfortschritt
 lcdmenu.statusline.volume Lautstärke
 lcdmenu.vfd_scroll Laufschrift
-ledcontroler.backlight Hintergrundbeleuchtung Buttons
-ledcontroler.backlight.tv TV Modus
-ledcontroler.blink Blinke im Deep-Standby, wenn Timer aktiv
-ledcontroler.menu Power Button LEDs
-ledcontroler.mode.deepstandby Deep-Standby
-ledcontroler.mode.record Blinke bei Aufnahme
-ledcontroler.mode.standby Standby
-ledcontroler.mode.tv TV Betrieb
-ledcontroler.off LED1 und LED2 aus
-ledcontroler.on.all LED1 und LED2 an
-ledcontroler.on.led1 LED1 an
-ledcontroler.on.led2 LED2 an
 livestream.head Livestreams
 livestream.read_data Lese Daten ...
 livestream.resolution Auflösung
@@ -1086,7 +1044,7 @@ mainsettings.language Sprache
 mainsettings.lcd Front-Panel
 mainsettings.manage Einstellungen verwalten
 mainsettings.misc Erweiterte Einstellungen
-mainsettings.multimedia Multimedia
+mainsettings.multimedia Medien
 mainsettings.network Netzwerk
 mainsettings.osd OSD
 mainsettings.recording Aufnahme
@@ -1109,7 +1067,7 @@ menu.hint_adzap_writedata Schreibe Daten über den Status des Werbezappers nach 
 menu.hint_adzap_zap Umschalten bei Timer-Aktivierung auf zuletzt gesehenen Kanal oder auf Start-Kanal
 menu.hint_aplay Audioplayer
 menu.hint_aplay_setup Ändern Sie Audioplayer-Einstellungen wie Titel-Anzeige, Startverzeichnis oder Bildschirmschoner.
-menu.hint_audio Audio-Ausgang, Dolby Digital und SRS TruVolume Optionen usw.
+menu.hint_audio Audio-Ausgang, Dolby Digital Optionen usw.
 menu.hint_audio_ac3 AC3 Tonspuren unverändert durchleiten
 menu.hint_audio_adjust_vol_ac3 Lautstärkeanpassung für AC3-Tonspuren
 menu.hint_audio_adjust_vol_clear Alle gespeicherten Werte für AC3- und PCM-Tonspuren löschen
@@ -1120,10 +1078,6 @@ menu.hint_audio_dd Ist diese Option aktiviert, wird automatisch auf Dolby Digita
 menu.hint_audio_dts DTS Tonspuren unverändert durchleiten
 menu.hint_audio_hdmi_dd Bei aktiver Option wird über den HDMI-Ausgang der Dolby Digital Ton ausgegeben
 menu.hint_audio_spdif_dd Bei aktiver Option wird über den optischen Ausgang (S/PDIF) der Dolby Digital Ton ausgegeben
-menu.hint_audio_srs Schalten Sie SRS TruVolume ein oder aus
-menu.hint_audio_srs_algo Stellen Sie die Betriebsarten von SRS TruVolume ein
-menu.hint_audio_srs_nmgr Schalten Sie den NoiseManager ein oder aus
-menu.hint_audio_srs_volume Legen Sie die Referenzlautstärke für SRS TruVolume fest
 menu.hint_audio_volstart Legen Sie die Einschaltlautstärke fest, die immer beim Starten eingestellt werden soll
 menu.hint_audio_volstep Beim Betätigen der Lautstärketasten wird die Lautstärke immer schrittweise nach diesem Wert geändert
 menu.hint_audioplayer_defdir Wählen Sie das Startverzeichnis für den Audioplayer
@@ -1326,11 +1280,6 @@ menu.hint_lcd4l_logodir Verzeichnis für Senderlogos\nBei ungültigem Eintrag Fa
 menu.hint_lcd4l_skin Auswahl der verfügbaren Darstellungsarten
 menu.hint_lcd4l_skin_radio Wechselt die Darstellungsart, wenn der Radio-Modus aktiviert wird
 menu.hint_lcd4l_support LCD4Linux aktivieren/deaktivieren\nUnterstützte Displays: Pearl DPF, Samsung DPF, VUPLUS4K, PNG
-menu.hint_leds_blink Die Power-LEDs blinken, wenn sich der Receiver im Deep-Standby befindet und ein Timer aktiv ist
-menu.hint_leds_deepstandby Definiert den Status der Power-LEDs im Deep-Standby
-menu.hint_leds_record Definiert, ob die Power-LEDs blinken sollen, wenn eine Aufnahme aktiv ist
-menu.hint_leds_standby Definiert den Status der Power-LEDs im Standby
-menu.hint_leds_tv Definiert den Status der Power-LEDs im TV-Modus
 menu.hint_load Laden der Einstellungen aus einer Datei
 menu.hint_longkeypress_duration Tasten, die länger als die angegebene Zeit betätigt werden, werden als "langer Tastendruck" behandelt.
 menu.hint_lua Plugins ausführen
@@ -1408,7 +1357,6 @@ menu.hint_opkg_install_local_package Paket von USB-Stick, SD, Freigabe oder loka
 menu.hint_opkg_upgrade Aktualisiert alle installierten Pakete auf die neueste verfügbare Version
 menu.hint_osd Farben, Schriftarten, Anzeigegröße, Ansichtsoptionen der Menüs usw.
 menu.hint_osd_language Wählen Sie ihre Menü-Sprache
-menu.hint_osd_preset Wählen Sie zwischen Röhren-TV (CRT) oder Flachbildschirm (LCD)
 menu.hint_osd_resolution Wählen Sie eine OSD-Auflösung
 menu.hint_osd_timing Einblendzeit, die das OSD auf dem TV angezeigt wird
 menu.hint_other_fonts Ändern Sie andere Schriftgrößen
@@ -1595,7 +1543,6 @@ menu.hint_sms_movie Wenn es aktiviert ist, können Sie die Nummern-Tasten im Mov
 menu.hint_soft_restart Neustarten der Benutzeroberfläche, ohne die Box neu zu starten
 menu.hint_softupdate_check Im Internet nach verfügbaren Updates suchen, herunterladen und installieren
 menu.hint_softupdate_check_local Lokal nach verfügbaren Updates suchen und installieren
-menu.hint_softupdate_createimage_menu Sicherung der aktuellen Software inklusive aller Einstellungen
 menu.hint_softupdate_expert Einzelne Partitionen aus dem Flash lesen bzw. in den Flash schreiben
 menu.hint_softupdate_expert_read Einzelne Partitionen (U-Boot, Splash, Kernel, SystemFS) aus dem Flash lesen
 menu.hint_softupdate_expert_write Einzelne Partitionen (Splash, Kernel, SystemFS) in den Flash schreiben
@@ -1632,25 +1579,19 @@ menu.hint_vfd_scroll Laufschrift im Display ein- oder ausschalten
 menu.hint_vfd_statusline Wählen Sie, was in der Statuszeile des VFD/LCD angezeigt werden soll
 menu.hint_video Video-Ausgang, Auflösung, Format, Seitenverhältnisse usw.
 menu.hint_video_43mode Anzeige-Modus für 4:3-Inhalte auf 16:9-Fernsehern
-menu.hint_video_analog_mode Wählen Sie den Modus des Ausgangssignals für den CINCH-Anschluss
 menu.hint_video_brightness Ändert die Helligkeit
-menu.hint_video_cinch_mode Wählen Sie den Modus des Ausgangssignals für den Composite-Video-Anschluss
 menu.hint_video_colorformat_analog Wählt den Farbraum für die analoge Ausgabe (Scart/Cinch)
 menu.hint_video_colorformat_hdmi Wählt den Farbraum für die digitale Ausgabe (HDMI)
 menu.hint_video_contrast Ändert den Kontrast
-menu.hint_video_dbdr Verwendeter MPEG2 Filter
 menu.hint_video_format Wählen Sie das Bildschirmformat ihres Fernsehgerätes
 menu.hint_video_mask Definieren Sie einen kanalspezifischen Rahmen zum Ausblenden unerwünschter Inhalte am Bildschirmrand
 menu.hint_video_mixer_color Wenn kein Signal vorhanden ist, wird die gewählte Farbe als Hintergrundfarbe verwendet.
 menu.hint_video_mode Wählen Sie den Modus des Ausgangssignals für den HDMI-Anschluss
 menu.hint_video_modes Definiert, welche Videosysteme mit der VF-Taste der Fernbedienung ausgewählt werden können
-menu.hint_video_modes_auto Definiert, welche Videosysteme automatisch ausgewählt werden können
 menu.hint_video_pip Bild in Bild Größe und Position
 menu.hint_video_psi On-Screen-Menü zur Änderung von Farbe, Kontrast und mehr
 menu.hint_video_psi_step Setzt die Schrittweite für das On-Screen-Menü
 menu.hint_video_saturation Ändert die Farbsättigung
-menu.hint_video_scart_mode Wählen Sie den Modus des Ausgangssignals für den SCART-Anschluss
-menu.hint_video_sdosd Aktivieren/Deaktivieren der OSD Anzeige am Analogausgang (Scart, Cinch)
 menu.hint_video_three_d Ändert die kanalspezifischen 3D-Einstellungen
 menu.hint_video_tint Ändert den Farbton
 menu.hint_video_zappingmode Wählen Sie, ob ein schwarzes Bild oder ein Standbild beim Umschalten gezeigt werden soll
@@ -2622,15 +2563,15 @@ timing.numericzap Umschalten mit Zifferntasten
 timing.popup_messages Popup Meldungen
 timing.static_messages Interaktive Meldungen
 timing.volumebar Lautstärkeanzeige
+tmdb.api_key TMDb API Schlüssel
+tmdb.enabled TMDb-Unterstützung
+tmdb.info TMDb-Info
+tmdb.read_data Suche TMDb-Daten ...
 tunersetup.cable Kabel (DVB-C)
 tunersetup.hybrid Hybrid (DVB-C/T/T2)
 tunersetup.mode Betriebsmodus
 tunersetup.power 5V-Versorgung bei DVB-T/T2 Kanälen
 tunersetup.terr Terrestrisch (DVB-T/T2)
-tmdb.api_key TMDb API Schlüssel
-tmdb.enabled TMDb-Unterstützung
-tmdb.info TMDb-Info
-tmdb.read_data Suche TMDb-Daten ...
 unicable.lnb Unicable Eingang
 unicable.pin Unicable PIN
 unicable.pin_hint PIN (1 - 255) für Benutzerfrequenz\n0 bedeutet inaktiv / aus
@@ -2670,24 +2611,11 @@ usermenu.title_yellow Bildoptionen
 usermenus.head Benutzermenüs
 video_mode_ok Video-Einstellungen OK?
 videomenu.43mode 4:3 Anzeigeverhalten
-videomenu.analog_auto AUTO
-videomenu.analog_cvbs CVBS
-videomenu.analog_hd_rgb RGB (HD)
-videomenu.analog_hd_rgb_cinch RGB -> Cinch (HD)
-videomenu.analog_hd_rgb_scart RGB -> Scart (HD)
-videomenu.analog_hd_yprpb YPbPr(HD)
-videomenu.analog_hd_yprpb_cinch YPbPr -> Cinch (HD)
-videomenu.analog_hd_yprpb_scart YPbPr -> Scart (HD)
-videomenu.analog_mode Videomodus
 videomenu.analog_sd_rgb RGB (SD)
-videomenu.analog_sd_rgb_cinch RGB -> Cinch (SD)
 videomenu.analog_sd_rgb_scart RGB -> Scart (SD)
 videomenu.analog_sd_yprpb YPbPr (SD)
-videomenu.analog_sd_yprpb_cinch YPbPr -> Cinch (SD)
 videomenu.analog_sd_yprpb_scart YPbPr -> Scart (SD)
 videomenu.auto Automatisch
-videomenu.brightness Helligkeit
-videomenu.cinch Cinch
 videomenu.colorformat Farbraum
 videomenu.colorformat.cvbs CVBS
 videomenu.colorformat.rgb RGB
@@ -2697,13 +2625,7 @@ videomenu.colorformat.ycbcr444 YCbCr 4:4:4
 videomenu.colorformat.yuv YUV
 videomenu.colorformat_analog Cinch/Scart
 videomenu.colorformat_hdmi HDMI
-videomenu.contrast Kontrast
-videomenu.dbdr MPEG2 Filter
-videomenu.dbdr_both deBlock und deRing
-videomenu.dbdr_deblock deBlock
-videomenu.dbdr_none aus
 videomenu.enabled_modes Videosysteme auf der VF-Taste
-videomenu.enabled_modes_auto Videosysteme für autom. Wahl
 videomenu.fullscreen Vollbild
 videomenu.hdmi_cec HDMI-CEC
 videomenu.hdmi_cec_broadcast Senden an alle Geräte
@@ -2730,10 +2652,8 @@ videomenu.psi.reset Standard
 videomenu.psi.saturation Sättigung
 videomenu.psi.step Videoregler-Schrittweite
 videomenu.psi.tint Farbton
-videomenu.saturation Sättigung
 videomenu.scart Scart
 videomenu.screensetup Bildbereich
-videomenu.sdosd SD OSD
 videomenu.sharpness Schärfe
 videomenu.tv-scart TV Scart
 videomenu.vcrsignal VCR-Ausgang Signalart

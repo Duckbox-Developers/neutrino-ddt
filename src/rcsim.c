@@ -5,7 +5,7 @@
  *
  *	(c) 2003 Carsten Juttner (carjay@gmx.net)
  *	(c) 2009 Stefan Seyfried, add code to use the neutrino socket instead
- *			of the input subsystem for dreambox / tripledragon
+ *			of the input subsystem for dreambox
  *	(c) 2011 Stefan Seyfried, convert driver/rcinput.h via script to
  *			rcsim.h for automated import of new keys
  *
@@ -42,12 +42,10 @@
 
 #if defined(HAVE_DBOX_HARDWARE)
 #define EVENTDEV "/dev/input/event0"
-#elif defined (HAVE_COOL_HARDWARE)
-#define EVENTDEV "/dev/input/input0"
 #else
 #endif
 #else
-/* dreambox and tripledragon do not use a "normal" input device, so we cannot
+/* dreambox do not use a "normal" input device, so we cannot
    (ab-)use the event repeating function of it. use the neutrino socket instead. */
 #include <sys/socket.h>
 #include <sys/un.h>

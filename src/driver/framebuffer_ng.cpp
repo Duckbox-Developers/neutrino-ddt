@@ -46,16 +46,9 @@
 #include <global.h>
 #include <video.h>
 #include <cs_api.h>
-#ifdef HAVE_COOL_HARDWARE
-#include <cnxtfb.h>
-#endif
 #if HAVE_SH4_HARDWARE
 #include <linux/stmfb.h>
 #include <png.h>
-#endif
-#if HAVE_TRIPLEDRAGON
-#ifdef SCALE
-#undef SCALE
 #endif
 #include <tdgfx/stb04gfx.h>
 extern int gfxfd;
@@ -205,13 +198,6 @@ CFrameBuffer* CFrameBuffer::getInstance()
 	}
 	return frameBuffer;
 }
-
-#ifdef USE_NEVIS_GXA
-void CFrameBuffer::setupGXA(void)
-{
-	accel->setupGXA();
-}
-#endif
 
 void CFrameBuffer::init(const char * const)
 {
@@ -413,11 +399,7 @@ fprintf(stderr, "CFrameBuffer::setMode avail: %d active: %d\n", available, activ
 	yRes = screeninfo.yres;
 	bpp  = screeninfo.bits_per_pixel;
 	printf("FB: %dx%dx%d line length %d. %s nevis GXA accelerator.\n", xRes, yRes, bpp, stride,
-#ifdef USE_NEVIS_GXA
-		"Using"
-#else
 		"Not using"
-#endif
 	);
 	accel->update(); /* just in case we need to update stuff */
 
@@ -425,7 +407,7 @@ fprintf(stderr, "CFrameBuffer::setMode avail: %d active: %d\n", available, activ
 	paintBackground();
 	return ret;
 }
-#if 0 
+#if 0
 //never used
 void CFrameBuffer::setTransparency( int /*tr*/ )
 {
@@ -456,35 +438,17 @@ void CFrameBuffer::setBlendLevel(int level)
 	if (ioctl(fd, STMFBIO_SET_VAR_SCREENINFO_EX, &v) < 0)
 		perror("[fb:setBlendLevel] STMFBIO");
 }
-#elif !HAVE_TRIPLEDRAGON
 void CFrameBuffer::setBlendMode(uint8_t mode)
 {
 	(void)mode;
-#ifdef HAVE_COOL_HARDWARE
-	if (ioctl(fd, FBIO_SETBLENDMODE, mode))
-		printf("FBIO_SETBLENDMODE failed.\n");
-#endif
 }
 
 void CFrameBuffer::setBlendLevel(int level)
 {
 	(void)level;
-#ifdef HAVE_COOL_HARDWARE
-	//printf("CFrameBuffer::setBlendLevel %d\n", level);
-	unsigned char value = 0xFF;
-	if((level >= 0) && (level <= 100))
-		value = convertSetupAlpha2Alpha(level);
-
-	if (ioctl(fd, FBIO_SETOPACITY, value))
-		printf("FBIO_SETOPACITY failed.\n");
-#ifndef BOXMODEL_CS_HD2
-	if(level == 100) // TODO: sucks.
-		usleep(20000);
-#endif
-#endif
 }
 #else
-/* TRIPLEDRAGON */
+
 void CFrameBuffer::setBlendMode(uint8_t mode)
 {
 	Stb04GFXOsdControl g;

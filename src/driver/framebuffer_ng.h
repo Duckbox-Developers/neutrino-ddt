@@ -160,9 +160,6 @@ class CFrameBuffer : public sigc::trackable
 		~CFrameBuffer();
 
 		static CFrameBuffer* getInstance();
-#ifdef USE_NEVIS_GXA
-		void setupGXA(void);
-#endif
 
 		void init(const char * const fbDevice = "/dev/fb0");
 		int setMode(unsigned int xRes, unsigned int yRes, unsigned int bpp);

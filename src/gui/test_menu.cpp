@@ -63,10 +63,6 @@
 #include <system/helpers.h>
 #include <gui/components/cc_timer.h>
 
-#if HAVE_COOL_HARDWARE
-extern int cs_test_card(int unit, char * str);
-#endif
-
 #define TestButtonsCount 4
 const struct button_label TestButtons[/*TestButtonsCount*/] =
 {
@@ -197,54 +193,6 @@ int CTestMenu::exec(CMenuTarget* parent, const std::string &actionKey)
 		
 		return res;
 	}
-#if HAVE_COOL_HARDWARE
-	else if (actionKey == "card0")
-	{
-		char str[255];
-		int ret = cs_test_card(0, str);
-		switch(ret)
-		{
-			case 0:
-				ShowMsg(LOCALE_MESSAGEBOX_INFO, str, CMsgBox::mbrBack, CMsgBox::mbBack, "info.raw");
-				break;
-			case -1:
-				ShowMsg(LOCALE_MESSAGEBOX_INFO, "Smardcard 1 ATR read failed", CMsgBox::mbrBack, CMsgBox::mbBack, "info");
-				break;
-			case -2:
-				ShowMsg(LOCALE_MESSAGEBOX_INFO, "Smardcard 1 reset failed", CMsgBox::mbrBack, CMsgBox::mbBack, "info");
-				break;
-			default:
-			case -3:
-				ShowMsg(LOCALE_MESSAGEBOX_INFO, "Smardcard 1 open failed", CMsgBox::mbrBack, CMsgBox::mbBack, "info");
-				break;
-		}
-		
-		return res;
-	}
-	else if (actionKey == "card1")
-	{
-		char str[255];
-		int ret = cs_test_card(1, str);
-		switch(ret)
-		{
-			case 0:
-				ShowMsg(LOCALE_MESSAGEBOX_INFO, str, CMsgBox::mbrBack, CMsgBox::mbBack, "info.raw");
-				break;
-			case -1:
-				ShowMsg(LOCALE_MESSAGEBOX_INFO, "Smardcard 2 ATR read failed", CMsgBox::mbrBack, CMsgBox::mbBack, "info");
-				break;
-			case -2:
-				ShowMsg(LOCALE_MESSAGEBOX_INFO, "Smardcard 2 reset failed", CMsgBox::mbrBack, CMsgBox::mbBack, "info");
-				break;
-			default:
-			case -3:
-				ShowMsg(LOCALE_MESSAGEBOX_INFO, "Smardcard 2 open failed", CMsgBox::mbrBack, CMsgBox::mbBack, "info");
-				break;
-		}
-		
-		return res;
-	}
-#endif
 	else if (actionKey == "hdd")
 	{
 		char buffer[255];
@@ -1198,10 +1146,6 @@ void CTestMenu::showHWTests(CMenuWidget *widget)
 	widget->addIntroItems();
 	widget->addItem(new CMenuForwarder("VFD", true, NULL, this, "vfd"));
 	widget->addItem(new CMenuForwarder("Network", true, NULL, this, "network"));
-#if HAVE_COOL_HARDWARE
-	widget->addItem(new CMenuForwarder("Smartcard 1", true, NULL, this, "card0"));
-	widget->addItem(new CMenuForwarder("Smartcard 2", true, NULL, this, "card1"));
-#endif
 	widget->addItem(new CMenuForwarder("HDD", true, NULL, this, "hdd"));
 	widget->addItem(new CMenuForwarder("SD/MMC", true, NULL, this, "mmc"));
 #if 0 //some parts DEPRECATED

@@ -154,7 +154,6 @@ class CLCD
 		void wake_up();
 		void setled(void) { return; };
 		void setlcdparameter(void);
-		void setBacklight(bool) { return; };
 
 		static CLCD* getInstance();
 		void init(const char * fontfile, const char * fontname,

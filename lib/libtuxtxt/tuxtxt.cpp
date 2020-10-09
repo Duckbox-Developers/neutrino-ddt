@@ -5595,7 +5595,7 @@ void CopyBB2FB()
 {
 	fb_pixel_t *src, *dst, *topsrc;
 	int fillcolor, i, screenwidth, swtmp;
-#if defined(HAVE_SH4_HARDWARE) || defined(HAVE_COOL_HARDWARE)
+#if defined(HAVE_SH4_HARDWARE)
 	CFrameBuffer *f = CFrameBuffer::getInstance();
 #endif
 
@@ -5608,8 +5608,6 @@ void CopyBB2FB()
 	{
 #if HAVE_SH4_HARDWARE
 		f->blit2FB(lbb, var_screeninfo.xres, var_screeninfo.yres, 0, 0, 0, 0, true);
-#elif defined(HAVE_COOL_HARDWARE)
-		f->fbCopyArea(var_screeninfo.xres, var_screeninfo.yres, 0, 0, 0, var_screeninfo.yres);
 #else
 		if ((uint32_t)stride > var_screeninfo.xres) {
 			fb_pixel_t *lfb_ = lfb;

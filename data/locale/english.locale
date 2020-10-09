@@ -123,13 +123,6 @@ adzap.zap_off off
 adzap.zap_to_last_channel to last channel
 adzap.zap_to_start_channel to start channel
 apidselector.head Select language
-audio.srs_algo Type
-audio.srs_algo_heavy Heavy
-audio.srs_algo_light Light
-audio.srs_algo_normal Normal
-audio.srs_iq SRS TruVolume algo
-audio.srs_nmgr Noise manager
-audio.srs_volume Reference volume
 audiomenu.PCMOffset Volume Decrease PCM
 audiomenu.ac3 AC3 passthrough
 audiomenu.analog_mode Analog mode
@@ -658,7 +651,6 @@ filesystem.is.utf8 file system
 filesystem.is.utf8.option.iso8859.1 ISO-8859-1
 filesystem.is.utf8.option.utf8 UTF-8
 flashupdate.actionreadflash reading
-flashupdate.apply_settings Import current settings into new image?
 flashupdate.autocheck Auto-check updates on boot
 flashupdate.cantopenfile can't open file
 flashupdate.cantopenmtd can't open MTD
@@ -667,18 +659,6 @@ flashupdate.checkupdate_local Local update
 flashupdate.choose_partition Choose partition
 flashupdate.copy_image Copy Image to main memory
 flashupdate.copy_settings Copy settings to new image?
-flashupdate.createimage Save image
-flashupdate.createimage_add_env Add 'env' to image
-flashupdate.createimage_add_kernel Add 'kernel' to image
-flashupdate.createimage_add_root1 Add 'root1' to image
-flashupdate.createimage_add_spare Add 'spare' to image
-flashupdate.createimage_add_u_boot Add 'u-boot' to image
-flashupdate.createimage_add_uldr Add 'uldr' to image
-flashupdate.createimage_add_var Add 'var' to image
-flashupdate.createimage_menu Save current software
-flashupdate.createimage_options Options
-flashupdate.createimage_other Create image for %s STB
-flashupdate.createimage_warning Now an image for the %s STB is created.\nThis image will also run on only one %s STB!\n \nNevertheless continued?
 flashupdate.currentversion_sep Current version
 flashupdate.currentversiondate Date
 flashupdate.currentversiontime Time
@@ -699,19 +679,11 @@ flashupdate.install_package Install downloadad pack?
 flashupdate.md5check checking image
 flashupdate.md5sumerror image has errors
 flashupdate.menu_apply_kernel Flashing kernel
-flashupdate.menu_apply_settings Allow apply settings
 flashupdate.mkfs_create_image Create backup
 flashupdate.mkfs_preparing_files Preparing files and directories
 flashupdate.mkfs_using_sumtool Using sumtool
 flashupdate.msgbox Found the following new file:\nDate: %s, %s\nBaseImage: %s\nType: %s\n\nDo you want to download and install this version now?
 flashupdate.mtdselector Partition-Selector
-flashupdate.namemode1 Filename settingsfile
-flashupdate.namemode1_default <org.name>+settings.img
-flashupdate.namemode1_hostname_time <hostname>+<time>+settings.img
-flashupdate.namemode1_orgname_time <org.name>+<time>+settings.img
-flashupdate.namemode2 Filename backup
-flashupdate.namemode2_default <partition>+<time>.img
-flashupdate.namemode2_hostname_time <partition>+<time>+<hostname>.img
 flashupdate.new_found New image found !
 flashupdate.new_notfound No new images found
 flashupdate.noversion Version check is only supported via online updates.\nAre you sure that you want to continue?
@@ -966,13 +938,11 @@ keybindingmenu.remotecontrol_code_msg2 at the same time, after that press the bu
 keybindingmenu.remotecontrol_code_not_save The remote control code has not been changed !
 keybindingmenu.remotecontrol_code_save Save new code
 keybindingmenu.remotecontrol_hardware Hardware
-keybindingmenu.remotecontrol_hardware_coolstream CST
 keybindingmenu.remotecontrol_hardware_dbox d-box Nokia (old)
 keybindingmenu.remotecontrol_hardware_msg_part1 The remote control has been changed from '
 keybindingmenu.remotecontrol_hardware_msg_part2 ' to '
 keybindingmenu.remotecontrol_hardware_msg_part3 ' \nIs this correct?\nPlease confirm the selection within 15 seconds by using the new remote control.\nOtherwise the selection will be reverted.
 keybindingmenu.remotecontrol_hardware_philips Philips
-keybindingmenu.remotecontrol_hardware_tripledragon Triple Dragon
 keybindingmenu.repeatblock generic delay
 keybindingmenu.repeatblockgeneric repeat delay
 keybindingmenu.sort change sort order
@@ -1029,18 +999,6 @@ lcdmenu.statusline.both volume and playtime
 lcdmenu.statusline.playtime playtime
 lcdmenu.statusline.volume volume
 lcdmenu.vfd_scroll Scrolling
-ledcontroler.backlight Buttons backlight
-ledcontroler.backlight.tv TV mode
-ledcontroler.blink Blink in deep standby, if timer set
-ledcontroler.menu Power Button LEDs
-ledcontroler.mode.deepstandby Deep Standby
-ledcontroler.mode.record Blinke in Record
-ledcontroler.mode.standby Standby
-ledcontroler.mode.tv TV Mode
-ledcontroler.off LED1 and LED2 off
-ledcontroler.on.all LED1 and LED2 on
-ledcontroler.on.led1 LED1 on
-ledcontroler.on.led2 LED2 on
 livestream.head Live streams
 livestream.read_data Read data ...
 livestream.resolution Resolution
@@ -1086,7 +1044,7 @@ mainsettings.language Language and timezone
 mainsettings.lcd Front-Panel
 mainsettings.manage Manage settings
 mainsettings.misc Extended settings
-mainsettings.multimedia Multimedia
+mainsettings.multimedia Media
 mainsettings.network Network
 mainsettings.osd OSD
 mainsettings.recording Recording
@@ -1109,7 +1067,7 @@ menu.hint_adzap_writedata Write data according to adzap status to /tmp/adzap.dat
 menu.hint_adzap_zap Zap to last viewed channel or to start channel during timer activation
 menu.hint_aplay Audio player
 menu.hint_aplay_setup Change title display, start directory, screen saver and more
-menu.hint_audio Audio output, DD\nSRS True volume options
+menu.hint_audio Audio output, DD volume options
 menu.hint_audio_ac3 Pass AC3 audio tracks unchanged
 menu.hint_audio_adjust_vol_ac3 Channel specific volume adjustment for AC3 streams
 menu.hint_audio_adjust_vol_clear Clear all saved values for PCM and AC3 streams
@@ -1120,10 +1078,6 @@ menu.hint_audio_dd Auto-switch to DolbyDigital audio pid,\nif available
 menu.hint_audio_dts Pass DTS audio tracks unchanged
 menu.hint_audio_hdmi_dd DolbyDigital over HDMI: off - decoded\nauto  if supported by device, force
 menu.hint_audio_spdif_dd DolbyDigital over optical output
-menu.hint_audio_srs SRS TruVolume control volume jumps\nat content changes
-menu.hint_audio_srs_algo Amount of control, light or normal
-menu.hint_audio_srs_nmgr Noise manager
-menu.hint_audio_srs_volume Reference level to maintain
 menu.hint_audio_volstart Always set selected volume value on boot
 menu.hint_audio_volstep Volume +/- keys increase/decrease step
 menu.hint_audioplayer_defdir Default audioplayer directory
@@ -1326,11 +1280,6 @@ menu.hint_lcd4l_logodir Logo directory.\nFallback to default on invalid entry.
 menu.hint_lcd4l_skin Switch between modes
 menu.hint_lcd4l_skin_radio Switch the mode, when Radio-Mode is activated
 menu.hint_lcd4l_support Activate/deactivate LCD4Linux\nSupported displays: Pearl DPF, Samsung DPF, VUPLUS4K, PNG
-menu.hint_leds_blink Blinking LEDs in deep-standby
-menu.hint_leds_deepstandby LEDs state in deeps-standby mode
-menu.hint_leds_record LEDs state when box recording
-menu.hint_leds_standby LEDs state in soft-standby mode
-menu.hint_leds_tv Working LEDs state
 menu.hint_load Load GUI settings from file
 menu.hint_longkeypress_duration A key press will be considered as "long key press" if it's pressed longer than the specified time.
 menu.hint_lua Run Lua Plugins
@@ -1408,7 +1357,6 @@ menu.hint_opkg_install_local_package Install package from USB, SD, share or loca
 menu.hint_opkg_upgrade Updates all installed packages to the most recent version available
 menu.hint_osd Colors, fonts, screen size\nGUI look and feel options
 menu.hint_osd_language Select OSD language
-menu.hint_osd_preset Pre-configured screen margins for CRT and LCD TV
 menu.hint_osd_resolution Change OSD resolution
 menu.hint_osd_timing After this time the OSD will be faded out
 menu.hint_other_fonts Change other font sizes
@@ -1595,7 +1543,6 @@ menu.hint_sms_movie If enabled, numeric buttons in moviebrowser used to search m
 menu.hint_soft_restart Restart Neutrino without reboot
 menu.hint_softupdate_check Check online update, download and flash firmware
 menu.hint_softupdate_check_local Select and flash firmware from local file
-menu.hint_softupdate_createimage_menu Backup of current software, including all settings
 menu.hint_softupdate_expert Separate partitions from the flash. Read and write to the flash
 menu.hint_softupdate_expert_read Separate partitions (U-Boot, Splash, Kernel, SystemFS) from the flash read
 menu.hint_softupdate_expert_write Separate partitions (Splash, Kernel, SystemFS) write to the flash
@@ -1632,25 +1579,19 @@ menu.hint_vfd_scroll Enable or disable text scrolling on VFD
 menu.hint_vfd_statusline Choose what to display in short\nVFD/LCD status line
 menu.hint_video Video output, resolution, format\nAspect ratio, fast mode switch options
 menu.hint_video_43mode Display mode for 4:3 content\non 16:9 TV
-menu.hint_video_analog_mode Select analog output mode\nfor SCART and RCA connectors
 menu.hint_video_brightness Change picture brightness
-menu.hint_video_cinch_mode Select analog output mode for\ncomposite video out
 menu.hint_video_colorformat_analog Select color space for analog output (SCART/RCA)
 menu.hint_video_colorformat_hdmi Select color space for digital output (HDMI)
 menu.hint_video_contrast Change picture contrast
-menu.hint_video_dbdr MPEG2 enhancement filters
 menu.hint_video_format TV aspect ratio
 menu.hint_video_mask Define a channel-specific border to hide unwanted screen content
 menu.hint_video_mixer_color This color will be used for the background if there is no signal available.
 menu.hint_video_mode HDMI output video mode
 menu.hint_video_modes VF key will cycle between enabled modes 
-menu.hint_video_modes_auto Enable modes to auto-select based on content
 menu.hint_video_pip Picture in picture size and position
 menu.hint_video_psi On-screen menu for changing color, contrast and more
 menu.hint_video_psi_step Set the increment for the on-screen menu
 menu.hint_video_saturation Change picture saturation
-menu.hint_video_scart_mode Select analog output mode for SCART connectors
-menu.hint_video_sdosd Enable/disable OSD display on SD output (scart, cinch)
 menu.hint_video_three_d Change the channel-specific 3D settings
 menu.hint_video_tint Change picture tint
 menu.hint_video_zappingmode Select black screen or still picture while zapping
@@ -2622,15 +2563,15 @@ timing.numericzap Numeric Zap
 timing.popup_messages Popup messages
 timing.static_messages Interactive messages
 timing.volumebar Volume bar
+tmdb.api_key TMDb API key
+tmdb.enabled TMDb support
+tmdb.info TMDb-Info
+tmdb.read_data Search TMDb data ...
 tunersetup.cable Cable (DVB-C)
 tunersetup.hybrid Hybrid (DVB-C/T/T2)
 tunersetup.mode Operation mode
 tunersetup.power 5V supply on DVB-T/T2 channels
 tunersetup.terr Terrestrial (DVB-T/T2)
-tmdb.api_key TMDb API key
-tmdb.enabled TMDb support
-tmdb.info TMDb-Info
-tmdb.read_data Search TMDb data ...
 unicable.lnb Unicable Input
 unicable.pin Unicable PIN
 unicable.pin_hint PIN (1 - 255) for user frequency\n0 means inactive / off
@@ -2670,24 +2611,11 @@ usermenu.title_yellow Video
 usermenus.head User menus
 video_mode_ok Is this video mode working ok ?
 videomenu.43mode 4:3 Content mode
-videomenu.analog_auto AUTO
-videomenu.analog_cvbs CVBS
-videomenu.analog_hd_rgb RGB (HD)
-videomenu.analog_hd_rgb_cinch RGB on cinch (HD)
-videomenu.analog_hd_rgb_scart RGB on scart (HD)
-videomenu.analog_hd_yprpb YPbPr(HD)
-videomenu.analog_hd_yprpb_cinch YPbPr on cinch (HD)
-videomenu.analog_hd_yprpb_scart YPbPr on scart (HD)
-videomenu.analog_mode Analog Video Output
 videomenu.analog_sd_rgb RGB (SD)
-videomenu.analog_sd_rgb_cinch RGB on cinch (SD)
 videomenu.analog_sd_rgb_scart RGB on scart (SD)
 videomenu.analog_sd_yprpb YPbPr (SD)
-videomenu.analog_sd_yprpb_cinch YPbPr on cinch (SD)
 videomenu.analog_sd_yprpb_scart YPbPr on scart (SD)
 videomenu.auto Auto
-videomenu.brightness Brightness
-videomenu.cinch Cinch
 videomenu.colorformat Color space
 videomenu.colorformat.cvbs CVBS
 videomenu.colorformat.rgb RGB
@@ -2697,13 +2625,7 @@ videomenu.colorformat.ycbcr444 YCbCr 4:4:4
 videomenu.colorformat.yuv YUV
 videomenu.colorformat_analog Cinch/Scart
 videomenu.colorformat_hdmi HDMI
-videomenu.contrast Contrast
-videomenu.dbdr MPEG2 de-block/de-ring
-videomenu.dbdr_both de-block+de-ring
-videomenu.dbdr_deblock de-block
-videomenu.dbdr_none none
 videomenu.enabled_modes VF key enabled modes
-videomenu.enabled_modes_auto Auto-select enabled modes
 videomenu.fullscreen Full screen
 videomenu.hdmi_cec HDMI-CEC
 videomenu.hdmi_cec_broadcast Send to all devices
@@ -2730,10 +2652,8 @@ videomenu.psi.reset Default
 videomenu.psi.saturation Saturation
 videomenu.psi.step Video slider step size
 videomenu.psi.tint Tint
-videomenu.saturation Saturation
 videomenu.scart Scart
 videomenu.screensetup Screen Setup
-videomenu.sdosd SD OSD
 videomenu.sharpness Sharpness
 videomenu.tv-scart Video
 videomenu.vcrsignal VCR Output Signal Type

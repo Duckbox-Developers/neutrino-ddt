@@ -38,7 +38,6 @@
 #include <mymenu.h>
 #include <neutrino_menue.h>
 #include <gui/filebrowser.h>
-#include <gui/update_ext.h>
 #include <gui/update_settings.h>
 #include <gui/widget/icons.h>
 #include <driver/screen_max.h>
@@ -59,24 +58,6 @@ CUpdateSettings::~CUpdateSettings()
 	delete input_url_file;
 #endif
 }
-
-#if ENABLE_EXTUPDATE
-#define SOFTUPDATE_NAME_MODE1_OPTION_COUNT 3
-const CMenuOptionChooser::keyval SOFTUPDATE_NAME_MODE1_OPTIONS[SOFTUPDATE_NAME_MODE1_OPTION_COUNT] =
-{
-	{ CExtUpdate::SOFTUPDATE_NAME_DEFAULT,       LOCALE_FLASHUPDATE_NAMEMODE1_DEFAULT       },
-	{ CExtUpdate::SOFTUPDATE_NAME_HOSTNAME_TIME, LOCALE_FLASHUPDATE_NAMEMODE1_HOSTNAME_TIME },
-	{ CExtUpdate::SOFTUPDATE_NAME_ORGNAME_TIME,  LOCALE_FLASHUPDATE_NAMEMODE1_ORGNAME_TIME  }
-};
-
-#define SOFTUPDATE_NAME_MODE2_OPTION_COUNT 2
-const CMenuOptionChooser::keyval SOFTUPDATE_NAME_MODE2_OPTIONS[SOFTUPDATE_NAME_MODE2_OPTION_COUNT] =
-{
-	{ CExtUpdate::SOFTUPDATE_NAME_DEFAULT,       LOCALE_FLASHUPDATE_NAMEMODE2_DEFAULT       },
-	{ CExtUpdate::SOFTUPDATE_NAME_HOSTNAME_TIME, LOCALE_FLASHUPDATE_NAMEMODE2_HOSTNAME_TIME }
-};
-#endif
-
 int CUpdateSettings::exec(CMenuTarget* parent, const std::string &actionKey)
 {
 	dprintf(DEBUG_DEBUG, "init software-update settings\n");
@@ -123,20 +104,6 @@ int CUpdateSettings::initMenu()
 //	fw_url->setHint("", LOCALE_MENU_HINT_XXX);
 	CMenuForwarder * fw_update_dir 	= new CMenuForwarder(LOCALE_EXTRA_UPDATE_DIR, true, g_settings.update_dir , this, "update_dir", CRCInput::RC_red);
 //	fw_update_dir->setHint("", LOCALE_MENU_HINT_XXX);
-#if ENABLE_EXTUPDATE
-	CMenuOptionChooser *name_backup = new CMenuOptionChooser(LOCALE_FLASHUPDATE_NAMEMODE2, &g_settings.softupdate_name_mode_backup, SOFTUPDATE_NAME_MODE2_OPTIONS, SOFTUPDATE_NAME_MODE2_OPTION_COUNT, true);
-//	name_backup->setHint("", LOCALE_MENU_HINT_XXX);
-
-#ifndef BOXMODEL_CS_HD2
-	CMenuOptionChooser *apply_settings = new CMenuOptionChooser(LOCALE_FLASHUPDATE_MENU_APPLY_SETTINGS, &g_settings.apply_settings, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, OnOffNotifier);
-//	apply_settings->setHint("", LOCALE_MENU_HINT_XXX);
-
-	CMenuOptionChooser *name_apply = new CMenuOptionChooser(LOCALE_FLASHUPDATE_NAMEMODE1, &g_settings.softupdate_name_mode_apply, SOFTUPDATE_NAME_MODE1_OPTIONS, SOFTUPDATE_NAME_MODE1_OPTION_COUNT, g_settings.apply_settings);
-//	name_apply->setHint("", LOCALE_MENU_HINT_XXX);
-	OnOffNotifier->addItem(name_apply);
-#endif
-#endif
-
 #if 0
 	CMenuOptionChooser *apply_kernel = new CMenuOptionChooser(LOCALE_FLASHUPDATE_MENU_APPLY_KERNEL, &g_settings.apply_kernel, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, g_settings.apply_settings);
 //	apply_kernel->setHint("", LOCALE_MENU_HINT_XXX);
@@ -148,14 +115,6 @@ int CUpdateSettings::initMenu()
 
 	w_upsettings.addItem(fw_update_dir);
 	w_upsettings.addItem(fw_url);
-#if ENABLE_EXTUPDATE
-	w_upsettings.addItem(name_backup);
-#ifndef BOXMODEL_CS_HD2
-	w_upsettings.addItem(GenericMenuSeparatorLine);
-	w_upsettings.addItem(apply_settings);
-	w_upsettings.addItem(name_apply);
-#endif
-#endif
 	w_upsettings.addItem(autocheck);
 
 #if 0

@@ -44,11 +44,6 @@
 #include <neutrino.h>
 #include <driver/display.h>
 
-#if HAVE_TRIPLEDRAGON
-/* TD kernel 2.6.12 is too old and does not have writesize yet, use oobsize instead */
-#define writesize oobsize
-#endif
-
 CFlashTool::CFlashTool()
 {
 	statusViewer = NULL;
@@ -182,22 +177,6 @@ bool CFlashTool::program( const std::string & filename, int globalProgressEndEra
 	std::string flashfile;
 
 	bool skipCopy = false;
-#ifdef BOXMODEL_CS_HD2
-	if (strcmp(dn, "/tmp") != 0) {
-		uint64_t btotal = 0, bused = 0;
-		long bsize = 0;
-		if (get_fs_usage("/tmp", btotal, bused, &bsize)) {
-			uint64_t fileSize = (uint64_t)file_size(filename.c_str()) / 1024ULL;
-			uint64_t backupMaxSize = (int)((btotal - bused) * bsize);
-			uint64_t res = 10; // Reserved 10% of available space
-			backupMaxSize = (backupMaxSize - ((backupMaxSize * res) / 100ULL)) / 1024ULL;
-			if (backupMaxSize < fileSize)
-				skipCopy = true;
-		}
-		else
-			skipCopy = true;
-	}
-#endif
 
 	if ((strcmp(dn, "/tmp") != 0) && !skipCopy) {
 		memset(buf1, 0, sizeof(buf1));
@@ -410,7 +389,7 @@ bool CFlashTool::erase(int globalProgressEnd)
 	close(fd);
 	return true;
 }
-#if 0 
+#if 0
 //never used
 bool CFlashTool::check_cramfs( const std::string & /*filename*/ )
 {
@@ -692,11 +671,7 @@ int CMTDInfo::getMTDEraseSize( const std::string & filename )
 
 std::string CMTDInfo::findMTDsystem()
 {
-#ifdef BOXMODEL_CS_HD2
-	std::string sysfs = "root0";
-#else
 	std::string sysfs = "systemFS";
-#endif
 
 	for(int i = 0; i < getMTDCount(); i++) {
 		if(getMTDName(i) == sysfs) {

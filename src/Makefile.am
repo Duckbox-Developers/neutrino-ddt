@@ -27,10 +27,6 @@ AM_CPPFLAGS = \
 	@LUA_CFLAGS@ \
 	@HWLIB_CFLAGS@
 
-if BOXTYPE_TRIPLE
-SUBDIRS += lcddisplay
-endif
-
 if USE_PUGIXML
 PUGIXML_LIBS = -lpugixml
 endif
@@ -64,12 +60,6 @@ neutrino_SOURCES = neutrino_menue.cpp neutrino.cpp
 rcsim_SOURCES = rcsim.c rcsim.h
 
 AM_CPPFLAGS += -D_FILE_OFFSET_BITS=64
-
-if BOXMODEL_CS_HD2
-MTDUTILSLIBS = \
-	system/mtdutils/libneutrino_system_mtdutils.a \
-	system/mtdutils/lib/libneutrino_system_mtdutils_lib.a
-endif
 
 if ENABLE_LUA
 LUALIBS = \
@@ -157,26 +147,6 @@ neutrino_LDADD += \
 	$(top_builddir)/lib/libupnpclient/libtuxbox-upnpclient.a
 endif
 
-if BOXTYPE_COOL
-neutrino_LDADD += \
-	$(top_builddir)/lib/hardware/coolstream/libhwcaps.a
-if ENABLE_LIBCOOLSTREAM_STATIC
-neutrino_LDADD += -lca-sc
-neutrino_LDADD += @LIBCOOLSTREAM_STATIC_DIR@/libcoolstream-mt.a
-else
-neutrino_LDADD += -lcoolstream-mt -lca-sc
-endif
-
-if BOXMODEL_CS_HD2
-neutrino_LDADD += -lca-ci -llnxtmvssUsr -llnxUKAL -llnxplatUsr -llnxtmasUsr -llnxdvbciUsr -llnxpvrUsr -llnxcssUsr -llnxnotifyqUsr -ltmpvrDataManager-cst -ltmpvrIndexStorage -llnxscsUsr
-else
-neutrino_LDADD += -lnxp
-endif
-
-if BOXMODEL_CS_HD2
-neutrino_LDADD += -liconv
-endif
-
 if BOXTYPE_SPARK
 neutrino_LDADD += -lass
 endif
@@ -193,27 +163,16 @@ if BOXTYPE_MIPSBOX
 neutrino_LDADD += -lass
 endif
 
-bin_PROGRAMS += drivertool
-drivertool_SOURCES = drivertool.c
-bin_PROGRAMS += dt
-dt_SOURCES = dt.c
-bin_PROGRAMS += mdev_helper
-mdev_helper_SOURCES = mdev_helper.cpp
-endif
-
-if BOXTYPE_TRIPLE
-neutrino_LDADD += \
-	$(top_builddir)/src/lcddisplay/liblcddisplay.a
-endif
+#bin_PROGRAMS += drivertool
+#drivertool_SOURCES = drivertool.c
+#bin_PROGRAMS += dt
+#dt_SOURCES = dt.c
+#bin_PROGRAMS += mdev_helper
+#mdev_helper_SOURCES = mdev_helper.cpp
 
 if BOXMODEL_RASPI
 neutrino_LDADD += \
 	-L/opt/vc/lib/ -lbcm_host -lvcos -lvchiq_arm -lpthread -lrt
-endif
-
-if BOXTYPE_COOL
-bin_PROGRAMS += shutdown_helper
-shutdown_helper_SOURCES = shutdown_helper.c
 endif
 
 if USE_STB_HAL

@@ -57,12 +57,6 @@
 #include <zapit/satconfig.h>
 #include <zapit/femanager.h>
 
-#if HAVE_COOL_HARDWARE
-#include <record_cs.h>
-#include <playback_cs.h>
-#include <pwrmngr.h>
-#endif
-
 #include <hardware/audio.h>
 #include <hardware/ca.h>
 #include <hardware/dmx.h>
@@ -610,11 +604,6 @@ bool CZapit::ZapIt(const t_channel_id channel_id, bool forupdate, bool startplay
 #ifdef ENABLE_PIP
 	if (transponder_change && (live_fe == pip_fe))
 		StopPip();
-#endif
-
-#ifdef BOXMODEL_CS_HD2
-	if (CCamManager::getInstance()->GetCITuner() < 0)
-		cCA::GetInstance()->SetTS((CA_DVBCI_TS_INPUT)live_fe->getNumber());
 #endif
 
 	if (current_channel->getServiceType() == ST_NVOD_REFERENCE_SERVICE) {
@@ -2258,14 +2247,11 @@ bool CZapit::StartPlayBack(CZapitChannel *thisChannel)
 		pcrDemux->Start();
 	}
 
-#if HAVE_AZBOX_HARDWARE
-	/* new (> 20130917) AZbox drivers switch to radio mode if audio is started first */
 	/* start video */
 	if (video_pid) {
-		videoDecoder->Start(0, thisChannel->getPcrPid(), thisChannel->getVideoPid());
 		videoDemux->Start();
+		videoDecoder->Start(0, pcr_pid, video_pid);
 	}
-#endif
 
 	/* select audio output and start audio */
 	if (audio_pid) {
@@ -2274,18 +2260,6 @@ bool CZapit::StartPlayBack(CZapitChannel *thisChannel)
 		audioDecoder->Start();
 	}
 
-#if ! HAVE_AZBOX_HARDWARE
-	/* start video */
-	if (video_pid) {
-	#if HAVE_COOL_HARDWARE
-		videoDecoder->Start(0, pcr_pid, video_pid);
-		videoDemux->Start();
-	#else
-		videoDemux->Start();
-		videoDecoder->Start(0, pcr_pid, video_pid);
-	#endif
-	}
-#endif
 #ifdef USE_VBI
 	if(teletext_pid)
 		videoDecoder->StartVBI(teletext_pid);
@@ -2314,16 +2288,6 @@ bool CZapit::StopPlayBack(bool send_pmt, bool __attribute__ ((unused)) blank)
 	if (playbackStopForced)
 		return false;
 
-#if HAVE_AZBOX_HARDWARE
-	pcrDemux->Stop();
-
-	if (current_channel && current_channel->getVideoPid()) {
-		videoDemux->Stop();
-		videoDecoder->Stop(standby ? false : true);
-	}
-	audioDemux->Stop();
-	audioDecoder->Stop();
-#else
 	videoDecoder->Stop(false);
 	videoDemux->Stop();
 	audioDemux->Stop();
@@ -2332,7 +2296,6 @@ bool CZapit::StopPlayBack(bool send_pmt, bool __attribute__ ((unused)) blank)
 
 	/* hack. if standby, dont blank video -> for paused timeshift */
 	//videoDecoder->Stop(standby ? false : blank);
-#endif
 #ifdef USE_VBI
 	videoDecoder->StopVBI();
 #endif
@@ -2481,42 +2444,14 @@ bool CZapit::Start(Z_start_arg *ZapStart_arg)
 	/* FIXME until proper demux management */
 	int dnum = 1;
 #endif
-#ifdef BOXMODEL_CS_HD2
-	videoDecoder = cVideo::GetDecoder(0);
-	audioDecoder = cAudio::GetDecoder(0);
-
-	videoDecoder->SetDemux(videoDemux);
-	COsdHelpers::getInstance()->setVideoSystem(video_mode);
-	uint32_t osd_resolution = ZapStart_arg->osd_resolution;
-	COsdHelpers::getInstance()->changeOsdResolution(osd_resolution);
-	videoDecoder->Standby(false);
-
-	audioDecoder->SetDemux(audioDemux);
-	audioDecoder->SetVideo(videoDecoder);
-
-#ifdef ENABLE_PIP
-	pipDemux = new cDemux(dnum);
-	pipDemux->Open(DMX_PIP_CHANNEL);
-	pipDecoder = cVideo::GetDecoder(1);
-	pipDecoder->SetDemux(pipDemux);
-#endif
-#else
-#if HAVE_COOL_HARDWARE
-	/* work around broken drivers: when starting up with 720p50 image is pink on hd1 */
-	videoDecoder = new cVideo(VIDEO_STD_1080I50, videoDemux->getChannel(), videoDemux->getBuffer());
-	videoDecoder->SetVideoSystem(video_mode);
-#else
         videoDecoder = new cVideo(video_mode, videoDemux->getChannel(), videoDemux->getBuffer());
-#endif
         videoDecoder->Standby(false);
-
         audioDecoder = new cAudio(audioDemux->getBuffer(), videoDecoder->GetTVEnc(), NULL /*videoDecoder->GetTVEncSD()*/);
 
 #ifdef ENABLE_PIP
 	pipDemux = new cDemux(dnum);
 	pipDemux->Open(DMX_PIP_CHANNEL);
 	pipDecoder = new cVideo(video_mode, pipDemux->getChannel(), pipDemux->getBuffer(), 1);
-#endif
 #endif
 
 	videoDecoder->SetAudioHandle(audioDecoder->GetHandle());

@@ -141,29 +141,6 @@ int CCAMMenuHandler::doMainMenu()
 	}
 	cammenu->addItem(new CMenuOptionChooser(LOCALE_CI_CHECK_LIVE_SLOT, &g_settings.ci_check_live, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this));
 
-#ifdef BOXMODEL_CS_HD2
-	int fecount = CFEManager::getInstance()->getFrontendCount();
-	char fename[fecount+1][255];
-
-	CMenuOptionChooser::keyval_ext feselect[fecount+1];
-	feselect[0].key = -1;
-	feselect[0].value = NONEXISTANT_LOCALE;
-	feselect[0].valname = g_Locale->getText(LOCALE_OPTIONS_OFF);
-	int select_count = 1;
-
-	for (int i = 0; i < fecount; i++) {
-		CFrontend * fe = CFEManager::getInstance()->getFE(i);
-		int num = fe->getNumber();
-		snprintf(fename[select_count], sizeof(fename[select_count]), "%d: %s", num+1, fe->getName());
-		feselect[select_count].key = num;
-		feselect[select_count].value = NONEXISTANT_LOCALE;
-		feselect[select_count].valname = fename[select_count];
-		select_count++;
-	}
-	CMenuOptionChooser * mc = new CMenuOptionChooser(LOCALE_CI_TUNER, &g_settings.ci_tuner, feselect, select_count, true, this);
-	cammenu->addItem(mc);
-#endif
-
 	cammenu->addItem( GenericMenuSeparatorLine );
 
 	CMenuWidget * tempMenu;
