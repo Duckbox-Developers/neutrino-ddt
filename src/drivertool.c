@@ -32,17 +32,6 @@
 
 #include <cs_frontpanel.h>
 
-#ifdef BOXMODEL_CS_HD2
-#ifdef HAVE_COOLSTREAM_CS_IR_GENERIC_H
-#include <cs_ir_generic.h>
-#endif
-#else
-#ifdef HAVE_COOLSTREAM_NEVIS_IR_H
-#include <nevis_ir.h>
-#endif
-#endif
-
-
 #ifndef IOC_IR_SET_PRI_PROTOCOL
 /* unfortunately, the shipped headers seem to be still incomplete...
  * documented here:

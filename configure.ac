@@ -89,10 +89,6 @@ TUXBOX_APPS_LIB_PKGCONFIG(SWRESAMPLE,libswresample)
 
 AM_CONDITIONAL(USE_TREMOR, test "$TREMOR" = "yes")
 
-if test "$BOXTYPE" = "tripledragon"; then
-	TUXBOX_APPS_LIB_PKGCONFIG(DIRECTFB, directfb)
-fi
-
 # TUXBOX_APPS_LIB_PKGCONFIG(OPENSSL,openssl)
 TUXBOX_APPS_LIB_PKGCONFIG(CURL,libcurl)
 
@@ -136,13 +132,7 @@ TUXBOX_APPS_LIB_PKGCONFIG(SIGC,sigc++-2.0)
 TUXBOX_APPS_LIB_PKGCONFIG(SWRESAMPLE,libswresample)
 TUXBOX_APPS_LIB_PKGCONFIG(SWSCALE,libswscale)
 
-if test "$BOXTYPE" = "coolstream"; then
-	TUXBOX_APPS_LIB_PKGCONFIG(BLURAY,libbluray)
-fi
-
-if test "$BOXTYPE" = "coolstream" ||
-   test "$BOXTYPE" = "generic" ||
-   test "$BOXTYPE" = "tripledragon" ||
+if test "$BOXTYPE" = "generic" ||
    test "$BOXTYPE" = "duckbox" ||
    test "$BOXTYPE" = "armbox" ||
    test "$BOXTYPE" = "mipsbox" ||
@@ -233,11 +223,6 @@ if test "$enable_mips_acc" = "yes"; then
 	AC_DEFINE(ENABLE_MIPS_ACC,1,[enable mips hardware acceleration])
 fi
 
-AC_ARG_ENABLE(extupdate,
-	AS_HELP_STRING([--enable-extupdate], [enable extended update routine @<:@default=no@:>@]),
-	AC_DEFINE(ENABLE_EXTUPDATE, 1, [enable extended update routine]))
-AM_CONDITIONAL(ENABLE_EXTUPDATE, test "$enable_extupdate" = "yes")
-
 AC_ARG_ENABLE(lua,
 	AS_HELP_STRING([--enable-lua], [enable Lua support @<:@default=yes@:>@]),
 	[enable_lua="$enableval"],
@@ -290,36 +275,13 @@ AC_ARG_WITH(stb-hal-build,
 	[STB_HAL_LIB="-L$withval"],
 	[STB_HAL_LIB=""])
 
-if test "$BOXTYPE" != coolstream; then
 	AC_DEFINE(USE_STB_HAL, 1, [use libstb-hal])
 	if test "$STB_HAL_INC" = ""; then
 		AC_MSG_ERROR([need libstb-hal includes path with --with-stb-hal-includes=...])
 	fi
 	HWLIB_CFLAGS="-I$STB_HAL_INC"
-fi
+
 AM_CONDITIONAL(USE_STB_HAL, test "$BOXTYPE" != "coolstream")
-
-if test "$BOXTYPE" = "coolstream"; then
-	if test "$BOXMODEL" = "hd1"; then
-		if test -e ${srcdir}/lib/hardware/coolstream/hd1/libcoolstream/nevis_ir.h; then
-			AC_DEFINE(HAVE_COOLSTREAM_NEVIS_IR_H, 1, [Define to 1 if you have the <nevis_ir.h> header file.])
-		fi
-		HWLIB_CFLAGS='-I$(top_srcdir)/lib/hardware/coolstream/hd1/libcoolstream'
-	fi
-
-	if test "$BOXMODEL" = "hd2"; then
-		if test -e ${srcdir}/lib/hardware/coolstream/hd2/libcoolstream/cs_ir_generic.h; then
-			AC_DEFINE(HAVE_COOLSTREAM_CS_IR_GENERIC_H, 1, [Define to 1 if you have the <cs_ir_generic.h> header file.])
-		fi
-		if test -e ${srcdir}/lib/hardware/coolstream/hd2/libcoolstream/cs_frontpanel.h; then
-			AC_DEFINE(HAVE_COOLSTREAM_CS_FRONTPANEL_H, 1, [Define to 1 if you have the <cs_frontpanel.h> header file.])
-		fi
-		HWLIB_CFLAGS='-I$(top_srcdir)/lib/hardware/coolstream/hd2/libcoolstream'
-	fi
-
-	HWLIB_CFLAGS="$HWLIB_CFLAGS "'-I$(top_srcdir)/src/zapit/include/private'
-	HWLIB_CFLAGS="$HWLIB_CFLAGS "'-I$(top_srcdir)/lib/hardware/coolstream'
-fi
 
 # hack, so that framebuffer.h does not need to be included everywhere...
 AC_DEFINE(fb_pixel_t, uint32_t, [hack, so that framebuffer.h does not need to be included everywhere...])
@@ -367,9 +329,6 @@ data/icons/status/various/Makefile
 data/icons/various/Makefile
 data/inetradio/Makefile
 data/iso-codes/Makefile
-data/lcd/Makefile
-data/lcd/clock/Makefile
-data/lcd/icons/Makefile
 data/license/Makefile
 data/locale/Makefile
 data/neutrino-scripts/Makefile
@@ -388,7 +347,6 @@ data/y-web/scripts/Makefile
 data/y-web/styles/Makefile
 lib/Makefile
 lib/connection/Makefile
-lib/hardware/coolstream/Makefile
 lib/jsoncpp/Makefile
 lib/libconfigfile/Makefile
 lib/libdvbsub/Makefile
@@ -414,15 +372,12 @@ src/gui/components/Makefile
 src/gui/lua/Makefile
 src/gui/moviebrowser/Makefile
 src/gui/widget/Makefile
-src/lcddisplay/Makefile
 src/nhttpd/Makefile
 src/nhttpd/nhttpd.conf
 src/nhttpd/tuxboxapi/Makefile
 src/nhttpd/yhttpd_core/Makefile
 src/nhttpd/yhttpd_mods/Makefile
 src/system/Makefile
-src/system/mtdutils/Makefile
-src/system/mtdutils/lib/Makefile
 src/timerd/Makefile
 src/zapit/Makefile
 src/zapit/lib/Makefile

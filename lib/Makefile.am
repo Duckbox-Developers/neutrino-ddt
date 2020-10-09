@@ -1,24 +1,19 @@
 SUBDIRS = \
 	connection \
-	libeventserver \
-	sectionsdclient \
-	timerdclient \
+	jsoncpp \
 	libconfigfile \
+	libdvbsub \
+	libeventserver \
+	libiw \
 	libmd5sum \
 	libnet \
-	xmltree \
-	jsoncpp \
 	libtuxtxt \
-	libiw \
-	libdvbsub \
-	luaclient
+	luaclient \
+	sectionsdclient \
+	timerdclient \
+	xmltree
 
 if ENABLE_UPNP
 SUBDIRS += \
 	libupnpclient
-endif
-
-if BOXTYPE_COOL
-SUBDIRS += \
-	hardware/coolstream
 endif

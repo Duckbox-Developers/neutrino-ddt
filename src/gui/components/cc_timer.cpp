@@ -83,9 +83,7 @@ void CComponentsTimer::runSharedTimerAction()
 		}else{
 			//behavior is different on cst hardware
 			long corr_factor = 1;
-#if ! HAVE_COOL_HARDWARE 
 			corr_factor = 10;
-#endif
 			int res = getSleep(tm_interval * corr_factor);
 			if (res != 0)
 				dprintf(DEBUG_NORMAL,"\033[33m[CComponentsTimer] [%s - %d] ERROR: returns [%d] \033[0m\n", __func__, __LINE__, res);

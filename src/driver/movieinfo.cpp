@@ -573,7 +573,6 @@ void MI_MOVIE_INFO::clear(void)
 		bookmarks.user[i].name = "";
 	}
 	tfile = "";
-
 	marked = false;
 	delAsk = true;
 	source = UNKNOWN;

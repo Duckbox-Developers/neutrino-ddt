@@ -32,33 +32,33 @@
 const struct personalize_settings_t personalize_settings[SNeutrinoSettings::P_SETTINGS_MAX] =
 {
 	{"personalize_pinstatus"		, CPersonalizeGui::PERSONALIZE_PROTECT_MODE_NOT_PROTECTED},
-	
+
 	//user menu
 	{"personalize_bluebutton"		, CPersonalizeGui::PERSONALIZE_ACTIVE_MODE_ENABLED}, // features
 	{"personalize_yellowbutton"		, CPersonalizeGui::PERSONALIZE_ACTIVE_MODE_ENABLED}, // features
 	{"personalize_greenbutton"		, CPersonalizeGui::PERSONALIZE_ACTIVE_MODE_ENABLED}, // features
 	{"personalize_redbutton"		, CPersonalizeGui::PERSONALIZE_ACTIVE_MODE_ENABLED}, // epg/info
-	
+
 	//main menu
 	{"personalize_tv_mode"			, CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE},
 	{"personalize_tv_radio_mode"		, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE}, //toggle
 	{"personalize_radio_mode"		, CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE},
-	{"personalize_timer"			, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE}, 
-	{"personalize_media"			, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE}, 
-	
-	{"personalize_games"			, CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE},	
+	{"personalize_timer"			, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
+	{"personalize_media"			, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
+
+	{"personalize_games"			, CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE},
 	{"personalize_tools"			, CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE},
 	{"personalize_scripts"			, CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE},
 	{"personalize_lua"			, CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE},
 	{"personalize_settings"			, CPersonalizeGui::PERSONALIZE_PROTECT_MODE_NOT_PROTECTED},
 	{"personalize_service"			, CPersonalizeGui::PERSONALIZE_PROTECT_MODE_NOT_PROTECTED},
-	{"personalize_sleeptimer"		, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE}, 
+	{"personalize_sleeptimer"		, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	{"personalize_standby"			, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	{"personalize_reboot"			, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	{"personalize_shutdown"			, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	{"personalize_infomenu_main"		, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	{"personalize_cisettings_main"		, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
-	
+
 	//main menu->settings menu
 	{"personalize_settingsmager"		, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	{"personalize_video"			, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
@@ -74,19 +74,19 @@ const struct personalize_settings_t personalize_settings[SNeutrinoSettings::P_SE
 	{"personalize_keybindings"		, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	{"personalize_mediaplayer"		, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	{"personalize_misc"			, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
-	
+
 	//main menu->service menu
 	{"personalize_tuner"			, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	{"personalize_scants"			, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	{"personalize_reload_channels"		, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	{"personalize_bouquet_edit"		, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
-	{"personalize_reset_channels"		, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE}, 
+	{"personalize_reset_channels"		, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	{"personalize_restart"			, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	{"personalize_reload_plugins"		, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	{"personalize_restart_tuner"		, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	{"personalize_infomenu_service"		, CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE},
 	{"personalize_softupdate"		, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
-	
+
 	//media menu
 	{"personalize_media_menu"		, CPersonalizeGui::PERSONALIZE_PROTECT_MODE_NOT_PROTECTED},
 	{"personalize_media_audio"		, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
@@ -96,7 +96,7 @@ const struct personalize_settings_t personalize_settings[SNeutrinoSettings::P_SE
 	{"personalize_media_upnp"		, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	
 	//media menu->movieplayer
-	{"personalize_mplayer_mbrowser"		, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
+	{"personalize_mplayer_mbrowser"	, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	{"personalize_mplayer_fileplay_video"	, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	{"personalize_mplayer_fileplay_audio"	, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	{"personalize_mplayer_gui_mount"	, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
@@ -106,7 +106,7 @@ const struct personalize_settings_t personalize_settings[SNeutrinoSettings::P_SE
 	{"personalize_feat_key_timerlist"	, CPersonalizeGui::PERSONALIZE_FEAT_KEY_YELLOW},
 	{"personalize_feat_key_vtxt"		, CPersonalizeGui::PERSONALIZE_FEAT_KEY_BLUE},
 	{"personalize_feat_key_rclock"		, CPersonalizeGui::PERSONALIZE_FEAT_KEY_AUTO},
-	
+
 	//user menu
 	{"personalize_usermenu_show_cancel"	, true},
 

@@ -129,20 +129,11 @@ CFrameBuffer* CFrameBuffer::getInstance()
 #if HAVE_SPARK_HARDWARE
 		frameBuffer = new CFbAccelSTi();
 #endif
-#if HAVE_COOL_HARDWARE
-#ifdef BOXMODEL_CS_HD1
-		frameBuffer = new CFbAccelCSHD1();
-#endif
-#ifdef BOXMODEL_CS_HD2
-		frameBuffer = new CFbAccelCSHD2();
-#endif
-#endif
+
 #if HAVE_GENERIC_HARDWARE
 		frameBuffer = new CFbAccelGLFB();
 #endif
-#if HAVE_TRIPLEDRAGON
-		frameBuffer = new CFbAccelTD();
-#endif
+
 #if HAVE_ARM_HARDWARE
 		frameBuffer = new CFbAccelARM();
 #endif
@@ -542,23 +533,8 @@ fb_pixel_t* CFrameBuffer::paintBoxRel(const int x, const int y, const int dx, co
 	int w_align;
 	int offs_align;
 
-#ifdef BOXMODEL_CS_HD2
-	if (_dx%4 != 0) {
-		w_align = getWidth4FB_HW_ACC(x, _dx, true);
-		if (w_align < _dx)
-			_dx = w_align;
-		offs_align = w_align - _dx;
-		if ((x - offs_align) < 0)
-			offs_align = 0;
-	}
-	else {
-		w_align    = _dx;
-		offs_align = 0;
-	}
-#else
 	w_align    = _dx;
 	offs_align = 0;
-#endif
 
 	fb_pixel_t* boxBuf    = paintBoxRel2Buf(_dx, dy, w_align, offs_align, MASK, NULL, radius, type);
 	if (boxBuf == NULL) {

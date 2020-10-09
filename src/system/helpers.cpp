@@ -54,7 +54,6 @@
 //#include <driver/framebuffer.h>
 #include <system/helpers.h>
 #include <system/helpers-json.h>
-#include <gui/update_ext.h>
 #include <driver/framebuffer.h>
 #include <libmd5sum.h>
 #define MD5_DIGEST_LENGTH 16
@@ -483,7 +482,7 @@ std::string getNowTimeStr(const char* format)
 	char tmpStr[256];
 	struct timeval tv;
 	struct tm t;
-	gettimeofday(&tv, NULL);        
+	gettimeofday(&tv, NULL);
 	strftime(tmpStr, sizeof(tmpStr), format, localtime_r(&tv.tv_sec, &t));
 	return (std::string)tmpStr;
 }
@@ -654,7 +653,7 @@ std::string& htmlEntityDecode(std::string& text)
 		text = str_replace(dt[i].htmlCode, dt[i].code, text);
 
 	return text;
-}	
+}
 
 CFileHelpers::CFileHelpers()
 {
@@ -969,10 +968,6 @@ bool CFileHelpers::copyDir(const char *Src, const char *Dst, bool backupMode)
 			else if (S_ISREG(FileInfo.st_mode)) {
 				std::string save = "";
 				(void)backupMode; /* squelch unused parameter warning */
-#if ENABLE_EXTUPDATE
-				if (backupMode && (CExtUpdate::getInstance()->isBlacklistEntry(srcPath)))
-					save = ".save";
-#endif
 				copyFile(srcPath, (dstPath + save).c_str()); /* mode is set by copyFile */
 			}
 		}

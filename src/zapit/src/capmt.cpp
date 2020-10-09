@@ -142,19 +142,13 @@ bool CCam::setCaPmt(bool update)
 	return sendMessage((char *)cabuf, calen, update);
 }
 
-#if ! HAVE_COOL_HARDWARE
+
 bool CCam::sendCaPmt(uint64_t tpid, uint8_t *rawpmt, int rawlen, uint8_t type, unsigned char scrambled, casys_map_t camap, int mode, bool enable)
 {
 	return cCA::GetInstance()->SendCAPMT(tpid, source_demux, camask,
 			rawpmt ? cabuf : NULL, rawpmt ? calen : 0, rawpmt, rawpmt ? rawlen : 0, (CA_SLOT_TYPE) type, scrambled, camap, mode, enable);
 }
-#else
-bool CCam::sendCaPmt(uint64_t tpid, uint8_t *rawpmt, int rawlen, uint8_t type)
-{
-	return cCA::GetInstance()->SendCAPMT(tpid, source_demux, camask,
-			rawpmt ? cabuf : NULL, rawpmt ? calen : 0, rawpmt, rawpmt ? rawlen : 0, (CA_SLOT_TYPE) type);
-}
-#endif
+
 
 int CCam::makeMask(int demux, bool add)
 {
@@ -239,14 +233,9 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 	CFrontend *frontend = CFEManager::getInstance()->getFrontend(channel);
 	switch(mode) {
 		case PLAY:
-#if HAVE_COOL_HARDWARE
-			source = DEMUX_SOURCE_0;
-			demux = LIVE_DEMUX;
-#else
 			source = cDemux::GetSource(0);
 			demux = cDemux::GetSource(0);
 //			INFO("PLAY: fe_num %d dmx_src %d", frontend ? frontend->getNumber() : -1, cDemux::GetSource(0));
-#endif
 			INFO("PLAY: fe_num %d dmx_src %d", source, demux);
 			break;
 		case STREAM:
@@ -282,7 +271,6 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 
 	//INFO("source %d old mask %d new mask %d force update %s", source, oldmask, newmask, force_update ? "yes" : "no");
 
-#if ! HAVE_COOL_HARDWARE
 	/* stop decoding if record stops unless it's the live channel. TODO:PIP? */
 	/* all the modes: RECORD, STREAM, PIP except PLAY now stopping here !! */
 	if (mode && start == false && source != cDemux::GetSource(0)) {
@@ -296,7 +284,6 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 			channel_map.erase(channel_id);
 		}
 	}
-#endif
 
 	if((oldmask != newmask) || force_update) {
 		cam->setCaMask(newmask);
@@ -357,29 +344,6 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 		if (channel_map.size() > 1)
 			list = CCam::CAPMT_ADD;
 
-#ifdef BOXMODEL_CS_HD2
-		int ci_use_count = 0;
-		for (it = channel_map.begin(); it != channel_map.end(); ++it)
-		{
-			cam = it->second;
-			channel = CServiceManager::getInstance()->FindChannel(it->first);
-
-			if (tunerno >= 0 && tunerno == cDemux::GetSource(cam->getSource())) {
-				cCA::GetInstance()->SetTS((CA_DVBCI_TS_INPUT)tunerno);
-				ci_use_count++;
-				break;
-			} else if (filter_channels) {
-				if (channel && channel->bUseCI)
-					ci_use_count++;
-			} else
-				ci_use_count++;
-		}
-		if (ci_use_count == 0) {
-			INFO("CI: not used, disabling TS\n");
-			cCA::GetInstance()->SetTS(CA_DVBCI_TS_INPUT_DISABLED);
-		}
-#endif
-
 		for (it = channel_map.begin(); it != channel_map.end(); /*++it*/)
 		{
 			cam = it->second;
@@ -401,16 +365,6 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 			cam->sendCaPmt(channel->getChannelID(), buffer, len, CA_SLOT_TYPE_CI, channel->scrambled, channel->camap, 0, true);
 
 			/* out commented: causes a double send of capmt, the second without needed parameters */ 
-#ifdef HAVE_COOLSTREAM
-			if (tunerno >= 0 && tunerno != cDemux::GetSource(cam->getSource())) {
-			INFO("CI: configured tuner %d do not match %d, skip [%s]\n", tunerno, cam->getSource(), channel->getName().c_str());
-			} else if (filter_channels && !channel->bUseCI) {
-			INFO("CI: filter enabled, CI not used for [%s]\n", channel->getName().c_str());
-			} else {
-				cam->sendCaPmt(channel->getChannelID(), buffer, len, CA_SLOT_TYPE_CI);
-			}
-			//list = CCam::CAPMT_MORE;
-#endif
 		}
 	}
 
@@ -420,8 +374,4 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 void CCamManager::SetCITuner(int tuner)
 {
 	tunerno = tuner;
-#ifdef BOXMODEL_CS_HD2
-	if (tunerno >= 0)
-		cCA::GetInstance()->SetTS((CA_DVBCI_TS_INPUT)tunerno);
-#endif
 }

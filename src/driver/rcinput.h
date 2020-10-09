@@ -42,16 +42,6 @@
 #include <OpenThreads/Mutex>
 #include <OpenThreads/ScopedLock>
 
-#ifdef BOXMODEL_CS_HD2
-#ifdef HAVE_COOLSTREAM_CS_IR_GENERIC_H
-#include <cs_ir_generic.h>
-#endif
-#else
-#ifdef HAVE_COOLSTREAM_NEVIS_IR_H
-#include <nevis_ir.h>
-#endif
-#endif
-
 #ifndef KEY_OK
 #define KEY_OK           0x160
 #endif
@@ -223,8 +213,8 @@ class CRCInput
 #endif
 			RC_home		= KEY_HOME,	    /* /include/linux/input.h: #define KEY_HOME			102   */
 			RC_setup	= KEY_MENU,	    /* /include/linux/input.h: #define KEY_SETUP		141   */
-			RC_topleft	= KEY_TOPLEFT,	
-			RC_topright	= KEY_TOPRIGHT,	
+			RC_topleft	= KEY_TOPLEFT,
+			RC_topright	= KEY_TOPRIGHT,
 			RC_page_up	= KEY_PAGEUP,	    /* /include/linux/input.h: #define KEY_PAGEUP		104   */
 			RC_page_down	= KEY_PAGEDOWN,	    /* /include/linux/input.h: #define KEY_PAGEDOWN		109   */
 			RC_ok		= KEY_OK,	    /* /include/linux/input.h: #define KEY_OK			0x160 */ /* in patched input.h */
@@ -303,8 +293,6 @@ class CRCInput
 			RC_mute_off	= KEY_MUTEOFF,
 			RC_analog_on	= KEY_ANALOGON,
 			RC_analog_off	= KEY_ANALOGOFF,
-
-			/* tripledragon keys */
 			RC_eject	= KEY_EJECTCD,
 			RC_aux		= KEY_AUX,          /* 0x186 */
 			RC_timer	= KEY_TIME,
@@ -321,10 +309,8 @@ class CRCInput
 		//rc-hardware definitions
 		enum
 		{
-			RC_HW_COOLSTREAM	= 0,
-			RC_HW_DBOX		= 1,
-			RC_HW_PHILIPS		= 2,
-			RC_HW_TRIPLEDRAGON	= 3
+			RC_HW_DBOX		= 0,
+			RC_HW_PHILIPS		= 1,
 		};
 		void set_rc_hw(void);
 

@@ -38,7 +38,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <math.h>
-#include <sys/stat.h> 
+#include <sys/stat.h>
 
 #include <daemonc/remotecontrol.h>
 #include <system/helpers.h>
@@ -288,38 +288,8 @@ CVFD::CVFD()
 	fd = 1;
 #endif
 
-#ifdef BOXMODEL_CS_HD2
-	if (fd >= 0) {
-		int ret = ioctl(fd, IOC_FP_GET_DISPLAY_CAPS, &caps);
-		if (ret < 0) {
-			perror("IOC_FP_GET_DISPLAY_CAPS");
-			printf("VFD: please update driver!\n");
-			support_text	= true;
-			support_numbers	= true;
-		} else {
-			switch (caps.display_type) {
-			case FP_DISPLAY_TYPE_NONE:
-				has_lcd		= false;
-				has_led_segment	= false;
-				break;
-			case FP_DISPLAY_TYPE_LED_SEGMENT:
-				has_lcd		= false;
-				has_led_segment	= true;
-				break;
-			default:
-				has_lcd		= true;
-				has_led_segment	= false;
-				break;
-			}
-			support_text    = (caps.display_type != FP_DISPLAY_TYPE_LED_SEGMENT &&
-				           caps.text_support != FP_DISPLAY_TEXT_NONE);
-			support_numbers = caps.number_support;
-		}
-	}
-#else
 	support_text	= true;
 	support_numbers	= true;
-#endif
 }
 
 CVFD::~CVFD()
@@ -492,106 +462,6 @@ void CVFD::setlcdparameter(void)
 			last_toggle_state_power);
 }
 
-#if !HAVE_DUCKBOX_HARDWARE
-void CVFD::setled(int led1, int led2)
-{
-	int ret = -1;
-
-	if(led1 != -1){
-		ret = ioctl(fd, IOC_FP_LED_CTRL, led1);
-		if(ret < 0)
-			perror("IOC_FP_LED_CTRL");
-	}
-	if(led2 != -1){
-		ret = ioctl(fd, IOC_FP_LED_CTRL, led2);
-		if(ret < 0)
-			perror("IOC_FP_LED_CTRL");
-	}
-}
-
-void CVFD::setBacklight(bool on_off)
-{
-	if(cs_get_revision() != 9)
-		return;
-
-	int led = on_off ? FP_LED_3_ON : FP_LED_3_OFF;
-	if (ioctl(fd, IOC_FP_LED_CTRL, led) < 0)
-		perror("FP_LED_3");
-}
-
-void CVFD::setled(bool on_off)
-{
-	if(g_settings.led_rec_mode == 0)
-		return;
-
-	int led1 = -1, led2 = -1;
-	if(on_off){//on
-		switch(g_settings.led_rec_mode) {
-			case 1:
-				led1 = FP_LED_1_ON; led2 = FP_LED_2_ON;
-				break;
-			case 2:
-				led1 = FP_LED_1_ON;
-				break;
-			case 3:
-				led2 = FP_LED_2_ON;
-				break;
-			default:
-				break;
-	      }
-	}
-	else {//off
-		switch(g_settings.led_rec_mode) {
-			case 1:
-				led1 = FP_LED_1_OFF; led2 = FP_LED_2_OFF;
-				break;
-			case 2:
-				led1 = FP_LED_1_OFF;
-				break;
-			case 3:
-				led2 = FP_LED_2_OFF;
-				break;
-			default:
-				led1 = FP_LED_1_OFF; led2 = FP_LED_2_OFF;
-				break;
-	      }
-	}
-
-	setled(led1, led2);
-}
-
-void CVFD::setled(void)
-{
-	if(fd < 0) return;
-
-	int led1 = -1, led2 = -1;
-	int select = 0;
-
-	if(mode == MODE_MENU_UTF8 || mode == MODE_TVRADIO  )
-		  select = g_settings.led_tv_mode;
-	else if(mode == MODE_STANDBY)
-		  select = g_settings.led_standby_mode;
-
-	switch(select){
-		case 0:
-			led1 = FP_LED_1_OFF; led2 = FP_LED_2_OFF;
-			break;
-		case 1:
-			led1 = FP_LED_1_ON; led2 = FP_LED_2_ON;
-			break;
-		case 2:
-			led1 = FP_LED_1_ON; led2 = FP_LED_2_OFF;
-			break;
-		case 3:
-			led1 = FP_LED_1_OFF; led2 = FP_LED_2_ON;
-			break;
-		default:
-			break;
-	}
-	setled(led1, led2);
-}
-#endif
-
 void CVFD::showServicename(const std::string & name, int number) // UTF-8
 {
 	if(fd < 0) return;
@@ -658,25 +528,15 @@ void CVFD::showTime(bool force)
 			clearClock = 0;
 			if(has_lcd)
 				ShowIcon(FP_ICON_CAM1, false);
-#if !HAVE_DUCKBOX_HARDWARE
-			setled(false);//off
-#endif
 		} else {
 			clearClock = 1;
 			if(has_lcd)
 				ShowIcon(FP_ICON_CAM1, true);
-#if !HAVE_DUCKBOX_HARDWARE
-			setled(true);//on
-#endif
 		}
 	} else if(clearClock || (recstatus != tmp_recstatus)) { // in case icon ON after record stopped
 		clearClock = 0;
 		if(has_lcd)
 			ShowIcon(FP_ICON_CAM1, false);
-
-#if !HAVE_DUCKBOX_HARDWARE
-		setled();
-#endif
 	}
 
 	recstatus = tmp_recstatus;
@@ -948,10 +808,6 @@ void CVFD::setMode(const MODES m, const char * const title)
 	if(fd < 0) return;
 
 	// Clear colon in display if it is still there
-#ifdef BOXMODEL_CS_HD2
-	if (support_numbers && has_led_segment)
-		ioctl(fd, IOC_FP_SET_COLON, 0x00);
-#endif
 
 	if(mode == MODE_AUDIO)
 		ShowIcon(FP_ICON_MP3, false);
@@ -1016,9 +872,7 @@ void CVFD::setMode(const MODES m, const char * const title)
 		ShowIcon(FP_ICON_COL1, true);
 		ShowIcon(FP_ICON_COL2, true);
 #endif
-#if ! HAVE_COOL_HARDWARE
 		ClearIcons();
-#endif
 		ShowIcon(FP_ICON_USB, false);
 		ShowIcon(FP_ICON_HDD, false);
 		showclock = true;
@@ -1048,9 +902,6 @@ void CVFD::setMode(const MODES m, const char * const title)
 #endif // VFD_UPDATE
 	}
 	wake_up();
-#if !HAVE_DUCKBOX_HARDWARE
-	setled();
-#endif
 }
 
 void CVFD::setBrightness(int bright)
@@ -1308,14 +1159,6 @@ void CVFD::ShowNumber(int number)
 
 	if (number < 0)
 		return;
-	
-#ifdef BOXMODEL_CS_HD2
-	int ret = ioctl(fd, IOC_FP_SET_NUMBER, number);
-	if(ret < 0) {
-		support_numbers = false;
-		perror("IOC_FP_SET_NUMBER");
-	}
-#endif
 }
 
 #ifdef VFD_UPDATE

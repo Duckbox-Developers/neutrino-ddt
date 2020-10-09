@@ -102,15 +102,6 @@ const CMenuOptionChooser::keyval LCDMENU_STATUSLINE_OPTIONS[LCDMENU_STATUSLINE_O
 	//,{ 2, LOCALE_LCDMENU_STATUSLINE_BOTH     }
 };
 
-#define LEDMENU_OPTION_COUNT 4
-const CMenuOptionChooser::keyval LEDMENU_OPTIONS[LEDMENU_OPTION_COUNT] =
-{
-	{ 0, LOCALE_LEDCONTROLER_OFF },
-	{ 1, LOCALE_LEDCONTROLER_ON_ALL },
-	{ 2, LOCALE_LEDCONTROLER_ON_LED1 },
-	{ 3, LOCALE_LEDCONTROLER_ON_LED2   }
-};
-
 #define LCD_INFO_OPTION_COUNT 2
 const CMenuOptionChooser::keyval LCD_INFO_OPTIONS[LCD_INFO_OPTION_COUNT] =
 {
@@ -137,18 +128,6 @@ int CVfdSetup::showSetup()
 
 	CMenuForwarder * mf;
 
-#ifndef HAVE_DUCKBOX_HARDWARE
-	//led menu
-	if (cs_get_revision() > 7) // not HD1 and BSE
-	{
- 		CMenuWidget * ledMenu = new CMenuWidget(LOCALE_LCDMENU_HEAD, NEUTRINO_ICON_LCD, width, MN_WIDGET_ID_VFDSETUP_LED_SETUP);
-		showLedSetup(ledMenu);
-		mf = new CMenuDForwarder(LOCALE_LEDCONTROLER_MENU, true, NULL, ledMenu, NULL, CRCInput::RC_red);
-		mf->setHint("", LOCALE_MENU_HINT_POWER_LEDS);
-		vfds->addItem(mf);
-	}
-#endif
-
 	if (g_info.hw_caps->display_can_set_brightness)
 	{
 		//vfd brightness menu
@@ -159,17 +138,6 @@ int CVfdSetup::showSetup()
 
 	if (CVFD::getInstance()->has_lcd)
 	{
-		if (cs_get_revision() == 9) // Tank only
-		{
-			//backlight menu
-			CMenuWidget * blMenu = new CMenuWidget(LOCALE_LCDMENU_HEAD, NEUTRINO_ICON_LCD, width, MN_WIDGET_ID_VFDSETUP_BACKLIGHT);
-			showBacklightSetup(blMenu);
-			mf = new CMenuDForwarder(LOCALE_LEDCONTROLER_BACKLIGHT, true, NULL, blMenu, NULL, CRCInput::RC_yellow);
-			mf->setHint("", LOCALE_MENU_HINT_BACKLIGHT);
-			vfds->addItem(mf);
-
-			vfds->addItem(GenericMenuSeparatorLine);
-		}
 
 		CMenuOptionChooser* oj;
 		if (g_info.hw_caps->display_has_statusline)
@@ -320,52 +288,6 @@ int CVfdSetup::showBrightnessSetup()
 	return res;
 }
 
-#ifndef HAVE_DUCKBOX_HARDWARE
-void CVfdSetup::showLedSetup(CMenuWidget *mn_led_widget)
-{
-	CMenuOptionChooser * mc;
-	mn_led_widget->addIntroItems(LOCALE_LEDCONTROLER_MENU);
-
-	mc = new CMenuOptionChooser(LOCALE_LEDCONTROLER_MODE_TV, &g_settings.led_tv_mode, LEDMENU_OPTIONS, LEDMENU_OPTION_COUNT, true, this);
-	mc->setHint("", LOCALE_MENU_HINT_LEDS_TV);
-	mn_led_widget->addItem(mc);
-
-	mc = new CMenuOptionChooser(LOCALE_LEDCONTROLER_MODE_STANDBY, &g_settings.led_standby_mode, LEDMENU_OPTIONS, LEDMENU_OPTION_COUNT, true);
-	mc->setHint("", LOCALE_MENU_HINT_LEDS_STANDBY);
-	mn_led_widget->addItem(mc);
-
-	mc = new CMenuOptionChooser(LOCALE_LEDCONTROLER_MODE_DEEPSTANDBY, &g_settings.led_deep_mode, LEDMENU_OPTIONS, LEDMENU_OPTION_COUNT, true);
-	mc->setHint("", LOCALE_MENU_HINT_LEDS_DEEPSTANDBY);
-	mn_led_widget->addItem(mc);
-
-	mc = new CMenuOptionChooser(LOCALE_LEDCONTROLER_MODE_RECORD, &g_settings.led_rec_mode, LEDMENU_OPTIONS, LEDMENU_OPTION_COUNT, true);
-	mc->setHint("", LOCALE_MENU_HINT_LEDS_RECORD);
-	mn_led_widget->addItem(mc);
-
-	mc = new CMenuOptionChooser(LOCALE_LEDCONTROLER_BLINK, &g_settings.led_blink, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
-	mc->setHint("", LOCALE_MENU_HINT_LEDS_BLINK);
-	mn_led_widget->addItem(mc);
-}
-#endif
-
-void CVfdSetup::showBacklightSetup(CMenuWidget *mn_led_widget)
-{
-	CMenuOptionChooser * mc;
-	mn_led_widget->addIntroItems(LOCALE_LEDCONTROLER_BACKLIGHT);
-
-	mc = new CMenuOptionChooser(LOCALE_LEDCONTROLER_BACKLIGHT_TV, &g_settings.backlight_tv, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this);
-	mc->setHint("", LOCALE_MENU_HINT_LEDS_TV);
-	mn_led_widget->addItem(mc);
-
-	mc = new CMenuOptionChooser(LOCALE_LEDCONTROLER_MODE_STANDBY, &g_settings.backlight_standby, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
-	mc->setHint("", LOCALE_MENU_HINT_LEDS_STANDBY);
-	mn_led_widget->addItem(mc);
-
-	mc = new CMenuOptionChooser(LOCALE_LEDCONTROLER_MODE_DEEPSTANDBY, &g_settings.backlight_deepstandby, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
-	mc->setHint("", LOCALE_MENU_HINT_LEDS_DEEPSTANDBY);
-	mn_led_widget->addItem(mc);
-}
-
 bool CVfdSetup::changeNotify(const neutrino_locale_t OptionName, void * /* data */)
 {
 	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_LCDCONTROLER_BRIGHTNESS)) {
@@ -378,10 +300,6 @@ bool CVfdSetup::changeNotify(const neutrino_locale_t OptionName, void * /* data 
 	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_LCDMENU_DIM_BRIGHTNESS)) {
 		CVFD::getInstance()->setBrightness(g_settings.lcd_setting_dim_brightness);
 #if !HAVE_SH4_HARDWARE
-	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_LEDCONTROLER_MODE_TV)) {
-		CVFD::getInstance()->setled();
-	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_LEDCONTROLER_BACKLIGHT_TV)) {
-		CVFD::getInstance()->setBacklight(g_settings.backlight_tv);
 	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_LCDMENU_SCROLL) || ARE_LOCALES_EQUAL(OptionName, LOCALE_LCDMENU_SCROLL_REPEATS)) {
 		CVFD::getInstance()->setScrollMode(g_settings.lcd_scroll);
 #endif

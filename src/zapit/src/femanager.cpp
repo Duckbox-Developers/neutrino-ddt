@@ -738,11 +738,7 @@ CFrontend * CFEManager::allocateFE(CZapitChannel * channel, bool forrecord)
 #else
 		channel->setRecordDemux(frontend->fenumber+1);
 		channel->setPipDemux(frontend->fenumber+1);
-#if HAVE_COOL_HARDWARE
-		/* I don't know if this check is necessary on cs, but it hurts on other hardware */
-		if(femap.size() > 1)
-#endif
-			cDemux::SetSource(frontend->fenumber+1, frontend->fenumber);
+		cDemux::SetSource(frontend->fenumber+1, frontend->fenumber);
 #ifdef ENABLE_PIP
 		/* FIXME until proper demux management */
 		if (unused_demux)
@@ -759,10 +755,7 @@ void CFEManager::setLiveFE(CFrontend * fe)
 {
 	OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(mutex);
 	livefe = fe; 
-#if HAVE_COOL_HARDWARE
-	if(femap.size() > 1)
-#endif
-		cDemux::SetSource(0, livefe->fenumber);
+	cDemux::SetSource(0, livefe->fenumber);
 }
 
 bool CFEManager::canTune(CZapitChannel * channel)

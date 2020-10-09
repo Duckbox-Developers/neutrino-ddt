@@ -60,12 +60,12 @@ class CUpdateSettings : public CMenuTarget
 	private:
 		int width;
 		int initMenu();
-		
+
 #ifdef USE_SMS_INPUT
 		CStringInputSMS *input_url_file;
 #endif
-	
-	public:	
+
+	public:
 		CUpdateSettings();
 		~CUpdateSettings();
 		int exec(CMenuTarget* parent, const std::string & actionKey);

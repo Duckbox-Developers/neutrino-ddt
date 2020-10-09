@@ -68,10 +68,6 @@ class CScreenShot
 		static void cleanupThread(void *arg);
 #endif
 
-#ifdef BOXMODEL_CS_HD2
-		bool mergeOsdScreen(uint32_t dx, uint32_t dy, fb_pixel_t* osdData);
-#endif
-
 	public:
 		CScreenShot(const std::string &fname = "", screenshot_format_t fmt = CScreenShot::FORMAT_JPG);
 		~CScreenShot();
@@ -81,11 +77,7 @@ class CScreenShot
 		void EnableVideo(bool enable) { get_video = enable; }
 		void EnableOSD(bool enable) { get_osd = enable; }
 		void ScaleToVideo(bool enable) { scale_to_video = enable; }
-#if HAVE_COOL_HARDWARE
-		bool Start();
-#else
 		bool Start(const std::string custom_cmd = "");
-#endif
 		bool StartSync();
 };
 

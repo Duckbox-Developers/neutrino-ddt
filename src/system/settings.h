@@ -46,9 +46,7 @@
 #include <string>
 #include <list>
 
-#ifdef BOXMODEL_CS_HD2
-#define VIDEOMENU_VIDEOMODE_OPTION_COUNT 16
-#elif HAVE_ARM_HARDWARE
+#if HAVE_ARM_HARDWARE
 #define VIDEOMENU_VIDEOMODE_OPTION_COUNT 17
 #else
 #define VIDEOMENU_VIDEOMODE_OPTION_COUNT 13
@@ -196,7 +194,6 @@ struct SNeutrinoSettings
 	int video_Format;
 	int video_Mode;
 	int analog_mode1;
-	int analog_mode2;
 	int video_43mode;
 #if HAVE_SH4_HARDWARE
 	int hdmi_mode;
@@ -208,12 +205,6 @@ struct SNeutrinoSettings
 	int psi_tint;
 	int psi_step;
 
-#ifdef BOXMODEL_CS_HD2
-	int brightness;
-	int contrast;
-	int saturation;
-	int enable_sd_osd;
-#endif
 	char current_volume;
 	int current_volume_step;
 	int start_volume;
@@ -283,7 +274,6 @@ struct SNeutrinoSettings
 	int audio_volume_percent_pcm;
 
 	//video
-	int video_dbdr;
 	int hdmi_cec_mode;
 	int hdmi_cec_view_on;
 	int hdmi_cec_standby;
@@ -292,7 +282,6 @@ struct SNeutrinoSettings
 	int hdmi_cec_broadcast;
 #endif
 	int enabled_video_modes[VIDEOMENU_VIDEOMODE_OPTION_COUNT];
-	int enabled_auto_modes[VIDEOMENU_VIDEOMODE_OPTION_COUNT];
 	int cpufreq;
 	int standby_cpufreq;
 	int make_hd_list;
@@ -461,7 +450,7 @@ struct SNeutrinoSettings
 	std::string personalize_pincode;
 
 	//timing
-	enum TIMING_SETTINGS 
+	enum TIMING_SETTINGS
 	{
 		TIMING_MENU		= 0,
 		TIMING_CHANLIST		= 1,
@@ -643,7 +632,7 @@ struct SNeutrinoSettings
 	int minimode;
 	int mode_clock;
 
-	enum MODE_LEFT_RIGHT_KEY_TV_SETTINGS 
+	enum MODE_LEFT_RIGHT_KEY_TV_SETTINGS
 	{
 		ZAP     = 0,
 		VZAP    = 1,
@@ -1024,7 +1013,7 @@ struct SNeutrinoSettings
 		INFOBAR_PROGRESSBAR_ARRANGEMENT_DEFAULT = 0,
 		INFOBAR_PROGRESSBAR_ARRANGEMENT_BELOW_CH_NAME = 1,
 		INFOBAR_PROGRESSBAR_ARRANGEMENT_BELOW_CH_NAME_SMALL = 2,
-		INFOBAR_PROGRESSBAR_ARRANGEMENT_BETWEEN_EVENTS = 3	
+		INFOBAR_PROGRESSBAR_ARRANGEMENT_BETWEEN_EVENTS = 3
 	}INFOBAR_PROGRESSBAR_ARRANGEMENT_TYPES;
 
 	enum WIZARD_MODES

@@ -135,14 +135,14 @@ CLocaleManager::loadLocale_ret_t CLocaleManager::loadLocale(const char * const l
 		filename += locale;
 		filename += ".locale";
 		::stat(filename.c_str(), &st);
-		
+
 		fd = fopen(filename.c_str(), "r");
 		if (fd)
 			break;
 	}
-	
+
 	if (!fd)
-	{		
+	{
 		perror("cannot read locale");
 		return NO_SUCH_LOCALE;
 	}

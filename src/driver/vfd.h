@@ -76,9 +76,7 @@ class CVFD
 
 
 	private:
-#ifdef BOXMODEL_CS_HD2
-		fp_display_caps_t		caps;
-#endif
+
 		MODES				mode;
 
 		std::string			servicename;
@@ -109,22 +107,12 @@ class CVFD
 
 		static void* TimeThread(void*);
 		void setlcdparameter(int dimm, int power);
-#if !HAVE_DUCKBOX_HARDWARE
-		void setled(int led1, int led2);
-#endif
 	public:
 
 		~CVFD();
 		bool has_lcd;
 		bool has_led_segment;
 		void setlcdparameter(void);
-#if !HAVE_DUCKBOX_HARDWARE
-		void setled(void);
-		void setled(bool on_off);
-		void setBacklight(bool on_off);
-#else
-		void setBacklight(bool /*on_off*/) { };
-#endif
 		static CVFD* getInstance();
 		void init(const char * fontfile, const char * fontname);
 

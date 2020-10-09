@@ -25,7 +25,7 @@
 	GNU General Public License for more details.
 
 	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the 
+	along with this program; if not, write to the
 	Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
 	Boston, MA  02110-1301, USA.
 */
@@ -35,7 +35,6 @@
 #endif
 
 #include <gui/update.h>
-#include <gui/update_ext.h>
 
 #include <global.h>
 #include <neutrino.h>
@@ -129,11 +128,7 @@ extern int allow_flash;
 #else
 #define FILEBROWSER_UPDATE_FILTER      "img"
 #define MTD_OF_WHOLE_IMAGE             0
-#ifdef BOXMODEL_CS_HD2
-#define MTD_DEVICE_OF_UPDATE_PART      "/dev/mtd0"
-#else
 #define MTD_DEVICE_OF_UPDATE_PART      "/dev/mtd3"
-#endif
 #endif
 #endif
 #endif
@@ -251,8 +246,8 @@ bool CFlashUpdate::selectHttpImage(void)
 	showStatusMessageUTF(g_Locale->getText(LOCALE_FLASHUPDATE_GETINFOFILE));
 
 	char current[200];
-	snprintf(current, 200, "%s: %s %s %s %s %s", g_Locale->getText(LOCALE_FLASHUPDATE_CURRENTVERSION_SEP), curInfo.getReleaseCycle(), 
-		g_Locale->getText(LOCALE_FLASHUPDATE_CURRENTVERSIONDATE), curInfo.getDate(), 
+	snprintf(current, 200, "%s: %s %s %s %s %s", g_Locale->getText(LOCALE_FLASHUPDATE_CURRENTVERSION_SEP), curInfo.getReleaseCycle(),
+		g_Locale->getText(LOCALE_FLASHUPDATE_CURRENTVERSIONDATE), curInfo.getDate(),
 		g_Locale->getText(LOCALE_FLASHUPDATE_CURRENTVERSIONTIME), curInfo.getTime());
 
 	CMenuWidget SelectionWidget(LOCALE_FLASHUPDATE_SELECTIMAGE, NEUTRINO_ICON_UPDATE, listWidth, MN_WIDGET_ID_IMAGESELECTOR);
@@ -353,18 +348,8 @@ bool CFlashUpdate::selectHttpImage(void)
 	file_md5 = md5s[selected];
 	fileType = fileTypes[selected];
 	gotImage = (fileType <= '9');
-//NI #ifdef BOXMODEL_CS_HD2
-#if 0
-	if (gotImage)
-	{
-		int esize = CMTDInfo::getInstance()->getMTDEraseSize(sysfs);
-		dprintf(DEBUG_NORMAL, "[update] erase size is %x\n", esize);
-		if (esize == 0x40000) {
-			filename += ".256k";
-		}
-	}
-#endif
-#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+
+#if HAVE_ARM_HARDWARE|| HAVE_MIPS_HARDWARE
 	if (gotImage && (filename.substr(filename.find_last_of(".") + 1) == "tgz" || filename.substr(filename.find_last_of(".") + 1) == "zip"))
 	{
 		// manipulate fileType for tgz- or zip-packages
@@ -612,17 +597,6 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 
 	if (fileType <= '9') // flashing image
 	{
-#if ENABLE_EXTUPDATE
-#ifndef BOXMODEL_CS_HD2
-		if (g_settings.apply_settings) {
-			if (ShowMsg(LOCALE_MESSAGEBOX_INFO, LOCALE_FLASHUPDATE_APPLY_SETTINGS, CMsgBox::mbrYes, CMsgBox::mbYes | CMsgBox::mbNo, NEUTRINO_ICON_UPDATE) == CMsgBox::mbrYes)
-				if (!CExtUpdate::getInstance()->applySettings(filename, CExtUpdate::MODE_SOFTUPDATE)) {
-					hide();
-					return menu_return::RETURN_REPAINT;
-				}
-		}
-#endif
-#endif
 
 #ifdef DRYRUN
 		if (1)
@@ -901,11 +875,6 @@ CFlashExpert::CFlashExpert()
 {
 	selectedMTD = -1;
 	width = 40;
-#ifdef BOXMODEL_CS_HD2
-	forceOtherFilename = false;
-	otherFilename = "";
-	createimage_other = 0;
-#endif
 }
 
 CFlashExpert* CFlashExpert::getInstance()
@@ -918,9 +887,6 @@ CFlashExpert* CFlashExpert::getInstance()
 
 bool CFlashExpert::checkSize(int mtd, std::string &backupFile)
 {
-#ifndef BOXMODEL_CS_HD2
-	if (mtd < 0) return false;
-#endif
 	char errMsg[1024] = {0};
 	std::string path = getPathName(backupFile);
 	if (!file_exists(path.c_str()))  {
@@ -932,20 +898,8 @@ bool CFlashExpert::checkSize(int mtd, std::string &backupFile)
 	uint64_t btotal = 0, bused = 0;
 	long bsize = 0;
 	uint64_t backupRequiredSize = 0;
-#ifdef BOXMODEL_CS_HD2
-	if (mtd == -1) { // check disk space for image creation
-		if (!get_fs_usage("/", btotal, bused, &bsize)) {
-			snprintf(errMsg, sizeof(errMsg)-1, g_Locale->getText(LOCALE_FLASHUPDATE_READ_VOLUME_ERROR), "root0");
-			ShowHint(LOCALE_MESSAGEBOX_ERROR, errMsg);
-			return false;
-		}
-		backupRequiredSize = ((bused * bsize) / 1024ULL) * 2ULL; // twice disk space for summarized image
-		dprintf(DEBUG_INFO, "##### [%s] backupRequiredSize: %" PRIu64 ", btotal: %" PRIu64 ", bused: %" PRIu64 ", bsize: %ld\n",
-				__func__, backupRequiredSize, btotal, bused, bsize);
-	}
-	else
-#endif
-		backupRequiredSize = CMTDInfo::getInstance()->getMTDSize(mtd) / 1024ULL;
+
+	backupRequiredSize = CMTDInfo::getInstance()->getMTDSize(mtd) / 1024ULL;
 
 	btotal = 0; bused = 0; bsize = 0;
 	if (!get_fs_usage(path.c_str(), btotal, bused, &bsize)) {
@@ -968,82 +922,6 @@ bool CFlashExpert::checkSize(int mtd, std::string &backupFile)
 	return true;
 }
 
-#ifdef BOXMODEL_CS_HD2
-bool CFlashExpert::readDevtableFile(std::string &devtableFile, CMkfsJFFS2::v_devtable_t &v_devtable)
-{
-	FILE *fd = fopen(devtableFile.c_str(), "r");
-	if (!fd) return false;
-	char lineRead[1024];
-	memset(lineRead, 0, sizeof(lineRead));
-	bool status = false;
-	while (fgets(lineRead, sizeof(lineRead)-1, fd)) {
-		std::string line = lineRead;
-		line = trim(line);
-		// ignore comments
-		if (line.find_first_of("#") == 0) {
-			continue;
-		}
-		// ignore comments after the entry
-		size_t pos = line.find_first_of("#");
-		if (pos != std::string::npos) {
-			line = line.substr(0, pos);
-			line = trim(line);
-		}
-		// minimal entry: "/dev/x x 0000"
-		// length = 13
-		if (line.length() > 12) {
-			v_devtable.push_back(line);
-			status = true;
-		}
-		memset(lineRead, 0, sizeof(lineRead));
-	}
-	fclose(fd);
-	if (!status) return false;
-	return true;
-}
-
-void CFlashExpert::readmtdJFFS2(std::string &filename, std::string title/*=""*/, std::string path/*="/"*/, bool makeDevTable/*=true*/)
-{
-	if (!checkSize(-1, filename))
-		return;
-	CProgressWindow progress;
-	if (title == "")
-		progress.setTitle(LOCALE_FLASHUPDATE_TITLEREADFLASH);
-	else
-		progress.setTitle(g_Locale->getText(LOCALE_FLASHUPDATE_TITLEREADFLASH) + title);
-	progress.paint();
-
-	int eSize = CMTDInfo::getInstance()->getMTDEraseSize(CMTDInfo::getInstance()->findMTDsystem());
-	if (createimage_other == 1) {
-		if (eSize == 0x40000) eSize = 0x20000;
-		else if (eSize == 0x20000) eSize = 0x40000;
-	}
-	CMkfsJFFS2 mkfs;
-	if (makeDevTable) {
-		CMkfsJFFS2::v_devtable_t v_devtable;
-		bool devtableFileIO = false;
-		std::string devtableFile = (std::string)CONFIGDIR + "/devtable.txt";
-		if (file_exists(devtableFile.c_str())) {
-			if (readDevtableFile(devtableFile, v_devtable))
-				devtableFileIO = true;
-		}
-		if (!devtableFileIO || v_devtable.empty()) {
-			v_devtable.push_back("/dev/console c 0600 0 0 5 1 0 0 0");
-			v_devtable.push_back("/dev/null c 0666 0 0 1 3 0 0 0");
-		}
-		mkfs.makeJffs2Image(path, filename, eSize, 0, 0, __LITTLE_ENDIAN, true, true, &progress, &v_devtable);
-	}
-	else
-		mkfs.makeJffs2Image(path, filename, eSize, 0, 0, __LITTLE_ENDIAN, true, true, &progress);
-
-	progress.hide();
-
-	char message[500];
-	snprintf(message, sizeof(message)-1, g_Locale->getText(LOCALE_FLASHUPDATE_SAVESUCCESS), filename.c_str());
-	ShowHint(LOCALE_MESSAGEBOX_INFO, message);
-}
-#endif
-
 void CFlashExpert::readmtd(int preadmtd)
 {
 	std::string filename;
@@ -1053,58 +931,17 @@ void CFlashExpert::readmtd(int preadmtd)
 	std::string timeStr  = getNowTimeStr("_%Y%m%d_%H%M");
 	std::string tankStr  = "";
 
-#if ENABLE_EXTUPDATE
-#ifdef BOXMODEL_CS_HD2
-	int eSize = CMTDInfo::getInstance()->getMTDEraseSize(CMTDInfo::getInstance()->findMTDsystem());
-	if (preadmtd == 0) {
-		if (createimage_other == 0) {
-			if (eSize == 0x40000) tankStr = ".256k";
-			if (eSize == 0x20000) tankStr = "";
-		}
-		else if (createimage_other == 1) {
-			if (eSize == 0x40000) tankStr = "";
-			if (eSize == 0x20000) tankStr = ".256k";
-		}
-	}
-#endif
-	if (g_settings.softupdate_name_mode_backup == CExtUpdate::SOFTUPDATE_NAME_HOSTNAME_TIME)
-		filename = (std::string)g_settings.update_dir + "/" + mtdInfo->getMTDName(preadmtd) + timeStr + "_" + hostName + tankStr + ".img";
-	else
-#endif
 		filename = (std::string)g_settings.update_dir + "/" + mtdInfo->getMTDName(preadmtd) + timeStr + tankStr + ".img";
 
-#ifdef BOXMODEL_CS_HD2
-	std::string title  = " (" + CMTDInfo::getInstance()->getMTDName(preadmtd) + ")";
-	std::string mountp = getJFFS2MountPoint(preadmtd);
-	if (preadmtd == 0) {
-		readmtdJFFS2(filename, title);
-		return;
-	}
-	if (preadmtd == 1) {
-		if (mountp != "")
-			readmtdJFFS2(filename, title, mountp.c_str(), false);
-		return;
-	}
-	if (preadmtd == 2) {
-		if (mountp != "")
-			readmtdJFFS2(filename, title, mountp.c_str(), false);
-		return;
-	}
-#endif
 	if (preadmtd == -1) {
 		filename = (std::string)g_settings.update_dir + "/flashimage.img"; // US-ASCII (subset of UTF-8 and ISO8859-1)
 		preadmtd = MTD_OF_WHOLE_IMAGE;
 	}
 
 	bool skipCheck = false;
-#if !HAVE_SH4_HARDWARE && !BOXMODEL_CS_HD2
+#if !HAVE_SH4_HARDWARE
 	if ((std::string)g_settings.update_dir == "/tmp")
 		skipCheck = true;
-#else
-#if BOXMODEL_CS_HD2
-	if (forceOtherFilename)
-		filename = otherFilename;
-#endif
 #endif
 	if ((!skipCheck) && (!checkSize(preadmtd, filename)))
 		return;
@@ -1127,12 +964,7 @@ void CFlashExpert::readmtd(int preadmtd)
 		sprintf(message, g_Locale->getText(LOCALE_FLASHUPDATE_SAVESUCCESS), filename.c_str());
 		sleep(1);
 		hide();
-#ifdef BOXMODEL_CS_HD2
-		if (!forceOtherFilename)
-			ShowHint(LOCALE_MESSAGEBOX_INFO, message);
-#else
 		ShowHint(LOCALE_MESSAGEBOX_INFO, message);
-#endif
 	}
 }
 
@@ -1189,35 +1021,14 @@ int CFlashExpert::showMTDSelector(const std::string & actionkey)
 	for(int lx=0;lx<mtdInfo->getMTDCount();lx++) {
 		char sActionKey[20];
 		bool enabled = true;
-#ifdef BOXMODEL_CS_HD2
-		// disable write uboot / uldr / env
-		if ((actionkey == "writemtd") && (lx == mtdInfo->findMTDNumberFromName("u-boot") || 
-			                          lx == mtdInfo->findMTDNumberFromName("uldr") ||
-			                          lx == mtdInfo->findMTDNumberFromName("env")))
-			enabled = false;
-		if (actionkey == "readmtd") {
-			// Enabled when file system is mounted
-			if (lx == mtdInfo->findMTDNumberFromName("var"))
-				enabled = (getJFFS2MountPoint(lx) == "") ? false : true;
-			else if (lx == mtdInfo->findMTDNumberFromName("root1"))
-				enabled = (getJFFS2MountPoint(lx) == "") ? false : true;
-		}
-		if (lx == 3)
-			mtdselector->addItem(GenericMenuSeparatorLine);
-#else
+
 		// disable write uboot
 		if ((actionkey == "writemtd") && (lx == mtdInfo->findMTDNumberFromName("U-Boot")))
 			enabled = false;
-#endif
+
 		sprintf(sActionKey, "%s%d", actionkey.c_str(), lx);
 		mtdselector->addItem(new CMenuForwarder(mtdInfo->getMTDName(lx).c_str(), enabled, NULL, this, sActionKey, CRCInput::convertDigitToKey(shortcut++)));
 	}
-#if ENABLE_EXTUPDATE
-#ifndef BOXMODEL_CS_HD2
-	if (actionkey == "writemtd")
-		mtdselector->addItem(new CMenuForwarder("systemFS with settings", true, NULL, this, "writemtd10", CRCInput::convertDigitToKey(shortcut++)));
-#endif
-#endif
 	int res = mtdselector->exec(NULL,"");
 	delete mtdselector;
 	return res;
@@ -1286,13 +1097,6 @@ int CFlashExpert::exec(CMenuTarget* parent, const std::string & actionKey)
 			selectedMTD = iWritemtd;
 			showFileSelector("");
 		} else {
-#if ENABLE_EXTUPDATE
-			if(selectedMTD == 10) {
-				std::string aK = actionKey;
-				CExtUpdate::getInstance()->applySettings(aK, CExtUpdate::MODE_EXPERT);
-			}
-			else
-#endif
 			if (selectedMTD == -1) {
 				writemtd(actionKey, MTD_OF_WHOLE_IMAGE);
 			} else {
@@ -1305,171 +1109,3 @@ int CFlashExpert::exec(CMenuTarget* parent, const std::string & actionKey)
 	hide();
 	return res;
 }
-
-#ifdef BOXMODEL_CS_HD2
-CFlashExpertSetup::CFlashExpertSetup()
-{
-	width = 40;
-}
-
-void CFlashExpertSetup::readMTDPart(int mtd, const std::string &fileName)
-{
-	CFlashExpert *cfe = CFlashExpert::getInstance();
-	if (file_exists(fileName.c_str()))
-		unlink(fileName.c_str());
-	cfe->otherFilename = fileName;
-	cfe->readmtd(mtd);
-	sync();
-}
-
-#define UBOOT_BIN
-//#define SPARE_BIN
-
-int CFlashExpertSetup::exec(CMenuTarget* parent, const std::string &actionKey)
-{
-#define UPDATEDIR "/var/update"
-	if (parent)
-		parent->hide();
-
-	if (actionKey == "readmtd0") {
-		CFlashExpert *cfe = CFlashExpert::getInstance();
-		CMTDInfo *mtdInfo = CMTDInfo::getInstance();
-		bool skipImage = false;
-		if (cfe->createimage_other == 1) {
-			char message[512] = {0};
-			// create image warning
-			const char *box = (mtdInfo->getMTDEraseSize(mtdInfo->findMTDsystem()) == 0x40000) ? "Trinity" : "Tank";
-			snprintf(message, sizeof(message)-1, g_Locale->getText(LOCALE_FLASHUPDATE_CREATEIMAGE_WARNING), box, box);
-			if (ShowMsg(LOCALE_MESSAGEBOX_INFO, message, CMsgBox::mbrNo, CMsgBox::mbYes | CMsgBox::mbNo, NEUTRINO_ICON_UPDATE, 600) != CMsgBox::mbrYes)
-				skipImage = true;
-		}
-		if (!skipImage) {
-			std::string uldrName   = (std::string)UPDATEDIR + "/uldr.bin";
-			cfe->forceOtherFilename = true;
-			if (g_settings.flashupdate_createimage_add_uldr == 1)
-				readMTDPart(mtdInfo->findMTDNumberFromName("uldr"), uldrName);
-#ifdef UBOOT_BIN
-			std::string ubootName   = (std::string)UPDATEDIR + "/u-boot.bin";
-			if (g_settings.flashupdate_createimage_add_u_boot == 1)
-				readMTDPart(mtdInfo->findMTDNumberFromName("u-boot"), ubootName);
-			std::string envName   = (std::string)UPDATEDIR + "/env.bin";
-			if (g_settings.flashupdate_createimage_add_env == 1)
-				readMTDPart(mtdInfo->findMTDNumberFromName("env"), envName);
-#endif
-#ifdef SPARE_BIN
-			std::string spareName   = (std::string)UPDATEDIR + "/spare.bin";
-			if (g_settings.flashupdate_createimage_add_spare == 1)
-				readMTDPart(mtdInfo->findMTDNumberFromName("spare"), spareName);
-#endif
-			std::string kernelName = (std::string)UPDATEDIR + "/vmlinux.ub.gz";
-			if (g_settings.flashupdate_createimage_add_kernel == 1)
-				readMTDPart(mtdInfo->findMTDNumberFromName("kernel"), kernelName);
-			cfe->forceOtherFilename = false;
-			cfe->otherFilename = "";
-
-			if (g_settings.flashupdate_createimage_add_var == 1)
-				cfe->readmtd(1);
-
-			if (g_settings.flashupdate_createimage_add_root1 == 1)
-				cfe->readmtd(2);
-
-			cfe->readmtd(0);
-
-			if (g_settings.flashupdate_createimage_add_uldr == 1)
-				unlink(uldrName.c_str());
-#ifdef UBOOT_BIN
-			if (g_settings.flashupdate_createimage_add_u_boot == 1)
-				unlink(ubootName.c_str());
-			if (g_settings.flashupdate_createimage_add_env == 1)
-				unlink(envName.c_str());
-#endif
-#ifdef SPARE_BIN
-			if (g_settings.flashupdate_createimage_add_spare == 1)
-				unlink(spareName.c_str());
-#endif
-			if (g_settings.flashupdate_createimage_add_kernel == 1)
-				unlink(kernelName.c_str());
-			sync();
-		}
-
-		cfe->createimage_other = 0;
-		return menu_return::RETURN_REPAINT;
-	}
-	return showMenu();
-}
-
-int CFlashExpertSetup::showMenu()
-{
-	CFlashExpert *cfe = CFlashExpert::getInstance();
-	CMenuWidget *rootfsSetup = new CMenuWidget(LOCALE_SERVICEMENU_UPDATE, NEUTRINO_ICON_UPDATE, width, MN_WIDGET_ID_MTDREAD_ROOT0);
-	rootfsSetup->addIntroItems(LOCALE_FLASHUPDATE_CREATEIMAGE_MENU);
-
-	CMenuSeparator     *s1 = new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_FLASHUPDATE_CREATEIMAGE_OPTIONS);
-	CMenuForwarder     *m1 = new CMenuForwarder(LOCALE_FLASHUPDATE_CREATEIMAGE, true, NULL, this, "readmtd0", CRCInput::convertDigitToKey(0));
-	bool isMountVar = (getJFFS2MountPoint(1) == "") ? false : true;
-	CMenuOptionChooser *m8=NULL;
-	if (isMountVar)
-		m8 = new CMenuOptionChooser(LOCALE_FLASHUPDATE_CREATEIMAGE_ADD_VAR,   &g_settings.flashupdate_createimage_add_var,
-								MESSAGEBOX_NO_YES_OPTIONS, MESSAGEBOX_NO_YES_OPTION_COUNT, true);
-
-	bool isMountRoot1 = (getJFFS2MountPoint(2) == "") ? false : true;
-	CMenuOptionChooser *m9=NULL;
-	if (isMountRoot1)
-		m9 = new CMenuOptionChooser(LOCALE_FLASHUPDATE_CREATEIMAGE_ADD_ROOT1,   &g_settings.flashupdate_createimage_add_root1,
-								MESSAGEBOX_NO_YES_OPTIONS, MESSAGEBOX_NO_YES_OPTION_COUNT, true);
-
-	CMenuOptionChooser *m2 = new CMenuOptionChooser(LOCALE_FLASHUPDATE_CREATEIMAGE_ADD_ULDR,   &g_settings.flashupdate_createimage_add_uldr,
-								MESSAGEBOX_NO_YES_OPTIONS, MESSAGEBOX_NO_YES_OPTION_COUNT, true);
-#ifdef UBOOT_BIN
-	CMenuOptionChooser *m3 = new CMenuOptionChooser(LOCALE_FLASHUPDATE_CREATEIMAGE_ADD_U_BOOT, &g_settings.flashupdate_createimage_add_u_boot,
-								MESSAGEBOX_NO_YES_OPTIONS, MESSAGEBOX_NO_YES_OPTION_COUNT, true);
-	CMenuOptionChooser *m4 = new CMenuOptionChooser(LOCALE_FLASHUPDATE_CREATEIMAGE_ADD_ENV,    &g_settings.flashupdate_createimage_add_env,
-								MESSAGEBOX_NO_YES_OPTIONS, MESSAGEBOX_NO_YES_OPTION_COUNT, true);
-#else
-	g_settings.flashupdate_createimage_add_u_boot = 0;
-	g_settings.flashupdate_createimage_add_env = 0;
-#endif
-#ifdef SPARE_BIN
-	CMenuOptionChooser *m5 = new CMenuOptionChooser(LOCALE_FLASHUPDATE_CREATEIMAGE_ADD_SPARE,  &g_settings.flashupdate_createimage_add_spare,
-								MESSAGEBOX_NO_YES_OPTIONS, MESSAGEBOX_NO_YES_OPTION_COUNT, true);
-#else
-	g_settings.flashupdate_createimage_add_spare = 0;
-#endif
-	CMenuOptionChooser *m6 = new CMenuOptionChooser(LOCALE_FLASHUPDATE_CREATEIMAGE_ADD_KERNEL, &g_settings.flashupdate_createimage_add_kernel,
-								MESSAGEBOX_NO_YES_OPTIONS, MESSAGEBOX_NO_YES_OPTION_COUNT, true);
-
-	rootfsSetup->addItem(m1); // create image
-	rootfsSetup->addItem(s1);
-	if (isMountVar)
-		rootfsSetup->addItem(m8); // include var
-	if (isMountRoot1)
-		rootfsSetup->addItem(m9); // include root1
-	rootfsSetup->addItem(m2); // include uldr
-#ifdef UBOOT_BIN
-	rootfsSetup->addItem(m3); // include u-boot
-	rootfsSetup->addItem(m4); // include env
-#endif
-#ifdef SPARE_BIN
-	rootfsSetup->addItem(m5); // include spare
-#endif
-	rootfsSetup->addItem(m6); // include kernel
-
-	if (cs_get_revision() != 12) { // not kronos
-		CMTDInfo *mtdInfo = CMTDInfo::getInstance();
-		const char *box = (mtdInfo->getMTDEraseSize(mtdInfo->findMTDsystem()) == 0x40000) ? "Trinity" : "Tank";
-		char mText[512] = {0};
-		snprintf(mText, sizeof(mText)-1, g_Locale->getText(LOCALE_FLASHUPDATE_CREATEIMAGE_OTHER), box);
-		CMenuOptionChooser *m7 = new CMenuOptionChooser(mText, &(cfe->createimage_other), MESSAGEBOX_NO_YES_OPTIONS, MESSAGEBOX_NO_YES_OPTION_COUNT, true);
-
-		rootfsSetup->addItem(GenericMenuSeparatorLine);
-		rootfsSetup->addItem(m7); // create image for other STB
-	} else
-		cfe->createimage_other = 0;
-
-	int res = rootfsSetup->exec (NULL, "");
-	delete rootfsSetup;
-
-	cfe->createimage_other = 0;
-	return res;
-}
-#endif // BOXMODEL_CS_HD2

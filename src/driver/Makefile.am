@@ -62,45 +62,11 @@ libneutrino_driver_a_SOURCES += \
 	vfd.cpp
 endif
 
-if BOXTYPE_COOL
-libneutrino_driver_a_SOURCES += \
-	fb_generic.cpp \
-	fb_accel.cpp \
-	fb_accel_cs_hdx.cpp
-if BOXMODEL_CS_HD2
-libneutrino_driver_a_SOURCES += \
-	fb_accel_cs_hd2.cpp \
-	vfd.cpp
-else
-libneutrino_driver_a_SOURCES += \
-	fb_accel_cs_hd1.cpp \
-	vfd.cpp
-endif
-endif
-
-if BOXTYPE_TRIPLE
-libneutrino_driver_a_SOURCES += \
-	fb_generic.cpp \
-	fb_accel.cpp \
-	fb_accel_td.cpp \
-	newclock.cpp \
-	lcdd.cpp
-endif
-
 if BOXTYPE_SPARK
 libneutrino_driver_a_SOURCES += \
 	fb_generic_sti_ddt.cpp \
 	fb_accel_sti_ddt.cpp \
 	simple_display.cpp
-endif
-
-if BOXTYPE_AZBOX
-libneutrino_driver_a_SOURCES += \
-	simple_display.cpp
-endif
-if USE_STB_HAL
-AM_CPPFLAGS += \
-	@DIRECTFB_CFLAGS@
 endif
 
 #if BOXTYPE_SPARK

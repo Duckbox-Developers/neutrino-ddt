@@ -399,7 +399,7 @@ void CRCInput::restartInput(const bool ext)
 	if (ext)
 		postMsg(NeutrinoMessages::UNLOCK_RC_EXTERN, 0);
 }
-#if 0 
+#if 0
 //never used
 int CRCInput::messageLoop( bool anyKeyCancels, int timeout )
 {
@@ -907,7 +907,7 @@ void CRCInput::getMsg_us(neutrino_msg_t * msg, neutrino_msg_data_t * data, uint6
 								printf("[neutrino] event INITID_CONTROLD - unknown eventID 0x%x\n",  emsg.eventID );
 						}
 					}
-					else 
+					else
 #endif
 					if ( emsg.initiatorID == CEventServer::INITID_HTTPD )
 					{
@@ -1578,7 +1578,7 @@ const char *CRCInput::getUnicodeValue(const neutrino_msg_t key)
 {
 	if (key < UNICODE_VALUE_SIZE)
 		return unicode_value + key * 2;
-	return ""; 
+	return "";
 }
 
 /**************************************************************************
@@ -1818,16 +1818,6 @@ int CRCInput::translate(int code)
 		case KEY_VIDEO:
 			return RC_favorites;
 #endif
-#ifdef HAVE_AZBOX_HARDWARE
-		case KEY_HOME:
-			return RC_favorites;
-		case KEY_TV:
-			return RC_stop;
-		case KEY_RADIO:
-			return RC_record;
-		case KEY_PLAY:
-			return RC_pause;
-#endif
 		default:
 			break;
 	}
@@ -1844,15 +1834,6 @@ void CRCInput::setKeyRepeatDelay(unsigned int start_ms, unsigned int repeat_ms)
 		std::string path = (*it).path;
 		if (path == "/tmp/neutrino.input")
 			continue; /* setting repeat rate does not work here */
-#ifdef BOXMODEL_CS_HD1
-		/* this is ugly, but the driver does not support anything advanced... */
-		if (path == "/dev/input/nevis_ir") {
-			d_printf("[rcinput:%s] %s(fd %d) using proprietary ioctl\n", __func__, path.c_str(), fd);
-			ioctl(fd, IOC_IR_SET_F_DELAY, start_ms);
-			ioctl(fd, IOC_IR_SET_X_DELAY, repeat_ms);
-			continue;
-		}
-#endif
 		d_printf("[rcinput:%s] %s(fd %d) writing EV_REP (%d->%d)\n",
 				__func__, path.c_str(), fd, start_ms, repeat_ms);
 		/* if we have a good input device, we don't need the private ioctl above */
@@ -1919,10 +1900,6 @@ void CRCInput::set_rc_hw(void)
 
 	switch(g_settings.remote_control_hardware)
 	{
-		case RC_HW_COOLSTREAM:
-			ir_protocol = IR_PROTOCOL_NECE;
-			ir_address  = 0xFF80;
-			break;
 		case RC_HW_DBOX:
 			ir_protocol = IR_PROTOCOL_NRC17;
 			ir_address  = 0x00C5;
@@ -1931,22 +1908,11 @@ void CRCInput::set_rc_hw(void)
 			ir_protocol = IR_PROTOCOL_RC5;
 			ir_address  = 0x000A;
 			break;
-		case RC_HW_TRIPLEDRAGON:
-			ir_protocol = IR_PROTOCOL_RMAP_E;
-			ir_address  = 0x000A; // with device id 0
-//			ir_address  = 0x100A; // with device id 1
-//			ir_address  = 0x200A; // with device id 2
-//			ir_address  = 0x300A; // with device id 3
-//			ir_address  = 0x400A; // with device id 4
-//			ir_address  = 0x500A; // with device id 5
-//			ir_address  = 0x600A; // with device id 6
-//			ir_address  = 0x700A; // with device id 7
-			break;
 		default:
 			ir_protocol = IR_PROTOCOL_NECE;
 			ir_address  = 0xFF80;
 	}
-	
+
 	set_rc_hw(ir_protocol, ir_address);
 }
 #else
