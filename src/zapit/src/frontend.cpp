@@ -79,7 +79,11 @@ extern int zapit_debug;
 
 #define FE_COMMON_PROPS	2
 #define FE_DVBS_PROPS	6
+#if 0 //defined DTV_STREAM_ID /* FIXME: problem with BCM45308X */
 #define FE_DVBS2_PROPS	9
+#else
+#define FE_DVBS2_PROPS	8
+#endif
 #define FE_DVBC_PROPS	6
 #define FE_DVBT_PROPS 10
 #define FE_DVBT2_PROPS 11
@@ -106,7 +110,9 @@ static const struct dtv_property dvbs2_cmdargs[] = {
 	{ DTV_INNER_FEC,	{}     , { FEC_AUTO		}, 0 },
 	{ DTV_PILOT,		{}     , { PILOT_AUTO		}, 0 },
 	{ DTV_ROLLOFF,		{}     , { ROLLOFF_AUTO		}, 0 },
+#if 0 //defined DTV_STREAM_ID /* FIXME: problem with BCM45308X */
 	{ DTV_STREAM_ID,	{}     , { NO_STREAM_ID_FILTER	}, 0 },
+#endif
 	{ DTV_TUNE,		{}     , { 0			}, 0 }
 };
 
