@@ -1602,33 +1602,32 @@ bool CFrontend::buildProperties(const FrontendParameters *feparams, struct dtv_p
 		if (feparams->delsys == DVB_S2) {
 			nrOfProps			= FE_DVBS2_PROPS;
 			memcpy(cmdseq.props, dvbs2_cmdargs, sizeof(dvbs2_cmdargs));
-
 			cmdseq.props[MODULATION].u.data	= feparams->modulation;
 			cmdseq.props[ROLLOFF].u.data	= feparams->rolloff;
 			cmdseq.props[PILOTS].u.data	= pilot;
 			cmdseq.props[MIS].u.data	= feparams->plp_id | (feparams->pls_code << 8) | (feparams->pls_mode << 26);
 			if (zapit_debug)
-				printf("[fe%d/%d] tuner pilot %d (feparams %d)\n", adapter, fenumber, pilot, feparams->pilot);
+				printf("[fe%d/%d] tuner pilot %d (feparams %d) streamid (%d/%d/%d)\n", adapter, fenumber, pilot, feparams->pilot, feparams->plp_id, feparams->pls_code, feparams->pls_mode);
 		} else {
 			memcpy(cmdseq.props, dvbs_cmdargs, sizeof(dvbs_cmdargs));
 			nrOfProps			= FE_DVBS_PROPS;
 		}
 		cmdseq.props[FREQUENCY].u.data		= feparams->frequency;
 		cmdseq.props[SYMBOL_RATE].u.data	= feparams->symbol_rate;
-		cmdseq.props[INNER_FEC].u.data		= fec; /*_inner*/ ;
+		cmdseq.props[INNER_FEC].u.data		= fec; /*_inner*/
 		break;
 	case DVB_S2X:
-		nrOfProps			= FE_DVBS2X_PROPS;
+		nrOfProps				= FE_DVBS2X_PROPS;
 		memcpy(cmdseq.props, dvbs2x_cmdargs, sizeof(dvbs2x_cmdargs));
-		cmdseq.props[MODULATION].u.data	= feparams->modulation;
-		cmdseq.props[ROLLOFF].u.data	= feparams->rolloff;
-		cmdseq.props[PILOTS].u.data	= pilot;
-		cmdseq.props[MIS].u.data	= feparams->plp_id | (feparams->pls_code << 8) | (feparams->pls_mode << 26);
+		cmdseq.props[MODULATION].u.data		= feparams->modulation;
+		cmdseq.props[ROLLOFF].u.data		= feparams->rolloff;
+		cmdseq.props[PILOTS].u.data		= pilot;
+		cmdseq.props[MIS].u.data		= feparams->plp_id | (feparams->pls_code << 8) | (feparams->pls_mode << 26);
 		if (zapit_debug)
-			printf("[fe%d/%d] tuner pilot %d (feparams %d) streamid (%d/%d/%d)\n", adapter, fenumber, pilot, feparams->pilot, feparams->plp_id, feparams->pls_code, feparams->pls_mode );
+			printf("[fe%d/%d] tuner pilot %d (feparams %d) streamid (%d/%d/%d)\n", adapter, fenumber, pilot, feparams->pilot, feparams->plp_id, feparams->pls_code, feparams->pls_mode);
 		cmdseq.props[FREQUENCY].u.data		= feparams->frequency;
 		cmdseq.props[SYMBOL_RATE].u.data	= feparams->symbol_rate;
-		cmdseq.props[INNER_FEC].u.data		= fec; /*_inner*/ ;
+		cmdseq.props[INNER_FEC].u.data		= fec; /*_inner*/
 		break;
 	case DVB_C:
 		memcpy(cmdseq.props, dvbc_cmdargs, sizeof(dvbc_cmdargs));
