@@ -54,7 +54,7 @@ extern int zapit_debug;
 #define WEST	1
 #define USALS
 
-#define FE_MAX_PROPS 13
+#define FE_MAX_PROPS 18
 
 #define diff(x,y)	(max(x,y) - min(x,y))
 
@@ -1195,10 +1195,8 @@ fe_delivery_system_t CFrontend::getFEDeliverySystem(delivery_system_t Delsys)
 		delsys = SYS_DVBS;
 		break;
 	case DVB_S2:
-		delsys = SYS_DVBS2;
-		break;
 	case DVB_S2X:
-		delsys = SYS_DVBS2X;
+		delsys = SYS_DVBS2;
 		break;
 	case DVB_T:
 		delsys = SYS_DVBT;
@@ -1349,7 +1347,7 @@ bool CFrontend::buildProperties(const FrontendParameters *feparams, struct dtv_p
 		break;
 	case FEC_2_3:
 		fec = FEC_2_3;
-		if ((feparams->delsys == DVB_S2 || feparams->delsys == DVB_S2X) && feparams->modulation == PSK_8)
+		if ((getFEDeliverySystem(feparams->delsys) == SYS_DVBS2) && feparams->modulation == PSK_8)
 #if BOXMODEL_VUPLUS_ARM
 			pilot = PILOT_AUTO;
 #else
@@ -1358,7 +1356,7 @@ bool CFrontend::buildProperties(const FrontendParameters *feparams, struct dtv_p
 		break;
 	case FEC_3_4:
 		fec = FEC_3_4;
-		if ((feparams->delsys == DVB_S2 || feparams->delsys == DVB_S2X) && feparams->modulation == PSK_8)
+		if ((getFEDeliverySystem(feparams->delsys) == SYS_DVBS2) && feparams->modulation == PSK_8)
 #if BOXMODEL_VUPLUS_ARM
 			pilot = PILOT_AUTO;
 #else
@@ -1370,7 +1368,7 @@ bool CFrontend::buildProperties(const FrontendParameters *feparams, struct dtv_p
 		break;
 	case FEC_5_6:
 		fec = FEC_5_6;
-		if ((feparams->delsys == DVB_S2 || feparams->delsys == DVB_S2X) && feparams->modulation == PSK_8)
+		if ((getFEDeliverySystem(feparams->delsys) == SYS_DVBS2) && feparams->modulation == PSK_8)
 #if BOXMODEL_VUPLUS_ARM
 			pilot = PILOT_AUTO;
 #else
@@ -1388,7 +1386,7 @@ bool CFrontend::buildProperties(const FrontendParameters *feparams, struct dtv_p
 		break;
 	case FEC_3_5:
 		fec = FEC_3_5;
-		if ((feparams->delsys == DVB_S2 || feparams->delsys == DVB_S2X) && feparams->modulation == PSK_8)
+		if ((getFEDeliverySystem(feparams->delsys) == SYS_DVBS2) && feparams->modulation == PSK_8)
 #if BOXMODEL_VUPLUS_ARM
 			pilot = PILOT_AUTO;
 #else
@@ -1509,19 +1507,23 @@ bool CFrontend::buildProperties(const FrontendParameters *feparams, struct dtv_p
 		p[cmdseq.num].cmd = DTV_SYMBOL_RATE, p[cmdseq.num].u.data = feparams->symbol_rate, cmdseq.num++;
 		p[cmdseq.num].cmd = DTV_INNER_FEC, p[cmdseq.num].u.data = fec, cmdseq.num++;
 
-		if (feparams->delsys == DVB_S2 || feparams->delsys == DVB_S2X)
+		if (getFEDeliverySystem(feparams->delsys) == SYS_DVBS2)
 		{
 			p[cmdseq.num].cmd = DTV_ROLLOFF, p[cmdseq.num].u.data = feparams->rolloff, cmdseq.num++;
 			p[cmdseq.num].cmd = DTV_PILOT, p[cmdseq.num].u.data = pilot, cmdseq.num++;
-#if defined DTV_STREAM_ID
 			if (can_multistream)
 			{
+#if (DVB_API_VERSION >= 5 && DVB_API_VERSION_MINOR >= 11)
+				p[cmdseq.num].cmd = DTV_STREAM_ID, p[cmdseq.num].u.data = feparams->plp_id, cmdseq.num++;
+				p[cmdseq.num].cmd = DTV_SCRAMBLING_SEQUENCE_INDEX, p[cmdseq.num].u.data = feparams->pls_code, cmdseq.num++;
+#else
 				p[cmdseq.num].cmd = DTV_STREAM_ID, p[cmdseq.num].u.data = feparams->plp_id | (feparams->pls_code << 8) | (feparams->pls_mode << 26), cmdseq.num++;
-#if BOXMODEL_VUPLUS_ALL // FIXME - without this, Tuner BCM45308X problem - no Multistream possible
+#if BOXMODEL_VUULTIMO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUDUO4KSE || BOXMODEL_VUUNO4K || BOXMODEL_VUUNO4KSE // FIXME - without this, Tuner BCM45308X problem - no Multistream possible
 				p[cmdseq.num].cmd = DTV_STREAM_ID, p[cmdseq.num].u.data = NO_STREAM_ID_FILTER, cmdseq.num++;
 #endif
-			}
 #endif
+			}
+			p[cmdseq.num].cmd = DTV_ISDBT_SB_SEGMENT_IDX, p[cmdseq.num].u.data = (feparams->plp_id == 0 ? 0 : (0x80000000 | (/*default pid*/4096 << 16) | feparams->plp_id)), cmdseq.num++;
 		}
 
 		p[cmdseq.num].cmd = DTV_TUNE, cmdseq.num++;
@@ -1559,7 +1561,7 @@ bool CFrontend::buildProperties(const FrontendParameters *feparams, struct dtv_p
 		p[cmdseq.num].cmd = DTV_GUARD_INTERVAL,		p[cmdseq.num].u.data = feparams->guard_interval,		cmdseq.num++;
 		p[cmdseq.num].cmd = DTV_HIERARCHY,		p[cmdseq.num].u.data = feparams->hierarchy,			cmdseq.num++;
 		p[cmdseq.num].cmd = DTV_BANDWIDTH_HZ,		p[cmdseq.num].u.data = getFEBandwidth(feparams->bandwidth),	cmdseq.num++;
-		if (can_multistream)
+		if ((getFEDeliverySystem(feparams->delsys) == SYS_DVBT2) && can_multistream)
 		{
 #if defined DTV_STREAM_ID
 			p[cmdseq.num].cmd = DTV_STREAM_ID,	p[cmdseq.num].u.data = feparams->plp_id,			cmdseq.num++;
