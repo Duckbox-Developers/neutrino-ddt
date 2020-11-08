@@ -1556,7 +1556,7 @@ std::string downloadUrlToLogo(std::string url, std::string directory, t_channel_
 		std::string file = directory + "/" + strChnId + url.substr(url.find_last_of("."));
 		if (file_exists(file))
 			return file;
-		if (downloadUrl(url, file))
+		if (downloadUrl(url, file, " ", 1))
 			return file;
 	}
 	return url;
