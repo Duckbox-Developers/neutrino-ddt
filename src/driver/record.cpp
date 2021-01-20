@@ -340,23 +340,24 @@ bool CRecordInstance::Stop(bool remove_event)
 	/* Stop do close fd - if started */
 	record->Stop();
 
+
+	CCamManager::getInstance()->Stop(channel_id, CCamManager::RECORD);
+
 	if(!autoshift)
 		CFEManager::getInstance()->unlockFrontend(frontend, true);//FIXME testing
 
-        CCamManager::getInstance()->Stop(channel_id, CCamManager::RECORD);
-
-        if((autoshift && g_settings.timeshift_delete) /* || autoshift_delete*/) {
+	if((autoshift && g_settings.timeshift_delete) /* || autoshift_delete*/) {
 		snprintf(buf,sizeof(buf), "nice -n 20 rm -f \"%s.ts\" &", filename);
 		my_system(3, "/bin/sh", "-c", buf);
 		snprintf(buf,sizeof(buf), "%s.xml", filename);
-                //autoshift_delete = false;
-                unlink(buf);
-        }
+		//autoshift_delete = false;
+		unlink(buf);
+	}
 	if(recording_id && remove_event) {
 		g_Timerd->stopTimerEvent(recording_id);
 		recording_id = 0;
 	}
-        //CVFD::getInstance()->ShowIcon(VFD_ICON_CAM1, false);
+	//CVFD::getInstance()->ShowIcon(VFD_ICON_CAM1, false);
 	WaitRecMsg(end_time, 2);
 	hintBox.hide();
 	return true;
