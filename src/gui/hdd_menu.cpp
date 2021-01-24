@@ -1110,7 +1110,10 @@ int CHDDMenuHandler::formatDevice(std::string dev)
 	if (fmt_label.empty())
 		mkfscmd = devtool->mkfs + " " + devtool->mkfs_options + " " + partname;
 	else
-		mkfscmd = devtool->mkfs + " " + "-L " + fmt_label + " " + devtool->mkfs_options + " " + partname;
+		if (devtool->mkfs == "/sbin/mkfs.f2fs")
+			mkfscmd = devtool->mkfs + " " + "-l " + fmt_label + " " + devtool->mkfs_options + " " + partname;
+		else
+			mkfscmd = devtool->mkfs + " " + "-L " + fmt_label + " " + devtool->mkfs_options + " " + partname;
 	printf("mkfs cmd: [%s]\n", mkfscmd.c_str());
 
 	res = ShowMsg(LOCALE_HDD_FORMAT, g_Locale->getText(LOCALE_HDD_FORMAT_WARN), CMsgBox::mbrNo, CMsgBox::mbYes | CMsgBox::mbNo );
