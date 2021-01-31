@@ -3338,7 +3338,7 @@ t_channel_id CMoviePlayerGui::getChannelId(void)
 
 void CMoviePlayerGui::getAPID(int &apid, unsigned int &is_ac3)
 {
-	apid = currentapid, is_ac3 = (currentac3 == AUDIO_FMT_DOLBY_DIGITAL || currentac3 == AUDIO_FMT_DD_PLUS);
+	apid = currentapid, is_ac3 = (currentac3 == CZapitAudioChannel::AC3 || currentac3 == CZapitAudioChannel::EAC3);
 }
 
 bool CMoviePlayerGui::getAPID(unsigned int i, int &apid, unsigned int &is_ac3)
