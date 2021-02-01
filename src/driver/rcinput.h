@@ -246,8 +246,13 @@ class CRCInput
 			RC_record	= KEY_RECORD,
 			RC_play		= KEY_PLAY,
 			RC_pause	= KEY_PAUSE,
+#if BOXMODEL_DM8000
+			RC_forward	= KEY_NEXTSONG,
+			RC_rewind	= KEY_PREVIOUSSONG,
+#else
 			RC_forward	= KEY_FORWARD,
 			RC_rewind	= KEY_REWIND,
+#endif
 			RC_stop		= KEY_STOP,
 			RC_timeshift	= KEY_T,
 			RC_mode		= KEY_MODE,
@@ -275,8 +280,13 @@ class CRCInput
 			RC_prog4	= KEY_PROG4,
 			RC_media	= KEY_MEDIA,
 			RC_search	= KEY_SEARCH,
+#if BOXMODEL_DM8000
+			RC_nextsong	= KEY_FORWARD,
+			RC_previoussong	= KEY_REWIND,
+#else
 			RC_nextsong	= KEY_NEXTSONG,
 			RC_previoussong	= KEY_PREVIOUSSONG,
+#endif
 			RC_bookmarks	= KEY_BOOKMARKS,
 			RC_program	= KEY_PROGRAM,
 			RC_playpause	= KEY_PLAYPAUSE,
@@ -284,7 +294,6 @@ class CRCInput
 			RC_playpause_long = KEY_PLAYPAUSE_LONG,
 			RC_switchvideomode = KEY_SWITCHVIDEOMODE,
 #endif
-
 			RC_power_on	= KEY_POWERON,
 			RC_power_off	= KEY_POWEROFF,
 			RC_standby_on	= KEY_STANDBYON,
