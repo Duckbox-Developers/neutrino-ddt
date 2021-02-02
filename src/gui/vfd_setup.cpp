@@ -192,7 +192,7 @@ int CVfdSetup::showSetup()
 		vfds->addItem(led_num);
 	}
 
-#if !defined BOXMODEL_VUSOLO4K && !defined BOXMODEL_VUDUO4K && !defined BOXMODEL_VUDUO4KSE && !defined BOXMODEL_VUULTIMO4K && !defined BOXMODEL_VUUNO4KSE
+#if !defined BOXMODEL_VUSOLO4K && !defined BOXMODEL_VUDUO4K && !defined BOXMODEL_VUDUO4KSE && !defined BOXMODEL_VUULTIMO4K && !defined BOXMODEL_VUUNO4KSE && !defined BOXMODEL_DM8000
 #if ENABLE_LCD4LINUX && ENABLE_GRAPHLCD
 	if (g_settings.glcd_enable != 0 && g_settings.lcd4l_support != 0) {
 		g_settings.glcd_enable = 0;
@@ -202,7 +202,7 @@ int CVfdSetup::showSetup()
 #endif
 
 #ifdef ENABLE_LCD4LINUX
-#if !defined (BOXMODEL_VUSOLO4K) && !defined BOXMODEL_VUDUO4K && !defined BOXMODEL_VUDUO4KSE && !defined BOXMODEL_VUULTIMO4K && !defined BOXMODEL_VUUNO4KSE && defined (ENABLE_GRAPHLCD)
+#if !defined BOXMODEL_VUSOLO4K && !defined BOXMODEL_VUDUO4K && !defined BOXMODEL_VUDUO4KSE && !defined BOXMODEL_VUULTIMO4K && !defined BOXMODEL_VUUNO4KSE && !defined BOXMODEL_DM8000 && defined (ENABLE_GRAPHLCD)
 	if (g_settings.glcd_enable == 0)
 #endif
 	{
@@ -214,7 +214,7 @@ int CVfdSetup::showSetup()
 #ifdef ENABLE_GRAPHLCD
 	GLCD_Menu glcdMenu;
 #ifdef ENABLE_LCD4LINUX
-#if !defined BOXMODEL_VUSOLO4K && !defined BOXMODEL_VUDUO4K && !defined BOXMODEL_VUDUO4KSE && !defined BOXMODEL_VUULTIMO4K && !defined BOXMODEL_VUUNO4KSE
+#if !defined BOXMODEL_VUSOLO4K && !defined BOXMODEL_VUDUO4K && !defined BOXMODEL_VUDUO4KSE && !defined BOXMODEL_VUULTIMO4K && !defined BOXMODEL_VUUNO4KSE && !defined BOXMODEL_DM8000
 	if (g_settings.lcd4l_support == 0)
 #endif
 #endif
