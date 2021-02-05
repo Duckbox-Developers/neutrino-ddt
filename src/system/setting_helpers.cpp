@@ -673,6 +673,29 @@ void CFanControlNotifier::setSpeed(unsigned int speed)
 #endif
 	close(cfd);
 }
+#else
+void CFanControlNotifier::setSpeed(unsigned int speed)
+{
+#if defined (BOXMODEL_DM8000)
+	int cfd;
+	cfd = open("/proc/stb/fp/fan_vlt", O_WRONLY);
+	if(cfd < 0) {
+		perror("Cannot open /proc/stb/fp/fan_vlt");
+		return;
+	}
+	switch (speed)
+	{
+	case 0:
+		write(cfd,"00000000", 8);
+		break;
+	case 1:
+		write(cfd,"FFFFFFFF", 8);
+		break;
+	}
+	close(cfd);
+#endif
+}
+#endif
 
 bool CFanControlNotifier::changeNotify(const neutrino_locale_t, void * data)
 {
@@ -680,16 +703,6 @@ bool CFanControlNotifier::changeNotify(const neutrino_locale_t, void * data)
 	setSpeed(speed);
 	return false;
 }
-#else
-void CFanControlNotifier::setSpeed(unsigned int)
-{
-}
-
-bool CFanControlNotifier::changeNotify(const neutrino_locale_t, void *)
-{
-	return false;
-}
-#endif
 
 bool CCpuFreqNotifier::changeNotify(const neutrino_locale_t, void * data)
 {
