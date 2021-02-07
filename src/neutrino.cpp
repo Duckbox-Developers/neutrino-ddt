@@ -5229,7 +5229,11 @@ void CNeutrinoApp::loadKeys(const char * fname)
 	g_settings.mpkey_pause = tconfig->getInt32( "mpkey.pause", CRCInput::RC_playpause );
 #else
 	g_settings.mpkey_play = tconfig->getInt32( "mpkey.play", CRCInput::RC_play );
+#if BOXMODEL_DM8000
+	g_settings.mpkey_pause = tconfig->getInt32( "mpkey.pause", CRCInput::RC_play );
+#else
 	g_settings.mpkey_pause = tconfig->getInt32( "mpkey.pause", CRCInput::RC_pause );
+#endif
 #endif
 	g_settings.mpkey_audio = tconfig->getInt32( "mpkey.audio", CRCInput::RC_green );
 	g_settings.mpkey_time = tconfig->getInt32( "mpkey.time", CRCInput::RC_timeshift );
