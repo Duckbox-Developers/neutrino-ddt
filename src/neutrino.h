@@ -149,7 +149,6 @@ public:
 	void saveSetup(const char * fname);
 	int loadSetup(const char * fname);
 	void setScreenSettings();
-	void upgradeSetup(const char * fname);
 	void loadKeys(const char * fname = NULL);
 	void saveKeys(const char * fname = NULL);
 	void SetupTiming();

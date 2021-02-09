@@ -47,7 +47,6 @@
 #include "global.h"
 #include "neutrino.h"
 #include "neutrino_menue.h"
-#include "version_pseudo.h"
 
 #include <daemonc/remotecontrol.h>
 
@@ -1152,11 +1151,6 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.livestreamResolution = configfile.getInt32("livestreamResolution", 1920);
 	g_settings.livestreamScriptPath = configfile.getString("livestreamScriptPath", WEBTVDIR_VAR);
 
-	g_settings.version_pseudo = configfile.getString("version_pseudo", "19700101000000");
-
-	if (g_settings.version_pseudo < NEUTRINO_VERSION_PSEUDO)
-		upgradeSetup(fname);
-
 	if(erg)
 		configfile.setModifiedFlag(true);
 	return erg;
@@ -1225,70 +1219,6 @@ void CNeutrinoApp::setScreenSettings()
 	g_settings.screen_EndX = g_settings.screen_width;
 	g_settings.screen_EndY = g_settings.screen_height;
 #endif
-}
-
-void CNeutrinoApp::upgradeSetup(const char * fname)
-{
-	dprintf(DEBUG_NORMAL, "upgrade/cleanup %s\n", fname);
-
-	if (g_settings.version_pseudo < "20160226110000")
-	{
-		if (g_settings.usermenu[SNeutrinoSettings::BUTTON_YELLOW]->items == "7")
-		{
-			g_settings.usermenu[SNeutrinoSettings::BUTTON_YELLOW]->items = "7,31";
-			configfile.setString("usermenu_tv_yellow", g_settings.usermenu[SNeutrinoSettings::BUTTON_YELLOW]->items);
-		}
-	}
-	if (g_settings.version_pseudo < "20162912080000")
-	{
-		//convert and remove obsolete progressbar_* keys
-
-		g_settings.theme.progressbar_design = configfile.getInt32("progressbar_design", CProgressBar::PB_MONO);
-		bool pb_color = configfile.getBool("progressbar_color", true );
-		if (!pb_color)
-			g_settings.theme.progressbar_design = CProgressBar::PB_MONO;
-		g_settings.theme.progressbar_design_channellist = configfile.getInt32("channellist_progressbar_design", g_settings.theme.progressbar_design);
-		g_settings.theme.progressbar_gradient = configfile.getBool("progressbar_gradient", false);
-		g_settings.theme.progressbar_timescale_red = configfile.getInt32("progressbar_timescale_red", 0);
-		g_settings.theme.progressbar_timescale_green = configfile.getInt32("progressbar_timescale_green", 100);
-		g_settings.theme.progressbar_timescale_yellow = configfile.getInt32("progressbar_timescale_yellow", 70);
-		g_settings.theme.progressbar_timescale_invert = configfile.getBool("progressbar_timescale_invert", false);
-
-		configfile.deleteKey("progressbar_design");
-		configfile.deleteKey("channellist_progressbar_design");
-		configfile.deleteKey("progressbar_color");
-		configfile.deleteKey("progressbar_gradient");
-		configfile.deleteKey("progressbar_timescale_red");
-		configfile.deleteKey("progressbar_timescale_green");
-		configfile.deleteKey("progressbar_timescale_yellow");
-		configfile.deleteKey("progressbar_timescale_invert");
-	}
-	if (g_settings.version_pseudo < "20170209181001")
-	{
-		//convert screen_x/yres keys to font_scaling_x/y
-
-		g_settings.font_scaling_x = configfile.getInt32("screen_xres", 100);
-		g_settings.font_scaling_y = configfile.getInt32("screen_yres", 100);
-
-		configfile.deleteKey("screen_xres");
-		configfile.deleteKey("screen_yres");
-	}
-	if (g_settings.version_pseudo < "20170209181002")
-	{
-		//remove screen_width/height keys
-
-		configfile.deleteKey("screen_width");
-		configfile.deleteKey("screen_height");
-	}
-	if (g_settings.version_pseudo < "20170913110000")
-	{
-		//remove easymenu
-		configfile.deleteKey("easymenu");
-	}
-	g_settings.version_pseudo = NEUTRINO_VERSION_PSEUDO;
-	configfile.setString("version_pseudo", g_settings.version_pseudo);
-
-	saveSetup(NEUTRINO_SETTINGS_FILE);
 }
 
 /**************************************************************************************
@@ -1859,8 +1789,6 @@ void CNeutrinoApp::saveSetup(const char * fname)
 
 	configfile.setInt32("livestreamResolution", g_settings.livestreamResolution);
 	configfile.setString("livestreamScriptPath", g_settings.livestreamScriptPath);
-
-	configfile.setString("version_pseudo", g_settings.version_pseudo);
 
 	if(strcmp(fname, NEUTRINO_SETTINGS_FILE) || configfile.getModifiedFlag())
 		configfile.saveConfig(fname);
