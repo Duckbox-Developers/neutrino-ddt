@@ -1128,9 +1128,6 @@ int CNeutrinoApp::loadSetup(const char * fname)
 		}
 	}
 
-	if(configfile.getUnknownKeyQueryedFlag() && (erg==0)) {
-		erg = 2;
-	}
 
 #ifdef ENABLE_PIP
 	g_settings.pip_x = configfile.getInt32("pip_x", 50);
@@ -1151,8 +1148,15 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.livestreamResolution = configfile.getInt32("livestreamResolution", 1920);
 	g_settings.livestreamScriptPath = configfile.getString("livestreamScriptPath", WEBTVDIR_VAR);
 
-	if(erg)
+	if (!erg)
+	{
+		if (configfile.getUnknownKeyQueryedFlag())
+			erg = 2;
+	}
+
+	if (erg)
 		configfile.setModifiedFlag(true);
+
 	return erg;
 }
 
