@@ -188,7 +188,6 @@ struct timer_remotebox_item
 
 struct SNeutrinoSettings
 {
-	std::string version_pseudo;
 
 	//video
 	int video_Format;
