@@ -473,7 +473,6 @@ struct SNeutrinoSettings
 
 	//theme/color options
 	SNeutrinoTheme theme;
-	bool osd_colorsettings_advanced_mode;
 
 	//network
 #define NETWORK_NFS_NR_OF_ENTRIES 8
