@@ -140,6 +140,18 @@ int CVfdSetup::showSetup()
 	{
 
 		CMenuOptionChooser* oj;
+
+#if ENABLE_LCD
+#if 0
+		//option power
+		oj = new CMenuOptionChooser("Power LCD"/*LOCALE_LCDMENU_POWER*/, &g_settings.lcd_setting[SNeutrinoSettings::LCD_POWER], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, new CLCDNotifier(), CRCInput::RC_nokey);
+		vfds->addItem(oj);
+#endif
+		//option invert
+		oj = new CMenuOptionChooser("Invert LCD"/*LOCALE_LCDMENU_INVERSE*/, &g_settings.lcd_setting[SNeutrinoSettings::LCD_INVERSE], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, new CLCDNotifier(), CRCInput::RC_nokey);
+		vfds->addItem(oj);
+#endif
+
 		if (g_info.hw_caps->display_has_statusline)
 		{
 			//status line options
@@ -343,3 +355,21 @@ void CVfdSetup::activateNotify(const neutrino_locale_t OptionName)
 		CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8);
 	}
 }
+
+#if ENABLE_LCD
+// lcd notifier
+bool CLCDNotifier::changeNotify(const neutrino_locale_t, void * Data)
+{
+	int state = *(int *)Data;
+
+	dprintf(DEBUG_NORMAL, "CLCDNotifier: state: %d\n", state);
+#if 0
+	CVFD::getInstance()->setPower(state);
+#else
+	CVFD::getInstance()->setPower(1);
+#endif
+	CVFD::getInstance()->setlcdparameter();
+
+	return true;
+}
+#endif
