@@ -981,8 +981,8 @@ lcd4l_support_auto automatisch
 lcd4l_support_off aus
 lcd4l_support_on ein
 lcd_info_line Zeige in Infozeile
-lcd_info_line_channel Kanalname
-lcd_info_line_channel_no Kanalnummer
+lcd_info_line_channelname Kanalname
+lcd_info_line_channelnumber Kanalnummer
 lcd_info_line_clock Uhrzeit
 lcdcontroler.brightness Normalbetrieb
 lcdcontroler.brightnessdeepstandby Deep-Standby
