@@ -45,6 +45,10 @@ libneutrino_driver_a_SOURCES = \
 	streamts.cpp \
 	volume.cpp
 
+if ENABLE_LCD
+AM_CPPFLAGS += -I$(top_srcdir)/lib/liblcddisplay
+endif
+
 if ENABLE_LCD4LINUX
 libneutrino_driver_a_SOURCES += \
 	lcd4l.cpp
@@ -92,11 +96,19 @@ libneutrino_driver_a_SOURCES += \
 endif
 
 if BOXTYPE_MIPSBOX
+if ENABLE_LCD
+libneutrino_driver_a_SOURCES += \
+	fb_generic.cpp \
+	fb_accel.cpp \
+	fb_accel_mips.cpp \
+	lcdd.cpp
+else
 libneutrino_driver_a_SOURCES += \
 	fb_generic.cpp \
 	fb_accel.cpp \
 	fb_accel_mips.cpp \
 	simple_display.cpp
+endif
 endif
 
 libneutrino_driver_netfile_a_SOURCES = netfile.cpp

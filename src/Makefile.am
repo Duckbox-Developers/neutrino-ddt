@@ -124,6 +124,11 @@ neutrino_LDADD = \
 	-ldl -lblkid \
 	-lz
 
+# LCD display
+if ENABLE_LCD
+neutrino_LDADD += $(top_builddir)/lib/liblcddisplay/liblcddisplay.a
+endif
+
 if ENABLE_GRAPHLCD
 neutrino_LDADD += -lglcddrivers -lglcdgraphics -lusb-1.0
 endif
