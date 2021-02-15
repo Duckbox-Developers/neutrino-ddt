@@ -17,3 +17,8 @@ if ENABLE_UPNP
 SUBDIRS += \
 	libupnpclient
 endif
+
+if ENABLE_LCD
+SUBDIRS += \
+	liblcddisplay
+endif

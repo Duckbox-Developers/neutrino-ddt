@@ -141,6 +141,30 @@ if test "$BOXTYPE" = "generic" ||
 	AC_DEFINE(SCREENSHOT, 1, [Define to 1 if the platform supports screenshots])
 fi
 
+# lcd
+AC_ARG_ENABLE(lcd,
+	AS_HELP_STRING(--enable-lcd,include lcd support),
+	,[enable_lcd=no])
+AM_CONDITIONAL(ENABLE_LCD,test "$enable_lcd" = "yes")
+
+if test "$enable_lcd" = "yes"; then
+AC_DEFINE(ENABLE_LCD,1,[include lcd support])
+fi
+
+# lcd update
+AM_CONDITIONAL(LCD_UPDATE,test "$enable_lcd_update" = "yes")
+
+if test "$enable_lcd" = "yes"; then
+AC_DEFINE(LCD_UPDATE,1,[include lcd update support])
+fi
+
+# lcdapi
+AM_CONDITIONAL(ENABLE_LCDAPI,test "$enable_lcd" = "yes")
+
+if test "$enable_lcd" = "yes"; then
+AC_DEFINE(ENABLE_LCDAPI,1,[include lcd api support])
+fi
+
 AC_ARG_ENABLE(graphlcd,
 	AS_HELP_STRING([--enable-graphlcd], [enable GraphLCD support]),
 	,[enable_graphlcd=no])
@@ -355,6 +379,7 @@ lib/Makefile
 lib/connection/Makefile
 lib/jsoncpp/Makefile
 lib/libconfigfile/Makefile
+lib/liblcddisplay/Makefile
 lib/libdvbsub/Makefile
 lib/libeventserver/Makefile
 lib/libiw/Makefile
