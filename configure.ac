@@ -229,6 +229,16 @@ if test "$enable_upnp" = "yes"; then
 fi
 AM_CONDITIONAL(ENABLE_UPNP, test "$enable_upnp" = "yes")
 
+AC_ARG_ENABLE(dynamicdemux,
+	AS_HELP_STRING(--enable-dynamicdemux,use dynamic demux),
+	,[enable_dynamicdemux=yes])
+
+AM_CONDITIONAL(DYNAMIC_DEMUX,test "$enable_dynamicdemux" = "yes")
+if test "$enable_dynamicdemux" = "yes"; then
+	AC_DEFINE(DYNAMIC_DEMUX,1,[use dynamic demux])
+fi
+
+
 AC_ARG_ENABLE(arm-acc,
 	AS_HELP_STRING(--disable-arm-acc,disable arm hardware acceleration),
 	,[enable_arm_acc=yes])
