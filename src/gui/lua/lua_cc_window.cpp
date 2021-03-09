@@ -273,7 +273,7 @@ int CLuaInstCCWindow::CCWindowNew(lua_State *L)
 			}
 			if (!btnSetup.empty()) {
 				button_label_cc btnSSetup;
-				btnSSetup.button	= NEUTRINO_ICON_BUTTON_SETUP;
+				btnSSetup.button	= NEUTRINO_ICON_BUTTON_MENU;
 				btnSSetup.text		= btnSetup;
 				buttons.push_back(btnSSetup);
 			}
