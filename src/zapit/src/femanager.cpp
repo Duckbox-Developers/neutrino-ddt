@@ -675,9 +675,9 @@ CFrontend * CFEManager::getFrontend(CZapitChannel * channel)
 }
 
 #ifdef DYNAMIC_DEMUX
-int CFEManager::getDemux(transponder_id_t id)
+int CFEManager::getDemux(transponder_id_t id, int feNum)
 {
-	for (unsigned int i = 1; i < dmap.size(); i++) {
+	for (unsigned int i = feNum +1; i < dmap.size(); i++) {
 		if((dmap[i].usecount == 0) || dmap[i].tpid == id)
 			return i;
 	}
@@ -727,7 +727,7 @@ CFrontend * CFEManager::allocateFE(CZapitChannel * channel, bool forrecord)
 	CFrontend * frontend = getFrontend(channel);
 	if (frontend) {
 #ifdef DYNAMIC_DEMUX
-		int dnum = getDemux(channel->getTransponderId());
+		int dnum = getDemux(channel->getTransponderId(), frontend->getNumber());
 		INFO("record demux: %d", dnum);
 		channel->setRecordDemux(dnum);
 		if (forrecord && !dnum) {
