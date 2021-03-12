@@ -168,13 +168,6 @@ if BOXTYPE_MIPSBOX
 neutrino_LDADD += -lass
 endif
 
-#bin_PROGRAMS += drivertool
-#drivertool_SOURCES = drivertool.c
-#bin_PROGRAMS += dt
-#dt_SOURCES = dt.c
-#bin_PROGRAMS += mdev_helper
-#mdev_helper_SOURCES = mdev_helper.cpp
-
 if BOXMODEL_RASPI
 neutrino_LDADD += \
 	-L/opt/vc/lib/ -lbcm_host -lvcos -lvchiq_arm -lpthread -lrt
