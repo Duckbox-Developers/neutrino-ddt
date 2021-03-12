@@ -252,7 +252,8 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 			break;
 		case PIP:
 #if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
-			source = frontend->getNumber();
+			if(frontend)
+				source = frontend->getNumber();
 			demux = source;
 #else
 			source = channel->getRecordDemux();
