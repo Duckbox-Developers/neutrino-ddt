@@ -430,7 +430,8 @@ void CVideoSettings::setVideoSettings()
 #endif
 	videoDecoder->setAspectRatio(g_settings.video_Format, g_settings.video_43mode);
 #ifdef ENABLE_PIP
-	pipDecoder->setAspectRatio(g_settings.video_Format, g_settings.video_43mode);
+	if (pipDecoder != NULL)
+		pipDecoder->setAspectRatio(g_settings.video_Format, g_settings.video_43mode);
 #endif
 
 	CAutoModeNotifier anotify;
@@ -439,7 +440,8 @@ void CVideoSettings::setVideoSettings()
 	frameBuffer->setMixerColor(g_settings.video_mixer_color);
 #endif
 #ifdef ENABLE_PIP
-	pipDecoder->Pig(g_settings.pip_x, g_settings.pip_y, g_settings.pip_width, g_settings.pip_height, frameBuffer->getScreenWidth(true), frameBuffer->getScreenHeight(true));
+	if (pipDecoder != NULL)
+		pipDecoder->Pig(g_settings.pip_x, g_settings.pip_y, g_settings.pip_width, g_settings.pip_height, g_settings.screen_width, g_settings.screen_height);
 #endif
 }
 
