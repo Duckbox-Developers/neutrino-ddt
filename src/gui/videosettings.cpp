@@ -342,6 +342,8 @@ int CVideoSettings::showVideoSetup()
 	CMenuForwarder *mf;
 	CMenuOptionNumberChooser *mc;
 
+	int shortcut = 1;
+
 	CPSISetup *psiSetup = CPSISetup::getInstance();
 
 	videosetup->addItem(GenericMenuSeparatorLine);
@@ -371,26 +373,26 @@ int CVideoSettings::showVideoSetup()
 
 	videosetup->addItem(GenericMenuSeparatorLine);
 
-	mf = new CMenuForwarder(LOCALE_THREE_D_SETTINGS, true, NULL, CNeutrinoApp::getInstance(), "3dmode", CRCInput::RC_red);
+	mf = new CMenuForwarder(LOCALE_THREE_D_SETTINGS, true, NULL, CNeutrinoApp::getInstance(), "3dmode", CRCInput::convertDigitToKey(shortcut++));
 	mf->setHint("", LOCALE_MENU_HINT_VIDEO_THREE_D);
 	videosetup->addItem(mf);
 #if HAVE_SH4_HARDWARE
 	CScreenSetup channelScreenSetup;
 	channelScreenSetup.loadBorder(CZapit::getInstance()->GetCurrentChannelID());
-	mf = new CMenuForwarder(LOCALE_VIDEOMENU_MASKSETUP, true, NULL, &channelScreenSetup, NULL, CRCInput::RC_green);
+	mf = new CMenuForwarder(LOCALE_VIDEOMENU_MASKSETUP, true, NULL, &channelScreenSetup, NULL, CRCInput::convertDigitToKey(shortcut++));
 	mf->setHint("", LOCALE_MENU_HINT_VIDEO_MASK);
 	videosetup->addItem(mf);
 #endif
 
 #ifdef ENABLE_PIP
 	CPipSetup pip;
-	CMenuForwarder * pipsetup = new CMenuForwarder(LOCALE_VIDEOMENU_PIP, true, NULL, &pip, NULL, CRCInput::RC_green);
+	CMenuForwarder * pipsetup = new CMenuForwarder(LOCALE_VIDEOMENU_PIP, true, NULL, &pip, NULL, CRCInput::convertDigitToKey(shortcut++));
 	pipsetup->setHint("", LOCALE_MENU_HINT_VIDEO_PIP);
 	videosetup->addItem(pipsetup);
 #endif
 
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
-	CMenuOptionChooser * zm = new CMenuOptionChooser(LOCALE_VIDEOMENU_ZAPPINGMODE, &g_settings.zappingmode, VIDEOMENU_ZAPPINGMODE_OPTIONS, VIDEOMENU_ZAPPINGMODE_OPTION_COUNT, true, this, CRCInput::RC_yellow);
+	CMenuOptionChooser * zm = new CMenuOptionChooser(LOCALE_VIDEOMENU_ZAPPINGMODE, &g_settings.zappingmode, VIDEOMENU_ZAPPINGMODE_OPTIONS, VIDEOMENU_ZAPPINGMODE_OPTION_COUNT, true, this, CRCInput::convertDigitToKey(shortcut++));
 	zm->setHint("", LOCALE_MENU_HINT_VIDEO_ZAPPINGMODE);
 	videosetup->addItem(zm);
 #endif
