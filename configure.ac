@@ -231,7 +231,7 @@ AM_CONDITIONAL(ENABLE_UPNP, test "$enable_upnp" = "yes")
 
 AC_ARG_ENABLE(dynamicdemux,
 	AS_HELP_STRING(--enable-dynamicdemux,use dynamic demux),
-	,[enable_dynamicdemux=yes])
+	,[enable_dynamicdemux=no])
 
 AM_CONDITIONAL(DYNAMIC_DEMUX,test "$enable_dynamicdemux" = "yes")
 if test "$enable_dynamicdemux" = "yes"; then
