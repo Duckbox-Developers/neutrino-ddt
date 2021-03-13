@@ -2995,11 +2995,34 @@ void CNeutrinoApp::RealRun()
 			}
 #ifdef ENABLE_PIP
 			else if (msg == (neutrino_msg_t) g_settings.key_pip_close) {
+#if BOXMODEL_BRE2ZE4K || BOXMODEL_HD51 || BOXMODEL_H7
+				bool bm12=false;
+				FILE *f = fopen("/proc/cmdline", "r");
+				if (f) {
+					char buf[256] = "";
+					while(fgets(buf, sizeof(buf), f) != NULL) {
+						if (strstr(buf, "boxmode=12") != NULL) {
+							bm12=true;
+						}
+					}
+					fclose(f);
+				}
+				if (!bm12) {
+					ShowMsg(LOCALE_MESSAGEBOX_ERROR, LOCALE_BOXMODE12_NOT_ACTIVATED, CMsgBox::mbrOk, CMsgBox::mbOk, NEUTRINO_ICON_ERROR);
+				} else {
+					t_channel_id pip_channel_id = CZapit::getInstance()->GetPipChannelID();
+					if (pip_channel_id)
+						g_Zapit->stopPip();
+					else
+						StartPip(CZapit::getInstance()->GetCurrentChannelID());
+				}
+#else
 				t_channel_id pip_channel_id = CZapit::getInstance()->GetPipChannelID();
 				if (pip_channel_id)
 					g_Zapit->stopPip();
 				else
 					StartPip(CZapit::getInstance()->GetCurrentChannelID());
+#endif
 			}
 			else if (msg == (neutrino_msg_t) g_settings.key_pip_setup) {
 				CPipSetup pipsetup;
@@ -5097,7 +5120,7 @@ void CNeutrinoApp::loadKeys(const char * fname)
 	g_settings.key_screenshot = tconfig->getInt32( "key_screenshot", (unsigned int)CRCInput::RC_nokey );
 #ifdef ENABLE_PIP
 	g_settings.key_pip_close = tconfig->getInt32( "key_pip_close", CRCInput::RC_prev );
-	g_settings.key_pip_setup = tconfig->getInt32( "key_pip_setup", CRCInput::RC_nokey );
+	g_settings.key_pip_setup = tconfig->getInt32( "key_pip_setup", 1431 ); // next (long)
 	g_settings.key_pip_swap = tconfig->getInt32( "key_pip_swap", CRCInput::RC_next );
 #endif
 	g_settings.key_current_transponder = tconfig->getInt32( "key_current_transponder", CRCInput::RC_games );
