@@ -345,7 +345,7 @@ int CVideoSettings::showVideoSetup()
 	CPSISetup *psiSetup = CPSISetup::getInstance();
 
 	videosetup->addItem(GenericMenuSeparatorLine);
-	mf = new CMenuForwarder(LOCALE_VIDEOMENU_PSI, true, NULL, psiSetup, NULL, CRCInput::RC_red);
+	mf = new CMenuForwarder(LOCALE_VIDEOMENU_PSI, true, NULL, psiSetup );
 	mf->setHint("", LOCALE_MENU_HINT_VIDEO_PSI);
 	videosetup->addItem(mf);
 
@@ -371,20 +371,20 @@ int CVideoSettings::showVideoSetup()
 
 	videosetup->addItem(GenericMenuSeparatorLine);
 
-	mf = new CMenuForwarder(LOCALE_THREE_D_SETTINGS, true, NULL, CNeutrinoApp::getInstance(), "3dmode", CRCInput::RC_green);
+	mf = new CMenuForwarder(LOCALE_THREE_D_SETTINGS, true, NULL, CNeutrinoApp::getInstance(), "3dmode", CRCInput::RC_red);
 	mf->setHint("", LOCALE_MENU_HINT_VIDEO_THREE_D);
 	videosetup->addItem(mf);
 #if HAVE_SH4_HARDWARE
 	CScreenSetup channelScreenSetup;
 	channelScreenSetup.loadBorder(CZapit::getInstance()->GetCurrentChannelID());
-	mf = new CMenuForwarder(LOCALE_VIDEOMENU_MASKSETUP, true, NULL, &channelScreenSetup, NULL, CRCInput::RC_yellow);
+	mf = new CMenuForwarder(LOCALE_VIDEOMENU_MASKSETUP, true, NULL, &channelScreenSetup, NULL, CRCInput::RC_green);
 	mf->setHint("", LOCALE_MENU_HINT_VIDEO_MASK);
 	videosetup->addItem(mf);
 #endif
 
 #ifdef ENABLE_PIP
 	CPipSetup pip;
-	CMenuForwarder * pipsetup = new CMenuForwarder(LOCALE_VIDEOMENU_PIP, true, NULL, &pip);
+	CMenuForwarder * pipsetup = new CMenuForwarder(LOCALE_VIDEOMENU_PIP, true, NULL, &pip, NULL, CRCInput::RC_green);
 	pipsetup->setHint("", LOCALE_MENU_HINT_VIDEO_PIP);
 	videosetup->addItem(pipsetup);
 #endif
