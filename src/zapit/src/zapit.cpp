@@ -709,21 +709,27 @@ bool CZapit::StartPip(const t_channel_id channel_id)
 
 	pip_fe = frontend;
 
+#ifdef DYNAMIC_DEMUX
+	int dnum = CFEManager::getInstance()->getDemux(newchannel->getTransponderId(), pip_fe->getNumber());
+	INFO("[pip] dyn demux: %d", dnum);
+#else
+	/* FIXME until proper demux management */
+	int dnum = 1;
+	INFO("[pip] demux: %d", dnum);
+#endif
+
 	INFO("[pip] vpid %X apid %X pcr %X", newchannel->getVideoPid(), newchannel->getAudioPid(), newchannel->getPcrPid());
 	if (!pipDemux) {
-#ifdef DYNAMIC_DEMUX
-		int dnum = CFEManager::getInstance()->getDemux(newchannel->getTransponderId(), pip_fe->getNumber());
-		INFO("[pip] dyn demux: %d", dnum);
-#else
-		/* FIXME until proper demux management */
-		int dnum = 1;
-#endif
 		pipDemux = new cDemux(dnum);
 		pipDemux->Open(DMX_PIP_CHANNEL);
 		if (!pipDecoder) {
 			pipDecoder = new cVideo(0, NULL, NULL, 1);
 		}
 	}
+
+	pipDemux->SetSource(dnum, pip_fe->getNumber());
+	newchannel->setPipDemux(dnum);
+	newchannel->setRecordDemux(pip_fe->getNumber());
 
 	pipDecoder->SetStreamType((VIDEO_FORMAT)newchannel->type);
 	pipDemux->pesFilter(newchannel->getVideoPid());
