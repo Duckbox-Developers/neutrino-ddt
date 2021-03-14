@@ -942,13 +942,19 @@ int CChannelList::show()
 		}
 #ifdef ENABLE_PIP
 		else if (!empty && ((msg == CRCInput::RC_play) || (msg == CRCInput::RC_playpause) || (msg == (neutrino_msg_t) g_settings.key_pip_close))) {
-			if(SameTP()) {
-				if (CZapit::getInstance()->GetPipChannelID() == (*chanlist)[selected]->getChannelID()) {
-					g_Zapit->stopPip();
-					calcSize();
-					paintBody();
-				} else {
-					handleMsg(NeutrinoMessages::EVT_PROGRAMLOCKSTATUS, 0x100, true);
+			int boxmode = getBoxMode();
+			if (boxmode > -1 && boxmode != 12)
+				ShowMsg(LOCALE_MESSAGEBOX_ERROR, LOCALE_BOXMODE12_NOT_ACTIVATED, CMsgBox::mbrOk, CMsgBox::mbOk, NEUTRINO_ICON_ERROR);
+			else
+			{
+				if(SameTP()) {
+					if (CZapit::getInstance()->GetPipChannelID() == (*chanlist)[selected]->getChannelID()) {
+						g_Zapit->stopPip();
+						calcSize();
+						paintBody();
+					} else {
+						handleMsg(NeutrinoMessages::EVT_PROGRAMLOCKSTATUS, 0x100, true);
+					}
 				}
 			}
 		}
