@@ -1348,6 +1348,7 @@ menu.hint_next_brief Weiter zum nächsten Menü
 menu.hint_numeric_adjust Bei numerischer Programmwahl die Kanalliste am neu gewählten Programm ausrichten
 menu.hint_osd Farben, Schriftarten, Anzeigegröße, Ansichtsoptionen der Menüs usw.
 menu.hint_osd_language Wählen Sie ihre Menü-Sprache
+menu.hint_osd_preset Wählen Sie zwischen CRT oder LCD
 menu.hint_osd_resolution Wählen Sie eine OSD-Auflösung
 menu.hint_osd_timing Einblendzeit, die das OSD auf dem TV angezeigt wird
 menu.hint_other_fonts Ändern Sie andere Schriftgrößen
