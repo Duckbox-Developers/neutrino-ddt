@@ -1358,6 +1358,7 @@ menu.hint_opkg_install_local_package Paket von USB-Stick, SD, Freigabe oder loka
 menu.hint_opkg_upgrade Aktualisiert alle installierten Pakete auf die neueste verfügbare Version
 menu.hint_osd Farben, Schriftarten, Anzeigegröße, Ansichtsoptionen der Menüs usw.
 menu.hint_osd_language Wählen Sie ihre Menü-Sprache
+menu.hint_osd_preset Wählen Sie zwischen CRT oder LCD
 menu.hint_osd_resolution Wählen Sie eine OSD-Auflösung
 menu.hint_osd_timing Einblendzeit, die das OSD auf dem TV angezeigt wird
 menu.hint_other_fonts Ändern Sie andere Schriftgrößen

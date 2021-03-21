@@ -739,6 +739,13 @@ int COsdSetup::showOsdSetup()
 	osd_menu->addItem(osd_res);
 #endif
 
+#if !HAVE_SH4_HARDWARE
+	//monitor
+		mc = new CMenuOptionChooser(LOCALE_COLORMENU_OSD_PRESET, &g_settings.screen_preset, OSD_PRESET_OPTIONS, OSD_PRESET_OPTIONS_COUNT, true, this);
+		mc->setHint("", LOCALE_MENU_HINT_OSD_PRESET);
+		osd_menu->addItem(mc);
+#endif
+
 #if 0
 	// round corners
 	mc = new CMenuOptionChooser(LOCALE_EXTRA_ROUNDED_CORNERS, &g_settings.theme.rounded_corners, MENU_CORNERSETTINGS_TYPE_OPTIONS, MENU_CORNERSETTINGS_TYPE_OPTION_COUNT, true, this);
