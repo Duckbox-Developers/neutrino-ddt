@@ -1385,6 +1385,7 @@ const char * locale_real_names[] =
 	"menu.hint_opkg_upgrade",
 	"menu.hint_osd",
 	"menu.hint_osd_language",
+	"menu.hint_osd_preset",
 	"menu.hint_osd_resolution",
 	"menu.hint_osd_timing",
 	"menu.hint_other_fonts",

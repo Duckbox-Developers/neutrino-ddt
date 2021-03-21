@@ -1358,6 +1358,7 @@ menu.hint_opkg_install_local_package Install package from USB, SD, share or loca
 menu.hint_opkg_upgrade Updates all installed packages to the most recent version available
 menu.hint_osd Colors, fonts, screen size\nGUI look and feel options
 menu.hint_osd_language Select OSD language
+menu.hint_osd_preset Choose between CRT or LCD
 menu.hint_osd_resolution Change OSD resolution
 menu.hint_osd_timing After this time the OSD will be faded out
 menu.hint_other_fonts Change other font sizes
