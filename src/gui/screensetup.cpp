@@ -153,15 +153,15 @@ int CScreenSetup::exec(CMenuTarget* parent, const std::string &action)
 			showBorder(channel_id);
 
 			if(g_settings.screen_preset) {
-				g_settings.screen_StartX_lcd_0 = g_settings.screen_StartX_int;
-				g_settings.screen_StartY_lcd_0 = g_settings.screen_StartY_int;
-				g_settings.screen_EndX_lcd_0 = g_settings.screen_EndX_int;
-				g_settings.screen_EndY_lcd_0 = g_settings.screen_EndY_int;
+				g_settings.screen_StartX_lcd_a_0 = g_settings.screen_StartX_int;
+				g_settings.screen_StartY_lcd_a_0 = g_settings.screen_StartY_int;
+				g_settings.screen_EndX_lcd_a_0 = g_settings.screen_EndX_int;
+				g_settings.screen_EndY_lcd_a_0 = g_settings.screen_EndY_int;
 			} else {
-				g_settings.screen_StartX_crt_0 = g_settings.screen_StartX_int;
-				g_settings.screen_StartY_crt_0 = g_settings.screen_StartY_int;
-				g_settings.screen_EndX_crt_0 = g_settings.screen_EndX_int;
-				g_settings.screen_EndY_crt_0 = g_settings.screen_EndY_int;
+				g_settings.screen_StartX_lcd_b_0 = g_settings.screen_StartX_int;
+				g_settings.screen_StartY_lcd_b_0 = g_settings.screen_StartY_int;
+				g_settings.screen_EndX_lcd_b_0 = g_settings.screen_EndX_int;
+				g_settings.screen_EndY_lcd_b_0 = g_settings.screen_EndY_int;
 			}
 		}
 		return menu_return::RETURN_EXIT;
@@ -274,18 +274,18 @@ int CScreenSetup::exec(CMenuTarget* parent, const std::string &)
 					case 1:
 					    {
 						switch (g_settings.screen_preset) {
-							case COsdSetup::PRESET_LCD:
-							default:
-								g_settings.screen_StartX_lcd_1 = g_settings.screen_StartX;
-								g_settings.screen_StartY_lcd_1 = g_settings.screen_StartY;
-								g_settings.screen_EndX_lcd_1   = g_settings.screen_EndX;
-								g_settings.screen_EndY_lcd_1   = g_settings.screen_EndY;
+							case COsdSetup::PRESET_LCD_B:
+								g_settings.screen_StartX_lcd_b_1 = g_settings.screen_StartX;
+								g_settings.screen_StartY_lcd_b_1 = g_settings.screen_StartY;
+								g_settings.screen_EndX_lcd_b_1   = g_settings.screen_EndX;
+								g_settings.screen_EndY_lcd_b_1   = g_settings.screen_EndY;
 								break;
-							case COsdSetup::PRESET_CRT:
-								g_settings.screen_StartX_crt_1 = g_settings.screen_StartX;
-								g_settings.screen_StartY_crt_1 = g_settings.screen_StartY;
-								g_settings.screen_EndX_crt_1   = g_settings.screen_EndX;
-								g_settings.screen_EndY_crt_1   = g_settings.screen_EndY;
+							case COsdSetup::PRESET_LCD_A:
+							default:
+								g_settings.screen_StartX_lcd_a_1 = g_settings.screen_StartX;
+								g_settings.screen_StartY_lcd_a_1 = g_settings.screen_StartY;
+								g_settings.screen_EndX_lcd_a_1   = g_settings.screen_EndX;
+								g_settings.screen_EndY_lcd_a_1   = g_settings.screen_EndY;
 								break;
 						}
 					    }
@@ -295,18 +295,18 @@ int CScreenSetup::exec(CMenuTarget* parent, const std::string &)
 					default:
 					    {
 						switch (g_settings.screen_preset) {
-							case COsdSetup::PRESET_LCD:
-							default:
-								g_settings.screen_StartX_lcd_0 = g_settings.screen_StartX;
-								g_settings.screen_StartY_lcd_0 = g_settings.screen_StartY;
-								g_settings.screen_EndX_lcd_0   = g_settings.screen_EndX;
-								g_settings.screen_EndY_lcd_0   = g_settings.screen_EndY;
+							case COsdSetup::PRESET_LCD_B:
+								g_settings.screen_StartX_lcd_b_0 = g_settings.screen_StartX;
+								g_settings.screen_StartY_lcd_b_0 = g_settings.screen_StartY;
+								g_settings.screen_EndX_lcd_b_0   = g_settings.screen_EndX;
+								g_settings.screen_EndY_lcd_b_0   = g_settings.screen_EndY;
 								break;
-							case COsdSetup::PRESET_CRT:
-								g_settings.screen_StartX_crt_0 = g_settings.screen_StartX;
-								g_settings.screen_StartY_crt_0 = g_settings.screen_StartY;
-								g_settings.screen_EndX_crt_0   = g_settings.screen_EndX;
-								g_settings.screen_EndY_crt_0   = g_settings.screen_EndY;
+							case COsdSetup::PRESET_LCD_A:
+							default:
+								g_settings.screen_StartX_lcd_a_0 = g_settings.screen_StartX;
+								g_settings.screen_StartY_lcd_a_0 = g_settings.screen_StartY;
+								g_settings.screen_EndX_lcd_a_0   = g_settings.screen_EndX;
+								g_settings.screen_EndY_lcd_a_0   = g_settings.screen_EndY;
 								break;
 						}
 					    }
