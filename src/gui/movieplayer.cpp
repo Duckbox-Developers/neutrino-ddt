@@ -1190,7 +1190,7 @@ bool CMoviePlayerGui::getLiveUrl(const std::string &url, const std::string &scri
 		printf("[%s:%s:%d] script: %s\n", __file__, __func__, __LINE__, _s.c_str());
 		if (!file_exists(_s.c_str()))
 		{
-			_s = std::string(WEBTVDIR_VAR) + "/" + _script;
+			_s = std::string(WEBTVDIR) + "/" + _script;
 			printf("[%s:%s:%d] script: %s\n", __file__, __func__, __LINE__, _s.c_str());
 		}
 		_script = _s;
