@@ -108,7 +108,7 @@ install-data-hook:
 	find $(DESTDIR)$(PRIVATE_HTTPDDIR)/ -type f -print0 | xargs --no-run-if-empty -0 \
 		sed -i \
 			-e 's|%(CONFIGDIR)|$(CONFIGDIR)|g' \
-			-e 's|%(PLUGINDIR_VAR)|$(PLUGINDIR_VAR)|g' \
+			-e 's|%(PLUGINDIR)|$(PLUGINDIR)|g' \
 			-e 's|%(PRIVATE_HTTPDDIR)|$(PRIVATE_HTTPDDIR)|g' \
 			-e 's|%(PUBLIC_HTTPDDIR)|$(PUBLIC_HTTPDDIR)|g' \
 	;

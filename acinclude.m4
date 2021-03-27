@@ -144,29 +144,11 @@ TUXBOX_APPS_DIRECTORY_ONE(datadir, DATADIR, datadir, /share, /tuxbox,
 TUXBOX_APPS_DIRECTORY_ONE(fontdir, FONTDIR, datadir, /share, /fonts,
 	[--with-fontdir=PATH], [where to find fonts])
 
-TUXBOX_APPS_DIRECTORY_ONE(fontdir_var, FONTDIR_VAR, localstatedir, /var, /tuxbox/fonts,
-	[--with-fontdir_var=PATH], [where to find fonts in /var])
-
-TUXBOX_APPS_DIRECTORY_ONE(gamesdir, GAMESDIR, localstatedir, /var, /tuxbox/games,
-	[--with-gamesdir=PATH], [where to find games])
-
 TUXBOX_APPS_DIRECTORY_ONE(libdir, LIBDIR, libdir, /lib, /tuxbox,
 	[--with-libdir=PATH], [where to find internal libs])
 
-TUXBOX_APPS_DIRECTORY_ONE(plugindir, PLUGINDIR, libdir, /lib, /tuxbox/plugins,
-	[--with-plugindir=PATH], [where to find plugins])
-
-TUXBOX_APPS_DIRECTORY_ONE(plugindir_var, PLUGINDIR_VAR, localstatedir, /var, /tuxbox/plugins,
-	[--with-plugindir_var=PATH], [where to find plugins in /var])
-
-TUXBOX_APPS_DIRECTORY_ONE(plugindir_mnt, PLUGINDIR_MNT, mntdir, /mnt, /plugins,
-	[--with-plugindir_mnt=PATH], [where to find external plugins])
-
-TUXBOX_APPS_DIRECTORY_ONE(luaplugindir, LUAPLUGINDIR, libdir, /lib, /tuxbox/luaplugins,
-	[--with-luaplugindir=PATH], [where to find Lua plugins])
-
-TUXBOX_APPS_DIRECTORY_ONE(webtvdir, WEBTVDIR, datadir, /share, /tuxbox/neutrino/webtv,
-	[--with-webtvdir=PATH], [where to find webtv content])
+TUXBOX_APPS_DIRECTORY_ONE(plugindir, PLUGINDIR, localstatedir, /var, /tuxbox/plugins,
+	[--with-plugindir=PATH], [where to find plugins in /var])
 
 TUXBOX_APPS_DIRECTORY_ONE(webtvdir_var, WEBTVDIR_VAR, localstatedir, /var, /tuxbox/webtv,
 	[--with-webtvdir_var=PATH], [where to find webtv content in /var])
@@ -206,15 +188,9 @@ dnl automake <= 1.6 needs this specifications
 AC_SUBST(CONFIGDIR)
 AC_SUBST(DATADIR)
 AC_SUBST(FONTDIR)
-AC_SUBST(FONTDIR_VAR)
-AC_SUBST(GAMESDIR)
 AC_SUBST(LIBDIR)
 AC_SUBST(MNTDIR)
 AC_SUBST(PLUGINDIR)
-AC_SUBST(PLUGINDIR_VAR)
-AC_SUBST(PLUGINDIR_MNT)
-AC_SUBST(LUAPLUGINDIR)
-AC_SUBST(WEBTVDIR)
 AC_SUBST(WEBTVDIR_VAR)
 AC_SUBST(LOCALEDIR)
 AC_SUBST(LOCALEDIR_VAR)

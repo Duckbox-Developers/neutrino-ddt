@@ -122,13 +122,7 @@ void CPlugins::scanDir(const char *dir)
 					new_plugin.pluginfile.append(".lua");
 				else // CPlugins::P_TYPE_GAME or CPlugins::P_TYPE_TOOL
 					new_plugin.pluginfile.append(".so");
-				// We do not check if new_plugin.pluginfile exists since .cfg in
-				// PLUGINDIR_VAR can overwrite settings in read only dir
-				// PLUGINDIR. This needs PLUGINDIR_VAR to be scanned at
-				// first -> .cfg in PLUGINDIR will be skipped since plugin
-				// already exists in the list.
-				// This behavior is used to make sure plugins can be disabled
-				// by creating a .cfg in PLUGINDIR_VAR (PLUGINDIR often is read only).
+
 				if (!plugin_exists(new_plugin.filename))
 				{
 					plugin_list.push_back(new_plugin);
@@ -146,10 +140,7 @@ void CPlugins::loadPlugins()
 	number_of_plugins = 0;
 	plugin_list.clear();
 	sindex = 100;
-	scanDir(GAMESDIR);
 	scanDir(g_settings.plugin_hdd_dir.c_str());
-	scanDir(PLUGINDIR_MNT);
-	scanDir(PLUGINDIR_VAR);
 	scanDir(PLUGINDIR);
 
 	sort (plugin_list.begin(), plugin_list.end());
