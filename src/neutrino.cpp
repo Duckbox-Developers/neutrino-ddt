@@ -1141,7 +1141,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.infoClockSeconds = configfile.getInt32("infoClockSeconds", 1);
 
 	g_settings.livestreamResolution = configfile.getInt32("livestreamResolution", 1920);
-	g_settings.livestreamScriptPath = configfile.getString("livestreamScriptPath", WEBTVDIR_VAR);
+	g_settings.livestreamScriptPath = configfile.getString("livestreamScriptPath", WEBTVDIR);
 
 	if (!erg)
 	{
