@@ -236,7 +236,7 @@ bool CLuaServer::luaserver_parse_command(CBasicMessage::Header &rmsg __attribute
 	if (data[0] == '/')
 		luascript = data;
 	else {
-		luascript = PLUGINDIR_VAR "/";
+		luascript = PLUGINDIR "/";
 		luascript += data;
 		luascript += ".lua";
 	}

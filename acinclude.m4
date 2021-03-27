@@ -150,8 +150,8 @@ TUXBOX_APPS_DIRECTORY_ONE(fontdir, FONTDIR, datadir, /share, /fonts,
 TUXBOX_APPS_DIRECTORY_ONE(libdir, LIBDIR, libdir, /lib, /tuxbox,
 	[--with-libdir=PATH], [where to find internal libs])
 
-TUXBOX_APPS_DIRECTORY_ONE(plugindir_var, PLUGINDIR_VAR, localstatedir, /var, /tuxbox/plugins,
-	[--with-plugindir_var=PATH], [where to find plugins in /var])
+TUXBOX_APPS_DIRECTORY_ONE(plugindir, PLUGINDIR, localstatedir, /var, /tuxbox/plugins,
+	[--with-plugindir=PATH], [where to find plugins in /var])
 
 TUXBOX_APPS_DIRECTORY_ONE(webtvdir_var, WEBTVDIR_VAR, localstatedir, /var, /tuxbox/webtv,
 	[--with-webtvdir_var=PATH], [where to find webtv content in /var])
@@ -194,7 +194,7 @@ AC_SUBST(DATADIR)
 AC_SUBST(FONTDIR)
 AC_SUBST(LIBDIR)
 AC_SUBST(MNTDIR)
-AC_SUBST(PLUGINDIR_VAR)
+AC_SUBST(PLUGINDIR)
 AC_SUBST(WEBTVDIR_VAR)
 AC_SUBST(LOCALEDIR)
 AC_SUBST(LOCALEDIR_VAR)
