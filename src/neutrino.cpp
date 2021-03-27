@@ -2633,7 +2633,7 @@ TIMER_START();
 
 	CFSMounter::automount();
 	g_Plugins = new CPlugins;
-	g_Plugins->setPluginDir(PLUGINDIR_VAR);
+	g_Plugins->setPluginDir(PLUGINDIR);
 	//load Pluginlist before main menu (only show script menu if at least one script is available
 	g_Plugins->loadPlugins();
 
