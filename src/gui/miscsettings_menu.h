@@ -39,6 +39,7 @@ class CMiscMenue : public CMenuTarget, CChangeObserver
 {
 	private:
 		CFanControlNotifier *fanNotifier;
+		CCpuFreqNotifier * cpuNotifier;
 		CSectionsdConfigNotifier* sectionsdConfigNotifier;
 		//COnOffNotifier* miscNotifier;
 		CMenuOptionChooser * epg_save;
