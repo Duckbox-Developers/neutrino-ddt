@@ -214,7 +214,7 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 	OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(mutex);
 
 	cammap_iterator_t it = channel_map.find(channel_id);
-	if(it != channel_map.end()) {
+	if (it != channel_map.end()) {
 		cam = it->second;
 	} else if(start) {
 		cam = new CCam();
@@ -222,7 +222,7 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 	} else {
 		return false;
 	}
-	if(channel == NULL) {
+	if (channel == NULL) {
 		printf("CCamManager: channel %" PRIx64 " not found\n", channel_id);
 		StopCam(channel_id, cam);
 		return false;
@@ -231,7 +231,7 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 
 	/* FIXME until proper demux management */
 	CFrontend *frontend = CFEManager::getInstance()->getFrontend(channel);
-	switch(mode) {
+	switch (mode) {
 		case PLAY:
 			source = cDemux::GetSource(0);
 			demux = cDemux::GetSource(0);
@@ -242,7 +242,8 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 		case RECORD:
 #if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 //			INFO("RECORD/STREAM(%d): fe_num %d rec_dmx %d", mode, frontend ? frontend->getNumber() : -1, channel->getRecordDemux());
-			source = frontend->getNumber();
+			if (frontend)
+				source = frontend->getNumber();
 			demux = source;
 #else
 			source = channel->getRecordDemux();
@@ -252,8 +253,11 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 			break;
 		case PIP:
 #if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
-			if(frontend)
-				source = frontend->getNumber();
+			if (frontend)
+				if (frontend->sameTsidOnid(channel->getTransponderId()))
+					source = frontend->getNumber();
+				else
+					source = frontend->getNumber() + 1;
 			demux = source;
 #else
 			source = channel->getRecordDemux();
@@ -264,12 +268,12 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 	}
 
 	oldmask = cam->getCaMask();
-	if(force_update)
+	if (force_update)
 		newmask = oldmask;
 	else
 		newmask = cam->makeMask(demux, start);
 
-	if(cam->getSource() > 0)
+	if (cam->getSource() > 0)
 		source = cam->getSource();
 
 	INFO("channel %" PRIx64 " [%s] mode %d %s src %d mask %d -> %d update %d", channel_id, channel->getName().c_str(),
