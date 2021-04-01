@@ -153,15 +153,15 @@ int CScreenSetup::exec(CMenuTarget* parent, const std::string &action)
 			showBorder(channel_id);
 
 			if(g_settings.screen_preset) {
-				g_settings.screen_StartX_lcd_a_0 = g_settings.screen_StartX_int;
-				g_settings.screen_StartY_lcd_a_0 = g_settings.screen_StartY_int;
-				g_settings.screen_EndX_lcd_a_0 = g_settings.screen_EndX_int;
-				g_settings.screen_EndY_lcd_a_0 = g_settings.screen_EndY_int;
+				g_settings.screen_StartX_a_0 = g_settings.screen_StartX_int;
+				g_settings.screen_StartY_a_0 = g_settings.screen_StartY_int;
+				g_settings.screen_EndX_a_0 = g_settings.screen_EndX_int;
+				g_settings.screen_EndY_a_0 = g_settings.screen_EndY_int;
 			} else {
-				g_settings.screen_StartX_lcd_b_0 = g_settings.screen_StartX_int;
-				g_settings.screen_StartY_lcd_b_0 = g_settings.screen_StartY_int;
-				g_settings.screen_EndX_lcd_b_0 = g_settings.screen_EndX_int;
-				g_settings.screen_EndY_lcd_b_0 = g_settings.screen_EndY_int;
+				g_settings.screen_StartX_b_0 = g_settings.screen_StartX_int;
+				g_settings.screen_StartY_b_0 = g_settings.screen_StartY_int;
+				g_settings.screen_EndX_b_0 = g_settings.screen_EndX_int;
+				g_settings.screen_EndY_b_0 = g_settings.screen_EndY_int;
 			}
 		}
 		return menu_return::RETURN_EXIT;
