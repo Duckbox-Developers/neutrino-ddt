@@ -263,10 +263,12 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 			demux = channel->getPipDemux();
 #else
 			if (frontend)
+			{
 				if (frontend->sameTsidOnid(channel->getTransponderId()))
 					source = frontend->getNumber();
 				else
 					source = frontend->getNumber() + 1;
+			}
 			demux = source;
 #endif // DYNAMIC_DEMUX
 #else
