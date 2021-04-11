@@ -866,14 +866,6 @@ struct SNeutrinoSettings
 #if HAVE_SH4_HARDWARE
 	int lcd_vfd_scroll;
 #endif
-	int led_tv_mode;
-	int led_standby_mode;
-	int led_deep_mode;
-	int led_rec_mode;
-	int led_blink;
-	int backlight_tv;
-	int backlight_standby;
-	int backlight_deepstandby;
 	int lcd_scroll;
 	int lcd_notify_rclock;
 
