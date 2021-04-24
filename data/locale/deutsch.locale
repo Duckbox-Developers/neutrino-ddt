@@ -286,6 +286,7 @@ channellist.recording_not_possible Aufnahme nicht möglich!
 channellist.remember Zuletzt verwendete
 channellist.reset_all Entferne Markierung "Neu" für alle Kanäle
 channellist.reset_flags Entferne Kanal-Markierung "Neu"
+channellist.scrambleicon Schlüssel Icon anzeigen
 channellist.sats Satelliten
 channellist.show_channellogo Senderlogos zeigen
 channellist.show_channelnumber Kanalnummern zeigen
@@ -1111,6 +1112,7 @@ menu.hint_channellist_foot Definiert, welche Informationen im unteren Sendungsfe
 menu.hint_channellist_hdicon Zeigt HD/UHD Symbol in der Kanalliste
 menu.hint_channellist_mode Wählen Sie die Start-Kanalliste im TV-Modus
 menu.hint_channellist_mode_radio Wählen Sie die Start-Kanalliste im Radio-Modus
+menu.hint_channellist_scrambleicon Zeigt Verschlüsselungs Symbol in der Kanalliste
 menu.hint_channellist_setup Wählen Sie die Anzeigeoptionen für die Kanalliste
 menu.hint_channellist_show_channellogo Zeigt Senderlogos in Kanalliste, Eventliste, EPG-Plus, EPG-Ansicht und Moviebrowser.
 menu.hint_channellist_show_channelnumber Zeigt Kanalnummer in der Kanalliste.

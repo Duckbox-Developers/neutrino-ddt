@@ -287,6 +287,7 @@ channellist.remember Last used
 channellist.reset_all Reset 'new' flag for all channels
 channellist.reset_flags Reset 'new' channel flag
 channellist.sats Satellites
+channellist.scrambleicon Show Scramble icon
 channellist.show_channellogo Show Channel Logos
 channellist.show_channelnumber Show Channel Numbers
 channellist.show_empty_favs Show empty Favorites Bouquets
@@ -1111,6 +1112,7 @@ menu.hint_channellist_foot Show additional information\nin bottom box
 menu.hint_channellist_hdicon Show HD/UHD icons in channel list
 menu.hint_channellist_mode Use the selected channel list mode on startup if last mode is TV
 menu.hint_channellist_mode_radio Use the selected channel list mode on startup if last mode is Radio
+menu.hint_channellist_scrambleicon Show Scramble Icon in channel list
 menu.hint_channellist_setup Configure channel list GUI options
 menu.hint_channellist_show_channellogo Show channel logos in channellist, eventlist, EPG Plus, EPG-viewer and moviebrowser
 menu.hint_channellist_show_channelnumber Show channel number in channel list
