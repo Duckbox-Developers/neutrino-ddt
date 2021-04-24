@@ -2086,7 +2086,7 @@ void CChannelList::paintItem(int pos, const bool firstpaint)
 
 		//set scramble icon
 		const char *scramble_icon = NULL;
-		if (chan->scrambled)
+		if (chan->scrambled && g_settings.channellist_scrambleicon)
 			scramble_icon = NEUTRINO_ICON_SCRAMBLED;
 
 		//calculate and paint right status icons
