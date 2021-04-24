@@ -670,6 +670,7 @@ struct SNeutrinoSettings
 	int channellist_new_zap_mode;
 	int channellist_sort_mode;
 	int channellist_hdicon;
+	int channellist_scrambleicon;
 	int channellist_numeric_adjust;
 	int channellist_show_channellogo;
 	int channellist_show_infobox;
