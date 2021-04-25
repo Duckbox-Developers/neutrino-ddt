@@ -692,7 +692,7 @@ int CChannelList::show()
 			}
 		}
 		else if(!edit_state && !empty && msg == (neutrino_msg_t) g_settings.key_record) { //start direct recording from channellist
-			if((g_settings.recording_type != CNeutrinoApp::RECORDING_OFF) && SameTP() /* && !IS_WEBCHAN((*chanlist)[selected]->getChannelID()) */) {
+			if(SameTP() /* && !IS_WEBCHAN((*chanlist)[selected]->getChannelID()) */) {
 				printf("[neutrino channellist] start direct recording...\n");
 				hide();
 				if (!CRecordManager::getInstance()->Record((*chanlist)[selected]->getChannelID())) {
@@ -1929,8 +1929,6 @@ void CChannelList::paintButtonBar(bool is_current)
 		}
 		if (i == 4) {
 			//manage record button
-			if (g_settings.recording_type == RECORDING_OFF)
-				continue;
 			if (IS_WEBCHAN(channel_id))
 				continue;
 			if (displayMode == DISPLAY_MODE_NOW)
