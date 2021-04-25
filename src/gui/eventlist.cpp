@@ -477,68 +477,68 @@ int CEventList::exec(const t_channel_id channel_id, const std::string& channelna
 
 		else if ((msg == (neutrino_msg_t)g_settings.key_channelList_addrecord) && !g_settings.minimode)
 		{
-				int tID = -1;
-				CTimerd::CTimerEventTypes etype = isScheduled(evtlist[selected].channelID, &evtlist[selected], &tID);
-				if(etype == CTimerd::TIMER_RECORD) //remove timer event 
-				{
-					g_Timerd->removeTimerEvent(tID);
-					UpdateTimerList();
-					paint(evtlist[selected].channelID);
-					paintFoot(evtlist[selected].channelID);
-					continue;
-				}
-				std::string recDir = g_settings.network_nfs_recordingdir;
-				if (g_settings.recording_choose_direct_rec_dir)
-				{
-					int id = -1;
-					CMountChooser recDirs(LOCALE_TIMERLIST_RECORDING_DIR,NEUTRINO_ICON_SETTINGS,&id,NULL,g_settings.network_nfs_recordingdir.c_str());
-					if (recDirs.hasItem())
-					{
-						hide();
-						recDirs.exec(NULL,"");
-						paint(evtlist[selected].channelID);
-						timeoutEnd = CRCInput::calcTimeoutEnd(timeout);
-					} 
-					else
-					{
-						printf("[CEventList] no network devices available\n");
-					}
-					
-					if (id != -1)
-						recDir = g_settings.network_nfs[id].local_dir;
-					else
-						recDir = "";
-				}
-				bool doRecord = true;
-				if (g_settings.recording_already_found_check)
-				{
-					CHintBox loadBox(LOCALE_RECORDING_ALREADY_FOUND_CHECK, LOCALE_MOVIEBROWSER_SCAN_FOR_MOVIES);
-					loadBox.paint();
-					CMovieBrowser moviebrowser;
-					const char *rec_title = evtlist[selected].description.c_str();
-					bool already_found = moviebrowser.gotMovie(rec_title);
-					loadBox.hide();
-					if (already_found)
-					{
-						printf("already found in moviebrowser: %s\n", rec_title);
-						char message[1024];
-						snprintf(message, sizeof(message)-1, g_Locale->getText(LOCALE_RECORDING_ALREADY_FOUND), rec_title);
-						doRecord = (ShowMsg(LOCALE_RECORDING_ALREADY_FOUND_CHECK, message, CMsgBox::mbrYes, CMsgBox::mbYes | CMsgBox::mbNo) == CMsgBox::mbrYes);
-					}
-				}
-				t_channel_id used_id = IS_WEBCHAN(channel_id) ? channel_id : evtlist[selected].channelID;
-				if (!recDir.empty() && doRecord) //add/remove recording timer events and check/warn for conflicts
-				{
-					CFollowScreenings m(used_id,
-						evtlist[selected].startTime,
-						evtlist[selected].startTime + evtlist[selected].duration,
-						evtlist[selected].description, evtlist[selected].eventID, TIMERD_APIDS_CONF, true, "", &evtlist);
-					m.exec(NULL, "");
-					timeoutEnd = CRCInput::calcTimeoutEnd(timeout);
-				}
+			int tID = -1;
+			CTimerd::CTimerEventTypes etype = isScheduled(evtlist[selected].channelID, &evtlist[selected], &tID);
+			if(etype == CTimerd::TIMER_RECORD) //remove timer event 
+			{
+				g_Timerd->removeTimerEvent(tID);
 				UpdateTimerList();
-				paint(used_id);
-				paintFoot(used_id);
+				paint(evtlist[selected].channelID);
+				paintFoot(evtlist[selected].channelID);
+				continue;
+			}
+			std::string recDir = g_settings.network_nfs_recordingdir;
+			if (g_settings.recording_choose_direct_rec_dir)
+			{
+				int id = -1;
+				CMountChooser recDirs(LOCALE_TIMERLIST_RECORDING_DIR,NEUTRINO_ICON_SETTINGS,&id,NULL,g_settings.network_nfs_recordingdir.c_str());
+				if (recDirs.hasItem())
+				{
+					hide();
+					recDirs.exec(NULL,"");
+					paint(evtlist[selected].channelID);
+					timeoutEnd = CRCInput::calcTimeoutEnd(timeout);
+				} 
+				else
+				{
+					printf("[CEventList] no network devices available\n");
+				}
+				
+				if (id != -1)
+					recDir = g_settings.network_nfs[id].local_dir;
+				else
+					recDir = "";
+			}
+			bool doRecord = true;
+			if (g_settings.recording_already_found_check)
+			{
+				CHintBox loadBox(LOCALE_RECORDING_ALREADY_FOUND_CHECK, LOCALE_MOVIEBROWSER_SCAN_FOR_MOVIES);
+				loadBox.paint();
+				CMovieBrowser moviebrowser;
+				const char *rec_title = evtlist[selected].description.c_str();
+				bool already_found = moviebrowser.gotMovie(rec_title);
+				loadBox.hide();
+				if (already_found)
+				{
+					printf("already found in moviebrowser: %s\n", rec_title);
+					char message[1024];
+					snprintf(message, sizeof(message)-1, g_Locale->getText(LOCALE_RECORDING_ALREADY_FOUND), rec_title);
+					doRecord = (ShowMsg(LOCALE_RECORDING_ALREADY_FOUND_CHECK, message, CMsgBox::mbrYes, CMsgBox::mbYes | CMsgBox::mbNo) == CMsgBox::mbrYes);
+				}
+			}
+			t_channel_id used_id = IS_WEBCHAN(channel_id) ? channel_id : evtlist[selected].channelID;
+			if (!recDir.empty() && doRecord) //add/remove recording timer events and check/warn for conflicts
+			{
+				CFollowScreenings m(used_id,
+					evtlist[selected].startTime,
+					evtlist[selected].startTime + evtlist[selected].duration,
+					evtlist[selected].description, evtlist[selected].eventID, TIMERD_APIDS_CONF, true, "", &evtlist);
+				m.exec(NULL, "");
+				timeoutEnd = CRCInput::calcTimeoutEnd(timeout);
+			}
+			UpdateTimerList();
+			paint(used_id);
+			paintFoot(used_id);
 		}
 		else if ( msg == (neutrino_msg_t) g_settings.key_channelList_addremind )//add/remove zapto timer event
 		{
