@@ -497,7 +497,6 @@ struct SNeutrinoSettings
 	std::string last_webradio_dir;
 
 	//recording
-	int  recording_type;
 	int  recording_stopsectionsd;
 	unsigned char recording_audio_pids_default;
 	int recording_audio_pids_std;
@@ -1090,11 +1089,6 @@ struct SglobalInfo
 {
 	hw_caps_t *hw_caps;
 };
-
-const int RECORDING_OFF    = 0;
-const int RECORDING_SERVER = 1;
-const int RECORDING_VCR    = 2;
-const int RECORDING_FILE   = 3;
 
 const int PARENTALLOCK_PROMPT_NEVER          = 0;
 const int PARENTALLOCK_PROMPT_ONSTART        = 1;

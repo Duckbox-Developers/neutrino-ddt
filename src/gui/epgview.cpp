@@ -1030,7 +1030,7 @@ int CEpgData::show(const t_channel_id channel_id, uint64_t a_id, time_t* a_start
 					loop = false;
 					break;
 				}
-				else if (!g_settings.minimode && (g_settings.recording_type != CNeutrinoApp::RECORDING_OFF))
+				else if (!g_settings.minimode)
 				{
 					std::string recDir;
 					//CTimerdClient timerdclient;
@@ -1547,11 +1547,7 @@ void CEpgData::showTimerEventBar (bool pshow, bool adzap, bool mp_info)
 			EpgButtons[TV_BUTTONS][1].button = NEUTRINO_ICON_BUTTON_GREEN;
 		else
 			EpgButtons[TV_BUTTONS][1].button = NEUTRINO_ICON_BUTTON_DUMMY_SMALL;
-
-		if (g_settings.recording_type != CNeutrinoApp::RECORDING_OFF)
-			::paintButtons(x, y, w, MaxButtons, EpgButtons[TV_BUTTONS], w, h, "", false, COL_MENUFOOT_TEXT, adzap ? adzap_button.c_str() : NULL, 2);
-		else // don't show recording button
-			::paintButtons(x, y, w, MaxButtons, &EpgButtons[TV_BUTTONS][1], w, h, "", false, COL_MENUFOOT_TEXT, adzap ? adzap_button.c_str() : NULL, 1);
+		::paintButtons(x, y, w, MaxButtons, EpgButtons[TV_BUTTONS], w, h, "", false, COL_MENUFOOT_TEXT, adzap ? adzap_button.c_str() : NULL, 2);
 	}
 
 	//frameBuffer->blit();

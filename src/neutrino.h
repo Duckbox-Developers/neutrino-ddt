@@ -66,14 +66,6 @@ public:
 	};
 	void ExitRun(int can_shutdown = 0);
 
-	enum
-	{
-		RECORDING_OFF    = 0,
-		RECORDING_SERVER = 1,
-		RECORDING_VCR    = 2,
-		RECORDING_FILE   = 3
-	};
-
 private:
 	CFrameBuffer * frameBuffer;
 
