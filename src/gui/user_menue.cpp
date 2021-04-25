@@ -283,8 +283,6 @@ bool CUserMenu::showUserMenu(neutrino_msg_t msg)
 		}
 		case SNeutrinoSettings::ITEM_RECORD:
 		{
-			if (g_settings.recording_type == RECORDING_OFF)
-				break;
 			keyhelper.get(&key,&icon,CRCInput::RC_red);
 			menu_item = new CMenuForwarder(LOCALE_MAINMENU_RECORDING, true, NULL, CRecordManager::getInstance(), "-1", key, icon);
 			// FIXME menu_item->setHint("", NONEXISTANT_LOCALE);
@@ -292,8 +290,6 @@ bool CUserMenu::showUserMenu(neutrino_msg_t msg)
 		}
 		case SNeutrinoSettings::ITEM_MOVIEPLAYER_MB:
 		{
-			if (g_settings.recording_type == RECORDING_OFF)
-				break;
 			keyhelper.get(&key,&icon,CRCInput::RC_green);
 			menu_item = new CMenuForwarder(LOCALE_MOVIEBROWSER_HEAD, !_mode_ts, NULL, neutrino, "tsmoviebrowser", key, icon);
 			menu_item->setHint(NEUTRINO_ICON_HINT_MB, LOCALE_MENU_HINT_MB);

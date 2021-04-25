@@ -127,7 +127,7 @@ public:
 				 tmTime2->tm_hour, tmTime2->tm_min);
 			*display = std::string(disp);
 			m1->setActive(true);
-			m6->setActive((g_settings.recording_type == RECORDING_FILE));
+			m6->setActive(true);
 		}
 		else
 		{
@@ -1653,8 +1653,7 @@ int CTimerList::modifyTimer()
 		timer_recordingDir = timer->recordingDir;
 		strncpy(t_old.recordingDir, timer->recordingDir, sizeof(t_old.recordingDir));
 
-		bool recDirEnabled = (g_settings.recording_type == RECORDING_FILE); // obsolete?
-		CMenuForwarder* m6 = new CMenuForwarder(LOCALE_TIMERLIST_RECORDING_DIR, recDirEnabled, timer_recordingDir, this, "rec_dir1", CRCInput::RC_green);
+		CMenuForwarder* m6 = new CMenuForwarder(LOCALE_TIMERLIST_RECORDING_DIR, true, timer_recordingDir, this, "rec_dir1", CRCInput::RC_green);
 		timerSettings.addItem(GenericMenuSeparatorLine);
 		timerSettings.addItem(m6);
 	}
@@ -1718,9 +1717,6 @@ int CTimerList::newTimer()
 	std::vector<CMenuWidget *> toDelete;
 	// Defaults
 	timerNew.eventType = CTimerd::TIMER_RECORD ;
-	if (g_settings.recording_type == CNeutrinoApp::RECORDING_OFF)
-		timerNew.eventType = CTimerd::TIMER_ZAPTO;
-
 	timerNew.eventRepeat = CTimerd::TIMERREPEAT_ONCE ;
 	timerNew.repeatCount = 0;
 	timerNew.alarmTime = (time(NULL)/60)*60;
@@ -1812,10 +1808,7 @@ int CTimerList::newTimer()
 					&timerNew.stopTime,m2,m6,m8,m9,m10,m7,
 					&timerSettings_stopTime.getValue());
 	CMenuOptionChooser* m0;
-	if (g_settings.recording_type != CNeutrinoApp::RECORDING_OFF)
-		m0 = new CMenuOptionChooser(LOCALE_TIMERLIST_TYPE, (int *)&timerNew.eventType, TIMERLIST_TYPE_OPTIONS, TIMERLIST_TYPE_OPTION_COUNT, true, &notifier2, CRCInput::RC_nokey, "", true, true);
-	else
-		m0 = new CMenuOptionChooser(LOCALE_TIMERLIST_TYPE, (int *)&timerNew.eventType, &TIMERLIST_TYPE_OPTIONS[1], TIMERLIST_TYPE_OPTION_COUNT-1, true, &notifier2);
+	m0 = new CMenuOptionChooser(LOCALE_TIMERLIST_TYPE, (int *)&timerNew.eventType, TIMERLIST_TYPE_OPTIONS, TIMERLIST_TYPE_OPTION_COUNT, true, &notifier2, CRCInput::RC_nokey, "", true, true);
 
 	timerSettings.addItem( m0);
 	timerSettings.addItem( m1);

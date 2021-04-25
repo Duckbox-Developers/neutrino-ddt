@@ -771,7 +771,6 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.filesystem_is_utf8              = configfile.getBool("filesystem_is_utf8"                 , true );
 
 	//recording (server + vcr)
-	g_settings.recording_type = configfile.getInt32("recording_type", RECORDING_FILE);
 	g_settings.recording_stopsectionsd         = configfile.getBool("recording_stopsectionsd"            , false );
 	g_settings.recording_audio_pids_default    = configfile.getInt32("recording_audio_pids_default", TIMERD_APIDS_STD | TIMERD_APIDS_AC3);
 	g_settings.recording_zap_on_announce       = configfile.getBool("recording_zap_on_announce"      , false);
@@ -1514,8 +1513,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setString( "last_webradio_dir", g_settings.last_webradio_dir);
 	configfile.setBool  ("filesystem_is_utf8"                 , g_settings.filesystem_is_utf8             );
 
-	//recording (server + vcr)
-	configfile.setInt32 ("recording_type",                      g_settings.recording_type);
+	//recording
 	configfile.setBool  ("recording_stopsectionsd"            , g_settings.recording_stopsectionsd        );
 
 	configfile.setInt32 ("recording_audio_pids_default"       , g_settings.recording_audio_pids_default   );
@@ -3044,8 +3042,7 @@ void CNeutrinoApp::RealRun()
 			}
 #endif
 			else if( msg == (neutrino_msg_t) g_settings.key_record /* && (mode != NeutrinoModes::mode_webtv) */) {
-				if (g_settings.recording_type != CNeutrinoApp::RECORDING_OFF)
-					CRecordManager::getInstance()->exec(NULL, "Record");
+				CRecordManager::getInstance()->exec(NULL, "Record");
 			}
 #if 0
 			else if ((mode == NeutrinoModes::mode_webtv) && msg == (neutrino_msg_t) g_settings.mpkey_subtitle) {
@@ -3155,8 +3152,7 @@ void CNeutrinoApp::RealRun()
 			}
 			else if( msg == CRCInput::RC_video) {
 				//open moviebrowser via media player menu object
-				if (g_settings.recording_type != CNeutrinoApp::RECORDING_OFF)
-					CMediaPlayerMenu::getInstance()->exec(NULL, "moviebrowser");
+				CMediaPlayerMenu::getInstance()->exec(NULL, "moviebrowser");
 				CVFD::getInstance()->UpdateIcons();
 			}
 			else if( msg == CRCInput::RC_play || msg == CRCInput::RC_playpause ) {
@@ -3829,10 +3825,8 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 				zapTo(eventinfo->channel_id);
 		}
 
-		if (g_settings.recording_type != CNeutrinoApp::RECORDING_OFF) {
-			CRecordManager::getInstance()->Record(eventinfo);
-			autoshift = CRecordManager::getInstance()->TimeshiftOnly();
-		}
+		CRecordManager::getInstance()->Record(eventinfo);
+		autoshift = CRecordManager::getInstance()->TimeshiftOnly();
 
 		delete[] (unsigned char*) data;
 		return messages_return::handled;
@@ -3919,18 +3913,16 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 	else if( msg == NeutrinoMessages::ANNOUNCE_RECORD) {
 		my_system(NEUTRINO_RECORDING_TIMER_SCRIPT);
 		CTimerd::RecordingInfo * eventinfo = (CTimerd::RecordingInfo *) data;
-		if (g_settings.recording_type == RECORDING_FILE) {
-			char * recordingDir = eventinfo->recordingDir;
-			for(int i=0 ; i < NETWORK_NFS_NR_OF_ENTRIES ; i++) {
-				if (g_settings.network_nfs[i].local_dir == recordingDir) {
-					printf("[neutrino] waking up %s (%s)\n", g_settings.network_nfs[i].ip.c_str(), recordingDir);
-					if (my_system(2, "ether-wake", g_settings.network_nfs[i].mac.c_str()) != 0)
-						perror("ether-wake failed");
-					break;
-				}
+		char * recordingDir = eventinfo->recordingDir;
+		for(int i=0 ; i < NETWORK_NFS_NR_OF_ENTRIES ; i++) {
+			if (g_settings.network_nfs[i].local_dir == recordingDir) {
+				printf("[neutrino] waking up %s (%s)\n", g_settings.network_nfs[i].ip.c_str(), recordingDir);
+				if (my_system(2, "ether-wake", g_settings.network_nfs[i].mac.c_str()) != 0)
+					perror("ether-wake failed");
+				break;
 			}
-			wakeup_hdd(recordingDir);
 		}
+		wakeup_hdd(recordingDir);
 
 		if( g_settings.recording_zap_on_announce && (mode != NeutrinoModes::mode_standby) && (eventinfo->channel_id != CZapit::getInstance()->GetCurrentChannelID())) {
 			CRecordManager::getInstance()->StopAutoRecord();
