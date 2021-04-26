@@ -78,7 +78,7 @@ bool sortById (const CChannelEvent& a, const CChannelEvent& b)
 
 inline static bool sortbyEventid (const CChannelEvent& a, const CChannelEvent& b)
 {
-	return (a.channelID == b.channelID && a.eventID == b.eventID && a.startTime == b.startTime); 
+	return (a.channelID == b.channelID && a.eventID == b.eventID && a.startTime == b.startTime);
 }
 #endif
 
@@ -111,7 +111,7 @@ CEventList::CEventList()
 	full_width = width = 0;
 	height = 0;
 	x = y = 0;
-	
+
 	infozone = NULL;
 	infozone_text = "";
 	item_event_ID = 0;
@@ -152,19 +152,19 @@ void CEventList::UpdateTimerList(void)
 }
 
 // Function: HasTimerConflicts
-// search for timer conflicts for given time 
+// search for timer conflicts for given time
 // return: true if found any conflict, you can watch with parameter epg_ID
 bool CEventList::HasTimerConflicts(time_t starttime, time_t duration, t_event_id *epg_ID)
-{	
+{
 	for(uint i= 0; i < timerlist.size(); i++)
-	{			
+	{
 		if(timerlist[i].stopTime > starttime-timerPre && timerlist[i].alarmTime < starttime+duration+timerPost)
 		{
 			*epg_ID = timerlist[i].epg_id;
 			return true;
 		}
 	}
-	
+
 	*epg_ID = 0;
 	return false;
 }
@@ -409,9 +409,9 @@ int CEventList::exec(const t_channel_id channel_id, const std::string& channelna
 			} else
 				loop = false;
 		}
-		
+
 		//manage painting of function bar during scrolling, depends of timerevent types
-		if (msg == CRCInput::RC_up || (int) msg == g_settings.key_pageup || 
+		if (msg == CRCInput::RC_up || (int) msg == g_settings.key_pageup ||
 			msg == CRCInput::RC_down || (int) msg == g_settings.key_pagedown)
 		{
 			int prev_selected = selected;
@@ -479,7 +479,7 @@ int CEventList::exec(const t_channel_id channel_id, const std::string& channelna
 		{
 			int tID = -1;
 			CTimerd::CTimerEventTypes etype = isScheduled(evtlist[selected].channelID, &evtlist[selected], &tID);
-			if(etype == CTimerd::TIMER_RECORD) //remove timer event 
+			if(etype == CTimerd::TIMER_RECORD) //remove timer event
 			{
 				g_Timerd->removeTimerEvent(tID);
 				UpdateTimerList();
@@ -498,12 +498,12 @@ int CEventList::exec(const t_channel_id channel_id, const std::string& channelna
 					recDirs.exec(NULL,"");
 					paint(evtlist[selected].channelID);
 					timeoutEnd = CRCInput::calcTimeoutEnd(timeout);
-				} 
+				}
 				else
 				{
 					printf("[CEventList] no network devices available\n");
 				}
-				
+
 				if (id != -1)
 					recDir = g_settings.network_nfs[id].local_dir;
 				else
@@ -551,7 +551,7 @@ int CEventList::exec(const t_channel_id channel_id, const std::string& channelna
 				paintFoot(evtlist[selected].channelID);
 				continue;
 			}
-			
+
 			g_Timerd->addZaptoTimerEvent(IS_WEBCHAN(channel_id) ? channel_id : evtlist[selected].channelID,
 					evtlist[selected].startTime - (g_settings.zapto_pre_time * 60),
 					evtlist[selected].startTime - ANNOUNCETIME - (g_settings.zapto_pre_time * 60), 0,
@@ -790,7 +790,7 @@ void CEventList::paintItem(unsigned int pos, t_channel_id channel_idI)
 			g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_ITEMSMALL]->RenderString(x + width - SCROLLBAR_WIDTH - 2*OFFSET_INNER_MID - duration_width - w, ypos + OFFSET_INNER_MIN + smallfont_height, w, beginnt, color);
 		}
 		g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_ITEMSMALL]->RenderString(x + width - SCROLLBAR_WIDTH - OFFSET_INNER_MID - duration_width, ypos + OFFSET_INNER_MIN + smallfont_height, duration_width, duration_str, color);
-		
+
 		// 2nd line
 		// set status icons
 		t_channel_id channel_tmp = m_showChannel ? evtlist[currpos].channelID : channel_idI;
@@ -815,20 +815,20 @@ void CEventList::paintItem(unsigned int pos, t_channel_id channel_idI)
 			frameBuffer->paintIcon(icontype, x + OFFSET_INNER_MID, ypos + OFFSET_INNER_MIN + smallfont_height, largefont_height);
 			iw += OFFSET_INNER_MID;
 		}
-		
+
 		// detecting timer conflict and set start position of event text depending of possible painted icon
 		bool conflict = HasTimerConflicts(evtlist[currpos].startTime, evtlist[currpos].duration, &item_event_ID);
 		//printf("etype %d , conflicts %d -> %s, conflict event_ID %lld -> current event_ID %lld\n", etype, conflict, evtlist[currpos].description.c_str(), item_event_ID, evtlist[currpos].eventID);
-		
+
 		int i2w = 0, i2h = 0;
 		if (conflict && item_event_ID != evtlist[currpos].eventID)
-		{	
+		{
 			//paint_warning = true;
 			frameBuffer->getIconSize(NEUTRINO_ICON_IMPORTANT, &i2w, &i2h);
 			frameBuffer->paintIcon(NEUTRINO_ICON_IMPORTANT, x + iw + OFFSET_INNER_MID, ypos + OFFSET_INNER_MIN + smallfont_height, largefont_height);
 			iw += i2w + OFFSET_INNER_MID;
 		}
-		
+
 		// paint 2nd line text
 		g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_ITEMLARGE]->RenderString(x + iw + OFFSET_INNER_MID, ypos + item_height, width - iw - 2*OFFSET_INNER_MID, evtlist[currpos].description, color);
 
@@ -1137,7 +1137,7 @@ bool CEventList::findEvents(t_channel_id channel_id, std::string channelname)
 		}
 		else if(m_search_list == SEARCH_LIST_ALL)
 		{
-		  
+
 			CHintBox box(LOCALE_TIMING_EPG,g_Locale->getText(LOCALE_EVENTFINDER_SEARCHING));
 			box.paint();
 			std::vector<t_channel_id> v;
@@ -1146,7 +1146,7 @@ bool CEventList::findEvents(t_channel_id channel_id, std::string channelname)
 			    channel_id =  CNeutrinoApp::getInstance ()->channelList->getChannelFromIndex(channel)->getChannelID();
 			    v.push_back(channel_id);
 			}
-		
+
 			std::map<t_channel_id, t_channel_id> ch_id_map;
 			std::vector<t_channel_id>::iterator it;
 			for (it = v.begin(); it != v.end(); ++it){
