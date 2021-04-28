@@ -573,7 +573,6 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.infobar_casystem_display = configfile.getInt32("infobar_casystem_display", 1 );//discreet ca mode default
 	g_settings.infobar_casystem_dotmatrix = configfile.getInt32("infobar_casystem_dotmatrix", 0 );
 	g_settings.infobar_casystem_frame = configfile.getInt32("infobar_casystem_frame", 1 );
-	g_settings.scrambled_message = configfile.getBool("scrambled_message", false );
 	g_settings.volume_pos = configfile.getInt32("volume_pos", CVolumeBar::VOLUMEBAR_POS_TOP_RIGHT );
 	g_settings.volume_digits = configfile.getBool("volume_digits", true);
 	g_settings.volume_size = configfile.getInt32("volume_size", 26 );
@@ -1372,7 +1371,6 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32("infobar_casystem_display"  , g_settings.infobar_casystem_display  );
 	configfile.setInt32("infobar_casystem_dotmatrix"  , g_settings.infobar_casystem_dotmatrix  );
 	configfile.setInt32("infobar_casystem_frame"  , g_settings.infobar_casystem_frame  );
-	configfile.setBool("scrambled_message"  , g_settings.scrambled_message  );
 	configfile.setInt32("volume_pos"  , g_settings.volume_pos  );
 	configfile.setBool("volume_digits", g_settings.volume_digits);
 	configfile.setInt32("volume_size"  , g_settings.volume_size);
@@ -3487,18 +3485,6 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 		}
 	}
 	if ((msg == NeutrinoMessages::EVT_TIMER)) {
-		if(data == scrambled_timer) {
-			scrambled_timer = 0;
-#if BOXMODEL_UFS910
-			if(g_settings.scrambled_message && videoDecoder->getPlayState()) {
-#else
-			if(g_settings.scrambled_message && videoDecoder->getBlank() && videoDecoder->getPlayState()) {
-#endif
-				const char * text = g_Locale->getText(LOCALE_SCRAMBLED_CHANNEL);
-				ShowHint (LOCALE_MESSAGEBOX_INFO, text, g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth(text) + 10, 5);
-			}
-			return messages_return::handled;
-		}
 #if ENABLE_FASTSCAN
 		if(data == fst_timer) {
 			g_RCInput->killTimer(fst_timer);
