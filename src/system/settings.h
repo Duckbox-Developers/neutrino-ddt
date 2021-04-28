@@ -236,7 +236,6 @@ struct SNeutrinoSettings
 	int infobar_casystem_display;
 	int infobar_casystem_dotmatrix;
 	int infobar_casystem_frame;
-	int scrambled_message;
 	int volume_pos;
 	int volume_digits;
 	int volume_size;

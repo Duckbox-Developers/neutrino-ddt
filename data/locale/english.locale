@@ -510,7 +510,6 @@ extra.rounded_corners_off angular
 extra.rounded_corners_on rounded
 extra.saveconfig Save settings
 extra.savekeys Save keybindings
-extra.scrambled_message Scrambled Message
 extra.show_mute_icon mute-icon at volume 0
 extra.sms_channel SMS-mode channel
 extra.sms_movie SMS-mode movie
@@ -1508,7 +1507,6 @@ menu.hint_scan_usals USALS options
 menu.hint_scan_usals_repeat Repeat usals move rotor commands\nif you expirience unstable rotor move
 menu.hint_scan_usalsall Use USALS for all satellites on this frontend
 menu.hint_scan_useusals Use USALS for this satellite,\nif ON, rotor position ignored
-menu.hint_scrambled_message Show scrambled message, when channel cannot be decoded
 menu.hint_screen_setup Configure screen margins
 menu.hint_screensaver_delay Set the time (in minutes) after which the screensaver has to start or turn it off
 menu.hint_screensaver_dir Select directory in which the screensaver has to start
@@ -2336,7 +2334,6 @@ scants.select_tp Select transponder
 scants.startnow start scan
 scants.test Test signal
 scants.transponders Transponders:
-scrambled_channel Scrambled channel
 screensaver.delay Delay
 screensaver.dir Directory
 screensaver.menu Screensaver
