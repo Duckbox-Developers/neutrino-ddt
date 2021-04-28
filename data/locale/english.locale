@@ -2008,6 +2008,8 @@ nfs.automount Mount on startup
 nfs.dir directory/share
 nfs.ip Server IP
 nfs.localdir local dir
+nfs.mac MAC address
+nfs.mac_refsresh look up MAC address
 nfs.mount Mount Network volume
 nfs.mount_options mount options
 nfs.mounterror mount error
@@ -2016,7 +2018,6 @@ nfs.mountnow mount now
 nfs.mountok mount successful
 nfs.mounttimeout mount error: timeout
 nfs.password password
-nfs.refresh_mac look up MAC address
 nfs.remount remount directories
 nfs.type type
 nfs.type_cifs CIFS
@@ -2206,7 +2207,6 @@ recordingmenu.multimenu.timeshift Timeshift
 recordingmenu.record_is_not_running No record is running!
 recordingmenu.record_is_running Record is running!
 recordingmenu.save_in_channeldir Save in channel dir
-recordingmenu.server_mac MAC address
 recordingmenu.setupnow Activate changes
 recordingmenu.slow_warn Enable slow record warning
 recordingmenu.timeshift Timeshift
