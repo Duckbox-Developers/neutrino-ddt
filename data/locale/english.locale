@@ -2007,7 +2007,7 @@ nfs.dir directory/share
 nfs.ip Server IP
 nfs.localdir local dir
 nfs.mac MAC address
-nfs.mac_refsresh look up MAC address
+nfs.mac_refresh look up MAC address
 nfs.mount Mount Network volume
 nfs.mount_options mount options
 nfs.mounterror mount error
