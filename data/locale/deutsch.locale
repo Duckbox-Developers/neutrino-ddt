@@ -2086,15 +2086,12 @@ opkg.update.reading_lists Paketlisten werden eingelesen ...
 opkg.upgrade Installierte Pakete aktualisieren
 opkg.warning_3rdparty_packages Drittanbieter-Pakete könnten Ihr System beschädigen! Sind Sie sicher, dieses Paket zu installieren?
 options.default Voreinstellungen benutzen
-options.fb framebuffer
 options.hint_default Setzen Sie die Werte auf die Voreinstellung zurück.
 options.ntp_off DVB
 options.ntp_on NTP
-options.null null
 options.off aus
 options.on ein
 options.on.without_messages ohne Msg
-options.serial seriell
 osd.preset_screen_a Bildschirm 1
 osd.preset_screen_b Bildschirm 2
 parentallock.bouquetmode Bouquets sind standardmässig
