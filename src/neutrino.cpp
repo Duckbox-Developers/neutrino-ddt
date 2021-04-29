@@ -4784,9 +4784,6 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 		} else
 			tuxtxt_close();
 
-		//g_Sectionsd->setEventsAreOldInMinutes((unsigned short) (g_settings.epg_old_hours*60));
-		//g_Sectionsd->setHoursToCache((unsigned short) (g_settings.epg_cache_days*24));
-
 		hintBox.hide();
 	}
 	else if(actionKey=="recording") {
