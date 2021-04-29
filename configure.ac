@@ -1,8 +1,12 @@
-AC_INIT(Tuxbox-Neutrino,3.9.0)
+define(ver_major, 3)
+define(ver_minor, 9)
+define(ver_micro, 0)
+
+AC_INIT(Tuxbox-Neutrino, ver_major.ver_minor.ver_micro)
 AM_INIT_AUTOMAKE([nostdinc foreign])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES])
 
-#AC_DEFINE(RELEASE_CYCLE, "2.4", [Release cycle information; used in update code])
+AC_DEFINE(RELEASE_CYCLE, "ver_major.0", [Release cycle information; used in update code])
 
 TUXBOX_APPS
 TUXBOX_APPS_DIRECTORY
