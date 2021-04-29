@@ -92,11 +92,6 @@ int CFollowScreenings::exec(CMenuTarget* /*parent*/, const std::string & actionK
 							Timer.removeTimerEvent(i->eventID);
 							if (!forwarders.empty() && followlist.size() > 1)
 								forwarders[ix]->iconName_Info_right = "";
-#if 0
-							else
-								ShowMsg(LOCALE_TIMER_EVENTREMOVED_TITLE, LOCALE_TIMER_EVENTREMOVED_MSG,
-									CMessageBox::mbrBack, CMessageBox::mbBack, NEUTRINO_ICON_INFO);
-#endif
 							return menu_return::RETURN_REPAINT;
 						}
 						if (!SAME_TRANSPONDER(channel_id, i->channel_id)) {
