@@ -904,11 +904,8 @@ keybindingmenu.RC Tune Remote-Control
 keybindingmenu.accept_other_remotes Accept other remote controls
 keybindingmenu.addrecord add record timer
 keybindingmenu.addremind add zapto timer
-keybindingmenu.allchannels_on_ok all-services
-keybindingmenu.bouquetchannels_on_ok current bouquet
 keybindingmenu.bouquetdown bouquet back
 keybindingmenu.bouquethandling Bouquet-control
-keybindingmenu.bouquetlist_on_ok bouquet-list
 keybindingmenu.bouquetup next bouquet
 keybindingmenu.cancel close channellist
 keybindingmenu.channeldown channel down
