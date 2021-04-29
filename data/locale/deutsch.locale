@@ -2088,7 +2088,6 @@ options.ntp_off DVB
 options.ntp_on NTP
 options.off aus
 options.on ein
-options.on.without_messages ohne Msg
 osd.preset_screen_a Bildschirm 1
 osd.preset_screen_b Bildschirm 2
 parentallock.bouquetmode Bouquets sind standardmässig
