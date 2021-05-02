@@ -2747,6 +2747,7 @@ void CMoviePlayerGui::UpdatePosition()
 
 void CMoviePlayerGui::StopSubtitles(bool enable_glcd_mirroring __attribute__((unused)))
 {
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	printf("[CMoviePlayerGui] %s\n", __FUNCTION__);
 	int ttx, ttxpid, ttxpage;
 
@@ -2761,6 +2762,7 @@ void CMoviePlayerGui::StopSubtitles(bool enable_glcd_mirroring __attribute__((un
 #ifdef ENABLE_GRAPHLCD
 	if (enable_glcd_mirroring)
 		nGLCD::MirrorOSD(g_settings.glcd_mirror_osd);
+#endif
 #endif
 }
 
@@ -2796,6 +2798,7 @@ void CMoviePlayerGui::showHelp()
 
 void CMoviePlayerGui::StartSubtitles(bool show __attribute__((unused)))
 {
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	printf("[CMoviePlayerGui] %s: %s\n", __FUNCTION__, show ? "Show" : "Not show");
 #ifdef ENABLE_GRAPHLCD
 	nGLCD::MirrorOSD(false);
@@ -2807,6 +2810,7 @@ void CMoviePlayerGui::StartSubtitles(bool show __attribute__((unused)))
 	if (current_sub > -1)
 		dvbsub_start(current_sub, true);
 	tuxtx_pause_subtitle(false);
+#endif
 }
 
 #if HAVE_ARM_HARDWARE

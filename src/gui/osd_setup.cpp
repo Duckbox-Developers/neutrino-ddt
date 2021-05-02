@@ -571,7 +571,7 @@ const CMenuOptionChooser::keyval OPTIONS_CHANNELLOGO_POSITION[OPTIONS_CHANNELLOG
 //show osd setup
 int COsdSetup::showOsdSetup()
 {
-	int shortcut = 0;
+	int shortcut = 1;
 	CMenuOptionChooser * mc = NULL;
 
 	//osd main menu
@@ -1724,9 +1724,13 @@ void COsdSetup::showOsdScreenShotSetup(CMenuWidget *menu_screenshot)
 	mc->setHint("", LOCALE_MENU_HINT_SCREENSHOT_FORMAT);
 	menu_screenshot->addItem(mc);
 
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	mc = new CMenuOptionChooser(LOCALE_SCREENSHOT_PLANES, &g_settings.screenshot_mode, SCREENSHOT_PLANE_OPTIONS, SCREENSHOT_PLANE_OPTION_COUNT, true, this);
 	mc->setHint("", LOCALE_MENU_HINT_SCREENSHOT_PLANES);
-
+#else
+	mc = new CMenuOptionChooser(LOCALE_SCREENSHOT_RES, &g_settings.screenshot_mode, SCREENSHOT_OPTIONS, SCREENSHOT_OPTION_COUNT, true);
+	mc->setHint("", LOCALE_MENU_HINT_SCREENSHOT_RES);
+#endif
 	menu_screenshot->addItem(mc);
 
 #if HAVE_SH4_HARDWARE
