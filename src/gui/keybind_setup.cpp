@@ -315,20 +315,18 @@ int CKeybindSetup::showKeySetup()
 	mf->setHint("", LOCALE_MENU_HINT_KEY_LOAD);
 	keySettings->addItem(mf);
 
-	char * model = g_info.hw_caps->boxname;
-	if(strstr(model, "ufs912") || strstr(model, "ufs913"))
-	{
-		remote_code = getRemoteCode();
-		remote_code_old = remote_code;
-		keySettings->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_KEYBINDINGMENU_REMOTECONTROL_CODE_CHANGE));
-		CMenuOptionNumberChooser * nc = new CMenuOptionNumberChooser(LOCALE_KEYBINDINGMENU_REMOTECONTROL_CODE, &remote_code, true, 1, 4);
-		nc->setHint("", LOCALE_MENU_HINT_REMOTE_CODE);
-		keySettings->addItem(nc);
+#if defined (BOXMODEL_UFS912) || defined (BOXMODEL_UFS913)
+	remote_code = getRemoteCode();
+	remote_code_old = remote_code;
+	keySettings->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_KEYBINDINGMENU_REMOTECONTROL_CODE_CHANGE));
+	CMenuOptionNumberChooser * nc = new CMenuOptionNumberChooser(LOCALE_KEYBINDINGMENU_REMOTECONTROL_CODE, &remote_code, true, 1, 4);
+	nc->setHint("", LOCALE_MENU_HINT_REMOTE_CODE);
+	keySettings->addItem(nc);
 
-		mf = new CMenuForwarder(LOCALE_KEYBINDINGMENU_REMOTECONTROL_CODE_SAVE, true, NULL, this, "savecode", CRCInput::RC_blue);
-		mf->setHint("", LOCALE_MENU_HINT_REMOTE_CODE_SAVE);
-		keySettings->addItem(mf);
-	}
+	mf = new CMenuForwarder(LOCALE_KEYBINDINGMENU_REMOTECONTROL_CODE_SAVE, true, NULL, this, "savecode", CRCInput::RC_blue);
+	mf->setHint("", LOCALE_MENU_HINT_REMOTE_CODE_SAVE);
+	keySettings->addItem(mf);
+#endif
 
 	keySettings->addItem(GenericMenuSeparatorLine);
 
