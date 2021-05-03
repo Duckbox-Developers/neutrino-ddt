@@ -679,7 +679,6 @@ struct SNeutrinoSettings
 #if HAVE_SH4_HARDWARE
 	int accept_other_remotes;
 #endif
-	int remote_control_hardware;
 	int audiochannel_up_down_enable;
 
 	//screen configuration

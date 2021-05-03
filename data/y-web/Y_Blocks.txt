@@ -507,7 +507,6 @@ end-block~frame_live_epg
 
 # ------- Remote
 start-block~remote
-{=var-set:nfbtype={=ini-get:%(CONFIGDIR)/neutrino.conf;remote_control_hardware=}=}
 {=var-set:yfbtype={=ini-get:%(CONFIGDIR)/Y-Web.conf;fb;0=}=}
 {=var-set:boxtype={=func:get_boxtype=}=}
 {=if-equal:{=var-get:yfbtype=}~0~

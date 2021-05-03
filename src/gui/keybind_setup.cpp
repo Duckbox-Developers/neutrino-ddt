@@ -171,13 +171,6 @@ int CKeybindSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 	return res;
 }
 
-#define KEYBINDINGMENU_REMOTECONTROL_HARDWARE_OPTION_COUNT 2
-const CMenuOptionChooser::keyval KEYBINDINGMENU_REMOTECONTROL_HARDWARE_OPTIONS[KEYBINDINGMENU_REMOTECONTROL_HARDWARE_OPTION_COUNT] =
-{
-	{ CRCInput::RC_HW_DBOX,         LOCALE_KEYBINDINGMENU_REMOTECONTROL_HARDWARE_DBOX         },
-	{ CRCInput::RC_HW_PHILIPS,      LOCALE_KEYBINDINGMENU_REMOTECONTROL_HARDWARE_PHILIPS      }
-};
-
 #define KEYBINDINGMENU_MODE_LEFT_RIGHT_KEY_TV_COUNT 4
 const CMenuOptionChooser::keyval KEYBINDINGMENU_MODE_LEFT_RIGHT_KEY_TV_OPTIONS[KEYBINDINGMENU_MODE_LEFT_RIGHT_KEY_TV_COUNT] =
 {
@@ -279,16 +272,6 @@ bool checkLongPress(uint32_t key)
 
 int CKeybindSetup::showKeySetup()
 {
-#if !HAVE_SH4_HARDWARE
-	//save original rc hardware selection and initialize text strings
-	int org_remote_control_hardware = g_settings.remote_control_hardware;
-	char RC_HW_str[4][32];
-	snprintf(RC_HW_str[CRCInput::RC_HW_DBOX],         sizeof(RC_HW_str[CRCInput::RC_HW_DBOX])-1,         "%s", g_Locale->getText(LOCALE_KEYBINDINGMENU_REMOTECONTROL_HARDWARE_DBOX));
-	snprintf(RC_HW_str[CRCInput::RC_HW_PHILIPS],      sizeof(RC_HW_str[CRCInput::RC_HW_PHILIPS])-1,      "%s", g_Locale->getText(LOCALE_KEYBINDINGMENU_REMOTECONTROL_HARDWARE_PHILIPS));
-	char RC_HW_msg[256];
-	snprintf(RC_HW_msg, sizeof(RC_HW_msg)-1, "%s", g_Locale->getText(LOCALE_KEYBINDINGMENU_REMOTECONTROL_HARDWARE_MSG_PART1));
-#endif
-
 	//keysetup menu
 	CMenuWidget* keySettings = new CMenuWidget(LOCALE_MAINSETTINGS_HEAD, NEUTRINO_ICON_KEYBINDING, width, MN_WIDGET_ID_KEYSETUP);
 	keySettings->addIntroItems(LOCALE_MAINSETTINGS_KEYBINDING);
@@ -353,15 +336,6 @@ int CKeybindSetup::showKeySetup()
 	mc->setHint("", LOCALE_MENU_HINT_ACCEPT_OTHER_REMOTES);
 	keySettings->addItem(mc);
 #endif
-#if !HAVE_SH4_HARDWARE
-	if (RC_HW_SELECT) {
-		CMenuOptionChooser * mc = new CMenuOptionChooser(LOCALE_KEYBINDINGMENU_REMOTECONTROL_HARDWARE,
-			&g_settings.remote_control_hardware, KEYBINDINGMENU_REMOTECONTROL_HARDWARE_OPTIONS, KEYBINDINGMENU_REMOTECONTROL_HARDWARE_OPTION_COUNT, true, NULL,
-			CRCInput::convertDigitToKey(shortcut++));
-		mc->setHint("", LOCALE_MENU_HINT_KEY_HARDWARE);
-		keySettings->addItem(mc);
-	}
-#endif
 
 	cc = new CMenuOptionNumberChooser(LOCALE_KEYBINDINGMENU_REPEATBLOCK,
 		&g_settings.repeat_blocker, true, 0, 999, this,
@@ -380,21 +354,6 @@ int CKeybindSetup::showKeySetup()
 	keySettings->addItem(cc);
 
 	int res = keySettings->exec(NULL, "");
-
-#if !HAVE_SH4_HARDWARE
-	//check if rc hardware selection has changed before leaving the menu
-	if (org_remote_control_hardware != g_settings.remote_control_hardware) {
-		g_RCInput->CRCInput::set_rc_hw();
-		strcat(RC_HW_msg, RC_HW_str[org_remote_control_hardware]);
-		strcat(RC_HW_msg, g_Locale->getText(LOCALE_KEYBINDINGMENU_REMOTECONTROL_HARDWARE_MSG_PART2));
-		strcat(RC_HW_msg, RC_HW_str[g_settings.remote_control_hardware]);
-		strcat(RC_HW_msg, g_Locale->getText(LOCALE_KEYBINDINGMENU_REMOTECONTROL_HARDWARE_MSG_PART3));
-		if(ShowMsg(LOCALE_MESSAGEBOX_INFO, RC_HW_msg, CMsgBox::mbrNo, CMsgBox::mbYes | CMsgBox::mbNo, NEUTRINO_ICON_INFO, 450, 15) == CMsgBox::mbrNo) {
-			g_settings.remote_control_hardware = org_remote_control_hardware;
-			g_RCInput->CRCInput::set_rc_hw();
-		}
-	}
-#endif
 
 	delete keySettings;
 	for (int i = 0; i < KEYBINDS_COUNT; i++)
