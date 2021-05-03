@@ -1752,7 +1752,7 @@ int tuxtx_main(int pid, int page, int source)
 				case RC_TEXT:
 					break;
 
-				case RC_HELP: /* switch to scart input and back */
+				case RC_HELP: /* switch to hdmi input and back */
 				{
 					continue; /* otherwise ignore exit key */
 				}
