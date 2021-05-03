@@ -1893,6 +1893,7 @@ void CRCInput::set_rc_hw(ir_protocol_t ir_protocol, unsigned int ir_address)
 }
 
 // hint: ir_protocol_t and other useful things are defined in cs_ir_generic.h
+void CRCInput::set_rc_hw(void)
 {
 	ir_protocol_t ir_protocol = IR_PROTOCOL_UNKNOWN;
 	unsigned int ir_address = 0x00;
