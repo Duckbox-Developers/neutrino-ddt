@@ -2686,9 +2686,11 @@ TIMER_START();
 	CVFD::getInstance()->setMuted(current_muted);
 
 #ifdef ENABLE_LCD4LINUX
-	LCD4l = new CLCD4l();
-	if (g_settings.lcd4l_support)
+	if (g_settings.lcd4l_support) {
+		if (LCD4l == NULL)
+			LCD4l = new CLCD4l();
 		LCD4l->StartLCD4l();
+	}
 #endif
 
 	if (show_startwizard) {
