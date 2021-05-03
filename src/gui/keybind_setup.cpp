@@ -58,15 +58,6 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 
-#ifdef IOC_IR_SET_PRI_PROTOCOL
-/* define constants instead of #ifdef'ing the corresponding code.
- * the compiler will optimize it away anyway, but the syntax is
- * still checked */
-#define RC_HW_SELECT true
-#else
-#define RC_HW_SELECT false
-#endif
-
 CKeybindSetup::CKeybindSetup()
 {
 	changeNotify(LOCALE_KEYBINDINGMENU_REPEATBLOCKGENERIC, NULL);

@@ -173,9 +173,6 @@ class CRCInput
 		int checkTimers();
 		bool mayRepeat(uint32_t key, bool bAllowRepeatLR = false);
 		bool mayLongPress(uint32_t key, bool bAllowRepeatLR = false);
-#ifdef IOC_IR_SET_PRI_PROTOCOL
-		void set_rc_hw(ir_protocol_t ir_protocol, unsigned int ir_address);
-#endif
 	public:
 		//rc-code definitions
 		static const neutrino_msg_t RC_Repeat   = 0x0400;
@@ -314,14 +311,6 @@ class CRCInput
 			RC_timeout	= 0xFFFFFFFF,
 			RC_nokey	= 0xFFFFFFFE
 		};
-
-		//rc-hardware definitions
-		enum
-		{
-			RC_HW_DBOX		= 0,
-			RC_HW_PHILIPS		= 1,
-		};
-		void set_rc_hw(void);
 
 		void stopInput(const bool ext = false);
 		void restartInput(const bool ext = false);
