@@ -934,12 +934,6 @@ keybindingmenu.remotecontrol_code_msg1 Für die Umstellung der Fernbedienung bit
 keybindingmenu.remotecontrol_code_msg2 gleichzeitig betätigen, danach: OK Taste drücken zum Verlassen der Infobox.
 keybindingmenu.remotecontrol_code_not_save Der Code der Fernbedienung wurde nicht geändert !
 keybindingmenu.remotecontrol_code_save Neuen Code speichern
-keybindingmenu.remotecontrol_hardware Hardware
-keybindingmenu.remotecontrol_hardware_dbox DBox Nokia (alt)
-keybindingmenu.remotecontrol_hardware_msg_part1 Die Fernbedienung wurde von '
-keybindingmenu.remotecontrol_hardware_msg_part2 ' auf '
-keybindingmenu.remotecontrol_hardware_msg_part3 ' geändert.\nIst dies korrekt?\nBitte die Auswahl innerhalb 15 Sekunden mit der neuen Fernbedienung\nbestätigen. Ansonsten wird die Auswahl zurückgesetzt.
-keybindingmenu.remotecontrol_hardware_philips Philips
 keybindingmenu.repeatblock Anfangsverzögerung
 keybindingmenu.repeatblockgeneric Wiederholungsverzögerung
 keybindingmenu.sort Sortierreihenfolge ändern
@@ -1220,7 +1214,6 @@ menu.hint_key_channeldown Weisen Sie eine Taste für das Herunterschalten in der
 menu.hint_key_channellist Konfigurieren Sie die Tastenbelegung für die Kanalliste
 menu.hint_key_channelup Weisen Sie eine Taste für das Hochschalten in der Kanalliste zu
 menu.hint_key_format_mode_active Die Taste für das Videoformat deaktivieren/aktivieren
-menu.hint_key_hardware Definieren Sie, welche Fernbedienung Sie verwenden möchten. Die Bestätigung erfolgt mit der Ausgewählten
 menu.hint_key_history Definieren Sie eine Taste für das Anzeigen der letzten Programme, die Sie schauten
 menu.hint_key_lastchannel Definieren Sie eine Taste, die in den vorher eingestellten Kanal zurückschaltet
 menu.hint_key_left_exit Weisen Sie der Taste 'links' das Wechseln in das vorherige Menü zu

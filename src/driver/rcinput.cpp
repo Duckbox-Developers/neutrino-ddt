@@ -1893,26 +1893,9 @@ void CRCInput::set_rc_hw(ir_protocol_t ir_protocol, unsigned int ir_address)
 }
 
 // hint: ir_protocol_t and other useful things are defined in cs_ir_generic.h
-void CRCInput::set_rc_hw(void)
 {
 	ir_protocol_t ir_protocol = IR_PROTOCOL_UNKNOWN;
 	unsigned int ir_address = 0x00;
-
-	switch(g_settings.remote_control_hardware)
-	{
-		case RC_HW_DBOX:
-			ir_protocol = IR_PROTOCOL_NRC17;
-			ir_address  = 0x00C5;
-			break;
-		case RC_HW_PHILIPS:
-			ir_protocol = IR_PROTOCOL_RC5;
-			ir_address  = 0x000A;
-			break;
-		default:
-			ir_protocol = IR_PROTOCOL_NECE;
-			ir_address  = 0xFF80;
-	}
-
 	set_rc_hw(ir_protocol, ir_address);
 }
 #else

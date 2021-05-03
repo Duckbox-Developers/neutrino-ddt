@@ -940,7 +940,6 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.window_width = configfile.getInt32("window_width", g_settings.window_size);
 	g_settings.window_height = configfile.getInt32("window_height", g_settings.window_size);
 
-	g_settings.remote_control_hardware = configfile.getInt32( "remote_control_hardware",  CRCInput::RC_HW_DBOX);
 	g_settings.audiochannel_up_down_enable = configfile.getBool("audiochannel_up_down_enable", false);
 
 	//Software-update
@@ -1615,7 +1614,6 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32("channellist_new_zap_mode", g_settings.channellist_new_zap_mode);
 	configfile.setInt32("channellist_hdicon", g_settings.channellist_hdicon);
 	configfile.setInt32("channellist_scrambleicon" , g_settings.channellist_scrambleicon);
-	configfile.setInt32("remote_control_hardware", g_settings.remote_control_hardware);
 	configfile.setBool ("audiochannel_up_down_enable", g_settings.audiochannel_up_down_enable);
 	configfile.setInt32("channellist_sort_mode", g_settings.channellist_sort_mode);
 	configfile.setInt32("channellist_numeric_adjust", g_settings.channellist_numeric_adjust);
