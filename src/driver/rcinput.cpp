@@ -155,9 +155,6 @@ CRCInput::CRCInput(bool &_timer_wakeup)
 	rc_last_key =  KEY_MAX;
 	firstKey = true;
 	longPressEnd = 0;
-
-	//select and setup remote control hardware
-	set_rc_hw();
 }
 
 bool CRCInput::checkdev()
@@ -1853,54 +1850,3 @@ void CRCInput::setKeyRepeatDelay(unsigned int start_ms, unsigned int repeat_ms)
 			printf("[rcinput:%s] %s(fd %d) write %s: %m\n", __func__, path.c_str(), fd, "REP_PERIOD");
 	}
 }
-
-#ifdef IOC_IR_SET_PRI_PROTOCOL
-// hint: ir_protocol_t and other useful things are defined in cs_ir_generic.h
-void CRCInput::set_rc_hw(ir_protocol_t ir_protocol, unsigned int ir_address)
-{
-	int ioctl_ret = -1;
-	if (indev.empty()) {
-		printf("[rcinput:%s] indev is empty!\n", __func__);
-		return;
-	}
-	int fd = -1;
-	for (std::vector<in_dev>::iterator it = indev.begin(); it != indev.end(); ++it) {
-		if ((*it).path == "/dev/input/nevis_ir") {
-			fd = (*it).fd;
-			break;
-		}
-	}
-	if (fd == -1) {
-		printf("[rcinput:%s] no nevis_ir input device found??\n", __func__);
-		return;
-	}
-	ioctl_ret = ::ioctl(fd, IOC_IR_SET_PRI_PROTOCOL, ir_protocol);
-	if(ioctl_ret < 0)
-		perror("IOC_IR_SET_PRI_PROTOCOL");
-	else
-		printf("CRCInput::set_rc_hw: Set IOCTRL : IOC_IR_SET_PRI_PROTOCOL, %05X\n", ir_protocol);
-
-	//bypass setting of IR Address with ir_address=0
-	if(ir_address > 0)
-	{
-		//fixme?: for now fd_rc[] is hardcoded to 0 since only fd_rc[0] is used at the moment
-		ioctl_ret = ::ioctl(fd, IOC_IR_SET_PRI_ADDRESS, ir_address);
-		if(ioctl_ret < 0)
-			perror("IOC_IR_SET_PRI_ADDRESS");
-		else
-			printf("CRCInput::set_rc_hw: Set IOCTRL : IOC_IR_SET_PRI_ADDRESS,  %05X\n", ir_address);
-	}
-}
-
-// hint: ir_protocol_t and other useful things are defined in cs_ir_generic.h
-void CRCInput::set_rc_hw(void)
-{
-	ir_protocol_t ir_protocol = IR_PROTOCOL_UNKNOWN;
-	unsigned int ir_address = 0x00;
-	set_rc_hw(ir_protocol, ir_address);
-}
-#else
-void CRCInput::set_rc_hw(void)
-{
-}
-#endif
