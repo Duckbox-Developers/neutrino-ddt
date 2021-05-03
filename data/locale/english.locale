@@ -933,12 +933,6 @@ keybindingmenu.remotecontrol_code_msg1 For changing the remote control code plea
 keybindingmenu.remotecontrol_code_msg2 at the same time, after that press the button: OK for leaving the infobox.
 keybindingmenu.remotecontrol_code_not_save The remote control code has not been changed !
 keybindingmenu.remotecontrol_code_save Save new code
-keybindingmenu.remotecontrol_hardware Hardware
-keybindingmenu.remotecontrol_hardware_dbox d-box Nokia (old)
-keybindingmenu.remotecontrol_hardware_msg_part1 The remote control has been changed from '
-keybindingmenu.remotecontrol_hardware_msg_part2 ' to '
-keybindingmenu.remotecontrol_hardware_msg_part3 ' \nIs this correct?\nPlease confirm the selection within 15 seconds by using the new remote control.\nOtherwise the selection will be reverted.
-keybindingmenu.remotecontrol_hardware_philips Philips
 keybindingmenu.repeatblock generic delay
 keybindingmenu.repeatblockgeneric repeat delay
 keybindingmenu.sort change sort order
@@ -1219,7 +1213,6 @@ menu.hint_key_channeldown Assign button for fast switch to previous\nchannel in 
 menu.hint_key_channellist Configure keybingdings for channel list
 menu.hint_key_channelup Assign button for fast switch to next\nchannel in channel list
 menu.hint_key_format_mode_active Disable/enable key for the video format conversion
-menu.hint_key_hardware Change remote control type
 menu.hint_key_history Assign button to show channel\nchannel switch history
 menu.hint_key_lastchannel Assign button for fast zap to\nprevious channel in history
 menu.hint_key_left_exit Allow return to previous menu with 'left' key
