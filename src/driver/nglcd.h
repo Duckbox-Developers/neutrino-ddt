@@ -143,6 +143,7 @@ class nGLCD
 		bool dumpBuffer(fb_pixel_t *s, int format, const char *filename);
 		void UpdateBrightness();
 		int handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t data);
+		static void AVInputMode(bool);
 };
 #endif
 #endif
