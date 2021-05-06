@@ -45,13 +45,14 @@ function do_init(){
 		case "10":	// mutant hd51
 		case "11":	// vu+ solo 4k
 		case "12":	// vu+ duo 4k
-		case "13":	// vu+ ultimo 4k
-		case "14":	// vu+ duo
-		case "15":	// vu+ zero 4k
-		case "16":	// vu+ uno 4k se
-		case "17":	// vu+ uno 4k
-		case "18":	// zgemma h7
-		case "19":	// wwio bre2ze4k
+		case "13":	// vu+ duo 4k se
+		case "14":	// vu+ ultimo 4k
+		case "15":	// vu+ duo
+		case "16":	// vu+ zero 4k
+		case "17":	// vu+ uno 4k se
+		case "18":	// vu+ uno 4k
+		case "19":	// zgemma h7
+		case "20":	// wwio bre2ze4k
 			sel=(sel*1+val*1);
 			break;
 		default:
