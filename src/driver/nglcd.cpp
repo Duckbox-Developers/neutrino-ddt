@@ -1123,3 +1123,20 @@ std::string nGLCD::GetConfigName(int driver)
 		driver = 0;
 	return GLCD::Config.driverConfigs[driver].name;
 }
+
+void nGLCD::AVInputMode(bool b) {
+	if (nglcd) {
+		bool mo = nglcd->doMirrorOSD;
+		if (b) {
+			nglcd->doScrollChannel = false;
+			nglcd->doScrollEpg = false;
+			nglcd->MirrorOSD(false);
+			nglcd->lockChannel(g_info.hw_caps->boxname, g_Locale->getText(LOCALE_MAINMENU_AVINPUTMODE), 0);
+		} else {
+			nglcd->doScrollChannel = true;
+			nglcd->doScrollEpg = true;
+			nglcd->MirrorOSD(mo);
+			nglcd->unlockChannel();
+		}
+	}
+}
