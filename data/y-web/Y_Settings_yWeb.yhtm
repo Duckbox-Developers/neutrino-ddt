@@ -33,26 +33,18 @@ function do_init(){
 		case "-2":	// spark old
 		case "-1":	// spark new
 		case "0":	// auto
-		case "1":	// cst hd1/bse
-		case "2":	// cst neo
-		case "3":	// cst zee/neo2
-		case "4":	// cst neo twin
-		case "5":	// cst tank
-		case "6":	// cst trinity
-		case "7":	// cst link
-		case "8":	// cst trinity duo
-		case "9":	// ax hd51
-		case "10":	// mutant hd51
-		case "11":	// vu+ solo 4k
-		case "12":	// vu+ duo 4k
-		case "13":	// vu+ duo 4k se
-		case "14":	// vu+ ultimo 4k
-		case "15":	// vu+ duo
-		case "16":	// vu+ zero 4k
-		case "17":	// vu+ uno 4k se
-		case "18":	// vu+ uno 4k
-		case "19":	// zgemma h7
-		case "20":	// wwio bre2ze4k
+		case "1":	// ax hd51
+		case "2":	// mutant hd51
+		case "3":	// vu+ solo 4k
+		case "4":	// vu+ duo 4k
+		case "5":	// vu+ duo 4k se
+		case "6":	// vu+ ultimo 4k
+		case "7":	// vu+ duo
+		case "8":	// vu+ zero 4k
+		case "9":	// vu+ uno 4k se
+		case "10":	// vu+ uno 4k
+		case "11":	// zgemma h7
+		case "12":	// wwio bre2ze4k
 			sel=(sel*1+val*1);
 			break;
 		default:
@@ -133,25 +125,18 @@ select {
 						<option value="-2">SPARK | (alt)</option>
 						<option value="-1">SPARK | (neu)</option>
 						<option value="0" selected="selected">{=L:automatic=}</option>
-						<option value="1">CST HD-1 | BSE</option>
-						<option value="2">CST HD-1plus | Neo</option>
-						<option value="3">CST HD-1plus | Zee/Neo2</option>
-						<option value="4">CST HD-1plus | Neo Twin</option>
-						<option value="5">CST HD-2 | Tank</option>
-						<option value="6">CST HD-2 | Trinity</option>
-						<option value="7">CST HD-2 | Link</option>
-						<option value="8">CST HD-2 | Trinity Duo</option>
-						<option value="9">AX | HD51</option>
-						<option value="10">Mutant | HD51</option>
-						<option value="11">VU+ | Solo 4K</option>
-						<option value="12">VU+ | Duo 4k</option>
-						<option value="13">VU+ | Ultimo 4K</option>
-						<option value="14">VU+ | Duo</option>
-						<option value="15">VU+ | Zero 4K</option>
-						<option value="16">VU+ | Uno 4K SE</option>
-						<option value="17">VU+ | Uno 4K</option>
-						<option value="18">Zgemma | H7</option>
-						<option value="19">WWIO | BRE2ZE 4k</option>
+						<option value="1">AX | HD51</option>
+						<option value="2">Mutant | HD51</option>
+						<option value="3">VU+ | Solo 4K</option>
+						<option value="4">VU+ | Duo 4k</option>
+						<option value="5">VU+ | Duo 4k se</option>
+						<option value="6">VU+ | Ultimo 4K</option>
+						<option value="7">VU+ | Duo</option>
+						<option value="8">VU+ | Zero 4K</option>
+						<option value="9">VU+ | Uno 4K SE</option>
+						<option value="10">VU+ | Uno 4K</option>
+						<option value="11">Zgemma | H7</option>
+						<option value="12">WWIO | BRE2ZE 4k</option>
 					</select>
 				</td>
 			</tr>
