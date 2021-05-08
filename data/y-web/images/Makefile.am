@@ -103,7 +103,8 @@ install_DATA += rc_spark_old.jpg \
 endif
 
 if BOXTYPE_DUCKBOX
-install_DATA += rc_910.jpg
+install_DATA += rc_910.jpg \
+		rc_913.jpg
 endif
 
 # file manager

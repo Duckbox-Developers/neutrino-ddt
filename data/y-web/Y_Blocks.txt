@@ -510,8 +510,8 @@ start-block~remote
 {=var-set:yfbtype={=ini-get:%(CONFIGDIR)/Y-Web.conf;fb;0=}=}
 {=var-set:boxtype={=func:get_boxtype=}=}
 {=if-equal:{=var-get:yfbtype=}~0~
-		{=if-equal:{=var-get:boxtype=}~DUCKBOX ufs910~		{=include-block:Y_Blocks.txt;rc_ufs910=}~
-		{=if-equal:{=var-get:boxtype=}~DUCKBOX ufs922~		{=include-block:Y_Blocks.txt;rc_ufs910=}~
+		{=if-equal:{=var-get:boxtype=}~DUCKBOX UFS913~		{=include-block:Y_Blocks.txt;rc_ufs913=}~
+		{=if-equal:{=var-get:boxtype=}~DUCKBOX UFS910~		{=include-block:Y_Blocks.txt;rc_ufs910=}~
 		{=if-equal:{=var-get:boxtype=}~SPARK 7111~		{=include-block:Y_Blocks.txt;rc_spark_old=}~
 		{=if-equal:{=var-get:boxtype=}~SPARK 7162~		{=include-block:Y_Blocks.txt;rc_spark_new=}~
 		{=if-equal:{=var-get:boxtype=}~AX-Technologies HD51~	{=include-block:Y_Blocks.txt;rc_ax_hd51=}~
@@ -524,7 +524,7 @@ start-block~remote
 		{=if-equal:{=var-get:boxtype=}~VU+ ZERO4K~		{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 		{=if-equal:{=var-get:boxtype=}~VU+ UNO4KSE~		{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 		{=if-equal:{=var-get:boxtype=}~VU+ UNO4K~		{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
-		{=if-equal:{=var-get:boxtype=}~ZGEMMA H7~		{=include-block:Y_Blocks.txt;rc_zgemma_h7=}~
+		{=if-equal:{=var-get:boxtype=}~AirDigital Zgemma H7C/S~		{=include-block:Y_Blocks.txt;rc_zgemma_h7=}
 		{=if-equal:{=var-get:boxtype=}~WWIO BRE2ZE4K~		{=include-block:Y_Blocks.txt;rc_wwio_bre2ze4k=}~
 
 		{=comment:fallback~=}				{=include-block:Y_Blocks.txt;rc_ufs910=}
@@ -542,12 +542,13 @@ start-block~remote
 	{=if-equal:{=var-get:yfbtype=}~10~	{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 	{=if-equal:{=var-get:yfbtype=}~11~	{=include-block:Y_Blocks.txt;rc_zgemma_h7=}~
 	{=if-equal:{=var-get:yfbtype=}~12~	{=include-block:Y_Blocks.txt;rc_wwio_bre2ze4k=}~
+	{=if-equal:{=var-get:yfbtype=}~-4~	{=include-block:Y_Blocks.txt;rc_ufs913=}~
 	{=if-equal:{=var-get:yfbtype=}~-3~	{=include-block:Y_Blocks.txt;rc_ufs910=}~
 	{=if-equal:{=var-get:yfbtype=}~-2~	{=include-block:Y_Blocks.txt;rc_spark_old=}~
 	{=if-equal:{=var-get:yfbtype=}~-1~	{=include-block:Y_Blocks.txt;rc_spark_new=}~
 
 	{=comment:fallback~=}			{=include-block:Y_Blocks.txt;rc_ufs910=}
-	=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
+	=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
 =}
 end-block~remote
 
@@ -593,6 +594,52 @@ start-block~rc_ufs910
   <area shape="rect" href="javascript:rcsim('KEY_STOP')" coords="125, 465, 155, 485" />
 </map>
 end-block~rc_ufs910
+
+# ------- Remote UFS913
+start-block~rc_ufs913
+<img src="images/rc_913.jpg" usemap="#rc"/>
+<map name="rc" id="rc">
+ <area shape="rect" coords="15,60,55,96" alt="KEY_1" href="javascript:rcsim('KEY_1')" />
+ <area shape="rect" coords="64,60,103,97" alt="KEY_2" href="javascript:rcsim('KEY_2')" />
+ <area shape="rect" coords="114,61,152,96" alt="KEY_3" href="javascript:rcsim('KEY_3')" />
+ <area shape="rect" coords="15,105,53,140" alt="KEY_4" href="javascript:rcsim('KEY_4')" />
+ <area shape="rect" coords="63,106,102,140" alt="KEY_5" href="javascript:rcsim('KEY_5')" />
+ <area shape="rect" coords="113,104,152,141" alt="KEY_6" href="javascript:rcsim('KEY_6')" />
+ <area shape="rect" coords="15,149,54,185" alt="KEY_7" href="javascript:rcsim('KEY_7')" />
+ <area shape="rect" coords="65,149,103,184" alt="KEY_8" href="javascript:rcsim('KEY_8')" />
+ <area shape="rect" coords="113,150,153,185" alt="KEY_9" href="javascript:rcsim('KEY_9')" />
+ <area shape="rect" coords="64,198,103,229" alt="KEY_0" href="javascript:rcsim('KEY_0')" />
+ <area shape="rect" coords="14,352,38,387" alt="KEY_RED" href="javascript:rcsim('KEY_RED')" />
+ <area shape="rect" coords="54,352,76,384" alt="KEY_GREEN" href="javascript:rcsim('KEY_GREEN')" />
+ <area shape="rect" coords="92,352,114,387" alt="KEY_YELLOW" href="javascript:rcsim('KEY_YELLOW')" />
+ <area shape="rect" coords="131,352,153,387" alt="KEY_BLUE" href="javascript:rcsim('KEY_BLUE')" />
+ <area shape="rect" coords="64,24,152,43" alt="KEY_POWER" href="javascript:rcsim('KEY_POWER')" />
+ <area shape="rect" coords="114,198,152,229" alt="KEY_TEXT" href="javascript:rcsim('KEY_TEXT')" />
+ <area shape="rect" coords="15,197,54,229" alt="KEY_MENU" href="javascript:rcsim('KEY_MENU')" />
+ <area shape="rect" coords="15,24,54,42" alt="tv/radio" href="javascript:rcsim('KEY_RADIO')" />
+ <area shape="rect" coords="14,601,49,630" alt="KEY_PAUSE" href="javascript:rcsim('KEY_PAUSE')" />
+ <area shape="rect" coords="66,602,101,630" alt="KEY_RECORD" href="javascript:rcsim('KEY_RECORD')" />
+ <area shape="rect" coords="117,602,154,629" alt="KEY_STOP" href="javascript:rcsim('KEY_STOP')" />
+ <area shape="rect" coords="65,558,101,586" alt="KEY_PLAY" href="javascript:rcsim('KEY_PLAY')" />
+ <area shape="rect" coords="118,559,153,586" alt="KEY_FORWARD" href="javascript:rcsim('KEY_FORWARD')" />
+ <area shape="rect" coords="14,558,50,586" alt="KEY_REWIND" href="javascript:rcsim('KEY_REWIND')" />
+ <area shape="rect" coords="67,453,102,489" alt="KEY_OK" href="javascript:rcsim('KEY_OK')" />
+ <area shape="poly" coords="119,302,150,304,150,331,118,331,118,301,118,302,118,302" alt="KEY_INFO" href="javascript:rcsim('KEY_INFO')" />
+ <area shape="poly" coords="16,304,48,301,48,331,16,331,16,305" alt="KEY_MUTE" href="javascript:rcsim('KEY_MUTE')" />
+ <area shape="poly" coords="16,251,17,252,55,248,53,282,15,276,15,252,15,252" alt="KEY_VOLUMEDOWN" href="javascript:rcsim('KEY_VOLUMEDOWN')" />
+ <area shape="poly" coords="113,249,113,249,113,249,151,251,151,275,113,281,111,249" alt="KEY_VOLUMEUP" href="javascript:rcsim('KEY_VOLUMEUP')" />
+ <area shape="poly" coords="17,404,18,405,49,405,43,433,16,434,17,404" alt="KEY_EPG" href="javascript:rcsim('KEY_EPG')" />
+ <area shape="poly" coords="119,405,120,406,152,405,152,435,123,433" alt="KEY_MEDIA" href="javascript:rcsim('KEY_MEDIA')" />
+ <area shape="poly" coords="70,404,71,405,98,403,101,436,65,436,70,403" alt="KEY_UP" href="javascript:rcsim('KEY_UP')" />
+ <area shape="poly" coords="65,506,103,507,98,539,70,538,66,506" alt="KEY_DOWN" href="javascript:rcsim('KEY_DOWN')" />
+ <area shape="poly" coords="16,458,49,453,49,489,16,484,17,458" alt="KEY_LEFT" href="javascript:rcsim('KEY_LEFT')" />
+ <area shape="poly" coords="119,454,152,458,152,484,119,487,119,454" alt="KEY_RIGHT" href="javascript:rcsim('KEY_RIGHT')" />
+ <area shape="poly" coords="67,249,99,249,103,285,65,284,67,249" alt="channelup" href="javascript:rcsim('KEY_PAGEUP')" />
+ <area shape="poly" coords="64,297,102,298,101,332,67,331,64,297" alt="channeldown" href="javascript:rcsim('KEY_PAGEDOWN')" />
+ <area shape="poly" coords="17,508,18,509,17,508,43,511,48,538,16,539,16,509,16,509" alt="KEY_HOME" href="javascript:rcsim('KEY_HOME')" />
+ <area shape="poly" coords="123,511,152,508,151,538,120,538,123,511" alt="KEY_ARCHIVE" href="javascript:rcsim('KEY_ARCHIVE')" />
+</map>
+end-block~rc_ufs913
 
 # ------ Remote SPARK
 start-block~rc_spark_old
