@@ -196,7 +196,6 @@ extern cVideo * videoDecoder;
 #ifdef ENABLE_PIP
 extern cVideo *pipDecoder;
 extern cDemux *pipDemux;
-static bool avinput_pip = false;
 #endif
 extern cDemux *videoDemux;
 extern cAudio * audioDecoder;
@@ -286,6 +285,9 @@ CNeutrinoApp::CNeutrinoApp()
 	channels_init		= false;
 	channelList_allowed	= true;
 	channelList_painted	= false;
+#ifdef ENABLE_PIP
+	avinput_pip		= false;
+#endif
 }
 
 /*-------------------------------------------------------------------------------------

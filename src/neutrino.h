@@ -162,9 +162,11 @@ public:
 	void channelsInit(bool bOnly = false);
 	int run(int argc, char **argv);
 
+#ifdef ENABLE_PIP
 	bool avinput_pip;
 	void StartAVInputPiP();
 	void StopAVInputPiP();
+#endif
 
 	//callback stuff only....
 	int exec(CMenuTarget* parent, const std::string & actionKey);
@@ -229,5 +231,3 @@ public:
 	void g_settings_video_Mode(int value) { g_settings.video_Mode = value; }
 };
 #endif
-
-
