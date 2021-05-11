@@ -81,6 +81,9 @@ static inline int dev_open()
 
 static void replace_umlauts(std::string &s)
 {
+#if BOXMODEL_HD51 || BOXMODEL_BRE2ZE4K || BOXMODEL_H7 || BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4KSE || BOXMODEL_VUDUO4K || BOXMODEL_VUDUO4KSE || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4KSE
+	return;
+#else
 	/* this is crude, it just replaces ÄÖÜ with AOU since the display can't show them anyway */
 	/*                       Ä           ä           Ö           ö           Ü           ü   */
 	char tofind[][3] = { "\xc3\x84", "\xc3\xa4", "\xc3\x96", "\xc3\xb6", "\xc3\x9c", "\xc3\xbc" };
@@ -100,6 +103,7 @@ static void replace_umlauts(std::string &s)
 		s.replace(pos, 2, std::string(repl));
 	}
 	// printf("%s:<< '%s'\n", __func__, s.c_str());
+#endif
 }
 
 CLCD::CLCD()
