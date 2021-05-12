@@ -120,5 +120,4 @@ public:
 	inline const int & getCurrentChannelNumber(void) const { return current_channel_num; }
 };
 
-
 #endif

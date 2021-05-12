@@ -29,12 +29,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-
 #ifndef __neutrinoMessages__
 #define __neutrinoMessages__
 
 #include "driver/rcinput.h"
-
 
 struct messages_return
 {

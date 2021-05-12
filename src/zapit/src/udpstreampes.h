@@ -1,6 +1,6 @@
 /*
    Copyright (c) 2003,2004 Harald Maiss
-   
+
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2, or (at your option)
@@ -27,7 +27,7 @@ typedef struct {
      unsigned char Stream;
      unsigned StreamPacket;
 } PacketHeaderType;
-         
+
 
 // MTU betraegt standartmaessig 1500 und kann mit "ifconfig" nicht erhoeht 
 // werden. Abzueglich 8 Byte UDP-Header und 24/20 Byte IP-Header => 1468
