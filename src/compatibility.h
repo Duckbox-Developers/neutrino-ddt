@@ -23,12 +23,10 @@
 #ifndef __COMPATIBILITY_H__
 #define __COMPATIBILITY_H__
 
-
 #if !defined __UCLIBC__ || ((__UCLIBC_MAJOR__ >= 1) && (__UCLIBC_MINOR__ >= 0) && (__UCLIBC_SUBLEVEL__ >= 10))
 #define comp_malloc_stats(a) malloc_stats()
 #else
 #define comp_malloc_stats(a) malloc_stats(a)
 #endif
-
 
 #endif // __COMPATIBILITY_H__

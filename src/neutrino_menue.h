@@ -33,7 +33,6 @@
 	Otherwise ask the copyright owners, anything else would be theft!
 */
 
-
 #ifndef __neutrino_menue__
 #define __neutrino_menue__
 
