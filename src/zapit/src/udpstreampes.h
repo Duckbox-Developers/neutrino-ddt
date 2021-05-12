@@ -13,7 +13,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. 
+   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 */
 
@@ -29,7 +29,7 @@ typedef struct {
 } PacketHeaderType;
 
 
-// MTU betraegt standartmaessig 1500 und kann mit "ifconfig" nicht erhoeht 
+// MTU betraegt standartmaessig 1500 und kann mit "ifconfig" nicht erhoeht
 // werden. Abzueglich 8 Byte UDP-Header und 24/20 Byte IP-Header => 1468
 // Im Experiment wurde 1472 festgestellt.
 #define DATA_PER_PACKET 1472
@@ -38,7 +38,7 @@ typedef struct {
 
 #define MAX_PID_NUM 9   /* 1 Video + 8 Audio */
 #define MAX_SPKT_BUF_NUM 36
-#define SPKT_BUF_PACKET_NUM 256  
+#define SPKT_BUF_PACKET_NUM 256
 #define SPKT_BUF_SIZE (SPKT_BUF_PACKET_NUM * DATA_PER_PACKET)
 
 
