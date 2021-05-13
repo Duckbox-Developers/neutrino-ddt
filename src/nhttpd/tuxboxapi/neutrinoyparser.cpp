@@ -852,11 +852,8 @@ std::string CNeutrinoYParser::func_get_boxtype(CyhookHandler *, std::string)
 
 	   After change this, you'll have to align code in Y_Blocks.txt
 	*/
-	if (boxvendor.compare("Coolstream") == 0)
-		boxvendor = "CST";
 
 	std::string boxname(g_info.hw_caps->boxname);
-
 
 	return boxvendor + " " + boxname;
 }
