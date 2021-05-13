@@ -21,21 +21,6 @@ live_unlock()
 	call_webserver "control/zapto?startplayback" >/dev/null
 }
 # -----------------------------------------------------------
-prepare_tv()
-{
-	# SPTS on
-	if [ "$boxtype" != "coolstream" ]; then
-		call_webserver "control/system?setAViAExtPlayBack=spts" >/dev/null
-	fi
-}
-# -----------------------------------------------------------
-prepare_radio()
-{
-	# SPTS off
-	if [ "$boxtype" != "coolstream" ]; then
-		call_webserver "control/system?setAViAExtPlayBack=pes" >/dev/null
-	fi
-}
 
 # -----------------------------------
 # Main
@@ -76,18 +61,6 @@ case "$1" in
 	dboxIP)
 		buildLocalIP ;;
 
-	prepare_radio)
-		prepare_radio
-		Y_APid=`call_webserver "control/yweb?radio_stream_pid"`
-		url="http://$2:31338/$Y_APid"
-		echo "$url" > $y_tmp_m3u
-		echo "$url" > $y_tmp_pls
-		;;
-
-	prepare_tv)
-		prepare_tv
-		;;
-		
 	udp_stream)
 		if [ "$2" = "start" ]
 		then

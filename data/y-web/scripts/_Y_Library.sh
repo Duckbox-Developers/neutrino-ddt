@@ -30,7 +30,7 @@ buildLocalIP()
 buildStreamingURL()
 {
 	localIP=`buildLocalIP`
-	
+
 	pids=`call_webserver "control/yweb?video_stream_pids=0"`
 	echo "http:\/\/$localIP:31339\/0,$pids"
 }
@@ -78,7 +78,7 @@ y_format_message_html()
 	tmp="$tmp <link rel='stylesheet' type='text/css' href='/Y_User.css'></head>"
 	tmp="$tmp <body><div class='work_box'><div class='work_box_head'><div class='work_box_head_h2'>Results</div></div><div class='work_box_body' style='overflow:auto'>"
 	tmp="$tmp <pre>\n$msg\n</pre></div></div></body></html>"
-	
+
 #	tmp="$tmp <body><div class='y_work_box'><pre>\n$msg\n</pre></div></body></html>"
 	echo -e "$tmp"
 }

@@ -8,7 +8,7 @@
 # -----------------------------------------------------------
 # Definitions
 # -----------------------------------------------------------
-boxtype="coolstream"
+
 
 # -----------------------------------------------------------
 # Paths
@@ -31,12 +31,9 @@ y_url_control="http://localhost/control"
 # Files
 # -----------------------------------------------------------
 y_config_Y_Web="$y_path_config/Y-Web.conf"
-y_config_vnc="$y_path_config/vnc.conf"
 y_config_nhttpd="$y_path_config/nhttpd.conf"
 y_config_neutrino="$y_path_config/neutrino.conf"
 y_upload_file="$y_path_tmp/upload.tmp"
-y_boot_logo="/var/tuxbox/boot/logo-fb"
-y_boot_logo_lcd="/var/tuxbox/boot/logo-lcd"
 y_tmp="$y_path_tmp/y.tmp"
 y_wait_live="$y_path_httpd/Y_Live_Wait.yhtm"
 y_tmp_m3u="$y_path_tmp/y.m3u"

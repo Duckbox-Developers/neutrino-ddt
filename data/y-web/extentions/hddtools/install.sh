@@ -113,7 +113,7 @@ if [ "$hp" != "" ]; then
 fi
 mkdir -p $y_ywebover_dir
 chmod -R oug+rw $y_ywebover_dir
- 
+
 # -----------------------------------------------------------
 # prepare log
 # -----------------------------------------------------------
@@ -125,16 +125,16 @@ echo "installdir: $y_ywebover_dir"
 # -----------------------------------------------------------
 # Install (from install.inc)
 # -----------------------------------------------------------
-install 
+install
 
 # -----------------------------------------------------------
 # finishing
 # -----------------------------------------------------------
 mkdir -p $y_ext_conf_dir
 chmod oug+rw $y_ext_conf_dir
-chmod 755 ./uninstall* 
-cp ./uninstall.sh "$y_ext_conf_dir/" 
-cp ./*uninstall.inc "$y_ext_conf_dir/" 
+chmod 755 ./uninstall*
+cp ./uninstall.sh "$y_ext_conf_dir/"
+cp ./*uninstall.inc "$y_ext_conf_dir/"
 
 # -----------------------------------------------------------
 # Clean Up

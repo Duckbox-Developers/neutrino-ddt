@@ -69,108 +69,7 @@ style_set()
 		config_set_value_direct $y_config_Y_Web 'style'
 	fi
 }
-# -----------------------------------------------------------
-# Image Backup - build form
-# -----------------------------------------------------------
-image_upload()
-{
-	if [ -s "$y_upload_file" ]
-	then
-		msg="<b>Image upload ok</b><br>"
-		msg="$msg <script language='JavaScript' type='text/javascript'>window.setTimeout('parent.do_image_upload_ready()',1000)</script>"
-	else
-		msg="Upload-Problem.<br>Please, try again."
-		msg="$msg <script language='JavaScript' type='text/javascript'>window.setTimeout('parent.do_image_upload_ready_error()',1000)</script>"
-	fi
-	y_format_message_html
-}
-# ===========================================================
-# Flashimage
-# ===========================================================
-# -----------------------------------
-# Flash-Backup ($1=mtd Nummer)
-# -----------------------------------
-image_backup_mtd()
-{
-	rm /tmp/*.img
-	cat /dev/mtd/$1 > /tmp/flash_mtd$1.img
-}
-# -----------------------------------
-# Sende Download-Page ($1=mtd Nummer)
-# -----------------------------------
-# -----------------------------------
-image_delete_download_page()
-{
-	rm -r /tmp/*.img
-#	msg="<div class='y_work_box'><b>The image file in tmp was extinguished.</b></div>"
-#	y_format_message_html
-}
-# -----------------------------------------------------------
-# Flash ($1=mtd Nummer) Upload-File $2=true/false =simulate
-# -----------------------------------------------------------
-flash_mtd()
-{
-	simulate="true"
-	if [ "$2" = "false" ]
-	then
-		simulate="false"
-	fi
-	rm /tmp/*.img
-	if [ -s "$y_upload_file" ]
-	then
-		echo "" >/tmp/e.txt
-		msg_nmsg "Image%20%20flashing!"
-		if [ "$simulate" = "false" ]
-		then
-			umount /hdd #yet: fixed setting
-			fcp -v "$y_upload_file" /dev/mtd/$1 >/tmp/e.txt
-		else #simulation/DEMO
-			i="0"
-			while test $i -le 10
-			do
-				p=`expr $i \* 10`
-				b=`expr $i \* 63`
-				b=`expr $b / 10`
-				echo -e "\rDEMO: Erasing blocks: $b/63 ($p%)" >>/tmp/e.txt
-				i=`expr $i + 1`
-				sleep 1
-			done
-			i="0"
-			while test $i -le 20
-			do
-				p=`expr $i \* 5`
-				b=`expr $i \* 8064`
-				b=`expr $b / 20`
-				echo -e "\rDEMO: Writing data: $b k/8064k ($p%)" >>/tmp/e.txt
-				i=`expr $i + 1`
-				sleep 2
-			done
-			i="0"
-			while test $i -le 5
-			do
-				p=`expr $i \* 20`
-				b=`expr $i \* 8064`
-				b=`expr $b / 5`
-				echo -e "\rDEMO: Verifying data: $b k/8064k ($p%)" >>/tmp/e.txt
-				i=`expr $i + 1`
-				sleep 1
-			done
-		fi
-		msg_nmsg "flashing%20ready.%20Reboot..."
-		msg="flashing done ... please reboot box now ..."
-		msg="$msg <script language='JavaScript' type='text/javascript'>window.setTimeout('parent.do_image_flash_ready()',1000)</script>"
-		y_format_message_html
 
-		if [ "$simulate" = "false" ]
-		then
-			busybox reboot -d10
-		fi
-	else
-		msg="Upload-Problem.<br>Try again, please."
-		msg="$msg <script language='JavaScript' type='text/javascript'>window.setTimeout('parent.do_image_flash_ready()',1000)</script>"
-		y_format_message_html
-	fi
-}
 # -----------------------------------------------------------
 # copies Uploadfile to $1
 # -----------------------------------------------------------
@@ -183,20 +82,7 @@ upload_copy()
 		msg="Upload-Problem.<br>Try again, please."
 	fi
 }
-# -----------------------------------------------------------
-bootlogo_upload()
-{
-	msg="Boot-Logo installed"
-	upload_copy "$y_boot_logo"
-	y_format_message_html
-}
-# -----------------------------------------------------------
-bootlogo_lcd_upload()
-{
-	msg="Boot-Logo-LCD installed"
-	upload_copy "$y_boot_logo_lcd"
-	y_format_message_html
-}
+
 # -----------------------------------------------------------
 zapit_upload()
 {
@@ -443,7 +329,7 @@ do_ext_uninstaller()
 	if [ -e "$uinst"  ]; then
 		chmod 755 "$uinst"
 		`$uinst $1_uninstall.inc`
-	fi 
+	fi
 }
 # -----------------------------------------------------------
 # view /proc/$1 Informations
@@ -465,18 +351,7 @@ wol()
 	msg="<b>Wake on LAN $1</b><br><br>$msg"
 	y_format_message_html
 }
-# -----------------------------------------------------------
-# lcd shot
-# $1= optionen | leer
-# -----------------------------------------------------------
-do_lcshot()
-{
-	if [ -e "$y_path_varbin/lcshot" ]; then
-		$y_path_varbin/lcshot $*
-	else
-		$y_path_bin/lcshot $*
-	fi
-}
+
 # -----------------------------------------------------------
 # osd shot
 # $1= fbshot | grab
@@ -554,13 +429,6 @@ restart_neutrino()
 case "$1" in
 	style_set)			style_set $2 ;;
 	style_get)			style_get ;;
-	image_upload)			image_upload ;;
-	image_backup)			image_backup_mtd $2; echo "/tmp/flash_mtd$2.img" ;;
-	image_flash)			shift 1; flash_mtd $* ;;
-	image_flash_free_tmp)	rm -r /tmp/*.img ;;
-	image_delete)			image_delete_download_page ;;
-	bootlogo_upload)		bootlogo_upload ;;
-	bootlogo_lcd_upload)	bootlogo_lcd_upload ;;
 	zapit_upload)			zapit_upload $2 ;;
 	kernel-stack)			msg=`dmesg`; y_format_message_html ;;
 	ps)						msg=`ps l`; y_format_message_html ;;
@@ -577,7 +445,6 @@ case "$1" in
 	ext_installer)			shift 1; do_ext_installer $* 2>&1 ;;
 	proc)					shift 1; proc $* ;;
 	wol)					shift 1; wol $* ;;
-	lcshot)					shift 1; do_lcshot $* ;;
 	fbshot)					shift 1; do_fbshot $* ;;
 	fbshot_clear)			do_fbshot_clear ;;
 	screenshot_clear)		do_screenshot_clear ;;

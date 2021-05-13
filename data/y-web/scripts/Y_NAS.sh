@@ -62,7 +62,7 @@ case "$1" in
 	filemgr_vlc_file)
 		shift 1
 		echo "$*" >/tmp/vlc.m3u
-		;; 		
+		;;
 
 	*)
 		echo "[Y_NAS.sh] Parameter falsch: $*" ;;
