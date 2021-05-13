@@ -390,32 +390,8 @@ do_screenshot_clear()
 	rm -f /tmp/*.png
 }
 # -----------------------------------------------------------
-# Settings Backup/Restore
+# restart neutrino
 # -----------------------------------------------------------
-do_settings_backup_restore()
-{
-	now=$(date +%Y-%m-%d_%H-%M-%S)
-	workdir="$y_path_tmp/y_save_settings/$now"
-	case "$1" in
-		backup)
-			rm -rf $workdir
-			mkdir -p $workdir
-			$y_path_bin/backup.sh $workdir >/dev/null
-			filename=$(ls -1 -tr $workdir/settings_* | tail -1)
-			echo "$filename"
-		;;
-
-		restore)
-			if [ -s "$y_upload_file" ]
-			then
-				msg=$($y_path_bin/restore.sh "$y_upload_file")
-			else
-				msg="error: no upload file"
-			fi
-			y_format_message_html
-		;;
-	esac
-}
 restart_neutrino()
 {
 	echo "fixme"
@@ -448,8 +424,6 @@ case "$1" in
 	fbshot)					shift 1; do_fbshot $* ;;
 	fbshot_clear)			do_fbshot_clear ;;
 	screenshot_clear)		do_screenshot_clear ;;
-	get_update_version)		wget -O /tmp/version.txt "http://raw.github.com/tuxbox-neutrino/gui-neutrino/master/src/nhttpd/web/Y_Version.txt" ;;
-	settings_backup_restore)	shift 1; do_settings_backup_restore $* ;;
 	exec_cmd)				shift 1; $* ;;
 	automount_list)			shift 1; do_automount_list $* ;;
 	automount_getline)		shift 1; do_automount_getline $* ;;
