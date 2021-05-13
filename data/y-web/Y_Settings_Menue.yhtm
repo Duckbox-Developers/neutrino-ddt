@@ -7,7 +7,6 @@
 function init(){
 	add_yExtensions('settings_general', 'secmenu_general');
 	add_yExtensions('settings_neutrino', 'secmenu_neutrino');
-	add_yExtensions('settings_plugins', 'secmenu_plugins');
 }
 </script>
 </head>
