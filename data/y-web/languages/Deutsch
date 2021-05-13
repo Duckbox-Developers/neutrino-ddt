@@ -230,7 +230,7 @@ epg.si.url=Url
 ========Neutrino Settings
 set.reload_neutrino=Neutrino neuladen
 set.reboot_required=Neustart notwendig
-set.sync_with_neutrino_desc=After changing settings via yWeb: <br/>Choose on TV "Main Menu->Service->Soft restart", to accept the changes within neutrino.<br/><br/>After changing settings within Neutrino: <br/>Choose on TV "Main Menu->Settings->Save settings now", to accept these changes and reload this page.
+set.sync_with_neutrino_desc=Nach dem Ändern der Einstellungen über das yWeb: <br/>Wählen Sie im TV "Hauptmenü->Service->Neutrino neu starten", um die Änderungen in Neutrino zu übernehmen.<br/><br/>Nach dem Ändern der Einstellungen in Neutrino: <br/>Wählen Sie am TV "Hauptmenü->Einstellungen->Einstellungen jetzt speichern", um diese Änderungen zu übernehmen und diese Seite neu zu laden.
 set.sync_with_neutrino=Zur Synchronisation mit Neutrino
 
 =======Settings General & Menue
