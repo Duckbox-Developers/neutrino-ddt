@@ -21,13 +21,13 @@ zap=Umschalten
 lookup=Nachschlagen
 save_values_desc=Senden und Speichern der Werte
 save_values=Werte werden &uuml;bernommen ...
+save=Speichern
+save_all=Alle &Auml;nderungen speichern
 administration=Administration
 normal=Normal
 management=Management
 uninstaller=Deinstallation
 send=Senden
-save=Speichern
-save_all=Alle &Auml;nderungen speichern
 cancel=Abbrechen
 apply=&Auml;nderungen anwenden
 apply_desc=Liest die Konfigurationsdatei von Neutrino neu ein
@@ -76,24 +76,26 @@ date.friday=Freitag
 date.sa=Sa
 date.saturday=Samstag
 
-# ==========Main Menue
+#========= MAIN Menue
+main.live_tv_desc=LiveTV
+main.live_tv_popup_desc=LiveTV Popup
+main.remote_full_desc=Fernbedienung & OSD Vollbild
+main.stream_to_vlc_client_desc=Live TV direkt im VLC Client
+main.version=Version
+
+# =========Main Menue
 main.boxcontrol=Boxsteuerung
 main.boxcontrol_desc=Boxcontrol & Bouquets
 main.live=Live
 main.live_desc=LiveView, Aufnahmeliste, EPG
 main.tools=Werkzeuge
-main.tools_desc=Mounts, WOL, Experten Werkzeuge, Flashen
+main.tools_desc=Mounts, WOL, Experten Werkzeuge
 main.settings=Einstellungen
 main.settings_desc=Einstellungen f&uuml;r die Box, Webserver, ...
 main.extensions=Erweiterungen
 main.extensions_desc=Installierte Erweiterungen und Verwaltung
 main.info=Info
 main.info_desc=Information &uuml;ber das yWeb, Version
-main.live_tv_desc=LiveTV
-main.live_tv_popup_desc=LiveTV Popup
-main.remote_full_desc=Fernbedienung & OSD Vollbild
-main.stream_to_vlc_client_desc=Live TV direkt im VLC Client
-main.version=Version
 
 #========= Boxcontrol Menue
 bc.menue.bouquets_desc=Sender ausw&auml;hlen
@@ -106,9 +108,6 @@ bc.menue.remote_desc=Fernbedienung
 bc.menue.remote=Fernbedienung
 bc.menue.glcd_screenshot_desc=GLCD Screenshot erstellen
 bc.menue.glcd_screenshot=GLCD Screenshot
-bc.menue.lcd_screenshot_desc=LCD Screenshot erstellen
-bc.menue.lcd_screenshot=LCD Screenshot
-bc.menue.lcd_screenshot_desc_ni=lcshot nicht installiert in /bin oder /var/bin
 bc.menue.screenshot=Screenshot
 bc.menue.screenshot_desc=Screenshot des OSDs und/oder des TV-Bildes erstellen
 
@@ -182,6 +181,7 @@ ext.refresh_now=Einstellungen gespeichert. Menues werden aktualisiert.
 ext.ext_saved=Erweiterungseinstellungen gespeichert
 
 ====== Bouquet
+bou.bouquet=Bouquet
 bou.bouquets_must_be_saved=Alle &Auml;nderungen m&uuml;ssen noch gespeichert werden!
 bou.bouquet_editor=Bouquet-Editor
 bou.bouquet_add=Bouquet hinzuf&uuml;gen
@@ -233,27 +233,20 @@ set.reboot_required=Neustart notwendig
 set.sync_with_neutrino_desc=After changing settings via yWeb: <br/>Choose on TV "Main Menu->Service->Soft restart", to accept the changes within neutrino.<br/><br/>After changing settings within Neutrino: <br/>Choose on TV "Main Menu->Settings->Save settings now", to accept these changes and reload this page.
 set.sync_with_neutrino=Zur Synchronisation mit Neutrino
 
-========Settings General & Menue
+=======Settings General & Menue
 set.menue.webserver=Webserver
 set.menue.epg=EPG
-set.menue.timer_settings=Timer Einstellungen
 set.menue.zapit=Zapit
 set.menue.backup_restore=Sichern und Wiederherstellen
 set.menue.bouquet_editor=Bouquet-Editor
-set.menue.video_audio=Video/Audio
 set.menue.parental=Jugendschutz
-set.menue.direct_recording=Direktaufnahme
 set.menue.recording=Aufnahme
 set.menue.audio_player=Audioplayer
 set.menue.movieplayer=Movieplayer
 set.menue.pictureviewer=Bildbetrachter
 set.menue.glcd_display=GLC-Display
-set.menue.lcd_display=LC-Display
 set.menue.key_settings=Tastenbelegung
-set.menue.boot_options=Bootoptionen
-set.menue.peronalization=Personalisierung
-set.menue.plugins=Plugins
-set.menue.others=Diverses
+
 ========Neutrino Settings - Recording
 set.rec.rec_dest=Aufnahmeziel
 set.rec.device=Aufnahmeger&auml;t
@@ -433,8 +426,6 @@ tools.mounts=Mounts
 tools.wake_on_lan=Wake on LAN
 tools.check_install=Installation pr&uuml;fen
 tools.expert=Expert
-tools.image_desc=Image sichern oder flashen
-tools.image=Image
 tools.command_shell=Shell
 tools.not_installed=nicht installiert
 tools.cmd_shell.output_desc=fortlaufende Ausgabe (nur IE - wg. scrollen)
@@ -458,9 +449,8 @@ live.timer=Timer
 live.epg=EPG
 live.epg_plus_popup_desc=EPG+ (popup)
 live.epg_plus=EPG Plus
-live.timer_sync=Timer Sync
 
-=========== LIVE
+=========== LIVE tv/radio
 live.get_stream_info=Streaming-Informationen<br/>werden ermittelt.
 live.getting_bouquets=Hole Bouquets ...
 live.getting_channels=Hole Sender ...
@@ -544,33 +534,9 @@ live.timer_edit.description=Beschreibung
 live.timer_edit.type=Typ
 live.timer_edit.message=Nachricht
 
-=========== LIVE Timer Sync
-live.timer-sync.get_timer=Timer holen.
-live.timer-sync.header=Timer Synchonisieren
-live.timer-sync.timer_source=Timer Quelle
-live.timer-sync.rec_dir=Aufnahmeverzeichnis
-live.timer-sync.settings=Einstellungen
-live.timer-sync.debugging=Debugging
-live.timer-sync.get_selected=Hole gew&auml;hlte
-live.timer-sync.clear_all=L&ouml;sche alle
-live.timer-sync.timer_preview=Timer Vorschauliste
-live.timer-sync.start_time=Startzeit
-live.timer-sync.end_time=Endezeit
-live.timer-sync.channel=Sender
-live.timer-sync.programm=Sendung
-live.timer-sync.source=Quelle
-live.timer-sync.set_timer=Setze Timer
-live.timer-sync.clear_log=L&ouml;sche Log
-live.timer-sync.log=Log
-live.timer-sync.action=Aktion
-live.timer-sync.status=Status
-
-=========INFO
+========== INFO
 info.help=Hilfe
 info.About=&uuml;ber
-info.check_for_updates=Auf Updates pr&uuml;fen
-info.your_version=Deine Version
-info.actual_version=Aktuelle Version
 
 =========Remote control
 rc.key_power=Standby

@@ -6,7 +6,7 @@
 
 	Copyright (C) 2011-2012 Stefan Seyfried
 
-   $Id: timermanager.cpp,v 1.86 2006/03/04 09:51:47 zwen Exp $
+	$Id: timermanager.cpp,v 1.86 2006/03/04 09:51:47 zwen Exp $
 
 	License: GPL
 

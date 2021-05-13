@@ -71,7 +71,7 @@ diseq_test_param_t diseqc_test[] = {
 	{ 235, 12168000, 27500000, FEC_3_4, 1, QPSK , DVB_S  },
 	{ 282, 11778000, 27500000, FEC_2_3, 1, QPSK , DVB_S  }, // FIXME: no such TP on lyngsat ??
 	{ 130, 11681000, 27500000, FEC_3_4, 0, PSK_8, DVB_S2 },
-	{ 90,  12074000, 27500000, FEC_3_4, 1, PSK_8, DVB_S2 },
+	{ 90,  12074000, 27500000, FEC_3_4, 1, PSK_8, DVB_S2 }
 };
 #define diseqc_test_count (sizeof(diseqc_test)/sizeof(diseq_test_param_t))
 

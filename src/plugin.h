@@ -1,4 +1,3 @@
-
 #ifndef __plugin_h__
 #define __plugin_h__
 
