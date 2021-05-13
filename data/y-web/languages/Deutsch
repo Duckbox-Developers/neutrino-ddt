@@ -237,7 +237,6 @@ set.sync_with_neutrino=Zur Synchronisation mit Neutrino
 set.menue.webserver=Webserver
 set.menue.epg=EPG
 set.menue.zapit=Zapit
-set.menue.backup_restore=Sichern und Wiederherstellen
 set.menue.bouquet_editor=Bouquet-Editor
 set.menue.parental=Jugendschutz
 set.menue.recording=Aufnahme
@@ -388,13 +387,6 @@ set.timer.klack.url=Pers&ouml;nliche RSS TV-Planer URL
 set.timer.klack.security_code_desc=Klack Sicherheits Code
 set.timer.klack.security_code=Sicherheits Code
 set.timer.channel_name_replacelist=Sendernamen-Ersetzungsliste
-
-========Settings Backup/Restore
-set.settings.backup=Sichern
-set.settings.backup_desc=Sichern Ihrer Einstellungen
-set.settings.restore=Wiederherstellen
-set.settings.restore_desc=Hochladen und wiederherstellen einer vorher erstellten Sicherung. Ihre Box startet danach neu.
-set.settings.warning=Sichern &amp; Wiederherstellen ist nur bei einem gleichen Image mit gleichem Entwicklungsstand sinnvoll.
 
 ============ Tools Info
 tools.info.show_messages=Kernel Meldungen
