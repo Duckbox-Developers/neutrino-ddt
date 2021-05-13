@@ -1,4 +1,4 @@
-version=2.9.0.42
-date=05.05.2021
+version=3.0.0
+date=13.05.2021
 type=Release
-info=Port Tuxbox-Neutrino
+info=DDT Tuxbox-Neutrino
