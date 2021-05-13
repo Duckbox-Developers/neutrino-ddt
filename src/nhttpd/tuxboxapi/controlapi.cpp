@@ -855,8 +855,6 @@ void CControlAPI::HWInfoCGI(CyhookHandler *hh)
 	   I don't know the current legal situation.
 	   So better let's change the vendor's name to CST.
 	*/
-	if (boxvendor.compare("Coolstream") == 0)
-		boxvendor = "CST";
 
 	hh->printf("%s %s (%s)\nMAC:%s\n", boxvendor.c_str(), g_info.hw_caps->boxname, g_info.hw_caps->boxarch, eth_id.c_str());
 }
