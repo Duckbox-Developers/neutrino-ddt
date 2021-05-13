@@ -67,9 +67,6 @@ function init(){
 				<li>
 					<a target="work" href="Y_Timer_List.yhtm">{=L:live.timer=}</a>
 				</li>
-				<li>
-					<a target="work" href="Y_Tools_Timer_Sync.yhtm">{=L:live.timer_sync=}</a>
-				</li>
 			</ul>
 		</div>
 	</div>
