@@ -2071,7 +2071,6 @@ const char * locale_real_names[] =
 	"nfs.remount",
 	"nfs.type",
 	"nfs.type_cifs",
-	"nfs.type_lufs",
 	"nfs.type_nfs",
 	"nfs.umount",
 	"nfs.umounterror",

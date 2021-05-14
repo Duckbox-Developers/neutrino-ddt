@@ -136,9 +136,6 @@ do_mount()
 		1)
 			cmd="mount -t cifs $ip/$dir $local_dir -o username=$username,password=$password,unc=//$ip/$dir,$options1";
 			;;
-		2)
-			cmd="lufsd none $local_dir -o fs=ftpfs,username=$username,password=$password,host=$ip,root=/$dir,$options1";
-			;;
 		default)
 			echo "mount type not supported"
 	esac

@@ -2044,12 +2044,11 @@ nfs.password Passwort
 nfs.remount Verzeichnisse erneut mounten
 nfs.type Typ
 nfs.type_cifs CIFS
-nfs.type_lufs FTPFS
 nfs.type_nfs NFS
 nfs.umount Netzwerk Verzeichnis unmounten
 nfs.umounterror Umount-Fehler
 nfs.username Benutzername
-nfsmenu.head NFS/CIFS/FTPFS Einstellungen
+nfsmenu.head NFS/CIFS Einstellungen
 nvod.percentage (%d%% vorbei)
 nvod.starting (Beginn in %d min)
 nvodselector.directormode Bildregie-Modus

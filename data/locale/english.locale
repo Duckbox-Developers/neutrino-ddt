@@ -2044,12 +2044,11 @@ nfs.password password
 nfs.remount remount directories
 nfs.type type
 nfs.type_cifs CIFS
-nfs.type_lufs FTPFS
 nfs.type_nfs NFS
 nfs.umount Umount Network volume
 nfs.umounterror error umounting volume
 nfs.username username
-nfsmenu.head NFS/CIFS/FTPFS settings
+nfsmenu.head NFS/CIFS settings
 nvod.percentage (%d%% over)
 nvod.starting (starting in %d min)
 nvodselector.directormode Director mode

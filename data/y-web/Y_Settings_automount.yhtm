@@ -145,9 +145,8 @@ function change_type()
 			<tr>
 				<td>Typ</td>
 				<td>
-					<input type="radio" name="type" value="nfs" onclick="change_type()"/>NFS&nbsp;
-					<input type="radio" name="type" value="cifs" onclick="change_type()"/>CIFS&nbsp;
-<!--					<input type="radio" name="type" value="2" onchange="change_type()"/>FTPFS-->
+					<input type="radio" name="type" value="0" onclick="change_type()"/>NFS&nbsp;
+					<input type="radio" name="type" value="1" onclick="change_type()"/>CIFS&nbsp;
 				</td>
 			</tr>
 
