@@ -547,7 +547,7 @@ void CComponentsHeader::initClock()
 	//create instance for header clock object and add to container
 	if (cch_cl_obj == NULL){
 		dprintf(DEBUG_DEBUG, "[CComponentsHeader]\n    [%s - %d] init clock...\n", __func__, __LINE__);
-		cch_cl_obj = new CComponentsFrmClock(0, cch_items_y, cch_font, cch_cl_format, NULL, false, 1, this);
+		cch_cl_obj = new CComponentsFrmClock(0, cch_items_y, cch_font, cch_cl_format - OFFSET_INNER_MID, NULL, false, 1, this);
 		cch_cl_obj->disableForceSegmentPaint();
 		cch_cl_obj->doPaintBg(false);
 	}
