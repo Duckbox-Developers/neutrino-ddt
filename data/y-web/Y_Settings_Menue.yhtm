@@ -7,7 +7,6 @@
 function init(){
 	add_yExtensions('settings_general', 'secmenu_general');
 	add_yExtensions('settings_neutrino', 'secmenu_neutrino');
-	add_yExtensions('settings_plugins', 'secmenu_plugins');
 }
 </script>
 </head>
@@ -32,11 +31,6 @@ function init(){
 				<li>
 					{=var-set:m_link_href=Y_Settings_zapit.yhtm=}
 					{=var-set:m_link_text={=L:set.menue.zapit=}=}
-					{=include-block:Y_Blocks.txt;management_link=}
-				</li>
-				<li>
-					{=var-set:m_link_href=Y_Settings_Backup.yhtm=}
-					{=var-set:m_link_text={=L:set.menue.backup_restore=}=}
 					{=include-block:Y_Blocks.txt;management_link=}
 				</li>
 			</ul>

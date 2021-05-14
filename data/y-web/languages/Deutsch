@@ -95,7 +95,7 @@ main.settings_desc=Einstellungen f&uuml;r die Box, Webserver, ...
 main.extensions=Erweiterungen
 main.extensions_desc=Installierte Erweiterungen und Verwaltung
 main.info=Info
-main.info_desc=Information &uuml;ber das yWeb, Version
+main.info_desc=Information &uuml;ber das yWeb
 
 #========= Boxcontrol Menue
 bc.menue.bouquets_desc=Sender ausw&auml;hlen
@@ -230,14 +230,13 @@ epg.si.url=Url
 ========Neutrino Settings
 set.reload_neutrino=Neutrino neuladen
 set.reboot_required=Neustart notwendig
-set.sync_with_neutrino_desc=After changing settings via yWeb: <br/>Choose on TV "Main Menu->Service->Soft restart", to accept the changes within neutrino.<br/><br/>After changing settings within Neutrino: <br/>Choose on TV "Main Menu->Settings->Save settings now", to accept these changes and reload this page.
+set.sync_with_neutrino_desc=Nach dem Ändern der Einstellungen über das yWeb: <br/>Wählen Sie im TV "Hauptmenü->Service->Neutrino neu starten", um die Änderungen in Neutrino zu übernehmen.<br/><br/>Nach dem Ändern der Einstellungen in Neutrino: <br/>Wählen Sie am TV "Hauptmenü->Einstellungen->Einstellungen jetzt speichern", um diese Änderungen zu übernehmen und diese Seite neu zu laden.
 set.sync_with_neutrino=Zur Synchronisation mit Neutrino
 
 =======Settings General & Menue
 set.menue.webserver=Webserver
 set.menue.epg=EPG
 set.menue.zapit=Zapit
-set.menue.backup_restore=Sichern und Wiederherstellen
 set.menue.bouquet_editor=Bouquet-Editor
 set.menue.parental=Jugendschutz
 set.menue.recording=Aufnahme
@@ -388,13 +387,6 @@ set.timer.klack.url=Pers&ouml;nliche RSS TV-Planer URL
 set.timer.klack.security_code_desc=Klack Sicherheits Code
 set.timer.klack.security_code=Sicherheits Code
 set.timer.channel_name_replacelist=Sendernamen-Ersetzungsliste
-
-========Settings Backup/Restore
-set.settings.backup=Sichern
-set.settings.backup_desc=Sichern Ihrer Einstellungen
-set.settings.restore=Wiederherstellen
-set.settings.restore_desc=Hochladen und wiederherstellen einer vorher erstellten Sicherung. Ihre Box startet danach neu.
-set.settings.warning=Sichern &amp; Wiederherstellen ist nur bei einem gleichen Image mit gleichem Entwicklungsstand sinnvoll.
 
 ============ Tools Info
 tools.info.show_messages=Kernel Meldungen
