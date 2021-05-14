@@ -76,7 +76,7 @@ bool in_proc_filesystems(const char * const fsname)
 	std::ifstream in("/proc/filesystems", std::ifstream::in);
 
 	t = fsname;
-	
+
 	while (in >> s)
 	{
 		if (s == t)
@@ -101,8 +101,7 @@ bool insert_modules(const CFSMounter::FSType fstype)
 	}
 	else if (fstype == CFSMounter::CIFS)
 		return (system("insmod cifs") == 0);
-	else if (fstype == CFSMounter::LUFS)
-		return (system("insmod lufs") == 0);
+
 	return false;
 }
 
@@ -116,8 +115,7 @@ bool remove_modules(const CFSMounter::FSType fstype)
 	}
 	else if (fstype == CFSMounter::CIFS)
 		return (system("rmmod cifs") == 0);
-	else if (fstype == CFSMounter::LUFS)
-		return (system("rmmod lufs") == 0);
+
 	return false;
 }
 
@@ -129,8 +127,6 @@ CFSMounter::FS_Support CFSMounter::fsSupported(const CFSMounter::FSType fstype, 
 		fsname = "nfs";
 	else if (fstype == CFSMounter::CIFS)
 		fsname = "cifs";
-	else if (fstype == CFSMounter::LUFS)
-		fsname = "lufs";
 
 	if (in_proc_filesystems(fsname))
 		return CFSMounter::FS_READY;
@@ -161,7 +157,7 @@ bool CFSMounter::isMounted(const std::string &local_dir)
 	std::ifstream in;
 	if (local_dir.empty())
 		return false;
-	
+
 #ifdef PATH_MAX
 	char mount_point[PATH_MAX];
 #else
@@ -177,7 +173,7 @@ bool CFSMounter::isMounted(const std::string &local_dir)
 		MountInfo mi;
 		in >> mi.device >> mi.mountPoint >> mi.type;
 		if (strcmp(mi.mountPoint.c_str(),mount_point) == 0)
-		{   
+		{
 			return true;
 		}
 		in.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -206,7 +202,7 @@ CFSMounter::MountRes CFSMounter::mount(const std::string &ip, const std::string 
 
 	CFileHelpers fh;
 	fh.createDir(local_dir.c_str(), 0755);
-	
+
 	if (isMounted(local_dir))
 	{
 		printf("[CFSMounter] FS mount error %s already mounted\n", local_dir.c_str());
@@ -218,7 +214,7 @@ CFSMounter::MountRes CFSMounter::mount(const std::string &ip, const std::string 
 		options1 = options2;
 		options2 = "";
 	}
-	
+
 	if(options1.empty() && options2.empty())
 	{
 		if(fstype == NFS)
@@ -231,13 +227,8 @@ CFSMounter::MountRes CFSMounter::mount(const std::string &ip, const std::string 
 			options1 = "ro";
 			options2 = "";
 		}
-		else if(fstype == LUFS)
-		{
-			options1 = "";
-			options2 = "";
-		}
 	}
-	
+
 	if(fstype == NFS)
 	{
 		cmd = "mount -t nfs ";
@@ -268,30 +259,15 @@ CFSMounter::MountRes CFSMounter::mount(const std::string &ip, const std::string 
 		//cmd += ',';
 		//cmd += options1;
 	}
-	else
-	{
-		cmd = "lufsd none ";
-		cmd += local_dir;
-		cmd += " -o fs=ftpfs,username=";
-		cmd += username;
-		cmd += ",password=";
-		cmd += password;
-		cmd += ",host=";
-		cmd += ip;
-		cmd += ",root=/";
-		cmd += dir;
-		cmd += ',';
-		cmd += options1;
-	}
-	
+
 	if (options2[0] !='\0')
 	{
 		cmd += ',';
 		cmd += options2;
 	}
-	
+
 	pthread_create(&g_mnt, 0, mount_thread, (void *) cmd.c_str());
-	
+
 	struct timespec timeout;
 	int retcode;
 
@@ -299,7 +275,7 @@ CFSMounter::MountRes CFSMounter::mount(const std::string &ip, const std::string 
 	timeout.tv_sec = time(NULL) + 5;
 	timeout.tv_nsec = 0;
 	retcode = pthread_cond_timedwait(&g_cond, &g_mut, &timeout);
-	if (retcode == ETIMEDOUT) 
+	if (retcode == ETIMEDOUT)
 	{  // timeout occurred
 		pthread_cancel(g_mnt);
 	}
@@ -316,7 +292,7 @@ CFSMounter::MountRes CFSMounter::mount(const std::string &ip, const std::string 
 
 bool CFSMounter::automount()
 {
-	bool res = true; 
+	bool res = true;
 	for(int i = 0; i < NETWORK_NFS_NR_OF_ENTRIES; i++)
 	{
 		if(g_settings.network_nfs[i].automount)
@@ -374,8 +350,7 @@ void CFSMounter::getMountedFS(MountInfos& info)
 		in >> mi.device >> mi.mountPoint >> mi.type;
 		in.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		if (mi.type == "nfs" ||
-		    mi.type == "cifs" ||
-		    mi.type == "lufs")
+		    mi.type == "cifs")
 		{
 			info.push_back(mi);
 			printf("[CFSMounter] mounted fs: dev: %s, mp: %s, type: %s\n",

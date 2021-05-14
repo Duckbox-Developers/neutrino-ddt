@@ -95,7 +95,7 @@ THandleStatus CNeutrinoYParser::Hook_ReadConfig(CConfigFile *Config, CStringList
 		Config->setInt32("configfile.version", CONF_VERSION);
 		Config->saveConfig(HTTPD_CONFIGFILE);
 	}
-	//std::string logo = 
+	//std::string logo =
 	ConfigList["TUXBOX_LOGOS_URL"];
 	return HANDLED_CONTINUE;
 }
@@ -168,7 +168,7 @@ std::string  CNeutrinoYParser::func_mount_get_list(CyhookHandler *, std::string)
 		ynr=itoa(i);
 		ysel = ((i==0) ? "checked=\"checked\"" : "");
 		yitype = Config->getInt32("network_nfs_type_"+ynr,0);
-		ytype = ( (yitype==0) ? "NFS" :((yitype==1) ? "CIFS" : "FTPFS") );
+		ytype = ( (yitype==0) ? "NFS" : "CIFS" );
 		yip = Config->getString("network_nfs_ip_"+ynr,"");
 		ydir = Config->getString("network_nfs_dir_"+ynr,"");
 		ylocal_dir = Config->getString("network_nfs_local_dir_"+ynr,"");
@@ -801,7 +801,7 @@ std::string  CNeutrinoYParser::func_unmount_get_list(CyhookHandler *, std::strin
 		in >> ymount >> ylocal_dir >> yfstype;
 		in.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		yfstype = trim(yfstype);
-		if( (yfstype == "nfs") || (yfstype == "ftp") || (yfstype == "lufsd") )
+		if( (yfstype == "nfs") || (yfstype == "ftp") )
 		{
 			mounts=ylocal_dir +" on "+ ymount + " ("+yfstype+")";
 			ysel = ((j==0) ? "checked=\"checked\"" : "");

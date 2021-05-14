@@ -55,8 +55,7 @@ class CFSMounter
 	enum FSType
 	{
 		NFS  = 0,
-		CIFS = 1,
-		LUFS = 2
+		CIFS = 1
 	};
 	
 	enum MountRes
@@ -87,7 +86,6 @@ class CFSMounter
 /*
 	FS_Support m_nfs_sup;
 	FS_Support m_cifs_sup;
-	FS_Support m_lufs_sup;
 */
  public:
 	CFSMounter();
