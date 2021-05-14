@@ -95,7 +95,7 @@ main.settings_desc=Einstellungen f&uuml;r die Box, Webserver, ...
 main.extensions=Erweiterungen
 main.extensions_desc=Installierte Erweiterungen und Verwaltung
 main.info=Info
-main.info_desc=Information &uuml;ber das yWeb, Version
+main.info_desc=Information &uuml;ber das yWeb
 
 #========= Boxcontrol Menue
 bc.menue.bouquets_desc=Sender ausw&auml;hlen

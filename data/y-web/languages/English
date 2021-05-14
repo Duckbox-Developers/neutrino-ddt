@@ -95,7 +95,7 @@ main.settings_desc=Settings for Box, Web...
 main.extensions=Extensions
 main.extensions_desc=User Extensions ...
 main.info=Info
-main.info_desc=Information about yWeb, Updates
+main.info_desc=Information about yWeb
 
 #========= Boxcontrol Menue
 bc.menue.bouquets_desc=Switch channels
@@ -237,7 +237,6 @@ set.sync_with_neutrino=Synchronization with Neutrino
 set.menue.webserver=Webserver
 set.menue.epg=EPG
 set.menue.zapit=Zapit
-set.menue.backup_restore=Backup &amp; Restore
 set.menue.bouquet_editor=Bouquet-Editor
 set.menue.parental=Parental
 set.menue.recording=Recording
@@ -388,13 +387,6 @@ set.timer.klack.url=Personal RSS TV-Planer URL
 set.timer.klack.security_code_desc=your klack security code to get your data without login
 set.timer.klack.security_code=Security Code
 set.timer.channel_name_replacelist=Channel name replace list
-
-========Settings Backup/Restore
-set.settings.backup=Backup
-set.settings.backup_desc=Backup your settings
-set.settings.restore=Restore
-set.settings.restore_desc=Upload and restore your settings. Your STB will reboot.
-set.settings.warning=Backup & Restore is only useful for the same image with the same level of development. 
 
 ============ Tools Info
 tools.info.show_messages=Kernel Messages
