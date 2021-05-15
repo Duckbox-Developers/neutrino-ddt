@@ -161,53 +161,6 @@ do_unmount()
 	umount $1
 }
 # -----------------------------------------------------------
-# AutoMount
-# deactivate mount "#" replaces "---" and "=" replaced ",,"
-# -----------------------------------------------------------
-do_automount_list()
-{
-	i="1"
-	sel="checked='checked'"
-	cat $1|sed /#/d|sed -n /-fstype/p|\
-	while read mountname options share
-	do
-		mountvalue=`echo "$mountname"|sed -e "s/#/---/g"`
-		echo "<input type='radio' name='R1' value='$mountvalue' $sel/>$i: $mountname ($share)<br/>"
-		sel=""
-		i=`expr $i + 1`
-	done
-}
-# -----------------------------------------------------------
-do_automount_getline()
-{
-	mountname=`echo "$2"|sed -e "s/---/#/g"`
-	cat $1|sed -n "/^[#]*$mountname[^a-zA-Z0-9]/p"
-}
-# -----------------------------------------------------------
-# $1:filename, $2:mountname, $3-*:mountstring
-# -----------------------------------------------------------
-do_automount_setline()
-{
-	if ! [ -e $1 ]; then
-		cp /etc/auto.net $1
-	fi
-	filename=$1
-	mountname=`echo "$2"|sed -e "s;---;;g"`
-	shift 2
-	mountset=`echo "$*"|sed -e "s;---;#;g" -e "s;,,;=;g"`
-	cp $filename "$filename.old"
-	chmod ou+rwss $filename
-	ex=`cat $filename|sed -n "/^$mountname[^a-zA-Z0-9].*$/p"`
-	if [ "$ex" = "" ]; then
-		echo "$mountset" >>$filename
-	else
-		tmp=`cat "$filename"|sed -e "s;^$mountname[^a-zA-Z0-9].*$;$mountset;g"`
-	echo "$tmp" >$filename
-	fi
-
-	kill -HUP `cat /var/run/automount.pid`
-}
-# -----------------------------------------------------------
 # Execute shell command
 # 1: directory 2: append [true|false] 3+: cmd
 # -----------------------------------------------------------
@@ -422,9 +375,6 @@ case "$1" in
 	fbshot_clear)			do_fbshot_clear ;;
 	screenshot_clear)		do_screenshot_clear ;;
 	exec_cmd)				shift 1; $* ;;
-	automount_list)			shift 1; do_automount_list $* ;;
-	automount_getline)		shift 1; do_automount_getline $* ;;
-	automount_setline)		shift 1; do_automount_setline $* ;;
 	restart_neutrino)		restart_neutrino ;;
 	have_plugin_scripts)	 find %(PLUGINDIR) -name '*.sh' ;;
 

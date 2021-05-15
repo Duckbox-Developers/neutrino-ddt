@@ -52,11 +52,8 @@ case "$1" in
 			do_cmd 'Commands in /bin' ls /bin
 			do_cmd 'Commands in /sbin' ls /sbin
 			do_cmd 'mounts' cat /etc/fstab
-			if [ -e /etc/smb.conf ]; then
-				do_cmd 'Samba Server configuration' cat /etc/smb.conf
-			fi
-			if [ -e /etc/auto.net ]; then
-				do_cmd 'auto mounter configuration' cat /etc/auto.net
+			if [ -e /etc/samba/smb.conf ]; then
+				do_cmd 'Samba Server configuration' cat /etc/samba/smb.conf
 			fi
 		fi
 		;;

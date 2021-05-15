@@ -411,8 +411,6 @@ tools.yinstaller.tar_file=tar-Datei
 tools.yinstaller.upload_install=hochladen und installieren
 
 ============ Tools
-tools.automount_desc=Automounts organisieren
-tools.automount=AutoMounts
 tools.mounts_desc=File mounts organisieren
 tools.mounts=Mounts
 tools.wake_on_lan=Wake on LAN
