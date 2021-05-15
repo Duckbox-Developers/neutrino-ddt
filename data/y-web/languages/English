@@ -26,7 +26,6 @@ save_all=save all
 administration=Administration
 normal=Normal
 management=Management
-uninstaller=Uninstaller
 send=send
 cancel=cancel
 apply=apply changes
@@ -92,8 +91,6 @@ main.tools=Tools
 main.tools_desc=Mounts, WOL, Expert Tools
 main.settings=Settings
 main.settings_desc=Settings for Box, Web...
-main.extensions=Extensions
-main.extensions_desc=User Extensions ...
 main.info=Info
 main.info_desc=Information about yWeb
 
@@ -155,30 +152,6 @@ bc.screenshot.reload_desc=Reload interval in seconds
 
 ========= Boxcontrol - Others
 bc.channels=Channels
-
-====== EXtension
-ext.installer_updater=Installer/Updater
-ext.uninstaller=Extensions Uninstaller
-ext.search_for_ext=Search for Extensions ...
-ext.installed_extensions=installed extensions
-ext.type=Type
-ext.extension=Extension
-ext.tag=Tag
-ext.version=Version
-ext.size=Size/k
-ext.uninstall=Uninstall
-ext.info=Info
-ext.free=Free
-ext.action=Action
-ext.status=Status
-ext.preview=New extension settings (preview)
-ext.update_preview=Update Preview List
-ext.your=Your
-ext.update=Update
-ext.update_install=update/install
-ext.site=Site
-ext.refresh_now=Settings saved. Refreshing Menue now.
-ext.ext_saved=Extensions Settings saved
 
 ====== Bouquet
 bou.bouquet=Bouquet
