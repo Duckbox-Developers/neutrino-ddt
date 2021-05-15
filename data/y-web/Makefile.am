@@ -63,7 +63,6 @@ install_DATA =	channels.js \
 		Y_Tools_Cmd.yhtm \
 		Y_Tools_Glcd_Screenshot.yhtm \
 		Y_Tools_Info_Menue.yhtm \
-		Y_Tools_Installer.yhtm \
 		Y_Tools_m3uConvert.yhtm \
 		Y_Tools_Menue.yhtm \
 		Y_Tools_Rcsim.yhtm \
