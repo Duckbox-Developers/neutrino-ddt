@@ -71,12 +71,6 @@ function init(){
 				<li>
 					<a target="work" href="Y_Tools_Check_Install.yhtm">{=L:tools.check_install=}</a>
 				</li>
-				<li>
-					{=var-set:m_link_href=Y_Tools_Installer.yhtm=}
-					{=var-set:m_link_desc==}
-					{=var-set:m_link_text=yInstaller=}
-					{=include-block:Y_Blocks.txt;management_link=}
-				</li>
 			</ul>
 		</div>
 	</div>
