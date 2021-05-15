@@ -57,3 +57,9 @@ install_DATA = \
 	hint_vfd.png \
 	hint_video.png \
 	hint_ytplay.png
+
+if ENABLE_PIP
+install_DATA += \
+	hint_avinputmode.png \
+	hint_avinputmode_pip.png
+endif
