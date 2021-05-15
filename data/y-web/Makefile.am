@@ -4,7 +4,6 @@ installdir = $(PRIVATE_HTTPDDIR)
 
 install_DATA =	channels.js \
 		channels.txt \
-		extentions.txt \
 		favicon.ico \
 		index.html \
 		prototype.js \
@@ -25,9 +24,6 @@ install_DATA =	channels.js \
 		Y_Dyn_Pages.yhtm \
 		Y_EPG.js \
 		Y_EPG_Plus.yhtm \
-		Y_Ext_Menue.yhtm \
-		Y_Ext_Settings.yhtm \
-		Y_Ext_Uninstall.yhtm \
 		Y_Info_Help.yhtm \
 		Y_Info_Menue.yhtm \
 		Y_Live_DoubleView.yhtm \
