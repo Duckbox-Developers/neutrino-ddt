@@ -136,9 +136,6 @@ do_mount()
 		1)
 			cmd="mount -t cifs $ip/$dir $local_dir -o username=$username,password=$password,unc=//$ip/$dir,$options1";
 			;;
-		2)
-			cmd="lufsd none $local_dir -o fs=ftpfs,username=$username,password=$password,host=$ip,root=/$dir,$options1";
-			;;
 		default)
 			echo "mount type not supported"
 	esac
@@ -162,53 +159,6 @@ do_mount()
 do_unmount()
 {
 	umount $1
-}
-# -----------------------------------------------------------
-# AutoMount
-# deactivate mount "#" replaces "---" and "=" replaced ",,"
-# -----------------------------------------------------------
-do_automount_list()
-{
-	i="1"
-	sel="checked='checked'"
-	cat $1|sed /#/d|sed -n /-fstype/p|\
-	while read mountname options share
-	do
-		mountvalue=`echo "$mountname"|sed -e "s/#/---/g"`
-		echo "<input type='radio' name='R1' value='$mountvalue' $sel/>$i: $mountname ($share)<br/>"
-		sel=""
-		i=`expr $i + 1`
-	done
-}
-# -----------------------------------------------------------
-do_automount_getline()
-{
-	mountname=`echo "$2"|sed -e "s/---/#/g"`
-	cat $1|sed -n "/^[#]*$mountname[^a-zA-Z0-9]/p"
-}
-# -----------------------------------------------------------
-# $1:filename, $2:mountname, $3-*:mountstring
-# -----------------------------------------------------------
-do_automount_setline()
-{
-	if ! [ -e $1 ]; then
-		cp /etc/auto.net $1
-	fi
-	filename=$1
-	mountname=`echo "$2"|sed -e "s;---;;g"`
-	shift 2
-	mountset=`echo "$*"|sed -e "s;---;#;g" -e "s;,,;=;g"`
-	cp $filename "$filename.old"
-	chmod ou+rwss $filename
-	ex=`cat $filename|sed -n "/^$mountname[^a-zA-Z0-9].*$/p"`
-	if [ "$ex" = "" ]; then
-		echo "$mountset" >>$filename
-	else
-		tmp=`cat "$filename"|sed -e "s;^$mountname[^a-zA-Z0-9].*$;$mountset;g"`
-	echo "$tmp" >$filename
-	fi
-
-	kill -HUP `cat /var/run/automount.pid`
 }
 # -----------------------------------------------------------
 # Execute shell command
@@ -243,93 +193,6 @@ do_cmd()
 	echo 'parent.setCaretToEnd(parent.document.co.cmds);'
 	echo 'parent.document.f.cmd.focus();'
 	echo '</script></body></html>'
-}
-# -----------------------------------------------------------
-# yInstaller
-# un-tar uploaded file to /tmp. Execute included install.sh
-# -----------------------------------------------------------
-do_installer()
-{
-	# clean up
-	if [ -s "$y_out_html" ]
-	then
-		rm $y_out_html
-	fi
-
-	if [ -s "$y_upload_file" ]
-	then
-		# unpack /tmp/upload.tmp
-		cd $y_path_tmp
-		tar -xf "$y_upload_file"
-		rm $y_upload_file
-		if [ -s "$y_install" ] #look for install.sh
-		then
-			chmod 755 $y_install
-			o=`$y_install` # execute
-			rm -f $y_install # clean up
-			if [ -s "$y_out_html" ] #html - output?
-			then
-				echo '<html><head>'
-				echo '<link rel="stylesheet" type="text/css" href="/Y_Main.css">'
-				echo '<link rel="stylesheet" type="text/css" href="/Y_Dist.css">'
-				echo '<link rel="stylesheet" type="text/css" href="/Y_User.css">'
-				echo "<meta http-equiv='refresh' content='0; $y_out_html'>"
-				echo '</head>'
-				echo "<body><a href='$y_out_html'>If automatic forwarding does not go.</a>"
-				echo '</body></html>'
-#				cat $y_out_html
-			else
-				echo '<html><head>'
-				echo '<link rel="stylesheet" type="text/css" href="/Y_Main.css">'
-				echo '<link rel="stylesheet" type="text/css" href="/Y_Dist.css">'
-				echo '<link rel="stylesheet" type="text/css" href="/Y_User.css">'
-				echo '</head>'
-				echo '<body>'
-				echo "$o"
-				echo '</body></html>'
-			fi
-		else
-			msg="$y_install not found"
-			y_format_message_html
-		fi
-	else
-		msg="Upload-Problem.<br>Try again, please."
-		y_format_message_html
-	fi
-}
-
-# -----------------------------------------------------------
-# extention Installer $1=URL
-# -----------------------------------------------------------
-do_ext_installer()
-{
-	if [ -e $y_upload_file ]; then
-		rm $y_upload_file
-	fi
-	wgetlog=`wget -O $y_upload_file $1 2>&1`
-	if [ -s "$y_upload_file" ];then
-		cd $y_path_tmp
-		tar -xf "$y_upload_file"
-		rm $y_upload_file
-		if [ -s "$y_install" ] #look for install.sh
-		then
-			chmod 755 $y_install
-			o=`$y_install` # execute
-			rm -f $y_install # clean up
-			echo "ok: wget=$wgetlog"
-		fi
-	else
-		e=`cat /tmp/err.log`
-		echo "error: $y_install not found. wget=$wgetlog $e"
-	fi
-}
-do_ext_uninstaller()
-{
-	uinst="%(CONFIGDIR)/ext/uninstall.sh"
-	if [ -e "$uinst"  ]; then
-		chmod 755 "$uinst"
-		`$uinst $1_uninstall.inc`
-	fi
 }
 # -----------------------------------------------------------
 # view /proc/$1 Informations
@@ -417,17 +280,12 @@ case "$1" in
 	dounmount)				shift 1; do_unmount $* ;;
 	cmd)					shift 1; do_cmd $* ;;
 	installer)				shift 1; do_installer $* 2>&1 ;;
-	ext_uninstaller)		shift 1; do_ext_uninstaller $* 2>&1 ;;
-	ext_installer)			shift 1; do_ext_installer $* 2>&1 ;;
 	proc)					shift 1; proc $* ;;
 	wol)					shift 1; wol $* ;;
 	fbshot)					shift 1; do_fbshot $* ;;
 	fbshot_clear)			do_fbshot_clear ;;
 	screenshot_clear)		do_screenshot_clear ;;
 	exec_cmd)				shift 1; $* ;;
-	automount_list)			shift 1; do_automount_list $* ;;
-	automount_getline)		shift 1; do_automount_getline $* ;;
-	automount_setline)		shift 1; do_automount_setline $* ;;
 	restart_neutrino)		restart_neutrino ;;
 	have_plugin_scripts)	 find %(PLUGINDIR) -name '*.sh' ;;
 
@@ -442,48 +300,11 @@ case "$1" in
 		echo "$res"
 		;;
 
-	timer_get_klack)
-		config_open $y_config_Y_Web
-		url=`config_get_value "klack_url"`
-		klack_url=`echo "$url"|sed -e 's/;/\&/g'`
-		securitycode=`config_get_value "klack_securitycode"`
-		klack_url=`echo "$klack_url&secCode=$securitycode"`
-		wget -O /tmp/klack.xml "$klack_url" 2>&1 ;;
-
 	restart_sectionsd)
 		killall sectionsd
 		sectionsd >/dev/null 2>&1
 		msg="sectionsd reboot. ok."
 		y_format_message_html
-		;;
-
-	get_synctimer_channels)
-		if [ -e "$y_path_config/channels.txt" ]
-		then
-			cat $y_path_config/channels.txt
-		else
-			cat $y_path_httpd/channels.txt
-		fi
-		;;
-
-	get_extension_list)
-		if [ -e "$y_path_config/extentions.txt" ]
-		then
-			cat $y_path_config/extentions.txt
-		else
-			cat $y_path_httpd/extentions.txt
-		fi
-		;;
-
-	write_extension_list)
-		shift 1
-		echo  "$*" >$y_path_config/extentions.txt
-		;;
-
-	url_get)
-		shift 1
-		res=`wget -O /tmp/$2 "$1" >/tmp/url.log 2>&1`
-		cat /tmp/$2
 		;;
 
 	mtd_space|var_space)

@@ -163,12 +163,12 @@ void CNeutrinoApp::InitMenuMain()
 	//avinput mode
 	if ((g_info.hw_caps->has_SCART_input) || (g_info.hw_caps->has_HDMI_input)) {
 		CMenuForwarder *avinputmode = new CMenuForwarder(LOCALE_MAINMENU_AVINPUTMODE, true, NULL, this, "avinput", g_settings.personalize[SNeutrinoSettings::P_MAIN_TV_RADIO_MODE] != 0 ? CRCInput::RC_green : CRCInput::RC_nokey);
-		//avinputmode->setHint(NEUTRINO_ICON_HINT_AVINPUTMODE, LOCALE_MAINMENU_HINT_AVINPUTMODE);
+		avinputmode->setHint(NEUTRINO_ICON_HINT_AVINPUTMODE, LOCALE_MENU_HINT_AVINPUTMODE);
 		personalize.addItem(MENU_MAIN, avinputmode, &g_settings.personalize[SNeutrinoSettings::P_MAIN_AVINPUT]);
 
 #ifdef ENABLE_PIP
 		CMenuForwarder *avinputmode_pip = new CMenuForwarder(LOCALE_MAINMENU_AVINPUTMODE_PIP, true, NULL, this, "avinput_pip", false /*CRCInput::RC_nokey*/);
-		//avinputmode_pip->setHint(NEUTRINO_ICON_HINT_AVINPUTMODE_PIP, LOCALE_MAINMENU_HINT_AVINPUTMODE_PIP);
+		avinputmode_pip->setHint(NEUTRINO_ICON_HINT_AVINPUTMODE_PIP, LOCALE_MENU_HINT_AVINPUTMODE_PIP);
 		personalize.addItem(MENU_MAIN, avinputmode_pip, &g_settings.personalize[SNeutrinoSettings::P_MAIN_AVINPUT_PIP]);
 #endif
 	}

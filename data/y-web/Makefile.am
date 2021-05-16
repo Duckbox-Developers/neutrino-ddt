@@ -4,7 +4,6 @@ installdir = $(PRIVATE_HTTPDDIR)
 
 install_DATA =	channels.js \
 		channels.txt \
-		extentions.txt \
 		favicon.ico \
 		index.html \
 		prototype.js \
@@ -25,9 +24,6 @@ install_DATA =	channels.js \
 		Y_Dyn_Pages.yhtm \
 		Y_EPG.js \
 		Y_EPG_Plus.yhtm \
-		Y_Ext_Menue.yhtm \
-		Y_Ext_Settings.yhtm \
-		Y_Ext_Uninstall.yhtm \
 		Y_Info_Help.yhtm \
 		Y_Info_Menue.yhtm \
 		Y_Live_DoubleView.yhtm \
@@ -44,8 +40,6 @@ install_DATA =	channels.js \
 		Y_Menue.yhtm \
 		Y_neutrino_Blocks.txt \
 		Y_Refresh.yhtm \
-		Y_Settings_automount_liste.yhtm \
-		Y_Settings_automount.yhtm \
 		Y_Settings_buttons.yhtm \
 		Y_Settings_Live.yhtm \
 		Y_Settings_Menue.yhtm \
@@ -65,7 +59,6 @@ install_DATA =	channels.js \
 		Y_Tools_Cmd.yhtm \
 		Y_Tools_Glcd_Screenshot.yhtm \
 		Y_Tools_Info_Menue.yhtm \
-		Y_Tools_Installer.yhtm \
 		Y_Tools_m3uConvert.yhtm \
 		Y_Tools_Menue.yhtm \
 		Y_Tools_Rcsim.yhtm \
