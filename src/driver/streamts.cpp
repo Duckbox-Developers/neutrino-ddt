@@ -795,7 +795,7 @@ void CStreamStream::Close()
 		av_free(avio_ctx);
 
 	if (bsfc){
-#if (LIBAVCODEC_VERSION_INT < AV_VERSION_INT( 57,48,100 ))
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT( 57,48,100 )
 		av_bitstream_filter_close(bsfc);
 #else
 		av_bsf_free(&bsfc);
@@ -902,7 +902,7 @@ bool CStreamStream::Open()
 	av_dict_copy(&ofcx->metadata, ifcx->metadata, 0);
 	int stid = 0x200;
 	for (unsigned i = 0; i < ifcx->nb_streams; i++) {
-#if (LIBAVFORMAT_VERSION_INT < AV_VERSION_INT( 57,25,101 ))
+#if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT( 57,25,101 )
 		AVCodecContext * iccx = ifcx->streams[i]->codec;
 		AVStream *ost = avformat_new_stream(ofcx, iccx->codec);
 		avcodec_copy_context(ost->codec, iccx);
@@ -922,7 +922,7 @@ bool CStreamStream::Open()
 	av_dump_format(ofcx, 0, ofcx->url, 1);
 #endif
 	av_log_set_level(AV_LOG_WARNING);
-#if (LIBAVCODEC_VERSION_INT < AV_VERSION_INT( 57,48,100 ))
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT( 57,48,100 )
 	bsfc = av_bitstream_filter_init("h264_mp4toannexb");
 	if (!bsfc)
 		printf("%s: av_bitstream_filter_init h264_mp4toannexb failed!\n", __FUNCTION__);
@@ -981,14 +981,14 @@ void CStreamStream::run()
 		if (pkt.stream_index < 0)
 			continue;
 
-#if (LIBAVFORMAT_VERSION_INT < AV_VERSION_INT( 57,25,101 ))
+#if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT( 57,25,101 )
 		AVCodecContext *codec = ifcx->streams[pkt.stream_index]->codec;
 #else
 		AVCodecParameters *codec = ifcx->streams[pkt.stream_index]->codecpar;
 #endif
 		if (bsfc && codec->codec_id == AV_CODEC_ID_H264 ) {
 			AVPacket newpkt = pkt;
-#if (LIBAVCODEC_VERSION_INT < AV_VERSION_INT( 57,48,100 ))
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT( 57,48,100 )
 			if (av_bitstream_filter_filter(bsfc, codec, NULL, &newpkt.data, &newpkt.size, pkt.data, pkt.size, pkt.flags & AV_PKT_FLAG_KEY) >= 0) {
 #if (LIBAVFORMAT_VERSION_MAJOR == 57 && LIBAVFORMAT_VERSION_MINOR == 25)
  				av_packet_unref(&pkt);
