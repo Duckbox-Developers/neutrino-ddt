@@ -34,6 +34,7 @@
 #include <config.h>
 #endif
 #include <sstream>
+#include <limits>
 
 #include <gui/channellist.h>
 
