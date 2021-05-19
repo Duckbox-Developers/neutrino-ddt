@@ -1276,6 +1276,7 @@ menu.hint_lcd4l_logodir Logo directory.\nFallback to default on invalid entry.
 menu.hint_lcd4l_skin Switch between modes
 menu.hint_lcd4l_skin_radio Switch the mode, when Radio-Mode is activated
 menu.hint_lcd4l_support Activate/deactivate LCD4Linux\nSupported displays: Pearl DPF, Samsung DPF, VUPLUS4K, PNG
+menu.hint_lcd4l_dpf_type Choose type of external display
 menu.hint_load Load GUI settings from file
 menu.hint_longkeypress_duration A key press will be considered as "long key press" if it's pressed longer than the specified time.
 menu.hint_lua Run Lua Plugins

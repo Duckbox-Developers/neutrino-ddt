@@ -1276,6 +1276,7 @@ menu.hint_lcd4l_logodir Verzeichnis für Senderlogos\nBei ungültigem Eintrag Fa
 menu.hint_lcd4l_skin Auswahl der verfügbaren Darstellungsarten
 menu.hint_lcd4l_skin_radio Wechselt die Darstellungsart, wenn der Radio-Modus aktiviert wird
 menu.hint_lcd4l_support LCD4Linux aktivieren/deaktivieren\nUnterstützte Displays: Pearl DPF, Samsung DPF, VUPLUS4K, PNG
+menu.hint_lcd4l_dpf_type Wählen Sie den Typ des externen Displays
 menu.hint_load Laden der Einstellungen aus einer Datei
 menu.hint_longkeypress_duration Tasten, die länger als die angegebene Zeit betätigt werden, werden als "langer Tastendruck" behandelt.
 menu.hint_lua Plugins ausführen
