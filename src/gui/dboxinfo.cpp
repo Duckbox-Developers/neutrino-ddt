@@ -407,7 +407,7 @@ void CDBoxInfoWidget::paint()
 	width = std::max(width, g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getRenderWidth(title, true) + 50);
 
 	if (!header)
-		header = new CComponentsHeader(x, ypos, width, hheight, title, NEUTRINO_ICON_SHELL);
+		header = new CComponentsHeader(x, ypos, width, hheight, title, NEUTRINO_ICON_BOXINFO);
 	if (!header->isPainted())
 		header->paint(CC_SAVE_SCREEN_NO);
 
