@@ -420,8 +420,8 @@ start-block~remote
 {=var-set:yfbtype={=ini-get:%(CONFIGDIR)/Y-Web.conf;fb;0=}=}
 {=var-set:boxtype={=func:get_boxtype=}=}
 {=if-equal:{=var-get:yfbtype=}~0~
-		{=if-equal:{=var-get:boxtype=}~DUCKBOX UFS913~		{=include-block:Y_Blocks.txt;rc_ufs913=}~
-		{=if-equal:{=var-get:boxtype=}~DUCKBOX UFS910~		{=include-block:Y_Blocks.txt;rc_ufs910=}~
+		{=if-equal:{=var-get:boxtype=}~KATHREIN UFS913~		{=include-block:Y_Blocks.txt;rc_ufs913=}~
+		{=if-equal:{=var-get:boxtype=}~KATHREIN UFS910~		{=include-block:Y_Blocks.txt;rc_ufs910=}~
 		{=if-equal:{=var-get:boxtype=}~SPARK 7111~		{=include-block:Y_Blocks.txt;rc_spark_old=}~
 		{=if-equal:{=var-get:boxtype=}~SPARK 7162~		{=include-block:Y_Blocks.txt;rc_spark_new=}~
 		{=if-equal:{=var-get:boxtype=}~AX-Technologies HD51~	{=include-block:Y_Blocks.txt;rc_ax_hd51=}~
