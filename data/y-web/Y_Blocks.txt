@@ -429,17 +429,17 @@ start-block~remote
 		{=if-equal:{=var-get:boxtype=}~VU+ SOLO4K~		{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 		{=if-equal:{=var-get:boxtype=}~VU+ DUO4K~		{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 		{=if-equal:{=var-get:boxtype=}~VU+ DUO4KSE~		{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
-		{=if-equal:{=var-get:boxtype=}~VU+ ULTIMO4K~	{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
+		{=if-equal:{=var-get:boxtype=}~VU+ ULTIMO4K~		{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 		{=if-equal:{=var-get:boxtype=}~VU+ DUO~			{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 		{=if-equal:{=var-get:boxtype=}~VU+ ZERO4K~		{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 		{=if-equal:{=var-get:boxtype=}~VU+ UNO4KSE~		{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 		{=if-equal:{=var-get:boxtype=}~VU+ UNO4K~		{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
-		{=if-equal:{=var-get:boxtype=}~WWIO BRE2ZE4K~	{=include-block:Y_Blocks.txt;rc_wwio_bre2ze4k=}~
+		{=if-equal:{=var-get:boxtype=}~WWIO BRE2ZE4K~		{=include-block:Y_Blocks.txt;rc_wwio_bre2ze4k=}~
 		{=if-equal:{=var-get:boxtype=}~AirDigital Zgemma H7~	{=include-block:Y_Blocks.txt;rc_zgemma_h7=}~
 
-		{=comment:fallback~=}				{=include-block:Y_Blocks.txt;rc_ufs910=}
+		{=comment:fallback~=}					{=include-block:Y_Blocks.txt;rc_ufs910=}
 		=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
-~
+	~
 	{=if-equal:{=var-get:yfbtype=}~1~	{=include-block:Y_Blocks.txt;rc_ax_hd51=}~
 	{=if-equal:{=var-get:yfbtype=}~2~	{=include-block:Y_Blocks.txt;rc_mutant_hd51=}~
 	{=if-equal:{=var-get:yfbtype=}~3~	{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
