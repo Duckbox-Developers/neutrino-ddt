@@ -730,16 +730,7 @@ struct SNeutrinoSettings
 	int apply_settings;
 	int apply_kernel;
 
-	int flashupdate_createimage_add_var;
-	int flashupdate_createimage_add_root1;
-	int flashupdate_createimage_add_uldr;
-	int flashupdate_createimage_add_u_boot;
-	int flashupdate_createimage_add_env;
-	int flashupdate_createimage_add_spare;
-	int flashupdate_createimage_add_kernel;
-
 	std::string	backup_dir;
-
 	std::string	update_dir;
 	std::string	update_dir_opkg;
 

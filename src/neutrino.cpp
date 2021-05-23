@@ -953,15 +953,6 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.softupdate_name_mode_apply = 0;
 	g_settings.softupdate_name_mode_backup = 0; /* unused, but still initialize it */
 
-	g_settings.flashupdate_createimage_add_var    = configfile.getInt32( "flashupdate_createimage_add_var",    1);
-	g_settings.flashupdate_createimage_add_root1  = configfile.getInt32( "flashupdate_createimage_add_root1",  0);
-	g_settings.flashupdate_createimage_add_uldr   = configfile.getInt32( "flashupdate_createimage_add_uldr",   1);
-	g_settings.flashupdate_createimage_add_u_boot = configfile.getInt32( "flashupdate_createimage_add_u_boot", 0);
-	g_settings.flashupdate_createimage_add_env    = configfile.getInt32( "flashupdate_createimage_add_env",    0);
-	g_settings.flashupdate_createimage_add_spare  = configfile.getInt32( "flashupdate_createimage_add_spare",  0);
-	g_settings.flashupdate_createimage_add_kernel = configfile.getInt32( "flashupdate_createimage_add_kernel", 1);
-
-
 	g_settings.softupdate_url_file      = configfile.getString("softupdate_url_file", "/var/etc/update.urls");
 	g_settings.softupdate_proxyserver   = configfile.getString("softupdate_proxyserver", "" );
 	g_settings.softupdate_proxyusername = configfile.getString("softupdate_proxyusername", "" );
@@ -1653,14 +1644,6 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32 ("softupdate_name_mode_apply", g_settings.softupdate_name_mode_apply);
 	configfile.setInt32 ("softupdate_name_mode_backup", g_settings.softupdate_name_mode_backup);
 	configfile.setBool("softupdate_autocheck", g_settings.softupdate_autocheck);
-
-	configfile.setInt32("flashupdate_createimage_add_var",    g_settings.flashupdate_createimage_add_var);
-	configfile.setInt32("flashupdate_createimage_add_root1",  g_settings.flashupdate_createimage_add_root1);
-	configfile.setInt32("flashupdate_createimage_add_uldr",   g_settings.flashupdate_createimage_add_uldr);
-	configfile.setInt32("flashupdate_createimage_add_u_boot", g_settings.flashupdate_createimage_add_u_boot);
-	configfile.setInt32("flashupdate_createimage_add_env",    g_settings.flashupdate_createimage_add_env);
-	configfile.setInt32("flashupdate_createimage_add_spare",  g_settings.flashupdate_createimage_add_spare);
-	configfile.setInt32("flashupdate_createimage_add_kernel", g_settings.flashupdate_createimage_add_kernel);
 
 	configfile.setString("softupdate_proxyserver"   , g_settings.softupdate_proxyserver   );
 	configfile.setString("softupdate_proxyusername" , g_settings.softupdate_proxyusername );
