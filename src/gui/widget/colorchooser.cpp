@@ -301,8 +301,11 @@ void CColorChooser::paintSlider(int px, int py, unsigned char *spos, const neutr
 	   NEUTRINO_ICON_SLIDER_BODY should be scaled to bar_width.
 	   So long we paint a simple frame. This is more save on higher resolutions.
 	*/
-	//frameBuffer->paintIcon(NEUTRINO_ICON_SLIDER_BODY, px + text_width + 2*OFFSET_INNER_MID + bar_offset, py, item_height);
+#ifndef ENABLE_CHANGE_OSD_RESOLUTION
+	frameBuffer->paintIcon(NEUTRINO_ICON_SLIDER_BODY, px + text_width + 2*OFFSET_INNER_MID + bar_offset, py, item_height);
+#else
 	frameBuffer->paintBoxFrame(px + text_width + 2*OFFSET_INNER_MID + bar_offset, py + item_height/3, bar_width, item_height/3, 1, COL_FRAME_PLUS_0);
+#endif
 	// paint slider
 	frameBuffer->paintIcon(selected ? iconname : NEUTRINO_ICON_SLIDER_INACTIVE, px + text_width + 2*OFFSET_INNER_MID + ((*spos)*bar_width / 100), py, item_height);
 
