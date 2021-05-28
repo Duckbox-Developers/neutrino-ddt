@@ -658,6 +658,8 @@ bool CZapit::ZapIt(const t_channel_id channel_id, bool forupdate, bool startplay
 #ifdef ENABLE_PIP
 bool CZapit::StopPip()
 {
+	if (!g_info.hw_caps->can_pip) return false;
+
 	if (CNeutrinoApp::getInstance()->avinput_pip) {
 		CNeutrinoApp::getInstance()->StopAVInputPiP();
 	}
@@ -677,6 +679,8 @@ bool CZapit::StopPip()
 
 bool CZapit::StartPip(const t_channel_id channel_id)
 {
+	if (!g_info.hw_caps->can_pip) return false;
+
 	CZapitChannel* newchannel;
 	bool transponder_change;
 	/* do lock if live is running, or in record mode -
@@ -2467,8 +2471,11 @@ bool CZapit::Start(Z_start_arg *ZapStart_arg)
         audioDecoder = new cAudio(audioDemux->getBuffer(), videoDecoder->GetTVEnc(), NULL /*videoDecoder->GetTVEncSD()*/);
 
 #ifdef ENABLE_PIP
-	pipDecoder = new cVideo(0, NULL, NULL, 1);
-	pipDecoder->ShowPig(0);
+	if (g_info.hw_caps->can_pip)
+	{
+		pipDecoder = new cVideo(0, NULL, NULL, 1);
+		pipDecoder->ShowPig(0);
+	}
 #endif
 
 	videoDecoder->SetAudioHandle(audioDecoder->GetHandle());
@@ -2668,8 +2675,10 @@ void CZapit::run()
 	delete audioDemux;
 #ifdef ENABLE_PIP
 	StopPip();
-	delete pipDecoder;
-	delete pipDemux;
+	if (pipDecoder)
+		delete pipDecoder;
+	if (pipDemux)
+		delete pipDemux;
 #endif
 
 	INFO("demuxes/decoders deleted");
