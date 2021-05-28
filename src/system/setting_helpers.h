@@ -146,12 +146,6 @@ class CFanControlNotifier : public CChangeObserver
 		static void setSpeed(unsigned int speed);
 };
 
-class CCpuFreqNotifier : public CChangeObserver
-{
-	public:
-		bool changeNotify(const neutrino_locale_t, void * data);
-};
-
 class CAutoModeNotifier : public CChangeObserver
 {
 	public:
