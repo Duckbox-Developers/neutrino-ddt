@@ -1622,7 +1622,6 @@ miscsettings.colored_events_1 current
 miscsettings.colored_events_2 next
 miscsettings.colored_events_channellist In channellist
 miscsettings.colored_events_infobar In infobar
-miscsettings.cpu CPU
 miscsettings.energy Energy
 miscsettings.epg_cache EPG-Cache (Days)
 miscsettings.epg_cache_hint1 How long will EPG-Data in the future cached?

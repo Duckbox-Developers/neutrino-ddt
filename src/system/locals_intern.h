@@ -1649,7 +1649,6 @@ const char * locale_real_names[] =
 	"miscsettings.colored_events_2",
 	"miscsettings.colored_events_channellist",
 	"miscsettings.colored_events_infobar",
-	"miscsettings.cpu",
 	"miscsettings.energy",
 	"miscsettings.epg_cache",
 	"miscsettings.epg_cache_hint1",
