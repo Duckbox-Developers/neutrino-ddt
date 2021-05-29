@@ -33,13 +33,10 @@
 
 #include <string>
 
-//#define CPU_FREQ
-
 class CMiscMenue : public CMenuTarget, CChangeObserver
 {
 	private:
 		CFanControlNotifier *fanNotifier;
-		CCpuFreqNotifier * cpuNotifier;
 		CSectionsdConfigNotifier* sectionsdConfigNotifier;
 		//COnOffNotifier* miscNotifier;
 		CMenuOptionChooser * epg_save;
@@ -70,9 +67,7 @@ class CMiscMenue : public CMenuTarget, CChangeObserver
 		int showMiscSettingsMenuEnergy();
 		int showMiscSettingsMenuChanlist();
 		int showMiscSettingsMenuOnlineServices();
-#ifdef CPU_FREQ
-		void showMiscSettingsMenuCPUFreq(CMenuWidget *ms_cpu);
-#endif /*CPU_FREQ*/
+
 	public:
 		CMiscMenue();
 		~CMiscMenue();

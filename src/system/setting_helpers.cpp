@@ -704,18 +704,6 @@ bool CFanControlNotifier::changeNotify(const neutrino_locale_t, void * data)
 	return false;
 }
 
-bool CCpuFreqNotifier::changeNotify(const neutrino_locale_t, void * data)
-{
-extern cCpuFreqManager * cpuFreq;
-	int freq = * (int *) data;
-
-	printf("CCpuFreqNotifier: %d Mhz\n", freq);
-	freq *= 1000*1000;
-
-	cpuFreq->SetCpuFreq(freq);
-	return false;
-}
-
 extern CMenuOptionChooser::keyval_ext VIDEOMENU_VIDEOMODE_OPTIONS[];
 bool CAutoModeNotifier::changeNotify(const neutrino_locale_t /*OptionName*/, void * /* data */)
 {

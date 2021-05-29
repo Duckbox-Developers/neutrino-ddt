@@ -364,10 +364,6 @@ colorthememenu.question Use selected theme?
 colorthememenu.save Save current theme
 colorthememenu.select1 User Theme
 colorthememenu.select2 Standard Theme
-cpu.freq CPU frequency
-cpu.freq_default Default frequency
-cpu.freq_normal Normal frequency
-cpu.freq_standby Standby frequency
 date.Apr  Apr
 date.Aug  Aug
 date.Dec  Dec
@@ -1297,7 +1293,6 @@ menu.hint_menus Configure menu options
 menu.hint_message_fonts Change message text font sizes
 menu.hint_misc_cec HDMI-CEC Options
 menu.hint_misc_channellist HD/New/Removed channel lists\nZap cycle
-menu.hint_misc_cpufreq Set the CPU frequency
 menu.hint_misc_energy Enable soft-standby, delayed shutdown\ninactivity timers
 menu.hint_misc_epg Save/load EPG options, EPG cache options\nEPG save directory
 menu.hint_misc_filebrowser Filesystem encoding, file rights\ndeny directory leave
