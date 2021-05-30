@@ -309,37 +309,37 @@ static void set_lua_variables(lua_State *L)
 	lua_Integer yRes = (lua_Integer)CFrameBuffer::getInstance()->getScreenHeight(true);
 	table_key screenopts[] =
 	{
-		{ "OFF_X", g_settings.screen_StartX },
-		{ "OFF_Y", g_settings.screen_StartY },
-		{ "END_X", g_settings.screen_EndX },
-		{ "END_Y", g_settings.screen_EndY },
-		{ "X_RES", xRes },
-		{ "Y_RES", yRes },
+		{ "OFF_X",		g_settings.screen_StartX },
+		{ "OFF_Y",		g_settings.screen_StartY },
+		{ "END_X",		g_settings.screen_EndX },
+		{ "END_Y",		g_settings.screen_EndY },
+		{ "X_RES",		xRes },
+		{ "Y_RES",		yRes },
 		{ NULL, 0 }
 	};
 	table_key menureturn[] =
 	{
-		{ "NONE", menu_return::RETURN_NONE },
-		{ "REPAINT", menu_return::RETURN_REPAINT },
-		{ "EXIT", menu_return::RETURN_EXIT },
-		{ "EXIT_ALL", menu_return::RETURN_EXIT_ALL },
-		{ "EXIT_REPAINT", menu_return::RETURN_EXIT_REPAINT },
+		{ "NONE",		menu_return::RETURN_NONE },
+		{ "REPAINT",		menu_return::RETURN_REPAINT },
+		{ "EXIT",		menu_return::RETURN_EXIT },
+		{ "EXIT_ALL",		menu_return::RETURN_EXIT_ALL },
+		{ "EXIT_REPAINT",	menu_return::RETURN_EXIT_REPAINT },
 		{ NULL, 0 }
 	};
 	table_key apiversion[] =
 	{
-		{ "MAJOR", LUA_API_VERSION_MAJOR },
-		{ "MINOR", LUA_API_VERSION_MINOR },
+		{ "MAJOR",		LUA_API_VERSION_MAJOR },
+		{ "MINOR",		LUA_API_VERSION_MINOR },
 		{ NULL, 0 }
 	};
 
 	table_key playstate[] =
 	{
-		{ "NORMAL",    CMoviePlayerGui::PLUGIN_PLAYSTATE_NORMAL },
-		{ "STOP",      CMoviePlayerGui::PLUGIN_PLAYSTATE_STOP },
-		{ "NEXT",      CMoviePlayerGui::PLUGIN_PLAYSTATE_NEXT },
-		{ "PREV",      CMoviePlayerGui::PLUGIN_PLAYSTATE_PREV },
-		{ "LEAVE_ALL", CMoviePlayerGui::PLUGIN_PLAYSTATE_LEAVE_ALL },
+		{ "NORMAL",		CMoviePlayerGui::PLUGIN_PLAYSTATE_NORMAL },
+		{ "STOP",		CMoviePlayerGui::PLUGIN_PLAYSTATE_STOP },
+		{ "NEXT",		CMoviePlayerGui::PLUGIN_PLAYSTATE_NEXT },
+		{ "PREV",		CMoviePlayerGui::PLUGIN_PLAYSTATE_PREV },
+		{ "LEAVE_ALL",		CMoviePlayerGui::PLUGIN_PLAYSTATE_LEAVE_ALL },
 		{ NULL, 0 }
 	};
 
@@ -421,14 +421,14 @@ static void set_lua_variables(lua_State *L)
 		{ "FONT",		fontlist },
 		{ "CORNER",		corners },
 		{ "OFFSET",		offsets },
-		{ "MENU_RETURN", 	menureturn },
-		{ "APIVERSION",  	apiversion },
-		{ "PLAYSTATE",   	playstate },
-		{ "CC",          	ccomponents },
-		{ "DYNFONT",     	dynfont },
-		{ "CURL",        	curl_status },
-		{ "NMODE",       	neutrino_mode },
-		{ "POSTMSG",     	post_msg },
+		{ "MENU_RETURN",	menureturn },
+		{ "APIVERSION",		apiversion },
+		{ "PLAYSTATE",		playstate },
+		{ "CC",			ccomponents },
+		{ "DYNFONT",		dynfont },
+		{ "CURL",		curl_status },
+		{ "NMODE",		neutrino_mode },
+		{ "POSTMSG",		post_msg },
 		{ "TEXT_ALIGNMENT",	text_alignment },
 		{ NULL, NULL }
 	};
@@ -612,46 +612,49 @@ void LuaInstRegisterFunctions(lua_State *L, bool fromThreads/*=false*/)
 // ------------------------------------------
 	const luaL_Reg methods[] =
 	{
-		{ "GetInput",               CLuaInstance::GetInput },
-		{ "Blit",                   CLuaInstance::Blit },
-		{ "GetLanguage",            CLuaInstance::GetLanguage },
-		{ "PaintBox",               CLuaInstance::PaintBox },
-		{ "paintHLine",             CLuaInstance::paintHLineRel },
-		{ "paintVLine",             CLuaInstance::paintVLineRel },
-		{ "RenderString",           CLuaInstance::RenderString },
-		{ "getRenderWidth",         CLuaInstance::getRenderWidth },
-		{ "FontHeight",             CLuaInstance::FontHeight },
-		{ "getDynFont",             CLuaInstance::getDynFont },
-		{ "PaintIcon",              CLuaInstance::PaintIcon },
-		{ "DisplayImage",           CLuaInstance::DisplayImage },
-		{ "GetSize",                CLuaInstance::GetSize },
-		{ "saveScreen",             CLuaInstance::saveScreen },
-		{ "restoreScreen",          CLuaInstance::restoreScreen },
-		{ "deleteSavedScreen",      CLuaInstance::deleteSavedScreen },
-		{ "scale2Res",              CLuaInstance::scale2Res },
+		{ "GetInput",			CLuaInstance::GetInput },
+		{ "Blit",			CLuaInstance::Blit },
+		{ "GetLanguage",		CLuaInstance::GetLanguage },
+		{ "PaintBox",			CLuaInstance::PaintBox },
+		{ "paintHLine",			CLuaInstance::paintHLineRel },
+		{ "paintVLine",			CLuaInstance::paintVLineRel },
+		{ "RenderString",		CLuaInstance::RenderString },
+		{ "getRenderWidth",		CLuaInstance::getRenderWidth },
+		{ "FontHeight",			CLuaInstance::FontHeight },
+		{ "getDynFont",			CLuaInstance::getDynFont },
+		{ "PaintIcon",			CLuaInstance::PaintIcon },
+		{ "DisplayImage",		CLuaInstance::DisplayImage },
+		{ "GetSize",			CLuaInstance::GetSize },
+		{ "saveScreen",			CLuaInstance::saveScreen },
+		{ "restoreScreen",		CLuaInstance::restoreScreen },
+		{ "deleteSavedScreen",		CLuaInstance::deleteSavedScreen },
+		{ "scale2Res",			CLuaInstance::scale2Res },
 
 		/*
 		   lua_misc.cpp
 		   Deprecated, for the future using separate class for misc functions
 		*/
-		{ "strFind",                CLuaInstMisc::getInstance()->strFind_old },
-		{ "strSub",                 CLuaInstMisc::getInstance()->strSub_old },
-		{ "enableInfoClock",        CLuaInstMisc::getInstance()->enableInfoClock_old },
-		{ "runScript",              CLuaInstMisc::getInstance()->runScriptExt_old },
-		{ "GetRevision",            CLuaInstMisc::getInstance()->GetRevision_old },
-		{ "checkVersion",           CLuaInstMisc::getInstance()->checkVersion_old },
+		{ "strFind",			CLuaInstMisc::getInstance()->strFind_old },
+		{ "strSub",			CLuaInstMisc::getInstance()->strSub_old },
+		{ "enableInfoClock",		CLuaInstMisc::getInstance()->enableInfoClock_old },
+		{ "runScript",			CLuaInstMisc::getInstance()->runScriptExt_old },
+		{ "GetRevision",		CLuaInstMisc::getInstance()->GetRevision_old },
+		{ "checkVersion",		CLuaInstMisc::getInstance()->checkVersion_old },
 
 		/*
 		   lua_video.cpp
 		   Deprecated, for the future using separate class for video
 		*/
-		{ "setBlank",               CLuaInstVideo::getInstance()->setBlank_old },
-		{ "ShowPicture",            CLuaInstVideo::getInstance()->ShowPicture_old },
-		{ "StopPicture",            CLuaInstVideo::getInstance()->StopPicture_old },
-		{ "PlayFile",               CLuaInstVideo::getInstance()->PlayFile_old },
-		{ "zapitStopPlayBack",      CLuaInstVideo::getInstance()->zapitStopPlayBack_old },
-		{ "channelRezap",           CLuaInstVideo::getInstance()->channelRezap_old },
-		{ "createChannelIDfromUrl", CLuaInstVideo::getInstance()->createChannelIDfromUrl_old },
+		{ "setBlank",			CLuaInstVideo::getInstance()->setBlank_old },
+		{ "ShowPicture",		CLuaInstVideo::getInstance()->ShowPicture_old },
+		{ "StopPicture",		CLuaInstVideo::getInstance()->StopPicture_old },
+		{ "PlayFile",			CLuaInstVideo::getInstance()->PlayFile_old },
+		{ "zapitStopPlayBack",		CLuaInstVideo::getInstance()->zapitStopPlayBack_old },
+		{ "channelRezap",		CLuaInstVideo::getInstance()->channelRezap_old },
+		{ "createChannelIDfromUrl",	CLuaInstVideo::getInstance()->createChannelIDfromUrl_old },
+
+		// clean/normal neutrino exit
+		{ "ExitRun",			CLuaInstance::ExitRun },
 		{ NULL, NULL }
 	};
 // ------------------------------------------
@@ -1270,40 +1273,46 @@ int CLuaInstance::scale2Res(lua_State *L)
 	return 1;
 }
 
+int CLuaInstance::ExitRun(lua_State *L) {
+	int value = luaL_checkint(L, 2);
+	CNeutrinoApp::getInstance()->ExitRun(value);
+	return 0;
+}
+
 #if LUA_COMPAT_5_2
 
 void lua_pushunsigned (lua_State *L, lua_Unsigned n) {
-  lua_pushnumber(L, lua_unsigned2number(n));
+	lua_pushnumber(L, lua_unsigned2number(n));
 }
 
 
 lua_Unsigned luaL_checkunsigned (lua_State *L, int i) {
-  lua_Unsigned result;
-  lua_Number n = lua_tonumber(L, i);
-  if (n == 0 && !lua_isnumber(L, i))
-    luaL_checktype(L, i, LUA_TNUMBER);
-  lua_number2unsigned(result, n);
-  return result;
+	lua_Unsigned result;
+	lua_Number n = lua_tonumber(L, i);
+	if (n == 0 && !lua_isnumber(L, i))
+		luaL_checktype(L, i, LUA_TNUMBER);
+	lua_number2unsigned(result, n);
+	return result;
 }
 
 int lua_absindex (lua_State *L, int i) {
-  if (i < 0 && i > LUA_REGISTRYINDEX)
-    i += lua_gettop(L) + 1;
-  return i;
+	if (i < 0 && i > LUA_REGISTRYINDEX)
+		i += lua_gettop(L) + 1;
+	return i;
 }
 
 void lua_rawgetp (lua_State *L, int i, const void *p) {
-  int abs_i = lua_absindex(L, i);
-  lua_pushlightuserdata(L, (void*)p);
-  lua_rawget(L, abs_i);
+	int abs_i = lua_absindex(L, i);
+	lua_pushlightuserdata(L, (void*)p);
+	lua_rawget(L, abs_i);
 }
 
 void lua_rawsetp (lua_State *L, int i, const void *p) {
-  int abs_i = lua_absindex(L, i);
-  luaL_checkstack(L, 1, "not enough stack slots");
-  lua_pushlightuserdata(L, (void*)p);
-  lua_insert(L, -2);
-  lua_rawset(L, abs_i);
+	int abs_i = lua_absindex(L, i);
+	luaL_checkstack(L, 1, "not enough stack slots");
+	lua_pushlightuserdata(L, (void*)p);
+	lua_insert(L, -2);
+	lua_rawset(L, abs_i);
 }
 
 #endif
