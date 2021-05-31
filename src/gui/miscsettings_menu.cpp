@@ -70,7 +70,6 @@ CMiscMenue::CMiscMenue()
 	width = 40;
 
 	fanNotifier = NULL;
-	cpuNotifier = NULL;
 	sectionsdConfigNotifier = NULL;
 
 	epg_save = NULL;
@@ -314,8 +313,6 @@ int CMiscMenue::showMiscSettingsMenu()
 	fanNotifier = NULL;
 	delete sectionsdConfigNotifier;
 	sectionsdConfigNotifier = NULL;
-	delete cpuNotifier;
-	cpuNotifier = NULL;
 
 	return res;
 }
