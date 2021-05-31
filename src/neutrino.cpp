@@ -200,7 +200,6 @@ extern cDemux *pipDemux;
 extern cDemux *videoDemux;
 extern cAudio * audioDecoder;
 cPowerManager *powerManager;
-cCpuFreqManager * cpuFreq;
 
 #ifdef ENABLE_LCD4LINUX
 void stop_lcd4l_support(void);
@@ -479,13 +478,6 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.zappingmode = configfile.getInt32( "zappingmode", 0);
 #endif
 
-	g_settings.cpufreq = configfile.getInt32("cpufreq", 0);
-#if HAVE_SH4_HARDWARE
-	g_settings.standby_cpufreq = configfile.getInt32("standby_cpufreq", 0);
-#else
-	g_settings.standby_cpufreq = configfile.getInt32("standby_cpufreq", 100);
-#endif
-
 	g_settings.ci_standby_reset = configfile.getInt32("ci_standby_reset", 0);
 
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
@@ -517,11 +509,6 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	}
 	g_settings.ci_check_live = configfile.getInt32("ci_check_live", 0);
 	g_settings.ci_tuner = configfile.getInt32("ci_tuner", -1);
-
-#ifndef CPU_FREQ
-	g_settings.cpufreq = 0;
-	g_settings.standby_cpufreq = 50;
-#endif
 
 	g_settings.make_hd_list = configfile.getInt32("make_hd_list", 0);
 	g_settings.make_webtv_list = configfile.getInt32("make_webtv_list", 1);
@@ -1299,9 +1286,6 @@ void CNeutrinoApp::saveSetup(const char * fname)
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	configfile.setInt32( "zappingmode", g_settings.zappingmode);
 #endif
-
-	configfile.setInt32( "cpufreq", g_settings.cpufreq);
-	configfile.setInt32( "standby_cpufreq", g_settings.standby_cpufreq);
 
 	configfile.setInt32("ci_standby_reset", g_settings.ci_standby_reset);
 	for (unsigned int i = 0; i < cCA::GetInstance()->GetNumberCISlots(); i++) {
@@ -2432,10 +2416,7 @@ TIMER_START();
 	g_Locale        = new CLocaleManager;
 
 	int loadSettingsErg = loadSetup(NEUTRINO_SETTINGS_FILE);
-#if HAVE_SH4_HARDWARE
-	cpuFreq = new cCpuFreqManager();
-	cpuFreq->SetCpuFreq(g_settings.cpufreq * 1000 * 1000);
-#endif
+
 	wake_up( timer_wakeup );
 #if HAVE_SH4_HARDWARE
 	CCECSetup cecsetup;
@@ -2578,11 +2559,6 @@ TIMER_START();
 #endif
 	powerManager = new cPowerManager;
 	powerManager->Open();
-
-#if !HAVE_SH4_HARDWARE
-	cpuFreq = new cCpuFreqManager();
-	cpuFreq->SetCpuFreq(g_settings.cpufreq * 1000 * 1000);
-#endif
 
 	//fan speed
 	dprintf(DEBUG_NORMAL, "g_info.has_fan: %d\n", g_info.hw_caps->has_fan);
@@ -3369,7 +3345,6 @@ bool CNeutrinoApp::wakeupFromStandby(void)
 		CStreamManager::getInstance()->StreamStatus();
 
 	if ((mode == NeutrinoModes::mode_standby) && !alive) {
-		cpuFreq->SetCpuFreq(g_settings.cpufreq * 1000 * 1000);
 #if !HAVE_SPARK_HARDWARE
 		if(g_settings.ci_standby_reset) {
 			g_CamHandler->exec(NULL, "ca_ci_reset0");
@@ -3398,7 +3373,6 @@ void CNeutrinoApp::standbyToStandby(void)
 		}
 		g_Zapit->setStandby(true);
 		g_Sectionsd->setPauseScanning(true);
-		cpuFreq->SetCpuFreq(g_settings.standby_cpufreq * 1000 * 1000);
 #if defined (BOXMODEL_IPBOX9900) || defined (BOXMODEL_IPBOX99)
 		system("echo 0 > /proc/stb/misc/fan");
 #endif
@@ -4555,8 +4529,6 @@ void CNeutrinoApp::standbyMode( bool bOnOff, bool fromDeepStandby )
 		CEpgScan::getInstance()->Start(true);
 		bool alive = recordingstatus || CEpgScan::getInstance()->Running() ||
 			CStreamManager::getInstance()->StreamStatus();
-		if(!alive)
-			cpuFreq->SetCpuFreq(g_settings.standby_cpufreq * 1000 * 1000);
 
 		//fan speed
 		if (g_info.hw_caps->has_fan)
@@ -4574,7 +4546,6 @@ void CNeutrinoApp::standbyMode( bool bOnOff, bool fromDeepStandby )
 		powerManager->SetStandby(false, false);
 		CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
 		CVFD::getInstance()->ShowText("resume");
-		cpuFreq->SetCpuFreq(g_settings.cpufreq * 1000 * 1000);
 		videoDecoder->Standby(false);
 		CEpgScan::getInstance()->Stop();
 		CSectionsdClient::CurrentNextInfo dummy;
@@ -5064,11 +5035,6 @@ void stop_daemons(bool stopall, bool for_flash)
 		CVFD::getInstance()->Clear();
 	}
 	if(stopall && !for_flash) {
-		if (cpuFreq) {
-			cpuFreq->SetCpuFreq(g_settings.cpufreq * 1000 * 1000);
-			delete cpuFreq;
-		}
-
 		if (powerManager) {
 			/* if we were in standby, leave it otherwise, the next
 			   start of neutrino will fail in "_write_gxa" in
