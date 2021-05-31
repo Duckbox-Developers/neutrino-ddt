@@ -74,6 +74,7 @@ public:
 	static int restoreScreen(lua_State *L);
 	static int deleteSavedScreen(lua_State *L);
 	static int scale2Res(lua_State *L);
+	static int ExitRun(lua_State *L);
 
 private:
 	lua_State* lua;

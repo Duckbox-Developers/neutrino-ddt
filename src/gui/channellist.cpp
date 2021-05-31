@@ -945,7 +945,7 @@ int CChannelList::show()
 		else if (!empty && ((msg == CRCInput::RC_play) || (msg == CRCInput::RC_playpause) || (msg == (neutrino_msg_t) g_settings.key_pip_close))) {
 			int boxmode = getBoxMode();
 			if (boxmode > -1 && boxmode != 12)
-				ShowMsg(LOCALE_MESSAGEBOX_ERROR, LOCALE_BOXMODE12_NOT_ACTIVATED, CMsgBox::mbrOk, CMsgBox::mbOk, NEUTRINO_ICON_ERROR);
+				ShowHint(LOCALE_MESSAGEBOX_ERROR, g_Locale->getText(LOCALE_BOXMODE12_NOT_ACTIVATED), 300, 10, NEUTRINO_ICON_ERROR);
 			else
 			{
 				if(SameTP()) {
