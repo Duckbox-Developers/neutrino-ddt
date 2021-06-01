@@ -2,7 +2,7 @@
 	Neutrino-GUI  -   DBoxII-Project
 
 	Copyright (C) 2004 thegoodguy
-	
+
 	cdr audio decoder
 	Homepage: http://www.dbox2.info/
 

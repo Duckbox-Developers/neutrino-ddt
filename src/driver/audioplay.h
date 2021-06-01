@@ -43,7 +43,7 @@ private:
 	void clearFileData();
 	unsigned int m_SecondsToSkip;
 
-protected: 
+protected:
 	CAudiofile m_Audiofile;
 
 public:

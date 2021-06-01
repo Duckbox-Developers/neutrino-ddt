@@ -1,6 +1,6 @@
 /*
 	$Id: radiotext.cpp,v 1.7 2009/10/31 10:11:02 seife Exp $
-	
+
 	Neutrino-GUI  -   DBoxII-Project
 
 	License: GPL
@@ -41,7 +41,7 @@
  *
  * This Plugin display an background image while the vdr is switcht to radio channels.
  *
- 
+
 */
 
 #include <stdio.h>
@@ -83,21 +83,21 @@ const char *DataDir = "./";
 
 // RDS-Chartranslation: 0x80..0xff
 unsigned char rds_addchar[128] = {
-    0xe1, 0xe0, 0xe9, 0xe8, 0xed, 0xec, 0xf3, 0xf2, 
-    0xfa, 0xf9, 0xd1, 0xc7, 0x8c, 0xdf, 0x8e, 0x8f, 
-    0xe2, 0xe4, 0xea, 0xeb, 0xee, 0xef, 0xf4, 0xf6, 
-    0xfb, 0xfc, 0xf1, 0xe7, 0x9c, 0x9d, 0x9e, 0x9f, 
-    0xaa, 0xa1, 0xa9, 0xa3, 0xa4, 0xa5, 0xa6, 0xa7, 
-    0xa8, 0xa9, 0xa3, 0xab, 0xac, 0xad, 0xae, 0xaf, 
-    0xba, 0xb9, 0xb2, 0xb3, 0xb1, 0xa1, 0xb6, 0xb7, 
-    0xb5, 0xbf, 0xf7, 0xb0, 0xbc, 0xbd, 0xbe, 0xa7, 
-    0xc1, 0xc0, 0xc9, 0xc8, 0xcd, 0xcc, 0xd3, 0xd2, 
-    0xda, 0xd9, 0xca, 0xcb, 0xcc, 0xcd, 0xd0, 0xcf, 
-    0xc2, 0xc4, 0xca, 0xcb, 0xce, 0xcf, 0xd4, 0xd6, 
-    0xdb, 0xdc, 0xda, 0xdb, 0xdc, 0xdd, 0xde, 0xdf, 
-    0xc3, 0xc5, 0xc6, 0xe3, 0xe4, 0xdd, 0xd5, 0xd8, 
+    0xe1, 0xe0, 0xe9, 0xe8, 0xed, 0xec, 0xf3, 0xf2,
+    0xfa, 0xf9, 0xd1, 0xc7, 0x8c, 0xdf, 0x8e, 0x8f,
+    0xe2, 0xe4, 0xea, 0xeb, 0xee, 0xef, 0xf4, 0xf6,
+    0xfb, 0xfc, 0xf1, 0xe7, 0x9c, 0x9d, 0x9e, 0x9f,
+    0xaa, 0xa1, 0xa9, 0xa3, 0xa4, 0xa5, 0xa6, 0xa7,
+    0xa8, 0xa9, 0xa3, 0xab, 0xac, 0xad, 0xae, 0xaf,
+    0xba, 0xb9, 0xb2, 0xb3, 0xb1, 0xa1, 0xb6, 0xb7,
+    0xb5, 0xbf, 0xf7, 0xb0, 0xbc, 0xbd, 0xbe, 0xa7,
+    0xc1, 0xc0, 0xc9, 0xc8, 0xcd, 0xcc, 0xd3, 0xd2,
+    0xda, 0xd9, 0xca, 0xcb, 0xcc, 0xcd, 0xd0, 0xcf,
+    0xc2, 0xc4, 0xca, 0xcb, 0xce, 0xcf, 0xd4, 0xd6,
+    0xdb, 0xdc, 0xda, 0xdb, 0xdc, 0xdd, 0xde, 0xdf,
+    0xc3, 0xc5, 0xc6, 0xe3, 0xe4, 0xdd, 0xd5, 0xd8,
     0xde, 0xe9, 0xea, 0xeb, 0xec, 0xed, 0xee, 0xf0,
-    0xe3, 0xe5, 0xe6, 0xf3, 0xf4, 0xfd, 0xf5, 0xf8, 
+    0xe3, 0xe5, 0xe6, 0xf3, 0xf4, 0xfd, 0xf5, 0xf8,
     0xfe, 0xf9, 0xfa, 0xfb, 0xfc, 0xfd, 0xfe, 0xff
 };
 
@@ -138,21 +138,21 @@ char* CRadioText::ptynr2string(int nr)
 	switch (nr) {
         // Source: http://www.ebu.ch/trev_255-beale.pdf
 		case  0: return tr(const_cast<char *>("unknown program type"));
-		case  1: return tr(const_cast<char *>("News")); 
-		case  2: return tr(const_cast<char *>("Current affairs")); 
-		case  3: return tr(const_cast<char *>("Information")); 
-		case  4: return tr(const_cast<char *>("Sport")); 
-		case  5: return tr(const_cast<char *>("Education")); 
-		case  6: return tr(const_cast<char *>("Drama")); 
-		case  7: return tr(const_cast<char *>("Culture")); 
-		case  8: return tr(const_cast<char *>("Science")); 
-		case  9: return tr(const_cast<char *>("Varied")); 
-		case 10: return tr(const_cast<char *>("Pop music")); 
-		case 11: return tr(const_cast<char *>("Rock music")); 
-		case 12: return tr(const_cast<char *>("M.O.R. music")); 
-		case 13: return tr(const_cast<char *>("Light classical")); 
-		case 14: return tr(const_cast<char *>("Serious classical")); 
-		case 15: return tr(const_cast<char *>("Other music")); 
+		case  1: return tr(const_cast<char *>("News"));
+		case  2: return tr(const_cast<char *>("Current affairs"));
+		case  3: return tr(const_cast<char *>("Information"));
+		case  4: return tr(const_cast<char *>("Sport"));
+		case  5: return tr(const_cast<char *>("Education"));
+		case  6: return tr(const_cast<char *>("Drama"));
+		case  7: return tr(const_cast<char *>("Culture"));
+		case  8: return tr(const_cast<char *>("Science"));
+		case  9: return tr(const_cast<char *>("Varied"));
+		case 10: return tr(const_cast<char *>("Pop music"));
+		case 11: return tr(const_cast<char *>("Rock music"));
+		case 12: return tr(const_cast<char *>("M.O.R. music"));
+		case 13: return tr(const_cast<char *>("Light classical"));
+		case 14: return tr(const_cast<char *>("Serious classical"));
+		case 15: return tr(const_cast<char *>("Other music"));
 		// 16-30 "Spares"
 		case 31: return tr(const_cast<char *>("Alarm"));
 		default: return const_cast<char *>("?");
@@ -196,7 +196,7 @@ int CRadioText::PES_Receive(unsigned char *data, int len)
 
 	int offset = 0;
 
-	while (true) 
+	while (true)
 	{
 		if (len < offset + 6)
 			return offset;
@@ -345,7 +345,7 @@ void CRadioText::RadiotextDecode(unsigned char *mtext, int len)
 
 		// byte 5 = MEC (Message Element Code, 0x0a for RT, 0x46 for RTplus)
 		if (mtext[5] == 0x0a) {
-		// byte 6+7 = DSN+PSN (DataSetNumber+ProgramServiceNumber, 
+		// byte 6+7 = DSN+PSN (DataSetNumber+ProgramServiceNumber,
 		//		       	   ignore here, always 0x00 ?)
 		// byte 8   = MEL (MessageElementLength, max. 64+1 byte @ RT)
 		if (mtext[8] == 0 || mtext[8] > RT_MEL || mtext[8] > leninfo-4) {
@@ -417,7 +417,7 @@ fprintf(stderr, "MEC=0x%02x DSN=0x%02x PSN=0x%02x MEL=%02d STATUS=0x%02x MFL=%02
 		rtp_start[1] = (0x38 & mtext[13]<<3) | mtext[14]>>5;
 		rtp_len[1]   = 0x1f & mtext[14];
 		if (S_Verbose >= 2)
-			printf("RTplus (tag=Typ/Start/Len):  Toggle/Run = %d/%d, tag#1 = %d/%d/%d, tag#2 = %d/%d/%d\n", 
+			printf("RTplus (tag=Typ/Start/Len):  Toggle/Run = %d/%d, tag#1 = %d/%d/%d, tag#2 = %d/%d/%d\n",
 				(mtext[10]&0x10)>0, (mtext[10]&0x08)>0, rtp_typ[0], rtp_start[0], rtp_len[0], rtp_typ[1], rtp_start[1], rtp_len[1]);
 		// save info
 		for (int i = 0; i < 2; i++) {
@@ -434,7 +434,7 @@ fprintf(stderr, "MEC=0x%02x DSN=0x%02x PSN=0x%02x MEL=%02d STATUS=0x%02x MFL=%02
 				memset(rtp_content.temptext, 0x20, RT_MEL-1);
 				memcpy(rtp_content.temptext, temptext, RT_MEL-1);
 				switch (rtp_typ[i]) {
-				case 1:		// Item-Title	
+				case 1:		// Item-Title
 					if ((mtext[10] & 0x08) > 0 && (RTP_TToggle & 0x01) == 0x01) {
 					RTP_TToggle -= 0x01;
 					RT_Info = 2;
@@ -458,7 +458,7 @@ fprintf(stderr, "MEC=0x%02x DSN=0x%02x PSN=0x%02x MEL=%02d STATUS=0x%02x MFL=%02
 						}
 					}
 					break;
-				case 4:		// Item-Artist	
+				case 4:		// Item-Artist
 					if ((mtext[10] & 0x08) > 0 && (RTP_TToggle & 0x02) == 0x02) {
 						RTP_TToggle -= 0x02;
 						RT_Info = 2;
@@ -637,7 +637,7 @@ void CRadioText::RadioStatusMsg(void)
 	/* announce text/items for lcdproc & other */
 	if (!RT_MsgShow || S_RtMsgItems <= 0)
 		return;
-	
+
 	if (S_RtMsgItems >= 2) {
 		char temp[100];
 		int ind = (RT_Index == 0) ? S_RtOsdRows - 1 : RT_Index - 1;

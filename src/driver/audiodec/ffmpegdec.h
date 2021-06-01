@@ -3,7 +3,7 @@
 
 	Copyright (C) 2004 Zwen
 	Copyright (C) 2013 martii
-	
+
 	ffmpeg audio decoder layer
 	Homepage: http://forum.tuxbox.org/forum
 

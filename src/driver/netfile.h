@@ -185,7 +185,7 @@ typedef struct
 	char version[2];	/* version of the tag */
 	char flags;
 	char size[4];
-	char base[1024]; 
+	char base[1024];
 	int len;
 } ID3;
 

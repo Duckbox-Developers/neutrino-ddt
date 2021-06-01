@@ -137,7 +137,7 @@ int fh_jpeg_load(const char *filename,unsigned char **buffer,int* x,int* y)
 			jpeg_read_scanlines(ciptr, &lb, 1);
 			memmove(bp,lb,px*c);
 			bp+=px*c;
-		}                 
+		}
 
 	}
 	jpeg_finish_decompress(ciptr);

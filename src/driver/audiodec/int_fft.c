@@ -84,7 +84,7 @@ fixed fix_mpy(fixed a, fixed b);
         size of data = 2**m
         set inverse to 0=dft, 1=idft
 */
-#if 0 
+#if 0
 //never used
 int fix_fft(fixed fr[], fixed fi[], int m, int inverse)
 {
@@ -205,7 +205,7 @@ void window(fixed fr[], int n)
         was obtained from an inverse FFT, 0 otherwise.
         loud[] is the loudness, in dB wrt 32767; will be +10 to -N_LOUD.
 */
-#if 0 
+#if 0
 //never used
 void fix_loud(fixed loud[], fixed fr[], fixed fi[], int n, int scale_shift)
 {
@@ -262,7 +262,7 @@ fixed fix_mpy(fixed a, fixed b)
 /*
         iscale() - scale an integer value by (numer/denom)
 */
-#if 0 
+#if 0
 //never used
 int iscale(int value, int numer, int denom)
 {

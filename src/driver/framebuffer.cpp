@@ -308,16 +308,16 @@ unsigned int CFrameBuffer::getScreenHeight(bool real)
 		return g_settings.screen_EndY - g_settings.screen_StartY;
 }
 
-unsigned int CFrameBuffer::getScreenWidthRel(bool force_small)
+unsigned int CFrameBuffer::getWindowWidth(bool force_small)
 {
-	int percent = force_small ? WINDOW_SIZE_MIN_FORCED : g_settings.window_width;
+	int percent = force_small ? WINDOW_SIZE_SMALL : g_settings.window_width;
 	// always reduce a possible detailsline
 	return (g_settings.screen_EndX - g_settings.screen_StartX - 2*DETAILSLINE_WIDTH) * percent / 100;
 }
 
-unsigned int CFrameBuffer::getScreenHeightRel(bool force_small)
+unsigned int CFrameBuffer::getWindowHeight(bool force_small)
 {
-	int percent = force_small ? WINDOW_SIZE_MIN_FORCED : g_settings.window_height;
+	int percent = force_small ? WINDOW_SIZE_SMALL : g_settings.window_height;
 	return (g_settings.screen_EndY - g_settings.screen_StartY) * percent / 100;
 }
 
@@ -1592,9 +1592,9 @@ void * CFrameBuffer::int_convertRGB2FB(unsigned char *rgbbuff, unsigned long x, 
 
 	if (alpha) {
 		for(i = 0; i < count ; i++)
-			fbbuff[i] = ((rgbbuff[i*4+3] << 24) & 0xFF000000) | 
-				    ((rgbbuff[i*4]   << 16) & 0x00FF0000) | 
-				    ((rgbbuff[i*4+1] <<  8) & 0x0000FF00) | 
+			fbbuff[i] = ((rgbbuff[i*4+3] << 24) & 0xFF000000) |
+				    ((rgbbuff[i*4]   << 16) & 0x00FF0000) |
+				    ((rgbbuff[i*4+1] <<  8) & 0x0000FF00) |
 				    ((rgbbuff[i*4+2])       & 0x000000FF);
 	} else {
 		switch (m_transparent) {
@@ -1647,7 +1647,6 @@ void CFrameBuffer::blit2FB(void *fbbuff, uint32_t width, uint32_t height, uint32
 		}
 		return;
 	}
-
 	fb_pixel_t*  data = (fb_pixel_t *) fbbuff;
 
 	uint8_t * d = ((uint8_t *)getFrameBufferPointer()) + xoff * sizeof(fb_pixel_t) + stride * yoff;

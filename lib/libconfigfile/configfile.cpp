@@ -132,7 +132,7 @@ bool CConfigFile::saveConfig(const std::string & filename, char _delimiter)
 
 //
 // private "store" methods
-// 
+//
 void CConfigFile::storeBool(const std::string & key, const bool val)
 {
 	if (val == true)
@@ -392,7 +392,7 @@ void CConfigFile::setString(const std::string & key, const std::string & val)
 	bool tmpUnknownKeyQueryedFlag = unknownKeyQueryedFlag;
 	unknownKeyQueryedFlag = false;
 	std::string oldVal = getString(key);
-	
+
 	if ((oldVal != val) || (unknownKeyQueryedFlag))
 	{
 		modifiedFlag = true;

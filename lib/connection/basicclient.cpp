@@ -89,10 +89,10 @@ bool CBasicClient::send_data(const char* data, const size_t size)
 
 	if (sock_fd == -1)
 		return false;
-	
+
 	timeout.tv_sec  = TIMEOUT_SEC;
 	timeout.tv_usec = TIMEOUT_USEC;
-	
+
 	if (::send_data(sock_fd, data, size, timeout) == false)
 	{
 		printf("[CBasicClient] send failed: %s\n", getSocketName());
@@ -156,7 +156,7 @@ bool CBasicClient::send(const unsigned char command, const char* data, const uns
 
 	if (!send_data((char*)&msgHead, sizeof(msgHead)))
 	    return false;
-	
+
 	if (size != 0)
 	    return send_data(data, size);
 

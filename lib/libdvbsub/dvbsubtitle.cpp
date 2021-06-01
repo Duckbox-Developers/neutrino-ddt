@@ -351,7 +351,7 @@ int cDvbSubtitleConverter::Convert(const uchar *Data, int Length, int64_t pts)
 		if(DebugConverter) {
 			unsigned int i;
 			for(i = 0; i < sub->num_rects; i++) {
-//				dbgconverter("cDvbSubtitleConverter::Convert: #%d at %d,%d size %d x %d colors %d\n", i+1, 
+//				dbgconverter("cDvbSubtitleConverter::Convert: #%d at %d,%d size %d x %d colors %d\n", i+1,
 //						sub->rects[i]->x, sub->rects[i]->y, sub->rects[i]->w, sub->rects[i]->h, sub->rects[i]->nb_colors);
 			}
 		}

@@ -25,7 +25,7 @@ extern "C" {
 
 #include "tools.h"
 
-class cDvbSubtitleBitmaps : public cListObject 
+class cDvbSubtitleBitmaps : public cListObject
 {
 	private:
 		int64_t pts;

@@ -23,7 +23,7 @@
         Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-	MD5-functions Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>.  
+	MD5-functions Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>.
 */
 
 #ifndef __libmd5sum__

@@ -18,7 +18,7 @@
  * This Plugin display an background image while the vdr is switcht to radio channels.
  *
  * $Id: radiotools.cpp,v 1.1 2009/08/07 07:22:31 rhabarber1848 Exp $
- 
+
 */
 
 #include "radiotools.h"

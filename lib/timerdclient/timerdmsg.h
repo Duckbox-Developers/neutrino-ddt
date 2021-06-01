@@ -35,7 +35,7 @@
 
 class CTimerdMsg : public CBasicMessage
 {
-	
+
  public:
 
 	static const CBasicMessage::t_version ACTVERSION = 2;
@@ -67,7 +67,7 @@ class CTimerdMsg : public CBasicMessage
 		CTimerd::CTimerEventRepeat eventRepeat;
 		time_t                     alarmTime;
 		time_t                     announceTime;
-		time_t                     stopTime;			
+		time_t                     stopTime;
 		uint32_t                       repeatCount;
 	};
 
@@ -139,7 +139,7 @@ class CTimerdMsg : public CBasicMessage
 	{
 		bool available;
 	};
-		
+
 	struct responseGetSleeptimer
 	{
 		int   eventID;

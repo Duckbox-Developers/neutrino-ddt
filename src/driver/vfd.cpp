@@ -1056,6 +1056,12 @@ void CVFD::ShowIcon(fp_icon icon, bool show)
 	if (icon == 0)
 		return;
 
+	if (blocked)
+	{
+		printf("[CVFD] - blocked\n");
+		usleep(SCROLL_TIME);
+	}
+
 	if (active_icon[icon & 0x0F] == show)
 		return;
 	else

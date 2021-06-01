@@ -65,7 +65,7 @@ int md5_file (const char *filename, int binary, unsigned char *md5_result)
           return 1;
         }
     }
- 
+
  err = md5_stream (fp, md5_result);
   if (err)
     {

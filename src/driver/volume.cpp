@@ -123,7 +123,7 @@ void CVolume::setVolume(const neutrino_msg_t key)
 	int vol = g_settings.current_volume;
 
 	do {
-		if (msg <= CRCInput::RC_MaxRC) 
+		if (msg <= CRCInput::RC_MaxRC)
 		{
 			bool sub_chan_keybind = g_settings.mode_left_right_key_tv == SNeutrinoSettings::VOLUME
 						&& g_RemoteControl && g_RemoteControl->subChannels.size() < 1;

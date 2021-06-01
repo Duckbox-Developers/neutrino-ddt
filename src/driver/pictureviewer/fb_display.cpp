@@ -1,5 +1,5 @@
 /* FrameBuffer Image Display Function
- * (c) smoku/2000 
+ * (c) smoku/2000
  */
 
 #include <stdint.h>

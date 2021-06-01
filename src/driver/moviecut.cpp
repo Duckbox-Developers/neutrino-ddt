@@ -431,7 +431,7 @@ bool CMovieCut::cutMovie(MI_MOVIE_INFO * minfo)
 			size_t r = read(srcfd, buf, toread);
 			if (r > 0) {
 				int wptr = 0;
-				if (r != toread) 
+				if (r != toread)
 					printf("CMovieCut::%s: short read at %" PRId64 ": %d\n", __func__, offset, (int)r);
 				if (buf[0] != 0x47)
 					printf("CMovieCut::%s: buffer not aligned at %" PRId64 "\n", __func__, offset);

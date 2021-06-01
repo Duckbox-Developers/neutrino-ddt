@@ -81,7 +81,7 @@ FLAC__StreamDecoderSeekStatus flac_seek(const FLAC__StreamDecoder *, FLAC__uint6
 	else
 		return FLAC__STREAM_DECODER_SEEK_STATUS_OK;
 }
-#if 0 
+#if 0
 //never used
 int flac_close(void *)
 {
