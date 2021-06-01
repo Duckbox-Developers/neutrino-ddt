@@ -874,7 +874,7 @@ void CRecordInstance::GetRecordString(std::string &str, std::string &dur)
 	char dtime[22];
 	int h = duration / 60;
 	int m = duration - (h * 60);
-	snprintf(dtime, sizeof(dtime), "(%d %s %02d %s)", h, h == 1 ? g_Locale->getText(LOCALE_RECORDING_TIME_HOUR) : g_Locale->getText(LOCALE_RECORDING_TIME_HOURS), 
+	snprintf(dtime, sizeof(dtime), "(%d %s %02d %s)", h, h == 1 ? g_Locale->getText(LOCALE_RECORDING_TIME_HOUR) : g_Locale->getText(LOCALE_RECORDING_TIME_HOURS),
 							  m, g_Locale->getText(LOCALE_RECORDING_TIME_MIN));
 	str = stime + channel->getName() + ": " + GetEpgTitle() + ((err & REC_STATUS_OVERFLOW) ? "  [!] " : " ");
 	dur = dtime;
@@ -1729,7 +1729,7 @@ bool CRecordManager::CutBackNeutrino(const t_channel_id channel_id, CFrontend * 
 		if (frontend == NULL)
 			return false;
 
-		/* if allocateFE was successful, full zapTo_serviceID 
+		/* if allocateFE was successful, full zapTo_serviceID
 		 * needed, if record frontend same as live, and its on different TP */
 		bool found = (live_fe != frontend) || IS_WEBCHAN(live_channel_id) || SAME_TRANSPONDER(live_channel_id, channel_id);
 

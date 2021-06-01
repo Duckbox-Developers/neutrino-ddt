@@ -2,7 +2,7 @@
 	Neutrino-GUI  -   DBoxII-Project
 
 	Copyright (C) 2002,2003,2004 Sania,Zwen
-	
+
 	ogg vorbis audio decoder
 	Homepage: http://www.dbox2.info/
 

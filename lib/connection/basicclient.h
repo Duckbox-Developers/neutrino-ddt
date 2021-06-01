@@ -44,7 +44,7 @@ class CBasicClient
 	bool receive_data(char* data, const size_t size, bool use_max_timeout = false);
 	bool send(const unsigned char command, const char* data = NULL, const unsigned int size = 0);
 	void close_connection();
-	
+
 	CBasicClient();
 };
 

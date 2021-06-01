@@ -230,7 +230,7 @@ void CGenPsi::addPid(uint16_t pid, uint16_t pidtype, short isAC3, const char *da
 }
 
 void CGenPsi::build_pat(uint8_t* buffer)
-{	
+{
 	buffer[0x00] = 0x47;
 	buffer[0x01] = 0x40;
 	buffer[0x02] = 0x00; // PID = 0x0000
@@ -249,13 +249,13 @@ void CGenPsi::build_pat(uint8_t* buffer)
 	buffer[0x0d] = buffer[0x0e] = 0x00;
 	buffer[0x0f] = 0xe0;
 	buffer[0x10] = 0x10;
-	
-	// Program Map PID	
+
+	// Program Map PID
 	buffer[0x11] = 0x03;
 	buffer[0x12] = 0xe8;
 	buffer[0x13] = 0xe0;
 	buffer[0x14] = pmt_pid;
-	
+
 	// Put CRC in buffer[0x15...0x18]
 	calc_crc32psi(&buffer[0x15], &buffer[OFS_HDR_2], 0x15-OFS_HDR_2 );
 
@@ -269,7 +269,7 @@ void CGenPsi::build_pat(uint8_t* buffer)
 void CGenPsi::build_pmt(uint8_t* buffer)
 {
 	int off=0;
-	
+
 	buffer[0x00] = 0x47;
 	buffer[0x01] = 0x40;
 	buffer[0x02] = pmt_pid;
@@ -430,7 +430,7 @@ void CGenPsi::build_pmt(uint8_t* buffer)
 		buffer[off++] = 0x01>>8; 		//ancillary_page_id
 		buffer[off++] = 0x01&0xff;	//ancillary_page_id
 	}
-	
+
 	// TeleText streams
 	if(vtxtpid && off < (TS_DATA_LEN-15)) {
 		buffer[off++] = 0x06;		//teletext stream type;

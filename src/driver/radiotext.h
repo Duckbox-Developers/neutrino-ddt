@@ -1,6 +1,6 @@
 /*
 	$Id: radiotext.h,v 1.4 2009/10/31 10:11:02 seife Exp $
-	
+
 	Neutrino-GUI  -   DBoxII-Project
 
 	License: GPL
@@ -150,7 +150,7 @@ struct rtp_classes {
     // Item
     bool item_New;
     char *item_Title[MAX_RTPC];		// 1
-    char *item_Artist[MAX_RTPC];	// 4	
+    char *item_Artist[MAX_RTPC];	// 4
     time_t item_Start[MAX_RTPC];
     int item_Index;
     // Info

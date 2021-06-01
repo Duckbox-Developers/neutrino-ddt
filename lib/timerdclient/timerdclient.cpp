@@ -241,8 +241,8 @@ int CTimerdClient::addTimerEvent( CTimerEventTypes evType, void* data , int min,
 	if (day > 0)
 		actTime->tm_mday = day;
 	if (month > 0)
-		actTime->tm_mon = month -1; 
-	
+		actTime->tm_mon = month -1;
+
 	addTimerEvent(evType,true,data,0,mktime(actTime),0);
 }
 */
@@ -326,7 +326,7 @@ int CTimerdClient::addTimerEvent( CTimerd::CTimerEventTypes evType, void* data, 
 	else if (evType == CTimerd::TIMER_ZAPTO ||
 		evType == CTimerd::TIMER_IMMEDIATE_RECORD)
 	{
-		CTimerd::EventInfo *ei=static_cast<CTimerd::EventInfo*>(data); 
+		CTimerd::EventInfo *ei=static_cast<CTimerd::EventInfo*>(data);
 		tei.apids = ei->apids;
 		tei.channel_id = ei->channel_id;
 		tei.epg_starttime	= ei->epg_starttime;
@@ -337,7 +337,7 @@ int CTimerdClient::addTimerEvent( CTimerd::CTimerEventTypes evType, void* data, 
 	}
 	else if(evType == CTimerd::TIMER_RECORD)
 	{
-		CTimerd::RecordingInfo *ri=static_cast<CTimerd::RecordingInfo*>(data); 
+		CTimerd::RecordingInfo *ri=static_cast<CTimerd::RecordingInfo*>(data);
 		tri.apids = ri->apids;
 		tri.channel_id = ri->channel_id;
 		tri.epg_starttime	= ri->epg_starttime;
@@ -387,7 +387,7 @@ void CTimerdClient::removeTimerEvent( int evId)
 
 	send(CTimerdMsg::CMD_REMOVETIMER, (char*) &msgRemoveTimer, sizeof(msgRemoveTimer));
 
-	close_connection();  
+	close_connection();
 }
 //-------------------------------------------------------------------------
 
@@ -405,7 +405,7 @@ bool CTimerdClient::isTimerdAvailable()
 
 CTimerd::TimerList CTimerdClient::getOverlappingTimers(time_t& startTime, time_t& stopTime)
 {
-	CTimerd::TimerList timerlist; 
+	CTimerd::TimerList timerlist;
 	CTimerd::TimerList overlapping;
 	int timerPre;
 	int timerPost;
@@ -454,7 +454,7 @@ void CTimerdClient::modifyTimerAPid(int eventid, unsigned char apids)
 	VALGRIND_PARANOIA(data);
 	data.eventID=eventid;
 	data.apids = apids;
-	send(CTimerdMsg::CMD_SETAPID, (char*) &data, sizeof(data)); 
+	send(CTimerdMsg::CMD_SETAPID, (char*) &data, sizeof(data));
 	close_connection();
 }
 
@@ -465,7 +465,7 @@ void CTimerdClient::setRecordingSafety(int pre, int post)
 	VALGRIND_PARANOIA(data);
 	data.pre = pre;
 	data.post = post;
-	send(CTimerdMsg::CMD_SETRECSAFETY, (char*) &data, sizeof(data)); 
+	send(CTimerdMsg::CMD_SETRECSAFETY, (char*) &data, sizeof(data));
 	close_connection();
 }
 
@@ -541,6 +541,6 @@ void CTimerdClient::stopTimerEvent( int evId)
 
 	send(CTimerdMsg::CMD_STOPTIMER, (char*) &msgRemoveTimer, sizeof(msgRemoveTimer));
 
-	close_connection();  
+	close_connection();
 }
 

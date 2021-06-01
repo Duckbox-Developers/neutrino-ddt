@@ -295,16 +295,16 @@ unsigned int CFrameBuffer::getScreenHeight(bool real)
 		return g_settings.screen_EndY - g_settings.screen_StartY;
 }
 
-unsigned int CFrameBuffer::getScreenWidthRel(bool force_small)
+unsigned int CFrameBuffer::getWindowWidth(bool force_small)
 {
-	int percent = force_small ? WINDOW_SIZE_MIN_FORCED : g_settings.window_width;
+	int percent = force_small ? WINDOW_SIZE_SMALL : g_settings.window_width;
 	// always reduce a possible detailline
 	return (g_settings.screen_EndX - g_settings.screen_StartX - 2*ConnectLineBox_Width) * percent / 100;
 }
 
-unsigned int CFrameBuffer::getScreenHeightRel(bool force_small)
+unsigned int CFrameBuffer::getWindowHeight(bool force_small)
 {
-	int percent = force_small ? WINDOW_SIZE_MIN_FORCED : g_settings.window_height;
+	int percent = force_small ? WINDOW_SIZE_SMALL : g_settings.window_height;
 	return (g_settings.screen_EndY - g_settings.screen_StartY) * percent / 100;
 }
 
@@ -334,16 +334,16 @@ unsigned int CFrameBuffer::getScreenHeight(bool real)
 		return g_settings.screen_EndY - g_settings.screen_StartY;
 }
 
-unsigned int CFrameBuffer::getScreenWidthRel(bool force_small)
+unsigned int CFrameBuffer::getWindowWidth(bool force_small)
 {
-	int percent = force_small ? WINDOW_SIZE_MIN_FORCED : g_settings.window_width;
+	int percent = force_small ? WINDOW_SIZE_SMALL : g_settings.window_width;
 	// always reduce a possible detailline
 	return (g_settings.screen_EndX - g_settings.screen_StartX - 2*ConnectLineBox_Width) * percent / 100;
 }
 
-unsigned int CFrameBuffer::getScreenHeightRel(bool force_small)
+unsigned int CFrameBuffer::getWindowHeight(bool force_small)
 {
-	int percent = force_small ? WINDOW_SIZE_MIN_FORCED : g_settings.window_height;
+	int percent = force_small ? WINDOW_SIZE_SMALL : g_settings.window_height;
 	return (g_settings.screen_EndY - g_settings.screen_StartY) * percent / 100;
 }
 
@@ -684,7 +684,7 @@ void CFrameBuffer::paintBoxRel(const int x, const int y, const int dx, const int
 	bool corner_bl = !!(type & CORNER_BOTTOM_LEFT);
 	bool corner_br = !!(type & CORNER_BOTTOM_RIGHT);
 
-	if (dx == 0 || dy == 0) {
+	if (dx <= 0 || dy <= 0) {
 		dprintf(DEBUG_NORMAL, "[CFrameBuffer] [%s - %d]: radius %d, start x %d y %d end x %d y %d\n", __FUNCTION__, __LINE__, radius, x, y, x+dx, y+dy);
 		return;
 	}
@@ -1090,7 +1090,7 @@ void CFrameBuffer::paintBoxFrame(const int x, const int y, const int dx, const i
 				while (p < pe)
 					*p++ = col;
 				*p = mergeColor(*p, ilevel, col, 255 - ilevel);
-				
+
 			}
 			// right
 			if ((corner_tr && line < radius) || (corner_br && line >= dy - radius)) {
@@ -1292,9 +1292,9 @@ void * CFrameBuffer::int_convertRGB2FB(unsigned char *rgbbuff, unsigned long x, 
 
 	if (alpha) {
 		for(i = 0; i < count ; i++)
-			fbbuff[i] = ((rgbbuff[i*4+3] << 24) & 0xFF000000) | 
-				    ((rgbbuff[i*4]   << 16) & 0x00FF0000) | 
-				    ((rgbbuff[i*4+1] <<  8) & 0x0000FF00) | 
+			fbbuff[i] = ((rgbbuff[i*4+3] << 24) & 0xFF000000) |
+				    ((rgbbuff[i*4]   << 16) & 0x00FF0000) |
+				    ((rgbbuff[i*4+1] <<  8) & 0x0000FF00) |
 				    ((rgbbuff[i*4+2])       & 0x000000FF);
 	} else {
 		switch (m_transparent) {

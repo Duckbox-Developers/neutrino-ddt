@@ -411,7 +411,7 @@ static std::string ass_subtitle_header(const char *font, int font_size,
 		int color, int outline_color, int back_color, int bold, int italic, int underline, int alignment)
 {
 	char buf[8192];
-	snprintf(buf, sizeof(buf), 
+	snprintf(buf, sizeof(buf),
 		"[Script Info]\r\n"
 		"ScriptType: v4.00+\r\n"
 		"\r\n"
