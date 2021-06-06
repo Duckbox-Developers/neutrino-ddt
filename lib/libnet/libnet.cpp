@@ -13,7 +13,7 @@
 
 void	netGetIP(std::string &dev, std::string &ip, std::string &mask, std::string &brdcast)
 {
-	int					fd;
+	int			fd;
 	struct ifreq		req;
 	struct sockaddr_in	*saddr;
 	unsigned char		*addr;
@@ -25,7 +25,6 @@ void	netGetIP(std::string &dev, std::string &ip, std::string &mask, std::string 
 	fd=socket(AF_INET,SOCK_DGRAM,0);
 	if ( !fd )
 		return;
-
 
 	memset(&req,0,sizeof(req));
 	strncpy(req.ifr_name, dev.c_str(), sizeof(req.ifr_name)-1);
@@ -49,7 +48,7 @@ void	netGetIP(std::string &dev, std::string &ip, std::string &mask, std::string 
 	close(fd);
 }
 
-void netGetDefaultRoute( std::string &ip )
+void	netGetDefaultRoute(std::string &ip)
 {
 	FILE *fp;
 	char interface[9];
@@ -79,7 +78,7 @@ void netGetDefaultRoute( std::string &ip )
 	fclose(fp);
 }
 
-void netGetHostname( std::string &host )
+void	netGetHostname(std::string &host)
 {
 	host = "";
 	char hostbuf[256];
@@ -87,7 +86,7 @@ void netGetHostname( std::string &host )
 		host = std::string(hostbuf);
 }
 
-void	netSetHostname( std::string &host )
+void	netSetHostname(std::string &host)
 {
 	if (sethostname(host.c_str(), host.length()) < 0)
 	{
@@ -124,7 +123,7 @@ void	netSetNameserver(std::string &ip)
 	fclose(fp);
 }
 
-void	netGetNameserver( std::string &ip )
+void	netGetNameserver(std::string &ip)
 {
 	FILE *fp;
 	char zeile[256];
@@ -155,7 +154,7 @@ void	netGetNameserver( std::string &ip )
 	fclose(fp);
 }
 
-void netGetMacAddr(std::string &ifname, unsigned char *mac)
+void	netGetMacAddr(std::string &ifname, unsigned char *mac)
 {
 	int fd;
 	struct ifreq ifr;
