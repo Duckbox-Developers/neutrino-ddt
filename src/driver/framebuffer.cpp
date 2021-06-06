@@ -406,12 +406,7 @@ int CFrameBuffer::setMode(unsigned int /*nxRes*/, unsigned int /*nyRes*/, unsign
 	}
 	return 0;
 }
-#if 0
-//never used
-void CFrameBuffer::setTransparency( int /*tr*/ )
-{
-}
-#endif
+
 void CFrameBuffer::setBlendMode(uint8_t mode)
 {
 }
@@ -420,15 +415,6 @@ void CFrameBuffer::setBlendLevel(int level)
 {
 }
 
-#if 0
-//never used
-void CFrameBuffer::setAlphaFade(int in, int num, int tr)
-{
-	for (int i=0; i<num; i++) {
-		cmap.transp[in+i]=tr;
-	}
-}
-#endif
 void CFrameBuffer::paletteFade(int i, __u32 rgb1, __u32 rgb2, int level)
 {
 	__u16 *r = cmap.red+i;
@@ -1218,160 +1204,7 @@ void CFrameBuffer::paintLine(int xa, int ya, int xb, int yb, const fb_pixel_t co
 		}
 	}
 }
-#if 0
-//never used
-void CFrameBuffer::setBackgroundColor(const fb_pixel_t color)
-{
-	backgroundColor = color;
-}
 
-bool CFrameBuffer::loadPictureToMem(const std::string & filename, const uint16_t width, const uint16_t height, const uint16_t pstride, fb_pixel_t * memp)
-{
-	struct rawHeader header;
-	int	      lfd;
-
-//printf("%s(%d, %d, memp)\n", __FUNCTION__, width, height);
-
-	lfd = open((iconBasePath + "/" + filename).c_str(), O_RDONLY );
-
-	if (lfd == -1)
-	{
-		printf("error while loading icon: %s/%s\n", iconBasePath.c_str(), filename.c_str());
-		return false;
-	}
-
-	read(lfd, &header, sizeof(struct rawHeader));
-
-	if ((width  != ((header.width_hi  << 8) | header.width_lo)) ||
-	    (height != ((header.height_hi << 8) | header.height_lo)))
-	{
-		printf("error while loading icon: %s - invalid resolution = %hux%hu\n", filename.c_str(), width, height);
-		close(lfd);
-		return false;
-	}
-
-	if ((pstride == 0) || (pstride == width * sizeof(fb_pixel_t)))
-		read(lfd, memp, height * width * sizeof(fb_pixel_t));
-	else
-		for (int i = 0; i < height; i++)
-			read(lfd, ((uint8_t *)memp) + i * pstride, width * sizeof(fb_pixel_t));
-
-	close(lfd);
-	return true;
-}
-
-bool CFrameBuffer::loadPicture2Mem(const std::string & filename, fb_pixel_t * memp)
-{
-	return loadPictureToMem(filename, BACKGROUNDIMAGEWIDTH, 576, 0, memp);
-}
-
-bool CFrameBuffer::loadPicture2FrameBuffer(const std::string & filename)
-{
-	if (!getActive())
-		return false;
-
-	return loadPictureToMem(filename, BACKGROUNDIMAGEWIDTH, 576, getStride(), getFrameBufferPointer());
-}
-
-bool CFrameBuffer::savePictureFromMem(const std::string & filename, const fb_pixel_t * const memp)
-{
-	struct rawHeader header;
-	uint16_t	 width, height;
-	int	      lfd;
-
-	width = BACKGROUNDIMAGEWIDTH;
-	height = 576;
-
-	header.width_lo  = width  &  0xFF;
-	header.width_hi  = width  >>    8;
-	header.height_lo = height &  0xFF;
-	header.height_hi = height >>    8;
-	header.transp    =	      0;
-
-	lfd = open((iconBasePath + "/" + filename).c_str(), O_WRONLY | O_CREAT, 0644);
-
-	if (lfd==-1)
-	{
-		printf("error while saving icon: %s/%s", iconBasePath.c_str(), filename.c_str() );
-		return false;
-	}
-
-	write(lfd, &header, sizeof(struct rawHeader));
-
-	write(lfd, memp, width * height * sizeof(fb_pixel_t));
-
-	close(lfd);
-	return true;
-}
-
-bool CFrameBuffer::loadBackground(const std::string & filename, const unsigned char offset)
-{
-	if ((backgroundFilename == filename) && (background))
-		return true;
-
-	if (background)
-		delete[] background;
-
-	background = new fb_pixel_t[BACKGROUNDIMAGEWIDTH * 576];
-
-	if (!loadPictureToMem(filename, BACKGROUNDIMAGEWIDTH, 576, 0, background))
-	{
-		delete[] background;
-		background=0;
-		return false;
-	}
-
-	if (offset != 0)//pic-offset
-	{
-		fb_pixel_t * bpos = background;
-		int pos = BACKGROUNDIMAGEWIDTH * 576;
-		while (pos > 0)
-		{
-			*bpos += offset;
-			bpos++;
-			pos--;
-		}
-	}
-
-	fb_pixel_t * dest = background + BACKGROUNDIMAGEWIDTH * 576;
-	uint8_t    * src  = ((uint8_t * )background)+ BACKGROUNDIMAGEWIDTH * 576;
-	for (int i = 576 - 1; i >= 0; i--)
-		for (int j = BACKGROUNDIMAGEWIDTH - 1; j >= 0; j--)
-		{
-			dest--;
-			src--;
-			paintPixel(dest, *src);
-		}
-	backgroundFilename = filename;
-
-	return true;
-}
-
-bool CFrameBuffer::loadBackgroundPic(const std::string & filename, bool show)
-{
-	if ((backgroundFilename == filename) && (background))
-		return true;
-
-//printf("loadBackgroundPic: %s\n", filename.c_str());
-	if (background){
-		delete[] background;
-		background = NULL;
-	}
-	background = g_PicViewer->getImage(iconBasePath + "/" + filename, BACKGROUNDIMAGEWIDTH, 576);
-
-	if (background == NULL) {
-		background=0;
-		return false;
-	}
-
-	backgroundFilename = filename;
-	if(show) {
-		useBackgroundPaint = true;
-		paintBackground();
-	}
-	return true;
-}
-#endif
 void CFrameBuffer::useBackground(bool ub)
 {
 	useBackgroundPaint = ub;
@@ -1507,33 +1340,6 @@ void CFrameBuffer::RestoreScreen(int x, int y, int dx, int dy, fb_pixel_t * cons
 	}
 	checkFbArea(x, y, dx, dy, false);
 }
-#if 0
-//never used
-void CFrameBuffer::switch_signal (int signal)
-{
-	CFrameBuffer * thiz = CFrameBuffer::getInstance();
-	if (signal == SIGUSR1) {
-		if (virtual_fb != NULL)
-			delete[] virtual_fb;
-		virtual_fb = new uint8_t[thiz->stride * thiz->yRes];
-		thiz->active = false;
-		if (virtual_fb != NULL)
-			memmove(virtual_fb, thiz->lfb, thiz->stride * thiz->yRes);
-		ioctl(thiz->tty, VT_RELDISP, 1);
-		printf ("release display\n");
-	}
-	else if (signal == SIGUSR2) {
-		ioctl(thiz->tty, VT_RELDISP, VT_ACKACQ);
-		thiz->active = true;
-		printf ("acquire display\n");
-		thiz->paletteSet(NULL);
-		if (virtual_fb != NULL)
-			memmove(thiz->lfb, virtual_fb, thiz->stride * thiz->yRes);
-		else
-			memset(thiz->lfb, 0, thiz->stride * thiz->yRes);
-	}
-}
-#endif
 
 void CFrameBuffer::Clear()
 {

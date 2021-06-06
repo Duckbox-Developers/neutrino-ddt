@@ -439,31 +439,6 @@ bool CZapitClient::receive_channel_list(BouquetChannelList& channels, const bool
 	}
 	return true;
 }
-#if 0 
-//never used
-bool CZapitClient::receive_nchannel_list(BouquetNChannelList& channels)
-{
-	CZapitMessages::responseGeneralInteger responseInteger;
-	responseGetBouquetNChannels             response;
-
-	channels.clear();
-
-	if (CBasicClient::receive_data((char* )&responseInteger, sizeof(responseInteger)))
-	{
-		channels.reserve(responseInteger.number);
-
-		while (responseInteger.number-- > 0)
-		{
-			if (!CBasicClient::receive_data((char*)&response, sizeof(responseGetBouquetNChannels)))
-				return false;
-
-			response.nr++;
-			channels.push_back(response);
-		}
-	}
-	return true;
-}
-#endif
 
 /* gets all channels that are in specified bouquet */
 /* bouquets are numbered starting at 0 */
@@ -648,23 +623,6 @@ void CZapitClient::lockRc(const bool b)
 	close_connection();
 }
 
-#if 0 
-//never used
-delivery_system_t CZapitClient::getDeliverySystem(void)
-{
-	OpenThreads::ScopedLock<OpenThreads::Mutex> lock(mutex);
-	send(CZapitMessages::CMD_GET_DELIVERY_SYSTEM, 0, 0);
-
-	CZapitMessages::responseDeliverySystem response;
-
-	if (!CBasicClient::receive_data((char* )&response, sizeof(response)))
-		response.system = DVB_S;  // return DVB_S if communication fails
-
-	close_connection();
-
-	return response.system;
-}
-#endif
 #if 0
 bool CZapitClient::get_current_TP(transponder* TP)
 {
@@ -1218,16 +1176,7 @@ void CZapitClient::setRecordMode(const bool activate)
 	send(CZapitMessages::CMD_SET_RECORD_MODE, (char*)&msg, sizeof(msg));
 	close_connection();
 }
-#if 0 
-//never used
-void CZapitClient::setEventMode(const bool activate)
-{
-	CZapitMessages::commandSetRecordMode msg;
-	msg.activate = activate;
-	send(CZapitMessages::CMD_SET_EVENT_MODE, (char*)&msg, sizeof(msg));
-	close_connection();
-}
-#endif
+
 bool CZapitClient::isRecordModeActive()
 {
 	OpenThreads::ScopedLock<OpenThreads::Mutex> lock(mutex);

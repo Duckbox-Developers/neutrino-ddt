@@ -5,7 +5,6 @@
         fix_loud()      calculates the loudness of the signal, for
                         each freq point. Result is an integer array,
                         units are dB (values will be negative).
-        iscale()        scale an integer value by (numer/denom).
         fix_mpy()       perform fixed-point multiplication.
         Sinewave[1024]  sinewave normalized to 32767 (= 1.0).
         Loudampl[100]   Amplitudes for lopudnesses from 0 to -99 dB.
@@ -76,114 +75,6 @@ extern fixed Loudampl[N_LOUD];
 int db_from_ampl(fixed re, fixed im);
 fixed fix_mpy(fixed a, fixed b);
 
-/*
-        fix_fft() - perform fast Fourier transform.
-
-        if n>0 FFT is done, if n<0 inverse FFT is done
-        fr[n],fi[n] are real,imaginary arrays, INPUT AND RESULT.
-        size of data = 2**m
-        set inverse to 0=dft, 1=idft
-*/
-#if 0
-//never used
-int fix_fft(fixed fr[], fixed fi[], int m, int inverse)
-{
-        int mr,nn,i,j,l,k,istep, n, scale, shift;
-        fixed qr,qi,tr,ti,wr,wi;
-
-                n = 1<<m;
-
-        if(n > N_WAVE)
-                return -1;
-
-        mr = 0;
-        nn = n - 1;
-        scale = 0;
-
-        /* decimation in time - re-order data */
-        for(m=1; m<=nn; ++m) {
-                l = n;
-                do {
-                        l >>= 1;
-                } while(mr+l > nn);
-                mr = (mr & (l-1)) + l;
-
-                if(mr <= m) continue;
-                tr = fr[m];
-                fr[m] = fr[mr];
-                fr[mr] = tr;
-                ti = fi[m];
-                fi[m] = fi[mr];
-                fi[mr] = ti;
-        }
-
-        l = 1;
-        k = LOG2_N_WAVE-1;
-        while(l < n) {
-                if(inverse) {
-                        /* variable scaling, depending upon data */
-                        shift = 0;
-                        for(i=0; i<n; ++i) {
-                                j = fr[i];
-                                if(j < 0)
-                                        j = -j;
-                                m = fi[i];
-                                if(m < 0)
-                                        m = -m;
-                                if(j > 16383 || m > 16383) {
-                                        shift = 1;
-                                        break;
-                                }
-                        }
-                        if(shift)
-                                ++scale;
-                } else {
-                        /* fixed scaling, for proper normalization -
-                           there will be log2(n) passes, so this
-                           results in an overall factor of 1/n,
-                           distributed to maximize arithmetic accuracy. */
-                        shift = 1;
-                }
-                /* it may not be obvious, but the shift will be performed
-                   on each data point exactly once, during this pass. */
-                istep = l << 1;
-                for(m=0; m<l; ++m) {
-                        j = m << k;
-                        /* 0 <= j < N_WAVE/2 */
-                        wr =  Sinewave[j+N_WAVE/4];
-                        wi = -Sinewave[j];
-                        if(inverse)
-                                wi = -wi;
-                        if(shift) {
-                                wr >>= 1;
-                                wi >>= 1;
-                        }
-                        for(i=m; i<n; i+=istep) {
-                                j = i + l;
-                                        tr = fix_mpy(wr,fr[j]) -
-fix_mpy(wi,fi[j]);
-                                        ti = fix_mpy(wr,fi[j]) +
-fix_mpy(wi,fr[j]);
-                                qr = fr[i];
-                                qi = fi[i];
-                                if(shift) {
-                                        qr >>= 1;
-                                        qi >>= 1;
-                                }
-                                fr[j] = qr - tr;
-                                fi[j] = qi - ti;
-                                fr[i] = qr + tr;
-                                fi[i] = qi + ti;
-                        }
-                }
-                --k;
-                l = istep;
-        }
-
-        return scale;
-}
-#endif
-
 /*      window() - apply a Hanning window       */
 void window(fixed fr[], int n)
 {
@@ -198,31 +89,6 @@ void window(fixed fr[], int n)
                 FIX_MPY(fr[i],fr[i],16384-(Sinewave[k]>>1));
 }
 
-/*      fix_loud() - compute loudness of freq-spectrum components.
-        n should be ntot/2, where ntot was passed to fix_fft();
-        6 dB is added to account for the omitted alias components.
-        scale_shift should be the result of fix_fft(), if the time-series
-        was obtained from an inverse FFT, 0 otherwise.
-        loud[] is the loudness, in dB wrt 32767; will be +10 to -N_LOUD.
-*/
-#if 0
-//never used
-void fix_loud(fixed loud[], fixed fr[], fixed fi[], int n, int scale_shift)
-{
-        int i, max;
-
-        max = 0;
-        if(scale_shift > 0)
-                max = 10;
-        scale_shift = (scale_shift+1) * 6;
-
-        for(i=0; i<n; ++i) {
-                loud[i] = db_from_ampl(fr[i],fi[i]) + scale_shift;
-                if(loud[i] > max)
-                        loud[i] = max;
-        }
-}
-#endif
 /*      db_from_ampl() - find loudness (in dB) from
         the complex amplitude.
 */
@@ -258,93 +124,6 @@ fixed fix_mpy(fixed a, fixed b)
         FIX_MPY(a,a,b);
         return a;
 }
-
-/*
-        iscale() - scale an integer value by (numer/denom)
-*/
-#if 0
-//never used
-int iscale(int value, int numer, int denom)
-{
-#ifdef  DOS
-        asm     mov ax,value
-        asm     imul WORD PTR numer
-        asm     idiv WORD PTR denom
-
-        return _AX;
-#else
-                return (long) value * (long)numer/(long)denom;
-#endif
-}
-
-/*
-        fix_dot() - dot product of two fixed arrays
-*/
-fixed fix_dot(fixed */*hpa*/, fixed *pb, int n)
-{
-        fixed *pa = NULL;
-        long sum;
-        register fixed a,b;
-        //unsigned int seg,off;
-
-/*      seg = FP_SEG(hpa);
-        off = FP_OFF(hpa);
-        seg += off>>4;
-        off &= 0x000F;
-        pa = MK_FP(seg,off);
- */
-        sum = 0L;
-        while(n--) {
-                a = *pa++;
-                b = *pb++;
-                FIX_MPY(a,a,b);
-                sum += a;
-        }
-
-        if(sum > 0x7FFF)
-                sum = 0x7FFF;
-        else if(sum < -0x7FFF)
-                sum = -0x7FFF;
-
-        return (fixed)sum;
-#ifdef  DOS
-        /* ASSUMES hpa is already normalized so FP_OFF(hpa) < 16 */
-        asm     push    ds
-        asm     lds     si,hpa
-        asm     les     di,pb
-        asm     xor     bx,bx
-
-        asm     xor     cx,cx
-
-loop:   /* intermediate values can overflow by a factor of 2 without
-           causing an error; the final value must not overflow! */
-        asm     lodsw
-.
-        asm     imul    word ptr es:[di]
-        asm     add     bx,ax
-        asm     adc     cx,dx
-        asm     jo      overflow
-        asm     add     di,2
-        asm     dec     word ptr n
-        asm     jg      loop
-
-        asm     add     bx,bx
-        asm     adc     cx,cx
-        asm     jo      overflow
-
-        asm     pop     ds
-        return _CX;
-
-overflow:
-        asm     mov     cx,7FFFH
-        asm     adc     cx,0
-
-        asm     pop     ds
-        return _CX;
-#endif
-
-}
-#endif
 
 #if N_WAVE != 1024
         ERROR: N_WAVE != 1024

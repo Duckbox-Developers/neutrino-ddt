@@ -673,27 +673,6 @@ bool CServiceScan::ScanTransponder()
 	return (found_channels != 0);
 }
 
-#if 0 
-//never used
-bool CServiceScan::ReplaceTransponderParams(freq_id_t freq, t_satellite_position satellitePosition, FrontendParameters *feparams)
-{
-	bool ret = false;
-	for (transponder_list_t::iterator tI = transponders.begin(); tI != transponders.end(); ++tI) {
-		if (tI->second.satellitePosition == satellitePosition) {
-			freq_id_t newfreq = CREATE_FREQ_ID(tI->second.feparams.frequency, frontend->isCable());
-			if (frontend->isTerr())
-				newfreq = (freq_id_t) (tI->second.feparams.frequency/(1000*1000));
-			if (freq == newfreq) {
-				memcpy(&tI->second.feparams, feparams, sizeof(FrontendParameters));
-				printf("[scan] replacing transponder parameters\n");
-				ret = true;
-				break;
-			}
-		}
-	}
-	return ret;
-}
-#endif
 void CServiceScan::SendTransponderInfo(transponder &t)
 {
 	CZapit::getInstance()->SendEvent(CZapitClient::EVT_SCAN_REPORT_NUM_SCANNED_TRANSPONDERS, &processed_transponders, sizeof(processed_transponders));

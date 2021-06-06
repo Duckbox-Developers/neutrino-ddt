@@ -341,20 +341,7 @@ CZapitAbsSub* CZapitChannel::getChannelSub(int index)
     }
     return retval;
 }
-#if 0 
-//never used
-void CZapitChannel::setChannelSub(int subIdx)
-{
-    if (subIdx < (int)channelSubs.size()){
-        currentSub=subIdx;
-    }
-}
 
-int CZapitChannel::getChannelSubIndex(void)
-{
-    return currentSub < getSubtitleCount() ? currentSub : -1;
-}
-#endif
 #if 0
 void CZapitChannel::setCaPmt(CCaPmt *pCaPmt)
 { 

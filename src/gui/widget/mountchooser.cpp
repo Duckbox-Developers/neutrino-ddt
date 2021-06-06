@@ -83,12 +83,3 @@ int CMountChooser::exec(CMenuTarget* parent, const std::string & actionKey)
 		return CMenuWidget::exec(parent, actionKey);
 	}
 }
-#if 0 
-//never used
-void CMountChooser::setSelectedItem(int selection)
-{
-	selected = selection;
-}
-#endif
-
-
