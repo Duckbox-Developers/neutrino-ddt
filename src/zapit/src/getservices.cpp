@@ -82,16 +82,7 @@ bool CServiceManager::ParseScanXml(delivery_system_t delsys)
 
 	return (scanInputParser != NULL);
 }
-#if 0 
-//never used
-xmlDocPtr CServiceManager::ScanXml()
-{
-	if(!scanInputParser)
-		ParseScanXml();
 
-	return scanInputParser;
-}
-#endif
 bool CServiceManager::AddChannel(CZapitChannel * &channel)
 {
 	channel_insert_res_t ret = allchans.insert (
@@ -179,13 +170,6 @@ void CServiceManager::RemovePosition(t_satellite_position satellitePosition)
 	INFO("delete %d, size after: %zd", satellitePosition, allchans.size());
 }
 
-#if 0 
-//never used
-void CServiceManager::RemoveNVODChannels()
-{
-	nvodchannels.clear();
-}
-#endif
 void CServiceManager::RemoveCurrentChannels()
 {
 	curchans.clear();
@@ -1342,22 +1326,7 @@ bool CServiceManager::ReplaceProviderName(std::string &name, t_transport_stream_
 	}
 	return false;
 }
-#if 0 
-//never used
-int CServiceManager::GetFreeNumber(bool radio)
-{
-	service_number_map_t * channel_numbers = radio ? &radio_numbers : &tv_numbers;
-	int i = 0;
-	while(true) {
-		++i;
-		service_number_map_t::iterator it = channel_numbers->find(i);
-		if(it == channel_numbers->end()) {
-			channel_numbers->insert(i);
-			return i;
-		}
-	}
-}
-#endif
+
 int CServiceManager::GetMaxNumber(bool radio)
 {
 	service_number_map_t * channel_numbers = radio ? &radio_numbers : &tv_numbers;
@@ -1369,20 +1338,7 @@ int CServiceManager::GetMaxNumber(bool radio)
 	}
 	return i+1;
 }
-#if 0 
-//never used
-void CServiceManager::FreeNumber(int number, bool radio)
-{
-	service_number_map_t * channel_numbers = radio ? &radio_numbers : &tv_numbers;
-	channel_numbers->erase(number);
-}
 
-void CServiceManager::UseNumber(int number, bool radio)
-{
-	service_number_map_t * channel_numbers = radio ? &radio_numbers : &tv_numbers;
-	channel_numbers->insert(number);
-}
-#endif
 bool CServiceManager::GetTransponder(transponder_id_t tid, transponder &t)
 {
 	stiterator tI = transponders.find(tid);

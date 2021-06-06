@@ -407,12 +407,6 @@ fprintf(stderr, "CFrameBuffer::setMode avail: %d active: %d\n", available, activ
 	paintBackground();
 	return ret;
 }
-#if 0
-//never used
-void CFrameBuffer::setTransparency( int /*tr*/ )
-{
-}
-#endif
 
 #if HAVE_SH4_HARDWARE
 /* original interfaceL: 1 == pixel alpha, 2 == global alpha premultiplied */

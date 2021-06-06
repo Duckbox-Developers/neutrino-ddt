@@ -228,15 +228,6 @@ void transponder::dump(std::string label)
 	}
 }
 
-#if 0 
-//never used
-void transponder::ddump(std::string label) 
-{
-	if (zapit_debug)
-		dump(label);
-}
-#endif
-
 char transponder::pol(unsigned char p)
 {
 	if (p == 0)

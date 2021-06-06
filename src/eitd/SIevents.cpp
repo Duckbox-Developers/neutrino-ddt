@@ -734,22 +734,3 @@ void SIevent::dump(void) const
 	for_each(ratings.begin(), ratings.end(), printSIparentalRating());
 	for_each(linkage_descs.begin(), linkage_descs.end(), printSIlinkage());
 }
-#if 0 
-//never used
-void SIevent::dumpSmall(void) const
-{
-	for (std::list<std::pair<unsigned int, std::string> >::const_iterator it = langName.begin() ;
-			it != langName.end() ; ++it)
-		printf("Name (%s): %s\n", it->first.c_str(), it->second.c_str());
-	for (std::list<std::pair<unsigned int, std::string> >::const_iterator it = langText.begin() ;
-			it != langText.end() ; ++it)
-		printf("Text (%s): %s\n", it->first.c_str(), it->second.c_str());
-	for (std::list<std::pair<unsigned int, std::string> >::const_iterator it = langExtendedText.begin() ;
-			it != langExtendedText.end() ; ++it)
-		printf("Extended-Text (%s): %s\n", it->first.c_str(), it->second.c_str());
-
-	for_each(times.begin(), times.end(), printSItime());
-	for_each(ratings.begin(), ratings.end(), printSIparentalRating());
-	for_each(linkage_descs.begin(), linkage_descs.end(), printSIlinkage());
-}
-#endif

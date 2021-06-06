@@ -2710,14 +2710,7 @@ void CZapit::SetConfig(Zapit_config * Cfg)
 	SaveSettings(true);
 	ConfigFrontend();
 }
-#if 0
-//never used
-void CZapit::SendConfig(int connfd)
-{
-	printf("[zapit] %s...\n", __FUNCTION__);
-	CBasicServer::send_data(connfd, &config, sizeof(config));
-}
-#endif
+
 void CZapit::GetConfig(Zapit_config &Cfg)
 {
 	printf("[zapit] %s...\n", __FUNCTION__);
