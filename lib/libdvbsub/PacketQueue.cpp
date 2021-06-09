@@ -38,7 +38,7 @@ uint8_t* PacketQueue::pop()
 	}
 
 	pthread_mutex_unlock(&mutex);
-	
+
 	return retval;
 }
 

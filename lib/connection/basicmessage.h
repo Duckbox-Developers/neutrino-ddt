@@ -28,7 +28,7 @@
 class CBasicMessage
 {
  public:
-	
+
 	typedef unsigned char t_version;
 	typedef unsigned char t_cmd;
 

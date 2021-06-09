@@ -243,8 +243,10 @@ int CBouquetList::doMenu()
 		menu->addItem(new CMenuForwarder(LOCALE_FAVORITES_COPY, true, NULL, selector, cnt, CRCInput::RC_blue), old_selected == i ++);
 		if ((!zapitBouquet->bWebtv && !zapitBouquet->bWebradio) && g_settings.epg_scan == CEpgScan::SCAN_SEL)
 			menu->addItem(new CMenuOptionChooser(LOCALE_MISCSETTINGS_EPG_SCAN, &zapitBouquet->bScanEpg, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true));
+#if 0 
 		if (!zapitBouquet->bWebtv && !zapitBouquet->bWebradio)
 			menu->addItem(new CMenuOptionChooser(LOCALE_CI_USE, &zapitBouquet->bUseCI, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true));
+#endif
 		menu->exec(NULL, "");
 		delete menu;
 		delete selector;
@@ -314,9 +316,10 @@ int CBouquetList::doMenu()
 		menu->addItem(new CMenuForwarder(LOCALE_BOUQUETEDITOR_DELETE, true, NULL, selector, cnt, CRCInput::RC_red), old_selected == i ++);
 		if (zapitBouquet && (!zapitBouquet->bWebtv && !zapitBouquet->bWebradio) && (g_settings.epg_scan == CEpgScan::SCAN_SEL))
 			menu->addItem(new CMenuOptionChooser(LOCALE_MISCSETTINGS_EPG_SCAN, &zapitBouquet->bScanEpg, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true));
+#if 0
 		if (zapitBouquet && (!zapitBouquet->bWebtv && !zapitBouquet->bWebradio))
 			menu->addItem(new CMenuOptionChooser(LOCALE_CI_USE, &zapitBouquet->bUseCI, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true));
-
+#endif
 		menu->exec(NULL, "");
 		delete menu;
 		delete selector;

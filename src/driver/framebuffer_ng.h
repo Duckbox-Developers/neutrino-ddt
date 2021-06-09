@@ -68,7 +68,7 @@ typedef struct gradientData_t
 
 #define WINDOW_SIZE_MAX		100 // %
 #define WINDOW_SIZE_MIN		50 // %
-#define WINDOW_SIZE_MIN_FORCED	80 // %
+#define WINDOW_SIZE_SMALL	80 // %
 #define ConnectLineBox_Width	16 // px
 
 #if HAVE_GENERIC_HARDWARE
@@ -173,11 +173,11 @@ class CFrameBuffer : public sigc::trackable
 		unsigned int getStride() const;             // size of a single line in the framebuffer (in bytes)
 		unsigned int getScreenWidth(bool real = false);
 		unsigned int getScreenHeight(bool real = false); 
-		unsigned int getScreenWidthRel(bool force_small = false);
-		unsigned int getScreenHeightRel(bool force_small = false);
+		unsigned int getWindowWidth(bool force_small = false);
+		unsigned int getWindowHeight(bool force_small = false);
 		unsigned int getScreenX();
 		unsigned int getScreenY();
-		
+
 		bool getActive() const;                     // is framebuffer active?
 		void setActive(bool enable);                     // is framebuffer active?
 
@@ -224,7 +224,7 @@ class CFrameBuffer : public sigc::trackable
 
 		void getIconSize(const char * const filename, int* width, int *height);
 		/* h is the height of the target "window", if != 0 the icon gets centered in that window */
-		bool paintIcon (const std::string & filename, const int x, const int y, 
+		bool paintIcon (const std::string & filename, const int x, const int y,
 				const int h = 0, const unsigned char offset = 1, bool paint = true, bool paintBg = false, const fb_pixel_t colBg = 0);
 		bool paintIcon8(const std::string & filename, const int x, const int y, const unsigned char offset = 0);
 		void loadPal   (const std::string & filename, const unsigned char offset = 0, const unsigned char endidx = 255);
@@ -268,7 +268,7 @@ class CFrameBuffer : public sigc::trackable
 		void mark(int x, int y, int dx, int dy);
 		void blit();
 
-		enum 
+		enum
 			{
 				TM_EMPTY  = 0,
 				TM_NONE   = 1,

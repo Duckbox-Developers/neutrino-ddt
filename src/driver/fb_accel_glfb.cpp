@@ -168,7 +168,7 @@ int CFbAccelGLFB::setMode(unsigned int, unsigned int, unsigned int)
 		backbuffer = lfb + swidth * yRes;
 		return 0;
 	}
-	fprintf(stderr, LOGTAG " not enough FB memory (have %d, need %d)\n", available, needmem);
+	fprintf(stderr, LOGTAG "not enough FB memory (have %d, need %d)\n", available, needmem);
 	backbuffer = lfb; /* will not work well, but avoid crashes */
 	return 0;
 }

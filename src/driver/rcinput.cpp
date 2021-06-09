@@ -396,60 +396,6 @@ void CRCInput::restartInput(const bool ext)
 	if (ext)
 		postMsg(NeutrinoMessages::UNLOCK_RC_EXTERN, 0);
 }
-#if 0
-//never used
-int CRCInput::messageLoop( bool anyKeyCancels, int timeout )
-{
-	neutrino_msg_t      msg;
-	neutrino_msg_data_t data;
-
-	int res = menu_return::RETURN_REPAINT;
-
-	bool doLoop = true;
-
-	if ( timeout == -1 )
-		timeout = g_settings.timing[SNeutrinoSettings::TIMING_MENU];
-
-	uint64_t timeoutEnd = CRCInput::calcTimeoutEnd(timeout);
-
-	while (doLoop)
-	{
-		g_RCInput->getMsgAbsoluteTimeout( &msg, &data, &timeoutEnd );
-
-	if ( ( msg == CRCInput::RC_timeout ) ||
-		( msg == CRCInput::RC_home ) ||
-		( msg == CRCInput::RC_ok ) )
-			doLoop = false;
-		else if (CNeutrinoApp::getInstance()->listModeKey(msg)) {
-			// do nothing
-		}
-		else
-		{
-			int mr = CNeutrinoApp::getInstance()->handleMsg( msg, data );
-
-			if ( mr & messages_return::cancel_all )
-			{
-				res = menu_return::RETURN_EXIT_ALL;
-				doLoop = false;
-			}
-			else if ( mr & messages_return::unhandled )
-			{
-				if ((msg <= CRCInput::RC_MaxRC) &&
-				    (data == 0))                     /* <- button pressed */
-				{
-					if ( anyKeyCancels )
-						doLoop = false;
-					else
-						timeoutEnd = CRCInput::calcTimeoutEnd(timeout);
-				}
-			}
-		}
-
-
-	}
-	return res;
-}
-#endif
 
 int CRCInput::addTimer(uint64_t Interval, bool oneshot, bool correct_time )
 {

@@ -45,7 +45,7 @@ extern CBouquetList * bouquetList;
 extern CBouquetList * TVfavList;
 extern CBouquetList * RADIOfavList;
 extern CBouquetList * TVbouquetList;
- 
+
 CEpgScan::CEpgScan()
 {
 	current_mode = 0;
@@ -215,7 +215,7 @@ bool CEpgScan::CheckMode()
 		return false;
 	}
 	return true;
-			
+
 }
 
 void CEpgScan::Start(bool instandby)
@@ -415,6 +415,6 @@ _repeat:
 	CFEManager::getInstance()->Unlock();
 	if (next_chid)
 		g_Zapit->zapTo_epg(next_chid, standby);
-	else 
+	else
 		EnterStandby();
 }

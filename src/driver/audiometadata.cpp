@@ -5,7 +5,7 @@
 	Copyright (C) 2002 Bjoern Kalkbrenner <terminar@cyberphoria.org>
 	Copyright (C) 2002,2003 Dirch
 	Copyright (C) 2002,2003,2004 Zwen
-	
+
 	libmad MP3 low-level core
 	Homepage: http://www.dbox2.info/
 

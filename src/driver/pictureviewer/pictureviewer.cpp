@@ -141,10 +141,10 @@ std::string CPictureViewer::DownloadImage(std::string url)
 
 bool CPictureViewer::DecodeImage (const std::string & _name, bool showBusySign, bool unscaled)
 {
-	// dbout("DecodeImage {\n"); 
+	// dbout("DecodeImage {\n");
 #if 0 // quick fix for issue #245. TODO more smart fix for this problem
 	if (name == m_NextPic_Name) {
-		//      dbout("DecodeImage }\n"); 
+		//      dbout("DecodeImage }\n");
 		return true;
 	}
 #endif

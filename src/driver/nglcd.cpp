@@ -481,7 +481,7 @@ bool nGLCD::getBoundingBox(uint32_t *buffer, int width, int height, int &bb_x, i
 	b = buffer + height * width - 1;
 	for (int y = height - 1; y_min < y; y--)
 		for (int x = 0; x < width; x++, b--)
-			if (*b) { 
+			if (*b) {
 				y_max = y;
 				goto out2;
 			}

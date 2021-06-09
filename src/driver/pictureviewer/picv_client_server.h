@@ -2,8 +2,8 @@
 
   structs/defines for client server communication
   between neutrino picviewer and jpeg decode server
-  
-  (c) Zwen@tuxbox.org   
+
+  (c) Zwen@tuxbox.org
 
   License: GPL
 

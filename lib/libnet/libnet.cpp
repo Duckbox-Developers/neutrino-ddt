@@ -11,83 +11,9 @@
 
 #include "libnet.h"
 
-#if 0
-//never used
-static	void	scanip( char *str, unsigned char *to )
-{
-	int		val;
-	int		c;
-	char	*sp;
-	int		b=4;
-
-	for( sp=str; b; b-- )
-	{
-		val=0;
-		for(; (*sp != 0) && (*sp != '.'); sp++)
-		{
-			c = *sp - '0';
-			if (( c < 0 ) || ( c>=10))
-				break;
-			val=(val*10)+c;
-		}
-		*to=val;
-		to++;
-		if ( !*sp )
-			break;
-		sp++;
-	}
-}
-
-int	netSetIP( char *dev, char *ip, char *mask, char *brdcast )
-{
-	int					fd;
-	struct ifreq		req;
-	int					rc=-1;
-	unsigned char		adr_ip[4];
-	unsigned char		adr_mask[4];
-	unsigned char		adr_brdcast[4];
-	struct sockaddr_in	addr;
-
-	fd=socket(AF_INET,SOCK_DGRAM,0);
-	if ( !fd )
-		return -1;
-
-	scanip( ip, adr_ip );
-	scanip( mask, adr_mask );
-	scanip( brdcast, adr_brdcast );
-
-	/* init structures */
-	memset(&req,0,sizeof(req));
-	strcpy(req.ifr_name,dev);
-
-	memset(&addr,0,sizeof(addr));
-	addr.sin_family = AF_INET;
-
-	addr.sin_addr.s_addr = *((unsigned long *) adr_ip);
-	memmove(&req.ifr_addr,&addr,sizeof(addr));
-	if( ioctl(fd,SIOCSIFADDR,&req) < 0 )
-		goto abbruch;
-
-	addr.sin_addr.s_addr = *((unsigned long *) adr_mask);
-	memmove(&req.ifr_addr,&addr,sizeof(addr));
-	if( ioctl(fd,SIOCSIFNETMASK,&req) < 0 )
-		goto abbruch;
-
-	addr.sin_addr.s_addr = *((unsigned long *) adr_brdcast);
-	memmove(&req.ifr_addr,&addr,sizeof(addr));
-	if( ioctl(fd,SIOCSIFBRDADDR,&req) < 0 )
-		goto abbruch;
-
-	rc = 0;
-abbruch:
-	close(fd);
-
-	return rc;
-}
-#endif
 void	netGetIP(std::string &dev, std::string &ip, std::string &mask, std::string &brdcast)
 {
-	int					fd;
+	int			fd;
 	struct ifreq		req;
 	struct sockaddr_in	*saddr;
 	unsigned char		*addr;
@@ -99,7 +25,6 @@ void	netGetIP(std::string &dev, std::string &ip, std::string &mask, std::string 
 	fd=socket(AF_INET,SOCK_DGRAM,0);
 	if ( !fd )
 		return;
-
 
 	memset(&req,0,sizeof(req));
 	strncpy(req.ifr_name, dev.c_str(), sizeof(req.ifr_name)-1);
@@ -122,44 +47,8 @@ void	netGetIP(std::string &dev, std::string &ip, std::string &mask, std::string 
 
 	close(fd);
 }
-#if 0
-//never used
-void	netSetDefaultRoute( char *gw )
-{
-	struct rtentry		re;
-	struct sockaddr_in	*in_addr;
-	unsigned char		*addr;
-	int					fd;
-	unsigned char		adr_gw[4] = {0};
 
-	scanip( gw, adr_gw );
-
-	memset(&re,0,sizeof(struct rtentry));
-
-	in_addr = (struct sockaddr_in *)&re.rt_dst;
-	in_addr->sin_family = AF_INET;
-
-	in_addr = (struct sockaddr_in *)&re.rt_gateway;
-	in_addr->sin_family = AF_INET;
-	addr=(unsigned char*)&in_addr->sin_addr.s_addr;
-
-	in_addr = (struct sockaddr_in *)&re.rt_genmask;
-	in_addr->sin_family = AF_INET;
-
-	fd=socket(AF_INET,SOCK_DGRAM,0);
-	if ( fd < 0 )
-		return;
-
-	re.rt_flags = RTF_GATEWAY | RTF_UP;
-	memmove(addr,adr_gw,4);
-
-	ioctl(fd,SIOCADDRT,&re);
-
-	close(fd);
-	return;
-}
-#endif
-void netGetDefaultRoute( std::string &ip )
+void	netGetDefaultRoute(std::string &ip)
 {
 	FILE *fp;
 	char interface[9];
@@ -189,26 +78,7 @@ void netGetDefaultRoute( std::string &ip )
 	fclose(fp);
 }
 
-#if 0
-static	char	dombuf[256];
-static	char	domis=0;
-//never used
-char	*netGetDomainname( void )
-{
-	if (!domis)
-		getdomainname( dombuf, 256 );
-	domis=1;
-	return dombuf;
-}
-
-void	netSetDomainname( char *dom )
-{
-	strcpy(dombuf,dom);
-	domis=1;
-	setdomainname(dombuf,strlen(dombuf)+1);
-}
-#endif
-void netGetHostname( std::string &host )
+void	netGetHostname(std::string &host)
 {
 	host = "";
 	char hostbuf[256];
@@ -216,7 +86,7 @@ void netGetHostname( std::string &host )
 		host = std::string(hostbuf);
 }
 
-void	netSetHostname( std::string &host )
+void	netSetHostname(std::string &host)
 {
 	if (sethostname(host.c_str(), host.length()) < 0)
 	{
@@ -253,7 +123,7 @@ void	netSetNameserver(std::string &ip)
 	fclose(fp);
 }
 
-void	netGetNameserver( std::string &ip )
+void	netGetNameserver(std::string &ip)
 {
 	FILE *fp;
 	char zeile[256];
@@ -284,7 +154,7 @@ void	netGetNameserver( std::string &ip )
 	fclose(fp);
 }
 
-void netGetMacAddr(std::string &ifname, unsigned char *mac)
+void	netGetMacAddr(std::string &ifname, unsigned char *mac)
 {
 	int fd;
 	struct ifreq ifr;

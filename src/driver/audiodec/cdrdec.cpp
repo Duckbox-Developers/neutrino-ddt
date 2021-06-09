@@ -2,13 +2,13 @@
 	Neutrino-GUI  -   DBoxII-Project
 
 	Copyright (C) 2004 thegoodguy
-	
+
 	Homepage: http://www.dbox2.info/
 
 	Kommentar:
 
 	cdr audio decoder
-	
+
 	License: GPL
 
 	This program is free software; you can redistribute it and/or modify
