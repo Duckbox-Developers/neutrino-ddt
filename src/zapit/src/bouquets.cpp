@@ -249,7 +249,6 @@ void CBouquetManager::writeBouquetHeader(FILE * bouq_fd, uint32_t i, const char 
 	if (Bouquets[i]->bHidden!=DEFAULT_BQ_HIDDEN) fprintf(bouq_fd, " hidden=\"%d\"", Bouquets[i]->bHidden ? 1 : 0);
 	if (Bouquets[i]->bLocked!=DEFAULT_BQ_LOCKED) fprintf(bouq_fd, " locked=\"%d\"", Bouquets[i]->bLocked ? 1 : 0);
 	if (Bouquets[i]->bScanEpg!=DEFAULT_BQ_SCANEPG) fprintf(bouq_fd, " epg=\"%d\"", Bouquets[i]->bScanEpg ? 1 : 0);
-	if (Bouquets[i]->bUseCI) fprintf(bouq_fd, " ci=\"1\"");
 	fprintf(bouq_fd, ">\n");
 }
 
@@ -434,7 +433,7 @@ void CBouquetManager::parseBouquetsXml(const char *fname, bool bUser)
 			else
 				newBouquet->bName = name;
 			newBouquet->bScanEpg = scanepg ? (strcmp(scanepg, "1") == 0) : false;
-			newBouquet->bUseCI = useci ? (strcmp(useci, "1") == 0) : false;
+
 			channel_node = xmlChildrenNode(search);
 			while ((channel_node = xmlGetNextOccurence(channel_node, "S")) != NULL) {
 				std::string name2;
@@ -470,7 +469,6 @@ void CBouquetManager::parseBouquetsXml(const char *fname, bool bUser)
 					if(!bUser)
 						chan->pname = (char *) newBouquet->Name.c_str();
 					chan->bLocked = clock;
-					chan->bUseCI = newBouquet->bUseCI;
 					//remapping epg_id
 					t_channel_id new_epgid = reMapEpgID(chan->getChannelID());
 					if(new_epgid)
