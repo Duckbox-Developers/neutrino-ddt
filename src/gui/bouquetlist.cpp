@@ -235,7 +235,6 @@ int CBouquetList::doMenu()
 	CMenuSelectorTarget * selector = new CMenuSelectorTarget(&select);
 
 	int old_epg = zapitBouquet ? zapitBouquet->bScanEpg : 0;
-	int old_ci = zapitBouquet ? zapitBouquet->bUseCI : 0;
 	sprintf(cnt, "%d", i);
 	/* FIXME menu centered different than bouquet list ??? */
 	/* provider bouquet */
@@ -243,10 +242,7 @@ int CBouquetList::doMenu()
 		menu->addItem(new CMenuForwarder(LOCALE_FAVORITES_COPY, true, NULL, selector, cnt, CRCInput::RC_blue), old_selected == i ++);
 		if ((!zapitBouquet->bWebtv && !zapitBouquet->bWebradio) && g_settings.epg_scan == CEpgScan::SCAN_SEL)
 			menu->addItem(new CMenuOptionChooser(LOCALE_MISCSETTINGS_EPG_SCAN, &zapitBouquet->bScanEpg, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true));
-#if 0 
-		if (!zapitBouquet->bWebtv && !zapitBouquet->bWebradio)
-			menu->addItem(new CMenuOptionChooser(LOCALE_CI_USE, &zapitBouquet->bUseCI, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true));
-#endif
+
 		menu->exec(NULL, "");
 		delete menu;
 		delete selector;
@@ -256,20 +252,12 @@ int CBouquetList::doMenu()
 			CNeutrinoApp::getInstance()->MarkBouquetsChanged();
 			ret = -1;
 		}
-		if (old_ci != zapitBouquet->bUseCI) {
-			channels = &zapitBouquet->tvChannels;
-			for(int li = 0; li < (int) channels->size(); li++)
-				(*channels)[li]->bUseCI = zapitBouquet->bUseCI;
-
-			channels = &zapitBouquet->radioChannels;
-			for(int li = 0; li < (int) channels->size(); li++)
-				(*channels)[li]->bUseCI = zapitBouquet->bUseCI;
-
-			CServiceManager::getInstance()->SetCIFilter();
-			save_bouquets = true;
-			CNeutrinoApp::getInstance()->MarkBouquetsChanged();
-			ret = -1;
-		}
+		channels = &zapitBouquet->tvChannels;
+		channels = &zapitBouquet->radioChannels;
+		CServiceManager::getInstance()->SetCIFilter();
+		save_bouquets = true;
+		CNeutrinoApp::getInstance()->MarkBouquetsChanged();
+		ret = -1;
 
 		if(select >= 0) {
 			bool added = false;
@@ -316,10 +304,7 @@ int CBouquetList::doMenu()
 		menu->addItem(new CMenuForwarder(LOCALE_BOUQUETEDITOR_DELETE, true, NULL, selector, cnt, CRCInput::RC_red), old_selected == i ++);
 		if (zapitBouquet && (!zapitBouquet->bWebtv && !zapitBouquet->bWebradio) && (g_settings.epg_scan == CEpgScan::SCAN_SEL))
 			menu->addItem(new CMenuOptionChooser(LOCALE_MISCSETTINGS_EPG_SCAN, &zapitBouquet->bScanEpg, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true));
-#if 0
-		if (zapitBouquet && (!zapitBouquet->bWebtv && !zapitBouquet->bWebradio))
-			menu->addItem(new CMenuOptionChooser(LOCALE_CI_USE, &zapitBouquet->bUseCI, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true));
-#endif
+
 		menu->exec(NULL, "");
 		delete menu;
 		delete selector;
@@ -328,15 +313,9 @@ int CBouquetList::doMenu()
 			CNeutrinoApp::getInstance()->MarkFavoritesChanged();
 			ret = -1;
 		}
-		if (zapitBouquet && (old_ci != zapitBouquet->bUseCI)) {
+		if (zapitBouquet) {
 			channels = &zapitBouquet->tvChannels;
-			for(int li = 0; li < (int) channels->size(); li++)
-				(*channels)[li]->bUseCI = zapitBouquet->bUseCI;
-
 			channels = &zapitBouquet->radioChannels;
-			for(int li = 0; li < (int) channels->size(); li++)
-				(*channels)[li]->bUseCI = zapitBouquet->bUseCI;
-
 			CServiceManager::getInstance()->SetCIFilter();
 			save_bouquets = true;
 			CNeutrinoApp::getInstance()->MarkFavoritesChanged();
@@ -690,15 +669,6 @@ void CBouquetList::paintItem(int pos)
 				int icon_x = x + width - SCROLLBAR_WIDTH - OFFSET_INNER_MID - iw;
 				frameBuffer->paintIcon(NEUTRINO_ICON_EPG, icon_x, ypos, item_height);
 				iw = iw + OFFSET_INNER_MID;
-			}
-		}
-		if (Bouquets[npos]->zapitBouquet && Bouquets[npos]->zapitBouquet->bUseCI) {
-			int iw2 = 0;
-			frameBuffer->getIconSize(NEUTRINO_ICON_SCRAMBLED, &iw2, &ih);
-			if (iw2 && ih) {
-				int icon_x = x + width - SCROLLBAR_WIDTH - OFFSET_INNER_MID - iw - iw2;
-				frameBuffer->paintIcon(NEUTRINO_ICON_SCRAMBLED, icon_x, ypos, item_height);
-				iw = iw + iw2 + OFFSET_INNER_MID;
 			}
 		}
 
