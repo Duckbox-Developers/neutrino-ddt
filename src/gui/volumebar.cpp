@@ -106,11 +106,11 @@ void CVolumeBar::initVolumeBarSize()
 	//result for width
 	if (g_settings.theme.rounded_corners == 1)
 	{
-		width = (vb_icon_w + vb_pbw + vb_digit_w) + 4*vb_item_offset;
+		width = (vb_icon_w + vb_pbw + vb_digit_w) + 4*vb_item_offset + corner_rad/2;
 	}
 	else
 	{
-		width = (vb_icon_w + vb_pbw + vb_digit_w) + 4*vb_item_offset + corner_rad/2;
+		width = (vb_icon_w + vb_pbw + vb_digit_w) + 4*vb_item_offset;
 	}
 
 	//adapt x-pos
