@@ -1380,11 +1380,5 @@ bool CServiceManager::IsChannelTVChannel(const t_channel_id channel_id)
 void CServiceManager::SetCIFilter()
 {
 	bool enable = false;
-	for (channel_map_iterator_t it = allchans.begin(); it != allchans.end(); ++it) {
-		if (it->second.bUseCI) {
-			enable = true;
-			break;
-		}
-	}
 	CCamManager::getInstance()->EnableChannelFilter(enable);
 }

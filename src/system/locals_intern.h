@@ -338,7 +338,6 @@ const char * locale_real_names[] =
 	"ci.settings",
 	"ci.timeout",
 	"ci.tuner",
-	"ci.use",
 	"ci.waiting",
 	"clock_background",
 	"clock_seconds",
