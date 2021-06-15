@@ -639,7 +639,7 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 	pthread_mutex_unlock(&logo_map_mutex);
 
 	if (g_settings.default_logo == 1) {
-		std::string logo_tmp = logo_path + "/picon_default.png";
+		std::string logo_tmp = DATADIR "/neutrino/icons/picon_default.png";
 		if (channel_id && access(logo_tmp, R_OK) != -1) {
 			if (width && height)
 				getSize(logo_tmp.c_str(), width, height);
@@ -818,7 +818,7 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 	}
 
 	if (g_settings.default_logo == 1) {
-		std::string logo_tmp = logo_path + "/picon_default.png";
+		std::string logo_tmp = DATADIR "/neutrino/icons/picon_default.png";
 		if (channel_id && access(logo_tmp, R_OK) != -1) {
 			if (width && height)
 				getSize(logo_tmp.c_str(), width, height);
