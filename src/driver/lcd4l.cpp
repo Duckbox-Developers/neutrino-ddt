@@ -737,6 +737,7 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 				case 1:
 					Layout = DPF_Type + "user01";
 					break;
+				case 0:
 				default:
 					Layout = DPF_Type + "standard";
 			}
