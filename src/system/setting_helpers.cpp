@@ -58,7 +58,6 @@
 #include <driver/display.h>
 #include <driver/volume.h>
 #include <system/helpers.h>
-// obsolete #include <gui/streaminfo.h>
 
 #include <gui/widget/msgbox.h>
 #include <gui/widget/hintbox.h>
