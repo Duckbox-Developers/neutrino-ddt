@@ -154,7 +154,6 @@ class CAutoModeNotifier : public CChangeObserver
 
 //do we need a class?
 inline int check_shoutcast_dev_id() { return ((g_settings.shoutcast_dev_id != "XXXXXXXXXXXXXXXX") && !g_settings.shoutcast_dev_id.empty()); }
-inline int check_youtube_dev_id() { return ((g_settings.youtube_dev_id != "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX") && !g_settings.youtube_dev_id.empty()); }
 inline int check_tmdb_api_key() { return ((g_settings.tmdb_api_key != "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX") && !g_settings.tmdb_api_key.empty()); }
 
 #endif
