@@ -1204,8 +1204,10 @@ void CNeutrinoApp::saveSetup(const char * fname)
 		dprintf(DEBUG_NORMAL, "error while saving scan-settings!\n");
 	}
 
+#if 0 // FIXME - all fontsize.* are missing
 	// clear configfile
 	configfile.clear();
+#endif
 
 	//theme/color options
 	CThemes::setTheme(configfile);
