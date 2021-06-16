@@ -372,14 +372,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	configfile.clear();
 	// load settings; setup defaults
 	if (!configfile.loadConfig(fname))
-	{
-		// file doesn't exist
 		erg = 1;
-	}
-	else
-	{
-		migrateConfig(fname);
-	}
 
 	parentallocked = !access(NEUTRINO_PARENTALLOCKED_FILE, R_OK);
 
@@ -573,7 +566,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.infobar_subchan_disp_pos = configfile.getInt32("infobar_subchan_disp_pos"  , 0 );
 	g_settings.infobar_buttons_usertitle = configfile.getBool("infobar_buttons_usertitle", false );
 	g_settings.infobar_analogclock = configfile.getInt32("infobar_analogclock", 0);
-	g_settings.infobar_show = configfile.getInt32("infobar_show", configfile.getInt32("infobar_cn", 1));
+	g_settings.infobar_show = configfile.getInt32("infobar_show", 1);
 	g_settings.infobar_show_channellogo   = configfile.getInt32("infobar_show_channellogo"  , 3 );
 	g_settings.infobar_progressbar   = configfile.getInt32("infobar_progressbar"  , 1 ); // below channel name
 	g_settings.infobar_casystem_display = configfile.getInt32("infobar_casystem_display", 1 );//discreet ca mode default
@@ -1209,6 +1202,11 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	if(!scansettings.saveSettings(NEUTRINO_SCAN_SETTINGS_FILE)) {
 		dprintf(DEBUG_NORMAL, "error while saving scan-settings!\n");
 	}
+
+#if 0 // FIXME - all fontsize.* are missing
+	// clear configfile
+	configfile.clear();
+#endif
 
 	//theme/color options
 	CThemes::setTheme(configfile);
@@ -2631,11 +2629,11 @@ TIMER_START();
 	CVFD::getInstance()->setMuted(current_muted);
 
 #ifdef ENABLE_LCD4LINUX
-	if (g_settings.lcd4l_support) {
-		if (LCD4l == NULL)
-			LCD4l = new CLCD4l();
+	if (LCD4l == NULL)
+		LCD4l = new CLCD4l();
+
+	if (g_settings.lcd4l_support)
 		LCD4l->StartLCD4l();
-	}
 #endif
 
 	if (show_startwizard) {
@@ -5659,59 +5657,4 @@ bool CNeutrinoApp::adjustToChannelID(const t_channel_id channel_id)
 		CNeutrinoApp::getInstance()->SetChannelMode(new_mode);
 
 	return true;
-}
-
-/*
- * convert config keys, so that users do not need to set up their system again
-*/
-struct __key_rename {
-	const char *from;
-	const char *to;
-};
-
-static struct __key_rename key_rename[] = {
-	{ "casystem_display",	"infobar_casystem_display" },
-	{ "casystem_dotmatrix",	"infobar_casystem_dotmatrix"},
-	{ "casystem_frame",	"infobar_casystem_frame" },
-	{ "screen_StartX_lcd_a_0",	"screen_StartX_a_0" },
-	{ "screen_StartY_lcd_a_0",	"screen_StartY_a_0" },
-	{ "screen_EndX_lcd_a_0",	"screen_EndX_a_0" },
-	{ "screen_EndY_lcd_a_0",	"screen_EndY_a_0" },
-	{ "screen_StartX_lcd_b_0",	"screen_StartX_b_0" },
-	{ "screen_StartY_lcd_b_0",	"screen_StartY_b_0" },
-	{ "screen_EndX_lcd_b_0",	"screen_EndX_b_0" },
-	{ "screen_EndY_lcd_b_0",	"screen_EndY_b_0" },
-	{ "ci_clock", "ci_clock_0" },
-	{ "ci_save_pincode", "ci_save_pincode_0" },
-	{ "ci_pincode", "ci_pincode_0" },
-	{ "ci_ignore_messages", "ci_ignore_messages_0" },
-#if BOXMODEL_VUPLUS_ALL
-	{ "ci_rpr", "ci_rpr_0" },
-#endif
-	{ NULL, NULL }
-};
-
-/* actually do the migration of the config entries */
-void CNeutrinoApp::migrateConfig(const char *fname)
-{
-	/* we need a second configfile to not create new entries and trigger the
-	 * "new entry created" flag */
-	CConfigFile migconf('\t', false);
-	migconf.loadConfig(fname);
-	/* here we do a simple rename of config file keys */
-	int magic = -424242; /* obviously a value that does not appear in real cases */
-	int i;
-	for (i = 0; key_rename[i].from != NULL; i++) {
-		const char *from = key_rename[i].from;
-		const char *to   = key_rename[i].to;
-		int tmp = migconf.getInt32(from, magic);
-		if (tmp == magic)	/* old key does not exist */
-			continue;
-		/* only set new key to old value if the new key does not yet exist */
-		if (configfile.getInt32(to, magic) == magic)
-			configfile.setInt32(to, tmp);
-		/* always remove old key */
-		configfile.deleteKey(from);
-	}
-	/* more complex migration, including converting values etc. could be done here */
 }
