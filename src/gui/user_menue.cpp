@@ -48,7 +48,7 @@
 #include "subchannel_select.h"
 #include "favorites.h"
 #include "audio_select.h"
-#include "streaminfo2.h"
+#include "streaminfo.h"
 #include "epgplus.h"
 #include "epgview.h"
 #include "eventlist.h"
