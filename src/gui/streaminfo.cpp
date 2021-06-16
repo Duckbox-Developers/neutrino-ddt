@@ -38,7 +38,7 @@ extern "C" {
 
 #include <OpenThreads/ScopedLock>
 
-#include <gui/streaminfo2.h>
+#include <gui/streaminfo.h>
 
 #include <global.h>
 #include <neutrino.h>
