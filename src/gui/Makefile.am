@@ -99,7 +99,7 @@ libneutrino_gui_a_SOURCES = \
 	settings_manager.cpp \
 	sleeptimer.cpp \
 	start_wizard.cpp \
-	streaminfo2.cpp \
+	streaminfo.cpp \
 	subchannel_select.cpp \
 	themes.cpp \
 	timeosd.cpp \

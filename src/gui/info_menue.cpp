@@ -37,7 +37,7 @@
 #include <gui/info_menue.h>
 #include <gui/imageinfo.h>
 #include <gui/dboxinfo.h>
-#include <gui/streaminfo2.h>
+#include <gui/streaminfo.h>
 
 #if 0
 #include <gui/buildinfo.h>
