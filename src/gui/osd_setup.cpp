@@ -519,10 +519,10 @@ const CMenuOptionChooser::keyval OPTIONS_COLORED_EVENTS_OPTIONS[OPTIONS_COLORED_
 {
 	{ 0, LOCALE_MISCSETTINGS_COLORED_EVENTS_0 },	//none
 	{ 1, LOCALE_MISCSETTINGS_COLORED_EVENTS_1 },	//current
-	{ 2, LOCALE_MISCSETTINGS_COLORED_EVENTS_2 } 	//next
+	{ 2, LOCALE_MISCSETTINGS_COLORED_EVENTS_2 }	//next
 };
 
-#define OPTIONS_COL_GRADIENT_OPTIONS_COUNT CC_COLGRAD_TYPES 	//TODO: add modes for intensity
+#define OPTIONS_COL_GRADIENT_OPTIONS_COUNT CC_COLGRAD_TYPES	//TODO: add modes for intensity
 const CMenuOptionChooser::keyval OPTIONS_COL_GRADIENT_OPTIONS[OPTIONS_COL_GRADIENT_OPTIONS_COUNT] =
 {
 	{ CC_COLGRAD_OFF			, LOCALE_OPTIONS_OFF },
@@ -531,14 +531,14 @@ const CMenuOptionChooser::keyval OPTIONS_COL_GRADIENT_OPTIONS[OPTIONS_COL_GRADIE
 	{ CC_COLGRAD_LIGHT_2_DARK		, LOCALE_COLOR_GRADIENT_L2D  }, //light to dark
 	{ CC_COLGRAD_DARK_2_LIGHT		, LOCALE_COLOR_GRADIENT_D2L  }, //dark to light
 	{ CC_COLGRAD_COL_LIGHT_DARK_LIGHT	, LOCALE_COLOR_GRADIENT_LDL  }, //light dark light
-	{ CC_COLGRAD_COL_DARK_LIGHT_DARK	, LOCALE_COLOR_GRADIENT_DLD  }, //dark light dark
+	{ CC_COLGRAD_COL_DARK_LIGHT_DARK	, LOCALE_COLOR_GRADIENT_DLD  }  //dark light dark
 };
 
 #define OPTIONS_COL_GRADIENT_DIRECTION_OPTIONS_COUNT 2
 const CMenuOptionChooser::keyval OPTIONS_COL_GRADIENT_DIRECTION_OPTIONS[OPTIONS_COL_GRADIENT_DIRECTION_OPTIONS_COUNT] =
 {
-	{ CFrameBuffer::gradientHorizontal	, LOCALE_COLOR_GRADIENT_MODE_DIRECTION_HOR  }, 	//horizontal
-	{ CFrameBuffer::gradientVertical	, LOCALE_COLOR_GRADIENT_MODE_DIRECTION_VER }, 	//vertical
+	{ CFrameBuffer::gradientHorizontal	, LOCALE_COLOR_GRADIENT_MODE_DIRECTION_HOR  },	//horizontal
+	{ CFrameBuffer::gradientVertical	, LOCALE_COLOR_GRADIENT_MODE_DIRECTION_VER }	//vertical
 };
 
 /* these are more descriptive... */
@@ -556,16 +556,16 @@ const CMenuOptionChooser::keyval PROGRESSBAR_COLOR_OPTIONS[PROGRESSBAR_COLOR_OPT
 	{ CProgressBar::PB_MATRIX,      _LOCALE_PROGRESSBAR_COLOR_MATRIX },
 	{ CProgressBar::PB_LINES_V,     _LOCALE_PROGRESSBAR_COLOR_VERTICAL },
 	{ CProgressBar::PB_LINES_H,     _LOCALE_PROGRESSBAR_COLOR_HORIZONTAL },
-	{ CProgressBar::PB_COLOR,       _LOCALE_PROGRESSBAR_COLOR_FULL },
+	{ CProgressBar::PB_COLOR,       _LOCALE_PROGRESSBAR_COLOR_FULL }
 };
 
 #define OPTIONS_CHANNELLOGO_POSITION_COUNT 4
 const CMenuOptionChooser::keyval OPTIONS_CHANNELLOGO_POSITION[OPTIONS_CHANNELLOGO_POSITION_COUNT] =
 {
-	{ 0, LOCALE_OPTIONS_OFF },													// off
+	{ 0, LOCALE_OPTIONS_OFF },							// off
 	{ CCHeaderTypes::CC_LOGO_RIGHT, LOCALE_CHANNELLIST_EPGTEXT_ALIGN_RIGHT },	// right
-	{ CCHeaderTypes::CC_LOGO_LEFT, LOCALE_CHANNELLIST_EPGTEXT_ALIGN_LEFT }, 	// left
-	{ CCHeaderTypes::CC_LOGO_CENTER, LOCALE_SETTINGS_POS_DEFAULT_CENTER } 		// centered
+	{ CCHeaderTypes::CC_LOGO_LEFT, LOCALE_CHANNELLIST_EPGTEXT_ALIGN_LEFT },		// left
+	{ CCHeaderTypes::CC_LOGO_CENTER, LOCALE_SETTINGS_POS_DEFAULT_CENTER }		// centered
 };
 
 //show osd setup
@@ -708,9 +708,7 @@ int COsdSetup::showOsdSetup()
 		resCount = 1;
 	}
 	int videoSystem = COsdHelpers::getInstance()->getVideoSystem();
-	bool enable = ((resCount > 1) &&
-			COsdHelpers::getInstance()->isVideoSystem1080(videoSystem) &&
-			(g_settings.video_Mode != VIDEO_STD_AUTO));
+	bool enable = ((resCount > 1) && COsdHelpers::getInstance()->isVideoSystem1080(videoSystem) && (g_settings.video_Mode != VIDEO_STD_AUTO));
 	CMenuOptionChooser * osd_res = new CMenuOptionChooser(LOCALE_COLORMENU_OSD_RESOLUTION, &g_settings.osd_resolution, kext, resCount, enable, this);
 	osd_res->OnAfterChangeOption.connect(sigc::mem_fun(frameBuffer->getInstance(), &CFrameBuffer::clearIconCache));
 	osd_res->setHint("", LOCALE_MENU_HINT_OSD_RESOLUTION);
@@ -1023,7 +1021,7 @@ private:
 	CChangeObserver * observer;
 	CConfigFile     * configfile;
 	int32_t           defaultvalue;
-	std::string	value;
+	std::string       value;
 
 protected:
 
@@ -1172,10 +1170,10 @@ const CMenuOptionChooser::keyval PROGRESSBAR_INFOBAR_POSITION_OPTIONS[PROGRESSBA
 #define LOCALE_MISCSETTINGS_INFOBAR_PROGRESSBAR_COUNT 4
 const CMenuOptionChooser::keyval  LOCALE_MISCSETTINGS_INFOBAR_PROGRESSBAR_OPTIONS[LOCALE_MISCSETTINGS_INFOBAR_PROGRESSBAR_COUNT]=
 {
-   { 0 , LOCALE_MISCSETTINGS_PROGRESSBAR_INFOBAR_POSITION_0 },
-   { 1 , LOCALE_MISCSETTINGS_PROGRESSBAR_INFOBAR_POSITION_1 },
-   { 2 , LOCALE_MISCSETTINGS_PROGRESSBAR_INFOBAR_POSITION_2 },
-   { 3 , LOCALE_MISCSETTINGS_PROGRESSBAR_INFOBAR_POSITION_3 }
+	{ 0 , LOCALE_MISCSETTINGS_PROGRESSBAR_INFOBAR_POSITION_0 },
+	{ 1 , LOCALE_MISCSETTINGS_PROGRESSBAR_INFOBAR_POSITION_1 },
+	{ 2 , LOCALE_MISCSETTINGS_PROGRESSBAR_INFOBAR_POSITION_2 },
+	{ 3 , LOCALE_MISCSETTINGS_PROGRESSBAR_INFOBAR_POSITION_3 }
 };
 
 //menus
@@ -1206,9 +1204,9 @@ void COsdSetup::showOsdMenusSetup(CMenuWidget *menu_menus)
 #define HDD_STATFS_OPTION_COUNT 3
 const CMenuOptionChooser::keyval HDD_STATFS_OPTIONS[HDD_STATFS_OPTION_COUNT] =
 {
-	{ SNeutrinoSettings::HDD_STATFS_OFF,            LOCALE_OPTIONS_OFF },
-	{ SNeutrinoSettings::HDD_STATFS_ALWAYS,         LOCALE_HDD_STATFS_ALWAYS },
-	{ SNeutrinoSettings::HDD_STATFS_RECORDING,      LOCALE_HDD_STATFS_RECORDING }
+	{ SNeutrinoSettings::HDD_STATFS_OFF,       LOCALE_OPTIONS_OFF },
+	{ SNeutrinoSettings::HDD_STATFS_ALWAYS,    LOCALE_HDD_STATFS_ALWAYS },
+	{ SNeutrinoSettings::HDD_STATFS_RECORDING, LOCALE_HDD_STATFS_RECORDING }
 };
 
 
@@ -1535,7 +1533,7 @@ bool COsdSetup::changeNotify(const neutrino_locale_t OptionName, void * data)
 		return true;
 	}
 #ifdef ENABLE_CHANGE_OSD_RESOLUTION
-        else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_COLORMENU_OSD_RESOLUTION))
+	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_COLORMENU_OSD_RESOLUTION))
 	{
 		if (frameBuffer->osd_resolutions.empty())
 			return true;
@@ -1694,8 +1692,8 @@ const CMenuOptionChooser::keyval_ext SCREENSHOT_FMT_OPTIONS[SCREENSHOT_FMT_OPTIO
 #define SCREENSHOT_RES_OPTION_COUNT 2
 const CMenuOptionChooser::keyval SCREENSHOT_RES_OPTIONS[SCREENSHOT_RES_OPTION_COUNT] =
 {
-	{ 1, LOCALE_SCREENSHOT_TV },
-	{ 2, LOCALE_SCREENSHOT_OSD   }
+	{ 1, LOCALE_SCREENSHOT_TV  },
+	{ 2, LOCALE_SCREENSHOT_OSD }
 };
 
 #define SCREENSHOT_PLANE_OPTION_COUNT 3
@@ -1823,7 +1821,7 @@ void COsdSetup::paintWindowSize(int w, int h)
 		if (win_demo->isPainted())
 			win_demo->kill();
 	}
-	
+
 	g_settings.window_width = w;
 	g_settings.window_height = h;
 	if (g_settings.window_width > WINDOW_SIZE_MAX)	
