@@ -717,10 +717,10 @@ int COsdSetup::showOsdSetup()
 	osd_menu->addItem(osd_res);
 #endif
 
-	//monitor
-		mc = new CMenuOptionChooser(LOCALE_COLORMENU_OSD_PRESET, &g_settings.screen_preset, OSD_PRESET_OPTIONS, OSD_PRESET_OPTIONS_COUNT, true, this);
-		mc->setHint("", LOCALE_MENU_HINT_OSD_PRESET);
-		osd_menu->addItem(mc);
+	// monitor
+	mc = new CMenuOptionChooser(LOCALE_COLORMENU_OSD_PRESET, &g_settings.screen_preset, OSD_PRESET_OPTIONS, OSD_PRESET_OPTIONS_COUNT, true, this);
+	mc->setHint("", LOCALE_MENU_HINT_OSD_PRESET);
+	osd_menu->addItem(mc);
 
 	// fade windows
 	mc = new CMenuOptionChooser(LOCALE_COLORMENU_FADE, &g_settings.widget_fade, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true );
