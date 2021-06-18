@@ -1204,9 +1204,75 @@ void CNeutrinoApp::saveSetup(const char * fname)
 		dprintf(DEBUG_NORMAL, "error while saving scan-settings!\n");
 	}
 
-#if 0 // FIXME - all fontsize.* are missing
+#if 0	// FIXME - only for testing
+	// read font settings
+	int fontsize_button_text = configfile.getInt32("fontsize.button_text", 14);
+	int fontsize_channel_num_zap = configfile.getInt32("fontsize.channel_num_zap", 40);
+	int fontsize_channellist = configfile.getInt32("fontsize.channellist", 20);
+	int fontsize_channellist_descr = configfile.getInt32("fontsize.channellist_descr", 20);
+	int fontsize_channellist_event = configfile.getInt32("fontsize.channellist_event", 17);
+	int fontsize_channellist_number = configfile.getInt32("fontsize.channellist_number", 14);
+	int fontsize_epg_date = configfile.getInt32("fontsize.epg_date", 15);
+	int fontsize_epg_info1 = configfile.getInt32("fontsize.epg_info1", 17);
+	int fontsize_epg_info2 = configfile.getInt32("fontsize.epg_info2", 17);
+	int fontsize_epg_title = configfile.getInt32("fontsize.epg_title", 25);
+	int fontsize_epgplus_item = configfile.getInt32("fontsize.epgplus_item", 17);
+	int fontsize_eventlist_datetime = configfile.getInt32("fontsize.eventlist_datetime", 16);
+	int fontsize_eventlist_event = configfile.getInt32("fontsize.eventlist_event", 17);
+	int fontsize_eventlist_itemlarge = configfile.getInt32("fontsize.eventlist_itemlarge", 20);
+	int fontsize_eventlist_itemsmall = configfile.getInt32("fontsize.eventlist_itemsmall", 14);
+	int fontsize_eventlist_title = configfile.getInt32("fontsize.eventlist_title", 30);
+	int fontsize_filebrowser_item = configfile.getInt32("fontsize.filebrowser_item", 17);
+	int fontsize_infobar_channame = configfile.getInt32("fontsize.infobar_channame", 30);
+	int fontsize_infobar_info = configfile.getInt32("fontsize.infobar_info", 20);
+	int fontsize_infobar_number = configfile.getInt32("fontsize.infobar_number", 50);
+	int fontsize_infobar_small = configfile.getInt32("fontsize.infobar_small", 14);
+	int fontsize_menu = configfile.getInt32("fontsize.menu", 20);
+	int fontsize_menu_foot = configfile.getInt32("fontsize.menu_foot", 14);
+	int fontsize_menu_hint = configfile.getInt32("fontsize.menu_hint", 16);
+	int fontsize_menu_info = configfile.getInt32("fontsize.menu_info", 16);
+	int fontsize_menu_title = configfile.getInt32("fontsize.menu_title", 30);
+	int fontsize_message_text = configfile.getInt32("fontsize.message_text", 20);
+	int fontsize_moviebrowser_head = configfile.getInt32("fontsize.moviebrowser_head", 15);
+	int fontsize_moviebrowser_info = configfile.getInt32("fontsize.moviebrowser_info", 17);
+	int fontsize_moviebrowser_list = configfile.getInt32("fontsize.moviebrowser_list", 17);
+	int fontsize_subtitles = configfile.getInt32("fontsize.subtitles", 24);
+
 	// clear configfile
 	configfile.clear();
+
+	// write font settings
+	configfile.setInt32("fontsize.button_text", fontsize_button_text);
+	configfile.setInt32("fontsize.channel_num_zap", fontsize_channel_num_zap);
+	configfile.setInt32("fontsize.channellist", fontsize_channellist);
+	configfile.setInt32("fontsize.channellist_descr", fontsize_channellist_descr);
+	configfile.setInt32("fontsize.channellist_event", fontsize_channellist_event);
+	configfile.setInt32("fontsize.channellist_number", fontsize_channellist_number);
+	configfile.setInt32("fontsize.epg_date", fontsize_epg_date);
+	configfile.setInt32("fontsize.epg_info1", fontsize_epg_info1);
+	configfile.setInt32("fontsize.epg_info2", fontsize_epg_info2);
+	configfile.setInt32("fontsize.epg_title", fontsize_epg_title);
+	configfile.setInt32("fontsize.epgplus_item", fontsize_epgplus_item);
+	configfile.setInt32("fontsize.eventlist_datetime", fontsize_eventlist_datetime);
+	configfile.setInt32("fontsize.eventlist_event", fontsize_eventlist_event);
+	configfile.setInt32("fontsize.eventlist_itemlarge", fontsize_eventlist_itemlarge);
+	configfile.setInt32("fontsize.eventlist_itemsmall", fontsize_eventlist_itemsmall);
+	configfile.setInt32("fontsize.eventlist_title", fontsize_eventlist_title);
+	configfile.setInt32("fontsize.filebrowser_item", fontsize_filebrowser_item);
+	configfile.setInt32("fontsize.infobar_channame", fontsize_infobar_channame);
+	configfile.setInt32("fontsize.infobar_info", fontsize_infobar_info);
+	configfile.setInt32("fontsize.infobar_number", fontsize_infobar_number);
+	configfile.setInt32("fontsize.infobar_small", fontsize_infobar_small);
+	configfile.setInt32("fontsize.menu", fontsize_menu);
+	configfile.setInt32("fontsize.menu_foot", fontsize_menu_foot);
+	configfile.setInt32("fontsize.menu_hint", fontsize_menu_hint);
+	configfile.setInt32("fontsize.menu_info", fontsize_menu_info);
+	configfile.setInt32("fontsize.menu_title", fontsize_menu_title);
+	configfile.setInt32("fontsize.message_text", fontsize_message_text);
+	configfile.setInt32("fontsize.moviebrowser_head", fontsize_moviebrowser_head);
+	configfile.setInt32("fontsize.moviebrowser_info", fontsize_moviebrowser_info);
+	configfile.setInt32("fontsize.moviebrowser_list", fontsize_moviebrowser_list);
+	configfile.setInt32("fontsize.subtitles", fontsize_subtitles);
 #endif
 
 	//theme/color options
