@@ -430,7 +430,7 @@ bool exec_controlscript(std::string script)
 	if (ret)
 		dprintf(DEBUG_NORMAL, "\033[01;31mcontrol script missing\033[0m %s\n", controlscript.c_str());
 
-	return ret;
+	return ret == 0 ? true : false;
 }
 
 std::string backtick(std::string command)
