@@ -428,7 +428,7 @@ bool exec_controlscript(std::string script)
 	dprintf(DEBUG_NORMAL, "executing %s\n", controlscript.c_str());
 	int ret = my_system(controlscript.c_str());
 	if (ret)
-		dprintf(DEBUG_NORMAL, "\033[01;31mcontrol script missing\033[0m %s\n", controlscript.c_str());
+		dprintf_colored(DEBUG_NORMAL, "control script missing %s\n", controlscript.c_str());
 
 	return ret == 0 ? true : false;
 }
