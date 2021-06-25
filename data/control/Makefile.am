@@ -10,6 +10,8 @@ install_DATA = \
 	movieplayer.end \
 	movieplayer.start \
 	neutrino.start \
+	pictureviewer.end \
+	pictureviewer.start \
 	recording.end \
 	recording.start \
 	recording.timer \
@@ -23,11 +25,13 @@ install-data-hook:
 	chmod 0755 $(DESTDIR)$(CONTROLDIR)/audioplayer.start
 	chmod 0755 $(DESTDIR)$(CONTROLDIR)/deepstandby.off
 	chmod 0755 $(DESTDIR)$(CONTROLDIR)/deepstandby.on
-	chmod 0755 $(DESTDIR)$(CONTROLDIR)/inactivity.on
 	chmod 0755 $(DESTDIR)$(CONTROLDIR)/flash.start
+	chmod 0755 $(DESTDIR)$(CONTROLDIR)/inactivity.on
 	chmod 0755 $(DESTDIR)$(CONTROLDIR)/movieplayer.end
 	chmod 0755 $(DESTDIR)$(CONTROLDIR)/movieplayer.start
 	chmod 0755 $(DESTDIR)$(CONTROLDIR)/neutrino.start
+	chmod 0755 $(DESTDIR)$(CONTROLDIR)/pictureviewer.end
+	chmod 0755 $(DESTDIR)$(CONTROLDIR)/pictureviewer.start
 	chmod 0755 $(DESTDIR)$(CONTROLDIR)/recording.end
 	chmod 0755 $(DESTDIR)$(CONTROLDIR)/recording.start
 	chmod 0755 $(DESTDIR)$(CONTROLDIR)/recording.timer

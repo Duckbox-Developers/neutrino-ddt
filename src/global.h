@@ -56,6 +56,8 @@
 #define NEUTRINO_RECORDING_TIMER_SCRIPT "recording.timer"
 #define NEUTRINO_SCAN_START_SCRIPT "scan.start"
 #define NEUTRINO_SCAN_STOP_SCRIPT "scan.stop"
+#define PICTUREVIEWER_END_SCRIPT "pictureviewer.end"
+#define PICTUREVIEWER_START_SCRIPT "pictureviewer.start"
 
 NEUTRINO_CPP  SNeutrinoSettings	g_settings;
 NEUTRINO_CPP  SglobalInfo	g_info;
