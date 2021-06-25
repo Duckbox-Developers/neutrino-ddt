@@ -59,9 +59,6 @@
 
 extern cVideo * videoDecoder;
 
-#define NEUTRINO_SCAN_START_SCRIPT	CONFIGDIR "/scan.start"
-#define NEUTRINO_SCAN_STOP_SCRIPT	CONFIGDIR "/scan.stop"
-
 #define BAR_BORDER 2
 #define BAR_WIDTH 150
 #define BAR_HEIGHT 16//(13 + BAR_BORDER*2)
@@ -296,10 +293,8 @@ int CScanTs::exec(CMenuTarget* /*parent*/, const std::string & actionKey)
 	}
 	success = false;
 
-	if(!manual) {
-                if (my_system(NEUTRINO_SCAN_START_SCRIPT) != 0)
-                	perror(NEUTRINO_SCAN_START_SCRIPT " failed");
-	}
+	if (!manual)
+		exec_controlscript(NEUTRINO_SCAN_START_SCRIPT);
 
 	g_Zapit->setScanBouquetMode( (CZapitClient::bouquetMode)scansettings.bouquetMode);
 
@@ -364,10 +359,9 @@ int CScanTs::exec(CMenuTarget* /*parent*/, const std::string & actionKey)
 	/* to join scan thread */
 	g_Zapit->stopScan();
 
-	if(!manual) {
-                if (my_system(NEUTRINO_SCAN_STOP_SCRIPT) != 0)
-                	perror(NEUTRINO_SCAN_STOP_SCRIPT " failed");
-	}
+	if (!manual)
+		exec_controlscript(NEUTRINO_SCAN_STOP_SCRIPT);
+
 	if(!test) {
 		CComponentsHeader header(x, y, width, hheight, success ? LOCALE_SCANTS_FINISHED : LOCALE_SCANTS_FAILED);
 		header.paint(CC_SAVE_SCREEN_NO);

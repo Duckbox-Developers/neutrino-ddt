@@ -30,20 +30,6 @@
 #endif
 
 #define NEUTRINO_SETTINGS_FILE          CONFIGDIR "/neutrino.conf"
-
-#define NEUTRINO_RECORDING_TIMER_SCRIPT CONFIGDIR "/recording.timer"
-#define NEUTRINO_RECORDING_START_SCRIPT CONFIGDIR "/recording.start"
-#define NEUTRINO_RECORDING_ENDED_SCRIPT CONFIGDIR "/recording.end"
-#define NEUTRINO_ENTER_STANDBY_SCRIPT   CONFIGDIR "/standby.on"
-#define NEUTRINO_LEAVE_STANDBY_SCRIPT   CONFIGDIR "/standby.off"
-#define NEUTRINO_ENTER_INACTIVITY_SCRIPT	CONFIGDIR "/inactivity.on"
-#define NEUTRINO_ENTER_DEEPSTANDBY_SCRIPT	CONFIGDIR "/deepstandby.on"
-#define NEUTRINO_LEAVE_DEEPSTANDBY_SCRIPT	CONFIGDIR "/deepstandby.off"
-#define MOVIEPLAYER_START_SCRIPT        CONFIGDIR "/movieplayer.start"
-#define MOVIEPLAYER_END_SCRIPT          CONFIGDIR "/movieplayer.end"
-#define NEUTRINO_ENTER_FLASH_SCRIPT	CONFIGDIR "/flash.start"
-#define NEUTRINO_APP_START_SCRIPT	CONFIGDIR "/neutrino.start"
-
 #define NEUTRINO_SCAN_SETTINGS_FILE     CONFIGDIR "/scan.conf"
 #define NEUTRINO_PARENTALLOCKED_FILE    DATADIR   "/neutrino/.plocked"
 
@@ -52,6 +38,24 @@
 #define LOGODIR		ICONSDIR "/logo"
 #define LOGODIR_VAR	ICONSDIR_VAR "/logo"
 #define LOGODIR_TMP	"/tmp/.logo"
+
+// control scripts
+#define AUDIOPLAYER_END_SCRIPT "audioplayer.end"
+#define AUDIOPLAYER_START_SCRIPT "audioplayer.start"
+#define MOVIEPLAYER_END_SCRIPT           "movieplayer.end"
+#define MOVIEPLAYER_START_SCRIPT         "movieplayer.start"
+#define NEUTRINO_APP_START_SCRIPT "neutrino.start"
+#define NEUTRINO_ENTER_DEEPSTANDBY_SCRIPT "deepstandby.on"
+#define NEUTRINO_ENTER_FLASH_SCRIPT "flash.start"
+#define NEUTRINO_ENTER_INACTIVITY_SCRIPT "inactivity.on"
+#define NEUTRINO_ENTER_STANDBY_SCRIPT   "standby.on"
+#define NEUTRINO_LEAVE_DEEPSTANDBY_SCRIPT "deepstandby.off"
+#define NEUTRINO_LEAVE_STANDBY_SCRIPT   "standby.off"
+#define NEUTRINO_RECORDING_ENDED_SCRIPT "recording.end"
+#define NEUTRINO_RECORDING_START_SCRIPT "recording.start"
+#define NEUTRINO_RECORDING_TIMER_SCRIPT "recording.timer"
+#define NEUTRINO_SCAN_START_SCRIPT "scan.start"
+#define NEUTRINO_SCAN_STOP_SCRIPT "scan.stop"
 
 NEUTRINO_CPP  SNeutrinoSettings	g_settings;
 NEUTRINO_CPP  SglobalInfo	g_info;

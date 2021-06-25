@@ -93,8 +93,6 @@ extern cVideo * videoDecoder;
 
 // check if files to be added are already in the playlist
 #define AUDIOPLAYER_CHECK_FOR_DUPLICATES
-#define AUDIOPLAYER_START_SCRIPT CONFIGDIR "/audioplayer.start"
-#define AUDIOPLAYER_END_SCRIPT CONFIGDIR "/audioplayer.end"
 #define DEFAULT_RADIOSTATIONS_XMLFILE CONFIGDIR "/radio-stations.xml"
 
 const char RADIO_STATION_XML_FILE[] = {DEFAULT_RADIOSTATIONS_XMLFILE};
@@ -299,9 +297,7 @@ int CAudioPlayerGui::exec(CMenuTarget* parent, const std::string &actionKey)
 	m_LastMode = CNeutrinoApp::getInstance()->getMode();
 	CNeutrinoApp::getInstance()->handleMsg(NeutrinoMessages::CHANGEMODE , NeutrinoModes::mode_audio);
 
-	puts("[audioplayer.cpp] executing " AUDIOPLAYER_START_SCRIPT ".");
-	if (my_system(AUDIOPLAYER_START_SCRIPT) != 0)
-		perror(AUDIOPLAYER_START_SCRIPT " failed");
+	exec_controlscript(AUDIOPLAYER_START_SCRIPT);
 
 	int res = show();
 
@@ -311,9 +307,7 @@ int CAudioPlayerGui::exec(CMenuTarget* parent, const std::string &actionKey)
 	m_frameBuffer->useBackground(usedBackground);
 	m_frameBuffer->paintBackground();
 
-	puts("[audioplayer.cpp] executing " AUDIOPLAYER_END_SCRIPT ".");
-	if (my_system(AUDIOPLAYER_END_SCRIPT) != 0)
-		perror(AUDIOPLAYER_END_SCRIPT " failed");
+	exec_controlscript(AUDIOPLAYER_END_SCRIPT);
 
 	//g_Zapit->unlockPlayBack();
 	CZapit::getInstance()->EnablePlayback(true);

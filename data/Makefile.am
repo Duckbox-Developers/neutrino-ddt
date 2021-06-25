@@ -6,7 +6,6 @@ SUBDIRS = \
 	iso-codes \
 	license \
 	locale \
-	neutrino-scripts \
 	pictures \
 	scripts \
 	themes \
@@ -14,3 +13,9 @@ SUBDIRS = \
 	webradio \
 	y-web \
 	zapit
+
+if BOXTYPE_ARMBOX
+SUBDIRS += control-arm
+else
+SUBDIRS += control
+endif

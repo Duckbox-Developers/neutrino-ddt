@@ -1,0 +1,4 @@
+#!/bin/sh
+[ -f /tmp/.box_in_standby ] && rm -f /tmp/.box_in_standby
+	echo -e "\033[01;32mStandby deaktiviert......\033[00m"
+exit 0

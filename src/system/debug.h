@@ -44,7 +44,16 @@ void setDebugLevel( int level );
 		if (debug >= debuglevel) \
 			printf( "[neutrino] " fmt, ## args); \
 	} while(0)
-#define dperror(str) {perror("[neutrino] " str);}
 
+/* dont add \n when using this */
+#define dprintf_colored(debuglevel, fmt, args...) do { \
+	if (debug >= debuglevel) { \
+		printf( "%c[%d;%d;%dm", 0x1B, 1, 31, 40);\
+		printf( "[neutrino] " fmt, ## args); \
+		printf( "%c[%dm\n", 0x1B, 0); \
+	}\
+}  while (0)
+
+#define dperror(str) {perror("[neutrino] " str);}
 
 #endif

@@ -1,0 +1,6 @@
+#!/bin/sh
+
+if pidof vsftpd > /dev/null; then
+	echo "Kill vsftpd"
+	killall vsftpd
+fi
