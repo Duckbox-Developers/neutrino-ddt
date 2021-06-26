@@ -799,10 +799,12 @@ int CNeutrinoApp::loadSetup(const char * fname)
 			g_settings.webtv_xml.push_back(webtv_xml);
 		}
 	} else {
-		std::string webtv_xml = configfile.getString("webtv_xml", WEBTV_XML);
-		if (file_size(webtv_xml.c_str())) {
-			g_settings.webtv_xml.push_back(webtv_xml);
-			configfile.deleteKey("webtv_xml");
+		if (!access(WEBTV_XML, R_OK)) {
+			std::string webtv_xml = configfile.getString("webtv_xml", WEBTV_XML);
+			if (file_size(webtv_xml.c_str())) {
+				g_settings.webtv_xml.push_back(webtv_xml);
+				configfile.deleteKey("webtv_xml");
+			}
 		}
 	}
 
@@ -817,10 +819,12 @@ int CNeutrinoApp::loadSetup(const char * fname)
 			g_settings.webradio_xml.push_back(webradio_xml);
 		}
 	} else {
-		std::string webradio_xml = configfile.getString("webradio_xml", WEBRADIO_XML);
-		if (file_size(webradio_xml.c_str())) {
-			g_settings.webradio_xml.push_back(webradio_xml);
-			configfile.deleteKey("webradio_xml");
+		if (!access(WEBRADIO_XML, R_OK)) {
+			std::string webradio_xml = configfile.getString("webradio_xml", WEBRADIO_XML);
+			if (file_size(webradio_xml.c_str())) {
+				g_settings.webradio_xml.push_back(webradio_xml);
+				configfile.deleteKey("webradio_xml");
+			}
 		}
 	}
 
