@@ -1216,7 +1216,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 		dprintf(DEBUG_NORMAL, "error while saving scan-settings!\n");
 	}
 
-#if 0	// FIXME - only for testing
+#if 1	// FIXME - only for testing
 	// read font settings
 	int fontsize_button_text = configfile.getInt32("fontsize.button_text", 14);
 	int fontsize_channel_num_zap = configfile.getInt32("fontsize.channel_num_zap", 40);
