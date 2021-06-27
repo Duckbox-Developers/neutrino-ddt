@@ -799,10 +799,12 @@ int CNeutrinoApp::loadSetup(const char * fname)
 			g_settings.webtv_xml.push_back(webtv_xml);
 		}
 	} else {
-		std::string webtv_xml = configfile.getString("webtv_xml", WEBTV_XML);
-		if (file_size(webtv_xml.c_str())) {
-			g_settings.webtv_xml.push_back(webtv_xml);
-			configfile.deleteKey("webtv_xml");
+		if (!access(WEBTV_XML, R_OK)) {
+			std::string webtv_xml = configfile.getString("webtv_xml", WEBTV_XML);
+			if (file_size(webtv_xml.c_str())) {
+				g_settings.webtv_xml.push_back(webtv_xml);
+				configfile.deleteKey("webtv_xml");
+			}
 		}
 	}
 
@@ -817,10 +819,12 @@ int CNeutrinoApp::loadSetup(const char * fname)
 			g_settings.webradio_xml.push_back(webradio_xml);
 		}
 	} else {
-		std::string webradio_xml = configfile.getString("webradio_xml", WEBRADIO_XML);
-		if (file_size(webradio_xml.c_str())) {
-			g_settings.webradio_xml.push_back(webradio_xml);
-			configfile.deleteKey("webradio_xml");
+		if (!access(WEBRADIO_XML, R_OK)) {
+			std::string webradio_xml = configfile.getString("webradio_xml", WEBRADIO_XML);
+			if (file_size(webradio_xml.c_str())) {
+				g_settings.webradio_xml.push_back(webradio_xml);
+				configfile.deleteKey("webradio_xml");
+			}
 		}
 	}
 
@@ -1203,7 +1207,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 		dprintf(DEBUG_NORMAL, "error while saving scan-settings!\n");
 	}
 
-#if 0	// FIXME - only for testing
+#if 1	// FIXME - only for testing
 	// read font settings
 	int fontsize_button_text = configfile.getInt32("fontsize.button_text", 14);
 	int fontsize_channel_num_zap = configfile.getInt32("fontsize.channel_num_zap", 40);
@@ -1433,7 +1437,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32("volume_size"  , g_settings.volume_size);
 	configfile.setInt32("menu_pos" , g_settings.menu_pos);
 	configfile.setBool("show_menu_hints" , g_settings.show_menu_hints);
-	configfile.setInt32("infobar_show_sysfs_hdd"  , g_settings.infobar_show_sysfs_hdd  );
+	configfile.setBool("infobar_show_sysfs_hdd"  , g_settings.infobar_show_sysfs_hdd  );
 	configfile.setInt32("show_mute_icon"   , g_settings.show_mute_icon);
 	configfile.setInt32("infobar_show_res"  , g_settings.infobar_show_res  );
 	configfile.setInt32("infobar_show_dd_available"  , g_settings.infobar_show_dd_available  );

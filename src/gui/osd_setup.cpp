@@ -605,12 +605,6 @@ int COsdSetup::showOsdSetup()
 	mf->setHint("", LOCALE_MENU_HINT_TIMEOUTS);
 	osd_menu->addItem(mf);
 
-	//screen
-	CScreenSetup screensetup;
-	mf = new CMenuForwarder(LOCALE_VIDEOMENU_SCREENSETUP, true, NULL, &screensetup, NULL, CRCInput::RC_blue);
-	mf->setHint("", LOCALE_MENU_HINT_SCREEN_SETUP);
-	osd_menu->addItem(mf);
-
 	//menus
 	CMenuWidget osd_menu_menus(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_SETTINGS, width, MN_WIDGET_ID_OSDSETUP_MENUS);
 	showOsdMenusSetup(&osd_menu_menus);
@@ -683,11 +677,6 @@ int COsdSetup::showOsdSetup()
 
 	osd_menu->addItem(GenericMenuSeparatorLine);
 
-	// radiotext
-	mc = new CMenuOptionChooser(LOCALE_MISCSETTINGS_RADIOTEXT, &g_settings.radiotext_enable, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this);
-	mc->setHint("", LOCALE_MENU_HINT_INFOBAR_RADIOTEXT);
-	osd_menu->addItem(mc);
-
 #ifdef ENABLE_CHANGE_OSD_RESOLUTION
 	// osd resolution
 	size_t resCount = frameBuffer->osd_resolutions.size();
@@ -720,10 +709,11 @@ int COsdSetup::showOsdSetup()
 	mc->setHint("", LOCALE_MENU_HINT_OSD_PRESET);
 	osd_menu->addItem(mc);
 
-	// fade windows
-	mc = new CMenuOptionChooser(LOCALE_COLORMENU_FADE, &g_settings.widget_fade, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true );
-	mc->setHint("", LOCALE_MENU_HINT_FADE);
-	osd_menu->addItem(mc);
+	//screen
+	CScreenSetup screensetup;
+	mf = new CMenuForwarder(LOCALE_VIDEOMENU_SCREENSETUP, true, NULL, &screensetup, NULL, CRCInput::RC_blue);
+	mf->setHint("", LOCALE_MENU_HINT_SCREEN_SETUP);
+	osd_menu->addItem(mf);
 
 	// window size
 	memset(window_size_value, 0, sizeof(window_size_value));
@@ -732,7 +722,17 @@ int COsdSetup::showOsdSetup()
 	mfWindowSize->setHint("", LOCALE_MENU_HINT_WINDOW_SIZE);
 	osd_menu->addItem(mfWindowSize);
 
+	// fade windows
+	mc = new CMenuOptionChooser(LOCALE_COLORMENU_FADE, &g_settings.widget_fade, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true );
+	mc->setHint("", LOCALE_MENU_HINT_FADE);
+	osd_menu->addItem(mc);
+
 	osd_menu->addItem(GenericMenuSeparatorLine);
+
+	// radiotext
+	mc = new CMenuOptionChooser(LOCALE_MISCSETTINGS_RADIOTEXT, &g_settings.radiotext_enable, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this);
+	mc->setHint("", LOCALE_MENU_HINT_INFOBAR_RADIOTEXT);
+	osd_menu->addItem(mc);
 
 	// subchannel menu position
 	mc = new CMenuOptionChooser(LOCALE_INFOVIEWER_SUBCHAN_DISP_POS, &g_settings.infobar_subchan_disp_pos, INFOBAR_SUBCHAN_DISP_POS_OPTIONS, INFOBAR_SUBCHAN_DISP_POS_OPTIONS_COUNT, true);
