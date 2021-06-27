@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo -e "\033[01;32mAudioplayer wird beendet......\033[00m"
+exit 0

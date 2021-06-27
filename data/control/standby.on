@@ -1,0 +1,8 @@
+#!/bin/sh
+if [ -f /var/etc/.hdd_stop ] && [ ! -f /tmp/.recording ]; then
+	DEV=`cat /tmp/auto.devices | grep 'RECORD' | awk '{print $1}' | cut -d '-' -f2`
+	[ ! "$DEV" == "" ] && echo "Record Device: $DEV to StandBy" && /sbin/hd-idle -t $DEV
+fi
+touch /tmp/.box_in_standby
+	echo -e "\033[01;32mStandby aktiviert......\033[00m"
+exit 0

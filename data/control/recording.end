@@ -1,0 +1,44 @@
+#!/bin/sh
+#echo "Aufnahme gestoppt..." >> /tmp/test.txt
+if [ -e /dev/dbox/oled0 ]; then
+	CVFD=/dev/dbox/oled0
+else
+	CVFD=/dev/vfd
+fi
+checkNextTimer() {
+	sleep 30
+	VSTART=`grep WAKEUPDECREMENT /etc/vdstandby.cfg | awk -F "=" '{print $2}'`
+	[ ! $VSTART ] && VSTART=300
+	TIMER=2100000000
+	for T in `grep ALARM_TIME /var/tuxbox/config/timerd.conf | awk -F "=" '{print $2}'`; do
+		[ $T -lt $TIMER ] && TIMER=$T
+	done
+
+	if [ $(( $TIMER - `date +%s` )) -gt $(( $VSTART * 3)) ]; then
+		[ -e /var/etc/.timer_wake_up ] && rm -f /var/etc/.timer_wake_up
+		echo ">>> Fertig <<<" > $CVFD
+		msgbox title="Herunterfahren" msg="Timer beendet, Box herunterfahren?" select="Ja,Nein" timeout=30
+		[ $? == 0 -o $? == 1 ] && killall neutrino
+#	else
+#		echo "Wait for next Timer" > $CVFD
+#		/usr/bin/pzapit -rz
+	fi
+}
+[ -e /tmp/.timer_record ] && rm -f /tmp/.timer_record
+if [ -e /var/etc/.timer_wake_up ]; then
+	checkNextTimer &
+#else
+#	/usr/bin/pzapit -rz
+fi
+# RAM-Cleaner starten
+#if [ -f /var/etc/msettings.conf ]; then
+#	if [ "$(grep -i "RAMCLEAN=" /var/etc/msettings.conf | cut -d "=" -f 2)" != "0" ]; then
+#		sync
+#		echo "3" > /proc/sys/vm/drop_caches
+#		rm -f /tmp/.ram_cleaner_pause
+#	fi
+#	echo -e "\033[01;31mRam Clean Start......\033[00m"
+#fi
+rm -f /tmp/.recording
+	echo -e "\033[01;32mAufnahme wird beendet......\033[00m"
+exit 0
