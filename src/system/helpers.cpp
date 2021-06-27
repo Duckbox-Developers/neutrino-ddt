@@ -421,6 +421,18 @@ std::string find_executable(const char *name)
 	return "";
 }
 
+bool exec_controlscript(std::string script)
+{
+	std::string controlscript = (std::string)CONTROLDIR + "/" + script;
+
+	dprintf(DEBUG_NORMAL, "executing %s\n", controlscript.c_str());
+	int ret = my_system(controlscript.c_str());
+	if (ret)
+		dprintf_colored(DEBUG_NORMAL, "control script missing %s\n", controlscript.c_str());
+
+	return ret == 0 ? true : false;
+}
+
 std::string backtick(std::string command)
 {
 	char *buf = NULL;

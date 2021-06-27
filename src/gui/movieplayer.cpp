@@ -381,11 +381,7 @@ int CMoviePlayerGui::exec(CMenuTarget * parent, const std::string & actionKey)
 		}
 	}
 
-	if (!access(MOVIEPLAYER_START_SCRIPT, X_OK)) {
-		puts("[movieplayer.cpp] executing " MOVIEPLAYER_START_SCRIPT ".");
-		if (my_system(MOVIEPLAYER_START_SCRIPT) != 0)
-			perror(MOVIEPLAYER_START_SCRIPT " failed");
-	}
+	exec_controlscript(MOVIEPLAYER_START_SCRIPT);
 
 	Cleanup();
 	ClearFlags();
@@ -470,11 +466,7 @@ int CMoviePlayerGui::exec(CMenuTarget * parent, const std::string & actionKey)
 
 	bookmarkmanager->flush();
 
-	if (!access(MOVIEPLAYER_END_SCRIPT, X_OK)) {
-		puts("[movieplayer.cpp] executing " MOVIEPLAYER_END_SCRIPT ".");
-		if (my_system(MOVIEPLAYER_END_SCRIPT) != 0)
-			perror(MOVIEPLAYER_END_SCRIPT " failed");
-	}
+	exec_controlscript(MOVIEPLAYER_END_SCRIPT);
 
 	CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
 

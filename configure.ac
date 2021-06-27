@@ -351,6 +351,8 @@ AC_OUTPUT([
 Makefile
 data/Makefile
 data/config/Makefile
+data/control/Makefile
+data/control-arm/Makefile
 data/fonts/Makefile
 data/icons/Makefile
 data/icons/buttons/Makefile
@@ -372,7 +374,6 @@ data/inetradio/Makefile
 data/iso-codes/Makefile
 data/license/Makefile
 data/locale/Makefile
-data/neutrino-scripts/Makefile
 data/pictures/Makefile
 data/pictures/backgrounds/Makefile
 data/pictures/screensaver/Makefile
