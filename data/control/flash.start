@@ -1,6 +1,4 @@
 #!/bin/sh
 
-if pidof vsftpd > /dev/null; then
-	echo "Kill vsftpd"
-	killall vsftpd
-fi
+echo -e "\033[01;32m......\033[00m"
+exit 0
