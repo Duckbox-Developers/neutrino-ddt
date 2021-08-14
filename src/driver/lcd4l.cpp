@@ -82,6 +82,7 @@ extern cVideo *videoDecoder;
 #define MODE_TSHIFT		LCD_DATADIR "mode_tshift"
 #define MODE_TIMER		LCD_DATADIR "mode_timer"
 #define MODE_ECM		LCD_DATADIR "mode_ecm"
+#define CRYPTSYSTEM		LCD_DATADIR "cryptsystem"
 
 #define SERVICE			LCD_DATADIR "service"
 #define CHANNELNR		LCD_DATADIR "channelnr"
@@ -551,6 +552,68 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 	{
 		WriteFile(MODE_ECM, ModeEcm ? "on" : "off");
 		m_ModeEcm = ModeEcm;
+	}
+
+	/* ----------------------------------------------------------------- */
+
+	int ecm_caid = 0;
+	FILE *f = fopen("/tmp/ecm.info", "rt");
+	if (f)
+	{
+		char buf[80];
+		if (fgets(buf, sizeof(buf), f) != NULL)
+		{
+			int i = 0;
+			while (buf[i] != '0')
+				i++;
+			sscanf(&buf[i], "%X", &ecm_caid);
+		}
+		fclose(f);
+	}
+
+	switch (ecm_caid & 0xFF00) {
+		case 0x0E00:
+			WriteFile(CRYPTSYSTEM, "powervu");
+			break;
+		case 0x1000:
+			WriteFile(CRYPTSYSTEM, "tan");
+			break;
+		case 0x2600:
+			WriteFile(CRYPTSYSTEM, "biss");
+			break;
+		case 0x4A00:
+			WriteFile(CRYPTSYSTEM, "d");
+			break;
+		case 0x0600:
+			WriteFile(CRYPTSYSTEM, "ird");
+			break;
+		case 0x1700:
+			WriteFile(CRYPTSYSTEM, "bc");
+			break;
+		case 0x0100:
+			WriteFile(CRYPTSYSTEM, "seca");
+			break;
+		case 0x0500:
+			WriteFile(CRYPTSYSTEM, "via");
+			break;
+		case 0x1800:
+			WriteFile(CRYPTSYSTEM, "nagra");
+			break;
+		case 0x0B00:
+			WriteFile(CRYPTSYSTEM, "conax");
+			break;
+		case 0x0D00:
+			WriteFile(CRYPTSYSTEM, "cw");
+			break;
+		case 0x0900:
+			WriteFile(CRYPTSYSTEM, "nds");
+			break;
+		case 0x5600:
+			WriteFile(CRYPTSYSTEM, "vmx");
+			break;
+		default:
+			WriteFile(CRYPTSYSTEM, "dec_fta");
+			break;
 	}
 
 	/* ----------------------------------------------------------------- */
