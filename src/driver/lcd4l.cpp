@@ -833,8 +833,12 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 		if (CNeutrinoApp::getInstance()->getMode() == NeutrinoModes::mode_webtv || CNeutrinoApp::getInstance()->getMode() == NeutrinoModes::mode_webradio)
 		{
 			// FIXME: Doesn't work with timing.infobar_tv/radio=0
-			Event = g_InfoViewer->get_livestreamInfo1();
-			Event += "\n" + g_InfoViewer->get_livestreamInfo2();
+			if (g_InfoViewer->get_livestreamInfo1() != "RESOLUTION=1x1") {
+				Event = g_InfoViewer->get_livestreamInfo1();
+				Event += "\n" + g_InfoViewer->get_livestreamInfo2();
+			} else {
+				Event = g_InfoViewer->get_livestreamInfo2();
+			}
 		}
 
 		t_channel_id channel_id = parseID & 0xFFFFFFFFFFFFULL;
