@@ -314,7 +314,7 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 	if((oldmask != newmask) || force_update) {
 		cam->setCaMask(newmask);
 		cam->setSource(source);
-		if(newmask != 0) {
+		if(newmask != 0 && !filter_channels) {
 			cam->makeCaPmt(channel, true);
 			cam->setCaPmt(true);
 			// CI
