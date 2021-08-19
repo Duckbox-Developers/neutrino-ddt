@@ -1201,7 +1201,6 @@ void CNeutrinoApp::setScreenSettings()
 *          CNeutrinoApp -  saveSetup, save the application-settings                   *
 **************************************************************************************/
 extern font_sizes_struct neutrino_font[];
-extern const char * locale_real_names[]; /* #include <system/locals_intern.h> */
 
 void CNeutrinoApp::saveSetup(const char * fname)
 {
