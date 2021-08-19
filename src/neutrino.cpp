@@ -1303,19 +1303,19 @@ void CNeutrinoApp::saveSetup(const char * fname)
 #endif
 
 	configfile.setInt32("ci_standby_reset", g_settings.ci_standby_reset);
-	for (unsigned int i = 0; i < cCA::GetInstance()->GetNumberCISlots(); i++) {
+	for (unsigned int i = 0; i < g_info.hw_caps->has_CI; i++) {
 		sprintf(cfg_key, "ci_clock_%d", i);
 		configfile.setInt32(cfg_key, g_settings.ci_clock[i]);
 	}
 
 #if BOXMODEL_VUPLUS_ALL
 	configfile.setInt32("ci_delay", g_settings.ci_delay);
-	for (unsigned int i = 0; i < cCA::GetInstance()->GetNumberCISlots(); i++) {
+	for (unsigned int i = 0; i < g_info.hw_caps->has_CI; i++) {
 		sprintf(cfg_key, "ci_rpr_%d", i);
 		configfile.setInt32(cfg_key, g_settings.ci_rpr[i]);
 	}
 #endif
-	for (unsigned int i = 0; i < cCA::GetInstance()->GetNumberCISlots(); i++) {
+	for (unsigned int i = 0; i < g_info.hw_caps->has_CI; i++) {
 		sprintf(cfg_key, "ci_ignore_messages_%d", i);
 		configfile.setInt32(cfg_key, g_settings.ci_ignore_messages[i]);
 		sprintf(cfg_key, "ci_save_pincode_%d", i);
