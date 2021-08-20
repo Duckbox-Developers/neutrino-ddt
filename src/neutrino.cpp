@@ -1308,7 +1308,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32("ci_delay", g_settings.ci_delay);
 #endif
 
-	for (unsigned int i = 0; i < g_info.hw_caps->has_CI; i++) {
+	for (int i = 0; i < g_info.hw_caps->has_CI; i++) {
 		sprintf(cfg_key, "ci_clock_%d", i);
 		configfile.setInt32(cfg_key, g_settings.ci_clock[i]);
 #if BOXMODEL_VUPLUS_ALL
