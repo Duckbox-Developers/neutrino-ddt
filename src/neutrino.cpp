@@ -484,13 +484,13 @@ int CNeutrinoApp::loadSetup(const char * fname)
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 		sprintf(cfg_key, "ci_clock_%d", i);
 		g_settings.ci_clock[i] = configfile.getInt32(cfg_key, 6);
-#if BOXMODEL_VUPLUS_ALL
-		sprintf(cfg_key, "ci_rpr_%d", i);
-		g_settings.ci_rpr[i] = configfile.getInt32(cfg_key, 9);
-#endif
 #else
 		sprintf(cfg_key, "ci_clock_%d", i);
 		g_settings.ci_clock[i] = configfile.getInt32(cfg_key, 9);
+#endif
+#if BOXMODEL_VUPLUS_ALL
+		sprintf(cfg_key, "ci_rpr_%d", i);
+		g_settings.ci_rpr[i] = configfile.getInt32(cfg_key, 9);
 #endif
 		sprintf(cfg_key, "ci_ignore_messages_%d", i);
 		g_settings.ci_ignore_messages[i] = configfile.getInt32(cfg_key, 0);
