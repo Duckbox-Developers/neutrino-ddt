@@ -472,28 +472,27 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.zappingmode = configfile.getInt32( "zappingmode", 0);
 #endif
 
+	// ci settings
 	g_settings.ci_standby_reset = configfile.getInt32("ci_standby_reset", 0);
-
-#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
-	for (unsigned int i = 0; i < cCA::GetInstance()->GetNumberCISlots(); i++) {
-		sprintf(cfg_key, "ci_clock_%d", i);
-		g_settings.ci_clock[i] = configfile.getInt32(cfg_key, 6);
-	}
-#else
-	for (unsigned int i = 0; i < cCA::GetInstance()->GetNumberCISlots(); i++) {
-		sprintf(cfg_key, "ci_clock_%d", i);
-		g_settings.ci_clock[i] = configfile.getInt32(cfg_key, 9);
-	}
-#endif
+	g_settings.ci_check_live = configfile.getInt32("ci_check_live", 0);
+	g_settings.ci_tuner = configfile.getInt32("ci_tuner", -1);
 
 #if BOXMODEL_VUPLUS_ALL
 	g_settings.ci_delay = configfile.getInt32("ci_delay", 128);
+#endif
+
 	for (unsigned int i = 0; i < cCA::GetInstance()->GetNumberCISlots(); i++) {
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+		sprintf(cfg_key, "ci_clock_%d", i);
+		g_settings.ci_clock[i] = configfile.getInt32(cfg_key, 6);
+#else
+		sprintf(cfg_key, "ci_clock_%d", i);
+		g_settings.ci_clock[i] = configfile.getInt32(cfg_key, 9);
+#endif
+#if BOXMODEL_VUPLUS_ALL
 		sprintf(cfg_key, "ci_rpr_%d", i);
 		g_settings.ci_rpr[i] = configfile.getInt32(cfg_key, 9);
-	}
 #endif
-	for (unsigned int i = 0; i < cCA::GetInstance()->GetNumberCISlots(); i++) {
 		sprintf(cfg_key, "ci_ignore_messages_%d", i);
 		g_settings.ci_ignore_messages[i] = configfile.getInt32(cfg_key, 0);
 		sprintf(cfg_key, "ci_save_pincode_%d", i);
@@ -501,8 +500,6 @@ int CNeutrinoApp::loadSetup(const char * fname)
 		sprintf(cfg_key, "ci_pincode_%d", i);
 		g_settings.ci_pincode[i] = configfile.getString(cfg_key, "");
 	}
-	g_settings.ci_check_live = configfile.getInt32("ci_check_live", 0);
-	g_settings.ci_tuner = configfile.getInt32("ci_tuner", -1);
 
 	g_settings.make_hd_list = configfile.getInt32("make_hd_list", 0);
 	g_settings.make_webtv_list = configfile.getInt32("make_webtv_list", 1);
@@ -1209,7 +1206,6 @@ void CNeutrinoApp::setScreenSettings()
 *          CNeutrinoApp -  saveSetup, save the application-settings                   *
 **************************************************************************************/
 extern font_sizes_struct neutrino_font[];
-extern const char * locale_real_names[]; /* #include <system/locals_intern.h> */
 
 void CNeutrinoApp::saveSetup(const char * fname)
 {
@@ -1311,20 +1307,22 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32( "zappingmode", g_settings.zappingmode);
 #endif
 
+	// ci settings
 	configfile.setInt32("ci_standby_reset", g_settings.ci_standby_reset);
-	for (unsigned int i = 0; i < cCA::GetInstance()->GetNumberCISlots(); i++) {
-		sprintf(cfg_key, "ci_clock_%d", i);
-		configfile.setInt32(cfg_key, g_settings.ci_clock[i]);
-	}
+	configfile.setInt32("ci_check_live", g_settings.ci_check_live);
+	configfile.setInt32("ci_tuner", g_settings.ci_tuner);
 
 #if BOXMODEL_VUPLUS_ALL
 	configfile.setInt32("ci_delay", g_settings.ci_delay);
-	for (unsigned int i = 0; i < cCA::GetInstance()->GetNumberCISlots(); i++) {
+#endif
+
+	for (int i = 0; i < g_info.hw_caps->has_CI; i++) {
+		sprintf(cfg_key, "ci_clock_%d", i);
+		configfile.setInt32(cfg_key, g_settings.ci_clock[i]);
+#if BOXMODEL_VUPLUS_ALL
 		sprintf(cfg_key, "ci_rpr_%d", i);
 		configfile.setInt32(cfg_key, g_settings.ci_rpr[i]);
-	}
 #endif
-	for (unsigned int i = 0; i < cCA::GetInstance()->GetNumberCISlots(); i++) {
 		sprintf(cfg_key, "ci_ignore_messages_%d", i);
 		configfile.setInt32(cfg_key, g_settings.ci_ignore_messages[i]);
 		sprintf(cfg_key, "ci_save_pincode_%d", i);
@@ -1332,9 +1330,6 @@ void CNeutrinoApp::saveSetup(const char * fname)
 		sprintf(cfg_key, "ci_pincode_%d", i);
 		configfile.setString(cfg_key, g_settings.ci_pincode[i]);
 	}
-
-	configfile.setInt32("ci_check_live", g_settings.ci_check_live);
-	configfile.setInt32("ci_tuner", g_settings.ci_tuner);
 
 	configfile.setInt32( "make_hd_list", g_settings.make_hd_list);
 	configfile.setInt32( "make_webtv_list", g_settings.make_webtv_list);
