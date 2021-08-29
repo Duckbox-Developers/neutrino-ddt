@@ -211,7 +211,7 @@ void CHintBox::enableTimeOutBar(bool enable)
 			timeout_pb->setValues(0, 100*timeout);
 			if (!timeout_pb_timer) {
 				timeout_pb_timer = new CComponentsTimer(1, true);
-				timeout_pb_timer->setThreadName("hb:tmoutbar");
+				timeout_pb_timer->setThreadName("hb:timeoutbar");
 			}
 			sl_tbar_on_timer.disconnect();
 			sl_tbar_on_timer = sigc::mem_fun0(this, &CHintBox::showTimeOutBar);
