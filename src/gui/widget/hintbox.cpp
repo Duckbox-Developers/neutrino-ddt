@@ -158,6 +158,7 @@ void CHintBox::init(const std::string& Text, const int& Width, const std::string
 	y_hint_obj 	= CC_CENTERED;
 
 	//initialize timeout bar and its timer
+	enable_timeout_bar = false;
 	timeout_pb 	= NULL;
 	timeout_pb_timer= NULL;
 
@@ -169,37 +170,54 @@ void CHintBox::init(const std::string& Text, const int& Width, const std::string
 
 CHintBox::~CHintBox()
 {
+	enable_timeout_bar = false;
 	disableTimeOutBar();
 }
 
 void CHintBox::enableTimeOutBar(bool enable)
 {
-	if(!enable){
+	if (!enable_timeout_bar || !enable)
+	{
 		if(timeout_pb_timer){
 			delete timeout_pb_timer; timeout_pb_timer = NULL;
 		}
 		if(timeout_pb){
+			timeout_pb->setValues(100, 100);
+			timeout_pb->paint0();
+			timeout_pb->kill();
 			delete timeout_pb; timeout_pb = NULL;
 		}
 		return;
 	}
 
-	if(timeout_pb){
-		timeout_pb->paint0();
-		if (timeout > 0)
+	if (enable_timeout_bar && enable)
+	{
+		if(timeout_pb){
+#if HAVE_SH4_HARDWARE
+			timeout_pb->setValues(timeout_pb->getValue()+3, 103*timeout);
+#else
 			timeout_pb->setValues(timeout_pb->getValue()+1, 100*timeout);
-		CFrameBuffer::getInstance()->blit();
-	}else{
-		timeout_pb = new CProgressBar();
-		timeout_pb->setType(CProgressBar::PB_TIMESCALE);
-		timeout_pb->setDimensionsAll(ccw_body->getRealXPos(), ccw_body->getRealYPos(), ccw_body->getWidth(), TIMEOUT_BAR_HEIGHT);
-		timeout_pb->setValues(0, 100*timeout);
-		if (!timeout_pb_timer) {
-			timeout_pb_timer = new CComponentsTimer(1, true);
-			timeout_pb_timer->setThreadName("hb:tmoutbar");
+#endif
+			timeout_pb->paint0();
+#if HAVE_SH4_HARDWARE
+			CFrameBuffer::getInstance()->blit();
+#endif
+		}else{
+			if (!timeout_pb){
+				timeout_pb = new CProgressBar();
+				timeout_pb->setType(CProgressBar::PB_TIMESCALE);
+			}
+			timeout_pb->setDimensionsAll(ccw_body->getRealXPos(), ccw_body->getRealYPos(), ccw_body->getWidth(), TIMEOUT_BAR_HEIGHT);
+			timeout_pb->setValues(0, 100*timeout);
+			if (!timeout_pb_timer) {
+				timeout_pb_timer = new CComponentsTimer(1, true);
+				timeout_pb_timer->setThreadName("hb:timeoutbar");
+			}
+			sl_tbar_on_timer.disconnect();
+			sl_tbar_on_timer = sigc::mem_fun0(this, &CHintBox::showTimeOutBar);
+			timeout_pb_timer->OnTimer.connect(sl_tbar_on_timer);
+			timeout_pb_timer->startTimer();
 		}
-		timeout_pb_timer->OnTimer.connect(sigc::mem_fun0(this, &CHintBox::showTimeOutBar));
-		timeout_pb_timer->startTimer();
 	}
 }
 
