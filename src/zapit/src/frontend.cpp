@@ -719,7 +719,7 @@ uint32_t CFrontend::getBitErrorRate(void) const
 {
 	uint32_t ber = 0;
 	fop(ioctl, FE_READ_BER, &ber);
-	if (ber > 100000000)	/* azbox minime driver has useless values around 500.000.000 */
+	if (ber > 100000000)
 		ber = 0;
 
 	return ber;
@@ -2131,7 +2131,7 @@ void CFrontend::setDiseqc(int sat_no, const uint8_t pol, const uint32_t frequenc
 	}
 
 	// Toneburst should not be repeated and should be sent AFTER
-	// all diseqc, this means we don't support a toneburst switch 
+	// all diseqc, this means we don't support a toneburst switch
 	// before any diseqc equipment.
 	if (config.diseqcType == MINI_DISEQC)
 		sendToneBurst(b, 1);
