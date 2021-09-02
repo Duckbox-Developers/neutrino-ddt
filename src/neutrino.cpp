@@ -610,12 +610,14 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	//language
 	g_settings.language = configfile.getString("language", "");
 	g_settings.timezone = configfile.getString("timezone", "(GMT+01:00) Amsterdam, Berlin, Bern, Rome, Vienna");
+
 	//epg dir
 	g_settings.epg_cache            = configfile.getInt32("epg_cache_time", 14);
-	g_settings.epg_extendedcache    = configfile.getInt32("epg_extendedcache_time", 360);
-	g_settings.epg_old_events       = configfile.getInt32("epg_old_events", 1);
-	g_settings.epg_max_events       = configfile.getInt32("epg_max_events", 30000);
 	g_settings.epg_dir              = configfile.getString("epg_dir", "/media/sda1/epg");
+	g_settings.epg_extendedcache    = configfile.getInt32("epg_extendedcache_time", 360);
+	g_settings.epg_max_events       = configfile.getInt32("epg_max_events", 30000);
+	g_settings.epg_old_events       = configfile.getInt32("epg_old_events", 1);
+
 	// NTP-Server for sectionsd
 	g_settings.network_ntpserver    = configfile.getString("network_ntpserver", "0.pool.ntp.org");
 	g_settings.network_ntprefresh   = configfile.getString("network_ntprefresh", "30" );
@@ -626,7 +628,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.epg_save = configfile.getBool("epg_save", false);
 	g_settings.epg_save_standby = configfile.getBool("epg_save_standby", true);
 	g_settings.epg_save_frequently = configfile.getInt32("epg_save_frequently", 0);
-	g_settings.epg_read = configfile.getBool("epg_read", g_settings.epg_save);
+	g_settings.epg_read = configfile.getBool("epg_read", false);
 	g_settings.epg_read_frequently = configfile.getInt32("epg_read_frequently", 0);
 	g_settings.epg_scan = configfile.getInt32("epg_scan", CEpgScan::SCAN_CURRENT);
 	g_settings.epg_scan_mode = configfile.getInt32("epg_scan_mode", CEpgScan::MODE_OFF);
