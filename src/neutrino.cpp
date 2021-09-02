@@ -2373,6 +2373,7 @@ void CNeutrinoApp::InitSectiondClient()
 	g_Sectionsd->registerEvent(CSectionsdClient::EVT_GOT_CN_EPG, 222, NEUTRINO_UDS_NAME);
 	g_Sectionsd->registerEvent(CSectionsdClient::EVT_EIT_COMPLETE, 222, NEUTRINO_UDS_NAME);
 	g_Sectionsd->registerEvent(CSectionsdClient::EVT_WRITE_SI_FINISHED, 222, NEUTRINO_UDS_NAME);
+	g_Sectionsd->registerEvent(CSectionsdClient::EVT_RELOAD_XMLTV, 222, NEUTRINO_UDS_NAME);
 }
 
 void wake_up(bool &wakeup)
@@ -4145,6 +4146,14 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 	}
 	else if (msg == NeutrinoMessages::EVT_SET_VOLUME) {
 		g_volume->setVolumeExt((int)data);
+		return messages_return::handled;
+	}
+	else if (msg == NeutrinoMessages::EVT_RELOAD_XMLTV) {
+		for (std::list<std::string>::iterator it = g_settings.xmltv_xml.begin(); it != g_settings.xmltv_xml.end(); ++it)
+		{
+			printf("CNeutrinoApp::handleMsg: Reading xmltv epg from %s ...\n", (*it).c_str());
+			g_Sectionsd->readSIfromXMLTV((*it).c_str());
+		}
 		return messages_return::handled;
 	}
 	if ((msg >= CRCInput::RC_WithData) && (msg < CRCInput::RC_WithData + 0x10000000)) {

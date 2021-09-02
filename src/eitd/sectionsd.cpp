@@ -2184,6 +2184,8 @@ static void *houseKeepingThread(void *)
 					perror("sectionsd: pthread_create()");
 					}
 				pthread_attr_destroy(&attr);
+
+				eventServer->sendEvent(CSectionsdClient::EVT_RELOAD_XMLTV, CEventServer::INITID_SECTIONSD);
 			}
 			ecount = 0;
 		}
