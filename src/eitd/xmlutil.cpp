@@ -469,7 +469,6 @@ bool readEventsFromXMLTV(std::string &epgname, int &ev_count)
 
 	while ((programme = xmlGetNextOccurence(programme,"programme")))
 	{
-
 		const char *chan = xmlGetAttribute(programme, "channel");
 		const char *start = xmlGetAttribute(programme, "start");
 		const char *stop  = xmlGetAttribute(programme, "stop");
@@ -544,16 +543,21 @@ t_channel_id getepgid(std::string epg_name)
 
 	CBouquetManager::ChannelIterator cit = g_bouquetManager->tvChannelsBegin();
 
-	for (; !(cit.EndOfChannels()); cit++)
+	for (int m = CZapitClient::MODE_TV; m < CZapitClient::MODE_ALL; m++)
 	{
-		std::string tvg_id = (*cit)->getEPGmap();
+		if (m == CZapitClient::MODE_RADIO)
+			cit = g_bouquetManager->radioChannelsBegin();
 
-		if (tvg_id.empty())
-			continue;
-
-		std::size_t found = tvg_id.find("#"+epg_name);
-  		if (found != std::string::npos)
+		for (; !(cit.EndOfChannels()); cit++)
 		{
+			std::string tvg_id = (*cit)->getEPGmap();
+
+			if (tvg_id.empty())
+				continue;
+
+			std::size_t found = tvg_id.find("#"+epg_name);
+			if (found != std::string::npos)
+			{
 				if (match_found)
 				{
 					if ((*cit)->getEpgID() == epgid) continue;
@@ -565,10 +569,12 @@ t_channel_id getepgid(std::string epg_name)
 					sscanf(tvg_id.c_str(), "=%" SCNx64, &epgid);
 					match_found = true;
 				}
+			}
+			else
+				continue;
 		}
-		else
-			continue;
 	}
+
 	return epgid;
 }
 

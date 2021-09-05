@@ -264,7 +264,7 @@ int main (int argc, char** argv)
 				sscanf(argv[++i], "%d", &m43);
 				continue;
 			}
-#if 0 
+#if 0
 			//FIXME howto read aspect mode back?
 			continue;
 #endif

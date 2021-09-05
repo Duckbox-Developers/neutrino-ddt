@@ -701,7 +701,7 @@ int str_compare_withoutspace(char const *s1, char const *s2)
 		cmp_result = tolower(*s1) - tolower(*s2);
 	}
 	return cmp_result;
-} 
+}
 #endif
 
 // -- Find Bouquet-Name, if BQ exists   (2002-04-02 rasc)
@@ -720,7 +720,7 @@ int CBouquetManager::existsBouquet(char const * const name, bool ignore_user)
 			int upper1 = 0 ,upper2 = 0;
 			std::string str2 = name;
 			size_t  pos=0;
-			size_t pos2 = Bouquets[i]->Name.find("] "); 
+			size_t pos2 = Bouquets[i]->Name.find("] ");
 			if(pos != std::string::npos){
 				pos += pos2;
 			}
@@ -738,7 +738,7 @@ int CBouquetManager::existsBouquet(char const * const name, bool ignore_user)
 				if(isupper(str2[pos])){
 					++upper2;
 				}
-				pos++;  
+				pos++;
 			}
 			if ( ( upper2 && (lower1 < lower2)) || (lower2==0 && upper1==0 && upper2==lower1) ){
 				Bouquets[i]->Name = str2;
@@ -957,7 +957,6 @@ void CBouquetManager::loadWebchannels(int mode)
 								char buf[100];
 								snprintf(buf, sizeof(buf), "%llx", chid & 0xFFFFFFFFFFFFULL);
 								channel->setEPGmap("#" + new_epgxml + "=" + buf);
-								channel->setEPGid(chid);
 							}
 							channel->flags = CZapitChannel::UPDATED;
 							if (gbouquet)
@@ -1001,7 +1000,7 @@ void CBouquetManager::loadWebchannels(int mode)
 					if (strLine.find(M3U_INFO_MARKER) != std::string::npos)
 					{
 						int iColon = (int)strLine.find_first_of(':');
-						int iComma = (int)strLine.find_last_of(',');
+						int iComma = (int)strLine.find_first_of(',');
 						title = "";
 						prefix = "";
 						group = "";
@@ -1072,7 +1071,6 @@ void CBouquetManager::loadWebchannels(int mode)
 									char buf[100];
 									snprintf(buf, sizeof(buf), "%llx", chid & 0xFFFFFFFFFFFFULL);
 									channel->setEPGmap("#" + new_epgxml + "=" + buf);
-									channel->setEPGid(chid);
 								}
 								desc = "m3u_loading_logos";
 								if (!alogo.empty() && !g_PicViewer->GetLogoName(chid,title,desc))
@@ -1100,6 +1098,7 @@ void CBouquetManager::loadWebchannels(int mode)
 				std::string url;
 				std::string desc;
 				std::string group;
+				t_channel_id epg_id = 0;
 				CZapitBouquet* pbouquet = NULL;
 
 				if(f != NULL)
@@ -1181,7 +1180,6 @@ void CBouquetManager::loadWebchannels(int mode)
 									char buf[100];
 									snprintf(buf, sizeof(buf), "%llx", chid & 0xFFFFFFFFFFFFULL);
 									channel->setEPGmap("#" + new_epgxml + "=" + buf);
-									channel->setEPGid(chid);
 								}
 								channel->flags = CZapitChannel::UPDATED;
 								if (gbouquet)
