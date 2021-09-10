@@ -35,6 +35,7 @@
 #include <gui/widget/keyboard_input.h>
 #include <zapit/zapit.h>
 #include <neutrino_menue.h>
+#include <thread>
 #include "webradio_setup.h"
 
 CWebRadioSetup::CWebRadioSetup()

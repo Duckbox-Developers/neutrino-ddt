@@ -26,6 +26,7 @@
 #include <neutrino.h>
 #include <gui/filebrowser.h>
 #include <gui/widget/keyboard_input.h>
+#include <thread>
 
 CXMLTVSetup::CXMLTVSetup()
 {
