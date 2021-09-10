@@ -177,8 +177,8 @@ int CXMLTVSetup::Show()
 			CMenuForwarder *f = static_cast<CMenuForwarder *>(item);
 			g_settings.xmltv_xml.push_back(f->getName());
 		}
-
-		CNeutrinoApp::getInstance()->xmltv_xml_readepg();
+		std::thread t1(&CNeutrinoApp::xmltv_xml_readepg, CNeutrinoApp::getInstance());
+		t1.detach();
 	}
 
 	delete m;
