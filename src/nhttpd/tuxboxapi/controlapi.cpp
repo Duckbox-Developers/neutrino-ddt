@@ -231,6 +231,7 @@ const CControlAPI::TyCgiCall CControlAPI::yCgiCallList[]=
 	{"xmltv.data",		&CControlAPI::xmltvepgCGI,		"+xml"},
 	{"xmltv.xml",		&CControlAPI::xmltvepgCGI,		"+xml"},
 	{"xmltv.m3u",		&CControlAPI::xmltvm3uCGI,		""},
+	{"xmltvlist",		&CControlAPI::xmltvlistCGI,		"text/plain"},
 	// utils
 	{"build_live_url",	&CControlAPI::build_live_url,		""},
 	{"build_playlist",	&CControlAPI::build_playlist,		""},
@@ -3211,6 +3212,14 @@ void CControlAPI::xmltvepgCGI(CyhookHandler *hh)
 	hh->ParamList["format"] = "xml";
 	hh->outStart();
 
+	int mode;
+	if (hh->ParamList["mode"] == "tv")
+		mode = CZapitClient::MODE_TV;
+	else if (hh->ParamList["mode"] == "radio")
+		mode = CZapitClient::MODE_RADIO;
+	else
+		mode = CZapitClient::MODE_ALL;
+
 	bool xml_cdata = false;
 	t_channel_id channel_id;
 	std::string result = "";
@@ -3227,8 +3236,10 @@ void CControlAPI::xmltvepgCGI(CyhookHandler *hh)
 
 		for (int m = CZapitClient::MODE_TV; m < CZapitClient::MODE_ALL; m++)
 		{
-			if (m == CZapitClient::MODE_RADIO)
+			if (mode == CZapitClient::MODE_RADIO || m == CZapitClient::MODE_RADIO)
 				g_bouquetManager->Bouquets[i]->getRadioChannels(chanlist);
+			else
+				g_bouquetManager->Bouquets[i]->getTvChannels(chanlist);
 
 			if(!chanlist.empty() && !g_bouquetManager->Bouquets[i]->bHidden && g_bouquetManager->Bouquets[i]->bUser)
 			{
@@ -3285,8 +3296,7 @@ void CControlAPI::xmltvepgCGI(CyhookHandler *hh)
 
 void CControlAPI::xmltvm3uCGI(CyhookHandler *hh)
 {
-	hh->outStart();
-	std::string result("#EXTM3U\n");
+	//hh->outStart();
 
 	int mode;
 	if (hh->ParamList["mode"] == "tv")
@@ -3305,6 +3315,16 @@ void CControlAPI::xmltvm3uCGI(CyhookHandler *hh)
 	// get hostname
 	char hostname[HOST_NAME_MAX];
 	gethostname(hostname, HOST_NAME_MAX);
+
+	std::string result("#EXTM3U");
+	result += " tvg-url=\"" + host + "/control/xmltv.xml";
+
+	if (mode == CZapitClient::MODE_TV)
+		result += "?mode=tv";
+	else if (mode == CZapitClient::MODE_RADIO)
+		result += "?mode=radio";
+
+	result += "\"\n";
 
 	// build url
 	std::string url = host;
@@ -3355,6 +3375,70 @@ void CControlAPI::xmltvm3uCGI(CyhookHandler *hh)
 	}
 
 	hh->SendResult(result);
+}
+
+void CControlAPI::xmltvlistCGI(CyhookHandler *hh)
+{
+	std::vector<std::string>::iterator it;
+	std::vector<std::string> url_list;
+	std::string tmp;
+	std::string::size_type i = 0;
+
+	if (!hh->ParamList["webtv"].empty())
+	{
+		std::string webtv_url = hh->ParamList["webtv"];
+		g_settings.webtv_xml.clear();
+		url_list = ::split(webtv_url, '\n');
+		for (it = url_list.begin(); it != url_list.end(); it++)
+		{
+			tmp = (*it);
+			tmp.erase(std::remove(tmp.begin(), tmp.end(), '\n'), tmp.end());
+			tmp.erase(std::remove(tmp.begin(), tmp.end(), '\r'), tmp.end());
+			tmp.erase(std::remove(tmp.begin(), tmp.end(), '\t'), tmp.end());
+			if (!tmp.empty())
+				g_settings.webtv_xml.push_back(tmp);
+		}
+	}
+	else
+		g_settings.webtv_xml.clear();
+
+	if (!hh->ParamList["webradio"].empty())
+	{
+		std::string webradio_url = hh->ParamList["webradio"];
+		g_settings.webradio_xml.clear();
+		url_list = ::split(webradio_url, '\n');
+		for (it = url_list.begin(); it != url_list.end(); it++)
+		{
+			tmp = (*it);
+			tmp.erase(std::remove(tmp.begin(), tmp.end(), '\n'), tmp.end());
+			tmp.erase(std::remove(tmp.begin(), tmp.end(), '\r'), tmp.end());
+			tmp.erase(std::remove(tmp.begin(), tmp.end(), '\t'), tmp.end());
+			if (!tmp.empty())
+				g_settings.webradio_xml.push_back(tmp);
+		}
+	}
+	else
+		g_settings.webradio_xml.clear();
+
+	if (!hh->ParamList["xmltv"].empty())
+	{
+		std::string xmltv_url = hh->ParamList["xmltv"];
+		g_settings.xmltv_xml.clear();
+		url_list = ::split(xmltv_url, '\n');
+		for (it = url_list.begin(); it != url_list.end(); it++)
+		{
+			tmp = (*it);
+			tmp.erase(std::remove(tmp.begin(), tmp.end(), '\n'), tmp.end());
+			tmp.erase(std::remove(tmp.begin(), tmp.end(), '\r'), tmp.end());
+			tmp.erase(std::remove(tmp.begin(), tmp.end(), '\t'), tmp.end());
+			if (!tmp.empty())
+				g_settings.xmltv_xml.push_back(tmp);
+		}
+	}
+	else
+		g_settings.xmltv_xml.clear();
+
+	hh->SendOk();
 }
 //-------------------------------------------------------------------------
 #if 0

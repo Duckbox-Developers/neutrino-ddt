@@ -49,6 +49,7 @@ install_DATA =	channels.js \
 		Y_Settings_nhttpd.yhtm \
 		Y_Settings_umount_liste.yhtm \
 		Y_Settings_wol.yhtm \
+		Y_Settings_xmltv.yhtm \
 		Y_Settings_yWeb.yhtm \
 		Y_Settings_zapit.yhtm \
 		Y_StreamInfo.yhtm \

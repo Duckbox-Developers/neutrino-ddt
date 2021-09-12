@@ -218,6 +218,7 @@ set.menue.movieplayer=Movieplayer
 set.menue.pictureviewer=Bildbetrachter
 set.menue.glcd_display=GLC-Display
 set.menue.key_settings=Tastenbelegung
+set.menue.xmltv=XMLTV
 
 ========Neutrino Settings - Recording
 set.rec.rec_dest=Aufnahmeziel
@@ -360,6 +361,9 @@ set.timer.klack.url=Pers&ouml;nliche RSS TV-Planer URL
 set.timer.klack.security_code_desc=Klack Sicherheits Code
 set.timer.klack.security_code=Sicherheits Code
 set.timer.channel_name_replacelist=Sendernamen-Ersetzungsliste
+
+============Settings XMLTV
+set.xmltv.header=XMLTV Einstellungen
 
 ============ Tools Info
 tools.info.show_messages=Kernel Meldungen
