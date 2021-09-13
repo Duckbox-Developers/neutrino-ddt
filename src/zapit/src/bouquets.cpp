@@ -539,10 +539,10 @@ void CBouquetManager::loadBouquets(bool ignoreBouquetFile)
 	renumServices();
 	CServiceManager::getInstance()->SetCIFilter();
 	if(!EpgIDMapping.empty()){
-		EpgIDMapping.clear();
+			EpgIDMapping.clear();
 	}
 	if(!EpgXMLMapping.empty()){
-		EpgXMLMapping.clear();
+			EpgXMLMapping.clear();
 	}
 	TIMER_STOP("[zapit] bouquet loading took");
 }
@@ -930,7 +930,6 @@ void CBouquetManager::loadWebchannels(int mode)
 						const char *desc = xmlGetAttribute(l1, "description");
 						const char *genre = xmlGetAttribute(l1, "genre");
 						const char *epgid = xmlGetAttribute(l1, "epgid");
-						const char *epgmap = xmlGetAttribute(l1, "epgmap");
 						const char *script = xmlGetAttribute(l1, "script");
 						t_channel_id epg_id = 0;
 						if (epgid)
@@ -956,19 +955,11 @@ void CBouquetManager::loadWebchannels(int mode)
 							t_channel_id new_epgid = reMapEpgID(chid);
 							if(new_epgid)
 								channel->setEPGid(new_epgid);
-							char buf[100];
-							snprintf(buf, sizeof(buf), "%llx", chid & 0xFFFFFFFFFFFFULL);
-							if (epgmap)
-							{
-								std::string new_epgxml(epgmap);
+							std::string new_epgxml = reMapEpgXML(chid);
+							if(!new_epgxml.empty()) {
+								char buf[100];
+								snprintf(buf, sizeof(buf), "%llx", chid & 0xFFFFFFFFFFFFULL);
 								channel->setEPGmap("#" + new_epgxml + "=" + buf);
-							}
-							else
-							{
-								std::string new_epgxml = reMapEpgXML(chid);
-								if(!new_epgxml.empty()) {
-									channel->setEPGmap("#" + new_epgxml + "=" + buf);
-								}
 							}
 							channel->flags = CZapitChannel::UPDATED;
 							if (gbouquet)
