@@ -207,7 +207,7 @@ int CWebTVSetup::Show()
 			g_settings.webtv_xml.push_back(f->getName());
 		}
 		g_Zapit->reinitChannels();
-		CNeutrinoApp::getInstance()->xmltv_xml_auto_readepg();
+		CNeutrinoApp::getInstance()->xmltv_xml_m3u_readepg();
 		changed = false;
 		hint.hide();
 	}

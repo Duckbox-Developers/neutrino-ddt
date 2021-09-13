@@ -351,6 +351,7 @@ struct SNeutrinoSettings
 	std::list<std::string> webradio_xml;
 	std::list<std::string> xmltv_xml; // see http://wiki.xmltv.org/
 	std::list<std::string> xmltv_xml_auto;
+	std::list<std::string> xmltv_xml_m3u; // contains temp xml from m3u
 
 	//personalize
 	enum PERSONALIZE_SETTINGS  //settings.h
