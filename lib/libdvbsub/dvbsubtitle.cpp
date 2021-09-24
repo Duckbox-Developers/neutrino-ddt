@@ -126,10 +126,18 @@ void cDvbSubtitleBitmaps::Draw(int &min_x, int &min_y, int &max_x, int &max_y)
 		}
 
 	for (int i = 0; i < Count(); i++) {
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(59,0,100)
 		uint32_t * colors = (uint32_t *) sub.rects[i]->pict.data[1];
+#else
+		uint32_t * colors = (uint32_t *) sub.rects[i]->data[1];
+#endif
 		int width = sub.rects[i]->w;
 		int height = sub.rects[i]->h;
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(59,0,100)
 		uint8_t *origin = sub.rects[i]->pict.data[0];
+#else
+		uint8_t *origin = sub.rects[i]->data[0];
+#endif
 		int nb_colors = sub.rects[i]->nb_colors;
 
 		size_t bs = width * height;

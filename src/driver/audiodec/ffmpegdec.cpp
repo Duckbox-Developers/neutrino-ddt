@@ -44,6 +44,9 @@ extern "C" {
 #include <libavutil/opt.h>
 #include <libavutil/samplefmt.h>
 #include <libswresample/swresample.h>
+#if LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(59,0,100)
+#include <libavcodec/avcodec.h>
+#endif
 }
 
 #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55, 28, 1)
@@ -164,9 +167,13 @@ bool CFfmpegDec::Init(void *_in, const CFile::FileType ft)
 		return false;
 	}
 	avc->pb = avioc;
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(59,0,100)
 	avc->flags |= AVFMT_FLAG_CUSTOM_IO|AVFMT_FLAG_KEEP_SIDE_DATA;
-
 	AVInputFormat *input_format = NULL;
+#else
+	avc->flags |= AVFMT_FLAG_CUSTOM_IO;
+	const AVInputFormat *input_format = NULL;
+#endif
 
 	switch (ft) {
 	case CFile::FILE_OGG:
