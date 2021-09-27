@@ -19,6 +19,9 @@
 #include <zapit/bouquets.h>
 #include <zapit/femanager.h>
 #include <zapit/fastscan.h>
+#if ENABLE_HBBTV
+#include <zapit/scanait.h>
+#endif
 
 #define PAL	0
 #define NTSC	1
@@ -166,7 +169,9 @@ class CZapit : public OpenThreads::Thread
 		t_channel_id  lastChannelTV;
 		int abort_zapit;
 		int pmt_update_fd;
-
+#if ENABLE_HBBTV
+		CAit *ait;
+#endif
 		//void LoadAudioMap();
 		void SaveAudioMap();
 		void SaveVolumeMap();

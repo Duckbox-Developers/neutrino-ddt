@@ -45,9 +45,6 @@
 #include <zapit/getservices.h>
 #include <zapit/pat.h>
 #include <zapit/scanpmt.h>
-#if ENABLE_HBBTV
-#include <zapit/scanait.h>
-#endif
 #include <zapit/scan.h>
 #ifdef ENABLE_FASTSCAN
 #include <zapit/fastscan.h>
@@ -140,6 +137,9 @@ CZapit::CZapit()
 	pip_channel_id = 0;
 	lock_channel_id = 0;
 	pip_fe = NULL;
+#if ENABLE_HBBTV
+	ait = new CAit();
+#endif
 }
 
 CZapit::~CZapit()
@@ -488,9 +488,6 @@ bool CZapit::ParsePatPmt(CZapitChannel * channel)
 
 	CPat pat(channel->getRecordDemux());
 	CPmt pmt(channel->getRecordDemux());
-#if ENABLE_HBBTV
-	CAit ait(channel->getRecordDemux());
-#endif
 	DBG("looking up pids for channel_id " PRINTF_CHANNEL_ID_TYPE "\n", channel->getChannelID());
 
 	if(!pat.Parse(channel)) {
@@ -501,12 +498,6 @@ bool CZapit::ParsePatPmt(CZapitChannel * channel)
 		printf("[zapit] pmt parsing failed\n");
 		return false;
 	}
-#if ENABLE_HBBTV
-	if (channel == current_channel)
-		if(!ait.Parse(channel)) {
-			printf("[zapit] ait parsing failed\n");
-		}
-#endif
 	return true;
 }
 
@@ -665,6 +656,11 @@ bool CZapit::ZapIt(const t_channel_id channel_id, bool forupdate, bool startplay
 
 	if (update_pmt)
 		pmt_set_update_filter(current_channel, &pmt_update_fd);
+
+#if ENABLE_HBBTV
+	ait->setDemux(current_channel->getRecordDemux());
+	ait->Parse(current_channel);
+#endif
 
 	return true;
 }

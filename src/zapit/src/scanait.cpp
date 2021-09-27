@@ -37,12 +37,16 @@
 #define DEBUG_AIT_UNUSED
 #define DEBUG_LCN
 
-CAit::CAit(int dnum)
+CAit::CAit()
 {
-	dmxnum = dnum;
+	dmxnum = 0;
 	pid = 0;
 }
 
+void CAit::setDemux(int dnum)
+{
+	dmxnum = dnum;
+}
 bool CAit::Start()
 {
 	int ret = start();
@@ -222,6 +226,7 @@ bool CAit::Parse()
 	}
 	if (pFile)
 		fclose(pFile);
+	sections.clear();
 	return true;
 }
 
@@ -232,8 +237,7 @@ bool CAit::Parse(CZapitChannel * const channel)
 	unlink("/tmp/ait.txt");
 	if(pid > 0)
 	{
-		Parse();
-		return true;
+		return Start();
 	}
 	return false;
 }
