@@ -130,7 +130,7 @@ int CWebTVSetup::exec(CMenuTarget* parent, const std::string & actionKey)
 		std::string tpl = "http://xxx.xxx.xxx.xxx/control/xmltv.m3u?mode=tv";
 		std::string entry = tpl;
 
-		CKeyboardInput *e = new CKeyboardInput(LOCALE_WEBTV_XML_ENTER, &entry, 52);
+		CKeyboardInput *e = new CKeyboardInput(LOCALE_WEBTV_XML_ENTER, &entry, 127);
 		e->exec(this, "");
 		delete e;
 
