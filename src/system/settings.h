@@ -648,6 +648,10 @@ struct SNeutrinoSettings
 	int pip_radio_height;
 	int pip_radio_x;
 	int pip_radio_y;
+
+	std::string quadpip_channel_window[4];
+	int quadpip_channel_id_window[4];
+
 	int bigFonts;
 	int window_size;
 	int window_width;

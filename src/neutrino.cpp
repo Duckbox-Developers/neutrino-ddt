@@ -110,6 +110,9 @@
 #ifdef ENABLE_PIP
 #include "gui/pipsetup.h"
 #endif
+#if ENABLE_PIP && ENABLE_QUADPIP
+#include <gui/quadpip_setup.h>
+#endif
 #include "gui/themes.h"
 #include "gui/timerlist.h"
 #include "gui/components/cc_item_progressbar.h"
@@ -1113,6 +1116,15 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.pip_radio_height = configfile.getInt32("pip_radio_height", g_settings.pip_height);
 #endif
 
+#if ENABLE_PIP && ENABLE_QUADPIP
+	for (unsigned int i = 0; i < 4; i++) {
+		sprintf(cfg_key, "quadpip_channel_window_%d", i);
+		g_settings.quadpip_channel_window[i] = configfile.getString(cfg_key, "-");
+		sprintf(cfg_key, "quadpip_channel_id_window_%d", i);
+		g_settings.quadpip_channel_id_window[i] = configfile.getInt32(cfg_key, 0);
+	}
+#endif
+
 	g_settings.infoClockFontSize = configfile.getInt32("infoClockFontSize", 30);
 	g_settings.infoClockBackground = configfile.getInt32("infoClockBackground", 0);
 	g_settings.infoClockSeconds = configfile.getInt32("infoClockSeconds", 1);
@@ -1765,6 +1777,16 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32("pip_radio_width", g_settings.pip_radio_width);
 	configfile.setInt32("pip_radio_height", g_settings.pip_radio_height);
 #endif
+
+#if ENABLE_PIP && ENABLE_QUADPIP
+	for (unsigned int i = 0; i < 4; i++) {
+		std::string qp = "quadpip_channel_window_" + to_string(i);
+		configfile.setString(qp, g_settings.quadpip_channel_window[i]);
+		qp = "quadpip_channel_id_window_" + to_string(i);
+		configfile.setInt32(qp, g_settings.quadpip_channel_id_window[i]);
+	}
+#endif
+
 	configfile.setInt32("infoClockFontSize", g_settings.infoClockFontSize);
 	configfile.setInt32("infoClockBackground", g_settings.infoClockBackground);
 	configfile.setInt32("infoClockSeconds", g_settings.infoClockSeconds);
