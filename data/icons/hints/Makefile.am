@@ -62,4 +62,8 @@ if ENABLE_PIP
 install_DATA += \
 	hint_avinputmode.png \
 	hint_avinputmode_pip.png
+if ENABLE_QUADPIP
+install_DATA += \
+	hint_quadpip.png
+endif
 endif
