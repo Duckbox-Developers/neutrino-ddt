@@ -113,7 +113,7 @@ void CZapitChannel::Init()
 	bLocked = DEFAULT_CH_LOCKED;
 	altlogo = "";
 	epgmapper = "";
-#if ENABLE_HBBTV
+#if ENABLE_AITSCAN
 	aitPid = 0;
 #endif
 }

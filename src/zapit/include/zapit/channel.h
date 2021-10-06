@@ -142,7 +142,7 @@ class CZapitChannel
 
 		unsigned short			pcrPid;
 		unsigned short			pmtPid;
-#if ENABLE_HBBTV
+#if ENABLE_AITSCAN
 		unsigned short			aitPid;
 #endif
 		unsigned short			teletextPid;
@@ -245,7 +245,7 @@ class CZapitChannel
 		unsigned char 		getAudioChannelCount(void)	{ return (unsigned char) audioChannels.size(); }
 		unsigned short		getPcrPid(void)			{ return pcrPid; }
 		unsigned short		getPmtPid(void)			{ return pmtPid; }
-#if ENABLE_HBBTV
+#if ENABLE_AITSCAN
 		unsigned short		getAitPid(void)			{ return aitPid; }
 #endif
 		unsigned short		getTeletextPid(void)		{ return teletextPid; }
@@ -271,7 +271,7 @@ class CZapitChannel
 		void setAudioChannel(unsigned char pAudioChannel)	{ if (pAudioChannel < audioChannels.size()) currentAudioChannel = pAudioChannel; }
 		void setPcrPid(unsigned short pPcrPid)			{ pcrPid = pPcrPid; }
 		void setPmtPid(unsigned short pPmtPid)			{ pmtPid = pPmtPid; }
-#if ENABLE_HBBTV
+#if ENABLE_AITSCAN
 		void setAitPid(unsigned short pAitPid)			{ aitPid = pAitPid; }
 #endif
 		void setTeletextPid(unsigned short pTeletextPid)	{ teletextPid = pTeletextPid; }
