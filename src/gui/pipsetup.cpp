@@ -20,7 +20,7 @@
 
 #ifdef ENABLE_PIP
 
-extern cVideo *pipDecoder;
+extern cVideo *pipVideoDecoder[3];
 
 CPipSetup::CPipSetup()
 {
@@ -69,8 +69,8 @@ void CPipSetup::move(int x, int y, bool abs)
 	*gy = y_coord;
 
 	printf("CPipSetup::move: x %d y %d\n", x_coord, y_coord);
-	if (pipDecoder != NULL)
-		pipDecoder->Pig(x_coord, y_coord, width, height, maxw, maxh);
+	if (pipVideoDecoder[0] != NULL)
+		pipVideoDecoder[0]->Pig(x_coord, y_coord, width, height, maxw, maxh);
 }
 
 // w and h is percent, if not absolute
@@ -102,8 +102,8 @@ void CPipSetup::resize(int w, int h, bool abs)
 	*gh = height;
 
 	printf("CPipSetup::resize: w %d h %d \n", width, height);
-	if (pipDecoder != NULL)
-		pipDecoder->Pig(x_coord, y_coord, width, height, maxw, maxh);
+	if (pipVideoDecoder[0] != NULL)
+		pipVideoDecoder[0]->Pig(x_coord, y_coord, width, height, maxw, maxh);
 }
 
 int CPipSetup::exec(CMenuTarget* parent, const std::string &)
@@ -125,8 +125,8 @@ int CPipSetup::exec(CMenuTarget* parent, const std::string &)
 
 	uint64_t timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_MENU]);
 
-	if (pipDecoder != NULL)
-		pipDecoder->ShowPig(1);
+	if (pipVideoDecoder[0] != NULL)
+		pipVideoDecoder[0]->ShowPig(1);
 
 	bool loop=true;
 	while (loop) {
@@ -176,8 +176,8 @@ void CPipSetup::hide()
 {
 	frameBuffer->Clear();
 
-	if (pipDecoder != NULL)
-		pipDecoder->ShowPig(0);
+	if (pipVideoDecoder[0] != NULL)
+		pipVideoDecoder[0]->ShowPig(0);
 }
 
 void CPipSetup::clear()
@@ -205,8 +205,8 @@ void CPipSetup::paint()
 	int x = (frameBuffer->getScreenWidth() - mwidth)/2;
 	int y = (frameBuffer->getScreenHeight() - mheight*4)/2;
 
-	if (pipDecoder != NULL)
-		if (pipDecoder->getBlank())
+	if (pipVideoDecoder[0] != NULL)
+		if (pipVideoDecoder[0]->getBlank())
 			frameBuffer->paintBoxRel(x_coord, y_coord, width, height, COL_MENUCONTENT_PLUS_0);
 
 	frameBuffer->paintBoxRel(x, y, mwidth, mheight*4, COL_MENUCONTENT_PLUS_0);
