@@ -2688,9 +2688,9 @@ void CZapit::run()
 #ifdef ENABLE_PIP
 	StopPip();
 	if (pipVideoDecoder[0])
-		delete pipVideoDecoder[0];
+		pipVideoDecoder[0] = NULL;
 	if (pipVideoDemux[0])
-		delete pipVideoDemux[0];
+		pipVideoDemux[0] = NULL;
 #endif
 
 	INFO("demuxes/decoders deleted");
