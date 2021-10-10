@@ -110,6 +110,9 @@
 #ifdef ENABLE_PIP
 #include "gui/pipsetup.h"
 #endif
+#if ENABLE_PIP && ENABLE_QUADPIP
+#include <gui/quadpip_setup.h>
+#endif
 #include "gui/themes.h"
 #include "gui/timerlist.h"
 #include "gui/components/cc_item_progressbar.h"
@@ -193,13 +196,13 @@ void * nhttpd_main_thread(void *data);
 
 //#define DISABLE_SECTIONSD
 
-extern cVideo * videoDecoder;
+extern cVideo *videoDecoder;
 #ifdef ENABLE_PIP
-extern cVideo *pipDecoder;
-extern cDemux *pipDemux;
+extern cVideo *pipVideoDecoder[3];
+extern cDemux *pipVideoDemux[3];
 #endif
 extern cDemux *videoDemux;
-extern cAudio * audioDecoder;
+extern cAudio *audioDecoder;
 cPowerManager *powerManager;
 
 #ifdef ENABLE_LCD4LINUX
@@ -214,7 +217,7 @@ void stop_video(void);
 #include "gui/ch_mosaic.h"
 #endif
 
-CAudioSetupNotifier	* audioSetupNotifier;
+CAudioSetupNotifier * audioSetupNotifier;
 CBouquetList   * bouquetList; // current list
 
 CBouquetList   * TVbouquetList;
@@ -1121,6 +1124,15 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.pip_radio_height = configfile.getInt32("pip_radio_height", g_settings.pip_height);
 #endif
 
+#if ENABLE_PIP && ENABLE_QUADPIP
+	for (unsigned int i = 0; i < 4; i++) {
+		sprintf(cfg_key, "quadpip_channel_window_%d", i);
+		g_settings.quadpip_channel_window[i] = configfile.getString(cfg_key, "-");
+		sprintf(cfg_key, "quadpip_channel_id_window_%d", i);
+		g_settings.quadpip_channel_id_window[i] = configfile.getInt64(cfg_key, 0);
+	}
+#endif
+
 	g_settings.infoClockFontSize = configfile.getInt32("infoClockFontSize", 30);
 	g_settings.infoClockBackground = configfile.getInt32("infoClockBackground", 0);
 	g_settings.infoClockSeconds = configfile.getInt32("infoClockSeconds", 1);
@@ -1777,6 +1789,16 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32("pip_radio_width", g_settings.pip_radio_width);
 	configfile.setInt32("pip_radio_height", g_settings.pip_radio_height);
 #endif
+
+#if ENABLE_PIP && ENABLE_QUADPIP
+	for (unsigned int i = 0; i < 4; i++) {
+		std::string qp = "quadpip_channel_window_" + to_string(i);
+		configfile.setString(qp, g_settings.quadpip_channel_window[i]);
+		qp = "quadpip_channel_id_window_" + to_string(i);
+		configfile.setInt64(qp, g_settings.quadpip_channel_id_window[i]);
+	}
+#endif
+
 	configfile.setInt32("infoClockFontSize", g_settings.infoClockFontSize);
 	configfile.setInt32("infoClockBackground", g_settings.infoClockBackground);
 	configfile.setInt32("infoClockSeconds", g_settings.infoClockSeconds);
@@ -4405,7 +4427,7 @@ void CNeutrinoApp::tvMode( bool rezap )
 #ifdef ENABLE_PIP
 	if (g_info.hw_caps->can_pip)
 	{
-		pipDecoder->Pig(g_settings.pip_x, g_settings.pip_y,
+		pipVideoDecoder[0]->Pig(g_settings.pip_x, g_settings.pip_y,
 			g_settings.pip_width, g_settings.pip_height,
 			frameBuffer->getScreenWidth(true), frameBuffer->getScreenHeight(true));
 	}
@@ -4551,9 +4573,10 @@ void CNeutrinoApp::standbyMode( bool bOnOff, bool fromDeepStandby )
 		exec_controlscript(NEUTRINO_ENTER_STANDBY_SCRIPT);
 
 		CEpgScan::getInstance()->Start(true);
+#if 0 // unused?!
 		bool alive = recordingstatus || CEpgScan::getInstance()->Running() ||
 			CStreamManager::getInstance()->StreamStatus();
-
+#endif
 		//fan speed
 		if (g_info.hw_caps->has_fan)
 			CFanControlNotifier::setSpeed(1);
@@ -4672,7 +4695,7 @@ void CNeutrinoApp::radioMode( bool rezap)
 #ifdef ENABLE_PIP
 	if (g_info.hw_caps->can_pip)
 	{
-		pipDecoder->Pig(g_settings.pip_radio_x, g_settings.pip_radio_y,
+		pipVideoDecoder[0]->Pig(g_settings.pip_radio_x, g_settings.pip_radio_y,
 			g_settings.pip_radio_width, g_settings.pip_radio_height,
 			frameBuffer->getScreenWidth(true), frameBuffer->getScreenHeight(true));
 	}
@@ -4741,20 +4764,20 @@ void CNeutrinoApp::StartAVInputPiP() {
 	if (!g_info.hw_caps->can_pip)
 		return;
 
-	if (!pipDemux) {
-		pipDemux = new cDemux(1);
-		pipDemux->Open(DMX_PIP_CHANNEL);
-		if (!pipDecoder) {
-			pipDecoder = new cVideo(0, NULL, NULL, 1);
+	if (!pipVideoDemux[0]) {
+		pipVideoDemux[0] = new cDemux(1);
+		pipVideoDemux[0]->Open(DMX_VIDEO_CHANNEL);
+		if (!pipVideoDecoder[0]) {
+			pipVideoDecoder[0] = new cVideo(0, NULL, NULL, 1);
 		}
 	}
-	pipDemux->SetSource(1, 2);
-	pipDecoder->SetStreamType((VIDEO_FORMAT) 1);
-	pipDemux->Start();
-	pipDecoder->Start(0, 0, 0);
-	pipDecoder->open_AVInput_Device();
-	pipDecoder->Pig(g_settings.pip_x,g_settings.pip_y,g_settings.pip_width,g_settings.pip_height,g_settings.screen_width,g_settings.screen_height);
-	pipDecoder->ShowPig(1);
+	pipVideoDemux[0]->SetSource(1, 2);
+	pipVideoDecoder[0]->SetStreamType((VIDEO_FORMAT) 1);
+	pipVideoDemux[0]->Start();
+	pipVideoDecoder[0]->Start(0, 0, 0);
+	pipVideoDecoder[0]->open_AVInput_Device();
+	pipVideoDecoder[0]->Pig(g_settings.pip_x,g_settings.pip_y,g_settings.pip_width,g_settings.pip_height,g_settings.screen_width,g_settings.screen_height);
+	pipVideoDecoder[0]->ShowPig(1);
 	avinput_pip = true;
 }
 
@@ -4762,10 +4785,10 @@ void CNeutrinoApp::StopAVInputPiP() {
 	if (!g_info.hw_caps->can_pip)
 		return;
 
-	pipDecoder->ShowPig(0);
-	pipDemux->Stop();
-	pipDecoder->Stop();
-	pipDecoder->close_AVInput_Device();
+	pipVideoDecoder[0]->ShowPig(0);
+	pipVideoDemux[0]->Stop();
+	pipVideoDecoder[0]->Stop();
+	pipVideoDecoder[0]->close_AVInput_Device();
 	avinput_pip = false;
 }
 #endif

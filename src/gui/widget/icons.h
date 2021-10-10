@@ -115,12 +115,6 @@
 #define NEUTRINO_ICON_SHELL		"shell"
 #define NEUTRINO_ICON_STREAMING		"streaming"
 #define NEUTRINO_ICON_TIMER		"timer"
-#if 0
-#define NEUTRINO_ICON_TUNER_1		"tuner_1"
-#define NEUTRINO_ICON_TUNER_2		"tuner_2"
-#define NEUTRINO_ICON_TUNER_3		"tuner_3"
-#define NEUTRINO_ICON_TUNER_4		"tuner_4"
-#endif
 #define NEUTRINO_ICON_UPDATE		"softupdate"
 #define NEUTRINO_ICON_UPNP		"upnp"
 #define NEUTRINO_ICON_VIDEO		"video"
@@ -207,6 +201,7 @@
 #define NEUTRINO_ICON_HINT_APLAY	"hint_aplay"
 #define NEUTRINO_ICON_HINT_AVINPUTMODE	"hint_avinputmode"
 #define NEUTRINO_ICON_HINT_AVINPUTMODE_PIP	"hint_avinputmode_pip"
+#define NEUTRINO_ICON_HINT_QUADPIP	"hint_quadpip"
 #define NEUTRINO_ICON_HINT_INET_RADIO	"hint_inetradio"
 #define NEUTRINO_ICON_HINT_MOVIE	"hint_movie"
 #define NEUTRINO_ICON_HINT_PICVIEW	"hint_picview"

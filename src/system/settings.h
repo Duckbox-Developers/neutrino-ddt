@@ -373,7 +373,9 @@ struct SNeutrinoSettings
 		P_MAIN_GAMES,
 		P_MAIN_TOOLS,
 		P_MAIN_AVINPUT,
+#if ENABLE_PIP
 		P_MAIN_AVINPUT_PIP,
+#endif
 		P_MAIN_SCRIPTS,
 		P_MAIN_LUA,
 		P_MAIN_SETTINGS,
@@ -619,10 +621,14 @@ struct SNeutrinoSettings
 	std::string screenshot_dir;
 
 	int key_current_transponder;
+
+#if ENABLE_PIP
 	int key_pip_close;
 	int key_pip_close_avinput;
 	int key_pip_setup;
 	int key_pip_swap;
+#endif
+
 	int key_format_mode_active;
 	int key_pic_mode_active;
 	int key_pic_size_active;
@@ -641,6 +647,9 @@ struct SNeutrinoSettings
 	int mode_left_right_key_tv;
 
 	int spectrum;
+
+
+#if ENABLE_PIP
 	int pip_width;
 	int pip_height;
 	int pip_x;
@@ -649,6 +658,13 @@ struct SNeutrinoSettings
 	int pip_radio_height;
 	int pip_radio_x;
 	int pip_radio_y;
+#endif
+
+#if ENABLE_PIP && ENABLE_QUADPIP
+	std::string quadpip_channel_window[4];
+	t_channel_id quadpip_channel_id_window[4];
+#endif
+
 	int bigFonts;
 	int window_size;
 	int window_width;

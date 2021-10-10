@@ -38,6 +38,12 @@
 #include <dvbsi++/teletext_descriptor.h>
 #include <dvbsi++/subtitling_descriptor.h>
 #include <dvbsi++/vbi_teletext_descriptor.h>
+#if ENABLE_AITSCAN
+#include <dvbsi++/application_information_section.h>
+#include <dvbsi++/application_name_descriptor.h>
+#include <dvbsi++/application_profile.h>
+#include <dvbsi++/application_descriptor.h>
+#endif
 
 #define DEBUG_PMT
 //#define DEBUG_PMT_UNUSED
@@ -331,6 +337,20 @@ bool CPmt::ParseEsInfo(ElementaryStreamInfo *esinfo, CZapitChannel * const chann
 		audio_type = CZapitAudioChannel::EAC3;
 		audio = true;
 		break;
+#if ENABLE_AITSCAN
+	case STREAM_TYPE_PRIVATE_SECTION:
+		for (DescriptorConstIterator desc = esinfo->getDescriptors()->begin(); desc != esinfo->getDescriptors()->end(); ++desc)
+		{
+			switch ((*desc)->getTag())
+			{
+				case APPLICATION_SIGNALLING_DESCRIPTOR:
+					channel->setAitPid(esinfo->getPid());
+					printf("[pmt] found aitpid: 0x%x\n", esinfo->getPid());
+					break;
+			}
+		}
+		break;
+#endif
 	default:
 #ifdef DEBUG_PMT_UNUSED
 		printf("PMT: pid %04x stream_type: %02x\n", esinfo->getPid(), stream_type);

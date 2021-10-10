@@ -86,7 +86,6 @@ libneutrino_gui_a_SOURCES = \
 	personalize.cpp \
 	pictureviewer.cpp \
 	pictureviewer_setup.cpp \
-	pipsetup.cpp \
 	pluginlist.cpp \
 	plugins.cpp \
 	proxyserver_setup.cpp \
@@ -116,6 +115,15 @@ libneutrino_gui_a_SOURCES = \
 	webtv_setup.cpp \
 	xmltv_setup.cpp \
 	zapit_setup.cpp
+
+if ENABLE_PIP
+libneutrino_gui_a_SOURCES += \
+	pipsetup.cpp
+if ENABLE_QUADPIP
+libneutrino_gui_a_SOURCES += \
+	quadpip_setup.cpp
+endif
+endif
 
 if BOXTYPE_SPARK
 libneutrino_gui_a_SOURCES += \

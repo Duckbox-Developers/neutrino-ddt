@@ -79,7 +79,7 @@ int CWebRadioSetup::exec(CMenuTarget* parent, const std::string & actionKey)
 		{
 			std::string entry = dirname;
 
-			CKeyboardInput *e = new CKeyboardInput(LOCALE_WEBTV_XML_ENTER, &entry, 50);
+			CKeyboardInput *e = new CKeyboardInput(LOCALE_WEBTV_XML_ENTER, &entry, 127);
 			e->exec(this, "");
 			delete e;
 
@@ -130,7 +130,7 @@ int CWebRadioSetup::exec(CMenuTarget* parent, const std::string & actionKey)
 		std::string tpl = "http://xxx.xxx.xxx.xxx/control/xmltv.m3u?mode=radio";
 		std::string entry = tpl;
 
-		CKeyboardInput *e = new CKeyboardInput(LOCALE_WEBTV_XML_ENTER, &entry, 52);
+		CKeyboardInput *e = new CKeyboardInput(LOCALE_WEBTV_XML_ENTER, &entry, 127);
 		e->exec(this, "");
 		delete e;
 
