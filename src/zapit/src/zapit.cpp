@@ -146,6 +146,9 @@ CZapit::CZapit()
 
 CZapit::~CZapit()
 {
+#if ENABLE_AITSCAN
+	delete ait;
+#endif
 	Stop();
 }
 
