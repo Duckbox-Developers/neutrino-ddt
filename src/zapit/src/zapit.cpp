@@ -722,7 +722,7 @@ bool CZapit::StartPip(const t_channel_id channel_id, int pip)
 		ERROR("Cannot get frontend\n");
 		return false;
 	}
-	StopPip();
+	StopPip(pip);
 	if (!need_lock && !SAME_TRANSPONDER(newchannel->getChannelID(), live_channel_id))
 		live_channel_id = newchannel->getChannelID();
 
@@ -1786,7 +1786,10 @@ bool CZapit::ParseCommand(CBasicMessage::Header &rmsg, int connfd)
 
 #ifdef ENABLE_PIP
 	case CZapitMessages::CMD_STOP_PIP:
-		StopPip();
+		for (unsigned i=0; i < (unsigned int) g_info.hw_caps->pip_devs; i++)
+		{
+			StopPip(i);
+		}
 		SendCmdReady(connfd);
 		break;
 #endif
@@ -2365,7 +2368,10 @@ void CZapit::enterStandby(void)
 	SaveVolumeMap();
 	StopPlayBack(true);
 #ifdef ENABLE_PIP
-	StopPip();
+	for (unsigned i=0; i < (unsigned int) g_info.hw_caps->pip_devs; i++)
+	{
+		StopPip(i);
+	}
 #endif
 
 	if(!(currentMode & RECORD_MODE)) {
@@ -2690,9 +2696,9 @@ void CZapit::run()
 	delete audioDecoder;
 	delete audioDemux;
 #ifdef ENABLE_PIP
-	StopPip();
 	for (unsigned i=0; i < (unsigned int) g_info.hw_caps->pip_devs; i++)
 	{
+		StopPip(i);
 		if (pipVideoDecoder[i])
 			pipVideoDecoder[i] = NULL;
 		if (pipVideoDemux[i])
