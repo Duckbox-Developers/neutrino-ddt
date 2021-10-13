@@ -680,14 +680,14 @@ bool CZapit::StopPip(int pip)
 		CNeutrinoApp::getInstance()->StopAVInputPiP();
 	}
 
-	if (pip_channel_id[0]) {
-		INFO("[pip] stop %llx", pip_channel_id[0]);
-		pipVideoDecoder[0]->ShowPig(0);
-		CCamManager::getInstance()->Stop(pip_channel_id[0], CCamManager::PIP);
-		pipVideoDemux[0]->Stop();
-		pipVideoDecoder[0]->Stop();
-		pip_fe[0] = NULL;
-		pip_channel_id[0] = 0;
+	if (pip_channel_id[pip]) {
+		INFO("[pip] stop %llx", pip_channel_id[pip]);
+		pipVideoDecoder[pip]->ShowPig(0);
+		CCamManager::getInstance()->Stop(pip_channel_id[pip], CCamManager::PIP);
+		pipVideoDemux[pip]->Stop();
+		pipVideoDecoder[pip]->Stop();
+		pip_fe[pip] = NULL;
+		pip_channel_id[pip] = 0;
 		return true;
 	}
 	return false;
@@ -732,38 +732,38 @@ bool CZapit::StartPip(const t_channel_id channel_id, int pip)
 	if(!ParsePatPmt(newchannel))
 		return false;
 
-	pip_fe[0] = frontend;
+	pip_fe[pip] = frontend;
 
 #ifdef DYNAMIC_DEMUX
-	int dnum = CFEManager::getInstance()->getDemux(newchannel->getTransponderId(), pip_fe[0]->getNumber());
+	int dnum = CFEManager::getInstance()->getDemux(newchannel->getTransponderId(), pip_fe[pip]->getNumber());
 	INFO("[pip] dyn demux: %d", dnum);
 #else
 	/* FIXME until proper demux management */
-	int dnum = 1;
+	int dnum = pip + 1;
 	INFO("[pip] demux: %d", dnum);
 #endif
 
 	INFO("[pip] vpid %X apid %X pcr %X", newchannel->getVideoPid(), newchannel->getAudioPid(), newchannel->getPcrPid());
-	if (!pipVideoDemux[0]) {
-		pipVideoDemux[0] = new cDemux(dnum);
-		pipVideoDemux[0]->Open(DMX_VIDEO_CHANNEL);
-		if (!pipVideoDecoder[0]) {
-			pipVideoDecoder[0] = new cVideo(0, NULL, NULL, dnum);
+	if (!pipVideoDemux[pip]) {
+		pipVideoDemux[pip] = new cDemux(dnum);
+		pipVideoDemux[pip]->Open(DMX_VIDEO_CHANNEL);
+		if (!pipVideoDecoder[pip]) {
+			pipVideoDecoder[pip] = new cVideo(0, NULL, NULL, dnum);
 		}
 	}
 
-	pipVideoDemux[0]->SetSource(dnum, pip_fe[0]->getNumber());
+	pipVideoDemux[pip]->SetSource(dnum, pip_fe[pip]->getNumber());
 	newchannel->setPipDemux(dnum);
-	newchannel->setRecordDemux(pip_fe[0]->getNumber());
+	newchannel->setRecordDemux(pip_fe[pip]->getNumber());
 
-	pipVideoDecoder[0]->SetStreamType((VIDEO_FORMAT)newchannel->type);
-	pipVideoDemux[0]->pesFilter(newchannel->getVideoPid());
-	pipVideoDemux[0]->Start();
-	pipVideoDecoder[0]->Start(0, newchannel->getPcrPid(), newchannel->getVideoPid());
-	pip_channel_id[0] = newchannel->getChannelID();
+	pipVideoDecoder[pip]->SetStreamType((VIDEO_FORMAT) newchannel->type);
+	pipVideoDemux[pip]->pesFilter(newchannel->getVideoPid());
+	pipVideoDemux[pip]->Start();
+	pipVideoDecoder[pip]->Start(0, newchannel->getPcrPid(), newchannel->getVideoPid());
+	pip_channel_id[pip] = newchannel->getChannelID();
 
-	pipVideoDecoder[0]->Pig(g_settings.pip_x,g_settings.pip_y,g_settings.pip_width,g_settings.pip_height,g_settings.screen_width,g_settings.screen_height);
-	pipVideoDecoder[0]->ShowPig(1);
+	pipVideoDecoder[pip]->Pig(g_settings.pip_x,g_settings.pip_y,g_settings.pip_width,g_settings.pip_height,g_settings.screen_width,g_settings.screen_height);
+	pipVideoDecoder[pip]->ShowPig(1);
 
 	CCamManager::getInstance()->Start(newchannel->getChannelID(), CCamManager::PIP);
 	return true;
@@ -1216,7 +1216,7 @@ bool CZapit::ParseCommand(CBasicMessage::Header &rmsg, int connfd)
 			msgResponseZapComplete.zapStatus = ZapForRecord(msgZaptoServiceID.channel_id);
 #ifdef ENABLE_PIP
 		else if(msgZaptoServiceID.pip)
-			msgResponseZapComplete.zapStatus = StartPip(msgZaptoServiceID.channel_id);
+			msgResponseZapComplete.zapStatus = StartPip(msgZaptoServiceID.channel_id, msgZaptoServiceID.pip_dev);
 #endif
 		else
 			msgResponseZapComplete.zapStatus = ZapTo(msgZaptoServiceID.channel_id, (rmsg.cmd == CZapitMessages::CMD_ZAPTO_SUBSERVICEID));
@@ -2486,8 +2486,11 @@ bool CZapit::Start(Z_start_arg *ZapStart_arg)
 #ifdef ENABLE_PIP
 	if (g_info.hw_caps->can_pip)
 	{
-		pipVideoDecoder[0] = new cVideo(0, NULL, NULL, 1);
-		pipVideoDecoder[0]->ShowPig(0);
+		for (unsigned i=0; i < (unsigned int) g_info.hw_caps->pip_devs; i++)
+		{
+			pipVideoDecoder[i] = new cVideo(0, NULL, NULL, i+1);
+			pipVideoDecoder[i]->ShowPig(0);
+		}
 	}
 #endif
 
@@ -2688,10 +2691,13 @@ void CZapit::run()
 	delete audioDemux;
 #ifdef ENABLE_PIP
 	StopPip();
-	if (pipVideoDecoder[0])
-		pipVideoDecoder[0] = NULL;
-	if (pipVideoDemux[0])
-		pipVideoDemux[0] = NULL;
+	for (unsigned i=0; i < (unsigned int) g_info.hw_caps->pip_devs; i++)
+	{
+		if (pipVideoDecoder[i])
+			pipVideoDecoder[i] = NULL;
+		if (pipVideoDemux[i])
+			pipVideoDemux[i] = NULL;
+	}
 #endif
 
 	INFO("demuxes/decoders deleted");
