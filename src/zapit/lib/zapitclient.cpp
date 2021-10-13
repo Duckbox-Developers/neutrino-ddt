@@ -206,13 +206,14 @@ unsigned int CZapitClient::zapTo_record(const t_channel_id channel_id)
 	return response.zapStatus;
 }
 
-unsigned int CZapitClient::zapTo_pip(const t_channel_id channel_id)
+unsigned int CZapitClient::zapTo_pip(const t_channel_id channel_id, int pip)
 {
 	CZapitMessages::commandZaptoServiceID msg;
 
 	msg.channel_id = channel_id;
 	msg.record = false;
 	msg.pip = true;
+	msg.pip_dev = pip;
 	msg.epg = false;
 
 	OpenThreads::ScopedLock<OpenThreads::Mutex> lock(mutex);
@@ -1094,7 +1095,7 @@ void CZapitClient::stopPlayBack(const bool sendpmt)
 	close_connection();
 }
 
-void CZapitClient::stopPip()
+void CZapitClient::stopPip(int pip)
 {
 	OpenThreads::ScopedLock<OpenThreads::Mutex> lock(mutex);
 	send(CZapitMessages::CMD_STOP_PIP);
