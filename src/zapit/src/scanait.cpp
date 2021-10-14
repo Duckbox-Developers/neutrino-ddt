@@ -55,8 +55,11 @@ bool CAit::Start()
 
 bool CAit::Stop()
 {
-	int ret = join();
-	return (ret == 0);
+	if(pid > 0){
+		int ret = join();
+		return (ret == 0);
+	}
+	return false;
 }
 
 void CAit::run()
