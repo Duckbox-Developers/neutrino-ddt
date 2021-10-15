@@ -683,7 +683,7 @@ bool CZapit::StopPip(int pip)
 	}
 
 	if (pip_channel_id[pip]) {
-		INFO("[pip] stop %llx", pip_channel_id[pip]);
+		INFO("[pip %d] stop %llx", pip, pip_channel_id[pip]);
 		pipVideoDecoder[pip]->ShowPig(0);
 		CCamManager::getInstance()->Stop(pip_channel_id[pip], CCamManager::PIP);
 		pipVideoDemux[pip]->Stop();
@@ -712,7 +712,7 @@ bool CZapit::StartPip(const t_channel_id channel_id, int pip)
 		INFO("channel_id " PRINTF_CHANNEL_ID_TYPE " not found", channel_id);
 		return false;
 	}
-	INFO("[pip] zap to %s (%llx tp %llx)", newchannel->getName().c_str(), newchannel->getChannelID(), newchannel->getTransponderId());
+	INFO("[pip %d] zap to %s (%llx tp %llx)", pip, newchannel->getName().c_str(), newchannel->getChannelID(), newchannel->getTransponderId());
 
 	if (need_lock)
 		CFEManager::getInstance()->lockFrontend(live_fe);
@@ -740,14 +740,14 @@ bool CZapit::StartPip(const t_channel_id channel_id, int pip)
 
 #ifdef DYNAMIC_DEMUX
 	int dnum = CFEManager::getInstance()->getDemux(newchannel->getTransponderId(), pip_fe[pip]->getNumber());
-	INFO("[pip] dyn demux: %d", dnum);
+	INFO("[pip %d] dyn demux: %d", pip, dnum);
 #else
 	/* FIXME until proper demux management */
 	int dnum = pip + 1;
-	INFO("[pip] demux: %d", dnum);
+	INFO("[pip %d] demux: %d", pip, dnum);
 #endif
 
-	INFO("[pip] vpid %X apid %X pcr %X", newchannel->getVideoPid(), newchannel->getAudioPid(), newchannel->getPcrPid());
+	INFO("[pip %d] vpid %X apid %X pcr %X", pip, newchannel->getVideoPid(), newchannel->getAudioPid(), newchannel->getPcrPid());
 	if (!pipVideoDemux[pip]) {
 		pipVideoDemux[pip] = new cDemux(dnum);
 		pipVideoDemux[pip]->Open(DMX_VIDEO_CHANNEL);
