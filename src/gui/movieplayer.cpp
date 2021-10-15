@@ -1803,9 +1803,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 				callInfoViewer();
 		} else if (msg == (neutrino_msg_t) g_settings.mpkey_bookmark) {
 #if HAVE_ARM_HARDWARE
-			if (is_file_player)
-				selectChapter();
-			else
+			if (selectChapter() != 0)
 #endif
 			handleMovieBrowser((neutrino_msg_t) g_settings.mpkey_bookmark, position);
 			update_lcd = true;
@@ -1904,6 +1902,9 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			disableOsdElements(NO_MUTE);
 			showHelp();
 			enableOsdElements(NO_MUTE);
+		} else if ((msg == CRCInput::RC_info) && fromInfoviewer) {
+			fromInfoviewer = false;
+			showMovieInfo();
 		} else if (msg == CRCInput::RC_info) {
 			if (fromInfoviewer) {
 				disableOsdElements(NO_MUTE);
@@ -2624,16 +2625,16 @@ void CMoviePlayerGui::StartSubtitles(bool show __attribute__((unused)))
 }
 
 #if HAVE_ARM_HARDWARE
-void CMoviePlayerGui::selectChapter()
+int CMoviePlayerGui::selectChapter()
 {
 	if (!is_file_player)
-		return;
+		return 1;
 
 	std::vector<int> positions; std::vector<std::string> titles;
 	playback->GetChapters(positions, titles);
 
 	if (positions.empty())
-		return;
+		return -1;
 
 	CMenuWidget ChSelector(LOCALE_MOVIEBROWSER_MENU_MAIN_BOOKMARKS, NEUTRINO_ICON_AUDIO);
 
@@ -2657,6 +2658,7 @@ void CMoviePlayerGui::selectChapter()
 	if (select >= 0) {
 		playback->SetPosition(positions[select], true);
 	}
+	return 0;
 }
 #endif
 

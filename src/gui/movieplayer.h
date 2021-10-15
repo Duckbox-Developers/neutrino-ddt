@@ -242,7 +242,7 @@ class CMoviePlayerGui : public CMenuTarget
 	bool convertSubtitle(std::string &text);
 #endif
 #if HAVE_ARM_HARDWARE
-	void selectChapter();
+	int selectChapter();
 #endif
 	void selectAutoLang();
 	void parsePlaylist(CFile *file);
