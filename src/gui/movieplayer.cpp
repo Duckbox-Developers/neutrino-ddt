@@ -252,9 +252,6 @@ void CMoviePlayerGui::Init(void)
 	showStartingHint = false;
 
 	iso_file = false;
-#if 0
-	lock_subs = false;
-#endif
 	bgThread = 0;
 	info_1 = "";
 	info_2 = "";
@@ -911,9 +908,6 @@ void* CMoviePlayerGui::bgPlayThread(void *arg)
 		bgmutex.unlock();
 		if (res == 0)
 			break;
-#if 0
-		mp->showSubtitle(0);
-#endif
 	}
 	printf("%s: play end...\n", __func__);fflush(stdout);
 	mp->PlayFileEnd();
@@ -1576,12 +1570,6 @@ void CMoviePlayerGui::PlayFileLoop(void)
 				handle_key_pause = false;
 		}
 
-#if 0		//bisectional jumps
-		if (bisection_loop > -1)
-			bisection_loop++;
-		if (bisection_loop > bisection_loop_max)
-			bisection_loop = -1;
-#endif
 
 		if ((playstate >= CMoviePlayerGui::PLAY) && (timeshift != TSHIFT_MODE_OFF || (playstate != CMoviePlayerGui::PAUSE))) {
 			if (playback->GetPosition(position, duration)) {
@@ -2669,16 +2657,14 @@ bool CMoviePlayerGui::setAPID(unsigned int i) {
 		playback->SetAPid(currentapid, currentac3);
 		CZapit::getInstance()->SetVolumePercent((ac3flags[i] == 0) ? g_settings.audio_volume_percent_pcm : g_settings.audio_volume_percent_ac3 );
 
-		if (!isMovieBrowser)
-			return (i < numpida);
-
-		for (unsigned int a = 0; a < p_movie_info->audioPids.size(); a++) {
-			if (p_movie_info->audioPids[a].AudioPid == currentapid) {
-				p_movie_info->audioPids[a].selected = 1;
-			} else {
-				p_movie_info->audioPids[a].selected = 0;
+		if (p_movie_info)
+			for (unsigned int a = 0; a < p_movie_info->audioPids.size(); a++)
+			{
+				if (p_movie_info->audioPids[a].AudioPid == currentapid)
+					p_movie_info->audioPids[a].selected = 1;
+				else
+					p_movie_info->audioPids[a].selected = 0;
 			}
-		}
 	}
 	return (i < numpida);
 }
