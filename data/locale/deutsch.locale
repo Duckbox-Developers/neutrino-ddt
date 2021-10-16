@@ -122,7 +122,6 @@ adzap.zap Zap bei Timer-Aktivierung
 adzap.zap_off aus
 adzap.zap_to_last_channel auf letzten Kanal
 adzap.zap_to_start_channel auf Start-Kanal
-apidselector.head Sprachauswahl
 audiomenu.PCMOffset Lautstärkeabsenkung PCM
 audiomenu.ac3 AC3 durchleiten
 audiomenu.analog_mode Analog Modus
@@ -1940,8 +1939,6 @@ movieplayer.help_button_pause Pause / Weiter
 movieplayer.help_button_stop Stopp
 movieplayer.plugin Movieplayer-Plugin
 movieplayer.starting Wiedergabe starten ...
-movieplayer.titles Titel
-movieplayer.toomanybookmarks Sie haben bereits zu viele Lesezeichen angelegt.\nEs muß erst ein anderes gelöscht werden.
 movieplayer.tsplayback Abspielen
 mpkey.audio Tonspuren
 mpkey.bookmark Markierungen
@@ -2424,7 +2421,6 @@ stringinput.caps Groß/Klein
 stringinput.clear Alles löschen
 stringinput.insert Einfügen
 stringinput.save Speichern
-subtitles.charset Zeichensatz
 subtitles.head Untertitel
 subtitles.stop Untertitel aus
 terrestrialsetup.area Region
