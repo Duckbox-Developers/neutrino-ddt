@@ -157,18 +157,6 @@ class CMoviePlayerGui : public CMenuTarget
 	int tpage[REC_MAX_TPIDS];
 	std::string currentttxsub;
 
-#if 0
-	/* subtitles vars */
-	unsigned short numsubs;
-	std::string    slanguage[REC_MAX_APIDS];
-	unsigned short spids[REC_MAX_APIDS];
-	unsigned short sub_supported[REC_MAX_APIDS];
-	int currentspid;
-	int min_x, min_y, max_x, max_y;
-	int64_t end_time;
-	bool ext_subs;
-	bool lock_subs;
-#endif
 	uint64_t last_read;
 
 	/* playback from MB */
@@ -238,10 +226,6 @@ class CMoviePlayerGui : public CMenuTarget
 	bool SelectFile();
 	void updateLcd(bool display_playtime = false);
 
-#if 0
-	void selectSubtitle();
-	bool convertSubtitle(std::string &text);
-#endif
 #if HAVE_ARM_HARDWARE
 	void selectChapter();
 #endif
@@ -308,11 +292,7 @@ class CMoviePlayerGui : public CMenuTarget
 	void Pause(bool b = true);
 	void selectAudioPid(void);
 	bool SetPosition(int pos, bool absolute = false);
-#if 0
-	void selectSubtitle();
-	void showSubtitle(neutrino_msg_data_t data);
-	void clearSubtitle(bool lock = false);
-#endif
+
 	int getKeyPressed() { return keyPressed; };
 	size_t GetReadCount();
 	std::string GetFile() { return pretty_name; }
