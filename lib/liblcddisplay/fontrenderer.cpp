@@ -47,10 +47,7 @@
 #include <fribidi/fribidi.h>
 #endif
 
-FT_Error LcdFontRenderClass::myFTC_Face_Requester(FTC_FaceID  face_id,
-	FT_Library  library,
-	FT_Pointer  request_data,
-	FT_Face    *aface)
+FT_Error LcdFontRenderClass::myFTC_Face_Requester(FTC_FaceID  face_id, FT_Library library, FT_Pointer request_data, FT_Face *aface)
 {
 	return ((LcdFontRenderClass *)request_data)->FTC_Face_Requester(face_id, aface);
 }
@@ -372,4 +369,3 @@ int LcdFont::getRenderWidth(const char *text, const bool utf8_encoded)
 	pthread_mutex_unlock(&renderer->render_mutex);
 	return x;
 }
-

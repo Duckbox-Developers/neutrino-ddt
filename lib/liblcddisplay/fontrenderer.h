@@ -42,15 +42,15 @@
 class LcdFontRenderClass;
 class LcdFont
 {
-		CLCDDisplay              *framebuffer;
+		CLCDDisplay		*framebuffer;
 #if FREETYPE_MAJOR >= 2 && FREETYPE_MINOR >= 3
-		FTC_ImageTypeRec        font;
+		FTC_ImageTypeRec	font;
 #else
-		FTC_Image_Desc  font;
-		FT_Face                 face;
+		FTC_Image_Desc		font;
+		FT_Face			face;
 #endif
-		LcdFontRenderClass *renderer;
-		FT_Size                 size;
+		LcdFontRenderClass	*renderer;
+		FT_Size			size;
 
 		FT_Error getGlyphBitmap(FT_ULong glyph_index, FTC_SBit *sbit);
 
@@ -74,10 +74,10 @@ class LcdFontRenderClass
 			~fontListEntry();
 		} *font;
 
-		FT_Library		library;
-		FTC_Manager		cacheManager;        /* the cache manager               */
-		FTC_ImageCache	imageCache;          /* the glyph image cache           */
-		FTC_SBitCache	sbitsCache;          /* the glyph small bitmaps cache   */
+		FT_Library	library;
+		FTC_Manager	cacheManager;	/* the cache manager             */
+		FTC_ImageCache	imageCache;	/* the glyph image cache         */
+		FTC_SBitCache	sbitsCache;	/* the glyph small bitmaps cache */
 
 		FTC_FaceID getFaceID(const char *family, const char *style);
 #if FREETYPE_MAJOR >= 2 && FREETYPE_MINOR >= 3
@@ -93,16 +93,12 @@ class LcdFontRenderClass
 
 		FT_Error FTC_Face_Requester(FTC_FaceID  face_id, FT_Face *aface);
 
-		static FT_Error myFTC_Face_Requester(FTC_FaceID  face_id,
-			FT_Library  library,
-			FT_Pointer  request_data,
-			FT_Face    *aface);
+		static FT_Error myFTC_Face_Requester(FTC_FaceID  face_id, FT_Library library, FT_Pointer request_data, FT_Face *aface);
 
 		//FT_Face getFace(const char *family, const char *style);
 		LcdFont *getFont(const char *family, const char *style, int size);
 		LcdFontRenderClass(CLCDDisplay *fb);
 		~LcdFontRenderClass();
-
 
 		friend class LcdFont;
 };

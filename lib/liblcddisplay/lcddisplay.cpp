@@ -955,5 +955,3 @@ bool CLCDDisplay::dump_png(const char *const filename)
 	element.header.bpp = 8;
 	return dump_png_element(filename, &element);
 }
-
-

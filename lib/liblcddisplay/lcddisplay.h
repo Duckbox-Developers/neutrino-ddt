@@ -30,26 +30,26 @@
 #include <string>
 #include <stdint.h> /* uint8_t */
 
-#define LCD_DEVICE	"/dev/dbox/lcd0"
+#define LCD_DEVICE		"/dev/dbox/lcd0"
 
-#define LCD_PIXEL_OFF	0x00
-#define LCD_PIXEL_ON	0xff
-#define LCD_PIXEL_INV	0x1000000
+#define LCD_PIXEL_OFF		0x00
+#define LCD_PIXEL_ON		0xff
+#define LCD_PIXEL_INV		0x1000000
 
-#define LCD_MODE_ASC	0
-#define LCD_MODE_BIN	2
+#define LCD_MODE_ASC		0
+#define LCD_MODE_BIN		2
 
 // ioctls
 #define LCD_IOCTL_ASC_MODE	(25)
 #define LCD_IOCTL_CLEAR		(26)
 
-#define FP_IOCTL_LCD_DIMM       3
+#define FP_IOCTL_LCD_DIMM	3
 
-#define LCDSET                  0x1000
+#define LCDSET			0x1000
 
-#define LCD_IOCTL_ON            (2 |LCDSET)
-#define LCD_IOCTL_REVERSE       (4 |LCDSET)
-#define LCD_IOCTL_SRV           (10|LCDSET)
+#define LCD_IOCTL_ON		(2 |LCDSET)
+#define LCD_IOCTL_REVERSE	(4 |LCDSET)
+#define LCD_IOCTL_SRV		(10|LCDSET)
 
 
 typedef unsigned char *raw_display_t;
