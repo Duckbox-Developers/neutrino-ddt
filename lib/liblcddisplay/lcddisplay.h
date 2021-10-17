@@ -104,10 +104,7 @@ class CLCDDisplay
 		void resume();
 
 		void convert_data();
-		void setIconBasePath(std::string bp)
-		{
-			iconBasePath = bp;
-		};
+		void setIconBasePath(std::string bp) {iconBasePath = bp;};
 		bool isAvailable();
 
 		void update();
@@ -134,10 +131,7 @@ class CLCDDisplay
 		int setLCDBrightness(int brightness);
 		void setInverted(unsigned char);
 		void setFlipped(bool);
-		bool isOled() const
-		{
-			return !!is_oled;
-		}
+		bool isOled() const { return !!is_oled; }
 		int raw_buffer_size;
 		int xres, yres, bpp;
 		int bypp;
