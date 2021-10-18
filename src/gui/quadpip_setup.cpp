@@ -74,7 +74,7 @@ CQuadPiPSetup::~CQuadPiPSetup()
 {
 }
 
-int CQuadPiPSetup::exec(CMenuTarget* parent, const std::string & actionKey)
+int CQuadPiPSetup::exec(CMenuTarget* parent, const std::string & /*actionKey*/)
 {
 	dprintf(DEBUG_DEBUG, "init quadpip setup\n");
 	int res = menu_return::RETURN_REPAINT;
@@ -103,9 +103,12 @@ int CQuadPiPSetup::showQuadPiPSetup()
 	// quadpip window channel settings
 	CQuadPiPSetupSelectChannelWidget select;
 	quadpipsetup->addItem(new CMenuForwarder(LOCALE_QUADPIP_1, true, g_settings.quadpip_channel_window[0], &select, "window_1", CRCInput::RC_1));
-	if (pip_devs >= 2) quadpipsetup->addItem(new CMenuForwarder(LOCALE_QUADPIP_2, true, g_settings.quadpip_channel_window[1], &select, "window_2", CRCInput::RC_2));
-	if (pip_devs >= 3) quadpipsetup->addItem(new CMenuForwarder(LOCALE_QUADPIP_3, true, g_settings.quadpip_channel_window[2], &select, "window_3", CRCInput::RC_3));
-	if (pip_devs >= 4) quadpipsetup->addItem(new CMenuForwarder(LOCALE_QUADPIP_4, true, g_settings.quadpip_channel_window[3], &select, "window_4", CRCInput::RC_4));
+	if (pip_devs >= 2)
+		quadpipsetup->addItem(new CMenuForwarder(LOCALE_QUADPIP_2, true, g_settings.quadpip_channel_window[1], &select, "window_2", CRCInput::RC_2));
+	if (pip_devs >= 3)
+		quadpipsetup->addItem(new CMenuForwarder(LOCALE_QUADPIP_3, true, g_settings.quadpip_channel_window[2], &select, "window_3", CRCInput::RC_3));
+	if (pip_devs >= 4)
+		quadpipsetup->addItem(new CMenuForwarder(LOCALE_QUADPIP_4, true, g_settings.quadpip_channel_window[3], &select, "window_4", CRCInput::RC_4));
 
 	// reset all channel settings
 	quadpipsetup->addItem(GenericMenuSeparatorLine);
@@ -124,7 +127,7 @@ int CQuadPiPSetup::showQuadPiPSetup()
 	return res;
 }
 
-bool CQuadPiPSetupNotifier::changeNotify(const neutrino_locale_t, void * Data)
+bool CQuadPiPSetupNotifier::changeNotify(const neutrino_locale_t, void * /*Data*/)
 {
 	if (quadpip)
 	{
@@ -276,7 +279,7 @@ CQuadPiPSetupSelectChannelWidget::~CQuadPiPSetupSelectChannelWidget()
 {
 }
 
-int CQuadPiPSetupSelectChannelWidget::InitZapitChannelHelper(CZapitClient::channelsMode mode)
+int CQuadPiPSetupSelectChannelWidget::InitZapitChannelHelper(CZapitClient::channelsMode /*mode*/)
 {
 	std::vector<CMenuWidget *> toDelete;
 	CMenuWidget mctv(LOCALE_TIMERLIST_BOUQUETSELECT, NEUTRINO_ICON_SETTINGS);
