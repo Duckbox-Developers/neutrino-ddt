@@ -375,6 +375,9 @@ struct SNeutrinoSettings
 		P_MAIN_AVINPUT,
 #if ENABLE_PIP
 		P_MAIN_AVINPUT_PIP,
+#if ENABLE_QUADPIP
+		P_MAIN_QUADPIP,
+#endif
 #endif
 		P_MAIN_SCRIPTS,
 		P_MAIN_LUA,
