@@ -427,7 +427,6 @@ void CBouquetManager::parseBouquetsXml(const char *fname, bool bUser)
 			const char* hidden = xmlGetAttribute(search, "hidden");
 			const char* locked = xmlGetAttribute(search, "locked");
 			const char* scanepg = xmlGetAttribute(search, "epg");
-			const char* useci = xmlGetAttribute(search, "ci");
 			newBouquet->bHidden = hidden ? (strcmp(hidden, "1") == 0) : false;
 			newBouquet->bLocked = locked ? (strcmp(locked, "1") == 0) : false;
 			newBouquet->bFav = (strcasecmp(name, DEFAULT_BQ_NAME_FAV) == 0);
@@ -1116,7 +1115,6 @@ void CBouquetManager::loadWebchannels(int mode)
 				std::string url;
 				std::string desc;
 				std::string group;
-				t_channel_id epg_id = 0;
 				CZapitBouquet* pbouquet = NULL;
 
 				if(f != NULL)
