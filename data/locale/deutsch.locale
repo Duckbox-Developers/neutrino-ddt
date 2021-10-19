@@ -122,7 +122,6 @@ adzap.zap Zap bei Timer-Aktivierung
 adzap.zap_off aus
 adzap.zap_to_last_channel auf letzten Kanal
 adzap.zap_to_start_channel auf Start-Kanal
-audiomenu.PCMOffset Lautstärkeabsenkung PCM
 audiomenu.ac3 AC3 durchleiten
 audiomenu.analog_mode Analog Modus
 audiomenu.analog_out Analog-Ausgang
