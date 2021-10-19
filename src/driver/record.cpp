@@ -1824,9 +1824,6 @@ bool CRecordManager::doGuiRecord()
 	t_channel_id live_channel_id = CZapit::getInstance()->GetCurrentChannelID();
 	if(recordingstatus == 1) {
 		bool doRecord = true;
-#if 0 //FIXME unused ?
-		doRecord = CRecordManager::getInstance()->ChooseRecDir(recDir);
-#endif
 		printf("%s: start to dir %s\n", __FUNCTION__, recDir.c_str());
 		if(!doRecord || (Record(live_channel_id, recDir.c_str()) == false))
 		{

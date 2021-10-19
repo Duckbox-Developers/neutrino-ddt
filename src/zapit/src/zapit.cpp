@@ -1518,13 +1518,6 @@ bool CZapit::ParseCommand(CBasicMessage::Header &rmsg, int connfd)
 	case CZapitMessages::CMD_SCANREADY: {
 		CZapitMessages::responseIsScanReady msgResponseIsScanReady;
 		VALGRIND_PARANOIA(msgResponseIsScanReady);
-#if 0 //FIXME used only when scanning done using pzapit client, is it really needed ?
-		msgResponseIsScanReady.satellite = curr_sat;
-		msgResponseIsScanReady.transponder = found_transponders;
-		msgResponseIsScanReady.processed_transponder = processed_transponders;
-		msgResponseIsScanReady.services = found_channels;
-		msgResponseIsScanReady.scanReady = !CServiceScan::getInstance()->Scanning();
-#endif
 		CBasicServer::send_data(connfd, &msgResponseIsScanReady, sizeof(msgResponseIsScanReady));
 		break;
 	}
@@ -2297,12 +2290,6 @@ bool CZapit::StartPlayBack(CZapitChannel *thisChannel)
 		videoDemux->pesFilter(video_pid);
 //	audioDecoder->SetSyncMode(AVSYNC_ENABLED);
 
-#if 0 //FIXME hack ?
-	if(thisChannel->getServiceType() == ST_DIGITAL_RADIO_SOUND_SERVICE) {
-		audioDecoder->SetSyncMode(AVSYNC_AUDIO_IS_MASTER);
-		pcr_pid = false;
-	}
-#endif
 	if (pcr_pid) {
 		//printf("[zapit] starting PCR 0x%X\n", thisChannel->getPcrPid());
 		pcrDemux->Start();

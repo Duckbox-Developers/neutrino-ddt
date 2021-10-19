@@ -1306,9 +1306,6 @@ void CFrameBuffer::SaveScreen(int x, int y, int dx, int dy, fb_pixel_t * const m
 			*(bkpos++) = *(dest++);
 		pos += stride;
 	}
-#if 0 //FIXME test to flush cache
-	if (ioctl(fd, 1, FB_BLANK_UNBLANK) < 0);
-#endif
 	//RestoreScreen(x, y, dx, dy, memp); //FIXME
 #if 0
 	uint8_t * fbpos = ((uint8_t *)getFrameBufferPointer()) + x * sizeof(fb_pixel_t) + stride * y;

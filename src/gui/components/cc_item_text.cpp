@@ -173,14 +173,7 @@ void CComponentsText::initCCText()
 
 	//observe behavior of parent form if available
 	bool force_text_paint = ct_force_text_paint;
-#if 0 //FIXME.,
-	if (cc_parent){
-		//if any embedded text item was hided because of hided parent form,
-		//we must ensure repaint of text, otherwise text item is not visible
-		if (cc_parent->isPainted())
-			force_text_paint = true;
-	}
-#endif
+
 	//send text to CTextBox object, but force text paint text if force_text_paint option is enabled
 	//this is managed by CTextBox object itself
 	if (cc_allow_paint)

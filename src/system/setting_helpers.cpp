@@ -305,11 +305,7 @@ bool CAudioSetupNotifier::changeNotify(const neutrino_locale_t OptionName, void 
 #endif
 {
 	//printf("notify: %d\n", OptionName);
-#if 0 //FIXME to do ? manual audio delay
-	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_PCMOFFSET))
-	{
-	}
-#endif
+
 	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_ANALOG_MODE)) {
 		g_Zapit->setAudioMode(g_settings.audio_AnalogMode);
 	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_ANALOG_OUT)) {
