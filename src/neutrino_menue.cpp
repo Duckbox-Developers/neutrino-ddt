@@ -170,11 +170,19 @@ void CNeutrinoApp::InitMenuMain()
 		personalize.addItem(MENU_MAIN, avinputmode, &g_settings.personalize[SNeutrinoSettings::P_MAIN_AVINPUT]);
 
 #ifdef ENABLE_PIP
+	// avinput pip
 		CMenuForwarder *avinputmode_pip = new CMenuForwarder(LOCALE_MAINMENU_AVINPUTMODE_PIP, g_info.hw_caps->can_pip, NULL, this, "avinput_pip", false /*CRCInput::RC_nokey*/);
 		avinputmode_pip->setHint(NEUTRINO_ICON_HINT_AVINPUTMODE_PIP, LOCALE_MENU_HINT_AVINPUTMODE_PIP);
 		personalize.addItem(MENU_MAIN, avinputmode_pip, &g_settings.personalize[SNeutrinoSettings::P_MAIN_AVINPUT_PIP]);
 #endif
 	}
+
+#if ENABLE_PIP && ENABLE_QUADPIP
+	// quadpip
+	CMenuForwarder *quadpip = new CMenuForwarder(LOCALE_QUADPIP, g_info.hw_caps->pip_devs >= 1, NULL, new CQuadPiPSetup(), NULL, false /*CRCInput::RC_nokey*/);
+	quadpip->setHint(NEUTRINO_ICON_HINT_QUADPIP, LOCALE_MENU_HINT_QUADPIP);
+	personalize.addItem(MENU_MAIN, quadpip, &g_settings.personalize[SNeutrinoSettings::P_MAIN_QUADPIP]);
+#endif
 
 	//timer
 	CMenuForwarder *timerlist = new CMenuForwarder(LOCALE_TIMERLIST_NAME, true, NULL, new CTimerList(), NULL, CRCInput::RC_yellow);
@@ -272,15 +280,6 @@ void CNeutrinoApp::InitMenuMain()
 		mf = new CMenuForwarder(LOCALE_CI_SETTINGS, true, NULL, g_CamHandler);
 		mf->setHint(NEUTRINO_ICON_HINT_CI, LOCALE_MENU_HINT_CI);
 		personalize.addItem(MENU_MAIN, mf, &g_settings.personalize[SNeutrinoSettings::P_MAIN_CISETTINGS]);
-	}
-#endif
-
-#if ENABLE_PIP && ENABLE_QUADPIP
-	// temp, only for testing, changed later
-	if (g_info.hw_caps->pip_devs >= 1) {
-		CMenuForwarder *quadpip = new CMenuForwarder(LOCALE_QUADPIP, true, NULL, new CQuadPiPSetup(), NULL, CRCInput::RC_nokey);
-		quadpip->setHint(NEUTRINO_ICON_HINT_QUADPIP, LOCALE_MENU_HINT_QUADPIP);
-		personalize.addItem(MENU_MAIN, quadpip/*, &g_settings.personalize[SNeutrinoSettings::P_MAIN_QUADPIP]*/);
 	}
 #endif
 

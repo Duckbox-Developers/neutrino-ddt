@@ -5520,7 +5520,7 @@ bool CNeutrinoApp::StartPip(const t_channel_id channel_id, int pip)
 
 	int recmode = CRecordManager::getInstance()->GetRecordMode(channel_id);
 	if ((recmode == CRecordManager::RECMODE_OFF) || (channel->getRecordDemux() != channel->getPipDemux())) {
-		if (!g_Zapit->zapTo_pip(channel_id), pip)
+		if (!g_Zapit->zapTo_pip(channel_id, pip))
 			DisplayErrorMessage(g_Locale->getText(LOCALE_VIDEOMENU_PIP_ERROR));
 		else
 			ret = true;

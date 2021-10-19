@@ -427,7 +427,6 @@ void CBouquetManager::parseBouquetsXml(const char *fname, bool bUser)
 			const char* hidden = xmlGetAttribute(search, "hidden");
 			const char* locked = xmlGetAttribute(search, "locked");
 			const char* scanepg = xmlGetAttribute(search, "epg");
-			const char* useci = xmlGetAttribute(search, "ci");
 			newBouquet->bHidden = hidden ? (strcmp(hidden, "1") == 0) : false;
 			newBouquet->bLocked = locked ? (strcmp(locked, "1") == 0) : false;
 			newBouquet->bFav = (strcasecmp(name, DEFAULT_BQ_NAME_FAV) == 0);
@@ -448,6 +447,9 @@ void CBouquetManager::parseBouquetsXml(const char *fname, bool bUser)
 				if (uName)
 					uname = uName;
 				const char *url = xmlGetAttribute(channel_node, "u");
+				if (url && ((uintptr_t)url % 4))
+					url = std::string(url).c_str(); /* hack to ensure buffer is aligned */
+
 				GET_ATTR(channel_node, "i", SCANF_SERVICE_ID_TYPE, service_id);
 				GET_ATTR(channel_node, "on", SCANF_ORIGINAL_NETWORK_ID_TYPE, original_network_id);
 				GET_ATTR(channel_node, "s", SCANF_SATELLITE_POSITION_TYPE, satellitePosition);
@@ -1116,7 +1118,6 @@ void CBouquetManager::loadWebchannels(int mode)
 				std::string url;
 				std::string desc;
 				std::string group;
-				t_channel_id epg_id = 0;
 				CZapitBouquet* pbouquet = NULL;
 
 				if(f != NULL)

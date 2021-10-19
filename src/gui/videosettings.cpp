@@ -74,6 +74,9 @@ extern cVideo *videoDecoder;
 #ifdef ENABLE_PIP
 extern cVideo *pipVideoDecoder[3];
 #include <gui/pipsetup.h>
+#if ENABLE_QUADPIP
+#include <gui/quadpip_setup.h>
+#endif
 #endif
 extern int prev_video_mode;
 extern CRemoteControl * g_RemoteControl; /* neutrino.cpp */
@@ -392,6 +395,11 @@ int CVideoSettings::showVideoSetup()
 	CMenuForwarder * pipsetup = new CMenuForwarder(LOCALE_VIDEOMENU_PIP, g_info.hw_caps->can_pip, NULL, &pip, NULL, CRCInput::convertDigitToKey(shortcut++));
 	pipsetup->setHint("", LOCALE_MENU_HINT_VIDEO_PIP);
 	videosetup->addItem(pipsetup);
+#if ENABLE_QUADPIP
+	CMenuForwarder *quadpip = new CMenuForwarder(LOCALE_QUADPIP, g_info.hw_caps->pip_devs >= 1, NULL, new CQuadPiPSetup(), NULL, CRCInput::convertDigitToKey(shortcut++));
+	quadpip->setHint(NEUTRINO_ICON_HINT_QUADPIP, LOCALE_MENU_HINT_QUADPIP);
+	videosetup->addItem(quadpip);
+#endif
 #endif
 
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
