@@ -582,7 +582,7 @@ int CMiscMenue::showMiscSettingsMenuChanlist()
 
 	int res = ms_chanlist->exec(NULL, "");
 	delete ms_chanlist;
-	if (make_hd_list != g_settings.make_hd_list || make_webtv_list != g_settings.make_webtv_list || show_empty_favorites != g_settings.show_empty_favorites)
+	if (make_hd_list != g_settings.make_hd_list || make_webtv_list != g_settings.make_webtv_list || make_webradio_list != g_settings.make_webradio_list || show_empty_favorites != g_settings.show_empty_favorites)
 		g_RCInput->postMsg(NeutrinoMessages::EVT_SERVICESCHANGED, 0);
 	return res;
 }

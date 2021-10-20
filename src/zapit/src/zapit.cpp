@@ -2724,13 +2724,25 @@ void CZapit::run()
 	{
 		StopPip(i);
 		if (pipVideoDecoder[i])
+		{
+			delete pipVideoDecoder[i];
 			pipVideoDecoder[i] = NULL;
+		}
 		if (pipVideoDemux[i])
+		{
+			delete pipVideoDemux[i];
 			pipVideoDemux[i] = NULL;
+		}
 		if (pipAudioDecoder[i])
+		{
+			delete pipAudioDecoder[i];
 			pipAudioDecoder[i] = NULL;
+		}
 		if (pipAudioDemux[i])
+		{
+			delete pipAudioDemux[i];
 			pipAudioDemux[i] = NULL;
+		}
 	}
 #endif
 
