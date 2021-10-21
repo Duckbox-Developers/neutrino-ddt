@@ -198,6 +198,11 @@ enum MN_WIDGET_ID
 	//options select menue
 	MN_WIDGET_ID_MENU_SELECT_STRING,
 
+#if ENABLE_PIP && ENABLE_QUADPIP
+	//quadpip
+	MN_WIDGET_ID_MENU_QUADPIP,
+#endif
+
 	MN_WIDGET_ID_MAX
 };
 
