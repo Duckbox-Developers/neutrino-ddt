@@ -300,6 +300,15 @@ AC_ARG_ENABLE(quadpip,
 	AC_DEFINE(ENABLE_QUADPIP, 1, [enable quad picture in picture support]))
 AM_CONDITIONAL(ENABLE_QUADPIP, test "$enable_quadpip" = "yes")
 
+if test "$enable_quadpip" = "yes"; then
+	if test "$enable_pip" != "yes"; then
+		[enable_pip="yes"]
+		AC_DEFINE(ENABLE_PIP, 1, [enable picture in picture support])
+		AC_MSG_WARN([--enable-quadpip depends on --enable-pip -> now enabled])
+	fi
+	AM_CONDITIONAL(ENABLE_PIP, test "$enable_pip" = "yes")
+fi
+
 AC_ARG_ENABLE(testing,
 	AS_HELP_STRING([--enable-testing], [enable development code @<:@default=no@:>@]),
 	AC_DEFINE(ENABLE_TESTING, 1, [enable development code]))
