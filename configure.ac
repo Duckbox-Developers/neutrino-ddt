@@ -310,6 +310,7 @@ case "$BOXMODEL" in
 		fi
 	;;
 esac
+AM_CONDITIONAL(ENABLE_QUADPIP, test "$enable_quadpip" = "yes")
 
 AC_ARG_ENABLE(testing,
 	AS_HELP_STRING([--enable-testing], [enable development code @<:@default=no@:>@]),
