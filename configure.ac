@@ -309,6 +309,9 @@ case "$BOXMODEL" in
 			AM_CONDITIONAL(ENABLE_PIP, test "$enable_pip" = "yes")
 		fi
 	;;
+	*)
+		[enable_quadpip="no"]
+	;;
 esac
 AM_CONDITIONAL(ENABLE_QUADPIP, test "$enable_quadpip" = "yes")
 
