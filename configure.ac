@@ -2,7 +2,7 @@ define(ver_major, 3)
 define(ver_minor, 9)
 define(ver_micro, 0)
 
-AC_INIT(Tuxbox-Neutrino, ver_major.ver_minor.ver_micro)
+AC_INIT(DDT-Neutrino, ver_major.ver_minor.ver_micro)
 AM_INIT_AUTOMAKE([nostdinc foreign])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES])
 
@@ -312,6 +312,10 @@ case "$BOXMODEL" in
 			AC_MSG_WARN([--enable-quadpip depends on --enable-pip -> now enabled])
 			AM_CONDITIONAL(ENABLE_PIP, test "$enable_pip" = "yes")
 		fi
+	;;
+	*)
+		[enable_quadpip="no"]
+		AC_MSG_WARN([--enable-quadpip not supported for $BOXMODEL -> now disabled])
 	;;
 esac
 AM_CONDITIONAL(ENABLE_QUADPIP, test "$enable_quadpip" = "yes")
