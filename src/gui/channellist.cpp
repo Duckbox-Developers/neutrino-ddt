@@ -1731,16 +1731,6 @@ void CChannelList::paintDetails(int index)
 			while ( text2.find_first_of("[ -.+*#?=!$%&/]+") == 0 )
 				text2 = text2.substr( 1 );
 			text2 = text2.substr( 0, text2.find('\n') );
-#if 0 //FIXME: to discuss, eat too much cpu time if string long enough
-			int pos = 0;
-			while ( ( pos != -1 ) && (g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->getRenderWidth(text2) > (full_width - 3*OFFSET_INNER_MID - noch_len) ) ) {
-				pos = text2.find_last_of(" ");
-
-				if ( pos!=-1 ) {
-					text2 = text2.substr( 0, pos );
-				}
-			}
-#endif
 			g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_DESCR]->RenderString(x + xstart, ypos_a + fdescrheight+ fheight, full_width- xstart- 3*OFFSET_INNER_MID- noch_len, text2, colored_event_C ? COL_COLORED_EVENTS_TEXT : COL_MENUCONTENTDARK_TEXT);
 		}
 

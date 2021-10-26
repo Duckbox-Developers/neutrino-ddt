@@ -425,12 +425,6 @@ bool CSdt::ParseServiceDescriptor(ServiceDescription * service, ServiceDescripto
 						serviceName.c_str(), free_ca, channel->scrambled);
 #endif
 		}
-#if 0 //FIXME updates scrambled flag without reloading, but prevent changes found if only scrambled different
-		bool scrambled = channel->scrambled;
-		channel = CServiceManager::getInstance()->FindChannel(channel_id);
-		if(channel)
-			channel->scrambled = scrambled;
-#endif
 		return true;
 	}
 

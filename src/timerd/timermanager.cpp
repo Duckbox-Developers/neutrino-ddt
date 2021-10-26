@@ -899,13 +899,6 @@ CTimerEvent::CTimerEvent( CTimerd::CTimerEventTypes evtype, time_t announcetime,
 	stopTime = stoptime;
 	repeatCount = repeatcount;
 	previousState = CTimerd::TIMERSTATE_SCHEDULED;
-
-#if 0 //FIXME EPG vs manual timer ?
-	printf("############## CTimerEvent dst %d -> %d diff %d\n", isdst1, isdst2, diff);
-	alarmTime += diff;
-	announceTime += diff;
-	stopTime += diff;
-#endif
 }
 
 //------------------------------------------------------------

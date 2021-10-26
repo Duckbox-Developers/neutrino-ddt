@@ -122,7 +122,6 @@ adzap.zap Zap on timer activation
 adzap.zap_off off
 adzap.zap_to_last_channel to last channel
 adzap.zap_to_start_channel to start channel
-audiomenu.PCMOffset Volume Decrease PCM
 audiomenu.ac3 AC3 passthrough
 audiomenu.analog_mode Analog mode
 audiomenu.analog_out Analog output

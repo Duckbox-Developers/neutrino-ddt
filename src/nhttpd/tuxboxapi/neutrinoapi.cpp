@@ -167,14 +167,6 @@ CNeutrinoAPI::~CNeutrinoAPI(void)
 
 void CNeutrinoAPI::UpdateBouquets(void)
 {
-#if 0 //FIXME
-	BouquetList.clear();
-	Zapit->getBouquets(BouquetList, true, true);
-	for (unsigned int i = 1; i <= BouquetList.size(); i++)
-		UpdateBouquet(i);
-
-	UpdateChannelList();
-#endif
 }
 
 //-------------------------------------------------------------------------

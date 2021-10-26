@@ -149,7 +149,6 @@ const char * locale_real_names[] =
 	"adzap.zap_off",
 	"adzap.zap_to_last_channel",
 	"adzap.zap_to_start_channel",
-	"audiomenu.PCMOffset",
 	"audiomenu.ac3",
 	"audiomenu.analog_mode",
 	"audiomenu.analog_out",

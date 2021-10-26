@@ -1517,16 +1517,12 @@ int pop(FILE *fd, char *buf, long len)
 
 			/* try to obtain read permissions for the cache */
 			/* this will block if the cache is empty */
-#if 0 //FIXME no way to stop if connection dead ?
-			pthread_mutex_lock( & cache[i].readable );
-#else
 			while(true) {
 				int lret = pthread_mutex_trylock(&cache[i].readable);
 				if((lret == 0) || (CAudioPlayer::getInstance()->getState() == CBaseDec::STOP_REQ))
 					break;
 				usleep(100);
 			}
-#endif
 			if(cache[i].filled)
 			{
 				int amt[2];
