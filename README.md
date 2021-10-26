@@ -1,1 +1,1 @@
-DDT Neutrino-HD ツ==
+DDT Neutrino-HD ツ
