@@ -747,10 +747,6 @@ q		 * next mad_frame_decode() invocation. (See the comments marked
 #ifdef SPECTRUM
 #define DDIFF 0
 					if(g_settings.spectrum) {
-#if HAVE_DBOX2
-					if(scnt == SPECTRUM_CNT-2)
-#endif
-					{
                                         	j += 4;
                                         	if((i < 512) && (j > DDIFF)) {
 //if(i == 0) printf("Filling on j = %d\n", j);
@@ -758,7 +754,6 @@ q		 * next mad_frame_decode() invocation. (See the comments marked
                                                         data[i] = (signed short)tmp;
                                         	        i++;
                                         	}
-					}
 					}
 #endif
 
@@ -786,14 +781,8 @@ q		 * next mad_frame_decode() invocation. (See the comments marked
 //int ms = (tv2.tv_sec - tv1.tv_sec) * 1000 + (tv2.tv_usec - tv1.tv_usec) / 1000;
 //if(ms)printf("Write takes %dms\n", ms);
                                                 	//sanalyzer_render_vu(data);
-							scnt++;
-#if HAVE_DBOX2
-							if(scnt >= SPECTRUM_CNT)
-#endif
-							{
-								scnt = 0;
-                                                		sanalyzer_render_freq(data);
-							}
+							scnt = 0;
+							sanalyzer_render_freq(data);
 						}
 #endif
 					}
@@ -816,10 +805,6 @@ q		 * next mad_frame_decode() invocation. (See the comments marked
 #ifdef SPECTRUM
 #define DDIFF 1024
 					if(g_settings.spectrum) {
-#if HAVE_DBOX2
-					if(scnt == SPECTRUM_CNT-2)
-#endif
-					{
                                         	j += 4;
                                         	if((i < 512) && (j > DDIFF)) {
 //if(i == 0) printf("Filling on j = %d\n", j);
@@ -827,7 +812,6 @@ q		 * next mad_frame_decode() invocation. (See the comments marked
                                                         data[i] = (signed short)tmp;
                                         	        i++;
                                         	}
-					}
 					}
 #endif
 
@@ -854,12 +838,7 @@ q		 * next mad_frame_decode() invocation. (See the comments marked
 //gettimeofday (&tv2, NULL);
 //int ms = (tv2.tv_sec - tv1.tv_sec) * 1000 + (tv2.tv_usec - tv1.tv_usec) / 1000;
 //if(ms)printf("Write takes %dms\n", ms);
-#if HAVE_DBOX2
-							if(scnt >= SPECTRUM_CNT)
-#endif
-							{
-                                                		sanalyzer_render_freq(data);
-							}
+							sanalyzer_render_freq(data);
 						}
 #endif
 					}

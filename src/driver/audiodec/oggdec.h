@@ -29,8 +29,6 @@
 #ifndef __OGG_DEC__
 #define __OGG_DEC__
 
-//#define DBOX
-
 #include <mad.h>
 #include <stdio.h>
 #include <fcntl.h>
