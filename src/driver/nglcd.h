@@ -47,7 +47,7 @@
 class nGLCD
 {
 	private:
-		GLCD::cDriver * lcd;
+		GLCD::cDriver *lcd;
 		GLCD::cFont font_channel;
 		GLCD::cFont font_epg;
 		GLCD::cFont font_time;
@@ -99,7 +99,7 @@ class nGLCD
 			uint32_t sw, uint32_t sh,
 			uint32_t dx, uint32_t dy, uint32_t dw, uint32_t dh,
 			bool transp = false, bool maximize = false);
-		bool showImage(const std::string & filename,
+		bool showImage(const std::string &filename,
 			uint32_t sw, uint32_t sh,
 			uint32_t dx, uint32_t dy, uint32_t dw, uint32_t dh,
 			bool transp = false, bool maximize = false);
@@ -109,19 +109,20 @@ class nGLCD
 		bool getBoundingBox(uint32_t *buffer,
 			int width, int height,
 			int &bb_x, int &bb_y, int &bb_width, int &bb_height);
-		void LcdAnalogClock(int posx,int posy,int dia);
+		void LcdAnalogClock(int posx, int posy, int dia);
 		void Exec();
 		void Run(void);
-		static void* Run(void *);
+		static void *Run(void *);
 		static void Lock();
 		static void Unlock();
 	public:
-		enum {
+		enum
+		{
 			BMP = 0,
 			JPG = 1,
 			PNG = 2
 		};
-		GLCD::cBitmap * bitmap;
+		GLCD::cBitmap *bitmap;
 		nGLCD();
 		~nGLCD();
 		void DeInit();

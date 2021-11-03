@@ -56,29 +56,29 @@ CAudioMetaData::~CAudioMetaData()
 }
 
 // copy constructor
-CAudioMetaData::CAudioMetaData( const CAudioMetaData& src )
-  : type( src.type ), type_info( src.type_info ),
-	filesize( src.filesize ), bitrate( src.bitrate ),
-	avg_bitrate( src.avg_bitrate ), samplerate( src.samplerate ),
+CAudioMetaData::CAudioMetaData(const CAudioMetaData &src)
+	: type(src.type), type_info(src.type_info),
+	  filesize(src.filesize), bitrate(src.bitrate),
+	  avg_bitrate(src.avg_bitrate), samplerate(src.samplerate),
 #ifndef ENABLE_FFMPEGDEC
-	layer( src.layer ), mode( src.mode ),
+	  layer(src.layer), mode(src.mode),
 #endif
-	total_time( src.total_time ),
-	audio_start_pos( src.audio_start_pos ), vbr( src.vbr ),
-	hasInfoOrXingTag( src.hasInfoOrXingTag ), artist( src.artist ),
-	title( src.title ), album( src.album ), sc_station( src.sc_station ),
-	date( src.date ), genre( src.genre ), track( src.track ),cover(src.cover),
-	logo( src.logo ), url( src.url ),
-	cover_temporary( false ),
-	changed( src.changed )
+	  total_time(src.total_time),
+	  audio_start_pos(src.audio_start_pos), vbr(src.vbr),
+	  hasInfoOrXingTag(src.hasInfoOrXingTag), artist(src.artist),
+	  title(src.title), album(src.album), sc_station(src.sc_station),
+	  date(src.date), genre(src.genre), track(src.track), cover(src.cover),
+	  logo(src.logo), url(src.url),
+	  cover_temporary(false),
+	  changed(src.changed)
 {
 }
 
 // assignment operator
-void CAudioMetaData::operator=( const CAudioMetaData& src )
+void CAudioMetaData::operator=(const CAudioMetaData &src)
 {
-    // self assignment check
-	if ( &src == this )
+	// self assignment check
+	if (&src == this)
 		return;
 
 	type = src.type;
@@ -111,16 +111,16 @@ void CAudioMetaData::operator=( const CAudioMetaData& src )
 
 void CAudioMetaData::clear()
 {
-	type=0;
+	type = 0;
 	type_info.clear();
-	filesize=0;
-	bitrate=0;
-	avg_bitrate=0;
-	samplerate=0;
-	total_time=0;
-	audio_start_pos=0;
-	vbr=false;
-	hasInfoOrXingTag=false;
+	filesize = 0;
+	bitrate = 0;
+	avg_bitrate = 0;
+	samplerate = 0;
+	total_time = 0;
+	audio_start_pos = 0;
+	vbr = false;
+	hasInfoOrXingTag = false;
 	artist.clear();
 	title.clear();
 	album.clear();
@@ -133,6 +133,6 @@ void CAudioMetaData::clear()
 	cover.clear();
 	logo.clear();
 	url.clear();
-	cover_temporary=false;
-	changed=false;
+	cover_temporary = false;
+	changed = false;
 }

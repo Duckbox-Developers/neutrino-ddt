@@ -29,13 +29,15 @@ typedef eit_scanmap_t::iterator eit_scanmap_iterator_t;
 class CEpgScan
 {
 	public:
-		enum {
+		enum
+		{
 			SCAN_OFF,
 			SCAN_CURRENT,
 			SCAN_FAV,
 			SCAN_SEL
 		};
-		enum {
+		enum
+		{
 			MODE_OFF = 0,
 			MODE_LIVE = 0x1,
 			MODE_STANDBY = 0x2,
@@ -55,7 +57,7 @@ class CEpgScan
 		uint32_t rescan_timer;
 		bool scan_in_progress;
 
-		void AddBouquet(CChannelList * clist);
+		void AddBouquet(CChannelList *clist);
 		bool AddFavorites();
 		bool AddSelected();
 		void AddTransponders();
@@ -66,7 +68,7 @@ class CEpgScan
 		CEpgScan();
 	public:
 		~CEpgScan();
-		static CEpgScan * getInstance();
+		static CEpgScan *getInstance();
 
 		int handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data);
 		void Next();

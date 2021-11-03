@@ -57,7 +57,7 @@
 #include "mp3dec.h"
 #include <driver/netfile.h>
 #include <driver/display.h>
-extern cAudio * audioDecoder;
+extern cAudio *audioDecoder;
 
 //#define SPECTRUM
 
@@ -73,22 +73,24 @@ void sanalyzer_render_freq(short data[1024]);
 extern "C"
 {
 //void id3_tag_addref(struct id3_tag *);
-void my_id3_tag_delref(struct id3_tag *);
-struct filetag {
-	struct id3_tag *tag;
-	unsigned long location;
-	id3_length_t length;
-};
-struct id3_file {
-	FILE *iofile;
-	enum id3_file_mode mode;
-	char *path;
-	int flags;
-	struct id3_tag *primary;
-	unsigned int ntags;
-	struct filetag *tags;
-};
-void id3_finish_file(struct id3_file* file);
+	void my_id3_tag_delref(struct id3_tag *);
+	struct filetag
+	{
+		struct id3_tag *tag;
+		unsigned long location;
+		id3_length_t length;
+	};
+	struct id3_file
+	{
+		FILE *iofile;
+		enum id3_file_mode mode;
+		char *path;
+		int flags;
+		struct id3_tag *primary;
+		unsigned int ntags;
+		struct filetag *tags;
+	};
+	void id3_finish_file(struct id3_file *file);
 }
 
 // Frames to skip in ff/rev mode
@@ -117,59 +119,59 @@ void id3_finish_file(struct id3_file* file);
 #else
 const char *CMP3Dec::MadErrorString(const struct mad_stream *Stream)
 {
-	switch(Stream->error)
+	switch (Stream->error)
 	{
 		/* Generic unrecoverable errors. */
 		case MAD_ERROR_BUFLEN:
-			return("input buffer too small (or EOF)");
+			return ("input buffer too small (or EOF)");
 		case MAD_ERROR_BUFPTR:
-			return("invalid (null) buffer pointer");
+			return ("invalid (null) buffer pointer");
 		case MAD_ERROR_NOMEM:
-			return("not enough memory");
+			return ("not enough memory");
 
 		/* Frame header related unrecoverable errors. */
 		case MAD_ERROR_LOSTSYNC:
-			return("lost synchronization");
+			return ("lost synchronization");
 		case MAD_ERROR_BADLAYER:
-			return("reserved header layer value");
+			return ("reserved header layer value");
 		case MAD_ERROR_BADBITRATE:
-			return("forbidden bitrate value");
+			return ("forbidden bitrate value");
 		case MAD_ERROR_BADSAMPLERATE:
-			return("reserved sample frequency value");
+			return ("reserved sample frequency value");
 		case MAD_ERROR_BADEMPHASIS:
-			return("reserved emphasis value");
+			return ("reserved emphasis value");
 
 		/* Recoverable errors */
 		case MAD_ERROR_BADCRC:
-			return("CRC check failed");
+			return ("CRC check failed");
 		case MAD_ERROR_BADBITALLOC:
-			return("forbidden bit allocation value");
+			return ("forbidden bit allocation value");
 		case MAD_ERROR_BADSCALEFACTOR:
-			return("bad scalefactor index");
+			return ("bad scalefactor index");
 		case MAD_ERROR_BADFRAMELEN:
-			return("bad frame length");
+			return ("bad frame length");
 		case MAD_ERROR_BADBIGVALUES:
-			return("bad big_values count");
+			return ("bad big_values count");
 		case MAD_ERROR_BADBLOCKTYPE:
-			return("reserved block_type");
+			return ("reserved block_type");
 		case MAD_ERROR_BADSCFSI:
-			return("bad scalefactor selection info");
+			return ("bad scalefactor selection info");
 		case MAD_ERROR_BADDATAPTR:
-			return("bad main_data_begin pointer");
+			return ("bad main_data_begin pointer");
 		case MAD_ERROR_BADPART3LEN:
-			return("bad audio data length");
+			return ("bad audio data length");
 		case MAD_ERROR_BADHUFFTABLE:
-			return("bad Huffman table select");
+			return ("bad Huffman table select");
 		case MAD_ERROR_BADHUFFDATA:
-			return("Huffman data overrun");
+			return ("Huffman data overrun");
 		case MAD_ERROR_BADSTEREO:
-			return("incompatible block_type for JS");
+			return ("incompatible block_type for JS");
 
 		/* Unknown error. This swich may be out of sync with libmad's
 		 * defined error codes.
 		 */
 		default:
-			return("Unknown error code");
+			return ("Unknown error code");
 	}
 }
 #endif
@@ -179,69 +181,71 @@ const char *CMP3Dec::MadErrorString(const struct mad_stream *Stream)
  * short (16 bits).                                                         *
  ****************************************************************************/
 #if 1
-struct audio_dither {
-  mad_fixed_t error[3];
-  mad_fixed_t random;
+struct audio_dither
+{
+	mad_fixed_t error[3];
+	mad_fixed_t random;
 };
 static struct audio_dither left_dither, right_dither;
 static inline
 unsigned long prng(unsigned long state)
 {
-  return (state * 0x0019660dL + 0x3c6ef35fL) & 0xffffffffL;
+	return (state * 0x0019660dL + 0x3c6ef35fL) & 0xffffffffL;
 }
 
 inline signed short CMP3Dec::MadFixedToSShort(const mad_fixed_t Fixed, bool left)
 {
-  unsigned int scalebits;
-  mad_fixed_t output, mask, random;
-  struct audio_dither *dither = left ? &left_dither : &right_dither;
-  unsigned int bits = 16;
-  mad_fixed_t sample = Fixed;
+	unsigned int scalebits;
+	mad_fixed_t output, mask, random;
+	struct audio_dither *dither = left ? &left_dither : &right_dither;
+	unsigned int bits = 16;
+	mad_fixed_t sample = Fixed;
 
-  enum {
-    MIN = -MAD_F_ONE,
-    MAX =  MAD_F_ONE - 1
-  };
+	enum
+	{
+		MIN = -MAD_F_ONE,
+		MAX =  MAD_F_ONE - 1
+	};
 
-  /* noise shape */
-  sample += dither->error[0] - dither->error[1] + dither->error[2];
+	/* noise shape */
+	sample += dither->error[0] - dither->error[1] + dither->error[2];
 
-  dither->error[2] = dither->error[1];
-  dither->error[1] = dither->error[0] / 2;
+	dither->error[2] = dither->error[1];
+	dither->error[1] = dither->error[0] / 2;
 
-  /* bias */
-  output = sample + (1L << (MAD_F_FRACBITS + 1 - bits - 1));
+	/* bias */
+	output = sample + (1L << (MAD_F_FRACBITS + 1 - bits - 1));
 
-  scalebits = MAD_F_FRACBITS + 1 - bits;
-  mask = (1L << scalebits) - 1;
+	scalebits = MAD_F_FRACBITS + 1 - bits;
+	mask = (1L << scalebits) - 1;
 
-  /* dither */
-  random  = prng(dither->random);
-  output += (random & mask) - (dither->random & mask);
+	/* dither */
+	random  = prng(dither->random);
+	output += (random & mask) - (dither->random & mask);
 
-  dither->random = random;
+	dither->random = random;
 
-  /* clip */
+	/* clip */
 #if 0
-  if (output >= MAD_F_ONE)
-        output = 32767;
-  else if (output < -MAD_F_ONE)
-        output = -32768;
+	if (output >= MAD_F_ONE)
+		output = 32767;
+	else if (output < -MAD_F_ONE)
+		output = -32768;
 #endif
 
-  if (output > MAX)
-        output = MAX;
-  else if (output < MIN)
-        output = MIN;
+	if (output > MAX)
+		output = MAX;
+	else if (output < MIN)
+		output = MIN;
 
-  /* quantize */
-  output &= ~mask;
+	/* quantize */
+	output &= ~mask;
 
-  /* error feedback */
-  dither->error[0] = sample - output;
+	/* error feedback */
+	dither->error[0] = sample - output;
 
-  /* scale */
-  return (signed short) (output >> scalebits);
+	/* scale */
+	return (signed short)(output >> scalebits);
 }
 #else
 
@@ -276,84 +280,84 @@ inline signed short CMP3Dec::MadFixedToSShort(const mad_fixed_t Fixed)
 /****************************************************************************
  * Print human readable informations about an audio MPEG frame.             *
  ****************************************************************************/
-void CMP3Dec::CreateInfo(CAudioMetaData* m, int FrameNumber)
+void CMP3Dec::CreateInfo(CAudioMetaData *m, int FrameNumber)
 {
-	if ( !m )
+	if (!m)
 		return;
 
-	if ( !m->hasInfoOrXingTag )
+	if (!m->hasInfoOrXingTag)
 	{
 		m->total_time = m->avg_bitrate != 0 ?
 			static_cast<int>(m->filesize / m->avg_bitrate)
 			: 0;
 	}
 
-	if ( FrameNumber == 1 )
+	if (FrameNumber == 1)
 	{
 		using namespace std;
 		string Layer, Mode;
 
-	/* Convert the layer number to it's printed representation. */
-		switch(m->layer)
-	{
-		case MAD_LAYER_I:
-			Layer="I";
-			break;
-		case MAD_LAYER_II:
-			Layer="II";
-			break;
-		case MAD_LAYER_III:
-			Layer="III";
-			break;
-		default:
-			Layer="?";
-			break;
-	}
+		/* Convert the layer number to it's printed representation. */
+		switch (m->layer)
+		{
+			case MAD_LAYER_I:
+				Layer = "I";
+				break;
+			case MAD_LAYER_II:
+				Layer = "II";
+				break;
+			case MAD_LAYER_III:
+				Layer = "III";
+				break;
+			default:
+				Layer = "?";
+				break;
+		}
 
-	/* Convert the audio mode to it's printed representation. */
-		switch(m->mode)
-	{
-		case MAD_MODE_SINGLE_CHANNEL:
-			Mode="single channel";
-			break;
-		case MAD_MODE_DUAL_CHANNEL:
-			Mode="dual channel";
-			break;
-		case MAD_MODE_JOINT_STEREO:
-			Mode="joint stereo";
-			break;
-		case MAD_MODE_STEREO:
-			Mode="normal stereo";
-			break;
-		default:
-			Mode="unkn. mode";
-			break;
-	}
+		/* Convert the audio mode to it's printed representation. */
+		switch (m->mode)
+		{
+			case MAD_MODE_SINGLE_CHANNEL:
+				Mode = "single channel";
+				break;
+			case MAD_MODE_DUAL_CHANNEL:
+				Mode = "dual channel";
+				break;
+			case MAD_MODE_JOINT_STEREO:
+				Mode = "joint stereo";
+				break;
+			case MAD_MODE_STEREO:
+				Mode = "normal stereo";
+				break;
+			default:
+				Mode = "unkn. mode";
+				break;
+		}
 
 #ifdef INCLUDE_UNUSED_STUFF
 		const char *Emphasis, *Vbr;
 
-	/* Convert the emphasis to it's printed representation. */
-		switch(m->emphasis)
-	{
-		case MAD_EMPHASIS_NONE:
-			Emphasis="no";
-			break;
-		case MAD_EMPHASIS_50_15_US:
-			Emphasis="50/15 us";
-			break;
-		case MAD_EMPHASIS_CCITT_J_17:
-			Emphasis="CCITT J.17";
-			break;
-		default:
-			Emphasis="(unexpected emphasis value)";
-			break;
-	}
+		/* Convert the emphasis to it's printed representation. */
+		switch (m->emphasis)
+		{
+			case MAD_EMPHASIS_NONE:
+				Emphasis = "no";
+				break;
+			case MAD_EMPHASIS_50_15_US:
+				Emphasis = "50/15 us";
+				break;
+			case MAD_EMPHASIS_CCITT_J_17:
+				Emphasis = "CCITT J.17";
+				break;
+			default:
+				Emphasis = "(unexpected emphasis value)";
+				break;
+		}
 
-		if(m->vbr)
-      Vbr="VBR ";
-   else
-      Vbr="";
+		if (m->vbr)
+			Vbr = "VBR ";
+		else
+			Vbr = "";
 #endif /* INCLUDE_UNUSED_STUFF */
 
 		m->type_info = string("MPEG Layer ") + Layer + string(" / ") + Mode;
@@ -369,32 +373,32 @@ void CMP3Dec::CreateInfo(CAudioMetaData* m, int FrameNumber)
 #define OUTPUT_BUFFER_SIZE      8192
 #define SPECTRUM_CNT 4
 CBaseDec::RetCode CMP3Dec::Decoder(FILE *InputFp, const int /*OutputFd*/,
-								   State* const state,
-								   CAudioMetaData* meta_data,
-								   time_t* const time_played,
-								   unsigned int* const secondsToSkip)
+	State *const state,
+	CAudioMetaData *meta_data,
+	time_t *const time_played,
+	unsigned int *const secondsToSkip)
 {
 	struct mad_stream	Stream;
 	struct mad_frame	Frame;
 	struct mad_synth	Synth;
 	mad_timer_t			Timer;
 	unsigned char		InputBuffer[INPUT_BUFFER_SIZE],
-						OutputBuffer[OUTPUT_BUFFER_SIZE],
-						*OutputPtr=OutputBuffer;
-	const unsigned char	*OutputBufferEnd=OutputBuffer+OUTPUT_BUFFER_SIZE;
-	RetCode				Status=OK;
+			  OutputBuffer[OUTPUT_BUFFER_SIZE],
+			  *OutputPtr = OutputBuffer;
+	const unsigned char	*OutputBufferEnd = OutputBuffer + OUTPUT_BUFFER_SIZE;
+	RetCode				Status = OK;
 	int 					ret;
-	unsigned long		FrameCount=0;
+	unsigned long		FrameCount = 0;
 
 #ifdef SPECTRUM
-        bool update_lcd = false;
-        int i = 0, j = 0;
-        signed short data[1024];
-	if(g_settings.spectrum)
-		CVFD::getInstance ()->Lock ();
+	bool update_lcd = false;
+	int i = 0, j = 0;
+	signed short data[1024];
+	if (g_settings.spectrum)
+		CVFD::getInstance()->Lock();
 	int scnt = 0;
 #endif
-        signed short ll, rr;
+	signed short ll, rr;
 
 	SaveCover(InputFp, meta_data);
 	/* First the structures used by libmad must be initialized. */
@@ -407,7 +411,7 @@ CBaseDec::RetCode CMP3Dec::Decoder(FILE *InputFp, const int /*OutputFd*/,
 	// to make sure the amount of frames is calculated
 	// before jumping (without this state/secondsToSkip could change
 	// anytime within the loop)
-	bool jumpDone=false;
+	bool jumpDone = false;
 
 	/* Decoding options can here be set in the options field of the
 	 * Stream structure.
@@ -417,7 +421,7 @@ CBaseDec::RetCode CMP3Dec::Decoder(FILE *InputFp, const int /*OutputFd*/,
 	do
 	{
 		int secondsToJump = *secondsToSkip;
-		if(*state==PAUSE)
+		if (*state == PAUSE)
 		{
 			// in pause mode do nothing
 			usleep(100000);
@@ -426,10 +430,10 @@ CBaseDec::RetCode CMP3Dec::Decoder(FILE *InputFp, const int /*OutputFd*/,
 		/* The input bucket must be filled if it becomes empty or if
 		 * it's the first execution of the loop.
 		 */
-		if(Stream.buffer==NULL || Stream.error==MAD_ERROR_BUFLEN)
+		if (Stream.buffer == NULL || Stream.error == MAD_ERROR_BUFLEN)
 		{
 			size_t			ReadSize,
-							Remaining;
+						Remaining;
 			unsigned char	*ReadStart;
 
 			/* {1} libmad may not consume all bytes of the input
@@ -449,51 +453,51 @@ CBaseDec::RetCode CMP3Dec::Decoder(FILE *InputFp, const int /*OutputFd*/,
 			 * kb/s). XXX=XXX Is 2016 bytes the size of the largest
 			 * frame? (448000*(1152/32000))/8
 			 */
-			if(Stream.next_frame!=NULL)
+			if (Stream.next_frame != NULL)
 			{
-				Remaining=Stream.bufend-Stream.next_frame;
-				memmove(InputBuffer,Stream.next_frame,Remaining);
-				ReadStart=InputBuffer+Remaining;
-				ReadSize=INPUT_BUFFER_SIZE-Remaining;
+				Remaining = Stream.bufend - Stream.next_frame;
+				memmove(InputBuffer, Stream.next_frame, Remaining);
+				ReadStart = InputBuffer + Remaining;
+				ReadSize = INPUT_BUFFER_SIZE - Remaining;
 			}
 			else
-				ReadSize=INPUT_BUFFER_SIZE,
-					ReadStart=InputBuffer,
-					Remaining=0;
+				ReadSize = INPUT_BUFFER_SIZE,
+				ReadStart = InputBuffer,
+				Remaining = 0;
 
 			/* Fill-in the buffer. If an error occurs print a message
 			 * and leave the decoding loop. If the end of stream is
 			 * reached we also leave the loop but the return status is
 			 * left untouched.
 			 */
-			ReadSize=fread(ReadStart,1,ReadSize,InputFp);
-			if(ReadSize<=0)
+			ReadSize = fread(ReadStart, 1, ReadSize, InputFp);
+			if (ReadSize <= 0)
 			{
-				if(ferror(InputFp))
+				if (ferror(InputFp))
 				{
-					fprintf(stderr,"%s: read error on bitstream (%s)\n",
-							ProgName,strerror(errno));
-					Status=READ_ERR;
+					fprintf(stderr, "%s: read error on bitstream (%s)\n",
+						ProgName, strerror(errno));
+					Status = READ_ERR;
 				}
-				if(feof(InputFp))
-					fprintf(stderr,"%s: end of input stream\n",ProgName);
+				if (feof(InputFp))
+					fprintf(stderr, "%s: end of input stream\n", ProgName);
 				break;
 			}
 
 			/* Pipe the new buffer content to libmad's stream decoder
 			 * facility.  */
-			mad_stream_buffer(&Stream,InputBuffer,ReadSize+Remaining);
-			Stream.error=(mad_error)0;
+			mad_stream_buffer(&Stream, InputBuffer, ReadSize + Remaining);
+			Stream.error = (mad_error)0;
 		}
 
-		long actFramesToSkip=FRAMES_TO_SKIP;
+		long actFramesToSkip = FRAMES_TO_SKIP;
 		// Calculate the amount of frames within the custom period
-		if(((*state==FF) || (*state==REV)) && ((secondsToJump)!=0))
+		if (((*state == FF) || (*state == REV)) && ((secondsToJump) != 0))
 		{
-			jumpDone=false;
+			jumpDone = false;
 
 			// what is 1152? grabbed it from the documentation above {1} ;)
-			actFramesToSkip=secondsToJump * meta_data->samplerate/1152;
+			actFramesToSkip = secondsToJump * meta_data->samplerate / 1152;
 			//printf("secsToSkip: %d, framesToSkip: %ld\n", secondsToJump,actFramesToSkip);
 		}
 
@@ -518,7 +522,7 @@ CBaseDec::RetCode CMP3Dec::Decoder(FILE *InputFp, const int /*OutputFd*/,
 		 * the end of the buffer if those bytes forms an incomplete
 		 * frame. Before refilling, the remainign bytes must be moved
 		 * to the begining of the buffer and used for input for the
-q		 * next mad_frame_decode() invocation. (See the comments marked
+		q		 * next mad_frame_decode() invocation. (See the comments marked
 		 * {1} earlier for more details.)
 		 *
 		 * Recoverable errors are caused by malformed bit-streams, in
@@ -526,19 +530,19 @@ q		 * next mad_frame_decode() invocation. (See the comments marked
 		 * skip the faulty part and re-sync to the next frame.
 		 */
 		// decode 'FRAMES_TO_PLAY' frames each 'FRAMES_TO_SKIP' frames in ff/rev mode
-		if( (*state!=FF &&
-			  *state!=REV) ||
-		    FrameCount % actFramesToSkip < FRAMES_TO_PLAY )
-			ret=mad_frame_decode(&Frame,&Stream);
-		else if(*state==FF) // in FF mode just decode the header, this sets bufferptr to next frame and also gives stats about the frame for totals
+		if ((*state != FF &&
+				*state != REV) ||
+			FrameCount % actFramesToSkip < FRAMES_TO_PLAY)
+			ret = mad_frame_decode(&Frame, &Stream);
+		else if (*state == FF) // in FF mode just decode the header, this sets bufferptr to next frame and also gives stats about the frame for totals
 			if (secondsToJump != 0 && !jumpDone)
 			{
-				jumpDone=true;
+				jumpDone = true;
 				// jump forwards
-				long bytesForward = (Stream.bufend - Stream.this_frame) + ((ftell(InputFp)+Stream.this_frame-Stream.bufend) / FrameCount)*(actFramesToSkip + FRAMES_TO_PLAY);
+				long bytesForward = (Stream.bufend - Stream.this_frame) + ((ftell(InputFp) + Stream.this_frame - Stream.bufend) / FrameCount) * (actFramesToSkip + FRAMES_TO_PLAY);
 				//printf("jump forwards by %d secs and %ld bytes",secondsToJump, bytesForward);
 
-				if (fseek(InputFp, bytesForward, SEEK_CUR)!=0)
+				if (fseek(InputFp, bytesForward, SEEK_CUR) != 0)
 				{
 					// Reached end, do nothing
 				}
@@ -546,107 +550,109 @@ q		 * next mad_frame_decode() invocation. (See the comments marked
 				{
 					// Calculate timer
 					mad_timer_t m;
-					mad_timer_set(&m, 0, 32 * MAD_NSBSAMPLES(&Frame.header) *(actFramesToSkip + FRAMES_TO_PLAY), Frame.header.samplerate);
+					mad_timer_set(&m, 0, 32 * MAD_NSBSAMPLES(&Frame.header) * (actFramesToSkip + FRAMES_TO_PLAY), Frame.header.samplerate);
 					Timer.seconds += m.seconds;
-					if((Timer.fraction + m.fraction)*MAD_TIMER_RESOLUTION>=1)
+					if ((Timer.fraction + m.fraction)*MAD_TIMER_RESOLUTION >= 1)
 					{
 						Timer.seconds++;
-						Timer.fraction-= m.fraction;
+						Timer.fraction -= m.fraction;
 					}
 					else
-						Timer.fraction+= m.fraction;
+						Timer.fraction += m.fraction;
 					// in case we calculated wrong...
-					if(Timer.seconds < 0)
+					if (Timer.seconds < 0)
 					{
-						Timer.seconds=0;
-						Timer.fraction=0;
+						Timer.seconds = 0;
+						Timer.fraction = 0;
 					}
-					*time_played=Timer.seconds;
-					FrameCount+=actFramesToSkip + FRAMES_TO_PLAY;
+					*time_played = Timer.seconds;
+					FrameCount += actFramesToSkip + FRAMES_TO_PLAY;
 				}
-				Stream.buffer=NULL;
-				Stream.next_frame=NULL;
+				Stream.buffer = NULL;
+				Stream.next_frame = NULL;
 				// if a custom value was set we only jump once
-				*state=PLAY;
+				*state = PLAY;
 				continue;
-			} else
+			}
+			else
 			{
-				ret=mad_header_decode(&Frame.header,&Stream);
+				ret = mad_header_decode(&Frame.header, &Stream);
 			}
 		else
-		{ //REV
+		{
+			//REV
 			// Jump back
-			long bytesBack = (Stream.bufend - Stream.this_frame) + ((ftell(InputFp)+Stream.this_frame-Stream.bufend) / FrameCount)*(actFramesToSkip + FRAMES_TO_PLAY);
+			long bytesBack = (Stream.bufend - Stream.this_frame) + ((ftell(InputFp) + Stream.this_frame - Stream.bufend) / FrameCount) * (actFramesToSkip + FRAMES_TO_PLAY);
 
-			if (secondsToJump!=0)
+			if (secondsToJump != 0)
 			{
-				jumpDone=true;
+				jumpDone = true;
 				//printf("jumping backwards by %d secs and %ld bytes\n",secondsToJump, bytesBack);
 			}
-			if (fseek(InputFp, -1*(bytesBack), SEEK_CUR)!=0)
+			if (fseek(InputFp, -1 * (bytesBack), SEEK_CUR) != 0)
 			{
 				// Reached beginning
 				fseek(InputFp, 0, SEEK_SET);
-				Timer.fraction=0;
-				Timer.seconds=0;
-				FrameCount=0;
-				*state=PLAY;
+				Timer.fraction = 0;
+				Timer.seconds = 0;
+				FrameCount = 0;
+				*state = PLAY;
 			}
 			else
 			{
 				// Calculate timer
 				mad_timer_t m;
-				mad_timer_set(&m, 0, 32 * MAD_NSBSAMPLES(&Frame.header) *(actFramesToSkip + FRAMES_TO_PLAY), Frame.header.samplerate);
+				mad_timer_set(&m, 0, 32 * MAD_NSBSAMPLES(&Frame.header) * (actFramesToSkip + FRAMES_TO_PLAY), Frame.header.samplerate);
 				Timer.seconds -= m.seconds;
-				if(Timer.fraction < m.fraction)
+				if (Timer.fraction < m.fraction)
 				{
 					Timer.seconds--;
-					Timer.fraction+= MAD_TIMER_RESOLUTION - m.fraction;
+					Timer.fraction += MAD_TIMER_RESOLUTION - m.fraction;
 				}
 				else
-					Timer.fraction-= m.fraction;
+					Timer.fraction -= m.fraction;
 				// in case we calculated wrong...
-				if(Timer.seconds < 0)
+				if (Timer.seconds < 0)
 				{
-					Timer.seconds=0;
-					Timer.fraction=0;
+					Timer.seconds = 0;
+					Timer.fraction = 0;
 				}
-				*time_played=Timer.seconds;
-				FrameCount-=actFramesToSkip + FRAMES_TO_PLAY;
+				*time_played = Timer.seconds;
+				FrameCount -= actFramesToSkip + FRAMES_TO_PLAY;
 			}
-			Stream.buffer=NULL;
-			Stream.next_frame=NULL;
+			Stream.buffer = NULL;
+			Stream.next_frame = NULL;
 			// if a custom value was set we only jump once
-			if (secondsToJump != 0) {
-				*state=PLAY;
+			if (secondsToJump != 0)
+			{
+				*state = PLAY;
 			}
 			continue;
 		}
 
-		if(ret)
+		if (ret)
 		{
-			if(MAD_RECOVERABLE(Stream.error))
+			if (MAD_RECOVERABLE(Stream.error))
 			{
 				// no errrors in FF mode
-				if(*state!=FF &&
-					*state!=REV)
+				if (*state != FF &&
+					*state != REV)
 				{
-					fprintf(stderr,"%s: recoverable frame level error (%s)\n",
-						ProgName,MadErrorString(&Stream));
+					fprintf(stderr, "%s: recoverable frame level error (%s)\n",
+						ProgName, MadErrorString(&Stream));
 					fflush(stderr);
-				 }
+				}
 				continue;
 			}
+			else if (Stream.error == MAD_ERROR_BUFLEN)
+				continue;
 			else
-				if(Stream.error==MAD_ERROR_BUFLEN)
-					continue;
-				else
-				{
-					fprintf(stderr,"%s: unrecoverable frame level error (%s).\n",
-						ProgName,MadErrorString(&Stream));
-					Status=DATA_ERR;
-					break;
-				}
+			{
+				fprintf(stderr, "%s: unrecoverable frame level error (%s).\n",
+					ProgName, MadErrorString(&Stream));
+				Status = DATA_ERR;
+				break;
+			}
 		}
 
 		/* On first frame set DSP & save header info
@@ -659,13 +665,13 @@ q		 * next mad_frame_decode() invocation. (See the comments marked
 #if 0
 			if (SetDSP(OutputFd, AFMT_S16_NE, Frame.header.samplerate, 2))
 			{
-				Status=DSPSET_ERR;
+				Status = DSPSET_ERR;
 				break;
 			}
 #endif
 			audioDecoder->PrepareClipPlay(2, Frame.header.samplerate, 16, 1);
 
-			if ( !meta_data )
+			if (!meta_data)
 			{
 				meta_data = new CAudioMetaData;
 			}
@@ -673,11 +679,11 @@ q		 * next mad_frame_decode() invocation. (See the comments marked
 			meta_data->bitrate = Frame.header.bitrate;
 			meta_data->mode = Frame.header.mode;
 			meta_data->layer = Frame.header.layer;
-			CreateInfo( meta_data, FrameCount );
+			CreateInfo(meta_data, FrameCount);
 		}
 		else
 		{
-			if ( meta_data->bitrate != Frame.header.bitrate )
+			if (meta_data->bitrate != Frame.header.bitrate)
 			{
 				/* bitrate of actual frame */
 				meta_data->vbr = true;
@@ -688,12 +694,12 @@ q		 * next mad_frame_decode() invocation. (See the comments marked
 					meta_data->avg_bitrate / FrameCount;
 				meta_data->avg_bitrate +=
 					Frame.header.bitrate / FrameCount;
-				CreateInfo( meta_data, FrameCount );
+				CreateInfo(meta_data, FrameCount);
 			}
 		}
 
 		// if played time was modified from outside, take this value...
-		if(*time_played!=Timer.seconds)
+		if (*time_played != Timer.seconds)
 		{
 			mad_timer_reset(&Timer);
 			Timer.seconds = *time_played;
@@ -708,14 +714,14 @@ q		 * next mad_frame_decode() invocation. (See the comments marked
 		 * some functions of mad's timer module receive some of their
 		 * mad_timer_t arguments by value!
 		 */
-		mad_timer_add(&Timer,Frame.header.duration);
+		mad_timer_add(&Timer, Frame.header.duration);
 		//mad_timer_string(Timer,m_timePlayed,"%lu:%02lu",
-      //                 MAD_UNITS_MINUTES,MAD_UNITS_MILLISECONDS,0);
+		//                 MAD_UNITS_MINUTES,MAD_UNITS_MILLISECONDS,0);
 		*time_played = Timer.seconds;
 
 
 		// decode 5 frames each 75 frames in ff mode
-		if( *state!=FF || FrameCount % actFramesToSkip < FRAMES_TO_PLAY)
+		if (*state != FF || FrameCount % actFramesToSkip < FRAMES_TO_PLAY)
 		{
 
 			/* Once decoded the frame is synthesized to PCM samples. No errors
@@ -733,27 +739,29 @@ q		 * next mad_frame_decode() invocation. (See the comments marked
 
 			if (MAD_NCHANNELS(&Frame.header) == 2)
 			{
-				mad_fixed_t * leftchannel = Synth.pcm.samples[0];
-				mad_fixed_t * rightchannel = Synth.pcm.samples[1];
+				mad_fixed_t *leftchannel = Synth.pcm.samples[0];
+				mad_fixed_t *rightchannel = Synth.pcm.samples[1];
 
 				while (Synth.pcm.length-- > 0)
 				{
-                                        ll = MadFixedToSShort(*(leftchannel++), true);
-                                        rr = MadFixedToSShort(*(rightchannel++), false);
-                                        *((signed short *)OutputPtr) = ll;
-                                        *(((signed short *)OutputPtr) + 1) = rr;
+					ll = MadFixedToSShort(*(leftchannel++), true);
+					rr = MadFixedToSShort(*(rightchannel++), false);
+					*((signed short *)OutputPtr) = ll;
+					*(((signed short *)OutputPtr) + 1) = rr;
 
 					OutputPtr += 4;
 #ifdef SPECTRUM
 #define DDIFF 0
-					if(g_settings.spectrum) {
-                                        	j += 4;
-                                        	if((i < 512) && (j > DDIFF)) {
+					if (g_settings.spectrum)
+					{
+						j += 4;
+						if ((i < 512) && (j > DDIFF))
+						{
 //if(i == 0) printf("Filling on j = %d\n", j);
-                                                        int tmp = (ll+rr)/2;
-                                                        data[i] = (signed short)tmp;
-                                        	        i++;
-                                        	}
+							int tmp = (ll + rr) / 2;
+							data[i] = (signed short)tmp;
+							i++;
+						}
 					}
 #endif
 
@@ -761,9 +769,9 @@ q		 * next mad_frame_decode() invocation. (See the comments marked
 					if (OutputPtr == OutputBufferEnd)
 					{
 						//if (write(OutputFd, OutputBuffer, OUTPUT_BUFFER_SIZE) != OUTPUT_BUFFER_SIZE)
-						if(audioDecoder->WriteClip(OutputBuffer, OUTPUT_BUFFER_SIZE) != OUTPUT_BUFFER_SIZE)
+						if (audioDecoder->WriteClip(OutputBuffer, OUTPUT_BUFFER_SIZE) != OUTPUT_BUFFER_SIZE)
 						{
-							fprintf(stderr,"%s: PCM write error in stereo (%s).\n", ProgName, strerror(errno));
+							fprintf(stderr, "%s: PCM write error in stereo (%s).\n", ProgName, strerror(errno));
 							Status = WRITE_ERR;
 							Synth.pcm.length = 0; /* discard buffer */
 							OutputPtr = OutputBuffer;
@@ -772,15 +780,16 @@ q		 * next mad_frame_decode() invocation. (See the comments marked
 
 						OutputPtr = OutputBuffer;
 #ifdef SPECTRUM
-						if(g_settings.spectrum) {
-                                                	i = 0;
-                                                	j = 0;
-                                                	update_lcd = true;
+						if (g_settings.spectrum)
+						{
+							i = 0;
+							j = 0;
+							update_lcd = true;
 
 //gettimeofday (&tv2, NULL);
 //int ms = (tv2.tv_sec - tv1.tv_sec) * 1000 + (tv2.tv_usec - tv1.tv_usec) / 1000;
 //if(ms)printf("Write takes %dms\n", ms);
-                                                	//sanalyzer_render_vu(data);
+							//sanalyzer_render_vu(data);
 							scnt = 0;
 							sanalyzer_render_freq(data);
 						}
@@ -790,7 +799,7 @@ q		 * next mad_frame_decode() invocation. (See the comments marked
 			}
 			else
 			{
-				mad_fixed_t * leftchannel = Synth.pcm.samples[0];
+				mad_fixed_t *leftchannel = Synth.pcm.samples[0];
 
 				while (Synth.pcm.length-- > 0)
 				{
@@ -804,14 +813,16 @@ q		 * next mad_frame_decode() invocation. (See the comments marked
 					OutputPtr += 4;
 #ifdef SPECTRUM
 #define DDIFF 1024
-					if(g_settings.spectrum) {
-                                        	j += 4;
-                                        	if((i < 512) && (j > DDIFF)) {
+					if (g_settings.spectrum)
+					{
+						j += 4;
+						if ((i < 512) && (j > DDIFF))
+						{
 //if(i == 0) printf("Filling on j = %d\n", j);
-                                                        int tmp = (ll+rr)/2;
-                                                        data[i] = (signed short)tmp;
-                                        	        i++;
-                                        	}
+							int tmp = (ll + rr) / 2;
+							data[i] = (signed short)tmp;
+							i++;
+						}
 					}
 #endif
 
@@ -819,9 +830,9 @@ q		 * next mad_frame_decode() invocation. (See the comments marked
 					if (OutputPtr == OutputBufferEnd)
 					{
 						//if (write(OutputFd, OutputBuffer, OUTPUT_BUFFER_SIZE) != OUTPUT_BUFFER_SIZE)
-						if(audioDecoder->WriteClip(OutputBuffer, OUTPUT_BUFFER_SIZE) != OUTPUT_BUFFER_SIZE)
+						if (audioDecoder->WriteClip(OutputBuffer, OUTPUT_BUFFER_SIZE) != OUTPUT_BUFFER_SIZE)
 						{
-							fprintf(stderr,"%s: PCM write error in mono (%s).\n", ProgName, strerror(errno));
+							fprintf(stderr, "%s: PCM write error in mono (%s).\n", ProgName, strerror(errno));
 							Status = WRITE_ERR;
 							Synth.pcm.length = 0; /* discard buffer */
 							OutputPtr = OutputBuffer;
@@ -830,10 +841,11 @@ q		 * next mad_frame_decode() invocation. (See the comments marked
 
 						OutputPtr = OutputBuffer;
 #ifdef SPECTRUM
-						if(g_settings.spectrum) {
-                                                	i = 0;
-                                                	j = 0;
-                                                	update_lcd = true;
+						if (g_settings.spectrum)
+						{
+							i = 0;
+							j = 0;
+							update_lcd = true;
 
 //gettimeofday (&tv2, NULL);
 //int ms = (tv2.tv_sec - tv1.tv_sec) * 1000 + (tv2.tv_usec - tv1.tv_usec) / 1000;
@@ -847,40 +859,42 @@ q		 * next mad_frame_decode() invocation. (See the comments marked
 		}
 
 		// if a custom value was set we only jump once
-		if ((*state==FF || *state==REV) && secondsToJump != 0 && !jumpDone) {
-			jumpDone=true;
-			*state=PLAY;
+		if ((*state == FF || *state == REV) && secondsToJump != 0 && !jumpDone)
+		{
+			jumpDone = true;
+			*state = PLAY;
 		}
 
-	}while(*state!=STOP_REQ);
+	}
+	while (*state != STOP_REQ);
 
 	/* Mad is no longer used, the structures that were initialized must
-     * now be cleared.
+	* now be cleared.
 	 */
 	mad_synth_finish(&Synth);
 	mad_frame_finish(&Frame);
 	mad_stream_finish(&Stream);
 
 	/* If the output buffer is not empty and no error occured during
-     * the last write, then flush it.
+	* the last write, then flush it.
 	 */
-	if(OutputPtr!=OutputBuffer && Status!=WRITE_ERR)
+	if (OutputPtr != OutputBuffer && Status != WRITE_ERR)
 	{
-		ssize_t	BufferSize=OutputPtr-OutputBuffer;
+		ssize_t	BufferSize = OutputPtr - OutputBuffer;
 
 		//if(write(OutputFd, OutputBuffer, BufferSize)!=BufferSize)
-		if(audioDecoder->WriteClip(OutputBuffer, BufferSize) != BufferSize)
-  		{
-			fprintf(stderr,"%s: PCM write error at the end (%s).\n", ProgName,strerror(errno));
-			Status=WRITE_ERR;
+		if (audioDecoder->WriteClip(OutputBuffer, BufferSize) != BufferSize)
+		{
+			fprintf(stderr, "%s: PCM write error at the end (%s).\n", ProgName, strerror(errno));
+			Status = WRITE_ERR;
 		}
 	}
 	audioDecoder->StopClip();
 #ifdef SPECTRUM
-	CVFD::getInstance ()->Unlock ();
+	CVFD::getInstance()->Unlock();
 #endif
 	/* Accounting report if no error occured. */
-	if(Status==OK)
+	if (Status == OK)
 	{
 		/* The duration timer is converted to a human readable string
 		 * with the versatile but still constrained mad_timer_string()
@@ -898,7 +912,7 @@ q		 * next mad_frame_decode() invocation. (See the comments marked
 		 * of the available units, fraction of units, their meanings,
 		 * the format arguments, etc.
 		 */
-	   //		mad_timer_string(Timer,m_timePlayed,"%lu:%02lu",
+		//		mad_timer_string(Timer,m_timePlayed,"%lu:%02lu",
 		//				 MAD_UNITS_MINUTES,MAD_UNITS_MILLISECONDS,0);
 		*time_played = Timer.seconds;
 
@@ -912,20 +926,20 @@ q		 * next mad_frame_decode() invocation. (See the comments marked
 	return Status;
 }
 
-CMP3Dec* CMP3Dec::getInstance()
+CMP3Dec *CMP3Dec::getInstance()
 {
-	static CMP3Dec* MP3Dec = NULL;
-	if(MP3Dec == NULL)
+	static CMP3Dec *MP3Dec = NULL;
+	if (MP3Dec == NULL)
 	{
 		MP3Dec = new CMP3Dec();
 	}
 	return MP3Dec;
 }
 
-bool CMP3Dec::GetMetaData(FILE* in, const bool nice, CAudioMetaData* const m)
+bool CMP3Dec::GetMetaData(FILE *in, const bool nice, CAudioMetaData *const m)
 {
 	bool res;
-	if ( in && m )
+	if (in && m)
 	{
 		res = GetMP3Info(in, nice, m);
 		GetID3(in, m);
@@ -950,8 +964,8 @@ bool CMP3Dec::GetMetaData(FILE* in, const bool nice, CAudioMetaData* const m)
  * Based on scan_header() from Robert Leslie's "MAD Plug-in for Winamp".
  */
 #define BUFFER_SIZE (5*8192) // big enough to skip id3 tags containing jpegs
-long CMP3Dec::scanHeader( FILE* input, struct mad_header* const header,
-						  struct tag* const ftag, const bool nice )
+long CMP3Dec::scanHeader(FILE *input, struct mad_header *const header,
+	struct tag *const ftag, const bool nice)
 {
 	struct mad_stream stream;
 	struct mad_frame frame;
@@ -961,31 +975,31 @@ long CMP3Dec::scanHeader( FILE* input, struct mad_header* const header,
 	short refillCount = 4; /* buffer may be refilled refillCount times */
 	long filePos = 0; /* return value */
 
-	mad_stream_init( &stream );
-	mad_frame_init( &frame );
+	mad_stream_init(&stream);
+	mad_frame_init(&frame);
 
-	if ( ftag )
-		tag_init( ftag );
+	if (ftag)
+		tag_init(ftag);
 
-	while ( true )
+	while (true)
 	{
-		if ( buflen < sizeof(buffer) )
+		if (buflen < sizeof(buffer))
 		{
-			if ( nice )
-				usleep( 15000 );
+			if (nice)
+				usleep(15000);
 
-			filePos = ftell( input ); /* remember where reading started */
-			if ( filePos == -1 )
+			filePos = ftell(input);   /* remember where reading started */
+			if (filePos == -1)
 			{
-				perror( "ftell()" );
+				perror("ftell()");
 			}
 
 			/* fill buffer */
-			int readbytes = fread( buffer+buflen, 1, sizeof(buffer)-buflen,
-								   input );
-			if ( readbytes <= 0 )
+			int readbytes = fread(buffer + buflen, 1, sizeof(buffer) - buflen,
+					input);
+			if (readbytes <= 0)
 			{
-				if ( readbytes == -1 )
+				if (readbytes == -1)
 					filePos = -1;
 				break;
 			}
@@ -993,27 +1007,27 @@ long CMP3Dec::scanHeader( FILE* input, struct mad_header* const header,
 			buflen += readbytes;
 		}
 
-		mad_stream_buffer( &stream, buffer, buflen );
+		mad_stream_buffer(&stream, buffer, buflen);
 
-		while ( true )
+		while (true)
 		{
-			const unsigned char* const actualFrame = stream.this_frame;
-			if ( mad_frame_decode( &frame, &stream ) == -1 )
+			const unsigned char *const actualFrame = stream.this_frame;
+			if (mad_frame_decode(&frame, &stream) == -1)
 			{
-				if ( !MAD_RECOVERABLE( stream.error ) )
+				if (!MAD_RECOVERABLE(stream.error))
 					break;
 
 				/* check if id3 tag is in the way */
 				long tagsize =
-					id3_tag_query( stream.this_frame,
-								   stream.bufend - stream.this_frame );
+					id3_tag_query(stream.this_frame,
+						stream.bufend - stream.this_frame);
 
-				if ( tagsize > 0 ) /* id3 tag recognized */
+				if (tagsize > 0)   /* id3 tag recognized */
 				{
-					mad_stream_skip( &stream, tagsize );
+					mad_stream_skip(&stream, tagsize);
 					continue;
 				}
-				else if ( mad_stream_sync( &stream ) != -1 ) /* try to sync */
+				else if (mad_stream_sync(&stream) != -1)     /* try to sync */
 				{
 					continue;
 				}
@@ -1021,7 +1035,7 @@ long CMP3Dec::scanHeader( FILE* input, struct mad_header* const header,
 				{
 					/* we have to set some limit here, otherwise we would scan
 					   junk files completely */
-					if ( refillCount-- )
+					if (refillCount--)
 					{
 						stream.error = MAD_ERROR_BUFLEN;
 					}
@@ -1029,20 +1043,20 @@ long CMP3Dec::scanHeader( FILE* input, struct mad_header* const header,
 				}
 			}
 
-			if ( count++ || ( ftag && tag_parse(ftag, &stream) == -1 ) )
+			if (count++ || (ftag && tag_parse(ftag, &stream) == -1))
 			{
 				filePos += actualFrame - buffer; /* start of audio data */
 				break;
 			}
 		}
 
-		if ( count || stream.error != MAD_ERROR_BUFLEN )
+		if (count || stream.error != MAD_ERROR_BUFLEN)
 			break;
 
-		if ( refillCount-- )
+		if (refillCount--)
 		{
-			memmove( buffer, stream.next_frame,
-					 buflen = &buffer[buflen] - stream.next_frame );
+			memmove(buffer, stream.next_frame,
+				buflen = &buffer[buflen] - stream.next_frame);
 		}
 		else
 		{
@@ -1050,9 +1064,9 @@ long CMP3Dec::scanHeader( FILE* input, struct mad_header* const header,
 		}
 	}
 
-	if ( count )
+	if (count)
 	{
-		if ( header )
+		if (header)
 		{
 			*header = frame.header;
 		}
@@ -1062,8 +1076,8 @@ long CMP3Dec::scanHeader( FILE* input, struct mad_header* const header,
 		filePos = -1;
 	}
 
-	mad_frame_finish( &frame );
-	mad_stream_finish( &stream );
+	mad_frame_finish(&frame);
+	mad_stream_finish(&stream);
 
 	return filePos;
 }
@@ -1074,17 +1088,17 @@ long CMP3Dec::scanHeader( FILE* input, struct mad_header* const header,
  * Inspired by get_fileinfo() from Robert Leslie's "MAD Plug-in for Winamp" and
  * decode_filter() from Robert Leslie's "madplay".
  */
-bool CMP3Dec::GetMP3Info( FILE* input, const bool nice,
-						  CAudioMetaData* const meta )
+bool CMP3Dec::GetMP3Info(FILE *input, const bool nice,
+	CAudioMetaData *const meta)
 {
 	struct mad_header header;
 	struct tag ftag;
-	mad_header_init( &header );
-	tag_init( &ftag );
+	mad_header_init(&header);
+	tag_init(&ftag);
 	bool result = true;
 
-	if ( ( meta->audio_start_pos = scanHeader(input, &header, &ftag, nice) )
-		 != -1 )
+	if ((meta->audio_start_pos = scanHeader(input, &header, &ftag, nice))
+		!= -1)
 	{
 		meta->type = CAudioMetaData::MP3;
 		meta->bitrate = header.bitrate;
@@ -1092,24 +1106,24 @@ bool CMP3Dec::GetMP3Info( FILE* input, const bool nice,
 		meta->mode = header.mode;
 		meta->samplerate = header.samplerate;
 
-		if ( fseek( input, 0, SEEK_END ) )
+		if (fseek(input, 0, SEEK_END))
 		{
-			perror( "fseek()" );
+			perror("fseek()");
 			result = false;
 		}
 		/* this is still not 100% accurate, because it does not take
 		   id3 tags at the end of the file in account */
-		meta->filesize = ( ftell( input ) - meta->audio_start_pos ) * 8;
+		meta->filesize = (ftell(input) - meta->audio_start_pos) * 8;
 
 		/* valid Xing vbr tag present? */
-		if ( ( ftag.flags & TAG_XING ) &&
-			 ( ftag.xing.flags & TAG_XING_FRAMES ) )
+		if ((ftag.flags & TAG_XING) &&
+			(ftag.xing.flags & TAG_XING_FRAMES))
 		{
 			meta->hasInfoOrXingTag = true;
 			mad_timer_t timer = header.duration;
-			mad_timer_multiply( &timer, ftag.xing.frames );
+			mad_timer_multiply(&timer, ftag.xing.frames);
 
-			meta->total_time = mad_timer_count( timer, MAD_UNITS_SECONDS );
+			meta->total_time = mad_timer_count(timer, MAD_UNITS_SECONDS);
 		}
 		else /* no valid Xing vbr tag present */
 		{
@@ -1118,7 +1132,7 @@ bool CMP3Dec::GetMP3Info( FILE* input, const bool nice,
 		}
 
 		/* vbr file */
-		if ( ftag.flags & TAG_VBR )
+		if (ftag.flags & TAG_VBR)
 		{
 			meta->vbr = true;
 			meta->avg_bitrate = meta->total_time != 0
@@ -1137,7 +1151,7 @@ bool CMP3Dec::GetMP3Info( FILE* input, const bool nice,
 		result = false;
 	}
 
-	if ( !result )
+	if (!result)
 	{
 		meta->clear();
 	}
@@ -1147,7 +1161,7 @@ bool CMP3Dec::GetMP3Info( FILE* input, const bool nice,
 
 
 //------------------------------------------------------------------------
-void CMP3Dec::GetID3(FILE* in, CAudioMetaData* const m)
+void CMP3Dec::GetID3(FILE *in, CAudioMetaData *const m)
 {
 	unsigned int i;
 	struct id3_frame const *frame;
@@ -1156,47 +1170,47 @@ void CMP3Dec::GetID3(FILE* in, CAudioMetaData* const m)
 	char const spaces[] = "          ";
 
 	struct
-		{
+	{
 		char const *id;
 		char const *name;
 	} const info[] =
-		{
-			{ ID3_FRAME_TITLE,  "Title"},
-			{ "TIT3",           0},	 /* Subtitle */
-			{ "TCOP",           0,},  /* Copyright */
-			{ "TPRO",           0,},  /* Produced */
-			{ "TCOM",           "Composer"},
-			{ ID3_FRAME_ARTIST, "Artist"},
-			{ "TPE2",           "Orchestra"},
-			{ "TPE3",           "Conductor"},
-			{ "TEXT",           "Lyricist"},
-			{ ID3_FRAME_ALBUM,  "Album"},
-			{ ID3_FRAME_YEAR,   "Year"},
-			{ ID3_FRAME_TRACK,  "Track"},
-			{ "TPUB",           "Publisher"},
-			{ ID3_FRAME_GENRE,  "Genre"},
-			{ "TRSN",           "Station"},
-			{ "TENC",           "Encoder"}
-		};
+	{
+		{ ID3_FRAME_TITLE,  "Title"},
+		{ "TIT3",           0},	 /* Subtitle */
+		{ "TCOP",           0,},  /* Copyright */
+		{ "TPRO",           0,},  /* Produced */
+		{ "TCOM",           "Composer"},
+		{ ID3_FRAME_ARTIST, "Artist"},
+		{ "TPE2",           "Orchestra"},
+		{ "TPE3",           "Conductor"},
+		{ "TEXT",           "Lyricist"},
+		{ ID3_FRAME_ALBUM,  "Album"},
+		{ ID3_FRAME_YEAR,   "Year"},
+		{ ID3_FRAME_TRACK,  "Track"},
+		{ "TPUB",           "Publisher"},
+		{ ID3_FRAME_GENRE,  "Genre"},
+		{ "TRSN",           "Station"},
+		{ "TENC",           "Encoder"}
+	};
 
 	/* text information */
 
 	struct id3_file *id3file = id3_file_fdopen(fileno(in), ID3_FILE_MODE_READONLY);
-	if(id3file == 0)
+	if (id3file == 0)
 		printf("error open id3 file\n");
 	else
 	{
-		id3_tag *tag=id3_file_tag(id3file);
-		if(tag)
+		id3_tag *tag = id3_file_tag(id3file);
+		if (tag)
 		{
-			for(i = 0; i < sizeof(info) / sizeof(info[0]); ++i)
+			for (i = 0; i < sizeof(info) / sizeof(info[0]); ++i)
 			{
 				union id3_field const *field;
 				unsigned int nstrings, namelen, j;
 				char const *name;
 
 				frame = id3_tag_findframe(tag, info[i].id, 0);
-				if(frame == 0)
+				if (frame == 0)
 					continue;
 
 				field    = &frame->fields[1];
@@ -1206,12 +1220,12 @@ void CMP3Dec::GetID3(FILE* in, CAudioMetaData* const m)
 				namelen = name ? strlen(name) : 0;
 				assert(namelen < sizeof(spaces));
 
-				for(j = 0; j < nstrings; ++j)
+				for (j = 0; j < nstrings; ++j)
 				{
 					ucs4 = id3_field_getstrings(field, j);
 					assert(ucs4);
 
-					if(strcmp(info[i].id, ID3_FRAME_GENRE) == 0)
+					if (strcmp(info[i].id, ID3_FRAME_GENRE) == 0)
 						ucs4 = id3_genre_name(ucs4);
 
 					utf8 = id3_ucs4_utf8duplicate(ucs4);
@@ -1220,20 +1234,20 @@ void CMP3Dec::GetID3(FILE* in, CAudioMetaData* const m)
 
 					if (j == 0 && name)
 					{
-						if(strcmp(name,"Title") == 0)
+						if (strcmp(name, "Title") == 0)
 							m->title = (char *) utf8;
-						if(strcmp(name,"Artist") == 0)
+						if (strcmp(name, "Artist") == 0)
 							m->artist = (char *) utf8;
-						if(strcmp(name,"Year") == 0)
+						if (strcmp(name, "Year") == 0)
 							m->date = (char *) utf8;
-						if(strcmp(name,"Album") == 0)
+						if (strcmp(name, "Album") == 0)
 							m->album = (char *) utf8;
-						if(strcmp(name,"Genre") == 0)
+						if (strcmp(name, "Genre") == 0)
 							m->genre = (char *) utf8;
 					}
 					else
 					{
-						if(strcmp(info[i].id, "TCOP") == 0 || strcmp(info[i].id, "TPRO") == 0)
+						if (strcmp(info[i].id, "TCOP") == 0 || strcmp(info[i].id, "TPRO") == 0)
 						{
 							//printf("%s  %s %s\n", spaces, (info[i].id[1] == 'C') ? ("Copyright (C)") : ("Produced (P)"), latin1);
 						}
@@ -1249,7 +1263,7 @@ void CMP3Dec::GetID3(FILE* in, CAudioMetaData* const m)
 			/* comments */
 
 			i = 0;
-			while((frame = id3_tag_findframe(tag, ID3_FRAME_COMMENT, i++)))
+			while ((frame = id3_tag_findframe(tag, ID3_FRAME_COMMENT, i++)))
 			{
 				id3_utf8_t *ptr, *newline;
 				int first = 1;
@@ -1257,7 +1271,7 @@ void CMP3Dec::GetID3(FILE* in, CAudioMetaData* const m)
 				ucs4 = id3_field_getstring(&frame->fields[2]);
 				assert(ucs4);
 
-				if(*ucs4)
+				if (*ucs4)
 					continue;
 
 				ucs4 = id3_field_getfullstring(&frame->fields[3]);
@@ -1268,24 +1282,24 @@ void CMP3Dec::GetID3(FILE* in, CAudioMetaData* const m)
 					goto fail;
 
 				ptr = utf8;
-				while(*ptr)
+				while (*ptr)
 				{
-					newline = (id3_utf8_t *) strchr((char*)ptr, '\n');
-					if(newline)
+					newline = (id3_utf8_t *) strchr((char *)ptr, '\n');
+					if (newline)
 						*newline = 0;
 
-					if(strlen((char *)ptr) > 66)
+					if (strlen((char *)ptr) > 66)
 					{
 						id3_utf8_t *linebreak;
 
 						linebreak = ptr + 66;
 
-						while(linebreak > ptr && *linebreak != ' ')
+						while (linebreak > ptr && *linebreak != ' ')
 							--linebreak;
 
-						if(*linebreak == ' ')
+						if (*linebreak == ' ')
 						{
-							if(newline)
+							if (newline)
 								*newline = '\n';
 
 							newline = linebreak;
@@ -1293,7 +1307,7 @@ void CMP3Dec::GetID3(FILE* in, CAudioMetaData* const m)
 						}
 					}
 
-					if(first)
+					if (first)
 					{
 						char const *name;
 						unsigned int namelen;
@@ -1322,31 +1336,31 @@ void CMP3Dec::GetID3(FILE* in, CAudioMetaData* const m)
 
 		id3_finish_file(id3file);
 	}
-	if(0)
+	if (0)
 	{
-		fail:
-			printf("id3: not enough memory to display tag\n");
+fail:
+		printf("id3: not enough memory to display tag\n");
 	}
 }
 
 static int cover_count = 0;
 
-bool CMP3Dec::SaveCover(FILE * in, CAudioMetaData * const m)
+bool CMP3Dec::SaveCover(FILE *in, CAudioMetaData *const m)
 {
 	struct id3_frame const *frame;
 
 	/* text information */
 	struct id3_file *id3file = id3_file_fdopen(fileno(in), ID3_FILE_MODE_READONLY);
 
-	if(id3file == 0)
+	if (id3file == 0)
 	{
 		printf("CMP3Dec::SaveCover: error open id3 file\n");
 		return false;
 	}
 	else
 	{
-		id3_tag * tag = id3_file_tag(id3file);
-		if(tag)
+		id3_tag *tag = id3_file_tag(id3file);
+		if (tag)
 		{
 			frame = id3_tag_findframe(tag, "APIC", 0);
 
@@ -1366,18 +1380,18 @@ bool CMP3Dec::SaveCover(FILE * in, CAudioMetaData * const m)
 							id3_byte_t const *data;
 
 							data = id3_field_getbinarydata(field, &size);
-							if ( data )
+							if (data)
 							{
 								mkdir(COVERDIR_TMP, 0755);
 								std::ostringstream cover;
 								cover.str(COVERDIR_TMP);
 								cover << "/cover_" << cover_count++ << ".jpg";
-								FILE * pFile;
-								pFile = fopen ( cover.str().c_str() , "wb" );
+								FILE *pFile;
+								pFile = fopen(cover.str().c_str(), "wb");
 								if (pFile)
 								{
-									fwrite (data , 1 , size , pFile );
-									fclose (pFile);
+									fwrite(data, 1, size, pFile);
+									fclose(pFile);
 									m->cover = cover.str().c_str();
 									m->changed = true;
 								}
@@ -1405,7 +1419,7 @@ bool CMP3Dec::SaveCover(FILE * in, CAudioMetaData * const m)
 		id3_finish_file(id3file);
 	}
 
-	if(0)
+	if (0)
 	{
 		printf("CMP3Dec::SaveCover:id3: not enough memory to display tag\n");
 		return false;
@@ -1416,23 +1430,26 @@ bool CMP3Dec::SaveCover(FILE * in, CAudioMetaData * const m)
 
 // this is a copy of static libid3tag function "finish_file"
 // which cannot be called from outside
-void id3_finish_file(struct id3_file* file)
+void id3_finish_file(struct id3_file *file)
 {
 	unsigned int i;
 
 	if (file->path)
 		free(file->path);
 
-	if (file->primary) {
+	if (file->primary)
+	{
 		my_id3_tag_delref(file->primary);
 		id3_tag_delete(file->primary);
 	}
 
-	for (i = 0; i < file->ntags; ++i) {
+	for (i = 0; i < file->ntags; ++i)
+	{
 		struct id3_tag *tag;
 
 		tag = file->tags[i].tag;
-		if (tag) {
+		if (tag)
+		{
 			my_id3_tag_delref(tag);
 			id3_tag_delete(tag);
 		}

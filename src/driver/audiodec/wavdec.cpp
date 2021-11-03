@@ -41,7 +41,7 @@
 
 #include "wavdec.h"
 
-extern cAudio * audioDecoder;
+extern cAudio *audioDecoder;
 
 #define ProgName "WavDec"
 // nr of msecs to skip in ff/rev mode
@@ -64,35 +64,35 @@ struct WavHeader
 	short BitsPerSample;
 	char  Subchunk2ID[4];
 	int   Subchunk2Size;
-} __attribute__ ((packed));
+} __attribute__((packed));
 
-int endianTest=1;
+int endianTest = 1;
 #define Swap32IfBE(l) \
-    (*(char *)&endianTest ? (l) : \
-                             ((((l) & 0xff000000) >> 24) | \
-                             (((l) & 0x00ff0000) >> 8)  | \
-                             (((l) & 0x0000ff00) << 8)  | \
-                             (((l) & 0x000000ff) << 24)))
+	(*(char *)&endianTest ? (l) : \
+		((((l) & 0xff000000) >> 24) | \
+			(((l) & 0x00ff0000) >> 8)  | \
+			(((l) & 0x0000ff00) << 8)  | \
+			(((l) & 0x000000ff) << 24)))
 #define Swap16IfBE(l) \
-    (*(char *)&endianTest ? (l) : \
-                             ((((l) & 0xff00) >> 8) | \
-                             (((l) &  0x00ff) << 8)))
+	(*(char *)&endianTest ? (l) : \
+		((((l) & 0xff00) >> 8) | \
+			(((l) &  0x00ff) << 8)))
 
 #define MAX_OUTPUT_SAMPLES 2048 /* AVIA_GT_PCM_MAX_SAMPLES-1 */
 
-CBaseDec::RetCode CWavDec::Decoder(FILE *in, int /*OutputFd*/, State* state, CAudioMetaData* meta_data, time_t* time_played, unsigned int* secondsToSkip)
+CBaseDec::RetCode CWavDec::Decoder(FILE *in, int /*OutputFd*/, State *state, CAudioMetaData *meta_data, time_t *time_played, unsigned int *secondsToSkip)
 {
-	char* buffer;
-	RetCode Status=OK;
+	char *buffer;
+	RetCode Status = OK;
 
 	if (!SetMetaData(in, meta_data))
 	{
-		Status=DATA_ERR;
+		Status = DATA_ERR;
 		return Status;
 	}
 	fseek(in, header_size, SEEK_SET);
 //	int fmt;
-	switch(mBitsPerSample)
+	switch (mBitsPerSample)
 	{
 		case 8  : //fmt = AFMT_U8;
 			break;
@@ -100,13 +100,13 @@ CBaseDec::RetCode CWavDec::Decoder(FILE *in, int /*OutputFd*/, State* state, CAu
 			break;
 		default:
 			printf("%s: wrong bits per sample (%d)\n", ProgName, mBitsPerSample);
-			Status=DATA_ERR;
+			Status = DATA_ERR;
 			return Status;
 	}
 #if 0
-	if (SetDSP(OutputFd, fmt, meta_data->samplerate , mChannels))
+	if (SetDSP(OutputFd, fmt, meta_data->samplerate, mChannels))
 	{
-		Status=DSPSET_ERR;
+		Status = DSPSET_ERR;
 		return Status;
 	}
 #endif
@@ -117,18 +117,18 @@ CBaseDec::RetCode CWavDec::Decoder(FILE *in, int /*OutputFd*/, State* state, CAu
 #endif
 	int actSecsToSkip = (*secondsToSkip != 0) ? *secondsToSkip : MSECS_TO_SKIP / 1000;
 	unsigned int oldSecsToSkip = *secondsToSkip;
-	int jumppos=0;
+	int jumppos = 0;
 	int bytes;
 	int bytes_to_play = MSECS_TO_PLAY * meta_data->bitrate / 8000;
 	int bytes_to_skip = actSecsToSkip * meta_data->bitrate / 8;
 	int buffersize = MAX_OUTPUT_SAMPLES * mChannels * mBitsPerSample / 8;
-	buffer = (char*) malloc (buffersize);
+	buffer = (char *) malloc(buffersize);
 	do
 	{
-		while(*state==PAUSE)
+		while (*state == PAUSE)
 			usleep(10000);
 
-		if(*state==FF || *state==REV)
+		if (*state == FF || *state == REV)
 		{
 			if (oldSecsToSkip != *secondsToSkip)
 			{
@@ -137,63 +137,65 @@ CBaseDec::RetCode CWavDec::Decoder(FILE *in, int /*OutputFd*/, State* state, CAu
 				oldSecsToSkip = *secondsToSkip;
 			}
 			//printf("skipping %d secs and %d bytes\n",actSecsToSkip,bytes_to_skip);
-			if(std::abs(ftell(in)-jumppos) > bytes_to_play)
+			if (std::abs(ftell(in) - jumppos) > bytes_to_play)
 			{
-				if(*state==FF)
+				if (*state == FF)
 				{
 					fseek(in, bytes_to_skip, SEEK_CUR);
-					jumppos=ftell(in);
+					jumppos = ftell(in);
 				}
 				else
 				{
-					if(ftell(in) < bytes_to_skip)
+					if (ftell(in) < bytes_to_skip)
 					{
 						fseek(in, header_size, SEEK_SET);
-						*state=PLAY;
+						*state = PLAY;
 					}
 					else
 					{
 						fseek(in, -bytes_to_skip, SEEK_CUR);
-						jumppos=ftell(in);
+						jumppos = ftell(in);
 					}
 				}
 			}
 			// if a custom value was set we only jump once
-			if (*secondsToSkip != 0) {
-				*state=PLAY;
+			if (*secondsToSkip != 0)
+			{
+				*state = PLAY;
 			}
 		}
 
 		bytes = fread(buffer, 1, buffersize, in);
 		//if (write(OutputFd, buffer, bytes) != bytes)
-		if(audioDecoder->WriteClip((unsigned char*) buffer, bytes) != bytes)
+		if (audioDecoder->WriteClip((unsigned char *) buffer, bytes) != bytes)
 		{
-			fprintf(stderr,"%s: PCM write error (%s).\n", ProgName, strerror(errno));
-			Status=WRITE_ERR;
+			fprintf(stderr, "%s: PCM write error (%s).\n", ProgName, strerror(errno));
+			Status = WRITE_ERR;
 		}
-		*time_played = (meta_data->bitrate!=0) ? (ftell(in)-header_size)*8/meta_data->bitrate : 0;
-	} while (bytes > 0 && *state!=STOP_REQ && Status==OK);
+		*time_played = (meta_data->bitrate != 0) ? (ftell(in) - header_size) * 8 / meta_data->bitrate : 0;
+	}
+	while (bytes > 0 && *state != STOP_REQ && Status == OK);
 	audioDecoder->StopClip();
 	free(buffer);
 	return Status;
 }
 
-bool CWavDec::GetMetaData(FILE *in, const bool /*nice*/, CAudioMetaData* m)
+bool CWavDec::GetMetaData(FILE *in, const bool /*nice*/, CAudioMetaData *m)
 {
 	return SetMetaData(in, m);
 }
 
-CWavDec* CWavDec::getInstance()
+CWavDec *CWavDec::getInstance()
 {
-	static CWavDec* WavDec = NULL;
-	if(WavDec == NULL)
+	static CWavDec *WavDec = NULL;
+	if (WavDec == NULL)
 	{
 		WavDec = new CWavDec();
 	}
 	return WavDec;
 }
 
-bool CWavDec::SetMetaData(FILE* in, CAudioMetaData* m)
+bool CWavDec::SetMetaData(FILE *in, CAudioMetaData *m)
 {
 	/* Set Metadata */
 	struct WavHeader wh;
@@ -203,24 +205,24 @@ bool CWavDec::SetMetaData(FILE* in, CAudioMetaData* m)
 	fseek(in, 0, SEEK_END);
 	int filesize = ftell(in);
 	fseek(in, 0, SEEK_SET);
-	if(fread(&wh, sizeof(wh), 1, in)!=1)
+	if (fread(&wh, sizeof(wh), 1, in) != 1)
 		return false;
-	if(memcmp(wh.ChunkID, "RIFF", 4)!=0 ||
-		memcmp(wh.Format, "WAVE", 4)!=0 ||
+	if (memcmp(wh.ChunkID, "RIFF", 4) != 0 ||
+		memcmp(wh.Format, "WAVE", 4) != 0 ||
 		Swap16IfBE(wh.AudioFormat) != 1)
 	{
 		printf("%s: wrong format (header)\n", ProgName);
 		return false;
 	}
 	m->type = CAudioMetaData::WAV;
-	m->bitrate = Swap32IfBE(wh.ByteRate)*8;
+	m->bitrate = Swap32IfBE(wh.ByteRate) * 8;
 	m->samplerate = Swap32IfBE(wh.SampleRate);
 	mBitsPerSample = Swap16IfBE(wh.BitsPerSample);
 	mChannels = Swap16IfBE(wh.NumChannels);
-	m->total_time = (m->bitrate!=0) ? (filesize-header_size)*8 / m->bitrate : 0;
+	m->total_time = (m->bitrate != 0) ? (filesize - header_size) * 8 / m->bitrate : 0;
 	std::stringstream ss;
 	ss << "Riff/Wave / " << mChannels << "channel(s) / " << mBitsPerSample << "bit";
 	m->type_info = ss.str();
-	m->changed=true;
+	m->changed = true;
 	return true;
 }

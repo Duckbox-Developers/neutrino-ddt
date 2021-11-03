@@ -38,7 +38,8 @@
 #include <cstring>
 #include <cstdlib>
 
-struct file_ext_s {
+struct file_ext_s
+{
 	const char *ext;
 	const CFile::FileType type;
 };
@@ -88,25 +89,26 @@ static const file_ext_s file_ext[] =
 	{ "zip",	CFile::FILE_ZIP_PACKAGE	}
 };
 
-int mycasecmp(const void * a, const void * b)
+int mycasecmp(const void *a, const void *b)
 {
 	return strcasecmp(((file_ext_s *)a)->ext, ((file_ext_s *)b)->ext);
 }
 
-CFile::CFile() : Size( 0 ), Mode( 0 ), Marked( false ), Time( 0 )
+CFile::CFile() : Size(0), Mode(0), Marked(false), Time(0)
 {
 }
 
 CFile::FileType CFile::getType(void) const
 {
-	if(S_ISDIR(Mode))
+	if (S_ISDIR(Mode))
 		return FILE_DIR;
 
 	std::string::size_type ext_pos = Name.rfind('.');
 
-	if (ext_pos != std::string::npos) {
-		const char * key = &(Name.c_str()[ext_pos + 1]);
-		void * result = ::bsearch(&key, file_ext, sizeof(file_ext) / sizeof(file_ext_s), sizeof(file_ext_s), mycasecmp);
+	if (ext_pos != std::string::npos)
+	{
+		const char *key = &(Name.c_str()[ext_pos + 1]);
+		void *result = ::bsearch(&key, file_ext, sizeof(file_ext) / sizeof(file_ext_s), sizeof(file_ext_s), mycasecmp);
 		if (result)
 			return ((file_ext_s *)result)->type;
 	}

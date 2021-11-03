@@ -149,7 +149,8 @@ class MI_MOVIE_INFO //MI_MOVIE_INFO &operator=(const MI_MOVIE_INFO& src);
 
 		std::string tfile;		// thumbnail/cover file name
 
-		enum miSource {
+		enum miSource
+		{
 			UNKNOWN = 0,
 			YT,
 			NK
@@ -157,11 +158,14 @@ class MI_MOVIE_INFO //MI_MOVIE_INFO &operator=(const MI_MOVIE_INFO& src);
 		miSource source;
 
 		void clear(void);
-		MI_MOVIE_INFO() { clear(); }
+		MI_MOVIE_INFO()
+		{
+			clear();
+		}
 };
 
 typedef std::vector<MI_MOVIE_INFO> MI_MOVIE_LIST;
-typedef std::vector<MI_MOVIE_INFO*> P_MI_MOVIE_LIST;
+typedef std::vector<MI_MOVIE_INFO *> P_MI_MOVIE_LIST;
 
 class CMovieInfo
 {
@@ -169,9 +173,9 @@ class CMovieInfo
 		CMovieInfo();
 		~CMovieInfo();
 		bool convertTs2XmlName(std::string &filename);					// convert a ts file name in .xml file name
-		bool loadMovieInfo(MI_MOVIE_INFO *movie_info, CFile *file = NULL );		// load movie information for the given .xml filename. If there is no filename, the filename (ts) from movie_info is converted to xml and used instead
+		bool loadMovieInfo(MI_MOVIE_INFO *movie_info, CFile *file = NULL);		// load movie information for the given .xml filename. If there is no filename, the filename (ts) from movie_info is converted to xml and used instead
 		bool encodeMovieInfoXml(std::string *extMessage, MI_MOVIE_INFO *movie_info);	// encode the movie_info structure to xml string
-		bool saveMovieInfo(MI_MOVIE_INFO &movie_info, CFile *file = NULL );		// encode the movie_info structure to xml and save it to the given .xml filename. If there is no filename, the filename (ts) from movie_info is converted to xml and used instead
+		bool saveMovieInfo(MI_MOVIE_INFO &movie_info, CFile *file = NULL);		// encode the movie_info structure to xml and save it to the given .xml filename. If there is no filename, the filename (ts) from movie_info is converted to xml and used instead
 		bool addNewBookmark(MI_MOVIE_INFO *movie_info, MI_BOOKMARK &new_bookmark);	// add a new bookmark to the given movie info. If there is no space false is returned
 		void clearMovieInfo(MI_MOVIE_INFO *movie_info); // clear infos completly
 

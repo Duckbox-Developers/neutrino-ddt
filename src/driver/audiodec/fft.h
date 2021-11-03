@@ -32,9 +32,9 @@ extern "C" {
 
 /* FFT library */
 typedef struct _struct_fft_state fft_state;
-fft_state *fft_init (void);
-void fft_perform (const sound_sample *input, float *output, fft_state *state);
-void fft_close (fft_state *state);
+fft_state *fft_init(void);
+void fft_perform(const sound_sample *input, float *output, fft_state *state);
+void fft_close(fft_state *state);
 
 #ifdef __cplusplus
 }

@@ -45,21 +45,22 @@ CFBWindow::CFBWindow(const int _x, const int _y, const int _dx, const int _dy)
 
 CFBWindow::~CFBWindow(void)
 {
-	if (Background != NULL) {
+	if (Background != NULL)
+	{
 		restoreScreen(x, y, dx, dy, Background, true);
 		frameBuffer->blit();
 	}
 }
 
-fb_pixel_t* CFBWindow::saveScreen(const int _x, const int _y, const int _dx, const int _dy)
+fb_pixel_t *CFBWindow::saveScreen(const int _x, const int _y, const int _dx, const int _dy)
 {
-	fb_pixel_t* buf = new fb_pixel_t [_dx * _dy];
+	fb_pixel_t *buf = new fb_pixel_t [_dx * _dy];
 	if (buf != NULL)
 		frameBuffer->SaveScreen(_x, _y, _dx, _dy, buf);
 	return buf;
 }
 
-void CFBWindow::restoreScreen(const int _x, const int _y, const int _dx, const int _dy, fb_pixel_t* buf, bool delBuf)
+void CFBWindow::restoreScreen(const int _x, const int _y, const int _dx, const int _dy, fb_pixel_t *buf, bool delBuf)
 {
 	if (buf != NULL)
 		frameBuffer->RestoreScreen(_x, _y, _dx, _dy, buf);
@@ -89,7 +90,7 @@ void CFBWindow::paintHLineRel(int _x, int _dx, int _y, const color_t _col)
 	frameBuffer->paintHLineRel(x + _x, _dx, y + _y, _col);
 }
 
-bool CFBWindow::paintIcon(const char * const _filename, const int _x, const int _y, const int _h, const color_t _offset)
+bool CFBWindow::paintIcon(const char *const _filename, const int _x, const int _y, const int _h, const color_t _offset)
 {
 	frameBuffer->paintIcon(_filename, x + _x, y + _y, _h, _offset);
 	if (mayBlit)
@@ -97,7 +98,7 @@ bool CFBWindow::paintIcon(const char * const _filename, const int _x, const int 
 	return 0;
 }
 
-void CFBWindow::RenderString(const font_t _font, const int _x, const int _y, const int _width, const char * const _text, const color_t _color, const int _boxheight, const unsigned int _flags)
+void CFBWindow::RenderString(const font_t _font, const int _x, const int _y, const int _width, const char *const _text, const color_t _color, const int _boxheight, const unsigned int _flags)
 {
 	((Font *)_font)->RenderString(x + _x, y + _y, _width, _text, _color, _boxheight, _flags);
 	if (mayBlit)

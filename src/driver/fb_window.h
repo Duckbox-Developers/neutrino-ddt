@@ -26,31 +26,31 @@
 class CFrameBuffer;
 class CFBWindow
 {
- public:
-	typedef unsigned int color_t;
-	typedef void *         font_t;
+	public:
+		typedef unsigned int color_t;
+		typedef void          *font_t;
 
- private:
-	CFrameBuffer	* frameBuffer;
-	fb_pixel_t	* Background;
-	bool mayBlit;
+	private:
+		CFrameBuffer	 *frameBuffer;
+		fb_pixel_t	 *Background;
+		bool mayBlit;
 
- public:
-	int x, y;   /* upper left corner */
-	int dx, dy; /* dimension         */
+	public:
+		int x, y;   /* upper left corner */
+		int dx, dy; /* dimension         */
 
-	CFBWindow(const int _x, const int _y, const int _dx, const int _dy);
-	~CFBWindow();
+		CFBWindow(const int _x, const int _y, const int _dx, const int _dy);
+		~CFBWindow();
 
-	void paintBoxRel(const int _x, const int _y, const int _dx, const int _dy, const color_t _col, int radius = 0, int type = 0xF);
-	void paintBoxFrame(int _x, int _y, int _dx, int _dy, int _px, const color_t _col, int radius = 0, int type = 0xf);
-	void paintVLineRel(int _x, int _y, int _dy, const color_t _col);
-	void paintHLineRel(int _x, int _dx, int _y, const color_t _col);
-	bool paintIcon(const char * const _filename, const int _x, const int _y, const int _h = 0, const color_t _offset = 1);
-	void RenderString(const font_t _font, const int _x, const int _y, const int _width, const char * const _text, const color_t _color, const int _boxheight = 0, const unsigned int _flags = 1 /*Font::IS_UTF8*/);
+		void paintBoxRel(const int _x, const int _y, const int _dx, const int _dy, const color_t _col, int radius = 0, int type = 0xF);
+		void paintBoxFrame(int _x, int _y, int _dx, int _dy, int _px, const color_t _col, int radius = 0, int type = 0xf);
+		void paintVLineRel(int _x, int _y, int _dy, const color_t _col);
+		void paintHLineRel(int _x, int _dx, int _y, const color_t _col);
+		bool paintIcon(const char *const _filename, const int _x, const int _y, const int _h = 0, const color_t _offset = 1);
+		void RenderString(const font_t _font, const int _x, const int _y, const int _width, const char *const _text, const color_t _color, const int _boxheight = 0, const unsigned int _flags = 1 /*Font::IS_UTF8*/);
 
-	fb_pixel_t* saveScreen(const int _x, const int _y, const int _dx, const int _dy);
-	void restoreScreen(const int _x, const int _y, const int _dx, const int _dy, fb_pixel_t* buf, bool delBuf);
+		fb_pixel_t *saveScreen(const int _x, const int _y, const int _dx, const int _dy);
+		void restoreScreen(const int _x, const int _y, const int _dx, const int _dy, fb_pixel_t *buf, bool delBuf);
 
 };
 

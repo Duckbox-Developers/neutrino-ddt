@@ -34,9 +34,9 @@
 #include <unistd.h>
 #include "cdrdec.h"
 
-CCdrDec* CCdrDec::getInstance()
+CCdrDec *CCdrDec::getInstance()
 {
-	static CCdrDec* CdrDec = NULL;
+	static CCdrDec *CdrDec = NULL;
 	if (CdrDec == NULL)
 	{
 		CdrDec = new CCdrDec();
@@ -44,7 +44,7 @@ CCdrDec* CCdrDec::getInstance()
 	return CdrDec;
 }
 
-bool CCdrDec::SetMetaData(FILE* in, CAudioMetaData* m)
+bool CCdrDec::SetMetaData(FILE *in, CAudioMetaData *m)
 {
 	header_size = 0;
 
@@ -58,7 +58,7 @@ bool CCdrDec::SetMetaData(FILE* in, CAudioMetaData* m)
 	mChannels = 2;
 	m->total_time = filesize / (44100 * 2 * 2);
 	m->type_info = "CDR / 2 channels / 16 bit";
-	m->changed=true;
+	m->changed = true;
 	return true;
 }
 

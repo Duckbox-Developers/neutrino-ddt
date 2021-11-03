@@ -16,46 +16,46 @@
 #include <sys/sysinfo.h>
 
 #ifdef FBV_SUPPORT_GIF
-extern int fh_gif_getsize (const char *, int *, int *, int, int);
-extern int fh_gif_load (const char *, unsigned char **, int *, int *);
-extern int fh_gif_id (const char *);
+extern int fh_gif_getsize(const char *, int *, int *, int, int);
+extern int fh_gif_load(const char *, unsigned char **, int *, int *);
+extern int fh_gif_id(const char *);
 #endif
 #ifdef FBV_SUPPORT_JPEG
-extern int fh_jpeg_getsize (const char *, int *, int *, int, int);
-extern int fh_jpeg_load (const char *, unsigned char **, int *, int *);
-extern int fh_jpeg_id (const char *);
+extern int fh_jpeg_getsize(const char *, int *, int *, int, int);
+extern int fh_jpeg_load(const char *, unsigned char **, int *, int *);
+extern int fh_jpeg_id(const char *);
 #endif
 #ifdef FBV_SUPPORT_PNG
-extern int fh_png_getsize (const char *, int *, int *, int, int);
-extern int fh_png_load (const char *, unsigned char **, int *, int *);
-extern int png_load_ext (const char * name, unsigned char ** buffer, int * xp, int * yp, int * bpp);
-extern int fh_png_id (const char *);
+extern int fh_png_getsize(const char *, int *, int *, int, int);
+extern int fh_png_load(const char *, unsigned char **, int *, int *);
+extern int png_load_ext(const char *name, unsigned char **buffer, int *xp, int *yp, int *bpp);
+extern int fh_png_id(const char *);
 #endif
 #ifdef FBV_SUPPORT_BMP
-extern int fh_bmp_getsize (const char *, int *, int *, int, int);
-extern int fh_bmp_load (const char *, unsigned char **, int *, int *);
-extern int fh_bmp_id (const char *);
+extern int fh_bmp_getsize(const char *, int *, int *, int, int);
+extern int fh_bmp_load(const char *, unsigned char **, int *, int *);
+extern int fh_bmp_id(const char *);
 #endif
 #ifdef FBV_SUPPORT_CRW
-extern int fh_crw_getsize (const char *, int *, int *, int, int);
-extern int fh_crw_load (const char *, unsigned char **, int *, int *);
-extern int fh_crw_id (const char *);
+extern int fh_crw_getsize(const char *, int *, int *, int, int);
+extern int fh_crw_load(const char *, unsigned char **, int *, int *);
+extern int fh_crw_id(const char *);
 #endif
 
 double CPictureViewer::m_aspect_ratio_correction;
 
-void CPictureViewer::add_format (int (*picsize) (const char *, int *, int *, int, int), int (*picread) (const char *, unsigned char **, int *, int *), int (*id) (const char *))
+void CPictureViewer::add_format(int (*picsize)(const char *, int *, int *, int, int), int (*picread)(const char *, unsigned char **, int *, int *), int (*id)(const char *))
 {
-  CFormathandler *fhn;
-  fhn = (CFormathandler *) malloc (sizeof (CFormathandler));
-  fhn->get_size = picsize;
-  fhn->get_pic = picread;
-  fhn->id_pic = id;
-  fhn->next = fh_root;
-  fh_root = fhn;
+	CFormathandler *fhn;
+	fhn = (CFormathandler *) malloc(sizeof(CFormathandler));
+	fhn->get_size = picsize;
+	fhn->get_pic = picread;
+	fhn->id_pic = id;
+	fhn->next = fh_root;
+	fh_root = fhn;
 }
 
-void CPictureViewer::getSupportedImageFormats(std::vector<std::string>& exts)
+void CPictureViewer::getSupportedImageFormats(std::vector<std::string> &exts)
 {
 #ifdef FBV_SUPPORT_JPEG
 	exts.push_back(".jpg");
@@ -77,43 +77,46 @@ void CPictureViewer::getSupportedImageFormats(std::vector<std::string>& exts)
 #endif
 }
 
-void CPictureViewer::init_handlers (void)
+void CPictureViewer::init_handlers(void)
 {
 #ifdef FBV_SUPPORT_PNG
-  add_format (fh_png_getsize, fh_png_load, fh_png_id);
+	add_format(fh_png_getsize, fh_png_load, fh_png_id);
 #endif
 #ifdef FBV_SUPPORT_GIF
-  add_format (fh_gif_getsize, fh_gif_load, fh_gif_id);
+	add_format(fh_gif_getsize, fh_gif_load, fh_gif_id);
 #endif
 #ifdef FBV_SUPPORT_JPEG
-  add_format (fh_jpeg_getsize, fh_jpeg_load, fh_jpeg_id);
+	add_format(fh_jpeg_getsize, fh_jpeg_load, fh_jpeg_id);
 #endif
 #ifdef FBV_SUPPORT_BMP
-  add_format (fh_bmp_getsize, fh_bmp_load, fh_bmp_id);
+	add_format(fh_bmp_getsize, fh_bmp_load, fh_bmp_id);
 #endif
 #ifdef FBV_SUPPORT_CRW
-  add_format (fh_crw_getsize, fh_crw_load, fh_crw_id);
+	add_format(fh_crw_getsize, fh_crw_load, fh_crw_id);
 #endif
 }
 
-CPictureViewer::CFormathandler * CPictureViewer::fh_getsize (const char *name, int *x, int *y, int width_wanted, int height_wanted)
+CPictureViewer::CFormathandler *CPictureViewer::fh_getsize(const char *name, int *x, int *y, int width_wanted, int height_wanted)
 {
 	CFormathandler *fh;
-	for (fh = fh_root; fh != NULL; fh = fh->next) {
-		if (fh->id_pic (name))
-			if (fh->get_size (name, x, y, width_wanted, height_wanted) == FH_ERROR_OK)
+	for (fh = fh_root; fh != NULL; fh = fh->next)
+	{
+		if (fh->id_pic(name))
+			if (fh->get_size(name, x, y, width_wanted, height_wanted) == FH_ERROR_OK)
 				return (fh);
 	}
 	return (NULL);
 }
 std::string CPictureViewer::DownloadImage(std::string url)
 {
-	if (strstr(url.c_str(), "://")) {
+	if (strstr(url.c_str(), "://"))
+	{
 		std::string tmpname = "/tmp/pictureviewer" + url.substr(url.find_last_of("."));
 		FILE *tmpFile = fopen(tmpname.c_str(), "wb");
-		if (tmpFile) {
+		if (tmpFile)
+		{
 			CURL *ch = curl_easy_init();
-			if(ch)
+			if (ch)
 			{
 				curl_easy_setopt(ch, CURLOPT_VERBOSE, 0L);
 				curl_easy_setopt(ch, CURLOPT_NOPROGRESS, 1L);
@@ -126,8 +129,9 @@ std::string CPictureViewer::DownloadImage(std::string url)
 				curl_easy_setopt(ch, CURLOPT_TIMEOUT, 4);
 				curl_easy_setopt(ch, CURLOPT_SSL_VERIFYPEER, 0L);
 				CURLcode res = curl_easy_perform(ch);
-				if (res != CURLE_OK){
-					printf("[%s] curl_easy_perform() failed:%s\n",__func__, curl_easy_strerror(res));
+				if (res != CURLE_OK)
+				{
+					printf("[%s] curl_easy_perform() failed:%s\n", __func__, curl_easy_strerror(res));
 				}
 				curl_easy_cleanup(ch);
 			}
@@ -139,11 +143,12 @@ std::string CPictureViewer::DownloadImage(std::string url)
 	return url;
 }
 
-bool CPictureViewer::DecodeImage (const std::string & _name, bool showBusySign, bool unscaled)
+bool CPictureViewer::DecodeImage(const std::string &_name, bool showBusySign, bool unscaled)
 {
 	// dbout("DecodeImage {\n");
 #if 0 // quick fix for issue #245. TODO more smart fix for this problem
-	if (name == m_NextPic_Name) {
+	if (name == m_NextPic_Name)
+	{
 		//      dbout("DecodeImage }\n");
 		return true;
 	}
@@ -155,7 +160,7 @@ bool CPictureViewer::DecodeImage (const std::string & _name, bool showBusySign, 
 
 	// Show red block for "next ready" in view state
 	if (showBusySign)
-		showBusy (m_startx + 3, m_starty + 3, 10, 0xff, 00, 00);
+		showBusy(m_startx + 3, m_starty + 3, 10, 0xff, 00, 00);
 
 	bool url = false;
 
@@ -163,33 +168,42 @@ bool CPictureViewer::DecodeImage (const std::string & _name, bool showBusySign, 
 
 	CFormathandler *fh;
 	if (unscaled)
-		fh = fh_getsize (name.c_str (), &x, &y, INT_MAX, INT_MAX);
+		fh = fh_getsize(name.c_str(), &x, &y, INT_MAX, INT_MAX);
 	else
-		fh = fh_getsize (name.c_str (), &x, &y, m_endx - m_startx, m_endy - m_starty);
-	if (fh) {
-		if (m_NextPic_Buffer != NULL) {
-			free (m_NextPic_Buffer);
+		fh = fh_getsize(name.c_str(), &x, &y, m_endx - m_startx, m_endy - m_starty);
+	if (fh)
+	{
+		if (m_NextPic_Buffer != NULL)
+		{
+			free(m_NextPic_Buffer);
 			m_NextPic_Buffer = NULL;
 		}
 		size_t bufsize = x * y * 3;
-		size_t resizeBuf = (m_endx - m_startx) * (m_endy - m_starty)*3;
-		if (!checkfreemem(bufsize + resizeBuf)){
+		size_t resizeBuf = (m_endx - m_startx) * (m_endy - m_starty) * 3;
+		if (!checkfreemem(bufsize + resizeBuf))
+		{
 			return false;
 		}
-		m_NextPic_Buffer = (unsigned char *) malloc (bufsize);
-		if (m_NextPic_Buffer == NULL) {
+		m_NextPic_Buffer = (unsigned char *) malloc(bufsize);
+		if (m_NextPic_Buffer == NULL)
+		{
 			dprintf(DEBUG_NORMAL,  "[CPictureViewer] [%s - %d] Error: malloc, %s\n", __func__, __LINE__, strerror(errno));
 			return false;
 		}
 		//      dbout("---Decoding Start(%d/%d)\n",x,y);
-		if (fh->get_pic (name.c_str (), &m_NextPic_Buffer, &x, &y) == FH_ERROR_OK) {
+		if (fh->get_pic(name.c_str(), &m_NextPic_Buffer, &x, &y) == FH_ERROR_OK)
+		{
 			//          dbout("---Decoding Done\n");
-			if ((x > (m_endx - m_startx) || y > (m_endy - m_starty)) && m_scaling != NONE && !unscaled) {
-				if ((m_aspect_ratio_correction * y * (m_endx - m_startx) / x) <= (m_endy - m_starty)) {
+			if ((x > (m_endx - m_startx) || y > (m_endy - m_starty)) && m_scaling != NONE && !unscaled)
+			{
+				if ((m_aspect_ratio_correction * y * (m_endx - m_startx) / x) <= (m_endy - m_starty))
+				{
 					imx = (m_endx - m_startx);
-					imy = (int) (m_aspect_ratio_correction * y * (m_endx - m_startx) / x);
-				} else {
-					imx = (int) ((1.0 / m_aspect_ratio_correction) * x * (m_endy - m_starty) / y);
+					imy = (int)(m_aspect_ratio_correction * y * (m_endx - m_startx) / x);
+				}
+				else
+				{
+					imx = (int)((1.0 / m_aspect_ratio_correction) * x * (m_endy - m_starty) / y);
 					imy = (m_endy - m_starty);
 				}
 				m_NextPic_Buffer = Resize(m_NextPic_Buffer, x, y, imx, imy, m_scaling);
@@ -214,15 +228,18 @@ bool CPictureViewer::DecodeImage (const std::string & _name, bool showBusySign, 
 				m_NextPic_YPan = (y - (m_endy - m_starty)) / 2;
 			else
 				m_NextPic_YPan = 0;
-		} else {
+		}
+		else
+		{
 			dprintf(DEBUG_NORMAL,  "[CPictureViewer] [%s - %d] Error: Unable to read file !, %s\n", __func__, __LINE__, strerror(errno));
-			free (m_NextPic_Buffer);
-			m_NextPic_Buffer = (unsigned char *) malloc (3);
-			if (m_NextPic_Buffer == NULL) {
+			free(m_NextPic_Buffer);
+			m_NextPic_Buffer = (unsigned char *) malloc(3);
+			if (m_NextPic_Buffer == NULL)
+			{
 				dprintf(DEBUG_NORMAL,  "[CPictureViewer] [%s - %d] Error: malloc, %s\n", __func__, __LINE__, strerror(errno));
 				return false;
 			}
-			memset (m_NextPic_Buffer, 0, 3);
+			memset(m_NextPic_Buffer, 0, 3);
 			m_NextPic_X = 1;
 			m_NextPic_Y = 1;
 			m_NextPic_XPos = 0;
@@ -230,18 +247,22 @@ bool CPictureViewer::DecodeImage (const std::string & _name, bool showBusySign, 
 			m_NextPic_XPan = 0;
 			m_NextPic_YPan = 0;
 		}
-	} else {
+	}
+	else
+	{
 		dprintf(DEBUG_NORMAL,  "[CPictureViewer] [%s - %d] Unable to read file or format not recognized!\n", __func__, __LINE__);
-		if (m_NextPic_Buffer != NULL) {
-			free (m_NextPic_Buffer);
+		if (m_NextPic_Buffer != NULL)
+		{
+			free(m_NextPic_Buffer);
 			m_NextPic_Buffer = NULL;
 		}
-		m_NextPic_Buffer = (unsigned char *) malloc (3);
-		if (m_NextPic_Buffer == NULL) {
+		m_NextPic_Buffer = (unsigned char *) malloc(3);
+		if (m_NextPic_Buffer == NULL)
+		{
 			dprintf(DEBUG_NORMAL,  "[CPictureViewer] [%s - %d] Error: malloc, %s\n", __func__, __LINE__, strerror(errno));
 			return false;
 		}
-		memset (m_NextPic_Buffer, 0, 3);
+		memset(m_NextPic_Buffer, 0, 3);
 		m_NextPic_X = 1;
 		m_NextPic_Y = 1;
 		m_NextPic_XPos = 0;
@@ -252,12 +273,12 @@ bool CPictureViewer::DecodeImage (const std::string & _name, bool showBusySign, 
 	m_NextPic_Name = name;
 	if (url)
 		unlink(name.c_str());
-	hideBusy ();
-	//   dbout("DecodeImage }\n"); 
+	hideBusy();
+	//   dbout("DecodeImage }\n");
 	return (m_NextPic_Buffer != NULL);
 }
 
-void CPictureViewer::SetVisible (int startx, int endx, int starty, int endy)
+void CPictureViewer::SetVisible(int startx, int endx, int starty, int endy)
 {
 	m_startx = startx;
 	m_endx = endx;
@@ -266,28 +287,31 @@ void CPictureViewer::SetVisible (int startx, int endx, int starty, int endy)
 }
 
 
-bool CPictureViewer::ShowImage (const std::string & filename, bool unscaled)
+bool CPictureViewer::ShowImage(const std::string &filename, bool unscaled)
 {
 	//  dbout("Show Image {\n");
 	// Wird eh ueberschrieben ,also schonmal freigeben... (wenig speicher)
-	if (m_CurrentPic_Buffer != NULL) {
-		free (m_CurrentPic_Buffer);
+	if (m_CurrentPic_Buffer != NULL)
+	{
+		free(m_CurrentPic_Buffer);
 		m_CurrentPic_Buffer = NULL;
 	}
-	if (DecodeImage (filename, true, unscaled))
-		DisplayNextImage ();
+	if (DecodeImage(filename, true, unscaled))
+		DisplayNextImage();
 	//  dbout("Show Image }\n");
 	return true;
 }
 
-bool CPictureViewer::DisplayNextImage ()
+bool CPictureViewer::DisplayNextImage()
 {
 	//  dbout("DisplayNextImage {\n");
-	if (m_CurrentPic_Buffer != NULL) {
-		free (m_CurrentPic_Buffer);
+	if (m_CurrentPic_Buffer != NULL)
+	{
+		free(m_CurrentPic_Buffer);
 		m_CurrentPic_Buffer = NULL;
 	}
-	if (m_NextPic_Buffer != NULL) {
+	if (m_NextPic_Buffer != NULL)
+	{
 		//fb_display (m_NextPic_Buffer, m_NextPic_X, m_NextPic_Y, m_NextPic_XPan, m_NextPic_YPan, m_NextPic_XPos, m_NextPic_YPos);
 		CFrameBuffer::getInstance()->displayRGB(m_NextPic_Buffer, m_NextPic_X, m_NextPic_Y, m_NextPic_XPan, m_NextPic_YPan, m_NextPic_XPos, m_NextPic_YPos);
 		CFrameBuffer::getInstance()->blit();
@@ -306,10 +330,10 @@ bool CPictureViewer::DisplayNextImage ()
 	return true;
 }
 
-void CPictureViewer::Zoom (float factor)
+void CPictureViewer::Zoom(float factor)
 {
 	//  dbout("Zoom %f\n",factor);
-	showBusy (m_startx + 3, m_starty + 3, 10, 0xff, 0xff, 00);
+	showBusy(m_startx + 3, m_starty + 3, 10, 0xff, 0xff, 00);
 
 	int oldx = m_CurrentPic_X;
 	int oldy = m_CurrentPic_Y;
@@ -319,9 +343,10 @@ void CPictureViewer::Zoom (float factor)
 
 	m_CurrentPic_Buffer = Resize(m_CurrentPic_Buffer, oldx, oldy, m_CurrentPic_X, m_CurrentPic_Y, m_scaling);
 
-	if (m_CurrentPic_Buffer == oldBuf) {
+	if (m_CurrentPic_Buffer == oldBuf)
+	{
 		// resize failed
-		hideBusy ();
+		hideBusy();
 		return;
 	}
 
@@ -346,12 +371,12 @@ void CPictureViewer::Zoom (float factor)
 	CFrameBuffer::getInstance()->blit();
 }
 
-void CPictureViewer::Move (int dx, int dy)
+void CPictureViewer::Move(int dx, int dy)
 {
 	int xs, ys;
 
 	//  dbout("Move %d %d\n",dx,dy);
-	showBusy (m_startx + 3, m_starty + 3, 10, 0x00, 0xff, 00);
+	showBusy(m_startx + 3, m_starty + 3, 10, 0x00, 0xff, 00);
 
 	xs = CFrameBuffer::getInstance()->getScreenWidth(true);
 	ys = CFrameBuffer::getInstance()->getScreenHeight(true);
@@ -376,7 +401,7 @@ void CPictureViewer::Move (int dx, int dy)
 		m_CurrentPic_YPos = (m_endy - m_starty - m_CurrentPic_Y) / 2 + m_starty;
 	else
 		m_CurrentPic_YPos = m_starty;
-	//  dbout("Display x(%d) y(%d) xpan(%d) ypan(%d) xpos(%d) ypos(%d)\n",m_CurrentPic_X, m_CurrentPic_Y, 
+	//  dbout("Display x(%d) y(%d) xpan(%d) ypan(%d) xpos(%d) ypos(%d)\n",m_CurrentPic_X, m_CurrentPic_Y,
 	//          m_CurrentPic_XPan, m_CurrentPic_YPan, m_CurrentPic_XPos, m_CurrentPic_YPos);
 
 	//fb_display (m_CurrentPic_Buffer, m_CurrentPic_X, m_CurrentPic_Y, m_CurrentPic_XPan, m_CurrentPic_YPan, m_CurrentPic_XPos, m_CurrentPic_YPos);
@@ -384,7 +409,7 @@ void CPictureViewer::Move (int dx, int dy)
 	CFrameBuffer::getInstance()->blit();
 }
 
-CPictureViewer::CPictureViewer ()
+CPictureViewer::CPictureViewer()
 {
 	int xs, ys;
 
@@ -425,21 +450,22 @@ CPictureViewer::CPictureViewer ()
 	pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK_NP);
 	pthread_mutex_init(&logo_map_mutex, &attr);
 
-	init_handlers ();
+	init_handlers();
 }
 
-CPictureViewer::~CPictureViewer ()
+CPictureViewer::~CPictureViewer()
 {
 	Cleanup();
 	CFormathandler *fh = fh_root;
-	while (fh) {
+	while (fh)
+	{
 		CFormathandler *tmp = fh->next;
 		free(fh);
 		fh = tmp;
 	}
 }
 
-void CPictureViewer::showBusy (int sx, int sy, int width, char r, char g, char b)
+void CPictureViewer::showBusy(int sx, int sy, int width, char r, char g, char b)
 {
 	//  dbout("Show Busy{\n");
 	unsigned char rgb_buffer[3];
@@ -451,95 +477,108 @@ void CPictureViewer::showBusy (int sx, int sy, int width, char r, char g, char b
 	rgb_buffer[1] = g;
 	rgb_buffer[2] = b;
 
-	fb_buffer = (unsigned char *) CFrameBuffer::getInstance()->convertRGB2FB (rgb_buffer, 1, 1);
-	if (fb_buffer == NULL) {
+	fb_buffer = (unsigned char *) CFrameBuffer::getInstance()->convertRGB2FB(rgb_buffer, 1, 1);
+	if (fb_buffer == NULL)
+	{
 		dprintf(DEBUG_NORMAL,  "[CPictureViewer] [%s - %d] Error: malloc\n", __func__, __LINE__);
 		return;
 	}
-	if (m_busy_buffer != NULL) {
-		free (m_busy_buffer);
+	if (m_busy_buffer != NULL)
+	{
+		free(m_busy_buffer);
 		m_busy_buffer = NULL;
 	}
 	size_t bufsize = width * width * cpp;
-	if (!checkfreemem(bufsize)){
-		cs_free_uncached (fb_buffer);
+	if (!checkfreemem(bufsize))
+	{
+		cs_free_uncached(fb_buffer);
 		return;
 	}
-	m_busy_buffer = (unsigned char *) malloc (bufsize);
-	if (m_busy_buffer == NULL) {
+	m_busy_buffer = (unsigned char *) malloc(bufsize);
+	if (m_busy_buffer == NULL)
+	{
 		dprintf(DEBUG_NORMAL,  "[CPictureViewer] [%s - %d] Error: malloc\n", __func__, __LINE__);
-		cs_free_uncached (fb_buffer);
+		cs_free_uncached(fb_buffer);
 		return;
 	}
 	busy_buffer_wrk = m_busy_buffer;
 	unsigned char *fb = (unsigned char *) CFrameBuffer::getInstance()->getFrameBufferPointer();
-	unsigned int stride = CFrameBuffer::getInstance ()->getStride ();
+	unsigned int stride = CFrameBuffer::getInstance()->getStride();
 
-	for (int y = sy; y < sy + width; y++) {
-		for (int x = sx; x < sx + width; x++) {
-			memmove (busy_buffer_wrk, fb + y * stride + x * cpp, cpp);
+	for (int y = sy; y < sy + width; y++)
+	{
+		for (int x = sx; x < sx + width; x++)
+		{
+			memmove(busy_buffer_wrk, fb + y * stride + x * cpp, cpp);
 			busy_buffer_wrk += cpp;
-			memmove (fb + y * stride + x * cpp, fb_buffer, cpp);
+			memmove(fb + y * stride + x * cpp, fb_buffer, cpp);
 		}
 	}
 	m_busy_x = sx;
 	m_busy_y = sy;
 	m_busy_width = width;
 	m_busy_cpp = cpp;
-	cs_free_uncached (fb_buffer);
+	cs_free_uncached(fb_buffer);
 	CFrameBuffer::getInstance()->blit();
 	//  dbout("Show Busy}\n");
 }
 
-void CPictureViewer::hideBusy ()
+void CPictureViewer::hideBusy()
 {
 	//  dbout("Hide Busy{\n");
-	if (m_busy_buffer != NULL) {
-		unsigned char *fb = (unsigned char *) CFrameBuffer::getInstance ()->getFrameBufferPointer ();
-		unsigned int stride = CFrameBuffer::getInstance ()->getStride ();
+	if (m_busy_buffer != NULL)
+	{
+		unsigned char *fb = (unsigned char *) CFrameBuffer::getInstance()->getFrameBufferPointer();
+		unsigned int stride = CFrameBuffer::getInstance()->getStride();
 		unsigned char *busy_buffer_wrk = m_busy_buffer;
 
-		for (int y = m_busy_y; y < m_busy_y + m_busy_width; y++) {
-			for (int x = m_busy_x; x < m_busy_x + m_busy_width; x++) {
-				memmove (fb + y * stride + x * m_busy_cpp, busy_buffer_wrk, m_busy_cpp);
+		for (int y = m_busy_y; y < m_busy_y + m_busy_width; y++)
+		{
+			for (int x = m_busy_x; x < m_busy_x + m_busy_width; x++)
+			{
+				memmove(fb + y * stride + x * m_busy_cpp, busy_buffer_wrk, m_busy_cpp);
 				busy_buffer_wrk += m_busy_cpp;
 			}
 		}
-		free (m_busy_buffer);
+		free(m_busy_buffer);
 		m_busy_buffer = NULL;
 	}
 	CFrameBuffer::getInstance()->blit();
 	//  dbout("Hide Busy}\n");
 }
-void CPictureViewer::Cleanup ()
+void CPictureViewer::Cleanup()
 {
-	if (m_busy_buffer != NULL) {
-		free (m_busy_buffer);
+	if (m_busy_buffer != NULL)
+	{
+		free(m_busy_buffer);
 		m_busy_buffer = NULL;
 	}
-	if (m_NextPic_Buffer != NULL) {
-		free (m_NextPic_Buffer);
+	if (m_NextPic_Buffer != NULL)
+	{
+		free(m_NextPic_Buffer);
 		m_NextPic_Buffer = NULL;
 	}
-	if (m_CurrentPic_Buffer != NULL) {
-		free (m_CurrentPic_Buffer);
+	if (m_CurrentPic_Buffer != NULL)
+	{
+		free(m_CurrentPic_Buffer);
 		m_CurrentPic_Buffer = NULL;
 	}
 }
 
-void CPictureViewer::getSize(const char* name, int* width, int *height)
+void CPictureViewer::getSize(const char *name, int *width, int *height)
 {
 	CFormathandler *fh;
 
 	fh = fh_getsize(name, width, height, INT_MAX, INT_MAX);
-	if (fh == NULL) {
+	if (fh == NULL)
+	{
 		*width = 0;
 		*height = 0;
 	}
 }
 
 #if HAVE_SH4_HARDWARE
-bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& ChannelName, std::string & name, int *width, int *height, std::string logo_path)
+bool CPictureViewer::GetLogoName(const uint64_t &channel_id, const std::string &ChannelName, std::string &name, int *width, int *height, std::string logo_path)
 {
 	char strChanId[16];
 
@@ -550,18 +589,23 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 
 	pthread_mutex_lock(&logo_map_mutex);
 
-	if ((logo_hdd_dir != logo_path)) {
+	if ((logo_hdd_dir != logo_path))
+	{
 		logo_map.clear();
 		logo_hdd_dir = logo_path;
 	}
 
 	std::map<uint64_t, logo_data>::iterator it;
 	it = logo_map.find(channel_id);
-	if (it != logo_map.end()) {
-		if (it->second.name == "") {
+	if (it != logo_map.end())
+	{
+		if (it->second.name == "")
+		{
 			pthread_mutex_unlock(&logo_map_mutex);
 			return false;
-		} else {
+		}
+		else
+		{
 			name = it->second.name;
 			if (width)
 				*width = it->second.width;
@@ -575,24 +619,25 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 	sprintf(strChanId, "%llx", channel_id & 0xFFFFFFFFFFFFULL);
 
 	std::string strLogoE2[2] = { "", "" };
-	CZapitChannel * cc = NULL;
+	CZapitChannel *cc = NULL;
 	if (channel_id)
 		if (CNeutrinoApp::getInstance()->channelList)
 			cc = CNeutrinoApp::getInstance()->channelList->getChannel(channel_id);
-	if (cc) {
+	if (cc)
+	{
 		char fname[255];
 		snprintf(fname, sizeof(fname), "1_0_%X_%X_%X_%X_%X0000_0_0_0.png",
 			(u_int) cc->getServiceType(true),
 			(u_int) channel_id & 0xFFFF,
-			(u_int) (channel_id >> 32) & 0xFFFF,
-			(u_int) (channel_id >> 16) & 0xFFFF,
+			(u_int)(channel_id >> 32) & 0xFFFF,
+			(u_int)(channel_id >> 16) & 0xFFFF,
 			(u_int) cc->getSatellitePosition());
 		strLogoE2[0] = std::string(fname);
 		snprintf(fname, sizeof(fname), "1_0_%X_%X_%X_%X_%X0000_0_0_0.png",
 			(u_int) 1,
 			(u_int) channel_id & 0xFFFF,
-			(u_int) (channel_id >> 32) & 0xFFFF,
-			(u_int) (channel_id >> 16) & 0xFFFF,
+			(u_int)(channel_id >> 32) & 0xFFFF,
+			(u_int)(channel_id >> 16) & 0xFFFF,
 			(u_int) cc->getSatellitePosition());
 		strLogoE2[1] = std::string(fname);
 	}
@@ -604,29 +649,33 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 	/* first the channel-id, then the channelname */
 	std::string strLogoName[2] = { (std::string)strChanId, SpecialChannelName };
 	/* first png, then jpg, then gif */
-	std::string strLogoExt[3] = { ".png", ".jpg" , ".gif" };
+	std::string strLogoExt[3] = { ".png", ".jpg", ".gif" };
 	std::string dirs[1] = { logo_path };
 
 	std::string tmp;
 
-	for (int k = 0; k < 2; k++) {
+	for (int k = 0; k < 2; k++)
+	{
 		if (dirs[k].length() < 1)
 			continue;
 		for (int i = 0; i < 2; i++)
-			for (int j = 0; j < 3; j++) {
+			for (int j = 0; j < 3; j++)
+			{
 				tmp = dirs[k] + "/" + strLogoName[i] + strLogoExt[j];
 				if (!access(tmp.c_str(), R_OK))
 					goto found;
 			}
 		if (!cc)
 			continue;
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < 2; i++)
+		{
 			tmp = dirs[k] + "/" + strLogoE2[i];
 			if (!access(tmp.c_str(), R_OK))
 				goto found;
 		}
 	}
-	if (cc) {
+	if (cc)
+	{
 		if (!cc->getAlternateLogo().empty())
 		{
 			std::string lname = downloadUrlToLogo(cc->getAlternateLogo(), LOGODIR_TMP, cc->getChannelID());
@@ -638,9 +687,11 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 	logo_map[channel_id].name = "";
 	pthread_mutex_unlock(&logo_map_mutex);
 
-	if (g_settings.default_logo == 1) {
+	if (g_settings.default_logo == 1)
+	{
 		std::string logo_tmp = DATADIR "/neutrino/icons/picon_default.png";
-		if (channel_id && access(logo_tmp, R_OK) != -1) {
+		if (channel_id && access(logo_tmp, R_OK) != -1)
+		{
 			if (width && height)
 				getSize(logo_tmp.c_str(), width, height);
 			name = logo_tmp;
@@ -653,7 +704,7 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 found:
 	int w, h;
 	getSize(tmp.c_str(), &w, &h);
-	if(width && height)
+	if (width && height)
 		*width = w, *height = h;
 	name = tmp;
 	logo_map[channel_id].name = name;
@@ -663,7 +714,7 @@ found:
 	return true;
 }
 #else
-bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& ChannelName, std::string & name, int *width, int *height, std::string logo_path)
+bool CPictureViewer::GetLogoName(const uint64_t &channel_id, const std::string &ChannelName, std::string &name, int *width, int *height, std::string logo_path)
 {
 	std::string fileType[] = { ".png", ".jpg", ".gif" };
 
@@ -681,7 +732,7 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 	char e2filename2[255];
 	e2filename2[0] = '\0';
 
-	CZapitChannel * cc = NULL;
+	CZapitChannel *cc = NULL;
 	if (channel_id)
 		if (CNeutrinoApp::getInstance()->channelList)
 			cc = CNeutrinoApp::getInstance()->channelList->getChannel(channel_id);
@@ -690,26 +741,27 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 	{
 		//create E2 filename1
 		snprintf(e2filename1, sizeof(e2filename1), "1_0_%X_%X_%X_%X_%X0000_0_0_0",
-		         (u_int) cc->getServiceType(true),
-		         (u_int) channel_id & 0xFFFF,
-		         (u_int) (channel_id >> 32) & 0xFFFF,
-		         (u_int) (channel_id >> 16) & 0xFFFF,
-		         (u_int) cc->getSatellitePosition());
+			(u_int) cc->getServiceType(true),
+			(u_int) channel_id & 0xFFFF,
+			(u_int)(channel_id >> 32) & 0xFFFF,
+			(u_int)(channel_id >> 16) & 0xFFFF,
+			(u_int) cc->getSatellitePosition());
 
 		//create E2 filename2
 		snprintf(e2filename2, sizeof(e2filename2), "1_0_%X_%X_%X_%X_%X0000_0_0_0",
-		         (u_int) 1,
-		         (u_int) channel_id & 0xFFFF,
-		         (u_int) (channel_id >> 32) & 0xFFFF,
-		         (u_int) (channel_id >> 16) & 0xFFFF,
-		         (u_int) cc->getSatellitePosition());
+			(u_int) 1,
+			(u_int) channel_id & 0xFFFF,
+			(u_int)(channel_id >> 32) & 0xFFFF,
+			(u_int)(channel_id >> 16) & 0xFFFF,
+			(u_int) cc->getSatellitePosition());
 	}
 
 	std::string SpecialChannelName = GetSpecialName(ChannelName);
 
 //	printf("SpecialChannelName: %s\n", SpecialChannelName.c_str());
 
-	for (size_t i = 0; i<(sizeof(fileType) / sizeof(fileType[0])); i++){
+	for (size_t i = 0; i < (sizeof(fileType) / sizeof(fileType[0])); i++)
+	{
 		std::vector<std::string> v_path;
 		std::string id_tmp_path;
 
@@ -739,7 +791,8 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 			v_path.push_back(id_tmp_path);
 		}
 
-		if(logo_path != LOGODIR_VAR){
+		if (logo_path != LOGODIR_VAR)
+		{
 			//create filename with channel name (LOGODIR_VAR)
 			id_tmp_path = LOGODIR_VAR "/";
 			id_tmp_path += SpecialChannelName + fileType[i];
@@ -766,7 +819,8 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 				v_path.push_back(id_tmp_path);
 			}
 		}
-		if(logo_path != LOGODIR){
+		if (logo_path != LOGODIR)
+		{
 			//create filename with channel name (LOGODIR)
 			id_tmp_path = LOGODIR "/";
 			id_tmp_path += SpecialChannelName + fileType[i];
@@ -794,9 +848,11 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 			}
 		}
 		//check if file is available, name with real name is preferred, return true on success
-		for (size_t j = 0; j < v_path.size(); j++){
-			if (access(v_path[j].c_str(), R_OK) != -1){
-				if(width && height)
+		for (size_t j = 0; j < v_path.size(); j++)
+		{
+			if (access(v_path[j].c_str(), R_OK) != -1)
+			{
+				if (width && height)
 					getSize(v_path[j].c_str(), width, height);
 				name = v_path[j];
 				return true;
@@ -817,9 +873,11 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 		}
 	}
 
-	if (g_settings.default_logo == 1) {
+	if (g_settings.default_logo == 1)
+	{
 		std::string logo_tmp = DATADIR "/neutrino/icons/picon_default.png";
-		if (channel_id && access(logo_tmp, R_OK) != -1) {
+		if (channel_id && access(logo_tmp, R_OK) != -1)
+		{
 			if (width && height)
 				getSize(logo_tmp.c_str(), width, height);
 			name = logo_tmp;
@@ -831,23 +889,25 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 }
 #endif
 #if 0
-bool CPictureViewer::DisplayLogo (uint64_t channel_id, int posx, int posy, int width, int height)
+bool CPictureViewer::DisplayLogo(uint64_t channel_id, int posx, int posy, int width, int height)
 {
 	char fname[255];
 	bool ret = false;
 
 	sprintf(fname, "%s/%llx.jpg", g_settings.logo_hdd_dir.c_str(), channel_id & 0xFFFFFFFFFFFFULL);
 //	printf("logo file: %s\n", fname);
-	if(access(fname, F_OK))
+	if (access(fname, F_OK))
 		sprintf(fname, "%s/%llx.gif", g_settings.logo_hdd_dir.c_str(), channel_id & 0xFFFFFFFFFFFFULL);
 
-	if(!access(fname, F_OK)) {
+	if (!access(fname, F_OK))
+	{
 		ret = DisplayImage(fname, posx, posy, width, height);
 #if 0
 		//ret = DisplayImage(fname, posx, posy, width, height);
-		fb_pixel_t * data = getImage(fname, width, height);
+		fb_pixel_t *data = getImage(fname, width, height);
 		//fb_pixel_t * data = getIcon(fname, &width, &height);
-		if(data) {
+		if (data)
+		{
 			CFrameBuffer::getInstance()->blit2FB(data, width, height, posx, posy);
 			cs_free_uncached(data);
 		}
@@ -864,34 +924,40 @@ void CPictureViewer::rescaleImageDimensions(int *width, int *height, const int m
 		return;
 
 	aspect = (float)(*width) / (float)(*height);
-	if (((float)(*width) / (float)max_width) > ((float)(*height) / (float)max_height)) {
+	if (((float)(*width) / (float)max_width) > ((float)(*height) / (float)max_height))
+	{
 		*width = max_width;
 		*height = int((float)max_width / aspect);
-	}else{
+	}
+	else
+	{
 		*height = max_height;
 		*width = int((float)max_height * aspect);
 	}
 }
 
-bool CPictureViewer::DisplayImage(const std::string & name, int posx, int posy, int width, int height, int transp)
+bool CPictureViewer::DisplayImage(const std::string &name, int posx, int posy, int width, int height, int transp)
 {
-	if(width < 1 || height < 1){
+	if (width < 1 || height < 1)
+	{
 		dprintf(DEBUG_NORMAL,  "[CPictureViewer] [%s - %d] Error: image [%s] width %i height %i \n", __func__, __LINE__, name.c_str(), width, height);
 		return false;
 	}
 
-	CFrameBuffer* frameBuffer = CFrameBuffer::getInstance();
+	CFrameBuffer *frameBuffer = CFrameBuffer::getInstance();
 	if (transp > CFrameBuffer::TM_EMPTY)
 		frameBuffer->SetTransparent(transp);
 
 	/* TODO: cache or check for same */
-	fb_pixel_t * data = getImage(name, width, height);
+	fb_pixel_t *data = getImage(name, width, height);
 
-	if (data){
+	if (data)
+	{
 		if (transp > CFrameBuffer::TM_EMPTY)
 			frameBuffer->SetTransparentDefault();
 
-		if(data) {
+		if (data)
+		{
 			frameBuffer->blit2FB(data, width, height, posx, posy);
 			cs_free_uncached(data);
 			return true;
@@ -900,15 +966,15 @@ bool CPictureViewer::DisplayImage(const std::string & name, int posx, int posy, 
 	return false;
 }
 
-fb_pixel_t * CPictureViewer::int_getImage(const std::string & name, int *width, int *height, bool GetImage)
+fb_pixel_t *CPictureViewer::int_getImage(const std::string &name, int *width, int *height, bool GetImage)
 {
 	if (access(name.c_str(), R_OK) == -1)
 		return NULL;
 
 	int x = 0, y = 0, load_ret = 0, bpp = 0;
 	CFormathandler *fh = NULL;
-	unsigned char * buffer = NULL;
-	fb_pixel_t * ret = NULL;
+	unsigned char *buffer = NULL;
+	fb_pixel_t *ret = NULL;
 	std::string mode_str;
 
 	if (GetImage)
@@ -916,8 +982,9 @@ fb_pixel_t * CPictureViewer::int_getImage(const std::string & name, int *width, 
 	else
 		mode_str = "getIcon";
 
-  	fh = fh_getsize(name.c_str(), &x, &y, INT_MAX, INT_MAX);
-	if (x < 1 || y < 1){
+	fh = fh_getsize(name.c_str(), &x, &y, INT_MAX, INT_MAX);
+	if (x < 1 || y < 1)
+	{
 		return NULL;
 	}
 
@@ -925,8 +992,8 @@ fb_pixel_t * CPictureViewer::int_getImage(const std::string & name, int *width, 
 	if (!checkfreemem(bufsize))
 		return NULL;
 
-  	if (fh)
-  	{
+	if (fh)
+	{
 		buffer = (unsigned char *) malloc(bufsize);//x * y * 4
 		if (buffer == NULL)
 		{
@@ -938,14 +1005,15 @@ fb_pixel_t * CPictureViewer::int_getImage(const std::string & name, int *width, 
 			load_ret = png_load_ext(name.c_str(), &buffer, &x, &y, &bpp);
 		else
 #endif
-			load_ret = fh->get_pic(name.c_str (), &buffer, &x, &y);
+			load_ret = fh->get_pic(name.c_str(), &buffer, &x, &y);
 		dprintf(DEBUG_INFO,  "[CPictureViewer] [%s - %d] load_result: %d \n", __func__, __LINE__, load_ret);
 
 		if (load_ret == FH_ERROR_OK)
 		{
 			dprintf(DEBUG_INFO,  "[CPictureViewer] [%s - %d] mode %s, decoded %s, (Pos: %d %d) ,bpp = %d \n", __func__, __LINE__, mode_str.c_str(), name.c_str(), x, y, bpp);
 			// image size error
-			if((GetImage) && (*width < 1 || *height < 1)){
+			if ((GetImage) && (*width < 1 || *height < 1))
+			{
 				dprintf(DEBUG_NORMAL,  "[CPictureViewer] [%s - %d] mode: %s, file: %s (Pos: %d %d, Dim: %d x %d)\n", __func__, __LINE__, mode_str.c_str(), name.c_str(), x, y, *width, *height);
 				free(buffer);
 				buffer = NULL;
@@ -968,7 +1036,9 @@ fb_pixel_t * CPictureViewer::int_getImage(const std::string & name, int *width, 
 				ret = (fb_pixel_t *) CFrameBuffer::getInstance()->convertRGB2FB(buffer, x, y, convertSetupAlpha2Alpha(g_settings.theme.infobar_alpha));
 			*width = x;
 			*height = y;
-		}else{
+		}
+		else
+		{
 			dprintf(DEBUG_NORMAL,  "[CPictureViewer] [%s - %d] mode %s: Error decoding file %s\n", __func__, __LINE__, mode_str.c_str(), name.c_str());
 			free(buffer);
 			buffer = NULL;
@@ -976,131 +1046,143 @@ fb_pixel_t * CPictureViewer::int_getImage(const std::string & name, int *width, 
 		}
 		free(buffer);
 		buffer = NULL;
-  	}else
+	}
+	else
 		dprintf(DEBUG_NORMAL,  "[CPictureViewer] [%s - %d] mode: %s, file: %s Error: %s, buffer = %p (Pos: %d %d, Dim: %d x %d)\n", __func__, __LINE__, mode_str.c_str(), name.c_str(), strerror(errno), buffer, x, y, *width, *height);
 	return ret;
 }
 
-fb_pixel_t * CPictureViewer::getImage(const std::string & name, int width, int height)
+fb_pixel_t *CPictureViewer::getImage(const std::string &name, int width, int height)
 {
 	return int_getImage(name, &width, &height, true);
 }
 
-fb_pixel_t * CPictureViewer::getIcon(const std::string & name, int *width, int *height)
+fb_pixel_t *CPictureViewer::getIcon(const std::string &name, int *width, int *height)
 {
 	return int_getImage(name, width, height, false);
 }
 
-unsigned char * CPictureViewer::int_Resize(unsigned char *orgin, int ox, int oy, int dx, int dy, ScalingMode type, unsigned char * dst, bool alpha)
+unsigned char *CPictureViewer::int_Resize(unsigned char *orgin, int ox, int oy, int dx, int dy, ScalingMode type, unsigned char *dst, bool alpha)
 {
-	unsigned char * cr;
-	if(dst == NULL)
+	unsigned char *cr;
+	if (dst == NULL)
 	{
 		size_t bufsize = dx * dy * ((alpha) ? 4 : 3);
-		if (!checkfreemem(bufsize)){
+		if (!checkfreemem(bufsize))
+		{
 			return orgin;
 		}
-		cr = (unsigned char*) malloc(bufsize);
-		if(cr == NULL)
+		cr = (unsigned char *) malloc(bufsize);
+		if (cr == NULL)
 		{
 			dprintf(DEBUG_NORMAL,  "[CPictureViewer] [%s - %d] Resize Error: malloc\n", __func__, __LINE__);
 			return orgin;
 		}
-	}else
+	}
+	else
 		cr = dst;
 
-	if(type == SIMPLE)
+	if (type == SIMPLE)
 	{
-		unsigned char *p,*l;
-		int i,j,k,ip;
-		l=cr;
+		unsigned char *p, *l;
+		int i, j, k, ip;
+		l = cr;
 
-		for(j=0;j<dy;j++,l+=dx*3)
+		for (j = 0; j < dy; j++, l += dx * 3)
 		{
-			p=orgin+(j*oy/dy*ox*3);
-			for(i=0,k=0;i<dx;i++,k+=3)
+			p = orgin + (j * oy / dy * ox * 3);
+			for (i = 0, k = 0; i < dx; i++, k += 3)
 			{
-				ip=i*ox/dx*3;
-				memmove(l+k, p+ip, 3);
+				ip = i * ox / dx * 3;
+				memmove(l + k, p + ip, 3);
 			}
 		}
-	}else
+	}
+	else
 	{
-		unsigned char *p,*q;
-		int i,j,k,l,ya,yb;
-		int sq,r,g,b,a;
+		unsigned char *p, *q;
+		int i, j, k, l, ya, yb;
+		int sq, r, g, b, a;
 
-		p=cr;
+		p = cr;
 
 		int xa_v[dx];
-		for(i=0;i<dx;i++)
-			xa_v[i] = i*ox/dx;
-		int xb_v[dx+1];
-		for(i=0;i<dx;i++)
+		for (i = 0; i < dx; i++)
+			xa_v[i] = i * ox / dx;
+		int xb_v[dx + 1];
+		for (i = 0; i < dx; i++)
 		{
-			xb_v[i]= (i+1)*ox/dx;
-			if(xb_v[i]>=ox)
-				xb_v[i]=ox-1;
+			xb_v[i] = (i + 1) * ox / dx;
+			if (xb_v[i] >= ox)
+				xb_v[i] = ox - 1;
 		}
 
 		if (alpha)
 		{
-			for(j=0;j<dy;j++)
+			for (j = 0; j < dy; j++)
 			{
-				ya= j*oy/dy;
-				yb= (j+1)*oy/dy; if(yb>=oy) yb=oy-1;
-				for(i=0;i<dx;i++,p+=4)
+				ya = j * oy / dy;
+				yb = (j + 1) * oy / dy;
+				if (yb >= oy) yb = oy - 1;
+				for (i = 0; i < dx; i++, p += 4)
 				{
-					for(l=ya,r=0,g=0,b=0,a=0,sq=0;l<=yb;l++)
+					for (l = ya, r = 0, g = 0, b = 0, a = 0, sq = 0; l <= yb; l++)
 					{
-						q=orgin+((l*ox+xa_v[i])*4);
-						for(k=xa_v[i];k<=xb_v[i];k++,q+=4,sq++)
+						q = orgin + ((l * ox + xa_v[i]) * 4);
+						for (k = xa_v[i]; k <= xb_v[i]; k++, q += 4, sq++)
 						{
-							r+=q[0]; g+=q[1]; b+=q[2]; a+=q[3];
+							r += q[0];
+							g += q[1];
+							b += q[2];
+							a += q[3];
 						}
 					}
 					int sq_tmp = sq ? sq : 1;//avoid division by zero
-					p[0]= uint8_t(r/sq_tmp);
-					p[1]= uint8_t(g/sq_tmp);
-					p[2]= uint8_t(b/sq_tmp);
-					p[3]= uint8_t(a/sq_tmp);
+					p[0] = uint8_t(r / sq_tmp);
+					p[1] = uint8_t(g / sq_tmp);
+					p[2] = uint8_t(b / sq_tmp);
+					p[3] = uint8_t(a / sq_tmp);
 				}
 			}
-		}else
+		}
+		else
 		{
-			for(j=0;j<dy;j++)
+			for (j = 0; j < dy; j++)
 			{
-				ya= j*oy/dy;
-				yb= (j+1)*oy/dy; if(yb>=oy) yb=oy-1;
-				for(i=0;i<dx;i++,p+=3)
+				ya = j * oy / dy;
+				yb = (j + 1) * oy / dy;
+				if (yb >= oy) yb = oy - 1;
+				for (i = 0; i < dx; i++, p += 3)
 				{
-					for(l=ya,r=0,g=0,b=0,sq=0;l<=yb;l++)
+					for (l = ya, r = 0, g = 0, b = 0, sq = 0; l <= yb; l++)
 					{
-						q=orgin+((l*ox+xa_v[i])*3);
-						for(k=xa_v[i];k<=xb_v[i];k++,q+=3,sq++)
+						q = orgin + ((l * ox + xa_v[i]) * 3);
+						for (k = xa_v[i]; k <= xb_v[i]; k++, q += 3, sq++)
 						{
-							r+=q[0]; g+=q[1]; b+=q[2];
+							r += q[0];
+							g += q[1];
+							b += q[2];
 						}
 					}
 					int sq_tmp = sq ? sq : 1;//avoid division by zero
-					p[0]= uint8_t(r/sq_tmp);
-					p[1]= uint8_t(g/sq_tmp);
-					p[2]= uint8_t(b/sq_tmp);
+					p[0] = uint8_t(r / sq_tmp);
+					p[1] = uint8_t(g / sq_tmp);
+					p[2] = uint8_t(b / sq_tmp);
 				}
 			}
 		}
 	}
 	free(orgin);
 	orgin = NULL;
-	return(cr);
+	return (cr);
 }
 
-unsigned char * CPictureViewer::Resize(unsigned char *orgin, int ox, int oy, int dx, int dy, ScalingMode type, unsigned char * dst)
+unsigned char *CPictureViewer::Resize(unsigned char *orgin, int ox, int oy, int dx, int dy, ScalingMode type, unsigned char *dst)
 {
 	return int_Resize(orgin, ox, oy, dx, dy, type, dst, false);
 }
 
-unsigned char * CPictureViewer::ResizeA(unsigned char *orgin, int ox, int oy, int dx, int dy)
+unsigned char *CPictureViewer::ResizeA(unsigned char *orgin, int ox, int oy, int dx, int dy)
 {
 	return int_Resize(orgin, ox, oy, dx, dy, COLOR, NULL, true);
 }
@@ -1109,17 +1191,21 @@ static size_t getCachedMemSize(void)
 {
 	FILE *procmeminfo = fopen("/proc/meminfo", "r");
 	size_t cached = 0;
-	if (procmeminfo) {
+	if (procmeminfo)
+	{
 		char buf[80] = {0}, a[80] = {0};
 		size_t v = 0;
-		while (fgets(buf, sizeof(buf), procmeminfo)) {
+		while (fgets(buf, sizeof(buf), procmeminfo))
+		{
 			char unit[10];
 			*unit = 0;
 			if ((3 == sscanf(buf, "%[^:]: %zu %s", a, &v, unit))
-			 || (2 == sscanf(buf, "%[^:]: %zu", a, &v))) {
+				|| (2 == sscanf(buf, "%[^:]: %zu", a, &v)))
+			{
 				if (*unit == 'k')
 					v <<= 10;
-				if (!strcasecmp(a, "Cached")){
+				if (!strcasecmp(a, "Cached"))
+				{
 					cached = v;
 					break;
 				}
@@ -1133,10 +1219,11 @@ static size_t getCachedMemSize(void)
 bool CPictureViewer::checkfreemem(size_t bufsize)
 {
 	struct sysinfo info;
-	sysinfo( &info );
+	sysinfo(&info);
 	size_t cached = getCachedMemSize();
-	if(bufsize + sysconf(_SC_PAGESIZE) > (size_t)info.freeram + (size_t)info.freeswap + (size_t)info.bufferram + cached){
-		dprintf(DEBUG_NORMAL,  "[CPictureViewer] [%s - %d] Error: Out of memory: need %zu > free %zu\n", __func__, __LINE__,bufsize,(size_t)info.freeram + (size_t)info.freeswap + (size_t)info.bufferram + cached);
+	if (bufsize + sysconf(_SC_PAGESIZE) > (size_t)info.freeram + (size_t)info.freeswap + (size_t)info.bufferram + cached)
+	{
+		dprintf(DEBUG_NORMAL,  "[CPictureViewer] [%s - %d] Error: Out of memory: need %zu > free %zu\n", __func__, __LINE__, bufsize, (size_t)info.freeram + (size_t)info.freeswap + (size_t)info.bufferram + cached);
 		return false;
 	}
 	return true;

@@ -32,7 +32,7 @@ class CFramebuffer;
 class CVolume
 {
 	private:
-		CFrameBuffer * frameBuffer;
+		CFrameBuffer *frameBuffer;
 		CVolumeBar *volscale;
 
 		int mute_ax, mute_ay, mute_dx, mute_dy;
@@ -44,14 +44,20 @@ class CVolume
 	public:
 		CVolume();
 		~CVolume();
-		static CVolume* getInstance();
+		static CVolume *getInstance();
 
 		void setvol(int vol);
 		void setVolume(const neutrino_msg_t key);
 		void setVolumeExt(int vol);
 
-		void SetCurrentPid(int pid) { apid = pid; }
-		void SetCurrentChannel(t_channel_id id) { channel_id = id; }
+		void SetCurrentPid(int pid)
+		{
+			apid = pid;
+		}
+		void SetCurrentChannel(t_channel_id id)
+		{
+			channel_id = id;
+		}
 		bool hideVolscale();
 		void showVolscale();
 };

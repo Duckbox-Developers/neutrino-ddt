@@ -52,10 +52,11 @@ CMovieInfo::~CMovieInfo()
 	;
 }
 
-bool CMovieInfo::convertTs2XmlName(std::string& filename)
+bool CMovieInfo::convertTs2XmlName(std::string &filename)
 {
 	size_t lastdot = filename.find_last_of(".");
-	if (lastdot != std::string::npos) {
+	if (lastdot != std::string::npos)
+	{
 		filename.erase(lastdot + 1);
 		filename.append("xml");
 		return true;
@@ -89,22 +90,23 @@ static void XML_ADD_TAG_LONG(std::string &_xml_text_, const char *_tag_name_, ui
 {
 	_xml_text_ += "\t\t<";
 	_xml_text_ += _tag_name_;
-	_xml_text_ += ">";\
+	_xml_text_ += ">";
+	\
 	_xml_text_ += to_string(_tag_content_);
 	_xml_text_ += "</";
 	_xml_text_ += _tag_name_;
 	_xml_text_ += ">\n";
 }
 
-bool CMovieInfo::encodeMovieInfoXml(std::string * extMessage, MI_MOVIE_INFO * movie_info)
+bool CMovieInfo::encodeMovieInfoXml(std::string *extMessage, MI_MOVIE_INFO *movie_info)
 {
 	//TRACE("[mi]->encodeMovieInfoXml\n");
 
 	*extMessage = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n"
-			"<" MI_XML_TAG_NEUTRINO " commandversion=\"1\">\n"
-			"\t<" MI_XML_TAG_RECORD " command=\""
-			"record"
-			"\">\n";
+		"<" MI_XML_TAG_NEUTRINO " commandversion=\"1\">\n"
+		"\t<" MI_XML_TAG_RECORD " command=\""
+		"record"
+		"\">\n";
 	XML_ADD_TAG_STRING(*extMessage, MI_XML_TAG_CHANNELNAME, movie_info->channelName);
 	XML_ADD_TAG_STRING(*extMessage, MI_XML_TAG_EPGTITLE, movie_info->epgTitle);
 	XML_ADD_TAG_LONG(*extMessage, MI_XML_TAG_ID, movie_info->channelId);
@@ -114,7 +116,8 @@ bool CMovieInfo::encodeMovieInfoXml(std::string * extMessage, MI_MOVIE_INFO * mo
 	XML_ADD_TAG_UNSIGNED(*extMessage, MI_XML_TAG_MODE, movie_info->mode); // %d
 	XML_ADD_TAG_UNSIGNED(*extMessage, MI_XML_TAG_VIDEOPID, movie_info->VideoPid); // %u
 	XML_ADD_TAG_UNSIGNED(*extMessage, MI_XML_TAG_VIDEOTYPE, movie_info->VideoType); // %u
-	if ( !movie_info->audioPids.empty() ) {
+	if (!movie_info->audioPids.empty())
+	{
 		*extMessage += "\t\t<" MI_XML_TAG_AUDIOPIDS ">\n";
 
 		for (unsigned int i = 0; i < movie_info->audioPids.size(); i++) // pids.APIDs.size()
@@ -144,14 +147,16 @@ bool CMovieInfo::encodeMovieInfoXml(std::string * extMessage, MI_MOVIE_INFO * mo
 	XML_ADD_TAG_UNSIGNED(*extMessage, MI_XML_TAG_PARENTAL_LOCKAGE, movie_info->parentalLockAge);
 	XML_ADD_TAG_UNSIGNED(*extMessage, MI_XML_TAG_DATE_OF_LAST_PLAY, movie_info->dateOfLastPlay);
 	*extMessage += "\t\t<" MI_XML_TAG_BOOKMARK ">\n"
-			"\t";
+		"\t";
 	XML_ADD_TAG_UNSIGNED(*extMessage, MI_XML_TAG_BOOKMARK_START, movie_info->bookmarks.start);
 	*extMessage += "\t";
 	XML_ADD_TAG_UNSIGNED(*extMessage, MI_XML_TAG_BOOKMARK_END, movie_info->bookmarks.end);
 	*extMessage += "\t";
 	XML_ADD_TAG_UNSIGNED(*extMessage, MI_XML_TAG_BOOKMARK_LAST, movie_info->bookmarks.lastPlayStop);
-	for (int i = 0; i < MI_MOVIE_BOOK_USER_MAX; i++) {
-		if (movie_info->bookmarks.user[i].pos != 0 || i == 0) {
+	for (int i = 0; i < MI_MOVIE_BOOK_USER_MAX; i++)
+	{
+		if (movie_info->bookmarks.user[i].pos != 0 || i == 0)
+		{
 			// encode any valid book, at least 1
 			*extMessage += "\t\t\t<" MI_XML_TAG_BOOKMARK_USER " " MI_XML_TAG_BOOKMARK_USER_POS "=\"";
 			*extMessage += to_string(movie_info->bookmarks.user[i].pos);
@@ -164,13 +169,13 @@ bool CMovieInfo::encodeMovieInfoXml(std::string * extMessage, MI_MOVIE_INFO * mo
 	}
 
 	*extMessage += "\t\t</" MI_XML_TAG_BOOKMARK ">\n"
-			"\t</" MI_XML_TAG_RECORD ">\n"
-			"</" MI_XML_TAG_NEUTRINO ">\n";
+		"\t</" MI_XML_TAG_RECORD ">\n"
+		"</" MI_XML_TAG_NEUTRINO ">\n";
 	return true;
 }
 
 
-bool CMovieInfo::saveMovieInfo(MI_MOVIE_INFO & movie_info, CFile * file)
+bool CMovieInfo::saveMovieInfo(MI_MOVIE_INFO &movie_info, CFile *file)
 {
 	//TRACE("[mi]->saveMovieInfo\n");
 
@@ -178,48 +183,62 @@ bool CMovieInfo::saveMovieInfo(MI_MOVIE_INFO & movie_info, CFile * file)
 	std::string text;
 	CFile file_xml;
 
-	if (file == NULL) {
+	if (file == NULL)
+	{
 		file_xml.Name = movie_info.file.Name;
 		result = convertTs2XmlName(file_xml.Name);
-	} else {
+	}
+	else
+	{
 		file_xml.Name = file->Name;
 	}
 	TRACE("[mi] saveMovieInfo: %s\n", file_xml.Name.c_str());
 
-	if (result == true) {
+	if (result == true)
+	{
 		result = encodeMovieInfoXml(&text, &movie_info);
-		if (result == true) {
+		if (result == true)
+		{
 			result = saveFile(file_xml, text);	// save
-			if (result == false) {
+			if (result == false)
+			{
 				TRACE("[mi] saveMovieInfo: save error\n");
 			}
-		} else {
+		}
+		else
+		{
 			TRACE("[mi] saveMovieInfo: encoding error\n");
 		}
-	} else {
+	}
+	else
+	{
 		TRACE("[mi] saveMovieInfo: error\n");
 	}
 	return (result);
 }
 
 
-bool CMovieInfo::loadMovieInfo(MI_MOVIE_INFO * movie_info, CFile * file)
+bool CMovieInfo::loadMovieInfo(MI_MOVIE_INFO *movie_info, CFile *file)
 {
 	//TRACE("[mi]->loadMovieInfo\n");
 
 	bool result = true;
 	CFile file_xml;
 
-	if (file == NULL) {
+	if (file == NULL)
+	{
 		// if there is no give file, we use the file name from movie info
 		// but we have to convert the ts name to xml name first
 		file_xml.Name = movie_info->file.Name;
 		result = convertTs2XmlName(file_xml.Name);
-	} else {
+	}
+	else
+	{
 		file_xml.Name = file->Name;
 	}
 
-	if (result == true) {
+	if (result == true)
+	{
 		// load xml file in buffer
 		std::string text;
 		result = loadFile(file_xml, text);
@@ -234,8 +253,10 @@ bool CMovieInfo::loadMovieInfo(MI_MOVIE_INFO * movie_info, CFile * file)
 
 static int find_next_char(char to_find, const char *text, int start_pos, int end_pos)
 {
-	while (start_pos < end_pos) {
-		if (text[start_pos] == to_find) {
+	while (start_pos < end_pos)
+	{
+		if (text[start_pos] == to_find)
+		{
 			return (start_pos);
 		}
 		start_pos++;
@@ -248,9 +269,9 @@ static int find_next_char(char to_find, const char *text, int start_pos, int end
 	{\
 		_pos_ += sizeof(_tag_) ;\
 		int pos_prev = _pos_;\
-		while(_pos_ < bytes && _text_[_pos_] != '<' ) _pos_++;\
+		while(_pos_ < bytes && _text_[_pos_] != '<') _pos_++;\
 		_dest_ = "";\
-		_dest_.append(&_text_[pos_prev],_pos_ - pos_prev );\
+		_dest_.append(&_text_[pos_prev],_pos_ - pos_prev);\
 		_dest_ = htmlEntityDecode(_dest_);\
 		_pos_ += sizeof(_tag_);\
 		continue;\
@@ -261,7 +282,7 @@ static int find_next_char(char to_find, const char *text, int start_pos, int end
 	{\
 		_pos_ += sizeof(_tag_) ;\
 		int pos_prev = _pos_;\
-		while(_pos_ < bytes && _text_[_pos_] != '<' ) pos++;\
+		while(_pos_ < bytes && _text_[_pos_] != '<') pos++;\
 		_dest_ = atoi(&_text_[pos_prev]);\
 		continue;\
 	}
@@ -270,7 +291,7 @@ static int find_next_char(char to_find, const char *text, int start_pos, int end
 	{\
 		_pos_ += sizeof(_tag_) ;\
 		int pos_prev = _pos_;\
-		while(_pos_ < bytes && _text_[_pos_] != '<' ) pos++;\
+		while(_pos_ < bytes && _text_[_pos_] != '<') pos++;\
 		_dest_ = strtoull(&_text_[pos_prev], NULL, 10);\
 		continue;\
 	}
@@ -288,7 +309,8 @@ bool CMovieInfo::parseXmlTree(std::string &_text, MI_MOVIE_INFO *movie_info)
 
 	AUDIO_PIDS audio_pids;
 
-	while ((pos = find_next_char('<', text, pos, bytes)) != -1) {
+	while ((pos = find_next_char('<', text, pos, bytes)) != -1)
+	{
 		pos++;
 		GET_XML_DATA_STRING(text, pos, MI_XML_TAG_CHANNELNAME, movie_info->channelName)
 		GET_XML_DATA_STRING(text, pos, MI_XML_TAG_EPGTITLE, movie_info->epgTitle)
@@ -317,7 +339,8 @@ bool CMovieInfo::parseXmlTree(std::string &_text, MI_MOVIE_INFO *movie_info)
 			pos += sizeof(MI_XML_TAG_AUDIOPIDS);
 
 		/* parse audio pids */
-		if (strncmp(&text[pos], MI_XML_TAG_AUDIO, sizeof(MI_XML_TAG_AUDIO) - 1) == 0) {
+		if (strncmp(&text[pos], MI_XML_TAG_AUDIO, sizeof(MI_XML_TAG_AUDIO) - 1) == 0)
+		{
 			pos += sizeof(MI_XML_TAG_AUDIO);
 
 			int pos2;
@@ -328,13 +351,15 @@ bool CMovieInfo::parseXmlTree(std::string &_text, MI_MOVIE_INFO *movie_info)
 			if (ptr)
 				pos2 = (int)(ptr - &text[pos]);
 			//pos2 = strcspn(&text[pos],MI_XML_TAG_PID);
-			if (pos2 >= 0) {
+			if (pos2 >= 0)
+			{
 				pos2 += sizeof(MI_XML_TAG_PID);
 				while (text[pos + pos2] != '\"' && text[pos + pos2] != 0 && text[pos + pos2] != '/')
 					pos2++;
 				if (text[pos + pos2] == '\"')
 					audio_pids.AudioPid = atoi(&text[pos + pos2 + 1]);
-			} else
+			}
+			else
 				audio_pids.AudioPid = 0;
 
 			audio_pids.atype = 0;
@@ -343,7 +368,8 @@ bool CMovieInfo::parseXmlTree(std::string &_text, MI_MOVIE_INFO *movie_info)
 			if (ptr)
 				pos2 = (int)(ptr - &text[pos]);
 			//pos2 = strcspn(&text[pos],MI_XML_TAG_ATYPE);
-			if (pos2 >= 0) {
+			if (pos2 >= 0)
+			{
 				pos2 += sizeof(MI_XML_TAG_ATYPE);
 				while (text[pos + pos2] != '\"' && text[pos + pos2] != 0 && text[pos + pos2] != '/')
 					pos2++;
@@ -357,7 +383,8 @@ bool CMovieInfo::parseXmlTree(std::string &_text, MI_MOVIE_INFO *movie_info)
 			if (ptr)
 				pos2 = (int)(ptr - &text[pos]);
 			//pos2 = strcspn(&text[pos],MI_XML_TAG_SELECTED);
-			if (pos2 >= 0) {
+			if (pos2 >= 0)
+			{
 				pos2 += sizeof(MI_XML_TAG_SELECTED);
 				while (text[pos + pos2] != '\"' && text[pos + pos2] != 0 && text[pos + pos2] != '/')
 					pos2++;
@@ -371,11 +398,13 @@ bool CMovieInfo::parseXmlTree(std::string &_text, MI_MOVIE_INFO *movie_info)
 			ptr = strstr(&text[pos], MI_XML_TAG_NAME);
 			if (ptr)
 				pos2 = (int)(ptr - &text[pos]);
-			if (pos2 >= 0) {
+			if (pos2 >= 0)
+			{
 				pos2 += sizeof(MI_XML_TAG_PID);
 				while (text[pos + pos2] != '\"' && text[pos + pos2] != 0 && text[pos + pos2] != '/')
 					pos2++;
-				if (text[pos + pos2] == '\"') {
+				if (text[pos + pos2] == '\"')
+				{
 					int pos3 = pos2 + 1;
 					while (text[pos + pos3] != '\"' && text[pos + pos3] != 0 && text[pos + pos3] != '/')
 						pos3++;
@@ -397,36 +426,44 @@ bool CMovieInfo::parseXmlTree(std::string &_text, MI_MOVIE_INFO *movie_info)
 		GET_XML_DATA_INT(text, pos, MI_XML_TAG_BOOKMARK_END, movie_info->bookmarks.end)
 		GET_XML_DATA_INT(text, pos, MI_XML_TAG_BOOKMARK_LAST, movie_info->bookmarks.lastPlayStop)
 
-		if (bookmark_nr < MI_MOVIE_BOOK_USER_MAX) {
-			if (strncmp(&text[pos], MI_XML_TAG_BOOKMARK_USER, sizeof(MI_XML_TAG_BOOKMARK_USER) - 1) == 0) {
+		if (bookmark_nr < MI_MOVIE_BOOK_USER_MAX)
+		{
+			if (strncmp(&text[pos], MI_XML_TAG_BOOKMARK_USER, sizeof(MI_XML_TAG_BOOKMARK_USER) - 1) == 0)
+			{
 				pos += sizeof(MI_XML_TAG_BOOKMARK_USER);
 				//int pos2 = strcspn(&text[pos],MI_XML_TAG_BOOKMARK_USER_POS);
-				if (strcspn(&text[pos], MI_XML_TAG_BOOKMARK_USER_POS) == 0) {
+				if (strcspn(&text[pos], MI_XML_TAG_BOOKMARK_USER_POS) == 0)
+				{
 					int pos2 = 0;
 					pos2 += sizeof(MI_XML_TAG_BOOKMARK_USER_POS);
 					while (text[pos + pos2] != '\"' && text[pos + pos2] != 0 && text[pos + pos2] != '/')
 						pos2++;
-					if (text[pos + pos2] == '\"') {
+					if (text[pos + pos2] == '\"')
+					{
 						movie_info->bookmarks.user[bookmark_nr].pos = atoi(&text[pos + pos2 + 1]);
 
 						//pos2 = strcspn(&text[pos],MI_XML_TAG_BOOKMARK_USER_TYPE);
 						pos++;
 						while (text[pos + pos2] == ' ')
 							pos++;
-						if (strcspn(&text[pos], MI_XML_TAG_BOOKMARK_USER_TYPE) == 0) {
+						if (strcspn(&text[pos], MI_XML_TAG_BOOKMARK_USER_TYPE) == 0)
+						{
 							pos2 += sizeof(MI_XML_TAG_BOOKMARK_USER_TYPE);
 							while (text[pos + pos2] != '\"' && text[pos + pos2] != 0 && text[pos + pos2] != '/')
 								pos2++;
-							if (text[pos + pos2] == '\"') {
+							if (text[pos + pos2] == '\"')
+							{
 								movie_info->bookmarks.user[bookmark_nr].length = atoi(&text[pos + pos2 + 1]);
 
 								movie_info->bookmarks.user[bookmark_nr].name = "";
 								//pos2 = ;
-								if (strcspn(&text[pos], MI_XML_TAG_BOOKMARK_USER_NAME) == 0) {
+								if (strcspn(&text[pos], MI_XML_TAG_BOOKMARK_USER_NAME) == 0)
+								{
 									pos2 += sizeof(MI_XML_TAG_BOOKMARK_USER_NAME);
 									while (text[pos + pos2] != '\"' && text[pos + pos2] != 0 && text[pos + pos2] != '/')
 										pos2++;
-									if (text[pos + pos2] == '\"') {
+									if (text[pos + pos2] == '\"')
+									{
 										int pos3 = pos2 + 1;
 										while (text[pos + pos3] != '\"' && text[pos + pos3] != 0 && text[pos + pos3] != '/')
 											pos3++;
@@ -438,17 +475,20 @@ bool CMovieInfo::parseXmlTree(std::string &_text, MI_MOVIE_INFO *movie_info)
 									}
 								}
 							}
-						} else
+						}
+						else
 							movie_info->bookmarks.user[bookmark_nr].length = 0;
 					}
 					bookmark_nr++;
-				} else
+				}
+				else
 					movie_info->bookmarks.user[bookmark_nr].pos = 0;
 			}
 		}
 	}
 
-	if (movie_info->epgInfo2.empty()) {
+	if (movie_info->epgInfo2.empty())
+	{
 		movie_info->epgInfo2 = movie_info->epgInfo1;
 		//movie_info->epgInfo1 = "";
 	}
@@ -457,30 +497,36 @@ bool CMovieInfo::parseXmlTree(std::string &_text, MI_MOVIE_INFO *movie_info)
 }
 
 
-bool CMovieInfo::addNewBookmark(MI_MOVIE_INFO * movie_info, MI_BOOKMARK & new_bookmark)
+bool CMovieInfo::addNewBookmark(MI_MOVIE_INFO *movie_info, MI_BOOKMARK &new_bookmark)
 {
 	TRACE("[mi] addNewBookmark\n");
 
 	bool result = false;
-	if (movie_info != NULL) {
+	if (movie_info != NULL)
+	{
 		// search for free entry
 		bool loop = true;
-		for (int i = 0; i < MI_MOVIE_BOOK_USER_MAX && loop == true; i++) {
-			if (movie_info->bookmarks.user[i].pos == 0) {
+		for (int i = 0; i < MI_MOVIE_BOOK_USER_MAX && loop == true; i++)
+		{
+			if (movie_info->bookmarks.user[i].pos == 0)
+			{
 				// empty entry found
 				result = true;
 				loop = false;
 				movie_info->bookmarks.user[i].pos = new_bookmark.pos;
 				movie_info->bookmarks.user[i].length = new_bookmark.length;
 				//if(movie_info->bookmarks.user[i].name.empty())
-				if (movie_info->bookmarks.user[i].name.empty() ) {
+				if (movie_info->bookmarks.user[i].name.empty())
+				{
 					if (new_bookmark.length == 0)
 						movie_info->bookmarks.user[i].name = g_Locale->getText(LOCALE_MOVIEBROWSER_BOOK_NEW);
 					if (new_bookmark.length < 0)
 						movie_info->bookmarks.user[i].name = g_Locale->getText(LOCALE_MOVIEBROWSER_BOOK_TYPE_BACKWARD);
 					if (new_bookmark.length > 0)
 						movie_info->bookmarks.user[i].name = g_Locale->getText(LOCALE_MOVIEBROWSER_BOOK_TYPE_FORWARD);
-				} else {
+				}
+				else
+				{
 					movie_info->bookmarks.user[i].name = new_bookmark.name;
 				}
 			}
@@ -490,7 +536,7 @@ bool CMovieInfo::addNewBookmark(MI_MOVIE_INFO * movie_info, MI_BOOKMARK & new_bo
 }
 
 
-void CMovieInfo::clearMovieInfo(MI_MOVIE_INFO * movie_info)
+void CMovieInfo::clearMovieInfo(MI_MOVIE_INFO *movie_info)
 {
 	//TRACE("[mi]->clearMovieInfo \r\n");
 	movie_info->file.Name = "";
@@ -523,7 +569,8 @@ void CMovieInfo::clearMovieInfo(MI_MOVIE_INFO * movie_info)
 	movie_info->bookmarks.end = 0;
 	movie_info->bookmarks.start = 0;
 	movie_info->bookmarks.lastPlayStop = 0;
-	for (int i = 0; i < MI_MOVIE_BOOK_USER_MAX; i++) {
+	for (int i = 0; i < MI_MOVIE_BOOK_USER_MAX; i++)
+	{
 		movie_info->bookmarks.user[i].pos = 0;
 		movie_info->bookmarks.user[i].length = 0;
 		movie_info->bookmarks.user[i].name = "";
@@ -567,7 +614,8 @@ void MI_MOVIE_INFO::clear(void)
 	bookmarks.end = 0;
 	bookmarks.start = 0;
 	bookmarks.lastPlayStop = 0;
-	for (int i = 0; i < MI_MOVIE_BOOK_USER_MAX; i++) {
+	for (int i = 0; i < MI_MOVIE_BOOK_USER_MAX; i++)
+	{
 		bookmarks.user[i].pos = 0;
 		bookmarks.user[i].length = 0;
 		bookmarks.user[i].name = "";
@@ -589,15 +637,18 @@ bool CMovieInfo::loadFile(CFile &file, std::string &buffer)
 		return false;
 	}
 	struct stat st;
-	if (fstat(fd, &st)) {
+	if (fstat(fd, &st))
+	{
 		close(fd);
 		return false;
 	}
 	char buf[st.st_size];
-	if (st.st_size != read(fd, buf, st.st_size)) {
+	if (st.st_size != read(fd, buf, st.st_size))
+	{
 		TRACE("[mi] loadFile: cannot read (%s)\n", file.Name.c_str());
 		result = false;
-	} else
+	}
+	else
 		buffer = std::string(buf, st.st_size);
 
 	close(fd);
@@ -605,17 +656,20 @@ bool CMovieInfo::loadFile(CFile &file, std::string &buffer)
 	return result;
 }
 
-bool CMovieInfo::saveFile(const CFile & file, std::string &text)
+bool CMovieInfo::saveFile(const CFile &file, std::string &text)
 {
 	bool result = false;
 	int fd;
-	if ((fd = open(file.Name.c_str(), O_SYNC | O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)) >= 0) {
+	if ((fd = open(file.Name.c_str(), O_SYNC | O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)) >= 0)
+	{
 		write(fd, text.c_str(), text.size());
 		//fdatasync(fd);
 		close(fd);
 		result = true;
 		//TRACE("[mi] saved (%d)\n",nr);
-	} else {
+	}
+	else
+	{
 		TRACE("[mi] ERROR: cannot open\n");
 	}
 	return (result);

@@ -122,22 +122,22 @@ known bugs:
 #define STATIC /**/
 
 #ifdef fopen
-	#undef fopen
+#undef fopen
 #endif
 #ifdef fclose
-	#undef fclose
+#undef fclose
 #endif
 #ifdef fread
-	#undef fread
+#undef fread
 #endif
 #ifdef ftell
-	#undef ftell
+#undef ftell
 #endif
 #ifdef rewind
-	#undef rewind
+#undef rewind
 #endif
 #ifdef fseek
-	#undef fseek
+#undef fseek
 #endif
 
 /* somewhat safe, 0-terminated sprintf and strcpy */
@@ -155,10 +155,10 @@ typedef struct
 
 magic_t known_magic[] =
 {
-	{{0xFF, 0xFF, 0xFF, 0x00}, {'I' , 'D' , '3' , 0x00}, "audio/mpeg"},
-	{{0xFF, 0xFF, 0xFF, 0x00}, {'O' , 'g' , 'g' , 0x00}, "audio/ogg" },
+	{{0xFF, 0xFF, 0xFF, 0x00}, {'I', 'D', '3', 0x00}, "audio/mpeg"},
+	{{0xFF, 0xFF, 0xFF, 0x00}, {'O', 'g', 'g', 0x00}, "audio/ogg" },
 	{{0xFF, 0xFE, 0x00, 0x00}, {0xFF, 0xFA, 0x00, 0x00}, "audio/mpeg"},
-	{{0xFF, 0xFF, 0xFF, 0x00}, {'F' , 'L' , 'V' , 0x00}, "audio/flv"}
+	{{0xFF, 0xFF, 0xFF, 0x00}, {'F', 'L', 'V', 0x00}, "audio/flv"}
 };
 
 #if 0
@@ -188,13 +188,13 @@ static int retry_num = 2 /*10*/;		/* number of retries for failed connections */
 static int enable_metadata = 0;	/* allow shoutcast meta data streaming */
 static int got_opts = 0;		/* is set to 1 if getOpts() was executed */
 static int cache_size = 196608;	/* default cache size; can be overridden at */
-						/* runtime with an option in the options file */
+/* runtime with an option in the options file */
 
 STATIC STREAM_CACHE cache[CACHEENTMAX];
 STATIC STREAM_TYPE stream_type[CACHEENTMAX];
 
 static int  ConnectToServer(char *hostname, int port);
-static int  parse_response(URL *url, void *, CSTATE*);
+static int  parse_response(URL *url, void *, CSTATE *);
 static int  request_file(URL *url);
 //static void readln(int, char *);
 static int  getCacheSlot(FILE *fd);
@@ -208,7 +208,7 @@ static void ShoutCAST_ParseMetaData(char *, CSTATE *);
 
 static void getOpts(void);
 
-static void parseURL_url(URL& url);
+static void parseURL_url(URL &url);
 
 static int  base64_encode(char *dest, const char *src);
 
@@ -232,28 +232,28 @@ void getOpts()
 	else
 		got_opts = 1;
 
-	for(i=0; dirs[i] != NULL; i++)
+	for (i = 0; dirs[i] != NULL; i++)
 	{
 		sprintf(buf, "%s/.netfile", dirs[i]);
 		fd = fopen(buf, "r");
-		if(fd) break;
+		if (fd) break;
 	}
 
-	if(!fd)
+	if (!fd)
 		return;
 	fread(buf, sizeof(char), 4095, fd);
 	fclose(fd);
 
-	if(strstr(buf, "debug=1"))
+	if (strstr(buf, "debug=1"))
 		debug = 1;
 
-	if((ptr = strstr(buf, "cachesize=")))
+	if ((ptr = strstr(buf, "cachesize=")))
 		cache_size = atoi(strchr(ptr, '=') + 1);
 
-	if((ptr = strstr(buf, "retries=")))
+	if ((ptr = strstr(buf, "retries=")))
 		retry_num = atoi(strchr(ptr, '=') + 1);
 
-	if((ptr = strstr(buf, "logfile=")))
+	if ((ptr = strstr(buf, "logfile=")))
 	{
 		STRCPY(logfile, strchr(ptr, '=') + 1);
 		CRLFCut(logfile);
@@ -275,7 +275,7 @@ int ConnectToServer(char *hostname, int port)
 
 	host = gethostbyname(hostname);
 
-	if(host == NULL)
+	if (host == NULL)
 	{
 		herror(err_txt);
 		return -1;
@@ -284,21 +284,21 @@ int ConnectToServer(char *hostname, int port)
 	addr = htonl(*(int *)host->h_addr);
 
 	dprintf(stderr, "connecting to %s [%d.%d.%d.%d], port %d\n", host->h_name,
-			(addr & 0xff000000) >> 24,
-			(addr & 0x00ff0000) >> 16,
-			(addr & 0x0000ff00) >>  8,
-			(addr & 0x000000ff), port);
+		(addr & 0xff000000) >> 24,
+		(addr & 0x00ff0000) >> 16,
+		(addr & 0x0000ff00) >>  8,
+		(addr & 0x000000ff), port);
 
 	fd = socket(AF_INET, SOCK_STREAM, 0);
 
-	if(fd == -1)
+	if (fd == -1)
 	{
 		STRCPY(err_txt, strerror(errno));
 		return -1;
 	}
 
 	memset(&sock, 0, sizeof(sock));
-	memmove((char*)&sock.sin_addr, host->h_addr, host->h_length);
+	memmove((char *)&sock.sin_addr, host->h_addr, host->h_length);
 
 	sock.sin_family = AF_INET;
 	sock.sin_port = htons(port);
@@ -306,9 +306,10 @@ int ConnectToServer(char *hostname, int port)
 	int flgs = fcntl(fd, F_GETFL, 0);
 	fcntl(fd, F_SETFL, flgs | O_NONBLOCK);
 
-	if( connect(fd, (struct sockaddr *)&sock, sizeof(sock)) == -1 )
+	if (connect(fd, (struct sockaddr *)&sock, sizeof(sock)) == -1)
 	{
-		if(errno != EINPROGRESS) {
+		if (errno != EINPROGRESS)
+		{
 			close(fd);
 			STRCPY(err_txt, strerror(errno));
 			dprintf(stderr, "error connecting to %s: %s\n", hostname, err_txt);
@@ -322,14 +323,16 @@ int ConnectToServer(char *hostname, int port)
 	pfd.revents = 0;
 
 	int ret = poll(&pfd, 1, 5000);
-	if(ret != 1) {
+	if (ret != 1)
+	{
 		STRCPY(err_txt, strerror(errno));
 		dprintf(stderr, "error connecting to %s: %s\n", hostname, err_txt);
 		close(fd);
 		return -1;
 	}
-	if ((pfd.revents & POLLOUT) == POLLOUT) {
-		fcntl(fd, F_SETFL, flgs &~ O_NONBLOCK);
+	if ((pfd.revents & POLLOUT) == POLLOUT)
+	{
+		fcntl(fd, F_SETFL, flgs & ~ O_NONBLOCK);
 		return fd;
 	}
 
@@ -357,122 +360,128 @@ int request_file(URL *url)
 	/* up to the line break as file name and everything beyond as */
 	/* entity to be sent with the request */
 	ptr = strchr(url->file, '\n');
-	if(ptr)
+	if (ptr)
 	{
 		strcpy(url->entity, ptr + 1);
 		*ptr = 0;
 	}
-	switch(url->proto_version)
+	switch (url->proto_version)
 	{
 		/* send a HTTP/1.0 request */
-		case HTTP10:	{
-				snprintf(str, sizeof(str)-1, "GET http://%s:%d%s\n", url->host, url->port, url->file);
-				dprintf(stderr, "> %s", str);
-				send(url->fd, str, strlen(str), 0);
-			}
-			break;
+		case HTTP10:
+		{
+			snprintf(str, sizeof(str) - 1, "GET http://%s:%d%s\n", url->host, url->port, url->file);
+			dprintf(stderr, "> %s", str);
+			send(url->fd, str, strlen(str), 0);
+		}
+		break;
 
 		/* send a HTTP/1.1 request */
-		case HTTP11:	{
-				int meta_int;
-				CSTATE tmp;
+		case HTTP11:
+		{
+			int meta_int;
+			CSTATE tmp;
 
-				snprintf(str, sizeof(str)-1, "%s %s HTTP/1.1\r\n", (url->entity[0]) ? "POST" : "GET", url->file);
+			snprintf(str, sizeof(str) - 1, "%s %s HTTP/1.1\r\n", (url->entity[0]) ? "POST" : "GET", url->file);
+			dprintf(stderr, "> %s", str);
+			send(url->fd, str, strlen(str), 0);
+
+			if (url->port != 80)
+				snprintf(str, sizeof(str) - 1, "Host: %s:%d\r\n", url->host, url->port);
+			else
+				snprintf(str, sizeof(str) - 1, "Host: %s\r\n", url->host);
+			dprintf(stderr, "> %s", str);
+			send(url->fd, str, strlen(str), 0);
+
+			snprintf(str, sizeof(str) - 1, "User-Agent: WinampMPEG/5.52\r\n");
+			dprintf(stderr, "> %s", str);
+			send(url->fd, str, strlen(str), 0);
+
+			if (url->logindata[0])
+			{
+				SPRINTF(str, "Authorization: Basic %s\r\n", url->logindata);
 				dprintf(stderr, "> %s", str);
 				send(url->fd, str, strlen(str), 0);
-
-				if(url->port != 80)
-					snprintf(str, sizeof(str)-1, "Host: %s:%d\r\n", url->host, url->port);
-				else
-					snprintf(str, sizeof(str)-1, "Host: %s\r\n", url->host);
-				dprintf(stderr, "> %s", str);
-				send(url->fd, str, strlen(str), 0);
-
-				snprintf(str, sizeof(str)-1, "User-Agent: WinampMPEG/5.52\r\n");
-				dprintf(stderr, "> %s", str);
-				send(url->fd, str, strlen(str), 0);
-
-				if (url->logindata[0])
-				{
-					SPRINTF(str, "Authorization: Basic %s\r\n", url->logindata);
-					dprintf(stderr, "> %s", str);
-					send(url->fd, str, strlen(str), 0);
-				}
-
-				strcpy(str, "Accept: */*\r\n");
-				dprintf(stderr, "> %s", str);
-				send(url->fd, str, strlen(str), 0);
-
-				if(enable_metadata)
-				{
-					strcpy(str, "Icy-MetaData: 1\r\n");
-					dprintf(stderr, "> %s", str);
-					send(url->fd, str, strlen(str), 0);
-				}
-
-				/* if we have a entity, announce it to the server */
-				if(url->entity[0])
-				{
-					snprintf(str, sizeof(str)-1, "Content-Length: %d\r\n", (int)strlen(url->entity));
-					dprintf(stderr, "> %s", str);
-					send(url->fd, str, strlen(str), 0);
-				}
-
-				snprintf(str, sizeof(str)-1, "Connection: close\r\n");
-				dprintf(stderr, "> %s", str);
-				send(url->fd, str, strlen(str), 0);
-
-				// empty line -> end of HTTP request
-				snprintf(str, sizeof(str)-1, "\r\n");
-				dprintf(stderr, "> %s", str);
-				send(url->fd, str, strlen(str), 0);
-
-				if( (meta_int = parse_response(url, &id3, &tmp)) < 0)
-				{
-					if(meta_int == -301 || meta_int == -302)
-						return meta_int;
-					else
-						return -1;
-				}
-				if(meta_int)
-				{
-					if (slot < 0) {
-						dprintf(stderr, "error: meta_int != 0 && slot < 0");
-					} else {
-						/* hook in the filter function if there is meta */
-						/* data present in the stream */
-						cache[slot].filter_arg = ShoutCAST_InitFilter(meta_int);
-						cache[slot].filter = ShoutCAST_MetaFilter;
-
-						/* this is a *really bad* way to pass along the argument, */
-						/* since we convert the integer into a pointer instead of */
-						/* passing along a pointer/reference !*/
-						if(cache[slot].filter_arg->state)
-							memmove(cache[slot].filter_arg->state, &tmp, sizeof(CSTATE));
-					}
-				}
-
-				/* push the created ID3 header into the stream cache */
-				push(url->stream, (char*)&id3, id3.len);
-#if 0
-				rval = parse_response(url, NULL, NULL);
-				dprintf(stderr, "server response parser: return value = %d\n", rval);
-
-				/* if the header indicated a zero length document or an */
-				/* error, then close the cache, if there is any */
-				/* 25.04.05 ChakaZulu: zero length can be a stream so let's try playing */
-				if((slot >= 0) && (rval < 0))
-					cache[slot].closed = 1;
-
-				/* return on error */
-				if( rval < 0 )
-					return rval;
-#endif
 			}
-			break;
+
+			strcpy(str, "Accept: */*\r\n");
+			dprintf(stderr, "> %s", str);
+			send(url->fd, str, strlen(str), 0);
+
+			if (enable_metadata)
+			{
+				strcpy(str, "Icy-MetaData: 1\r\n");
+				dprintf(stderr, "> %s", str);
+				send(url->fd, str, strlen(str), 0);
+			}
+
+			/* if we have a entity, announce it to the server */
+			if (url->entity[0])
+			{
+				snprintf(str, sizeof(str) - 1, "Content-Length: %d\r\n", (int)strlen(url->entity));
+				dprintf(stderr, "> %s", str);
+				send(url->fd, str, strlen(str), 0);
+			}
+
+			snprintf(str, sizeof(str) - 1, "Connection: close\r\n");
+			dprintf(stderr, "> %s", str);
+			send(url->fd, str, strlen(str), 0);
+
+			// empty line -> end of HTTP request
+			snprintf(str, sizeof(str) - 1, "\r\n");
+			dprintf(stderr, "> %s", str);
+			send(url->fd, str, strlen(str), 0);
+
+			if ((meta_int = parse_response(url, &id3, &tmp)) < 0)
+			{
+				if (meta_int == -301 || meta_int == -302)
+					return meta_int;
+				else
+					return -1;
+			}
+			if (meta_int)
+			{
+				if (slot < 0)
+				{
+					dprintf(stderr, "error: meta_int != 0 && slot < 0");
+				}
+				else
+				{
+					/* hook in the filter function if there is meta */
+					/* data present in the stream */
+					cache[slot].filter_arg = ShoutCAST_InitFilter(meta_int);
+					cache[slot].filter = ShoutCAST_MetaFilter;
+
+					/* this is a *really bad* way to pass along the argument, */
+					/* since we convert the integer into a pointer instead of */
+					/* passing along a pointer/reference !*/
+					if (cache[slot].filter_arg->state)
+						memmove(cache[slot].filter_arg->state, &tmp, sizeof(CSTATE));
+				}
+			}
+
+			/* push the created ID3 header into the stream cache */
+			push(url->stream, (char *)&id3, id3.len);
+#if 0
+			rval = parse_response(url, NULL, NULL);
+			dprintf(stderr, "server response parser: return value = %d\n", rval);
+
+			/* if the header indicated a zero length document or an */
+			/* error, then close the cache, if there is any */
+			/* 25.04.05 ChakaZulu: zero length can be a stream so let's try playing */
+			if ((slot >= 0) && (rval < 0))
+				cache[slot].closed = 1;
+
+			/* return on error */
+			if (rval < 0)
+				return rval;
+#endif
+		}
+		break;
 
 		/* send a SHOUTCAST request */
-		case SHOUTCAST:{
+		case SHOUTCAST:
+		{
 			int meta_int;
 			CSTATE tmp;
 
@@ -483,7 +492,7 @@ int request_file(URL *url)
 			dprintf(stderr, "> %s", str);
 			send(url->fd, str, strlen(str), 0);
 
-			if(enable_metadata)
+			if (enable_metadata)
 			{
 				strcpy(str, "icy-metadata: 1\r\n");
 				dprintf(stderr, "> %s", str);
@@ -505,15 +514,15 @@ int request_file(URL *url)
 			dprintf(stderr, "> %s", str);
 			send(url->fd, str, strlen(str), 0);
 
-			if( (meta_int = parse_response(url, &id3, &tmp)) < 0)
+			if ((meta_int = parse_response(url, &id3, &tmp)) < 0)
 			{
-				if(meta_int == -301 || meta_int == -302)
+				if (meta_int == -301 || meta_int == -302)
 					return meta_int;
 				else
 					return -1;
 			}
 
-			if(meta_int)
+			if (meta_int)
 			{
 				/* hook in the filter function if there is meta */
 				/* data present in the stream */
@@ -523,12 +532,12 @@ int request_file(URL *url)
 				/* this is a *really bad* way to pass along the argument, */
 				/* since we convert the integer into a pointer instead of */
 				/* passing along a pointer/reference !*/
-				if(cache[slot].filter_arg->state)
+				if (cache[slot].filter_arg->state)
 					memmove(cache[slot].filter_arg->state, &tmp, sizeof(CSTATE));
 			}
 
 			/* push the created ID3 header into the stream cache */
-			push(url->stream, (char*)&id3, id3.len);
+			push(url->stream, (char *)&id3, id3.len);
 		}
 		break;
 	} /* end switch(url->proto_version) */
@@ -539,13 +548,13 @@ int request_file(URL *url)
 	/* but *ONLY* if there is a cache slot for this stream at all ! */
 	/* HINT: in compatibility mode no cache is configured */
 
-	if(slot >= 0)
+	if (slot >= 0)
 	{
 		pthread_attr_init(&cache[slot].attr);
 		pthread_create(
 			&cache[slot].fill_thread,
 			&cache[slot].attr,
-			CacheFillThread, (void*)&cache[slot]);
+			CacheFillThread, (void *)&cache[slot]);
 		dprintf(stderr, "request_file: slot %d fill_thread 0x%x\n", slot, (int)cache[slot].fill_thread);
 	}
 
@@ -561,26 +570,26 @@ int request_file(URL *url)
 /* local syserror numbers              */
 
 #define getHeaderVal(a,b) { \
-  char *_ptr; \
-  _ptr = strcasestr(header, a); \
-  if(_ptr) \
-  { \
-    _ptr = strchr(_ptr, ':'); \
-    for(; !isalnum(*_ptr); _ptr++) {}; \
-    b = atoi(_ptr); \
-  } else b = -1; }
+		char *_ptr; \
+		_ptr = strcasestr(header, a); \
+		if(_ptr) \
+		{ \
+			_ptr = strchr(_ptr, ':'); \
+			for(; !isalnum(*_ptr); _ptr++) {}; \
+			b = atoi(_ptr); \
+		} else b = -1; }
 
 #define getHeaderStr(a,b) { \
-  char *_ptr; \
-  _ptr = strcasestr(header, a); \
-  if(_ptr) \
-  { \
-    unsigned int i; \
-    _ptr = strchr(_ptr, ':'); \
-    for(_ptr++; isspace(*_ptr); _ptr++) {}; \
-    for (i=0; (_ptr[i]!='\n') && (_ptr[i]!='\r') && (_ptr[i]!='\0') && (i<sizeof(b)); i++) b[i] = _ptr[i]; \
-    b[i] = 0; \
-  } }
+		char *_ptr; \
+		_ptr = strcasestr(header, a); \
+		if(_ptr) \
+		{ \
+			unsigned int i; \
+			_ptr = strchr(_ptr, ':'); \
+			for(_ptr++; isspace(*_ptr); _ptr++) {}; \
+			for (i=0; (_ptr[i]!='\n') && (_ptr[i]!='\r') && (_ptr[i]!='\0') && (i<sizeof(b)); i++) b[i] = _ptr[i]; \
+			b[i] = 0; \
+		} }
 
 /*
 void readln(int fd, char *buf)
@@ -594,7 +603,7 @@ void readln(int fd, char *buf)
 int parse_response(URL *url, void * /*opt*/, CSTATE *state)
 {
 	char header[2049], /*str[255]*/ str[2049]; // combined with 2nd local str from id3 part
-	char *ptr, chr=0, lastchr=0;
+	char *ptr, chr = 0, lastchr = 0;
 	int hlen = 0, response;
 	int rval;
 	int fd = url->fd;
@@ -610,12 +619,15 @@ int parse_response(URL *url, void * /*opt*/, CSTATE *state)
 		recv(fd, ptr, 1, 0);
 
 		/* skip all 'CR' symbols */
-		if(*ptr != 13)
+		if (*ptr != 13)
 		{
-			lastchr = chr; chr = *ptr++; hlen++;
+			lastchr = chr;
+			chr = *ptr++;
+			hlen++;
 		}
 
-	} while((hlen < 2048) && ( ! ((chr == 10) && (lastchr == 10))));
+	}
+	while ((hlen < 2048) && (!((chr == 10) && (lastchr == 10))));
 
 	*ptr = 0;
 
@@ -624,40 +636,42 @@ int parse_response(URL *url, void * /*opt*/, CSTATE *state)
 	/* parse the header fields */
 	ptr = strstr(header, "HTTP/1.1");
 
-	if(!ptr)
+	if (!ptr)
 		ptr = strstr(header, "HTTP/1.0");
 
-	if(!ptr)
+	if (!ptr)
 		ptr = strstr(header, "ICY");
 
 	/* no valid HTTP/1.1 or SHOUTCAST response */
-	if(!ptr)
+	if (!ptr)
 		return -1;
 
 	response = atoi(strchr(ptr, ' ') + 1);
 
-	switch(response)
+	switch (response)
 	{
-		case 200:	errno = 0;
-				break;
+		case 200:
+			errno = 0;
+			break;
 
 		case 301:	/* 'file moved' error */
 		case 302:	/* 'file not found' error */
-				errno = ENOENT;
-				STRCPY(err_txt, ptr);
-				getHeaderStr("Location", redirect_url);
-				return -1 * response;
-				break;
+			errno = ENOENT;
+			STRCPY(err_txt, ptr);
+			getHeaderStr("Location", redirect_url);
+			return -1 * response;
+			break;
 
 		case 404:	/* 'file not found' error */
-				errno = ENOENT;
-				STRCPY(err_txt, ptr);
-				return -1;
-				break;
+			errno = ENOENT;
+			STRCPY(err_txt, ptr);
+			return -1;
+			break;
 
-		default:	errno = ENOPROTOOPT;
-				dprintf(stderr, "unknown server response code: %d\n", response);
-				return -1;
+		default:
+			errno = ENOPROTOOPT;
+			dprintf(stderr, "unknown server response code: %d\n", response);
+			return -1;
 	}
 
 	/* use 'audio/mpeg' as default type, in case we are not told otherwise */
@@ -670,29 +684,30 @@ int parse_response(URL *url, void * /*opt*/, CSTATE *state)
 	/* then return now with the content length as return value */
 	getHeaderVal("Content-Length:", rval);
 	//  dprintf(stderr, "file size: %d\n", rval);
-	if(rval >= 0)
+	if (rval >= 0)
 		return rval;
 
 	/* no content length indication from the server ? Then treat it as stream */
 	getHeaderVal("icy-metaint:", meta_interval);
-	if(meta_interval < 0)
+	if (meta_interval < 0)
 		meta_interval = 0;
 
 	/* yet another hack: this is only implemented to be able to fetch */
 	/* the playlists from shoutcast */
-	if(strstr(header, "Transfer-Encoding: chunked"))
+	if (strstr(header, "Transfer-Encoding: chunked"))
 	{
 		chunked = true;
 	}
 
-	if (state != NULL) {
+	if (state != NULL)
+	{
 		getHeaderStr("icy-genre:", state->genre);
 		getHeaderStr("icy-name:", state->station);
 		getHeaderStr("icy-url:", state->station_url);
 		getHeaderVal("icy-br:", state->bitrate);
 	}
 #if 0
-	ID3 *id3 = (ID3*)opt;
+	ID3 *id3 = (ID3 *)opt;
 	/********************* dirty hack **********************/
 	/* we parse the stream header sent by the server and	*/
 	/* build based on this information an arteficial id3		*/
@@ -702,16 +717,16 @@ int parse_response(URL *url, void * /*opt*/, CSTATE *state)
 	/* station information in the display of the player :))	*/
 
 #define SSIZE(a) (\
-   (((a) & 0x0000007f) << 0) | (((a) & 0x00003f80) << 1) | \
-   (((a) & 0x001fc000) << 2) | (((a) & 0xfe000000) << 3))
+	(((a) & 0x0000007f) << 0) | (((a) & 0x00003f80) << 1) | \
+	(((a) & 0x001fc000) << 2) | (((a) & 0xfe000000) << 3))
 
 #define FRAME(b,c) {\
-  strcpy(id3frame.id, (b)); \
-  strcpy(id3frame.base, (c)); \
-  id3frame.size = strlen(id3frame.base); \
-  fcnt = 11 + id3frame.size; }
+		strcpy(id3frame.id, (b)); \
+		strcpy(id3frame.base, (c)); \
+		id3frame.size = strlen(id3frame.base); \
+		fcnt = 11 + id3frame.size; }
 
-	if(id3)
+	if (id3)
 	{
 		int cnt = 0, fcnt = 0;
 		ID3_frame id3frame;
@@ -723,18 +738,18 @@ int parse_response(URL *url, void * /*opt*/, CSTATE *state)
 		id3->version[1] = 0;
 
 		ptr = strstr(header, "icy-name:");
-		if(ptr)
+		if (ptr)
 		{
 			ptr = strchr(ptr, ':') + 1;
-			for(; ((*ptr == '-') || (*ptr == ' ')); ptr++){};
+			for (; ((*ptr == '-') || (*ptr == ' ')); ptr++) {};
 			strcpy(station, ptr);
 			*strchr(station, '\n') = 0;
 
 			ptr = strchr(station, '-');
-			if(ptr)
+			if (ptr)
 			{
 				*ptr = 0;
-				for(ptr++; ((*ptr == '-') || (*ptr == ' ')); ptr++){};
+				for (ptr++; ((*ptr == '-') || (*ptr == ' ')); ptr++) {};
 				strcpy(desc, ptr);
 			}
 
@@ -750,10 +765,10 @@ int parse_response(URL *url, void * /*opt*/, CSTATE *state)
 		}
 
 		ptr = strstr(header, "icy-genre:");
-		if(ptr)
+		if (ptr)
 		{
 			ptr = strchr(ptr, ':') + 1;
-			for(; ((*ptr == '-') || (*ptr == ' ')); ptr++){};
+			for (; ((*ptr == '-') || (*ptr == ' ')); ptr++) {};
 			strcpy(str, ptr);
 			*strchr(str, '\n') = 0;
 
@@ -785,11 +800,11 @@ int parse_response(URL *url, void * /*opt*/, CSTATE *state)
 /******* wrapper functions for the f*() calls ************************/
 
 #define transport(a,b,c) \
-    if(strstr(url.url, a)) \
-    { \
-      url.access_mode = b; \
-      url.proto_version = c; \
-    }
+	if(strstr(url.url, a)) \
+	{ \
+		url.access_mode = b; \
+		url.proto_version = c; \
+	}
 
 FILE *f_open(const char *filename, const char *acctype)
 {
@@ -798,7 +813,7 @@ FILE *f_open(const char *filename, const char *acctype)
 	int /*i,*/ compatibility_mode = 0;
 	char *ptr = NULL, buf[4096] = {0}, type[10] = {0};
 
-	if(acctype)
+	if (acctype)
 		strcpy(type, acctype);
 
 	/* read some options from the options-file */
@@ -806,7 +821,7 @@ FILE *f_open(const char *filename, const char *acctype)
 
 	/* test if compatibility mode has been requested. */
 	/* e.g. "rbc" = read, binary, without stream caching */
-	if(strchr(type, 'c'))
+	if (strchr(type, 'c'))
 	{
 		compatibility_mode = 1;
 		*strchr(type, 'c') = 0;
@@ -821,33 +836,33 @@ FILE *f_open(const char *filename, const char *acctype)
 	strcpy(url.url, filename);
 
 	/* remove leading spaces */
-	for (ptr = url.url; (ptr != NULL) && ((*ptr == ' ') || (*ptr == '	')); ptr++){} ;
+	for (ptr = url.url; (ptr != NULL) && ((*ptr == ' ') || (*ptr == '	')); ptr++) {} ;
 
-	if(ptr != url.url)
+	if (ptr != url.url)
 		strcpy(url.url, ptr);
 
 	/* did we get an URL file as argument ? If so, then open */
 	/* this file, read out the url and open the url instead */
 #ifndef DISABLE_URLFILES
-	if( strstr(filename, ".url") || strstr(filename, ".imu"))
+	if (strstr(filename, ".url") || strstr(filename, ".imu"))
 	{
 		fd = fopen(filename, "r");
 
-		if(fd)
+		if (fd)
 		{
 			fread(buf, sizeof(char), 4095, fd);
 			fclose(fd);
 
 			ptr = strstr(buf, "://");
 
-			if(!ptr)
+			if (!ptr)
 			{
 				dprintf(stderr, "Ups! File doesn't seem to contain any URL !\nbuffer:%s\n", buf);
 				return NULL;
 			}
 
 			ptr = strchr(buf, '\n');
-			if(ptr)
+			if (ptr)
 				*ptr = 0;
 
 			STRCPY(url.url, buf);
@@ -866,39 +881,41 @@ FILE *f_open(const char *filename, const char *acctype)
 		(url.access_mode == MODE_SCAST) ? 	"SHOUTCAST" :
 		(url.access_mode == MODE_ICAST) ? 	"ICECAST" :
 		(url.access_mode == MODE_PLS)   ? 	"PLAYLIST" :
-									"FILE",
+		"FILE",
 		(url.access_mode != MODE_FILE)   ? (
-		(url.proto_version == HTTP10)	 ? 	"/1.0" :
-		(url.proto_version == HTTP11)	 ? 	"/1.1" :
-		(url.proto_version == SHOUTCAST) ? 	"/SHOUTCAST" :
-									"") : "" );
+			(url.proto_version == HTTP10)	 ? 	"/1.0" :
+			(url.proto_version == HTTP11)	 ? 	"/1.1" :
+			(url.proto_version == SHOUTCAST) ? 	"/SHOUTCAST" :
+			"") : "");
 
 	dprintf(stderr, "FILE to open: %s, access mode: %d\n", url.file, url.access_mode);
 
-	switch(url.access_mode)
+	switch (url.access_mode)
 	{
-		case MODE_HTTP:	{
+		case MODE_HTTP:
+		{
 			int follow_url = 1; // used for redirects
 			int redirects = 0;
 			*redirect_url = '\0';
 			while (follow_url)
 			{
 
-  			 	int retries = retry_num;
+				int retries = retry_num;
 
 				do
 				{
 					url.fd = ConnectToServer(url.host, url.port);
 					retries--;
-				} while( url.fd < 0 && retries > 0);
+				}
+				while (url.fd < 0 && retries > 0);
 
 				/* if the stream could not be opened, then indicate */
 				/* an 'No such device or address' error */
- 				if(url.fd < 0)
+				if (url.fd < 0)
 				{
 					fd = NULL;
 					errno = ENXIO;
-					printf("netfile: could not connect to server %s:%d\n",url.host, url.port);
+					printf("netfile: could not connect to server %s:%d\n", url.host, url.port);
 					return fd;
 				}
 				else
@@ -906,9 +923,9 @@ FILE *f_open(const char *filename, const char *acctype)
 					fd = fdopen(url.fd, "r+");
 					url.stream = fd;
 
-					if(!fd)
+					if (!fd)
 					{
-						 perror(err_txt);
+						perror(err_txt);
 					}
 					else
 					{
@@ -917,14 +934,14 @@ FILE *f_open(const char *filename, const char *acctype)
 						/* which we can not replace by our own functions and thus they'll */
 						/* interfere with each other. All we can do is to open the stream */
 						/* and return a valid stream descriptor */
-						if(!compatibility_mode)
+						if (!compatibility_mode)
 						{
- 							int i;
+							int i;
 							/* look for a free cache slot */
-							for(i=0; ((i<CACHEENTMAX) && (cache[i].cache != NULL)); i++){};
+							for (i = 0; ((i < CACHEENTMAX) && (cache[i].cache != NULL)); i++) {};
 
 							/* no free cache slot ? return an error */
-							if(i == CACHEENTMAX)
+							if (i == CACHEENTMAX)
 							{
 								strcpy(err_txt, "no more free cache slots. Too many open files.\n");
 								return NULL;
@@ -934,7 +951,7 @@ FILE *f_open(const char *filename, const char *acctype)
 
 							cache[i].fd       = fd;
 							cache[i].csize    = CACHESIZE;
-							cache[i].cache    = (char*)malloc(cache[i].csize);
+							cache[i].cache    = (char *)malloc(cache[i].csize);
 							cache[i].ceiling  = cache[i].cache + CACHESIZE;
 							cache[i].wptr     = cache[i].cache;
 							cache[i].rptr     = cache[i].cache;
@@ -950,18 +967,18 @@ FILE *f_open(const char *filename, const char *acctype)
 
 							/* and set the empty cache to 'unreadable' */
 							dprintf(stderr, "f_open: locking read direction\n");
-							pthread_mutex_lock( &cache[i].readable );
+							pthread_mutex_lock(&cache[i].readable);
 
 							/* but writeable. */
 //							dprintf(stderr, "f_open: unlocking write direction\n");
 // mutex is not locked after init
-//							pthread_mutex_unlock( &cache[i].writeable );
+//							pthread_mutex_unlock(&cache[i].writeable);
 						}
 
 						/* send the file request and check it'S revurn value */
 						/* if it failed, then close the stream */
 						int request_res = request_file(&url);
-						if(request_res < 0)
+						if (request_res < 0)
 						{
 							/* we need out own f_close() function here, because everything */
 							/* already has been set up and f_close() deinitializes it all correctly */
@@ -969,20 +986,21 @@ FILE *f_open(const char *filename, const char *acctype)
 							fd = NULL;
 						}
 						follow_url = 0;
-						if (is_redirect(-1*request_res)) {
+						if (is_redirect(-1 * request_res))
+						{
 							redirects++;
-							dprintf(stderr,"redirected to %s\n",redirect_url);
-							strcpy(url.url,redirect_url);
+							dprintf(stderr, "redirected to %s\n", redirect_url);
+							strcpy(url.url, redirect_url);
 							parseURL_url(url);
 							if (redirects <= MAX_REDIRECTS)
 								follow_url = 1;
 							else
-								dprintf(stderr, "too many redirects: %d (max: %d)\n",redirects,MAX_REDIRECTS);
+								dprintf(stderr, "too many redirects: %d (max: %d)\n", redirects, MAX_REDIRECTS);
 						}
 					}
 				}
 			}
-		} /* endcase MODE_HTTP */
+			} /* endcase MODE_HTTP */
 		break;
 
 		case MODE_ICAST:
@@ -999,19 +1017,19 @@ FILE *f_open(const char *filename, const char *acctype)
 			/* and look in the reply for the station number */
 			char *endptr;
 			strtol(url.host, &endptr, 10);
-			if((endptr-url.host) < (int)strlen(url.host))
+			if ((endptr - url.host) < (int)strlen(url.host))
 			{
 				char buf2[32768];
 				FILE *_fd;
 
 				/* convert into shoutcast query format */
-				for(ptr=url.host; *ptr; ptr++)
+				for (ptr = url.host; *ptr; ptr++)
 					*ptr = (*ptr != 32) ? *ptr : '+';
 
 				CRLFCut(url.host);
 
 				/* create either a shoutcast or an icecast query */
-				if(url.access_mode == MODE_SCAST)
+				if (url.access_mode == MODE_SCAST)
 					SPRINTF(buf2, "http://classic.shoutcast.com/directory/?orderby=listeners&s=%s", url.host);
 				else
 					SPRINTF(buf2, "http://www.icecast.org/streamlist.php?search=%s", url.host);
@@ -1021,7 +1039,7 @@ FILE *f_open(const char *filename, const char *acctype)
 
 				_fd = f_open(buf2, "rc");
 
-				if(!_fd)
+				if (!_fd)
 				{
 					SPRINTF(err_txt, "%s database query failed\nfailed action: %s",
 						((url.access_mode == MODE_SCAST) ? "shoutcast" : "icecast"), buf2);
@@ -1033,7 +1051,7 @@ FILE *f_open(const char *filename, const char *acctype)
 
 				ptr = strstr(buf2, "rn=");
 
-				if(!ptr)
+				if (!ptr)
 				{
 					strcpy(err_txt, "failed to find station number");
 					dprintf(stderr, "%s\n", buf2);
@@ -1046,9 +1064,10 @@ FILE *f_open(const char *filename, const char *acctype)
 			/* create the correct url from the station number */
 			CRLFCut(url.host);
 			SPRINTF(url.url, "http://classic.shoutcast.com/sbin/shoutcast-playlist.pls?rn=%s&file=filename.pls", url.host);
-			/* fall through */
+		/* fall through */
 
-		case MODE_PLS:	{
+		case MODE_PLS:
+		{
 			char *ptr2, /*buf[4096], use local buf from function */ servers[25][1024];
 			int /*rval,*/ retries = retry_num;
 			ptr = NULL;
@@ -1060,7 +1079,7 @@ FILE *f_open(const char *filename, const char *acctype)
 			{
 				fd = f_open(url.url, "rc");
 
-				if(fd)
+				if (fd)
 				{
 					/* read the playlist (we use the standard fopen() call from the */
 					/* operating system because we don't need/want stream caching for */
@@ -1074,25 +1093,26 @@ FILE *f_open(const char *filename, const char *acctype)
 
 				retries--;
 
-			} while(!ptr && retries > 0);
+			}
+			while (!ptr && retries > 0);
 
 
 			/* extract the servers from the received playlist */
-			if(!ptr)
+			if (!ptr)
 			{
 				dprintf(stderr, "Ups! Playlist doesn't seem to contain any URL !\nbuffer:%s\n", buf);
 				strcpy(err_txt, "Ups! Playlist doesn't seem to contain any URL !");
 				return NULL;
 			}
 
-			for(int i=0; ((ptr != NULL) && (i<25)); ptr = strstr(ptr, "http://") )
+			for (int i = 0; ((ptr != NULL) && (i < 25)); ptr = strstr(ptr, "http://"))
 			{
 				strncpy(servers[i], ptr, 1023);
 				servers[i][1023] = '\0';
 				ptr2 = strchr(servers[i], '\n');
-				if(ptr2) *ptr2 = 0;
+				if (ptr2) *ptr2 = 0;
 				// change ptr so that next strstr searches in buf and not in servers[i]
-				ptr = strchr(ptr,'\n');
+				ptr = strchr(ptr, '\n');
 				if (ptr != NULL)
 					ptr++;
 				dprintf(stderr, "server[%d]: %s\n", i, servers[i]);
@@ -1103,12 +1123,12 @@ FILE *f_open(const char *filename, const char *acctype)
 			/* is willing to serve us */
 			{
 				int i;
-				for(i=0, fd = NULL; ((fd == NULL) && (i<25)); i++)
+				for (i = 0, fd = NULL; ((fd == NULL) && (i < 25)); i++)
 				{
-					const char* const chptr = strstr(servers[i], "://");
-					if(chptr)
+					const char *const chptr = strstr(servers[i], "://");
+					if (chptr)
 					{
-						snprintf(url.url, sizeof(url.url)-1, "icy%s", chptr);
+						snprintf(url.url, sizeof(url.url) - 1, "icy%s", chptr);
 						fd = f_open(url.url, "r");
 					}
 				}
@@ -1118,48 +1138,48 @@ FILE *f_open(const char *filename, const char *acctype)
 
 		case MODE_FILE:
 		default:
+		{
+			unsigned char magic[4] = {0, 0, 0, 0};
+
+			fd = fopen(url.file, type);
+			if (fd == NULL)
+				return NULL;
+			fread(&magic, 4, 1, fd);
+			rewind(fd);
+
+			/* first stage: try to determine the filetype from the file */
+			/* magic, if there is any */
+			for (int i = 0; i < known_magic_count; i++)
 			{
-				unsigned char magic[4] = {0, 0, 0, 0};
-
-				fd = fopen(url.file, type);
-				if (fd == NULL)
-					return NULL;
-				fread(&magic, 4, 1, fd);
-				rewind(fd);
-
-				/* first stage: try to determine the filetype from the file */
-				/* magic, if there is any */
-				for (int i = 0; i < known_magic_count; i++)
+				if (((*(unsigned char *) & (magic[0])) & *(unsigned char *) & (known_magic[i].mask[0])) == *(unsigned char *) & (known_magic[i].mode[0]))
 				{
-					if (((*(unsigned char *)&(magic[0])) & *(unsigned char *)&(known_magic[i].mask[0])) == *(unsigned char *)&(known_magic[i].mode[0]))
-					{
-						f_type(fd, known_magic[i].type);
-						goto magic_found;
-					}
+					f_type(fd, known_magic[i].type);
+					goto magic_found;
 				}
+			}
 
-				/* stage two: try to determine the filetype from the file name */
-				/* a smarter solution would be to get this info from /etc/mime.types */
+			/* stage two: try to determine the filetype from the file name */
+			/* a smarter solution would be to get this info from /etc/mime.types */
 
-				ptr = strrchr(url.file , '.');
-				//#FIXME warning what about filenames without dots?
+			ptr = strrchr(url.file, '.');
+			//#FIXME warning what about filenames without dots?
 
-				if (ptr++)
-				{
-					if (strcasecmp(ptr, "cdr") == 0)	f_type(fd, "audio/cdr");
-					if (strcasecmp(ptr, "wav") == 0)	f_type(fd, "audio/wave");
-					if (strcasecmp(ptr, "aif") == 0)	f_type(fd, "audio/aifc");
-					if (strcasecmp(ptr, "snd") == 0)	f_type(fd, "audio/snd");
+			if (ptr++)
+			{
+				if (strcasecmp(ptr, "cdr") == 0)	f_type(fd, "audio/cdr");
+				if (strcasecmp(ptr, "wav") == 0)	f_type(fd, "audio/wave");
+				if (strcasecmp(ptr, "aif") == 0)	f_type(fd, "audio/aifc");
+				if (strcasecmp(ptr, "snd") == 0)	f_type(fd, "audio/snd");
 
-					/* they should be obsolete now due to the file magic detection */
-					if (strcasecmp(ptr, "ogg") == 0)	f_type(fd, "audio/ogg");
-					if (strcasecmp(ptr, "mp3") == 0)	f_type(fd, "audio/mpeg");
-					if (strcasecmp(ptr, "mp2") == 0)	f_type(fd, "audio/mpeg");
-					if (strcasecmp(ptr, "mpa") == 0)	f_type(fd, "audio/mpeg");
-				}
+				/* they should be obsolete now due to the file magic detection */
+				if (strcasecmp(ptr, "ogg") == 0)	f_type(fd, "audio/ogg");
+				if (strcasecmp(ptr, "mp3") == 0)	f_type(fd, "audio/mpeg");
+				if (strcasecmp(ptr, "mp2") == 0)	f_type(fd, "audio/mpeg");
+				if (strcasecmp(ptr, "mpa") == 0)	f_type(fd, "audio/mpeg");
+			}
 magic_found:
 			;
-			}
+		}
 		break;
 	} /* endswitch */
 
@@ -1172,32 +1192,32 @@ int f_close(FILE *stream)
 
 //	dprintf(stderr, "f_close: stream 0x%x\n", stream);
 	/* at first, lookup the stream in the stream type table and remove it */
-	for(i=0 ; (i<CACHEENTMAX) && (stream_type[i].stream != stream); i++){};
+	for (i = 0 ; (i < CACHEENTMAX) && (stream_type[i].stream != stream); i++) {};
 
-	if(i < CACHEENTMAX)
+	if (i < CACHEENTMAX)
 		stream_type[i].stream = NULL;
 
 	/* lookup the stream ID in the cache table */
 	i = getCacheSlot(stream);
 
 	/* no associated cache slot ? Simply close the stream */
-	if(i < 0)
-		return( fclose(stream) );
+	if (i < 0)
+		return (fclose(stream));
 
-	if(cache[i].fd == stream)
+	if (cache[i].fd == stream)
 	{
 		dprintf(stderr, "f_close: removing stream %p from cache[%d]\n", stream, i);
 
 		cache[i].closed = 1;		/* indicate that the cache is closed */
 
 		/* remove the cache looks */
-		pthread_mutex_unlock( &cache[i].writeable );
-		pthread_mutex_unlock( &cache[i].readable );
-		pthread_mutex_unlock( &cache[i].cache_lock );
+		pthread_mutex_unlock(&cache[i].writeable);
+		pthread_mutex_unlock(&cache[i].readable);
+		pthread_mutex_unlock(&cache[i].cache_lock);
 
 		/* wait for the fill thread to finish */
 		dprintf(stderr, "f_close: waiting for fill tread to finish, slot %d fill_thread 0x%x\n", i, (int) cache[i].fill_thread);
-		if(cache[i].fill_thread)
+		if (cache[i].fill_thread)
 			pthread_join(cache[i].fill_thread, NULL);
 
 		cache[i].fill_thread = 0;
@@ -1207,8 +1227,8 @@ int f_close(FILE *stream)
 		free(cache[i].cache);		/* free the cache */
 
 		/* if this stream has a streamfilter, call it's destructor */
-		if(cache[i].filter_arg)
-			if(cache[i].filter_arg->destructor)
+		if (cache[i].filter_arg)
+			if (cache[i].filter_arg->destructor)
 			{
 				dprintf(stderr, "f_close: calling stream filter destructor\n");
 				cache[i].filter_arg->destructor(cache[i].filter_arg);
@@ -1237,10 +1257,10 @@ long f_tell(FILE *stream)
 	/* lookup the stream ID in the cache table */
 	i = getCacheSlot(stream);
 
-	if(i < 0)
-		return( ftell(stream) );
+	if (i < 0)
+		return (ftell(stream));
 
-	if(cache[i].fd == stream)
+	if (cache[i].fd == stream)
 		rval = cache[i].total_bytes_delivered;
 	else
 		rval = ftell(stream);
@@ -1255,13 +1275,13 @@ void f_rewind(FILE *stream)
 	/* lookup the stream ID in the cache table */
 	i = getCacheSlot(stream);
 
-	if(i < 0)
+	if (i < 0)
 	{
 		rewind(stream);
 		return;
 	}
 
-	if(cache[i].fd == stream)
+	if (cache[i].fd == stream)
 	{
 		/* nothing to do */
 	}
@@ -1276,10 +1296,10 @@ int f_seek(FILE *stream, long offset, int whence)
 	/* lookup the stream ID in the cache table */
 	i = getCacheSlot(stream);
 
-	if(i < 0)
-		return( fseek(stream, offset, whence) );
+	if (i < 0)
+		return (fseek(stream, offset, whence));
 
-	if(cache[i].fd == stream)
+	if (cache[i].fd == stream)
 	{
 		dprintf(stderr, "WARNING: program tries to seek on a stream !! offset %d whence %d\n", (int) offset, whence);
 		rval = -1;
@@ -1290,18 +1310,19 @@ int f_seek(FILE *stream, long offset, int whence)
 	return rval;
 }
 
-size_t f_read (void *ptr, size_t size, size_t nitems, FILE *stream)
+size_t f_read(void *ptr, size_t size, size_t nitems, FILE *stream)
 {
 	int i, rval;
 
 	/* lookup the stream ID in the cache table */
 	i = getCacheSlot(stream);
 
-	if(i < 0)
-		return( fread(ptr, size, nitems, stream) );
+	if (i < 0)
+		return (fread(ptr, size, nitems, stream));
 
-	if(cache[i].fd == stream) {
-		rval = pop(stream, (char*)ptr, size * nitems);
+	if (cache[i].fd == stream)
+	{
+		rval = pop(stream, (char *)ptr, size * nitems);
 	}
 	else
 		rval = fread(ptr, size, nitems, stream);
@@ -1314,29 +1335,29 @@ const char *f_type(FILE *stream, const char *type)
 	int i;
 
 	/* lookup the stream in the stream type table */
-	for(i=0 ; (i<CACHEENTMAX) && (stream_type[i].stream != stream); i++){};
+	for (i = 0 ; (i < CACHEENTMAX) && (stream_type[i].stream != stream); i++) {};
 
 	/* if the stream could not be found, look for a free slot ... */
-	if(i == CACHEENTMAX)
+	if (i == CACHEENTMAX)
 	{
-	dprintf(stderr, "stream %p not in type table, ", stream);
+		dprintf(stderr, "stream %p not in type table, ", stream);
 
-	for(i=0 ; (i<CACHEENTMAX) && (stream_type[i].stream != NULL); i++){};
+		for (i = 0 ; (i < CACHEENTMAX) && (stream_type[i].stream != NULL); i++) {};
 
-	/* ... and copy the supplied type into the table */
-	if(i < CACHEENTMAX)
-	{
-		if(type)
+		/* ... and copy the supplied type into the table */
+		if (i < CACHEENTMAX)
 		{
-			stream_type[i].stream = stream;
-			strncpy(stream_type[i].type, type, 64);
-			stream_type[i].type[64] = '\0';
-			dprintf(stderr, "added entry (%s) for %p\n", type, stream);
+			if (type)
+			{
+				stream_type[i].stream = stream;
+				strncpy(stream_type[i].type, type, 64);
+				stream_type[i].type[64] = '\0';
+				dprintf(stderr, "added entry (%s) for %p\n", type, stream);
+			}
+			return type;
 		}
-		return type;
-	}
-	else
-		dprintf(stderr, "failed to add entry (%s)\n", type);
+		else
+			dprintf(stderr, "failed to add entry (%s)\n", type);
 
 	}
 
@@ -1345,11 +1366,10 @@ const char *f_type(FILE *stream, const char *type)
 	{
 		dprintf(stderr, "stream %p lookup in type table succeded\n", stream);
 
-		if(!type)
+		if (!type)
 			return stream_type[i].type;
-		else
-			if(strstr(stream_type[i].type, type))
-				return stream_type[i].type;
+		else if (strstr(stream_type[i].type, type))
+			return stream_type[i].type;
 	}
 
 	return NULL;
@@ -1387,8 +1407,8 @@ int getCacheSlot(FILE *fd)
 {
 	int i;
 
-	for(i=0; ( (i<CACHEENTMAX) && ((cache[i].fd != fd) || (!cache[i].cache))
-		); i++){};
+	for (i = 0; ((i < CACHEENTMAX) && ((cache[i].fd != fd) || (!cache[i].cache))
+		); i++) {};
 
 	return (i == CACHEENTMAX) ? -1 : i;
 }
@@ -1401,42 +1421,43 @@ int push(FILE *fd, char *buf, long len)
 
 	i = getCacheSlot(fd);
 
-	if(i < 0)
+	if (i < 0)
 		return -1;
 
 	//	dprintf(stderr, "push: %d bytes to store [filled: %d of %d], stream: %x\n", len, cache[i].filled, CACHESIZE, fd);
 
-	if(cache[i].fd != fd) {
+	if (cache[i].fd != fd)
+	{
 		dprintf(stderr, "push: no cache present for stream %p\n", fd);
 		return -1;
 	}
 	do
 	{
-		if(cache[i].closed)
+		if (cache[i].closed)
 			return -1;
 
 		/* try to obtain write permissions for the cache */
 		/* this will block if the cache is full */
-		pthread_mutex_lock( &cache[i].writeable );
+		pthread_mutex_lock(&cache[i].writeable);
 
-		if((cache[i].csize - cache[i].filled))
+		if ((cache[i].csize - cache[i].filled))
 		{
 			int amt[2];
 
 			/* prevent any modification to the cache by other threads, */
 			/* mainly by the pop() function, while we write data to it */
-			pthread_mutex_lock( &cache[i].cache_lock );
+			pthread_mutex_lock(&cache[i].cache_lock);
 
 			/* has the cache been closed while we were waiting for the */
 			/* lock to open ? */
-			if(cache[i].closed)
+			if (cache[i].closed)
 				return -1;
 
 			/* block transfer length: get either what's there or */
 			/* only as much as we need */
 			blen = ((len - rval) > (cache[i].csize - cache[i].filled)) ? (cache[i].csize - cache[i].filled) : (len - rval);
 
-			if(cache[i].wptr < cache[i].rptr)
+			if (cache[i].wptr < cache[i].rptr)
 			{
 				amt[0] = cache[i].rptr - cache[i].wptr;
 				amt[1] = 0;
@@ -1447,12 +1468,12 @@ int push(FILE *fd, char *buf, long len)
 				amt[1] = cache[i].rptr - cache[i].cache;
 			}
 
-			for(j=0; j<2; j++)
+			for (j = 0; j < 2; j++)
 			{
-				if(amt[j] > blen)
+				if (amt[j] > blen)
 					amt[j] = blen;
 
-				if(amt[j] > 0)
+				if (amt[j] > 0)
 				{
 					memmove(cache[i].wptr, buf, amt[j]);
 					cache[i].wptr = cache[i].cache +
@@ -1467,24 +1488,27 @@ int push(FILE *fd, char *buf, long len)
 
 			//	dprintf(stderr, "push: %d/%d bytes written [filled: %d of %d], stream: %x\n", amt[0] + amt[1], rval, cache[i].filled, CACHESIZE, fd);
 
-			pthread_mutex_unlock( &cache[i].cache_lock );
+			pthread_mutex_unlock(&cache[i].cache_lock);
 
 			/* unlock the cache for read access, if it */
 			/* contains some data */
-			if(cache[i].filled){
-				pthread_mutex_unlock( &cache[i].readable );
+			if (cache[i].filled)
+			{
+				pthread_mutex_unlock(&cache[i].readable);
 			}
 		}
 
 		/* if there is still space in the cache, unlock */
 		/* it again for further writing by anyone */
-		if(cache[i].csize - cache[i].filled){
-			pthread_mutex_unlock( & cache[i].writeable );
+		if (cache[i].csize - cache[i].filled)
+		{
+			pthread_mutex_unlock(& cache[i].writeable);
 		}
 		else
 			dprintf(stderr, "push: buffer overrun; cache full - leaving cache locked\n");
 
-	} while(rval < len);
+	}
+	while (rval < len);
 
 	dprintf(stderr, "push: exitstate: [filled: %3.1f %%], stream: %p\r", 100.0 * (float)cache[i].filled / (float)cache[i].csize, fd);
 
@@ -1498,44 +1522,46 @@ int pop(FILE *fd, char *buf, long len)
 
 	i = getCacheSlot(fd);
 
-	if(i < 0)
+	if (i < 0)
 		return -1;
 
 	dprintf(stderr, "pop: %d bytes requested [filled: %d of %d], stream: %p buf %p\n",
 		(int) len, (int) cache[i].filled, (int) CACHESIZE, fd, buf);
 
-	if(cache[i].fd == fd)
+	if (cache[i].fd == fd)
 	{
 		do
 		{
-			if(cache[i].closed && (!cache[i].filled) )
+			if (cache[i].closed && (!cache[i].filled))
 				return 0;
 
-			if((!cache[i].filled) && feof(fd)){
+			if ((!cache[i].filled) && feof(fd))
+			{
 				return 0;
 			}
 
 			/* try to obtain read permissions for the cache */
 			/* this will block if the cache is empty */
-			while(true) {
+			while (true)
+			{
 				int lret = pthread_mutex_trylock(&cache[i].readable);
-				if((lret == 0) || (CAudioPlayer::getInstance()->getState() == CBaseDec::STOP_REQ))
+				if ((lret == 0) || (CAudioPlayer::getInstance()->getState() == CBaseDec::STOP_REQ))
 					break;
 				usleep(100);
 			}
-			if(cache[i].filled)
+			if (cache[i].filled)
 			{
 				int amt[2];
 
 				/* prevent any modification to the cache by other threads, */
 				/* mainly by the push() function, while we read data from it */
-				pthread_mutex_lock( &cache[i].cache_lock );
+				pthread_mutex_lock(&cache[i].cache_lock);
 
 				/* block transfer length: get either what's there or */
 				/* only as much as we need */
 				blen = ((len - rval) > cache[i].filled) ? cache[i].filled : (len - rval);
 
-				if(cache[i].rptr < cache[i].wptr)
+				if (cache[i].rptr < cache[i].wptr)
 				{
 					amt[0] = cache[i].wptr - cache[i].rptr;
 					amt[1] = 0;
@@ -1546,11 +1572,11 @@ int pop(FILE *fd, char *buf, long len)
 					amt[1] = cache[i].wptr - cache[i].cache;
 				}
 
-				for(j=0; j<2; j++)
+				for (j = 0; j < 2; j++)
 				{
-					if(amt[j] > blen) amt[j] = blen;
+					if (amt[j] > blen) amt[j] = blen;
 
-					if(amt[j])
+					if (amt[j])
 					{
 						dprintf(stderr, "pop(): rptr: %p, buf: %p, amt[%d]=%d, blen=%d, len=%d, rval=%d\n",
 							cache[i].rptr, buf, j, amt[j], blen, (int) len, rval);
@@ -1571,28 +1597,30 @@ int pop(FILE *fd, char *buf, long len)
 
 				/* if the cache is closed and empty, then */
 				/* force the end condition to be met */
-				if(cache[i].closed && (! cache[i].filled))
+				if (cache[i].closed && (! cache[i].filled))
 					break;//len = rval;
 
 				/* allow write access again */
-				pthread_mutex_unlock( &cache[i].cache_lock );
+				pthread_mutex_unlock(&cache[i].cache_lock);
 
 				/* unlock the cache for write access, if it */
 				/* has some free space */
-				if(cache[i].csize - cache[i].filled){
-					pthread_mutex_unlock( &cache[i].writeable );
+				if (cache[i].csize - cache[i].filled)
+				{
+					pthread_mutex_unlock(&cache[i].writeable);
 				}
 			}
 
 			/* if there is still data in the cache, unlock */
 			/* it again for further reading by anyone */
-			if(cache[i].filled)
+			if (cache[i].filled)
 			{
-				pthread_mutex_unlock( & cache[i].readable );
+				pthread_mutex_unlock(& cache[i].readable);
 			}
 			else
 				dprintf(stderr, "pop: buffer underrun; cache empty - leaving cache locked\n");
-		} while((rval < len) && (CAudioPlayer::getInstance()->getState() != CBaseDec::STOP_REQ));
+		}
+		while ((rval < len) && (CAudioPlayer::getInstance()->getState() != CBaseDec::STOP_REQ));
 	}
 	else
 	{
@@ -1604,8 +1632,8 @@ int pop(FILE *fd, char *buf, long len)
 
 	cache[i].total_bytes_delivered += rval;
 
-	if(cache[i].filter_arg)
-		if(cache[i].filter_arg->state)
+	if (cache[i].filter_arg)
+		if (cache[i].filter_arg->state)
 			cache[i].filter_arg->state->buffered = 65536L * (int64_t)cache[i].filled / (int64_t)CACHESIZE;
 
 	return rval;
@@ -1613,7 +1641,8 @@ int pop(FILE *fd, char *buf, long len)
 static int http_read_stream_all(STREAM_CACHE *scache, char *buf, int size)
 {
 	int pos = 0;
-	while (!scache->closed && pos < size) {
+	while (!scache->closed && pos < size)
+	{
 		int len = read(fileno(scache->fd), buf + pos, size - pos);
 		if (len <= 0)
 		{
@@ -1625,25 +1654,26 @@ static int http_read_stream_all(STREAM_CACHE *scache, char *buf, int size)
 	return pos;
 }
 
-static bool getChunkSizeLine(STREAM_CACHE *scache,char *line,int size)
+static bool getChunkSizeLine(STREAM_CACHE *scache, char *line, int size)
 {
 	char c = 0;
-	int pos = 0,rn = 0,rnc = 4;
+	int pos = 0, rn = 0, rnc = 4;
 	int len = 0;
 	while ((len = read(fileno(scache->fd), &c, 1)) != 0)
 	{
-		if(pos >= size)
+		if (pos >= size)
 			break;
-		if(c == '\n' || c == '\r')
+		if (c == '\n' || c == '\r')
 		{
 			rn++;
-			if(rn == rnc)
+			if (rn == rnc)
 				break;
 			continue;
 		}
-		if(isxdigit(c)){
+		if (isxdigit(c))
+		{
 			line[pos++] = c;
-			if(!rn)
+			if (!rn)
 				rnc = 2;
 		}
 		else
@@ -1656,7 +1686,7 @@ static bool getChunkSizeLine(STREAM_CACHE *scache,char *line,int size)
 		scache->closed = 1;
 		return false;
 	}
-	if(c == '\n' || rn == 2)
+	if (c == '\n' || rn == 2)
 	{
 		line[pos++] = 0;
 		return true;
@@ -1667,19 +1697,19 @@ static bool getChunkSizeLine(STREAM_CACHE *scache,char *line,int size)
 
 void *CacheFillThread(void *c)
 {
-	STREAM_CACHE *scache = (STREAM_CACHE*)c;
+	STREAM_CACHE *scache = (STREAM_CACHE *)c;
 
-	if(scache->closed)
+	if (scache->closed)
 		return NULL;
 
 	set_threadname("netfile:cache");
 	dprintf(stderr, "CacheFillThread: thread started, using stream %p\n", scache->fd);
 	int bufSize = CACHEBTRANS;
-	if(chunked && meta_interval > 0)
+	if (chunked && meta_interval > 0)
 		bufSize = meta_interval;
 
-	char *buf = (char*)malloc(bufSize);
-	if(!buf)
+	char *buf = (char *)malloc(bufSize);
+	if (!buf)
 	{
 		dprintf(stderr, "CacheFillThread: fatal error ! Could not allocate memory. Terminating.\n");
 		exit(-1);
@@ -1704,28 +1734,29 @@ void *CacheFillThread(void *c)
 
 		int ret = poll(&pfd, 1, 1000);
 
-		if (ret > 0 && (pfd.revents & POLLIN) == POLLIN) {
-			if(chunked)
+		if (ret > 0 && (pfd.revents & POLLIN) == POLLIN)
+		{
+			if (chunked)
 			{
-				if(chunkSize <= 0)
+				if (chunkSize <= 0)
 				{
 					chunkSize = 0;
 					char line[32];
-					if(getChunkSizeLine(scache,line,sizeof(line)))
+					if (getChunkSizeLine(scache, line, sizeof(line)))
 						chunkSize = strtol(line, NULL, 16);
 
-					if(!chunkSize)
+					if (!chunkSize)
 					{
 						dprintf(stderr, "CacheFillThread: chunkSize 0\n");
 						break;
 					}
 				}
 				datalen = bufSize;
-				if(chunkSize && chunkSize < datalen)
+				if (chunkSize && chunkSize < datalen)
 				{
 					datalen = chunkSize ;
 				}
-				if(rest)
+				if (rest)
 				{
 					datalen = rest;
 					rest = 0;
@@ -1737,7 +1768,7 @@ void *CacheFillThread(void *c)
 				break; /* exit cache fill thread if eof and nothing to push */
 			/* if there is a filter function set up for this stream, then */
 			/* we need to call it with the propper arguments */
-			if(!chunked && scache->filter)
+			if (!chunked && scache->filter)
 			{
 				scache->filter_arg->buf = buf;
 				scache->filter_arg->len = &rval;
@@ -1745,40 +1776,40 @@ void *CacheFillThread(void *c)
 				datalen = rval;
 			}
 
-			if( push(scache->fd, buf, rval) < 0)
+			if (push(scache->fd, buf, rval) < 0)
 				break;
 
-			if(chunked)
+			if (chunked)
 			{
 				chunkSize -= rval;
-				if(chunkSize <= 0)
+				if (chunkSize <= 0)
 				{
 					rest = bufSize - rval;
 				}
 			}
-			if(chunked && scache->filter)
+			if (chunked && scache->filter)
 			{
-				if(chunkSize > 0)
+				if (chunkSize > 0)
 				{
 					rval = read(fileno(scache->fd), buf, 1);
 					if (rval <= 0)
 						break;
 					chunkSize -= rval;
-					if(rval)
+					if (rval)
 					{
 						char ch = buf[0];
-						if(ch > 0)
+						if (ch > 0)
 						{
-							size_t icybufsize = 256*16+1;
+							size_t icybufsize = 256 * 16 + 1;
 							char icybuf[icybufsize];
-							memset(icybuf,0, icybufsize);
+							memset(icybuf, 0, icybufsize);
 							int len = (ch * 16);
-							rval = http_read_stream_all(scache, icybuf,len );
+							rval = http_read_stream_all(scache, icybuf, len);
 							if (rval <= 0)
 								break;
 							chunkSize -= rval;
 							ShoutCAST_ParseMetaData(icybuf, scache->filter_arg->state);
-							if(scache->filter_arg->state->cb)
+							if (scache->filter_arg->state->cb)
 								scache->filter_arg->state->cb(scache->filter_arg->state);
 						}
 					}
@@ -1786,13 +1817,13 @@ void *CacheFillThread(void *c)
 			}
 		}
 	}
-	while(!scache->closed);
-	//while( (rval == datalen) && (!scache->closed) );
+	while (!scache->closed);
+	//while((rval == datalen) && (!scache->closed));
 
 	/* close the cache if the stream disrupted */
 	scache->closed = 1;
-	pthread_mutex_unlock( &scache->writeable );
-	pthread_mutex_unlock( &scache->readable );
+	pthread_mutex_unlock(&scache->writeable);
+	pthread_mutex_unlock(&scache->readable);
 
 	/* ... and exit this thread. */
 	dprintf(stderr, "CacheFillThread: thread exited, stream %p  \n", scache->fd);
@@ -1803,11 +1834,11 @@ void *CacheFillThread(void *c)
 
 /**************************** stream filter ******************************/
 
-int f_status(FILE *stream, void (*cb)(void*))
+int f_status(FILE *stream, void (*cb)(void *))
 {
 	int i, rval = -1;
 
-	if(!stream)
+	if (!stream)
 	{
 		strcpy(err_txt, "NULL pointer as stream id\n");
 		return -1;
@@ -1818,12 +1849,12 @@ int f_status(FILE *stream, void (*cb)(void*))
 	if (i < 0)
 		return -1;
 
-	if(cache[i].fd == stream)
+	if (cache[i].fd == stream)
 	{
 		/* hook the users function into the steam filter */
-		if(cache[i].filter_arg)
+		if (cache[i].filter_arg)
 		{
-			if(cache[i].filter_arg->state)
+			if (cache[i].filter_arg->state)
 			{
 				cache[i].filter_arg->state->cb = cb;
 				rval = 0;
@@ -1843,41 +1874,41 @@ int f_status(FILE *stream, void (*cb)(void*))
 void ShoutCAST_ParseMetaData(char *md, CSTATE *state)
 {
 	/* abort if we were submitted a NULL pointer */
-	if((!md) || (!state))
+	if ((!md) || (!state))
 		return;
 
 	dprintf(stderr, "ShoutCAST_ParseMetaData(%p : %s, %p)\n", md, md, state);
 
 	char *ptr = strstr(md, "StreamTitle=");
 
-	if(ptr)
+	if (ptr)
 	{
 		/* look if there is a dash or a comma that separates artist and title */
 		ptr = strstr(md, " - ");
 
-		if(!ptr)
+		if (!ptr)
 			ptr = strstr(md, ", ");
 
 		const int bufsize = 4095;
 		/* no separator, simply copy everything into the 'title' field */
-		if(!ptr)
+		if (!ptr)
 		{
 			ptr = strchr(md, '=');
 			strncpy(state->title, ptr + 2, bufsize);
 			state->title[bufsize] = '\0';
 			ptr = strchr(state->title, ';');
-			if(ptr)
+			if (ptr)
 				*(ptr - 1) = 0;
 			state->artist[0] = 0;
 		}
 		else
 		{
 			//SKIP()
-			for(int i = 0;(ptr && i < bufsize && *ptr && !isalnum(*ptr)); ++ptr,i++){};
+			for (int i = 0; (ptr && i < bufsize && *ptr && !isalnum(*ptr)); ++ptr, i++) {};
 
-			strncpy(state->title, ptr,bufsize);
+			strncpy(state->title, ptr, bufsize);
 			ptr = strchr(state->title, ';');
-			if(ptr)
+			if (ptr)
 				*(ptr - 1) = 0;
 
 			ptr = strstr(md, "StreamTitle=");
@@ -1885,10 +1916,10 @@ void ShoutCAST_ParseMetaData(char *md, CSTATE *state)
 			strncpy(state->artist, ptr + 1, bufsize);
 			state->artist[bufsize] = '\0';
 			ptr = strstr(state->artist, " - ");
-			if(!ptr)
+			if (!ptr)
 				ptr = strstr(state->artist, ", ");
 
-			if(ptr)
+			if (ptr)
 				*ptr = 0;
 		}
 		state->state = RUNNING;
@@ -1897,11 +1928,11 @@ void ShoutCAST_ParseMetaData(char *md, CSTATE *state)
 
 void ShoutCAST_DestroyFilter(void *a)
 {
-	STREAM_FILTER *arg = (STREAM_FILTER*)a;
+	STREAM_FILTER *arg = (STREAM_FILTER *)a;
 
-	if(arg->state)
+	if (arg->state)
 		free(arg->state), arg->state = NULL;
-	if(arg->user)
+	if (arg->user)
 		free(arg->user),  arg->user  = NULL;
 }
 
@@ -1909,15 +1940,15 @@ STREAM_FILTER *ShoutCAST_InitFilter(int meta_int)
 {
 	STREAM_FILTER *arg;
 
-	arg = (STREAM_FILTER*)calloc(1, sizeof(STREAM_FILTER));
+	arg = (STREAM_FILTER *)calloc(1, sizeof(STREAM_FILTER));
 
 	/* allocate our private data space, hook it into the */
 	/* stream filter structure and initialize the variables */
-	if(!arg->user)
+	if (!arg->user)
 	{
 		arg->user = calloc(1, sizeof(FILTERDATA));
-		arg->state = (CSTATE*)calloc(1, sizeof(CSTATE));
-		((FILTERDATA*)arg->user)->meta_int = meta_int;
+		arg->state = (CSTATE *)calloc(1, sizeof(CSTATE));
+		((FILTERDATA *)arg->user)->meta_int = meta_int;
 		arg->destructor = ShoutCAST_DestroyFilter;
 	}
 
@@ -1928,17 +1959,18 @@ void ShoutCAST_MetaFilter(STREAM_FILTER *arg)
 {
 
 	/* bug trap */
-	if(!arg)
+	if (!arg)
 		return;
 
-	FILTERDATA *filterdata = (FILTERDATA*)arg->user;
+	FILTERDATA *filterdata = (FILTERDATA *)arg->user;
 	int meta_int = filterdata->meta_int;
 	int len = *arg->len;
-	if(len < 0){
-		dprintf(stderr, "[%s] : error ---> len %i < 0\n",__func__, len);
+	if (len < 0)
+	{
+		dprintf(stderr, "[%s] : error ---> len %i < 0\n", __func__, len);
 		return;
 	}
-	char*buf = (char*)arg->buf;
+	char *buf = (char *)arg->buf;
 	int meta_start;
 
 #if 0
@@ -1949,19 +1981,20 @@ void ShoutCAST_MetaFilter(STREAM_FILTER *arg)
 	dprintf(stderr, "filter : meta_int : %d\n", filterdata->meta_int);
 #endif
 	/* not yet all meta data has been processed */
-	if(filterdata->stored < filterdata->len)
+	if (filterdata->stored < filterdata->len)
 	{
 		int bsize = (filterdata->len + 1) - filterdata->stored;
-		dprintf(stderr, "filterdata->len %i bsize %i len %i\n",filterdata->len,bsize,len);
-			/*check overload size*/
-			if(bsize > len){
-				dprintf(stderr, "[%s] : error ---> bsize %i > len %i\n",__func__,bsize, len);
-				return;
-			}
+		dprintf(stderr, "filterdata->len %i bsize %i len %i\n", filterdata->len, bsize, len);
+		/*check overload size*/
+		if (bsize > len)
+		{
+			dprintf(stderr, "[%s] : error ---> bsize %i > len %i\n", __func__, bsize, len);
+			return;
+		}
 
 		/* if there is some meta data, extract it */
 		/* there can be zero size blocks too */
-		if(filterdata->len)
+		if (filterdata->len)
 		{
 			dprintf(stderr, "filter : ********* partitioned metadata block part 2 ******\n");
 
@@ -1970,7 +2003,7 @@ void ShoutCAST_MetaFilter(STREAM_FILTER *arg)
 			ShoutCAST_ParseMetaData(filterdata->meta_data, arg->state);
 
 			/* call the users callback function */
-			if(arg->state->cb)
+			if (arg->state->cb)
 				arg->state->cb(arg->state);
 
 			//dprintf(stderr, "filter : metadata : \n\n\n----------\n%s\n----------\n\n\n", filterdata->meta_data);
@@ -1986,7 +2019,7 @@ void ShoutCAST_MetaFilter(STREAM_FILTER *arg)
 		return;
 	}
 
-	if((filterdata->cnt < meta_int) && ((filterdata->cnt + len) <= meta_int))
+	if ((filterdata->cnt < meta_int) && ((filterdata->cnt + len) <= meta_int))
 	{
 		/* do nothing; leave the data block and the length variable */
 		/* untouched, update our private counter and return */
@@ -1995,7 +2028,7 @@ void ShoutCAST_MetaFilter(STREAM_FILTER *arg)
 	}
 
 	/* does a meta data block start in the current block ? */
-	if((filterdata->cnt <= meta_int) && ((filterdata->cnt + len) > meta_int))
+	if ((filterdata->cnt <= meta_int) && ((filterdata->cnt + len) > meta_int))
 	{
 		meta_start = meta_int - filterdata->cnt;
 
@@ -2007,13 +2040,13 @@ void ShoutCAST_MetaFilter(STREAM_FILTER *arg)
 		/****************************************************************/
 		/* case A: the meta data is completely within the current block */
 		/****************************************************************/
-		if((meta_start + filterdata->len) <= len)
+		if ((meta_start + filterdata->len) <= len)
 		{
 			int b = meta_start + filterdata->len + 1;
 
 			/* if there is some meta data, extract it; */
 			/* there can be zero size blocks too */
-			if(filterdata->len)
+			if (filterdata->len)
 			{
 				memset(filterdata->meta_data, 0, 4096);
 				memmove(filterdata->meta_data, buf + meta_start, filterdata->len);
@@ -2021,19 +2054,19 @@ void ShoutCAST_MetaFilter(STREAM_FILTER *arg)
 				ShoutCAST_ParseMetaData(filterdata->meta_data, arg->state);
 
 				/* call the users callback function */
-				if(arg->state->cb)
+				if (arg->state->cb)
 					arg->state->cb(arg->state);
 
 				//dprintf(stderr, "filter : metadata : \n\n\n----------\n%s\n----------\n\n\n", filterdata->meta_data);
 			}
 			/*check negative size*/
-			if(len - b < 0)
+			if (len - b < 0)
 			{
-				dprintf(stderr, "[%s] : error ---> len - b %i\n",__func__,len-b);
+				dprintf(stderr, "[%s] : error ---> len - b %i\n", __func__, len - b);
 				return;
 			}
 			/* remove the metadata and it's size indicator from the buffer */
-			memmove(buf + meta_start, buf + b, len - b );
+			memmove(buf + meta_start, buf + b, len - b);
 
 			/* adjust the buffersize */
 			*arg->len -= filterdata->len + 1;
@@ -2051,7 +2084,7 @@ void ShoutCAST_MetaFilter(STREAM_FILTER *arg)
 
 			/* if there is some meta data, extract it */
 			/* there can be zero size blocks too */
-			if(filterdata->len)
+			if (filterdata->len)
 			{
 				memset(filterdata->meta_data, 0, 4096);
 				filterdata->stored = len - meta_start;
@@ -2065,7 +2098,8 @@ void ShoutCAST_MetaFilter(STREAM_FILTER *arg)
 }
 
 /**************************** utility functions ******************************/
-void parseURL_url(URL& url) {
+void parseURL_url(URL &url)
+{
 	/* now lets see what we have ... */
 	char buffer[2048];
 //	printf("parseURL_url: %s\n", url.url);
@@ -2093,24 +2127,24 @@ void parseURL_url(URL& url) {
 		/* that it will be parsed and processed automatically. If */
 		/* it does not fail, then the call returns with an opened stream */
 
-/* this currently results in an endless loop due to recursive calls of f_open()
-    if((url.access_mode == HTTP11) && (strstr(url.url, ".pls")))
-    {
-      url.access_mode = MODE_PLS;
-      url.proto_version = SHOUTCAST;
-    }
-*/
+		/* this currently results in an endless loop due to recursive calls of f_open()
+		    if((url.access_mode == HTTP11) && (strstr(url.url, ".pls")))
+		    {
+		      url.access_mode = MODE_PLS;
+		      url.proto_version = SHOUTCAST;
+		    }
+		*/
 
 		/* extract the file path from the url */
 		ptr = strchr(ptr + 3, '/');
-		if(ptr)
+		if (ptr)
 			strcpy(url.file, ptr);
 		else
 			strcpy(url.file, "/");
 
 		/* extract the host part from the url */
 		ptr = strchr(url.host, '/');
-		if(ptr)
+		if (ptr)
 			*ptr = 0;
 
 		if ((ptr = strchr(url.host, '@')))
@@ -2127,7 +2161,7 @@ void parseURL_url(URL& url) {
 
 		ptr = strrchr(url.host, ':');
 
-		if(ptr)
+		if (ptr)
 		{
 			url.port = atoi(ptr + 1);
 			*ptr = 0;
@@ -2147,32 +2181,32 @@ int base64_encode(char *dest, const char *src)
 
 	if (dest != NULL && src != NULL && (src_len = strlen(src)) > 0)
 	{
-		strcpy(symbols,"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
-		char buffer[src_len*2];
+		strcpy(symbols, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
+		char buffer[src_len * 2];
 		char *buf_ptr = buffer;
 
-		for (src_pos = 0; src_pos < src_len; src_pos +=3)
+		for (src_pos = 0; src_pos < src_len; src_pos += 3)
 		{
 			for (part_pos = 0; part_pos < 3; part_pos++)
 			{
-				if (src[src_pos+part_pos] != 0)
-					mypart[part_pos] = src[src_pos+part_pos];
+				if (src[src_pos + part_pos] != 0)
+					mypart[part_pos] = src[src_pos + part_pos];
 				else
 				{
 					null_bytes = 3 - part_pos;
 					mypart[part_pos] = 0;
 					if (part_pos < 2) /* here: part_pos == 1, cannot be 0 */
-						mypart[part_pos+1] = 0;
+						mypart[part_pos + 1] = 0;
 					break;
 				}
 			}
 			for (part_pos = 0; part_pos < 24; part_pos++)
-				mybits[part_pos] = ( mypart[part_pos/8] >> (7 - (part_pos%8)) ) & 0x1;
-			for (part_pos = 0; part_pos < 24; part_pos+=6)
+				mybits[part_pos] = (mypart[part_pos / 8] >> (7 - (part_pos % 8))) & 0x1;
+			for (part_pos = 0; part_pos < 24; part_pos += 6)
 			{
 				*buf_ptr = (mybits[part_pos] << 5) |
-					(mybits[part_pos+1] << 4) | (mybits[part_pos+2] << 3) | (mybits[part_pos+3] << 2) |
-					(mybits[part_pos+4] << 1) | mybits[part_pos+5];
+					(mybits[part_pos + 1] << 4) | (mybits[part_pos + 2] << 3) | (mybits[part_pos + 3] << 2) |
+					(mybits[part_pos + 4] << 1) | mybits[part_pos + 5];
 				buf_ptr++;
 			}
 		}

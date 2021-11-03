@@ -106,7 +106,8 @@ bool CScreenShot::GetData()
 #endif
 
 	pthread_mutex_unlock(&getData_mutex);
-	if (!res) {
+	if (!res)
+	{
 		printf("[CScreenShot::%s:%d] GetScreenImage failed\n", __func__, __LINE__);
 		return false;
 	}
@@ -117,10 +118,12 @@ bool CScreenShot::GetData()
 
 bool CScreenShot::startThread()
 {
-	if (!scs_thread) {
-		void *ptr = static_cast<void*>(this);
+	if (!scs_thread)
+	{
+		void *ptr = static_cast<void *>(this);
 		int res = pthread_create(&scs_thread, NULL, initThread, ptr);
-		if (res != 0) {
+		if (res != 0)
+		{
 			printf("[CScreenShot::%s:%d] ERROR! pthread_create\n", __func__, __LINE__);
 			return false;
 		}
@@ -133,9 +136,9 @@ bool CScreenShot::startThread()
 #endif
 
 #if !HAVE_SH4_HARDWARE
-void* CScreenShot::initThread(void *arg)
+void *CScreenShot::initThread(void *arg)
 {
-	CScreenShot *scs = static_cast<CScreenShot*>(arg);
+	CScreenShot *scs = static_cast<CScreenShot *>(arg);
 	pthread_cleanup_push(cleanupThread, scs);
 //	printf("[CScreenShot::%s:%d] thread: %p\n", __func__, __LINE__, scs);
 
@@ -161,14 +164,14 @@ void CScreenShot::runThread()
 
 void CScreenShot::cleanupThread(void *arg)
 {
-	CScreenShot *scs = static_cast<CScreenShot*>(arg);
+	CScreenShot *scs = static_cast<CScreenShot *>(arg);
 //	printf("[CScreenShot::%s:%d] thread: %p\n", __func__, __LINE__, scs);
 	delete scs;
 }
 #endif
 
 /* start ::run in new thread to save file in selected format */
-bool CScreenShot::Start(const std::string __attribute__ ((unused)) custom_cmd)
+bool CScreenShot::Start(const std::string __attribute__((unused)) custom_cmd)
 {
 #if HAVE_SH4_HARDWARE
 	std::string cmd = "/bin/grab ";
@@ -176,18 +179,22 @@ bool CScreenShot::Start(const std::string __attribute__ ((unused)) custom_cmd)
 		cmd += "-o ";
 	else if (!get_osd && get_video)
 		cmd += "-v ";
-	switch (format) {
+	switch (format)
+	{
 		case FORMAT_PNG:
-			cmd += "-p "; break;
+			cmd += "-p ";
+			break;
 		case FORMAT_JPG:
-			cmd += "-j 100"; break;
+			cmd += "-j 100";
+			break;
 		default:
 			;
 	}
 	if (!scale_to_video)
 		cmd += " -d";
 
-	if (xres) {
+	if (xres)
+	{
 		char tmp[10];
 		snprintf(tmp, sizeof(tmp), "%d", xres);
 		cmd += "-w " + std::string(tmp);
@@ -230,19 +237,20 @@ bool CScreenShot::SaveFile()
 {
 	bool ret = true;
 
-	switch (format) {
-	case FORMAT_PNG:
-		ret = SavePng();
-		break;
-	default:
-		printf("CScreenShot::SaveFile unsupported format %d, using jpeg\n", format);
+	switch (format)
+	{
+		case FORMAT_PNG:
+			ret = SavePng();
+			break;
+		default:
+			printf("CScreenShot::SaveFile unsupported format %d, using jpeg\n", format);
 		/* fall through */
-	case FORMAT_JPG:
-		ret = SaveJpg();
-		break;
-	case FORMAT_BMP:
-		ret = SaveBmp();
-		break;
+		case FORMAT_JPG:
+			ret = SaveJpg();
+			break;
+		case FORMAT_BMP:
+			ret = SaveBmp();
+			break;
 	}
 
 	cs_free_uncached((void *) pixel_data);
@@ -253,7 +261,8 @@ bool CScreenShot::SaveFile()
 bool CScreenShot::OpenFile()
 {
 	fd = fopen(filename.c_str(), "w");
-	if (!fd) {
+	if (!fd)
+	{
 		printf("CScreenShot::OpenFile: failed to open %s\n", filename.c_str());
 		return false;
 	}
@@ -268,11 +277,12 @@ bool CScreenShot::SavePng()
 	png_infop info_ptr;
 
 	TIMER_START();
-	if(!OpenFile())
+	if (!OpenFile())
 		return false;
 
 	row_pointers = (png_bytep *) malloc(sizeof(png_bytep) * yres);
-	if (!row_pointers) {
+	if (!row_pointers)
+	{
 		printf("CScreenShot::SavePng: malloc error\n");
 		fclose(fd);
 		return false;
@@ -296,8 +306,9 @@ bool CScreenShot::SavePng()
 	png_init_io(png_ptr, fd);
 
 	int y;
-	for (y=0; y<yres; y++) {
-		row_pointers[y] = pixel_data + (y*xres*4);
+	for (y = 0; y < yres; y++)
+	{
+		row_pointers[y] = pixel_data + (y * xres * 4);
 	}
 
 	png_set_IHDR(png_ptr, info_ptr, xres, yres, 8, PNG_COLOR_TYPE_RGBA, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
@@ -320,20 +331,21 @@ bool CScreenShot::SavePng()
 #define SWAP(x,y)       { x ^= y; y ^= x; x ^= y; }
 
 /* from libjpg example.c */
-struct my_error_mgr {
+struct my_error_mgr
+{
 	struct jpeg_error_mgr pub;    /* "public" fields */
 	jmp_buf setjmp_buffer;        /* for return to caller */
 };
-typedef struct my_error_mgr * my_error_ptr;
+typedef struct my_error_mgr *my_error_ptr;
 
-void my_error_exit (j_common_ptr cinfo)
+void my_error_exit(j_common_ptr cinfo)
 {
 	/* cinfo->err really points to a my_error_mgr struct, so coerce pointer */
 	my_error_ptr myerr = (my_error_ptr) cinfo->err;
 
 	/* Always display the message. */
 	/* We could postpone this until after returning, if we chose. */
-	(*cinfo->err->output_message) (cinfo);
+	(*cinfo->err->output_message)(cinfo);
 
 	/* Return control to the setjmp point */
 	longjmp(myerr->setjmp_buffer, 1);
@@ -345,15 +357,17 @@ bool CScreenShot::SaveJpg()
 	int quality = 90;
 
 	TIMER_START();
-	if(!OpenFile())
+	if (!OpenFile())
 		return false;
 
-	for (int y = 0; y < yres; y++) {
-		int xres1 = y*xres*3;
-		int xres2 = xres1+2;
-		for (int x = 0; x < xres; x++) {
-			int x2 = x*3;
-			memmove(pixel_data + x2 + xres1, pixel_data + x*4 + y*xres*4, 3);
+	for (int y = 0; y < yres; y++)
+	{
+		int xres1 = y * xres * 3;
+		int xres2 = xres1 + 2;
+		for (int x = 0; x < xres; x++)
+		{
+			int x2 = x * 3;
+			memmove(pixel_data + x2 + xres1, pixel_data + x * 4 + y * xres * 4, 3);
 			SWAP(pixel_data[x2 + xres1], pixel_data[x2 + xres2]);
 		}
 	}
@@ -366,7 +380,8 @@ bool CScreenShot::SaveJpg()
 	cinfo.err = jpeg_std_error(&jerr.pub);
 	jerr.pub.error_exit = my_error_exit;
 
-	if (setjmp(jerr.setjmp_buffer)) {
+	if (setjmp(jerr.setjmp_buffer))
+	{
 		printf("CScreenShot::SaveJpg: %s save error\n", filename.c_str());
 		jpeg_destroy_compress(&cinfo);
 		fclose(fd);
@@ -387,7 +402,8 @@ bool CScreenShot::SaveJpg()
 	jpeg_start_compress(&cinfo, TRUE);
 	row_stride = xres * 3;
 
-	while (cinfo.next_scanline < cinfo.image_height) {
+	while (cinfo.next_scanline < cinfo.image_height)
+	{
 		row_pointer[0] = & pixel_data[cinfo.next_scanline * row_stride];
 		jpeg_write_scanlines(&cinfo, row_pointer, 1);
 	}
@@ -402,7 +418,7 @@ bool CScreenShot::SaveJpg()
 bool CScreenShot::SaveBmp()
 {
 	TIMER_START();
-	if(!OpenFile())
+	if (!OpenFile())
 		return false;
 
 	unsigned char hdr[14 + 40];
@@ -410,21 +426,32 @@ bool CScreenShot::SaveBmp()
 #define PUT32(x) hdr[i++] = ((x)&0xFF); hdr[i++] = (((x)>>8)&0xFF); hdr[i++] = (((x)>>16)&0xFF); hdr[i++] = (((x)>>24)&0xFF);
 #define PUT16(x) hdr[i++] = ((x)&0xFF); hdr[i++] = (((x)>>8)&0xFF);
 #define PUT8(x) hdr[i++] = ((x)&0xFF);
-	PUT8('B'); PUT8('M');
-	PUT32((((xres * yres) * 3 + 3) &~ 3) + 14 + 40);
-	PUT16(0); PUT16(0); PUT32(14 + 40);
-	PUT32(40); PUT32(xres); PUT32(yres);
+	PUT8('B');
+	PUT8('M');
+	PUT32((((xres * yres) * 3 + 3) & ~ 3) + 14 + 40);
+	PUT16(0);
+	PUT16(0);
+	PUT32(14 + 40);
+	PUT32(40);
+	PUT32(xres);
+	PUT32(yres);
 	PUT16(1);
-	PUT16(4*8); // bits
-	PUT32(0); PUT32(0); PUT32(0); PUT32(0); PUT32(0); PUT32(0);
+	PUT16(4 * 8); // bits
+	PUT32(0);
+	PUT32(0);
+	PUT32(0);
+	PUT32(0);
+	PUT32(0);
+	PUT32(0);
 #undef PUT32
 #undef PUT16
 #undef PUT8
 	fwrite(hdr, 1, i, fd);
 
 	int y;
-	for (y=yres-1; y>=0 ; y-=1) {
-		fwrite(pixel_data+(y*xres*4),xres*4,1,fd);
+	for (y = yres - 1; y >= 0 ; y -= 1)
+	{
+		fwrite(pixel_data + (y * xres * 4), xres * 4, 1, fd);
 	}
 	fclose(fd);
 	TIMER_STOP(("[CScreenShot::SaveBmp] " + filename).c_str());
@@ -448,45 +475,51 @@ void CScreenShot::MakeFileName(const t_channel_id channel_id)
 	pos = strlen(fname);
 
 	channel_name = CServiceManager::getInstance()->GetServiceName(channel_id);
-	if (!(channel_name.empty())) {
+	if (!(channel_name.empty()))
+	{
 		strcpy(&(fname[pos]), UTF8_TO_FILESYSTEM_ENCODING(channel_name.c_str()));
 		ZapitTools::replace_char(&fname[pos]);
 		strcat(fname, "_");
 	}
 	pos = strlen(fname);
 
-	if(CEitManager::getInstance()->getActualEPGServiceKey(channel_id, &epgData)) {
+	if (CEitManager::getInstance()->getActualEPGServiceKey(channel_id, &epgData))
+	{
 		CShortEPGData epgdata;
-		if(CEitManager::getInstance()->getEPGidShort(epgData.eventID, &epgdata)) {
-			if (!(epgdata.title.empty())) {
+		if (CEitManager::getInstance()->getEPGidShort(epgData.eventID, &epgdata))
+		{
+			if (!(epgdata.title.empty()))
+			{
 				strcpy(&(fname[pos]), epgdata.title.c_str());
 				ZapitTools::replace_char(&fname[pos]);
 			}
 		}
 	}
-	if (g_settings.screenshot_cover != 1) {
-	pos = strlen(fname);
+	if (g_settings.screenshot_cover != 1)
+	{
+		pos = strlen(fname);
 
-	struct timeval tv;
-	gettimeofday(&tv, NULL);
-	strftime(&(fname[pos]), sizeof(fname) - pos - 1, "_%Y%m%d_%H%M%S", localtime(&tv.tv_sec));
-	pos = strlen(fname);
-	snprintf(&(fname[pos]), sizeof(fname) - pos - 1, "_%03d", (int) tv.tv_usec/1000);
+		struct timeval tv;
+		gettimeofday(&tv, NULL);
+		strftime(&(fname[pos]), sizeof(fname) - pos - 1, "_%Y%m%d_%H%M%S", localtime(&tv.tv_sec));
+		pos = strlen(fname);
+		snprintf(&(fname[pos]), sizeof(fname) - pos - 1, "_%03d", (int) tv.tv_usec / 1000);
 	}
 
-	switch (format) {
-	case FORMAT_PNG:
-		strcat(fname, ".png");
-		break;
-	default:
-		printf("CScreenShot::MakeFileName unsupported format %d, using jpeg\n", format);
+	switch (format)
+	{
+		case FORMAT_PNG:
+			strcat(fname, ".png");
+			break;
+		default:
+			printf("CScreenShot::MakeFileName unsupported format %d, using jpeg\n", format);
 		/* fall through */
-	case FORMAT_JPG:
-		strcat(fname, ".jpg");
-		break;
-	case FORMAT_BMP:
-		strcat(fname, ".bmp");
-		break;
+		case FORMAT_JPG:
+			strcat(fname, ".jpg");
+			break;
+		case FORMAT_BMP:
+			strcat(fname, ".bmp");
+			break;
 	}
 	printf("CScreenShot::MakeFileName: [%s]\n", fname);
 	filename = std::string(fname);

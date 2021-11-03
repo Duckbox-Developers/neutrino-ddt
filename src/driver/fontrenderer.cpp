@@ -45,11 +45,11 @@
 #endif
 
 FT_Error FBFontRenderClass::myFTC_Face_Requester(FTC_FaceID  face_id,
-        FT_Library  /*library*/,
-        FT_Pointer  request_data,
-        FT_Face*    aface)
+	FT_Library  /*library*/,
+	FT_Pointer  request_data,
+	FT_Face    *aface)
 {
-	return ((FBFontRenderClass*)request_data)->FTC_Face_Requester(face_id, aface);
+	return ((FBFontRenderClass *)request_data)->FTC_Face_Requester(face_id, aface);
 }
 
 
@@ -67,8 +67,8 @@ FBFontRenderClass::FBFontRenderClass(const int xr, const int yr)
 	xres = xr;
 	yres = yr;
 
-	int maxbytes= 4 *1024*1024;
-	dprintf(DEBUG_INFO, "[FONT] Intializing font cache, using max. %dMB...\n", maxbytes/1024/1024);
+	int maxbytes = 4 * 1024 * 1024;
+	dprintf(DEBUG_INFO, "[FONT] Intializing font cache, using max. %dMB...\n", maxbytes / 1024 / 1024);
 	fflush(stdout);
 	if (FTC_Manager_New(library, 10, 20, maxbytes, myFTC_Face_Requester, this, &cacheManager))
 	{
@@ -85,37 +85,38 @@ FBFontRenderClass::FBFontRenderClass(const int xr, const int yr)
 		dprintf(DEBUG_NORMAL, "[FONT] sbit failed!\n");
 		return;
 	}
-/*	if (FTC_ImageCache_New(cacheManager, &imageCache))
-	{
-		printf(" imagecache failed!\n");
-	}
-*/
-	pthread_mutex_init( &render_mutex, NULL );
+	/*	if (FTC_ImageCache_New(cacheManager, &imageCache))
+		{
+			printf(" imagecache failed!\n");
+		}
+	*/
+	pthread_mutex_init(&render_mutex, NULL);
 }
 
 FBFontRenderClass::~FBFontRenderClass()
 {
-	fontListEntry * g;
+	fontListEntry *g;
 
-	for (fontListEntry * f = font; f; f = g)
+	for (fontListEntry *f = font; f; f = g)
 	{
 		g = f->next;
-		delete f; f = NULL;
+		delete f;
+		f = NULL;
 	}
 
 	FTC_Manager_Done(cacheManager);
 	FT_Done_FreeType(library);
 }
 
-FT_Error FBFontRenderClass::FTC_Face_Requester(FTC_FaceID face_id, FT_Face* aface)
+FT_Error FBFontRenderClass::FTC_Face_Requester(FTC_FaceID face_id, FT_Face *aface)
 {
-	fontListEntry *lfont=(fontListEntry *)face_id;
+	fontListEntry *lfont = (fontListEntry *)face_id;
 	if (!lfont)
 		return -1;
 	dprintf(DEBUG_DEBUG, "[FONT] FTC_Face_Requester (%s/%s)\n", lfont->family, lfont->style);
 
 	int error;
-	if ((error=FT_New_Face(library, lfont->filename, 0, aface)))
+	if ((error = FT_New_Face(library, lfont->filename, 0, aface)))
 	{
 		dprintf(DEBUG_NORMAL, "[FONT] FTC_Face_Requester (%s/%s) failed: %i\n", lfont->family, lfont->style, error);
 		return error;
@@ -135,22 +136,22 @@ FT_Error FBFontRenderClass::FTC_Face_Requester(FTC_FaceID face_id, FT_Face* afac
 	return 0;
 }
 
-FTC_FaceID FBFontRenderClass::getFaceID(const char * const family, const char * const style)
+FTC_FaceID FBFontRenderClass::getFaceID(const char *const family, const char *const style)
 {
-	for (fontListEntry *f=font; f; f=f->next)
+	for (fontListEntry *f = font; f; f = f->next)
 	{
 		if ((!strcmp(f->family, family)) && (!strcmp(f->style, style)))
 			return (FTC_FaceID)f;
 	}
 	if (strncmp(style, "Bold ", 5) == 0)
 	{
-		for (fontListEntry *f=font; f; f=f->next)
+		for (fontListEntry *f = font; f; f = f->next)
 		{
 			if ((!strcmp(f->family, family)) && (!strcmp(f->style, &(style[5]))))
 				return (FTC_FaceID)f;
 		}
 	}
-	for (fontListEntry *f=font; f; f=f->next)
+	for (fontListEntry *f = font; f; f = f->next)
 	{
 		if (!strcmp(f->family, family))
 		{
@@ -172,14 +173,14 @@ FT_Error FBFontRenderClass::getGlyphBitmap(FTC_ScalerRec *sc, FT_ULong glyph_ind
 	return FTC_SBitCache_LookupScaler(sbitsCache, sc, FT_LOAD_DEFAULT, glyph_index, sbit, NULL);
 }
 
-const char *FBFontRenderClass::AddFont(const char * const filename, const bool make_italics)
+const char *FBFontRenderClass::AddFont(const char *const filename, const bool make_italics)
 {
 	fflush(stdout);
 	int error;
-	fontListEntry *n=new fontListEntry;
+	fontListEntry *n = new fontListEntry;
 
 	FT_Face face;
-	if ((error=FT_New_Face(library, filename, 0, &face)))
+	if ((error = FT_New_Face(library, filename, 0, &face)))
 	{
 		dprintf(DEBUG_NORMAL, "[FONT] adding font %s, failed: %i\n", filename, error);
 		delete n;//Memory leak: n
@@ -189,9 +190,9 @@ const char *FBFontRenderClass::AddFont(const char * const filename, const bool m
 	n->family   = strdup(face->family_name);
 	n->style    = strdup(make_italics ? "Italic" : face->style_name);
 	FT_Done_Face(face);
-	n->next=font;
+	n->next = font;
 	dprintf(DEBUG_DEBUG, "[FONT] adding font %s... family %s, style %s ok\n", filename, n->family, n->style);
-	font=n;
+	font = n;
 	return n->style;
 }
 
@@ -202,10 +203,11 @@ FBFontRenderClass::fontListEntry::~fontListEntry()
 	free(style);
 }
 
-Font *FBFontRenderClass::getFont(const char * const family, const char * const style, int size)
+Font *FBFontRenderClass::getFont(const char *const family, const char *const style, int size)
 {
 	FTC_FaceID id = getFaceID(family, style);
-	if (!id) {
+	if (!id)
+	{
 		dprintf(DEBUG_DEBUG, "[FONT] getFont: family %s, style %s failed!\n", family, style);
 		return 0;
 	}
@@ -213,9 +215,9 @@ Font *FBFontRenderClass::getFont(const char * const family, const char * const s
 	return new Font(this, id, size, (strcmp(((fontListEntry *)id)->style, style) == 0) ? Font::Regular : Font::Embolden);
 }
 
-std::string FBFontRenderClass::getFamily(const char * const filename) const
+std::string FBFontRenderClass::getFamily(const char *const filename) const
 {
-	for (fontListEntry *f=font; f; f=f->next)
+	for (fontListEntry *f = font; f; f = f->next)
 	{
 		if (!strcmp(f->filename, filename))
 			return f->family;
@@ -248,7 +250,7 @@ Font::Font(FBFontRenderClass *render, FTC_FaceID faceid, const int isize, const 
 
 	setSize(isize);
 	fg_red = 0, fg_green = 0, fg_blue = 0;
-	memset((void*)colors, '\0', sizeof(colors));
+	memset((void *)colors, '\0', sizeof(colors));
 	useFullBG = false;
 }
 
@@ -277,35 +279,35 @@ int Font::setSize(int isize)
 	ascender = face->ascender;
 	descender = face->descender;
 	height = face->height;
-	lower = -descender+(-(descender>>1))+1;
-return 0;
+	lower = -descender + (-(descender >> 1)) + 1;
+	return 0;
 #endif
 	// hack begin (this is a hack to get correct font metrics, didn't find any other way which gave correct values)
 	FTC_SBit glyph;
 	int index;
 
-	index=FT_Get_Char_Index(face, 'M'); // "M" gives us ascender
+	index = FT_Get_Char_Index(face, 'M'); // "M" gives us ascender
 	getGlyphBitmap(index, &glyph);
-	int tM=glyph->top;
+	int tM = glyph->top;
 	fontwidth = glyph->width;
 
-	index=FT_Get_Char_Index(face, 'g'); // "g" gives us descender
+	index = FT_Get_Char_Index(face, 'g'); // "g" gives us descender
 	getGlyphBitmap(index, &glyph);
-	int hg=glyph->height;
-	int tg=glyph->top;
+	int hg = glyph->height;
+	int tg = glyph->top;
 
-	ascender=tM;
-	descender=tg-hg; //this is a negative value!
-	int halflinegap= -(descender>>1); // |descender/2| - we use descender as linegap, half at top, half at bottom
+	ascender = tM;
+	descender = tg - hg; //this is a negative value!
+	int halflinegap = -(descender >> 1); // |descender/2| - we use descender as linegap, half at top, half at bottom
 
 	//hack: Use additional percentage height offset, font types could have different heights, static values seems not really senseful.
-	upper = halflinegap+ascender+hg/7;   // we add 1/7 of glyph height at top
-	lower = -descender+halflinegap-hg/10;  // we add 1/10 of glyph height at bottom
+	upper = halflinegap + ascender + hg / 7; // we add 1/7 of glyph height at top
+	lower = -descender + halflinegap - hg / 10; // we add 1/10 of glyph height at bottom
 
-	height=upper+lower;               // this is total height == distance of lines
+	height = upper + lower;           // this is total height == distance of lines
 
-	DigitHeight = ascender+2; //Is this static value really ok?
-	DigitOffset = -descender+halflinegap;
+	DigitHeight = ascender + 2; //Is this static value really ok?
+	DigitOffset = -descender + halflinegap;
 	// hack end
 
 	//printf("glyph: hM=%d tM=%d hg=%d tg=%d ascender=%d descender=%d height=%d linegap/2=%d upper=%d lower=%d\n",
@@ -336,10 +338,12 @@ int Font::getDigitOffset(void)
 
 int Font::getMaxDigitWidth(void)
 {
-	if (maxdigitwidth < 1) {
+	if (maxdigitwidth < 1)
+	{
 		char b[2];
 		b[1] = 0;
-		for (char c = '0'; c <= '9'; c++) {
+		for (char c = '0'; c <= '9'; c++)
+		{
 			*b = c;
 			int w = getRenderWidth(b);
 			if (w > maxdigitwidth)
@@ -349,7 +353,7 @@ int Font::getMaxDigitWidth(void)
 	return maxdigitwidth;
 }
 
-int UTF8ToUnicode(const char * &text, const bool utf8_encoded) // returns -1 on error
+int UTF8ToUnicode(const char*&text, const bool utf8_encoded)  // returns -1 on error
 {
 	int unicode_value;
 //printf("%c ", (unsigned char)(*text));
@@ -394,12 +398,12 @@ int UTF8ToUnicode(const char * &text, const bool utf8_encoded) // returns -1 on 
 }
 
 #ifdef ENABLE_FRIBIDI
-static std::string fribidi_shape_char(const char * text)
+static std::string fribidi_shape_char(const char *text)
 {
-	if(text && *text)
+	if (text && *text)
 	{
 		int len = strlen(text);
-		char * rtl_text = NULL;
+		char *rtl_text = NULL;
 		int rtl_len = 0;
 
 		fribidi_set_mirroring(true);
@@ -412,8 +416,8 @@ static std::string fribidi_shape_char(const char * text)
 		FriBidiCharType fribidi_chartype = FRIBIDI_TYPE_L;
 
 		// our buffer
-		FriBidiChar *logical = (FriBidiChar *)alloca(sizeof(FriBidiChar)*(len + 1));
-		FriBidiChar *visual = (FriBidiChar *)alloca(sizeof(FriBidiChar)*(len + 1));
+		FriBidiChar *logical = (FriBidiChar *)alloca(sizeof(FriBidiChar) * (len + 1));
+		FriBidiChar *visual = (FriBidiChar *)alloca(sizeof(FriBidiChar) * (len + 1));
 
 		// convert from the selected charset to Unicode
 		rtl_len = fribidi_charset_to_unicode(fribidi_charset, const_cast<char *>(text), len, logical);
@@ -423,9 +427,9 @@ static std::string fribidi_shape_char(const char * text)
 		if (fribidi_log2vis(logical, rtl_len, &fribidi_chartype, visual, NULL, NULL, NULL))
 		{
 			// removes bidirectional marks
-			FriBidiStrIndex __attribute__ ((unused)) idx = fribidi_remove_bidi_marks(visual, rtl_len, NULL, NULL, NULL);
+			FriBidiStrIndex __attribute__((unused)) idx = fribidi_remove_bidi_marks(visual, rtl_len, NULL, NULL, NULL);
 
-			rtl_text = (char *)alloca(sizeof(char)*(rtl_len * 4 + 1));
+			rtl_text = (char *)alloca(sizeof(char) * (rtl_len * 4 + 1));
 			fribidi_unicode_to_charset(fribidi_charset, visual, rtl_len, rtl_text);
 
 			return std::string(rtl_text);
@@ -444,9 +448,11 @@ void Font::paintFontPixel(fb_pixel_t *td, uint8_t src)
 #define DST_GREEN 0x80
 #define DST_RED   0x80
 #define DST_TRANS 0x80
-	if (useFullBG) {
+	if (useFullBG)
+	{
 		uint8_t *dst = (uint8_t *)td;
-		if (*td == (fb_pixel_t)0) {
+		if (*td == (fb_pixel_t)0)
+		{
 			*dst = DST_BLUE  + ((fg_blue  - DST_BLUE)  * src) / 256;
 			dst++;
 			*dst = DST_GREEN + ((fg_green - DST_GREEN) * src) / 256;
@@ -455,7 +461,8 @@ void Font::paintFontPixel(fb_pixel_t *td, uint8_t src)
 			dst++;
 			*dst = (uint8_t)int_min(255, DST_TRANS + src);
 		}
-		else {
+		else
+		{
 			*dst = *dst + ((fg_blue  - *dst) * src) / 256;
 			dst++;
 			*dst = *dst + ((fg_green - *dst) * src) / 256;
@@ -477,32 +484,35 @@ void Font::RenderString(int x, int y, const int width, const char *text, const f
 
 	fb_pixel_t *buff;
 	int stride;
-	if (buffer) {
+	if (buffer)
+	{
 		buff = buffer;
 		stride = _stride;
-	} else {
+	}
+	else
+	{
 		buff = frameBuffer->getFrameBufferPointer();
 		stride = frameBuffer->getStride();
 	}
 
 	const bool utf8_encoded = flags & IS_UTF8;
 	useFullBG               = flags & FULLBG;
-/*
-	useFullBg = false
-	 fetch bgcolor from framebuffer, using lower left edge of the font
-	  - default render mode
-	  - font rendering faster
+	/*
+		useFullBg = false
+		 fetch bgcolor from framebuffer, using lower left edge of the font
+		  - default render mode
+		  - font rendering faster
 
-	useFullBg = true
-	 fetch bgcolor from framebuffer, using the respective real fontpixel position
-	  - better quality at font rendering on images or background with color gradient
-	  - font rendering slower
-*/
+		useFullBg = true
+		 fetch bgcolor from framebuffer, using the respective real fontpixel position
+		  - better quality at font rendering on images or background with color gradient
+		  - font rendering slower
+	*/
 
 	if (render_to_fb)
-		frameBuffer->checkFbArea(x, y-height, width, height, true);
+		frameBuffer->checkFbArea(x, y - height, width, height, true);
 
-	pthread_mutex_lock( &renderer->render_mutex );
+	pthread_mutex_lock(&renderer->render_mutex);
 
 #ifdef ENABLE_FRIBIDI
 	std::string Text = fribidi_shape_char(text);
@@ -518,10 +528,10 @@ void Font::RenderString(int x, int y, const int width, const char *text, const f
 	}
 	face = size->face;
 
-	int use_kerning=FT_HAS_KERNING(face);
+	int use_kerning = FT_HAS_KERNING(face);
 
-	int left=x;
-	int step_y=height;
+	int left = x;
+	int step_y = height;
 
 	// ----------------------------------- box upper end (this is NOT a font metric, this is our method for y centering)
 	//
@@ -552,15 +562,15 @@ void Font::RenderString(int x, int y, const int width, const char *text, const f
 	// caution: this only works if we print a single line of text
 	// if we have multiple lines, don't use boxheight or specify boxheight==0.
 	// if boxheight is !=0, we further adjust y, so that text is y-centered in the box
-	if(boxheight)
+	if (boxheight)
 	{
-		if(boxheight>step_y)			// this is a real box (bigger than text)
-			y -= ((boxheight-step_y)>>1);
-		else if(boxheight<0)			// this normally would be wrong, so we just use it to define a "border"
-			y += (boxheight>>1);		// half of border value at lower end, half at upper end
+		if (boxheight > step_y)			// this is a real box (bigger than text)
+			y -= ((boxheight - step_y) >> 1);
+		else if (boxheight < 0)			// this normally would be wrong, so we just use it to define a "border"
+			y += (boxheight >> 1);		// half of border value at lower end, half at upper end
 	}
 
-	int lastindex=0; // 0 == missing glyph (never has kerning values)
+	int lastindex = 0; // 0 == missing glyph (never has kerning values)
 	FT_Vector kerning;
 	int pen1 = -1; // "pen" positions for kerning, pen2 is "x"
 
@@ -577,7 +587,8 @@ void Font::RenderString(int x, int y, const int width, const char *text, const f
 	   background color or bgcolor will be wrong */
 	if (render_to_fb)
 		frameBuffer->waitForIdle("Font::RenderString 1");
-	if (!useFullBG) {
+	if (!useFullBG)
+	{
 		/* fetch bgcolor from framebuffer, using lower left edge of the font... */
 		bg_color = *(buff + x + y * stride / sizeof(fb_pixel_t));
 
@@ -588,11 +599,12 @@ void Font::RenderString(int x, int y, const int width, const char *text, const f
 		uint8_t bg_red   = (bg_color & 0x00FF0000) >> 16;
 		uint8_t bg_green = (bg_color & 0x0000FF00) >>  8;
 		uint8_t bg_blue  =  bg_color & 0x000000FF;
-		for (int i = 0; i < 256; i++) {
+		for (int i = 0; i < 256; i++)
+		{
 			colors[i] = (((int_min(0xFF, bg_trans + i))           << 24) & 0xFF000000) |
-				    (((bg_red  +((fg_red  -bg_red)  * i)/256) << 16) & 0x00FF0000) |
-				    (((bg_green+((fg_green-bg_green)* i)/256) <<  8) & 0x0000FF00) |
-				     ((bg_blue +((fg_blue -bg_blue) * i)/256)        & 0x000000FF);
+				(((bg_red  + ((fg_red  - bg_red)  * i) / 256) << 16) & 0x00FF0000) |
+				(((bg_green + ((fg_green - bg_green) * i) / 256) <<  8) & 0x0000FF00) |
+				((bg_blue + ((fg_blue - bg_blue) * i) / 256)        & 0x000000FF);
 		}
 	}
 
@@ -613,7 +625,7 @@ void Font::RenderString(int x, int y, const int width, const char *text, const f
 		if (unicode_value == -1)
 			break;
 
-		if (*text=='\n')
+		if (*text == '\n')
 		{
 			/* a '\n' in the text is basically an error, it should not have come
 			   until here. To find the offenders, we replace it with a paragraph
@@ -651,36 +663,42 @@ void Font::RenderString(int x, int y, const int width, const char *text, const f
 #endif
 		int xoff    = x + glyph->left;
 		int ap      = xoff * sizeof(fb_pixel_t) + stride * (y - glyph->top);
-		uint8_t * d = ((uint8_t *)buff) + ap;
-		uint8_t * s = glyph->buffer;
+		uint8_t *d = ((uint8_t *)buff) + ap;
+		uint8_t *s = glyph->buffer;
 		int w       = glyph->width;
 		int h       = glyph->height;
 		int pitch   = glyph->pitch;
-		if (ap>-1) {
-			for (int ay = 0; ay < h; ay++) {
-				fb_pixel_t * td = (fb_pixel_t *)d;
+		if (ap > -1)
+		{
+			for (int ay = 0; ay < h; ay++)
+			{
+				fb_pixel_t *td = (fb_pixel_t *)d;
 				int ax;
-				for (ax = 0; ax < w + spread_by; ax++) {
+				for (ax = 0; ax < w + spread_by; ax++)
+				{
 					/* width clip */
 					if (xoff  + ax >= left + width)
 						break;
-					if (stylemodifier != Font::Embolden) {
+					if (stylemodifier != Font::Embolden)
+					{
 						/* do not paint the backgroundcolor (*s = 0) */
 						if (*s != 0)
 							paintFontPixel(td, *s);
 					}
-					else {
+					else
+					{
 						int lcolor = -1;
 						int start = (ax < w) ? 0 : ax - w + 1;
 						int end   = (ax < spread_by) ? ax + 1 : spread_by + 1;
 						for (int i = start; i < end; i++)
-							if (lcolor < *(s - i))
+							if (lcolor < * (s - i))
 								lcolor = *(s - i);
 						/* do not paint the backgroundcolor (lcolor = 0) */
 						if (lcolor != 0)
 							paintFontPixel(td, (uint8_t)lcolor);
 					}
-					td++; s++;
+					td++;
+					s++;
 				}
 				s += pitch - ax;
 				d += stride;
@@ -693,22 +711,23 @@ void Font::RenderString(int x, int y, const int width, const char *text, const f
 		lastindex = index;
 	}
 	//printf("RenderStat: %d %d %d \n", renderer->cacheManager->num_nodes, renderer->cacheManager->num_bytes, renderer->cacheManager->max_bytes);
-	pthread_mutex_unlock( &renderer->render_mutex );
-	if (render_to_fb) {
-		frameBuffer->checkFbArea(x, y-height, width, height, false);
+	pthread_mutex_unlock(&renderer->render_mutex);
+	if (render_to_fb)
+	{
+		frameBuffer->checkFbArea(x, y - height, width, height, false);
 		/* x is the rightmost position of the last drawn character */
 		frameBuffer->mark(left, y + lower - height, x, y + lower);
 	}
 }
 
-void Font::RenderString(int x, int y, const int width, const std::string & text, const fb_pixel_t color, const int boxheight, const unsigned int flags, fb_pixel_t *buffer, int stride)
+void Font::RenderString(int x, int y, const int width, const std::string &text, const fb_pixel_t color, const int boxheight, const unsigned int flags, fb_pixel_t *buffer, int stride)
 {
 	RenderString(x, y, width, text.c_str(), color, boxheight, flags, buffer, stride);
 }
 
 int Font::getRenderWidth(const char *text, const bool utf8_encoded)
 {
-	pthread_mutex_lock( &renderer->render_mutex );
+	pthread_mutex_lock(&renderer->render_mutex);
 
 #ifdef ENABLE_FRIBIDI
 	std::string Text = fribidi_shape_char(text);
@@ -724,11 +743,11 @@ int Font::getRenderWidth(const char *text, const bool utf8_encoded)
 	}
 	face = size->face;
 
-	int use_kerning=FT_HAS_KERNING(face);
-	int x=0;
-	int lastindex=0; // 0==missing glyph (never has kerning)
+	int use_kerning = FT_HAS_KERNING(face);
+	int x = 0;
+	int lastindex = 0; // 0==missing glyph (never has kerning)
 	FT_Vector kerning;
-	int pen1=-1; // "pen" positions for kerning, pen2 is "x"
+	int pen1 = -1; // "pen" positions for kerning, pen2 is "x"
 	for (; *text; text++)
 	{
 		FTC_SBit glyph;
@@ -738,7 +757,7 @@ int Font::getRenderWidth(const char *text, const bool utf8_encoded)
 		if (unicode_value == -1)
 			break;
 
-		int index=FT_Get_Char_Index(face, unicode_value);
+		int index = FT_Get_Char_Index(face, unicode_value);
 
 		if (!index)
 			continue;
@@ -754,11 +773,11 @@ int Font::getRenderWidth(const char *text, const bool utf8_encoded)
 			x += (kerning.x) >> 6; // kerning!
 		}
 
-		x+=glyph->xadvance+1;
-		if(pen1>x)
-			x=pen1;
-		pen1=x;
-		lastindex=index;
+		x += glyph->xadvance + 1;
+		if (pen1 > x)
+			x = pen1;
+		pen1 = x;
+		lastindex = index;
 	}
 
 	if (stylemodifier == Font::Embolden)
@@ -770,12 +789,12 @@ int Font::getRenderWidth(const char *text, const bool utf8_encoded)
 		x += spread_by;
 	}
 
-	pthread_mutex_unlock( &renderer->render_mutex );
+	pthread_mutex_unlock(&renderer->render_mutex);
 
 	return x;
 }
 
-int Font::getRenderWidth(const std::string & text, const bool utf8_encoded)
+int Font::getRenderWidth(const std::string &text, const bool utf8_encoded)
 {
 	return getRenderWidth(text.c_str(), utf8_encoded);
 }

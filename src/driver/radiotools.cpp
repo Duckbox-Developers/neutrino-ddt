@@ -31,7 +31,8 @@ unsigned short crc16_ccitt(unsigned char *daten, int len, bool skipfirst)
 	register unsigned short crc = 0xffff;
 
 	if (skipfirst) daten++;
-	while (len--) {
+	while (len--)
+	{
 		crc = (crc >> 8) | (crc << 8);
 		crc ^= *daten++;
 		crc ^= (crc & 0xff) >> 4;
@@ -39,16 +40,16 @@ unsigned short crc16_ccitt(unsigned char *daten, int len, bool skipfirst)
 		crc ^= ((crc & 0xff) << 4) << 1;
 	}
 
-	 return ~(crc);
+	return ~(crc);
 }
 
 char *rtrim(char *text)
 {
-    char *s = text + strlen(text) - 1;
-    while (s >= text && (*s == ' ' || *s == '\t' || *s == '\n' || *s == '\r'))
-    	*s-- = 0;
+	char *s = text + strlen(text) - 1;
+	while (s >= text && (*s == ' ' || *s == '\t' || *s == '\n' || *s == '\r'))
+		*s-- = 0;
 
-    return text;
+	return text;
 }
 
 // --- cTimeMs ---------------------------------------------------------------

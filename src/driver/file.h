@@ -86,7 +86,10 @@ class CFile
 		FileType	getType(void) const;
 		std::string	getFileName(void) const;
 		std::string	getPath(void) const;
-		bool		isDir(void) { return S_ISDIR(Mode); };
+		bool		isDir(void)
+		{
+			return S_ISDIR(Mode);
+		};
 
 		CFile();
 		off_t Size;

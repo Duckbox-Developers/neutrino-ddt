@@ -56,7 +56,8 @@ class CFbAccelSTi
 		OpenThreads::Mutex blit_mutex;
 		fb_pixel_t *backbuffer;
 #ifdef PARTIAL_BLIT
-		struct {
+		struct
+		{
 			int xs;
 			int ys;
 			int xe;
@@ -67,13 +68,13 @@ class CFbAccelSTi
 	public:
 		CFbAccelSTi();
 		~CFbAccelSTi();
-		void init(const char * const);
+		void init(const char *const);
 		int setMode(unsigned int xRes, unsigned int yRes, unsigned int bpp);
 		void paintRect(const int x, const int y, const int dx, const int dy, const fb_pixel_t col);
 		void blit2FB(void *fbbuff, uint32_t width, uint32_t height, uint32_t xoff, uint32_t yoff, uint32_t xp, uint32_t yp, bool transp);
 		void waitForIdle(const char *func = NULL);
 		void mark(int x, int y, int dx, int dy);
-		fb_pixel_t * getBackBufferPointer() const;
+		fb_pixel_t *getBackBufferPointer() const;
 		void setBlendMode(uint8_t);
 		void setBlendLevel(int);
 };
@@ -93,10 +94,10 @@ class CFbAccelGLFB
 	public:
 		CFbAccelGLFB();
 		~CFbAccelGLFB();
-		void init(const char * const);
+		void init(const char *const);
 		int setMode(unsigned int xRes, unsigned int yRes, unsigned int bpp);
 		void blit2FB(void *fbbuff, uint32_t width, uint32_t height, uint32_t xoff, uint32_t yoff, uint32_t xp, uint32_t yp, bool transp);
-		fb_pixel_t * getBackBufferPointer() const;
+		fb_pixel_t *getBackBufferPointer() const;
 };
 
 class CFbAccelARM
@@ -121,7 +122,7 @@ class CFbAccelARM
 	public:
 		CFbAccelARM();
 		~CFbAccelARM();
-		fb_pixel_t * getBackBufferPointer() const;
+		fb_pixel_t *getBackBufferPointer() const;
 		int setMode(unsigned int xRes, unsigned int yRes, unsigned int bpp);
 		int scale2Res(int size);
 		bool fullHdAvailable();
@@ -156,7 +157,7 @@ class CFbAccelMIPS
 	public:
 		CFbAccelMIPS();
 		~CFbAccelMIPS();
-		fb_pixel_t * getBackBufferPointer() const;
+		fb_pixel_t *getBackBufferPointer() const;
 		int setMode(unsigned int xRes, unsigned int yRes, unsigned int bpp);
 		int scale2Res(int size);
 		bool fullHdAvailable();

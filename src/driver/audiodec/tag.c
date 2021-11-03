@@ -42,9 +42,9 @@
  */
 void tag_init(struct tag *tag)
 {
-  tag->flags      = 0;
+	tag->flags      = 0;
 #ifdef INCLUDE_UNUSED_STUFF
-  tag->encoder[0] = 0;
+	tag->encoder[0] = 0;
 #endif /* INCLUDE_UNUSED_STUFF */
 }
 
@@ -54,55 +54,59 @@ void tag_init(struct tag *tag)
  */
 static
 int parse_xing(struct tag_xing *xing,
-	       struct mad_bitptr *ptr, unsigned int *bitlen)
+	struct mad_bitptr *ptr, unsigned int *bitlen)
 {
-  if (*bitlen < 32)
-    goto fail;
+	if (*bitlen < 32)
+		goto fail;
 
-  xing->flags = mad_bit_read(ptr, 32);
-  *bitlen -= 32;
+	xing->flags = mad_bit_read(ptr, 32);
+	*bitlen -= 32;
 
-  if (xing->flags & TAG_XING_FRAMES) {
-    if (*bitlen < 32)
-      goto fail;
+	if (xing->flags & TAG_XING_FRAMES)
+	{
+		if (*bitlen < 32)
+			goto fail;
 
-    xing->frames = mad_bit_read(ptr, 32);
-    *bitlen -= 32;
-  }
+		xing->frames = mad_bit_read(ptr, 32);
+		*bitlen -= 32;
+	}
 
-  if (xing->flags & TAG_XING_BYTES) {
-    if (*bitlen < 32)
-      goto fail;
+	if (xing->flags & TAG_XING_BYTES)
+	{
+		if (*bitlen < 32)
+			goto fail;
 
-    xing->bytes = mad_bit_read(ptr, 32);
-    *bitlen -= 32;
-  }
+		xing->bytes = mad_bit_read(ptr, 32);
+		*bitlen -= 32;
+	}
 
-  if (xing->flags & TAG_XING_TOC) {
-    int i;
+	if (xing->flags & TAG_XING_TOC)
+	{
+		int i;
 
-    if (*bitlen < 800)
-      goto fail;
+		if (*bitlen < 800)
+			goto fail;
 
-    for (i = 0; i < 100; ++i)
-      xing->toc[i] = mad_bit_read(ptr, 8);
+		for (i = 0; i < 100; ++i)
+			xing->toc[i] = mad_bit_read(ptr, 8);
 
-    *bitlen -= 800;
-  }
+		*bitlen -= 800;
+	}
 
-  if (xing->flags & TAG_XING_SCALE) {
-    if (*bitlen < 32)
-      goto fail;
+	if (xing->flags & TAG_XING_SCALE)
+	{
+		if (*bitlen < 32)
+			goto fail;
 
-    xing->scale = mad_bit_read(ptr, 32);
-    *bitlen -= 32;
-  }
+		xing->scale = mad_bit_read(ptr, 32);
+		*bitlen -= 32;
+	}
 
-  return 0;
+	return 0;
 
- fail:
-  xing->flags = 0;
-  return -1;
+fail:
+	xing->flags = 0;
+	return -1;
 }
 
 #ifdef INCLUDE_UNUSED_STUFF
@@ -112,16 +116,16 @@ int parse_xing(struct tag_xing *xing,
  */
 void tag_parse_rgain(struct tag_rgain *rgain, struct mad_bitptr *ptr)
 {
-  int negative;
+	int negative;
 
-  rgain->name       = mad_bit_read(ptr, 3);
-  rgain->originator = mad_bit_read(ptr, 3);
+	rgain->name       = mad_bit_read(ptr, 3);
+	rgain->originator = mad_bit_read(ptr, 3);
 
-  negative          = mad_bit_read(ptr, 1);
-  rgain->adjustment = mad_bit_read(ptr, 9);
+	negative          = mad_bit_read(ptr, 1);
+	rgain->adjustment = mad_bit_read(ptr, 9);
 
-  if (negative)
-    rgain->adjustment = -rgain->adjustment;
+	if (negative)
+		rgain->adjustment = -rgain->adjustment;
 }
 
 /*
@@ -130,97 +134,97 @@ void tag_parse_rgain(struct tag_rgain *rgain, struct mad_bitptr *ptr)
  */
 static
 int parse_lame(struct tag_lame *lame,
-	       struct mad_bitptr *ptr, unsigned int *bitlen,
-	       unsigned short crc)
+	struct mad_bitptr *ptr, unsigned int *bitlen,
+	unsigned short crc)
 {
-  struct mad_bitptr save = *ptr;
+	struct mad_bitptr save = *ptr;
 
-  if (*bitlen < 36 * 8)
-    goto fail;
+	if (*bitlen < 36 * 8)
+		goto fail;
 
-  /* bytes $9A-$A4: Encoder short VersionString */
+	/* bytes $9A-$A4: Encoder short VersionString */
 
-  mad_bit_skip(ptr, 9 * 8);
+	mad_bit_skip(ptr, 9 * 8);
 
-  /* byte $A5: Info Tag revision + VBR method */
+	/* byte $A5: Info Tag revision + VBR method */
 
-  lame->revision = mad_bit_read(ptr, 4);
-  if (lame->revision == 15)
-    goto fail;
+	lame->revision = mad_bit_read(ptr, 4);
+	if (lame->revision == 15)
+		goto fail;
 
-  lame->vbr_method = mad_bit_read(ptr, 4);
+	lame->vbr_method = mad_bit_read(ptr, 4);
 
-  /* byte $A6: Lowpass filter value (Hz) */
+	/* byte $A6: Lowpass filter value (Hz) */
 
-  lame->lowpass_filter = mad_bit_read(ptr, 8) * 100;
+	lame->lowpass_filter = mad_bit_read(ptr, 8) * 100;
 
-  /* bytes $A7-$AA: 32 bit "Peak signal amplitude" */
+	/* bytes $A7-$AA: 32 bit "Peak signal amplitude" */
 
-  lame->peak = mad_bit_read(ptr, 32) << 5;
+	lame->peak = mad_bit_read(ptr, 32) << 5;
 
-  /* bytes $AB-$AC: 16 bit "Radio Replay Gain" */
+	/* bytes $AB-$AC: 16 bit "Radio Replay Gain" */
 
-  tag_parse_rgain(&lame->replay_gain[0], ptr);
+	tag_parse_rgain(&lame->replay_gain[0], ptr);
 
-  /* bytes $AD-$AE: 16 bit "Audiophile Replay Gain" */
+	/* bytes $AD-$AE: 16 bit "Audiophile Replay Gain" */
 
-  tag_parse_rgain(&lame->replay_gain[1], ptr);
+	tag_parse_rgain(&lame->replay_gain[1], ptr);
 
-  /* byte $AF: Encoding flags + ATH Type */
+	/* byte $AF: Encoding flags + ATH Type */
 
-  lame->flags    = mad_bit_read(ptr, 4);
-  lame->ath_type = mad_bit_read(ptr, 4);
+	lame->flags    = mad_bit_read(ptr, 4);
+	lame->ath_type = mad_bit_read(ptr, 4);
 
-  /* byte $B0: if ABR {specified bitrate} else {minimal bitrate} */
+	/* byte $B0: if ABR {specified bitrate} else {minimal bitrate} */
 
-  lame->bitrate = mad_bit_read(ptr, 8);
+	lame->bitrate = mad_bit_read(ptr, 8);
 
-  /* bytes $B1-$B3: Encoder delays */
+	/* bytes $B1-$B3: Encoder delays */
 
-  lame->start_delay = mad_bit_read(ptr, 12);
-  lame->end_padding = mad_bit_read(ptr, 12);
+	lame->start_delay = mad_bit_read(ptr, 12);
+	lame->end_padding = mad_bit_read(ptr, 12);
 
-  /* byte $B4: Misc */
+	/* byte $B4: Misc */
 
-  lame->source_samplerate = mad_bit_read(ptr, 2);
+	lame->source_samplerate = mad_bit_read(ptr, 2);
 
-  if (mad_bit_read(ptr, 1))
-    lame->flags |= TAG_LAME_UNWISE;
+	if (mad_bit_read(ptr, 1))
+		lame->flags |= TAG_LAME_UNWISE;
 
-  lame->stereo_mode   = mad_bit_read(ptr, 3);
-  lame->noise_shaping = mad_bit_read(ptr, 2);
+	lame->stereo_mode   = mad_bit_read(ptr, 3);
+	lame->noise_shaping = mad_bit_read(ptr, 2);
 
-  /* byte $B5: MP3 Gain */
+	/* byte $B5: MP3 Gain */
 
-  lame->gain = mad_bit_read(ptr, 8);
+	lame->gain = mad_bit_read(ptr, 8);
 
-  /* bytes $B6-B7: Preset and surround info */
+	/* bytes $B6-B7: Preset and surround info */
 
-  mad_bit_skip(ptr, 2);
+	mad_bit_skip(ptr, 2);
 
-  lame->surround = mad_bit_read(ptr,  3);
-  lame->preset   = mad_bit_read(ptr, 11);
+	lame->surround = mad_bit_read(ptr,  3);
+	lame->preset   = mad_bit_read(ptr, 11);
 
-  /* bytes $B8-$BB: MusicLength */
+	/* bytes $B8-$BB: MusicLength */
 
-  lame->music_length = mad_bit_read(ptr, 32);
+	lame->music_length = mad_bit_read(ptr, 32);
 
-  /* bytes $BC-$BD: MusicCRC */
+	/* bytes $BC-$BD: MusicCRC */
 
-  lame->music_crc = mad_bit_read(ptr, 16);
+	lame->music_crc = mad_bit_read(ptr, 16);
 
-  /* bytes $BE-$BF: CRC-16 of Info Tag */
+	/* bytes $BE-$BF: CRC-16 of Info Tag */
 
-  if (mad_bit_read(ptr, 16) != crc)
-    goto fail;
+	if (mad_bit_read(ptr, 16) != crc)
+		goto fail;
 
-  *bitlen -= 36 * 8;
+	*bitlen -= 36 * 8;
 
-  return 0;
+	return 0;
 
- fail:
-  *ptr = save;
-  return -1;
+fail:
+	*ptr = save;
+	return -1;
 }
 #endif /* INCLUDE_UNUSED_STUFF */
 
@@ -230,102 +234,110 @@ int parse_lame(struct tag_lame *lame,
  */
 int tag_parse(struct tag *tag, struct mad_stream const *stream)
 {
-  struct mad_bitptr ptr = stream->anc_ptr;
-  struct mad_bitptr start = ptr;
-  unsigned int bitlen = stream->anc_bitlen;
-  unsigned long magic;
+	struct mad_bitptr ptr = stream->anc_ptr;
+	struct mad_bitptr start = ptr;
+	unsigned int bitlen = stream->anc_bitlen;
+	unsigned long magic;
 #ifdef INCLUDE_UNUSED_STUFF
-  int i;
+	int i;
 #endif /* INCLUDE_UNUSED_STUFF */
 
-  if (bitlen < 32)
-    return -1;
+	if (bitlen < 32)
+		return -1;
 
-  magic = mad_bit_read(&ptr, 32);
-  bitlen -= 32;
+	magic = mad_bit_read(&ptr, 32);
+	bitlen -= 32;
 
-  if (magic != XING_MAGIC
-      && magic != INFO_MAGIC
-      && magic != LAME_MAGIC)
-  {
-    /*
-     * Due to an unfortunate historical accident, a Xing VBR tag may be
-     * misplaced in a stream with CRC protection. We check for this by
-     * assuming the tag began two octets prior and the high bits of the
-     * following flags field are always zero.
-     */
+	if (magic != XING_MAGIC
+		&& magic != INFO_MAGIC
+		&& magic != LAME_MAGIC)
+	{
+		/*
+		 * Due to an unfortunate historical accident, a Xing VBR tag may be
+		 * misplaced in a stream with CRC protection. We check for this by
+		 * assuming the tag began two octets prior and the high bits of the
+		 * following flags field are always zero.
+		 */
 
-    if (magic != ((XING_MAGIC << 16) & 0xffffffffL)
-        && magic != ((INFO_MAGIC << 16) & 0xffffffffL))
-      return -1;
+		if (magic != ((XING_MAGIC << 16) & 0xffffffffL)
+			&& magic != ((INFO_MAGIC << 16) & 0xffffffffL))
+			return -1;
 
-    magic >>= 16;
+		magic >>= 16;
 
-    /* backtrack the bit pointer */
+		/* backtrack the bit pointer */
 
-    ptr = start;
-    mad_bit_skip(&ptr, 16);
-    bitlen += 16;
-  }
+		ptr = start;
+		mad_bit_skip(&ptr, 16);
+		bitlen += 16;
+	}
 
-  if ((magic & 0x0000ffffL) == (XING_MAGIC & 0x0000ffffL))
-    tag->flags |= TAG_VBR;
+	if ((magic & 0x0000ffffL) == (XING_MAGIC & 0x0000ffffL))
+		tag->flags |= TAG_VBR;
 
-  /* Xing tag */
+	/* Xing tag */
 
-  if (magic == LAME_MAGIC) {
-    ptr = start;
-    bitlen += 32;
-  }
-  else if (parse_xing(&tag->xing, &ptr, &bitlen) == 0)
-    tag->flags |= TAG_XING;
+	if (magic == LAME_MAGIC)
+	{
+		ptr = start;
+		bitlen += 32;
+	}
+	else if (parse_xing(&tag->xing, &ptr, &bitlen) == 0)
+		tag->flags |= TAG_XING;
 
 #ifdef INCLUDE_UNUSED_STUFF
-  /* encoder string */
+	/* encoder string */
 
-  if (bitlen >= 20 * 8) {
-    start = ptr;
+	if (bitlen >= 20 * 8)
+	{
+		start = ptr;
 
-    for (i = 0; i < 20; ++i) {
-      tag->encoder[i] = mad_bit_read(&ptr, 8);
+		for (i = 0; i < 20; ++i)
+		{
+			tag->encoder[i] = mad_bit_read(&ptr, 8);
 
-      if (tag->encoder[i] == 0)
-	break;
+			if (tag->encoder[i] == 0)
+				break;
 
-      /* keep only printable ASCII chars */
+			/* keep only printable ASCII chars */
 
-      if (tag->encoder[i] < 0x20 || tag->encoder[i] >= 0x7f) {
-	tag->encoder[i] = 0;
-	break;
-      }
-    }
+			if (tag->encoder[i] < 0x20 || tag->encoder[i] >= 0x7f)
+			{
+				tag->encoder[i] = 0;
+				break;
+			}
+		}
 
-    tag->encoder[20] = 0;
-    ptr = start;
-  }
+		tag->encoder[20] = 0;
+		ptr = start;
+	}
 
-  /* LAME tag */
+	/* LAME tag */
 
-  if (stream->next_frame - stream->this_frame >= 192 &&
-      parse_lame(&tag->lame, &ptr, &bitlen,
-		 crc_compute(stream->this_frame, 190, 0x0000)) == 0) {
-    tag->flags |= TAG_LAME;
-    tag->encoder[9] = 0;
-  }
-  else {
-    for (i = 0; i < 20; ++i) {
-      if (tag->encoder[i] == 0)
-	break;
+	if (stream->next_frame - stream->this_frame >= 192 &&
+		parse_lame(&tag->lame, &ptr, &bitlen,
+			crc_compute(stream->this_frame, 190, 0x0000)) == 0)
+	{
+		tag->flags |= TAG_LAME;
+		tag->encoder[9] = 0;
+	}
+	else
+	{
+		for (i = 0; i < 20; ++i)
+		{
+			if (tag->encoder[i] == 0)
+				break;
 
-      /* stop at padding chars */
+			/* stop at padding chars */
 
-      if (tag->encoder[i] == 0x55) {
-	tag->encoder[i] = 0;
-	break;
-      }
-    }
-  }
+			if (tag->encoder[i] == 0x55)
+			{
+				tag->encoder[i] = 0;
+				break;
+			}
+		}
+	}
 #endif /* INCLUDE_UNUSED_STUFF */
 
-  return 0;
+	return 0;
 }

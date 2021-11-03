@@ -39,18 +39,18 @@
 
 class CAudiofile
 {
- public:
-	/* constructors */
-	CAudiofile();
-	CAudiofile( std::string name, CFile::FileType type );
-	CAudiofile( const CAudiofile& src );
+	public:
+		/* constructors */
+		CAudiofile();
+		CAudiofile(std::string name, CFile::FileType type);
+		CAudiofile(const CAudiofile &src);
 
-	void operator=( const CAudiofile& src );
-	void clear();
+		void operator=(const CAudiofile &src);
+		void clear();
 
-	CAudioMetaData MetaData;
-	std::string Filename;
-	CFile::FileType FileType;
+		CAudioMetaData MetaData;
+		std::string Filename;
+		CFile::FileType FileType;
 };
 
 typedef std::vector<CAudiofile> CPlayList;

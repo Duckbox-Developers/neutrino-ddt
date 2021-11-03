@@ -57,20 +57,20 @@ SHTDCNT::~SHTDCNT()
 	}
 }
 
-SHTDCNT* SHTDCNT::getInstance()
+SHTDCNT *SHTDCNT::getInstance()
 {
-	static SHTDCNT* shtdcnt = NULL;
-	if(shtdcnt == NULL)
+	static SHTDCNT *shtdcnt = NULL;
+	if (shtdcnt == NULL)
 	{
 		shtdcnt = new SHTDCNT();
 	}
 	return shtdcnt;
 }
 
-void* SHTDCNT::TimeThread(void *)
+void *SHTDCNT::TimeThread(void *)
 {
 	set_threadname("n:shtdcnt");
-	while(1)
+	while (1)
 	{
 		sleep(1);
 		SHTDCNT::getInstance()->shutdown_counter();
@@ -83,7 +83,7 @@ void SHTDCNT::init()
 	shutdown_cnt = g_settings.shutdown_count * 60;
 	sleep_cnt = g_settings.shutdown_min * 60;
 	thread_running = true;
-	if (pthread_create (&thrTime, NULL, TimeThread, NULL) != 0 )
+	if (pthread_create(&thrTime, NULL, TimeThread, NULL) != 0)
 	{
 		perror("[SHTDCNT]: pthread_create(TimeThread)");
 		thread_running = false;
@@ -96,9 +96,9 @@ void SHTDCNT::shutdown_counter()
 	static bool sleeptimer_active = true;
 	if (g_settings.shutdown_count > 0)
 	{
-		if ((CNeutrinoApp::getInstance()->getMode() == NeutrinoModes::mode_standby) && (!CNeutrinoApp::getInstance ()->recordingstatus))
+		if ((CNeutrinoApp::getInstance()->getMode() == NeutrinoModes::mode_standby) && (!CNeutrinoApp::getInstance()->recordingstatus))
 		{
-			if (shutdown_cnt > 0 )
+			if (shutdown_cnt > 0)
 			{
 				shutdown_cnt = shutdown_cnt - 1;
 				//printf("[SHTDCNT] shutdown counter: %d sec to shutdown\n", shutdown_cnt);
@@ -107,7 +107,7 @@ void SHTDCNT::shutdown_counter()
 			{
 				// send shutdown message
 				printf("[SHTDCNT] shutdown counter send NeutrinoMessages::SHUTDOWN\n");
-				//CNeutrinoApp::getInstance()->handleMsg( NeutrinoMessages::SHUTDOWN, 0);
+				//CNeutrinoApp::getInstance()->handleMsg(NeutrinoMessages::SHUTDOWN, 0);
 				g_RCInput->postMsg(NeutrinoMessages::SHUTDOWN, 0);
 			}
 		}
@@ -118,11 +118,15 @@ void SHTDCNT::shutdown_counter()
 		}
 	}
 
-	if(g_settings.shutdown_min > 0) {
-		if(sleep_cnt > 0) {
+	if (g_settings.shutdown_min > 0)
+	{
+		if (sleep_cnt > 0)
+		{
 			sleeptimer_active = true;
 			sleep_cnt--;
-		} else if(sleeptimer_active && !CNeutrinoApp::getInstance ()->recordingstatus) {
+		}
+		else if (sleeptimer_active && !CNeutrinoApp::getInstance()->recordingstatus)
+		{
 			sleeptimer_active = false;
 
 			exec_controlscript(NEUTRINO_ENTER_INACTIVITY_SCRIPT);

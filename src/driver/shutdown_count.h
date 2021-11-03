@@ -40,12 +40,12 @@ class SHTDCNT
 		void shutdown_counter();
 		SHTDCNT();
 
-		static void* TimeThread(void*);
+		static void *TimeThread(void *);
 	public:
 		~SHTDCNT();
 		void setlcdparameter(void);
 
-		static SHTDCNT* getInstance();
+		static SHTDCNT *getInstance();
 		void init();
 		void resetSleepTimer();
 };

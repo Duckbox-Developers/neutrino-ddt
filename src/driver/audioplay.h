@@ -34,37 +34,49 @@
 
 class CAudioPlayer
 {
-private:
-	time_t m_played_time;
-	int  m_sc_buffered;
-	pthread_t	thrPlay;
-	CBaseDec::State state;
-	static void* PlayThread(void*);
-	void clearFileData();
-	unsigned int m_SecondsToSkip;
+	private:
+		time_t m_played_time;
+		int  m_sc_buffered;
+		pthread_t	thrPlay;
+		CBaseDec::State state;
+		static void *PlayThread(void *);
+		void clearFileData();
+		unsigned int m_SecondsToSkip;
 
-protected:
-	CAudiofile m_Audiofile;
+	protected:
+		CAudiofile m_Audiofile;
 
-public:
-	static CAudioPlayer* getInstance();
-	bool play(const CAudiofile*, const bool highPrio=false);
-	void stop();
-	void pause();
-	void init();
-	void ff(unsigned int seconds=0);
-	void rev(unsigned int seconds=0);
-	CAudioMetaData getMetaData();
-	bool hasMetaDataChanged();
-	bool readMetaData(CAudiofile* const, const bool);
-	time_t getTimePlayed(){return m_played_time;}
-	time_t getTimeTotal(){return m_Audiofile.MetaData.total_time;}
-	int getScBuffered(){return m_sc_buffered;}
-	void sc_callback(void *arg); // see comment in .cpp
-	CBaseDec::State getState(){return state;}
+	public:
+		static CAudioPlayer *getInstance();
+		bool play(const CAudiofile *, const bool highPrio = false);
+		void stop();
+		void pause();
+		void init();
+		void ff(unsigned int seconds = 0);
+		void rev(unsigned int seconds = 0);
+		CAudioMetaData getMetaData();
+		bool hasMetaDataChanged();
+		bool readMetaData(CAudiofile *const, const bool);
+		time_t getTimePlayed()
+		{
+			return m_played_time;
+		}
+		time_t getTimeTotal()
+		{
+			return m_Audiofile.MetaData.total_time;
+		}
+		int getScBuffered()
+		{
+			return m_sc_buffered;
+		}
+		void sc_callback(void *arg); // see comment in .cpp
+		CBaseDec::State getState()
+		{
+			return state;
+		}
 
-	CAudioPlayer();
-	~CAudioPlayer();
+		CAudioPlayer();
+		~CAudioPlayer();
 
 
 };
