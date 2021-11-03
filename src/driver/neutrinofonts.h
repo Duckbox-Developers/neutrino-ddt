@@ -29,24 +29,27 @@
 
 #include <src/system/settings.h>
 
-typedef struct neutrino_font_descr {
+typedef struct neutrino_font_descr
+{
 	std::string	name;
 	std::string	filename;
 	int		size_offset;
 } neutrino_font_descr_struct;
 
-typedef struct font_sizes {
+typedef struct font_sizes
+{
 	const neutrino_locale_t name;
 	const unsigned int      defaultsize;
 	const unsigned int      style;
 	const unsigned int      size_offset;
 } font_sizes_struct;
 
-typedef struct font_sizes_groups {
+typedef struct font_sizes_groups
+{
 	const neutrino_locale_t			groupname;
 	const size_t				count;
 	const SNeutrinoSettings::FONT_TYPES	*const content;
-	const char * const			actionkey;
+	const char *const			actionkey;
 	const neutrino_locale_t hint;
 } font_sizes_groups_struct;
 
@@ -73,7 +76,7 @@ class CNeutrinoFonts
 			int size;
 			int style;
 			std::string text;
-			Font* font;
+			Font *font;
 			bool useDigitOffset;
 		} dyn_font_struct_t;
 
@@ -85,30 +88,34 @@ class CNeutrinoFonts
 
 		void InitDynFonts();
 		void refreshDynFont(int dx, int dy, std::string text, int style, int index, bool isShare);
-		int getFontHeight(Font* fnt);
+		int getFontHeight(Font *fnt);
 		int getDynFontSize(int dx, int dy, std::string text, int style);
 		Font **getDynFontShare(int &dx, int &dy, std::string text, int style);
 		Font **getDynFontWithID(int &dx, int &dy, std::string text, int style, unsigned int f_id);
-		void clearDynFontStruct(dyn_font_t* f);
+		void clearDynFontStruct(dyn_font_t *f);
 		void initDynFontExt();
 
 	public:
-		enum {
+		enum
+		{
 			FONT_STYLE_REGULAR	= 0,
 			FONT_STYLE_BOLD		= 1,
 			FONT_STYLE_ITALIC	= 2
 		};
 
-		enum {
+		enum
+		{
 			FONT_ID_SHARE		= -1
 		};
-		enum {
+		enum
+		{
 			FONT_ID_VOLBAR,
 			FONT_ID_INFOCLOCK,
 
 			FONT_ID_MAX
 		};
-		enum {
+		enum
+		{
 			FONTSETUP_NEUTRINO_FONT		= 1,	/* refresh neutrino fonts */
 			FONTSETUP_NEUTRINO_FONT_INST	= 2,	/* delete & initialize font renderer class */
 			FONTSETUP_DYN_FONT		= 4,	/* refresh dynamic fonts */
@@ -117,13 +124,14 @@ class CNeutrinoFonts
 			FONTSETUP_ALL			= FONTSETUP_NEUTRINO_FONT | FONTSETUP_NEUTRINO_FONT_INST | FONTSETUP_DYN_FONT | FONTSETUP_DYN_FONT_INST
 		};
 
-		enum {
+		enum
+		{
 			DYNFONTEXT_MAX = 16
 		};
 
 		CNeutrinoFonts();
 		~CNeutrinoFonts();
-		static CNeutrinoFonts* getInstance();
+		static CNeutrinoFonts *getInstance();
 
 		neutrino_font_descr_struct fontDescr;
 		neutrino_font_descr_struct old_fontDescr;
@@ -131,10 +139,13 @@ class CNeutrinoFonts
 		void SetupNeutrinoFonts(bool initRenderClass = true);
 		void SetupDynamicFonts(bool initRenderClass = true);
 		void refreshDynFonts();
-		Font **getDynFont(int &dx, int &dy, std::string text="", int style=FONT_STYLE_REGULAR, int share=FONT_ID_SHARE);
-		void setFontUseDigitHeight(bool set=true) {useDigitOffset = set;}
+		Font **getDynFont(int &dx, int &dy, std::string text = "", int style = FONT_STYLE_REGULAR, int share = FONT_ID_SHARE);
+		void setFontUseDigitHeight(bool set = true)
+		{
+			useDigitOffset = set;
+		}
 
-		Font *getDynFontExt(int &dx, int &dy, unsigned int f_id, std::string text="", int style=FONT_STYLE_REGULAR);
+		Font *getDynFontExt(int &dx, int &dy, unsigned int f_id, std::string text = "", int style = FONT_STYLE_REGULAR);
 		void deleteDynFontExtAll();
 };
 

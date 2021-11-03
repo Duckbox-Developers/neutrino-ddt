@@ -56,12 +56,12 @@ class CGenPsi
 		uint16_t       aacp_pid[10];
 		char           aacp_lang[10][3];
 		uint32_t calc_crc32psi(uint8_t *dst, const uint8_t *src, uint32_t len);
-		void build_pat(uint8_t* buffer);
-		void build_pmt(uint8_t* buffer);
+		void build_pat(uint8_t *buffer);
+		void build_pmt(uint8_t *buffer);
 
 	public:
 		CGenPsi();
-		void addPid(uint16_t pid,uint16_t pidtype, short isAC3, const char *data = NULL);
+		void addPid(uint16_t pid, uint16_t pidtype, short isAC3, const char *data = NULL);
 		int genpsi(int fd);
 };
 #endif

@@ -329,11 +329,11 @@ class CRCInput
 		static const char *getUnicodeValue(const neutrino_msg_t key);
 		uint32_t *setAllowRepeat(uint32_t *);
 
-		static const char * getSpecialKeyName(const unsigned int key);
+		static const char *getSpecialKeyName(const unsigned int key);
 		static const char *getKeyNameC(const unsigned int key);
 		static std::string getKeyName(const unsigned int key);
 
-		int addTimer(uint64_t Interval, bool oneshot= true, bool correct_time= true );
+		int addTimer(uint64_t Interval, bool oneshot = true, bool correct_time = true);
 		int addTimer(struct timeval Timeout);
 		int addTimer(const time_t *Timeout);
 
@@ -342,16 +342,19 @@ class CRCInput
 		static int64_t calcTimeoutEnd_MS(const int timeout_in_milliseconds);
 		static int64_t calcTimeoutEnd(const int timeout_in_seconds);
 
-		void getMsgAbsoluteTimeout(neutrino_msg_t * msg, neutrino_msg_data_t * data, uint64_t *TimeoutEnd, bool bAllowRepeatLR= false);
-		void getMsg(neutrino_msg_t * msg, neutrino_msg_data_t * data, int Timeout, bool bAllowRepeatLR= false);        //get message, timeout in 1/10 secs :)
-		void getMsg_ms(neutrino_msg_t * msg, neutrino_msg_data_t * data, int Timeout, bool bAllowRepeatLR= false);     //get message, timeout in msecs :)
-		void getMsg_us(neutrino_msg_t * msg, neutrino_msg_data_t * data, uint64_t Timeout, bool bAllowRepeatLR= false);//get message, timeout in µsecs :)
+		void getMsgAbsoluteTimeout(neutrino_msg_t *msg, neutrino_msg_data_t *data, uint64_t *TimeoutEnd, bool bAllowRepeatLR = false);
+		void getMsg(neutrino_msg_t *msg, neutrino_msg_data_t *data, int Timeout, bool bAllowRepeatLR = false);         //get message, timeout in 1/10 secs :)
+		void getMsg_ms(neutrino_msg_t *msg, neutrino_msg_data_t *data, int Timeout, bool bAllowRepeatLR = false);      //get message, timeout in msecs :)
+		void getMsg_us(neutrino_msg_t *msg, neutrino_msg_data_t *data, uint64_t Timeout, bool bAllowRepeatLR = false); //get message, timeout in µsecs :)
 		void postMsg(const neutrino_msg_t msg, const neutrino_msg_data_t data, const bool Priority = true);            // push message back into buffer
 		void clearRCMsg();
 
-		int messageLoop( bool anyKeyCancels = false, int timeout= -1 );
+		int messageLoop(bool anyKeyCancels = false, int timeout = -1);
 
-		void setLongPressAny(bool b) { longPressAny = b; };
+		void setLongPressAny(bool b)
+		{
+			longPressAny = b;
+		};
 		void setKeyRepeatDelay(unsigned int start_ms, unsigned int repeat_ms);
 };
 

@@ -149,9 +149,9 @@ class CLCD
 			MODE_WEBTV
 #ifdef LCD_UPDATE
 			, MODE_FILEBROWSER,
-			  MODE_PROGRESSBAR,
-			  MODE_PROGRESSBAR2,
-			  MODE_INFOBOX
+			MODE_PROGRESSBAR,
+			MODE_PROGRESSBAR2,
+			MODE_INFOBOX
 #endif // LCD_UPDATE
 		};
 		enum AUDIOMODES
@@ -169,7 +169,7 @@ class CLCD
 		{
 			public:
 				LcdFont *channelname;
-				LcdFont *time; 
+				LcdFont *time;
 				LcdFont *menutitle;
 				LcdFont *menu;
 		};
@@ -205,13 +205,13 @@ class CLCD
 
 		void count_down();
 
-		static void* TimeThread(void*);
-		bool lcdInit(const char * fontfile1, const char * fontname1, 
-		             const char * fontfile2 = NULL, const char * fontname2 = NULL,
-		             const char * fontfile3 = NULL, const char * fontname3 = NULL);
+		static void *TimeThread(void *);
+		bool lcdInit(const char *fontfile1, const char *fontname1,
+			const char *fontfile2 = NULL, const char *fontname2 = NULL,
+			const char *fontfile3 = NULL, const char *fontname3 = NULL);
 		void setlcdparameter(int dimm, int contrast, int power, int inverse, int bias);
 		void displayUpdate();
-		void showTextScreen(const std::string & big, const std::string & small, int showmode, bool perform_wakeup, bool centered = false);
+		void showTextScreen(const std::string &big, const std::string &small, int showmode, bool perform_wakeup, bool centered = false);
 		void drawBanner();
 
 	public:
@@ -221,30 +221,39 @@ class CLCD
 		bool has_lcd;
 		bool is4digits;
 		void wake_up();
-		void setled(void) { return; };
+		void setled(void)
+		{
+			return;
+		};
 		void setlcdparameter(void);
 
-		static CLCD* getInstance();
-		void init(const char * fontfile, const char * fontname,
-		const char * fontfile2=NULL, const char * fontname2=NULL,
-		const char * fontfile3=NULL, const char * fontname3=NULL); 
+		static CLCD *getInstance();
+		void init(const char *fontfile, const char *fontname,
+			const char *fontfile2 = NULL, const char *fontname2 = NULL,
+			const char *fontfile3 = NULL, const char *fontname3 = NULL);
 
-		void setMode(const MODES m, const char * const title = "");
-		MODES getMode() { return mode; };
+		void setMode(const MODES m, const char *const title = "");
+		MODES getMode()
+		{
+			return mode;
+		};
 
 		void showServicename(const std::string name, const bool perform_wakeup = true); // UTF-8
 		void setEPGTitle(const std::string title);
 		void setMovieInfo(const AUDIOMODES playmode, const std::string big, const std::string small, const bool centered = false);
 		void setMovieAudio(const bool is_ac3);
-		std::string getMenutitle() { return menutitle; };
+		std::string getMenutitle()
+		{
+			return menutitle;
+		};
 		void showTime();
 		/** blocks for duration seconds */
 		void showRCLock(int duration = 2);
 		void showVolume(const char vol, const bool perform_update = true);
 		void showPercentOver(const unsigned char perc, const bool perform_update = true, const MODES m = MODE_TVRADIO);
-		void showMenuText(const int position, const char * text, const int highlight = -1, const bool utf_encoded = false);
-		void showAudioTrack(const std::string & artist, const std::string & title, const std::string & album);
-		void showAudioPlayMode(AUDIOMODES m=AUDIO_MODE_PLAY);
+		void showMenuText(const int position, const char *text, const int highlight = -1, const bool utf_encoded = false);
+		void showAudioTrack(const std::string &artist, const std::string &title, const std::string &album);
+		void showAudioPlayMode(AUDIOMODES m = AUDIO_MODE_PLAY);
 		void showAudioProgress(const char perc, bool isMuted = false);
 		void setBrightness(int);
 		int getBrightness();
@@ -267,10 +276,19 @@ class CLCD
 
 		void setAutoDimm(int);
 		int getAutoDimm();
-		void setBrightnessDeepStandby(int) { return ; };
-		int getBrightnessDeepStandby() { return 0; };
+		void setBrightnessDeepStandby(int)
+		{
+			return ;
+		};
+		int getBrightnessDeepStandby()
+		{
+			return 0;
+		};
 
-		void repaintIcons() { return; };
+		void repaintIcons()
+		{
+			return;
+		};
 		void setMuted(bool);
 
 		void resume();
@@ -282,15 +300,21 @@ class CLCD
 		void UpdateIcons();
 		void ShowIcon(fp_icon icon, bool show);
 		void ShowIcon(vfd_icon icon, bool show);
-		void ShowText(const char *s) { showServicename(std::string(s)); };
-		void LCDshowText(int /*pos*/) { return ; };
+		void ShowText(const char *s)
+		{
+			showServicename(std::string(s));
+		};
+		void LCDshowText(int /*pos*/)
+		{
+			return ;
+		};
 
 		bool ShowPng(char *filename);
 		bool DumpPng(char *filename);
 
 #ifdef LCD_UPDATE
 	private:
-		CFileList* m_fileList;
+		CFileList *m_fileList;
 		int m_fileListPos;
 		std::string m_fileListHeader;
 
@@ -305,10 +329,10 @@ class CLCD
 		int m_progressGlobal;
 		int m_progressLocal;
 	public:
-		void showFilelist(int flist_pos = -1,CFileList* flist = NULL,const char * const mainDir=NULL);
-		void showInfoBox(const char * const title = NULL,const char * const text = NULL,int autoNewline = -1,int timer = -1);
-		void showProgressBar(int global = -1,const char * const text = NULL,int show_escape = -1,int timer = -1);
-		void showProgressBar2(int local = -1,const char * const text_local = NULL,int global = -1,const char * const text_global = NULL,int show_escape = -1);
+		void showFilelist(int flist_pos = -1, CFileList *flist = NULL, const char *const mainDir = NULL);
+		void showInfoBox(const char *const title = NULL, const char *const text = NULL, int autoNewline = -1, int timer = -1);
+		void showProgressBar(int global = -1, const char *const text = NULL, int show_escape = -1, int timer = -1);
+		void showProgressBar2(int local = -1, const char *const text_local = NULL, int global = -1, const char *const text_global = NULL, int show_escape = -1);
 #endif // LCD_UPDATE
 };
 

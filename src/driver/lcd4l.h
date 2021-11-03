@@ -49,7 +49,7 @@ class CLCD4l
 
 	private:
 		pthread_t	thrLCD4l;
-		static void*	LCD4lProc(void *arg);
+		static void	*LCD4lProc(void *arg);
 
 		struct tm	*tm_struct;
 
@@ -59,9 +59,9 @@ class CLCD4l
 
 		uint64_t	GetParseID();
 		bool		CompareParseID(uint64_t &i_ParseID);
-		bool		GetLogoName(uint64_t channel_id, std::string channel_name, std::string & logo);
+		bool		GetLogoName(uint64_t channel_id, std::string channel_name, std::string &logo);
 
-		std::string	hexStr(unsigned char* data);
+		std::string	hexStr(unsigned char *data);
 		void		strReplace(std::string &orig, const std::string &fstr, const std::string &rstr);
 		bool		WriteFile(const char *file, std::string content = "", bool convert = false);
 

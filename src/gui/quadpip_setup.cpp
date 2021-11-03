@@ -289,24 +289,25 @@ int CQuadPiPSetupSelectChannelWidget::InitZapitChannelHelper()
 	for (int i = 0; i < (int) g_bouquetManager->Bouquets.size(); i++)
 	{
 		CMenuWidget* mwtv = new CMenuWidget(LOCALE_TIMERLIST_CHANNELSELECT, NEUTRINO_ICON_SETTINGS);
+		CMenuForwarder * chan_item = NULL;
 		toDelete.push_back(mwtv);
 		mwtv->addIntroItems();
 		ZapitChannelList channels;
 		g_bouquetManager->Bouquets[i]->getTvChannels(channels);
 
-		for(int j = 0; j < (int) channels.size(); j++)
+		for (int j = 0; j < (int) channels.size(); j++)
 		{
 			CZapitChannel * channel = channels[j];
 			if (!IS_WEBCHAN(channel->getChannelID()))	// no web channels for pip
 			{
 				char cChannelId[60] = {0};
 				snprintf(cChannelId, sizeof(cChannelId), "ZCT:%d|%" PRIx64 "#", channel->number, channel->getChannelID());
-				CMenuForwarder * chan_item = new CMenuForwarder(channel->getName(), true, NULL, this, (std::string(cChannelId) + channel->getName()).c_str(), CRCInput::RC_nokey, NULL, channel->scrambled ? NEUTRINO_ICON_SCRAMBLED: (channel->getUrl().empty() ? NULL : NEUTRINO_ICON_STREAMING));
+				chan_item = new CMenuForwarder(channel->getName(), true, NULL, this, (std::string(cChannelId) + channel->getName()).c_str(), CRCInput::RC_nokey, NULL, channel->scrambled ? NEUTRINO_ICON_SCRAMBLED : (channel->getUrl().empty() ? NULL : NEUTRINO_ICON_STREAMING));
 				chan_item->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
 				mwtv->addItem(chan_item);
 			}
 		}
-		if(!channels.empty() && (!g_bouquetManager->Bouquets[i]->bHidden ))
+		if (!channels.empty() && (!g_bouquetManager->Bouquets[i]->bHidden) && chan_item)
 		{
 			mctv.addItem(new CMenuForwarder(g_bouquetManager->Bouquets[i]->Name.c_str(), true, NULL, mwtv));
 		}
@@ -314,7 +315,7 @@ int CQuadPiPSetupSelectChannelWidget::InitZapitChannelHelper()
 	int res = mctv.exec (NULL, "");
 
 	// delete dynamic created objects
-	for(unsigned int count=0;count<toDelete.size();count++)
+	for (unsigned int count=0;count<toDelete.size();count++)
 	{
 		delete toDelete[count];
 	}
@@ -351,7 +352,7 @@ int CQuadPiPSetupSelectChannelWidget::exec(CMenuTarget* parent, const std::strin
 
 		return menu_return::RETURN_EXIT;
 	}
-	else if(actionKey == "reset")
+	else if (actionKey == "reset")
 	{
 		for (unsigned i=0; i < pip_devs; i++)
 		{
@@ -360,7 +361,7 @@ int CQuadPiPSetupSelectChannelWidget::exec(CMenuTarget* parent, const std::strin
 		}
 	}
 
-	else if(actionKey=="select_window")
+	else if (actionKey=="select_window")
 	{
 		if (!quadpip)
 			return res;

@@ -42,55 +42,61 @@ class CFrameBuffer;
 class FBFontRenderClass;
 class Font
 {
-	CFrameBuffer	*frameBuffer;
-	FTC_ImageTypeRec	font;
-	FBFontRenderClass *renderer;
-	FT_Face		face;
-	FT_Size		size;
-	FTC_ScalerRec  scaler;
+		CFrameBuffer	*frameBuffer;
+		FTC_ImageTypeRec	font;
+		FBFontRenderClass *renderer;
+		FT_Face		face;
+		FT_Size		size;
+		FTC_ScalerRec  scaler;
 
-	FT_Error getGlyphBitmap(FT_ULong glyph_index, FTC_SBit *sbit);
+		FT_Error getGlyphBitmap(FT_ULong glyph_index, FTC_SBit *sbit);
 
-	// these are HACKED values, because the font metrics were unusable.
-	int height,DigitHeight,DigitOffset,ascender,descender,upper,lower;
-	int fontwidth;
-	int maxdigitwidth;
-	uint8_t fg_red, fg_green, fg_blue;
-	fb_pixel_t colors[256];
-	bool useFullBG;
+		// these are HACKED values, because the font metrics were unusable.
+		int height, DigitHeight, DigitOffset, ascender, descender, upper, lower;
+		int fontwidth;
+		int maxdigitwidth;
+		uint8_t fg_red, fg_green, fg_blue;
+		fb_pixel_t colors[256];
+		bool useFullBG;
 
-	inline int int_min(int a, int b) { return (a < b) ? a : b; }
-	inline void paintFontPixel(fb_pixel_t *td, uint8_t src);
+		inline int int_min(int a, int b)
+		{
+			return (a < b) ? a : b;
+		}
+		inline void paintFontPixel(fb_pixel_t *td, uint8_t src);
 
- public:
-	enum fontmodifier
+	public:
+		enum fontmodifier
 		{
 			Regular,
 			Embolden
 		};
-	fontmodifier stylemodifier;
+		fontmodifier stylemodifier;
 
-	enum renderflags
+		enum renderflags
 		{
 			IS_UTF8 = 1,
 			FULLBG = 2
 		};
 
-	void RenderString(int x, int y, const int width, const char *        text, const fb_pixel_t color, const int boxheight = 0, const unsigned int flags = IS_UTF8, fb_pixel_t *buffer = NULL, int stride = 0);
-	void RenderString(int x, int y, const int width, const std::string & text, const fb_pixel_t color, const int boxheight = 0, const unsigned int flags = IS_UTF8, fb_pixel_t *buffer = NULL, int stride = 0);
+		void RenderString(int x, int y, const int width, const char         *text, const fb_pixel_t color, const int boxheight = 0, const unsigned int flags = IS_UTF8, fb_pixel_t *buffer = NULL, int stride = 0);
+		void RenderString(int x, int y, const int width, const std::string &text, const fb_pixel_t color, const int boxheight = 0, const unsigned int flags = IS_UTF8, fb_pixel_t *buffer = NULL, int stride = 0);
 
-	int getRenderWidth(const char *        text, const bool utf8_encoded = true);
-	int getRenderWidth(const std::string & text, const bool utf8_encoded = true);
-	int getHeight(void);
-	int getDigitHeight(void);
-	int getMaxDigitWidth(void);
-	int getDigitOffset(void);
-	int getWidth(void);
-	int getSize(){return font.width;}
-	int setSize(int isize);
+		int getRenderWidth(const char         *text, const bool utf8_encoded = true);
+		int getRenderWidth(const std::string &text, const bool utf8_encoded = true);
+		int getHeight(void);
+		int getDigitHeight(void);
+		int getMaxDigitWidth(void);
+		int getDigitOffset(void);
+		int getWidth(void);
+		int getSize()
+		{
+			return font.width;
+		}
+		int setSize(int isize);
 
-	Font(FBFontRenderClass *render, FTC_FaceID faceid, const int isize, const fontmodifier _stylemodifier);
-	~Font(){}
+		Font(FBFontRenderClass *render, FTC_FaceID faceid, const int isize, const fontmodifier _stylemodifier);
+		~Font() {}
 };
 
 class FBFontRenderClass
@@ -108,7 +114,7 @@ class FBFontRenderClass
 // 		FTC_ImageCache	imageCache;	/* the glyph image cache           */
 		FTC_SBitCache	sbitsCache;	/* the glyph small bitmaps cache   */
 
-		FTC_FaceID getFaceID(const char * const family, const char * const style);
+		FTC_FaceID getFaceID(const char *const family, const char *const style);
 		FT_Error getGlyphBitmap(FTC_ImageTypeRec *font, FT_ULong glyph_index, FTC_SBit *sbit);
 		FT_Error getGlyphBitmap(FTC_ScalerRec *sc, FT_ULong glyph_index, FTC_SBit *sbit);
 
@@ -118,20 +124,20 @@ class FBFontRenderClass
 	public:
 		pthread_mutex_t     render_mutex;
 
-		FT_Error FTC_Face_Requester(FTC_FaceID face_id, FT_Face* aface);
+		FT_Error FTC_Face_Requester(FTC_FaceID face_id, FT_Face *aface);
 
 
 		static FT_Error myFTC_Face_Requester(FTC_FaceID  face_id,
-		                                     FT_Library  library,
-		                                     FT_Pointer  request_data,
-		                                     FT_Face*    aface);
+			FT_Library  library,
+			FT_Pointer  request_data,
+			FT_Face    *aface);
 
 		//FT_Face getFace(const char *family, const char *style);
-		Font *getFont(const char * const family, const char * const style, int size);
+		Font *getFont(const char *const family, const char *const style, int size);
 
-		std::string getFamily(const char * const filename) const;
+		std::string getFamily(const char *const filename) const;
 
-		const char * AddFont(const char * const filename, const bool make_italics = false);
+		const char *AddFont(const char *const filename, const bool make_italics = false);
 
 		FBFontRenderClass(const int xres = 72, const int yres = 72);
 		~FBFontRenderClass();

@@ -30,7 +30,8 @@ unsigned short crc16_ccitt(unsigned char *daten, int len, bool skipfirst);
 
 char *rtrim(char *text);
 
-class cTimeMs {
+class cTimeMs
+{
 	private:
 		uint64_t begin;
 

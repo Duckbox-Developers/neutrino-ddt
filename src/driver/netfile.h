@@ -78,12 +78,12 @@ extern "C" {
 
 extern FILE	*f_open(const char *, const char *);
 extern int		f_close(FILE *);
-extern size_t	f_read (void *, size_t, size_t, FILE *);
+extern size_t	f_read(void *, size_t, size_t, FILE *);
 extern long	f_tell(FILE *);
 extern void	f_rewind(FILE *);
 extern int		f_seek(FILE *, long, int);
-extern int		f_status(FILE *, void (*)(void*));
-extern const char	*f_type(FILE*, const char*);
+extern int		f_status(FILE *, void (*)(void *));
+extern const char	*f_type(FILE *, const char *);
 
 extern char err_txt[32818];
 
@@ -125,8 +125,8 @@ typedef struct
 	int	*len;		/* pointer to a variable containing the length of the buffer */
 	void	*arg;		/* pointer to some arguments for the filter function */
 	void	*user;	/* here the filter function can hook in */
-				/* some private data */
-	void 	(*destructor)(void*);	/* stream filter destructor */
+	/* some private data */
+	void	(*destructor)(void *);	/* stream filter destructor */
 
 	CSTATE 	*state;
 } STREAM_FILTER;
@@ -168,7 +168,7 @@ typedef struct
 	pthread_mutex_t writeable;
 	pthread_mutexattr_t writeable_attr;
 
-	void (*filter)(STREAM_FILTER*);	/* stream filter function */
+	void (*filter)(STREAM_FILTER *);	/* stream filter function */
 
 	STREAM_FILTER *filter_arg;	/* place to hook in a pointer to the arguments */
 } STREAM_CACHE;
@@ -198,14 +198,14 @@ typedef  struct
 } ID3_frame;
 
 #define CRLFCut(a) \
-{ \
-  char *_ptr; \
-  _ptr = strchr(a, '\r'); \
-  if(_ptr) *_ptr = 0; \
-  else { \
-  _ptr = strchr(a, '\n'); \
-  if(_ptr) *_ptr = 0; } \
-}
+	{ \
+		char *_ptr; \
+		_ptr = strchr(a, '\r'); \
+		if(_ptr) *_ptr = 0; \
+		else { \
+			_ptr = strchr(a, '\n'); \
+			if(_ptr) *_ptr = 0; } \
+	}
 
 #ifdef __cplusplus
 }

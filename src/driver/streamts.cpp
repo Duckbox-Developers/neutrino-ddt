@@ -105,7 +105,8 @@ bool CStreamInstance::Start()
 		return false;
 
 	buf =  new unsigned char [IN_SIZE];
-	if (buf == NULL) {
+	if (buf == NULL)
+	{
 		perror("CStreamInstance::Start: buf");
 		return false;
 	}
@@ -124,7 +125,7 @@ bool CStreamInstance::Stop()
 	return (OpenThreads::Thread::join() == 0);
 }
 
-bool CStreamInstance::Send(ssize_t r, unsigned char * _buf)
+bool CStreamInstance::Send(ssize_t r, unsigned char *_buf)
 {
 	//OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(mutex);
 	stream_fds_t cfds;
@@ -134,19 +135,23 @@ bool CStreamInstance::Send(ssize_t r, unsigned char * _buf)
 	int flags = 0;
 	if (cfds.size() > 1)
 		flags = MSG_DONTWAIT;
-	for (stream_fds_t::iterator it = cfds.begin(); it != cfds.end(); ++it) {
+	for (stream_fds_t::iterator it = cfds.begin(); it != cfds.end(); ++it)
+	{
 		int i = 10;
 		unsigned char *b = _buf ? _buf : buf;
 		ssize_t count = r;
-		do {
+		do
+		{
 			int ret = send(*it, b, count, flags);
-			if (ret > 0) {
+			if (ret > 0)
+			{
 				b += ret;
 				count -= ret;
 			}
-		} while ((count > 0) && (i-- > 0));
+		}
+		while ((count > 0) && (i-- > 0));
 		if (count)
-			printf("send err, fd %d: (%zd from %zd)\n", *it, r-count, r);
+			printf("send err, fd %d: (%zd from %zd)\n", *it, r - count, r);
 	}
 	return true;
 }
@@ -175,12 +180,12 @@ void CStreamInstance::RemoveClient(int clientfd)
 
 bool CStreamInstance::Open()
 {
-	CZapitChannel * tmpchan = CServiceManager::getInstance()->FindChannel(channel_id);
+	CZapitChannel *tmpchan = CServiceManager::getInstance()->FindChannel(channel_id);
 	if (!tmpchan)
 		return false;
 
 	dmx = new cDemux(tmpchan->getRecordDemux());//FIXME
-	if(!dmx)
+	if (!dmx)
 		return false;
 	return dmx->Open(DMX_TP_CHANNEL, NULL, DMX_BUFFER_SIZE);
 }
@@ -196,7 +201,8 @@ void CStreamInstance::run()
 	printf("CStreamInstance::run: add pid %x\n", *it);
 	dmx->pesFilter(*it);
 	++it;
-	for (; it != pids.end(); ++it) {
+	for (; it != pids.end(); ++it)
+	{
 		printf("CStreamInstance::run: add pid %x\n", *it);
 		dmx->addPid(*it);
 	}
@@ -210,13 +216,14 @@ void CStreamInstance::run()
 
 #if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	CFrontend *live_fe = CZapit::getInstance()->GetLiveFrontend();
-	if(live_fe)
+	if (live_fe)
 		CFEManager::getInstance()->unlockFrontend(live_fe);
-	if(frontend)
+	if (frontend)
 		CFEManager::getInstance()->lockFrontend(frontend);
 	//CZapit::getInstance()->SetRecordMode(true);
 #endif
-	while (running) {
+	while (running)
+	{
 		ssize_t r = dmx->Read(buf, IN_SIZE, 100);
 		if (r > 0)
 			Send(r);
@@ -225,7 +232,7 @@ void CStreamInstance::run()
 	CCamManager::getInstance()->Stop(channel_id, CCamManager::STREAM);
 
 #if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
-	if(frontend)
+	if (frontend)
 		CFEManager::getInstance()->unlockFrontend(frontend);
 	//CZapit::getInstance()->SetRecordMode(false);
 #endif
@@ -259,7 +266,7 @@ CStreamManager::~CStreamManager()
 	Stop();
 }
 
-CStreamManager * CStreamManager::getInstance()
+CStreamManager *CStreamManager::getInstance()
 {
 	if (sm == NULL)
 		sm = new CStreamManager();
@@ -286,7 +293,8 @@ bool CStreamManager::Stop()
 		return false;
 	running = false;
 	bool ret = false;
-	if (OpenThreads::Thread::CurrentThread() == this) {
+	if (OpenThreads::Thread::CurrentThread() == this)
+	{
 		cancel();
 		ret = (OpenThreads::Thread::join() == 0);
 	}
@@ -297,7 +305,8 @@ bool CStreamManager::Stop()
 bool CStreamManager::SetPort(int newport)
 {
 	bool ret = false;
-	if (port != newport) {
+	if (port != newport)
+	{
 		port = newport;
 #if 0
 		Stop();
@@ -312,13 +321,14 @@ bool CStreamManager::SetPort(int newport)
 	return ret;
 }
 
-CFrontend * CStreamManager::FindFrontend(CZapitChannel * channel)
+CFrontend *CStreamManager::FindFrontend(CZapitChannel *channel)
 {
-	std::set<CFrontend*> frontends;
-	CFrontend * frontend = NULL;
+	std::set<CFrontend *> frontends;
+	CFrontend *frontend = NULL;
 
 	t_channel_id chid = channel->getChannelID();
-	if (CRecordManager::getInstance()->RecordingStatus(chid)) {
+	if (CRecordManager::getInstance()->RecordingStatus(chid))
+	{
 		printf("CStreamManager::FindFrontend: channel %" PRIx64 " recorded, aborting..\n", chid);
 		return frontend;
 	}
@@ -332,7 +342,8 @@ CFrontend * CStreamManager::FindFrontend(CZapitChannel * channel)
 	CFEManager::getInstance()->Lock();
 
 	bool unlock = false;
-	if (!IS_WEBCHAN(live_channel_id)) {
+	if (!IS_WEBCHAN(live_channel_id))
+	{
 		unlock = true;
 		CFEManager::getInstance()->lockFrontend(live_fe);
 	}
@@ -341,12 +352,13 @@ CFrontend * CStreamManager::FindFrontend(CZapitChannel * channel)
 	for (streammap_iterator_t it = streams.begin(); it != streams.end(); ++it)
 		frontends.insert(it->second->frontend);
 
-	for (std::set<CFrontend*>::iterator ft = frontends.begin(); ft != frontends.end(); ++ft)
+	for (std::set<CFrontend *>::iterator ft = frontends.begin(); ft != frontends.end(); ++ft)
 		CFEManager::getInstance()->lockFrontend(*ft);
 
 	frontend = CFEManager::getInstance()->allocateFE(channel, true);
 
-	if (unlock && frontend == NULL) {
+	if (unlock && frontend == NULL)
+	{
 		unlock = false;
 		CFEManager::getInstance()->unlockFrontend(live_fe);
 		frontend = CFEManager::getInstance()->allocateFE(channel, true);
@@ -354,7 +366,8 @@ CFrontend * CStreamManager::FindFrontend(CZapitChannel * channel)
 
 	CFEManager::getInstance()->Unlock();
 
-	if (frontend) {
+	if (frontend)
+	{
 		bool found = (live_fe != frontend) || IS_WEBCHAN(live_channel_id) || SAME_TRANSPONDER(live_channel_id, chid);
 		bool ret = false;
 		if (found)
@@ -362,20 +375,23 @@ CFrontend * CStreamManager::FindFrontend(CZapitChannel * channel)
 		else
 			ret = zapit.zapTo_serviceID(chid) > 0;
 
-		if (ret) {
+		if (ret)
+		{
 #ifdef ENABLE_PIP
 			/* FIXME until proper demux management */
 			t_channel_id pip_channel_id = CZapit::getInstance()->GetPipChannelID();
 			if ((pip_channel_id == chid) && (channel->getRecordDemux() == channel->getPipDemux()))
 				zapit.stopPip();
 #endif
-		} else {
+		}
+		else
+		{
 			frontend = NULL;
 		}
 	}
 
 	CFEManager::getInstance()->Lock();
-	for (std::set<CFrontend*>::iterator ft = frontends.begin(); ft != frontends.end(); ++ft)
+	for (std::set<CFrontend *>::iterator ft = frontends.begin(); ft != frontends.end(); ++ft)
 		CFEManager::getInstance()->unlockFrontend(*ft);
 
 #if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
@@ -389,13 +405,14 @@ CFrontend * CStreamManager::FindFrontend(CZapitChannel * channel)
 	return frontend;
 }
 
-bool CStreamManager::Parse(int fd, stream_pids_t &pids, t_channel_id &chid, CFrontend * &frontend)
+bool CStreamManager::Parse(int fd, stream_pids_t &pids, t_channel_id &chid, CFrontend*&frontend)
 {
 	char cbuf[512];
 	char *bp;
 
-	FILE * fp = fdopen(fd, "r+");
-	if (fp == NULL) {
+	FILE *fp = fdopen(fd, "r+");
+	if (fp == NULL)
+	{
 		perror("fdopen");
 		return false;
 	}
@@ -403,12 +420,14 @@ bool CStreamManager::Parse(int fd, stream_pids_t &pids, t_channel_id &chid, CFro
 	bp = &cbuf[0];
 
 	/* read one line */
-	while (bp - &cbuf[0] < (int) sizeof(cbuf) - 1) {
+	while (bp - &cbuf[0] < (int) sizeof(cbuf) - 1)
+	{
 		unsigned char c;
 		int res = read(fd, &c, 1);
 		if (res == 0)
 			break;
-		if (res < 0) {
+		if (res < 0)
+		{
 			perror("read");
 			return false;
 		}
@@ -417,36 +436,43 @@ bool CStreamManager::Parse(int fd, stream_pids_t &pids, t_channel_id &chid, CFro
 	}
 	*bp = 0;
 
-	printf("CStreamManager::Parse: got %d bytes '%s'", (int)(bp-&cbuf[0]), cbuf);
+	printf("CStreamManager::Parse: got %d bytes '%s'", (int)(bp - &cbuf[0]), cbuf);
 	bp = &cbuf[0];
 
 	/* send response to http client */
-	if (!strncmp(cbuf, "GET /", 5)) {
+	if (!strncmp(cbuf, "GET /", 5))
+	{
 		fprintf(fp, "HTTP/1.1 200 OK\r\nServer: streamts (%s)\r\n\r\n", "ts" /*&argv[1][1]*/);
 		fflush(fp);
 		bp += 5;
-	} else {
+	}
+	else
+	{
 		printf("Received garbage\n");
 		return false;
 	}
 
 	chid = CZapit::getInstance()->GetCurrentChannelID();
-	CZapitChannel * channel = CZapit::getInstance()->GetCurrentChannel();
+	CZapitChannel *channel = CZapit::getInstance()->GetCurrentChannel();
 
 #ifndef ENABLE_MULTI_CHANNEL
 	/* parse stdin / url path, start dmx filters */
-	do {
+	do
+	{
 		int pid;
 		int res = sscanf(bp, "%x", &pid);
-		if (res == 1) {
+		if (res == 1)
+		{
 			printf("CStreamManager::Parse: pid: 0x%x\n", pid);
 			pids.insert(pid);
 		}
-	} while ((bp = strchr(bp, ',')) && (bp++));
+	}
+	while ((bp = strchr(bp, ',')) && (bp++));
 #else
 	t_channel_id tmpid;
 	bp = &cbuf[5];
-	if (sscanf(bp, "id=%" SCNx64, &tmpid) == 1) {
+	if (sscanf(bp, "id=%" SCNx64, &tmpid) == 1)
+	{
 		channel = CServiceManager::getInstance()->FindChannel(tmpid);
 		chid = tmpid;
 		pids.clear(); // to catch and stream all pids later !
@@ -460,7 +486,8 @@ bool CStreamManager::Parse(int fd, stream_pids_t &pids, t_channel_id &chid, CFro
 		return true;
 
 	frontend = FindFrontend(channel);
-	if (!frontend) {
+	if (!frontend)
+	{
 		printf("CStreamManager::Parse: no free frontend\n");
 		return false;
 	}
@@ -472,7 +499,8 @@ bool CStreamManager::Parse(int fd, stream_pids_t &pids, t_channel_id &chid, CFro
 
 void CStreamManager::AddPids(int fd, CZapitChannel *channel, stream_pids_t &pids)
 {
-	if (pids.empty()) {
+	if (pids.empty())
+	{
 		printf("CStreamManager::AddPids: no pids in url, using channel %" PRIx64 " pids\n", channel->getChannelID());
 		if (channel->getVideoPid())
 			pids.insert(channel->getVideoPid());
@@ -482,22 +510,35 @@ void CStreamManager::AddPids(int fd, CZapitChannel *channel, stream_pids_t &pids
 	}
 
 	CGenPsi psi;
-	for (stream_pids_t::iterator it = pids.begin(); it != pids.end(); ++it) {
-		if (*it == channel->getVideoPid()) {
+	for (stream_pids_t::iterator it = pids.begin(); it != pids.end(); ++it)
+	{
+		if (*it == channel->getVideoPid())
+		{
 			printf("CStreamManager::AddPids: genpsi vpid %x (%d)\n", *it, channel->type);
 			psi.addPid(*it, channel->type == CHANNEL_MPEG4 ? EN_TYPE_AVC : channel->type == CHANNEL_HEVC ? EN_TYPE_HEVC : EN_TYPE_VIDEO, 0);
-		} else {
-			for (int i = 0; i <  channel->getAudioChannelCount(); i++) {
-				if (*it == channel->getAudioChannel(i)->pid) {
+		}
+		else
+		{
+			for (int i = 0; i <  channel->getAudioChannelCount(); i++)
+			{
+				if (*it == channel->getAudioChannel(i)->pid)
+				{
 					CZapitAudioChannel::ZapitAudioChannelType atype = channel->getAudioChannel(i)->audioChannelType;
 					printf("CStreamManager::AddPids: genpsi apid %x (%d)\n", *it, atype);
-					if (channel->getAudioChannel(i)->audioChannelType == CZapitAudioChannel::EAC3) {
+					if (channel->getAudioChannel(i)->audioChannelType == CZapitAudioChannel::EAC3)
+					{
 						psi.addPid(*it, EN_TYPE_AUDIO_EAC3, 0, channel->getAudioChannel(i)->description.c_str());
-					} else if (channel->getAudioChannel(i)->audioChannelType == CZapitAudioChannel::AAC) {
+					}
+					else if (channel->getAudioChannel(i)->audioChannelType == CZapitAudioChannel::AAC)
+					{
 						psi.addPid(*it, EN_TYPE_AUDIO_AAC, 0, channel->getAudioChannel(i)->description.c_str());
-					} else if (channel->getAudioChannel(i)->audioChannelType == CZapitAudioChannel::AACPLUS) {
+					}
+					else if (channel->getAudioChannel(i)->audioChannelType == CZapitAudioChannel::AACPLUS)
+					{
 						psi.addPid(*it, EN_TYPE_AUDIO_AACP, 0, channel->getAudioChannel(i)->description.c_str());
-					} else {
+					}
+					else
+					{
 						psi.addPid(*it, EN_TYPE_AUDIO, (atype == CZapitAudioChannel::AC3), channel->getAudioChannel(i)->description.c_str());
 					}
 				}
@@ -505,24 +546,29 @@ void CStreamManager::AddPids(int fd, CZapitChannel *channel, stream_pids_t &pids
 		}
 	}
 	//add pcr pid
-	if (channel->getPcrPid() && (channel->getPcrPid() != channel->getVideoPid())) {
+	if (channel->getPcrPid() && (channel->getPcrPid() != channel->getVideoPid()))
+	{
 		pids.insert(channel->getPcrPid());
 		psi.addPid(channel->getPcrPid(), EN_TYPE_PCR, 0);
 	}
 	//add teletext pid
-	if (g_settings.recording_stream_vtxt_pid && channel->getTeletextPid() != 0) {
+	if (g_settings.recording_stream_vtxt_pid && channel->getTeletextPid() != 0)
+	{
 		pids.insert(channel->getTeletextPid());
 		psi.addPid(channel->getTeletextPid(), EN_TYPE_TELTEX, 0, channel->getTeletextLang());
 	}
 	//add dvb sub pid
-	if (g_settings.recording_stream_subtitle_pids) {
-		for (int i = 0 ; i < (int)channel->getSubtitleCount() ; ++i) {
-			CZapitAbsSub* s = channel->getChannelSub(i);
-			if (s->thisSubType == CZapitAbsSub::DVB) {
-				if (i>9)//max sub pids
+	if (g_settings.recording_stream_subtitle_pids)
+	{
+		for (int i = 0 ; i < (int)channel->getSubtitleCount() ; ++i)
+		{
+			CZapitAbsSub *s = channel->getChannelSub(i);
+			if (s->thisSubType == CZapitAbsSub::DVB)
+			{
+				if (i > 9) //max sub pids
 					break;
 
-				CZapitDVBSub* sd = reinterpret_cast<CZapitDVBSub*>(s);
+				CZapitDVBSub *sd = reinterpret_cast<CZapitDVBSub *>(s);
 				pids.insert(sd->pId);
 				psi.addPid(sd->pId, EN_TYPE_DVBSUB, 0, sd->ISO639_language_code.c_str());
 			}
@@ -538,21 +584,28 @@ bool CStreamManager::AddClient(int connfd)
 	t_channel_id channel_id;
 	CFrontend *frontend;
 
-	if (Parse(connfd, pids, channel_id, frontend)) {
+	if (Parse(connfd, pids, channel_id, frontend))
+	{
 		OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(mutex);
 		streammap_iterator_t it = streams.find(channel_id);
-		if (it != streams.end()) {
+		if (it != streams.end())
+		{
 			it->second->AddClient(connfd);
-		} else {
-			CStreamInstance * stream;
-			if (IS_WEBCHAN(channel_id)) {
+		}
+		else
+		{
+			CStreamInstance *stream;
+			if (IS_WEBCHAN(channel_id))
+			{
 				stream = new CStreamStream(connfd, channel_id, pids);
-			} else {
+			}
+			else
+			{
 				stream = new CStreamInstance(connfd, channel_id, pids);
 				stream->frontend = frontend;
 			}
 
-			int sendsize = 10*IN_SIZE;
+			int sendsize = 10 * IN_SIZE;
 			unsigned int m = sizeof(sendsize);
 			setsockopt(connfd, SOL_SOCKET, SO_SNDBUF, (void *)&sendsize, m);
 			if (stream->Open() && stream->Start())
@@ -568,11 +621,14 @@ bool CStreamManager::AddClient(int connfd)
 void CStreamManager::RemoveClient(int fd)
 {
 	OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(mutex);
-	for (streammap_iterator_t it = streams.begin(); it != streams.end(); ++it) {
-		if (it->second->HasFd(fd)) {
+	for (streammap_iterator_t it = streams.begin(); it != streams.end(); ++it)
+	{
+		if (it->second->HasFd(fd))
+		{
 			CStreamInstance *stream = it->second;
 			stream->RemoveClient(fd);
-			if (stream->GetFds().empty()) {
+			if (stream->GetFds().empty())
+			{
 				streams.erase(stream->GetChannelId());
 				delete stream;
 			}
@@ -594,15 +650,18 @@ void CStreamManager::run()
 	printf("Starting STREAM thread keeper, tid %ld\n", syscall(__NR_gettid));
 	set_threadname("n:streammanager");
 
-	while (running) {
+	while (running)
+	{
 		mutex.lock();
 		pfd[0].fd = listenfd;
 		pfd[0].events = (POLLIN | POLLPRI);
 		pfd[0].revents = 0;
 		poll_cnt = 1;
-		for (streammap_iterator_t it = streams.begin(); it != streams.end(); ++it) {
+		for (streammap_iterator_t it = streams.begin(); it != streams.end(); ++it)
+		{
 			stream_fds_t fds = it->second->GetFds();
-			for (stream_fds_t::iterator fit = fds.begin(); fit != fds.end(); ++fit) {
+			for (stream_fds_t::iterator fit = fds.begin(); fit != fds.end(); ++fit)
+			{
 				pfd[poll_cnt].fd = *fit;
 				pfd[poll_cnt].events = POLLRDHUP | POLLHUP;
 				pfd[poll_cnt].revents = 0;
@@ -611,19 +670,24 @@ void CStreamManager::run()
 		}
 		mutex.unlock();
 //printf("polling, count= %d\n", poll_cnt);
-		int pollres = poll (pfd, poll_cnt, poll_timeout);
-		if (pollres <= 0) {
+		int pollres = poll(pfd, poll_cnt, poll_timeout);
+		if (pollres <= 0)
+		{
 			if (pollres < 0)
 				perror("CStreamManager::run(): poll");
 			continue;
 		}
-		for (int i = poll_cnt - 1; i >= 0; i--) {
-			if (pfd[i].revents & (POLLIN | POLLPRI | POLLHUP | POLLRDHUP)) {
+		for (int i = poll_cnt - 1; i >= 0; i--)
+		{
+			if (pfd[i].revents & (POLLIN | POLLPRI | POLLHUP | POLLRDHUP))
+			{
 				printf("fd %d has events %x\n", pfd[i].fd, pfd[i].revents);
-				if (pfd[i].fd == listenfd) {
+				if (pfd[i].fd == listenfd)
+				{
 					int connfd = accept(listenfd, (struct sockaddr *) &servaddr, (socklen_t *) & clilen);
 					printf("CStreamManager::run(): connection, fd %d\n", connfd);
-					if (connfd < 0) {
+					if (connfd < 0)
+					{
 						perror("CStreamManager::run(): accept");
 						continue;
 					}
@@ -633,11 +697,15 @@ void CStreamManager::run()
 #endif
 					g_RCInput->postMsg(NeutrinoMessages::EVT_STREAM_START, connfd);
 					poll_timeout = 1000;
-				} else {
-					if (pfd[i].revents & (POLLHUP | POLLRDHUP)) {
+				}
+				else
+				{
+					if (pfd[i].revents & (POLLHUP | POLLRDHUP))
+					{
 						printf("CStreamManager::run(): POLLHUP, fd %d\n", pfd[i].fd);
 						RemoveClient(pfd[i].fd);
-						if (streams.empty()) {
+						if (streams.empty())
+						{
 							poll_timeout = 2000;
 							g_RCInput->postMsg(NeutrinoMessages::EVT_STREAM_STOP, 0);
 						}
@@ -655,7 +723,8 @@ void CStreamManager::run()
 bool CStreamManager::StopAll()
 {
 	bool ret = !streams.empty();
-	for (streammap_iterator_t it = streams.begin(); it != streams.end(); ++it) {
+	for (streammap_iterator_t it = streams.begin(); it != streams.end(); ++it)
+	{
 		it->second->Stop();
 		delete it->second;
 	}
@@ -667,29 +736,37 @@ bool CStreamManager::StopStream(t_channel_id channel_id)
 {
 	bool ret = false;
 	mutex.lock();
-	if (channel_id) {
+	if (channel_id)
+	{
 		streammap_iterator_t it = streams.find(channel_id);
-		if (it != streams.end()) {
+		if (it != streams.end())
+		{
 			delete it->second;
 			streams.erase(channel_id);
 			ret = true;
 		}
-	} else {
+	}
+	else
+	{
 		ret = StopAll();
 	}
 	mutex.unlock();
 	return ret;
 }
 
-bool CStreamManager::StopStream(CFrontend * fe)
+bool CStreamManager::StopStream(CFrontend *fe)
 {
 	bool ret = false;
-	for (streammap_iterator_t it = streams.begin(); it != streams.end(); ) {
-		if (it->second->frontend == fe) {
+	for (streammap_iterator_t it = streams.begin(); it != streams.end();)
+	{
+		if (it->second->frontend == fe)
+		{
 			delete it->second;
 			streams.erase(it++);
 			ret = true;
-		} else {
+		}
+		else
+		{
 			++it;
 		}
 	}
@@ -713,38 +790,42 @@ bool CStreamManager::Listen()
 	struct sockaddr_in socketAddr;
 	int socketOptActive = 1;
 
-	if ((listenfd = socket (AF_INET, SOCK_STREAM, 0)) < 0) {
-		fprintf (stderr, "network port %u open: ", port);
-		perror ("socket");
+	if ((listenfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+	{
+		fprintf(stderr, "network port %u open: ", port);
+		perror("socket");
 		return false;
 	}
 
-	if (setsockopt (listenfd, SOL_SOCKET, SO_REUSEADDR, (const void *)&socketOptActive, sizeof (int)) < 0) {
-		fprintf (stderr, "network port %u open: error setsockopt\n", port);
-		perror ("setsockopt");
+	if (setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, (const void *)&socketOptActive, sizeof(int)) < 0)
+	{
+		fprintf(stderr, "network port %u open: error setsockopt\n", port);
+		perror("setsockopt");
 		goto _error;
 	}
 
 	socketAddr.sin_family = AF_INET;
-	socketAddr.sin_port = htons (port);
-	socketAddr.sin_addr.s_addr = htonl (INADDR_ANY);
+	socketAddr.sin_port = htons(port);
+	socketAddr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-	if (bind (listenfd, (struct sockaddr *) &socketAddr, sizeof (socketAddr)) < 0) {
-		fprintf (stderr, "network port %u open: ", port);
-		perror ("bind");
+	if (bind(listenfd, (struct sockaddr *) &socketAddr, sizeof(socketAddr)) < 0)
+	{
+		fprintf(stderr, "network port %u open: ", port);
+		perror("bind");
 		goto _error;
 	}
 
-	if (listen (listenfd, 5) < 0) {
-		fprintf (stderr, "network port %u open: ", port);
-		perror ("listen");
+	if (listen(listenfd, 5) < 0)
+	{
+		fprintf(stderr, "network port %u open: ", port);
+		perror("listen");
 		goto _error;
 	}
 
 	printf("CStreamManager::Listen: on %d, fd %d\n", port, listenfd);
 	return true;
 _error:
-	close (listenfd);
+	close(listenfd);
 	return false;
 }
 
@@ -767,14 +848,14 @@ CStreamStream::~CStreamStream()
 
 int CStreamStream::write_packet(void *opaque, uint8_t *buffer, int buf_size)
 {
-	CStreamStream * st = (CStreamStream *) opaque;
+	CStreamStream *st = (CStreamStream *) opaque;
 	st->Send(buf_size, buffer);
 	return buf_size;
 }
 
-int CStreamStream::Interrupt(void * data)
+int CStreamStream::Interrupt(void *data)
 {
-	CStreamStream * sr = (CStreamStream*) data;
+	CStreamStream *sr = (CStreamStream *) data;
 	if (sr->interrupt)
 		return 1;
 	return 0;
@@ -794,8 +875,9 @@ void CStreamStream::Close()
 	if (avio_ctx)
 		av_free(avio_ctx);
 
-	if (bsfc){
-#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT( 57,48,100 )
+	if (bsfc)
+	{
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57,48,100)
 		av_bitstream_filter_close(bsfc);
 #else
 		av_bsf_free(&bsfc);
@@ -810,7 +892,7 @@ void CStreamStream::Close()
 
 bool CStreamStream::Open()
 {
-	CZapitChannel * channel = CServiceManager::getInstance()->FindChannel(channel_id);
+	CZapitChannel *channel = CServiceManager::getInstance()->FindChannel(channel_id);
 	if (!channel)
 		return false;
 
@@ -820,7 +902,8 @@ bool CStreamStream::Open()
 		return false;
 
 	std::string pretty_name, livestreamInfo1, livestreamInfo2, headers, dumb;
-	if (!CMoviePlayerGui::getInstance(true).getLiveUrl(channel->getUrl(), channel->getScriptName(), url, pretty_name, livestreamInfo1, livestreamInfo2,headers,dumb)) {
+	if (!CMoviePlayerGui::getInstance(true).getLiveUrl(channel->getUrl(), channel->getScriptName(), url, pretty_name, livestreamInfo1, livestreamInfo2, headers, dumb))
+	{
 		printf("%s: getLiveUrl() [%s] failed!\n", __FUNCTION__, url.c_str());
 		return false;
 	}
@@ -844,7 +927,8 @@ bool CStreamStream::Open()
 	}
 
 	av_log_set_level(AV_LOG_DEBUG);
-	if (avformat_open_input(&ifcx, url.c_str(), NULL, &options) != 0) {
+	if (avformat_open_input(&ifcx, url.c_str(), NULL, &options) != 0)
+	{
 		printf("%s: Cannot open input [%s]!\n", __FUNCTION__, channel->getUrl().c_str());
 		av_log_set_level(AV_LOG_INFO);
 		av_dict_free(&options);
@@ -854,7 +938,8 @@ bool CStreamStream::Open()
 	av_log_set_level(AV_LOG_INFO);
 	av_dict_free(&options);
 
-	if (avformat_find_stream_info(ifcx, NULL) < 0) {
+	if (avformat_find_stream_info(ifcx, NULL) < 0)
+	{
 		printf("%s: Cannot find stream info [%s]!\n", __FUNCTION__, channel->getUrl().c_str());
 		return false;
 	}
@@ -864,10 +949,11 @@ bool CStreamStream::Open()
 	const char *hls = "hls";
 #endif
 	if (!strstr(ifcx->iformat->name, hls) &&
-			!strstr(ifcx->iformat->name, "mpegts") &&
-			!strstr(ifcx->iformat->name, "matroska") &&
-			!strstr(ifcx->iformat->name, "avi") &&
-			!strstr(ifcx->iformat->name, "mp4")) {
+		!strstr(ifcx->iformat->name, "mpegts") &&
+		!strstr(ifcx->iformat->name, "matroska") &&
+		!strstr(ifcx->iformat->name, "avi") &&
+		!strstr(ifcx->iformat->name, "mp4"))
+	{
 		printf("%s: not supported format [%s]!\n", __FUNCTION__, ifcx->iformat->name);
 		return false;
 	}
@@ -883,17 +969,20 @@ bool CStreamStream::Open()
 #endif
 
 	buf = (unsigned char *) av_malloc(IN_SIZE);
-	if (buf == NULL) {
+	if (buf == NULL)
+	{
 		perror("CStreamStream::Open: buf");
 		return false;
 	}
 	avio_ctx = avio_alloc_context(buf, IN_SIZE, 1, this, NULL, &write_packet, NULL);
-	if (!avio_ctx) {
+	if (!avio_ctx)
+	{
 		printf("%s: avio_alloc_context failed\n", __FUNCTION__);
 		return false;
 	}
 
-	if (avformat_alloc_output_context2(&ofcx, NULL, "mpegts", NULL) < 0) {
+	if (avformat_alloc_output_context2(&ofcx, NULL, "mpegts", NULL) < 0)
+	{
 		printf("%s: avformat_alloc_output_context2 failed\n", __FUNCTION__);
 		return false;
 	}
@@ -901,13 +990,14 @@ bool CStreamStream::Open()
 
 	av_dict_copy(&ofcx->metadata, ifcx->metadata, 0);
 	int stid = 0x200;
-	for (unsigned i = 0; i < ifcx->nb_streams; i++) {
-#if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT( 57,25,101 )
-		AVCodecContext * iccx = ifcx->streams[i]->codec;
+	for (unsigned i = 0; i < ifcx->nb_streams; i++)
+	{
+#if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(57,25,101)
+		AVCodecContext *iccx = ifcx->streams[i]->codec;
 		AVStream *ost = avformat_new_stream(ofcx, iccx->codec);
 		avcodec_copy_context(ost->codec, iccx);
 #else
-		AVCodecParameters * iccx = ifcx->streams[i]->codecpar;
+		AVCodecParameters *iccx = ifcx->streams[i]->codecpar;
 		AVStream *ost = avformat_new_stream(ofcx, NULL);
 		avcodec_parameters_copy(ost->codecpar, iccx);
 #endif
@@ -922,16 +1012,18 @@ bool CStreamStream::Open()
 	av_dump_format(ofcx, 0, ofcx->url, 1);
 #endif
 	av_log_set_level(AV_LOG_WARNING);
-#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT( 57,48,100 )
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57,48,100)
 	bsfc = av_bitstream_filter_init("h264_mp4toannexb");
 	if (!bsfc)
 		printf("%s: av_bitstream_filter_init h264_mp4toannexb failed!\n", __FUNCTION__);
 #else
 	const AVBitStreamFilter *bsf = av_bsf_get_by_name("h264_mp4toannexb");
-	if(!bsf) {
+	if (!bsf)
+	{
 		return false;
 	}
-	if ((av_bsf_alloc(bsf, &bsfc))) {
+	if ((av_bsf_alloc(bsf, &bsfc)))
+	{
 		return false;
 	}
 #endif
@@ -969,29 +1061,33 @@ void CStreamStream::run()
 	AVPacket pkt;
 
 	printf("%s: Started.\n", __FUNCTION__);
-	if (avformat_write_header(ofcx, NULL) < 0) {
+	if (avformat_write_header(ofcx, NULL) < 0)
+	{
 		printf("%s: avformat_write_header failed\n", __FUNCTION__);
 		return;
 	}
 
-	while (!stopped) {
+	while (!stopped)
+	{
 		av_init_packet(&pkt);
 		if (av_read_frame(ifcx, &pkt) < 0)
 			break;
 		if (pkt.stream_index < 0)
 			continue;
 
-#if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT( 57,25,101 )
+#if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(57,25,101)
 		AVCodecContext *codec = ifcx->streams[pkt.stream_index]->codec;
 #else
 		AVCodecParameters *codec = ifcx->streams[pkt.stream_index]->codecpar;
 #endif
-		if (bsfc && codec->codec_id == AV_CODEC_ID_H264 ) {
+		if (bsfc && codec->codec_id == AV_CODEC_ID_H264)
+		{
 			AVPacket newpkt = pkt;
-#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT( 57,48,100 )
-			if (av_bitstream_filter_filter(bsfc, codec, NULL, &newpkt.data, &newpkt.size, pkt.data, pkt.size, pkt.flags & AV_PKT_FLAG_KEY) >= 0) {
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57,48,100)
+			if (av_bitstream_filter_filter(bsfc, codec, NULL, &newpkt.data, &newpkt.size, pkt.data, pkt.size, pkt.flags & AV_PKT_FLAG_KEY) >= 0)
+			{
 #if (LIBAVFORMAT_VERSION_MAJOR == 57 && LIBAVFORMAT_VERSION_MINOR == 25)
- 				av_packet_unref(&pkt);
+				av_packet_unref(&pkt);
 #else
 				av_free_packet(&pkt);
 #endif
@@ -1000,14 +1096,17 @@ void CStreamStream::run()
 			}
 #else
 			int ret = av_bsf_send_packet(bsfc, &pkt);
-			if (ret < 0){
+			if (ret < 0)
+			{
 				break;
 			}
 			ret = av_bsf_receive_packet(bsfc, &newpkt);
-			if (ret == AVERROR(EAGAIN)){
+			if (ret == AVERROR(EAGAIN))
+			{
 				break;
 			}
-			if(ret != AVERROR_EOF){
+			if (ret != AVERROR_EOF)
+			{
 				av_packet_unref(&pkt);
 				pkt = newpkt;
 			}

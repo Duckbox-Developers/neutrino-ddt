@@ -46,7 +46,7 @@
 
 extern font_sizes_groups_struct font_sizes_groups[];
 extern font_sizes_struct neutrino_font[];
-extern const char * locale_real_names[]; /* #include <system/locals_intern.h> */
+extern const char *locale_real_names[];  /* #include <system/locals_intern.h> */
 
 font_sizes_struct fixed_font[SNeutrinoSettings::FONT_TYPE_FIXED_COUNT] =
 {
@@ -84,7 +84,7 @@ CNeutrinoFonts::CNeutrinoFonts()
 	InitDynFonts();
 }
 
-void CNeutrinoFonts::clearDynFontStruct(dyn_font_t* f)
+void CNeutrinoFonts::clearDynFontStruct(dyn_font_t *f)
 {
 	f->dx			= 0;
 	f->dy			= 0;
@@ -97,7 +97,8 @@ void CNeutrinoFonts::clearDynFontStruct(dyn_font_t* f)
 
 void CNeutrinoFonts::InitDynFonts()
 {
-	for (int i = 0; i < FONT_ID_MAX; i++) {
+	for (int i = 0; i < FONT_ID_MAX; i++)
+	{
 		dyn_font_t dyn_font;
 		clearDynFontStruct(&dyn_font);
 		v_dyn_fonts.push_back(dyn_font);
@@ -106,30 +107,35 @@ void CNeutrinoFonts::InitDynFonts()
 
 CNeutrinoFonts::~CNeutrinoFonts()
 {
-	if (!v_share_fonts.empty()) {
-		for (unsigned int i = 0; i < v_share_fonts.size(); i++){
+	if (!v_share_fonts.empty())
+	{
+		for (unsigned int i = 0; i < v_share_fonts.size(); i++)
+		{
 			delete v_share_fonts[i].font;
 			v_share_fonts[i].font = NULL;
 		}
 		v_share_fonts.clear();
 	}
 
-	if (!v_dyn_fonts.empty()) {
-		for (unsigned int i = 0; i < v_dyn_fonts.size(); i++){
+	if (!v_dyn_fonts.empty())
+	{
+		for (unsigned int i = 0; i < v_dyn_fonts.size(); i++)
+		{
 			delete v_dyn_fonts[i].font;
 			v_dyn_fonts[i].font = NULL;
 		}
 		v_dyn_fonts.clear();
 	}
-	if (!vDynSize.empty()) {
+	if (!vDynSize.empty())
+	{
 		vDynSize.clear();
 	}
 	deleteDynFontExtAll();
 }
 
-CNeutrinoFonts* CNeutrinoFonts::getInstance()
+CNeutrinoFonts *CNeutrinoFonts::getInstance()
 {
-	static CNeutrinoFonts* nf = NULL;
+	static CNeutrinoFonts *nf = NULL;
 	if (!nf)
 		nf = new CNeutrinoFonts();
 	return nf;
@@ -137,7 +143,8 @@ CNeutrinoFonts* CNeutrinoFonts::getInstance()
 
 void CNeutrinoFonts::SetupDynamicFonts(bool initRenderClass/*=true*/)
 {
-	if (initRenderClass) {
+	if (initRenderClass)
+	{
 		if (g_dynFontRenderer != NULL)
 			delete g_dynFontRenderer;
 		g_dynFontRenderer = new FBFontRenderClass();
@@ -145,7 +152,8 @@ void CNeutrinoFonts::SetupDynamicFonts(bool initRenderClass/*=true*/)
 		dynFontStyle[0] = g_dynFontRenderer->AddFont(fontDescr.filename.c_str());
 
 		fontDescr.name = g_dynFontRenderer->getFamily(fontDescr.filename.c_str());
-		if (!vDynSize.empty()) {
+		if (!vDynSize.empty())
+		{
 			vDynSize.clear();
 		}
 		dprintf(DEBUG_NORMAL, "[CNeutrinoFonts] [%s - %d] dynamic font family: %s\n", __func__, __LINE__, fontDescr.name.c_str());
@@ -158,7 +166,8 @@ void CNeutrinoFonts::SetupDynamicFonts(bool initRenderClass/*=true*/)
 
 void CNeutrinoFonts::SetupNeutrinoFonts(bool initRenderClass/*=true*/)
 {
-	if (initRenderClass) {
+	if (initRenderClass)
+	{
 		if (g_fontRenderer != NULL)
 			delete g_fontRenderer;
 		g_fontRenderer = new FBFontRenderClass(72 * g_settings.font_scaling_x / 100, 72 * g_settings.font_scaling_y / 100);
@@ -167,13 +176,16 @@ void CNeutrinoFonts::SetupNeutrinoFonts(bool initRenderClass/*=true*/)
 		old_fontDescr.filename = fontDescr.filename;
 		fontDescr.filename = "";
 		dprintf(DEBUG_NORMAL, "[CNeutrinoFonts] [%s - %d] font file: %s\n", __func__, __LINE__, g_settings.font_file.c_str());
-		if (access(g_settings.font_file.c_str(), F_OK)) {
-			if (!access(FONTDIR"/neutrino.ttf", F_OK)) {
+		if (access(g_settings.font_file.c_str(), F_OK))
+		{
+			if (!access(FONTDIR"/neutrino.ttf", F_OK))
+			{
 				fontDescr.filename = FONTDIR"/neutrino.ttf";
 				g_settings.font_file = fontDescr.filename;
 			}
-			else {
-				fprintf( stderr,"[CNeutrinoFonts] [%s - %d] font file [%s] not found\n neutrino exit\n", __func__, __LINE__, FONTDIR"/neutrino.ttf");
+			else
+			{
+				fprintf(stderr, "[CNeutrinoFonts] [%s - %d] font file [%s] not found\n neutrino exit\n", __func__, __LINE__, FONTDIR"/neutrino.ttf");
 				_exit(0);
 			}
 		}
@@ -185,7 +197,8 @@ void CNeutrinoFonts::SetupNeutrinoFonts(bool initRenderClass/*=true*/)
 		old_fontDescr.name = fontDescr.name;
 		fontDescr.name = "";
 		fontDescr.name = g_fontRenderer->getFamily(fontDescr.filename.c_str());
-		if (!vDynSize.empty()) {
+		if (!vDynSize.empty())
+		{
 			vDynSize.clear();
 		}
 		dprintf(DEBUG_NORMAL, "[CNeutrinoFonts] [%s - %d] standard font family: %s\n", __func__, __LINE__, fontDescr.name.c_str());
@@ -225,15 +238,19 @@ void CNeutrinoFonts::SetupNeutrinoFonts(bool initRenderClass/*=true*/)
 
 void CNeutrinoFonts::refreshDynFonts()
 {
-	if (!v_share_fonts.empty()) {
-		for (unsigned int i = 0; i < v_share_fonts.size(); i++) {
+	if (!v_share_fonts.empty())
+	{
+		for (unsigned int i = 0; i < v_share_fonts.size(); i++)
+		{
 			if (v_share_fonts[i].font != NULL)
 				refreshDynFont(v_share_fonts[i].dx, v_share_fonts[i].dy, v_share_fonts[i].text, v_share_fonts[i].style, i, true);
 		}
 	}
 
-	if (!v_dyn_fonts.empty()) {
-		for (unsigned int i = 0; i < v_dyn_fonts.size(); i++) {
+	if (!v_dyn_fonts.empty())
+	{
+		for (unsigned int i = 0; i < v_dyn_fonts.size(); i++)
+		{
 			if (v_dyn_fonts[i].font != NULL)
 				refreshDynFont(v_dyn_fonts[i].dx, v_dyn_fonts[i].dy, v_dyn_fonts[i].text, v_dyn_fonts[i].style, i, false);
 		}
@@ -263,14 +280,17 @@ void CNeutrinoFonts::refreshDynFont(int dx, int dy, std::string text, int style,
 	Font *dynFont	= g_dynFontRenderer->getFont(fontDescr.name.c_str(), dynFontStyle[style].c_str(), dynSize);
 	dyn_font->font = dynFont;
 	dyn_font->size = dynSize;
-	if (dyn_font->size != dynSize){
-		dprintf(DEBUG_NORMAL, "[CNeutrinoFonts] [%s - %d]  change %s_font size old %d to new %d, index: %u\n", __func__, __LINE__, (isShare)?"share":"dyn", oldSize, dyn_font->size, index);
-	}else{
-		dprintf(DEBUG_NORMAL, "[CNeutrinoFonts] [%s - %d]  refresh %s_font size %d, index: %u\n",__func__, __LINE__, (isShare)?"share":"dyn", dyn_font->size, index);
+	if (dyn_font->size != dynSize)
+	{
+		dprintf(DEBUG_NORMAL, "[CNeutrinoFonts] [%s - %d]  change %s_font size old %d to new %d, index: %u\n", __func__, __LINE__, (isShare) ? "share" : "dyn", oldSize, dyn_font->size, index);
+	}
+	else
+	{
+		dprintf(DEBUG_NORMAL, "[CNeutrinoFonts] [%s - %d]  refresh %s_font size %d, index: %u\n", __func__, __LINE__, (isShare) ? "share" : "dyn", dyn_font->size, index);
 	}
 }
 
-int CNeutrinoFonts::getFontHeight(Font* fnt)
+int CNeutrinoFonts::getFontHeight(Font *fnt)
 {
 	if (useDigitOffset)
 		return fnt->getDigitHeight() + (fnt->getDigitOffset() * 18) / 10;
@@ -280,15 +300,18 @@ int CNeutrinoFonts::getFontHeight(Font* fnt)
 
 int CNeutrinoFonts::getDynFontSize(int dx, int dy, std::string text, int style)
 {
-	int dynSize	= dy/1.6;
+	int dynSize	= dy / 1.6;
 	if (dx == 0) dx = CFrameBuffer::getInstance()->getScreenWidth(true);
 
-	if (!vDynSize.empty()) {
-		for (size_t i = 0; i < vDynSize.size(); i++) {
+	if (!vDynSize.empty())
+	{
+		for (size_t i = 0; i < vDynSize.size(); i++)
+		{
 			if ((vDynSize[i].dy == dy) &&
-			    (vDynSize[i].dx == dx) &&
-			    (vDynSize[i].style == style) &&
-			    (vDynSize[i].text == text)) {
+				(vDynSize[i].dx == dx) &&
+				(vDynSize[i].style == style) &&
+				(vDynSize[i].text == text))
+			{
 				dynSize = vDynSize[i].dynsize;
 				return dynSize;
 			}
@@ -296,7 +319,8 @@ int CNeutrinoFonts::getDynFontSize(int dx, int dy, std::string text, int style)
 	}
 	Font *dynFont	= NULL;
 	bool dynFlag	= false;
-	while (1) {
+	while (1)
+	{
 		if (dynFont)
 			delete dynFont;
 		dynFont = g_dynFontRenderer->getFont(fontDescr.name.c_str(), dynFontStyle[style].c_str(), dynSize);
@@ -307,16 +331,21 @@ int CNeutrinoFonts::getDynFontSize(int dx, int dy, std::string text, int style)
 		std::string tmpText = text;
 		if (text.empty()) tmpText = "x";
 		_width = dynFont->getRenderWidth(tmpText);
-		if ((_height > dy) || (_width > dx)) {
-			if (dynFlag){
+		if ((_height > dy) || (_width > dx))
+		{
+			if (dynFlag)
+			{
 				dynSize--;
-			}else{
+			}
+			else
+			{
 				if (debug)
 					printf("##### [%s] Specified size (dx=%d, dy=%d) too small, use minimal font size.\n", __FUNCTION__, dx, dy);
 			}
 			break;
 		}
-		else if ((_height < dy) || (_width < dx)) {
+		else if ((_height < dy) || (_width < dx))
+		{
 			dynFlag = true;
 			dynSize++;
 		}
@@ -324,13 +353,16 @@ int CNeutrinoFonts::getDynFontSize(int dx, int dy, std::string text, int style)
 			break;
 	}
 
-	if (dynFont){
+	if (dynFont)
+	{
 		delete dynFont;
 
-		if (!vDynSize.empty() && vDynSize.size() > 99) {
+		if (!vDynSize.empty() && vDynSize.size() > 99)
+		{
 			vDynSize.clear();
 		}
-		if(dynSize){
+		if (dynSize)
+		{
 			dyn_size_t v;
 			v.dx		= dx;
 			v.dy		= dy;
@@ -393,8 +425,10 @@ Font **CNeutrinoFonts::getDynFontWithID(int &dx, int &dy, std::string text, int 
 	Font *dynFont = NULL;
 	Font **ret = NULL;
 
-	if (f_id < v_dyn_fonts.size()) {
-		if ((v_dyn_fonts[f_id].size == dynSize) && (v_dyn_fonts[f_id].font != NULL)) {
+	if (f_id < v_dyn_fonts.size())
+	{
+		if ((v_dyn_fonts[f_id].size == dynSize) && (v_dyn_fonts[f_id].font != NULL))
+		{
 			dy = v_dyn_fonts[f_id].font->getHeight();
 			if (!text.empty())
 				dx = v_dyn_fonts[f_id].font->getRenderWidth(text);
@@ -427,7 +461,8 @@ Font **CNeutrinoFonts::getDynFontWithID(int &dx, int &dy, std::string text, int 
 
 void CNeutrinoFonts::initDynFontExt()
 {
-	for (int i = 0; i < DYNFONTEXT_MAX; i++) {
+	for (int i = 0; i < DYNFONTEXT_MAX; i++)
+	{
 		dyn_font_t dyn_font;
 		clearDynFontStruct(&dyn_font);
 		v_dyn_fonts_ext.push_back(dyn_font);
@@ -436,9 +471,12 @@ void CNeutrinoFonts::initDynFontExt()
 
 void CNeutrinoFonts::deleteDynFontExtAll()
 {
-	if (!v_dyn_fonts_ext.empty()) {
-		for (size_t i = 0; i < v_dyn_fonts_ext.size(); ++i) {
-			if (v_dyn_fonts_ext[i].font != NULL){
+	if (!v_dyn_fonts_ext.empty())
+	{
+		for (size_t i = 0; i < v_dyn_fonts_ext.size(); ++i)
+		{
+			if (v_dyn_fonts_ext[i].font != NULL)
+			{
 				delete v_dyn_fonts_ext[i].font;
 				v_dyn_fonts_ext[i].font = NULL;
 			}
@@ -462,7 +500,8 @@ Font *CNeutrinoFonts::getDynFontExt(int &dx, int &dy, unsigned int f_id, std::st
 	Font *dynFont = NULL;
 	Font *ret = NULL;
 
-	if (f_id < v_dyn_fonts_ext.size()) {
+	if (f_id < v_dyn_fonts_ext.size())
+	{
 		dynFont = g_dynFontRenderer->getFont(fontDescr.name.c_str(), dynFontStyle[style].c_str(), dynSize);
 		if (v_dyn_fonts_ext[f_id].font != NULL)
 			delete v_dyn_fonts_ext[f_id].font;
@@ -500,25 +539,31 @@ Font **CNeutrinoFonts::getDynFontShare(int &dx, int &dy, std::string text, int s
 	bool fontAvailable = false;
 	unsigned int i;
 	Font **ret = NULL;
-	if (!v_share_fonts.empty()) {
-		for (i = 0; i < v_share_fonts.size(); i++) {
+	if (!v_share_fonts.empty())
+	{
+		for (i = 0; i < v_share_fonts.size(); i++)
+		{
 			if ((v_share_fonts[i].size == dynSize) &&
-			    (v_share_fonts[i].style == style) &&
-			    (v_share_fonts[i].useDigitOffset == useDigitOffset)) {
+				(v_share_fonts[i].style == style) &&
+				(v_share_fonts[i].useDigitOffset == useDigitOffset))
+			{
 				fontAvailable = true;
 				break;
 			}
 		}
 	}
-	if (fontAvailable) {
-		if (text.length() > v_share_fonts[i].text.length()) {
+	if (fontAvailable)
+	{
+		if (text.length() > v_share_fonts[i].text.length())
+		{
 			v_share_fonts[i].dx   = dx;
 			v_share_fonts[i].dy   = dy;
 			v_share_fonts[i].text = text;
 		}
 		ret = &(v_share_fonts[i].font);
 	}
-	else {
+	else
+	{
 		dynFont			= g_dynFontRenderer->getFont(fontDescr.name.c_str(), dynFontStyle[style].c_str(), dynSize);
 		dyn_font_t dyn_font;
 		dyn_font.dx		= dx;
@@ -529,7 +574,7 @@ Font **CNeutrinoFonts::getDynFontShare(int &dx, int &dy, std::string text, int s
 		dyn_font.font		= dynFont;
 		dyn_font.useDigitOffset	= useDigitOffset;
 		v_share_fonts.push_back(dyn_font);
-		ret = &(v_share_fonts[v_share_fonts.size()-1].font);
+		ret = &(v_share_fonts[v_share_fonts.size() - 1].font);
 	}
 
 	dy = (*ret)->getHeight();

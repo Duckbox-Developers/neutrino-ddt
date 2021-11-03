@@ -50,7 +50,8 @@ CFbAccelGLFB::CFbAccelGLFB()
 void CFbAccelGLFB::init(const char *)
 {
 	fd = -1;
-	if (!glfb) {
+	if (!glfb)
+	{
 		fprintf(stderr, LOGTAG "init: GL Framebuffer is not set up? we are doomed...\n");
 		return;
 	}
@@ -58,7 +59,7 @@ void CFbAccelGLFB::init(const char *)
 	stride = 4 * screeninfo.xres;
 	swidth = screeninfo.xres;
 	available = glfb->getOSDBuffer()->size(); /* allocated in glfb constructor */
-	lbb = lfb = reinterpret_cast<fb_pixel_t*>(glfb->getOSDBuffer()->data());
+	lbb = lfb = reinterpret_cast<fb_pixel_t *>(glfb->getOSDBuffer()->data());
 
 	memset(lfb, 0, available);
 	setMode(720, 576, 8 * sizeof(fb_pixel_t));
@@ -121,7 +122,8 @@ void CFbAccelGLFB::run()
 	blit_thread = true;
 	blit_mutex.lock();
 	set_threadname("glfb::autoblit");
-	while (blit_thread) {
+	while (blit_thread)
+	{
 		blit_cond.wait(&blit_mutex, blit_pending ? BLIT_INTERVAL_MIN : BLIT_INTERVAL_MAX);
 		int64_t now = time_monotonic_ms();
 		if (now - last_blit < BLIT_INTERVAL_MIN)
@@ -173,7 +175,7 @@ int CFbAccelGLFB::setMode(unsigned int, unsigned int, unsigned int)
 	return 0;
 }
 
-fb_pixel_t * CFbAccelGLFB::getBackBufferPointer() const
+fb_pixel_t *CFbAccelGLFB::getBackBufferPointer() const
 {
 	return backbuffer;
 }

@@ -40,38 +40,41 @@
 class CFlacDec : public CBaseDec
 {
 
-public:
-	static CFlacDec* getInstance();
-	virtual RetCode Decoder(FILE *, const int, State* const, CAudioMetaData*, time_t* const, unsigned int* const);
-	bool GetMetaData(FILE *in, const bool nice, CAudioMetaData* m);
-	CFlacDec(){ mMetadata = NULL; };
+	public:
+		static CFlacDec *getInstance();
+		virtual RetCode Decoder(FILE *, const int, State *const, CAudioMetaData *, time_t *const, unsigned int *const);
+		bool GetMetaData(FILE *in, const bool nice, CAudioMetaData *m);
+		CFlacDec()
+		{
+			mMetadata = NULL;
+		};
 
-	int mWriteSlot;
-	int mReadSlot;
-	int mSlotSize;
-	unsigned long mFrameCount;
-	unsigned int mChannels;
-	unsigned int mSampleRate;
-	unsigned long mBytes;
-	unsigned int mBps;
-	unsigned int mSamplesProcessed;
-	unsigned int mBuffersize;
-	unsigned long mTotalSamples;
-	unsigned int mLengthInMsec;
-	FLAC__StreamDecoder *mFlacDec;
-	FILE* mIn;
-	char* mPcmSlots[DECODE_SLOTS];
-	FLAC__uint64 mSlotTime[DECODE_SLOTS];
-	RetCode Status;
-	FLAC__StreamMetadata *mMetadata;
+		int mWriteSlot;
+		int mReadSlot;
+		int mSlotSize;
+		unsigned long mFrameCount;
+		unsigned int mChannels;
+		unsigned int mSampleRate;
+		unsigned long mBytes;
+		unsigned int mBps;
+		unsigned int mSamplesProcessed;
+		unsigned int mBuffersize;
+		unsigned long mTotalSamples;
+		unsigned int mLengthInMsec;
+		FLAC__StreamDecoder *mFlacDec;
+		FILE *mIn;
+		char *mPcmSlots[DECODE_SLOTS];
+		FLAC__uint64 mSlotTime[DECODE_SLOTS];
+		RetCode Status;
+		FLAC__StreamMetadata *mMetadata;
 
-private:
-	void ParseUserComments(FLAC__StreamMetadata_VorbisComment*, CAudioMetaData*);
-	bool Open(FILE*, FLAC__StreamDecoder*);
-	void SetMetaData(FLAC__StreamMetadata*, CAudioMetaData*);
-	State* mState;
-	bool mSeekable;
-	time_t* mTimePlayed;
+	private:
+		void ParseUserComments(FLAC__StreamMetadata_VorbisComment *, CAudioMetaData *);
+		bool Open(FILE *, FLAC__StreamDecoder *);
+		void SetMetaData(FLAC__StreamMetadata *, CAudioMetaData *);
+		State *mState;
+		bool mSeekable;
+		time_t *mTimePlayed;
 };
 
 #endif

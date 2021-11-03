@@ -66,7 +66,7 @@ extern "C" {
 #include <driver/netfile.h>
 #include <system/helpers.h>
 
-extern cAudio * audioDecoder;
+extern cAudio *audioDecoder;
 
 //#define FFDEC_DEBUG
 
@@ -76,7 +76,7 @@ static OpenThreads::Mutex mutex;
 
 static int cover_count = 0;
 
-static void __attribute__ ((unused)) log_callback(void *, int, const char *format, va_list ap)
+static void __attribute__((unused)) log_callback(void *, int, const char *format, va_list ap)
 {
 	vfprintf(stderr, format, ap);
 }
@@ -150,7 +150,8 @@ bool CFfmpegDec::Init(void *_in, const CFile::FileType ft)
 	if (!buffer)
 		return false;
 	avc = avformat_alloc_context();
-	if (!avc) {
+	if (!avc)
+	{
 		av_freep(&buffer);
 		return false;
 	}
@@ -160,45 +161,49 @@ bool CFfmpegDec::Init(void *_in, const CFile::FileType ft)
 
 	av_opt_set_int(avc, "analyzeduration", 1 * AV_TIME_BASE, 0);
 
-	avioc = avio_alloc_context (buffer, buffer_size, 0, this, read_packet, NULL, seek_packet);
-	if (!avioc) {
+	avioc = avio_alloc_context(buffer, buffer_size, 0, this, read_packet, NULL, seek_packet);
+	if (!avioc)
+	{
 		av_freep(&buffer);
 		avformat_free_context(avc);
 		return false;
 	}
 	avc->pb = avioc;
 #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(59,0,100)
-	avc->flags |= AVFMT_FLAG_CUSTOM_IO|AVFMT_FLAG_KEEP_SIDE_DATA;
+	avc->flags |= AVFMT_FLAG_CUSTOM_IO | AVFMT_FLAG_KEEP_SIDE_DATA;
 	AVInputFormat *input_format = NULL;
 #else
 	avc->flags |= AVFMT_FLAG_CUSTOM_IO;
 	const AVInputFormat *input_format = NULL;
 #endif
 
-	switch (ft) {
-	case CFile::FILE_OGG:
-		input_format = av_find_input_format("ogg");
-		break;
-	case CFile::FILE_MP3:
-		input_format = av_find_input_format("mp3");
-		break;
-	case CFile::FILE_WAV:
-		input_format = av_find_input_format("wav");
-		break;
-	case CFile::FILE_FLAC:
-		input_format = av_find_input_format("flac");
-		break;
-	case CFile::FILE_AAC:
-		input_format = av_find_input_format("aac");
-		break;
-	default:
-		break;
+	switch (ft)
+	{
+		case CFile::FILE_OGG:
+			input_format = av_find_input_format("ogg");
+			break;
+		case CFile::FILE_MP3:
+			input_format = av_find_input_format("mp3");
+			break;
+		case CFile::FILE_WAV:
+			input_format = av_find_input_format("wav");
+			break;
+		case CFile::FILE_FLAC:
+			input_format = av_find_input_format("flac");
+			break;
+		case CFile::FILE_AAC:
+			input_format = av_find_input_format("aac");
+			break;
+		default:
+			break;
 	}
 
 	int r = avformat_open_input(&avc, "", input_format, NULL);
-	if (r) {
-		char buf[200]; av_strerror(r, buf, sizeof(buf));
-		fprintf(stderr, "%d %s %d: %s\n", __LINE__, __func__,r,buf);
+	if (r)
+	{
+		char buf[200];
+		av_strerror(r, buf, sizeof(buf));
+		fprintf(stderr, "%d %s %d: %s\n", __LINE__, __func__, r, buf);
 		DeInit();
 		return false;
 	}
@@ -207,7 +212,7 @@ bool CFfmpegDec::Init(void *_in, const CFile::FileType ft)
 
 void CFfmpegDec::DeInit(void)
 {
-	if(c)
+	if (c)
 	{
 #if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(57, 83, 100)
 		avcodec_close(c);
@@ -225,7 +230,7 @@ void CFfmpegDec::DeInit(void)
 		avio_context_free(&avioc);
 #endif
 	}
-	if(avc)
+	if (avc)
 	{
 		avformat_close_input(&avc);
 		avformat_free_context(avc);
@@ -234,24 +239,26 @@ void CFfmpegDec::DeInit(void)
 	in = NULL;
 }
 
-CBaseDec::RetCode CFfmpegDec::Decoder(FILE *_in, int /*OutputFd*/, State* state, CAudioMetaData* _meta_data, time_t* time_played, unsigned int* secondsToSkip)
+CBaseDec::RetCode CFfmpegDec::Decoder(FILE *_in, int /*OutputFd*/, State *state, CAudioMetaData *_meta_data, time_t *time_played, unsigned int *secondsToSkip)
 {
 	in = _in;
-	RetCode Status=OK;
+	RetCode Status = OK;
 	is_stream = fseek((FILE *)in, 0, SEEK_SET);
 
-	if (!SetMetaData((FILE *)in, _meta_data, true)) {
+	if (!SetMetaData((FILE *)in, _meta_data, true))
+	{
 		DeInit();
-		Status=DATA_ERR;
+		Status = DATA_ERR;
 		return Status;
 	}
-#if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT( 57,25,101 )
+#if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(57,25,101)
 	c = avc->streams[best_stream]->codec;
 #else
 	c = avcodec_alloc_context3(codec);
-	if(avcodec_parameters_to_context(c,avc->streams[best_stream]->codecpar) < 0){
+	if (avcodec_parameters_to_context(c, avc->streams[best_stream]->codecpar) < 0)
+	{
 		DeInit();
-		Status=DATA_ERR;
+		Status = DATA_ERR;
 		return Status;
 	}
 #endif
@@ -261,17 +268,18 @@ CBaseDec::RetCode CFfmpegDec::Decoder(FILE *_in, int /*OutputFd*/, State* state,
 	if (r)
 	{
 		DeInit();
-		Status=DATA_ERR;
+		Status = DATA_ERR;
 		return Status;
 	}
 
 	SwrContext *swr = swr_alloc();
-	if (!swr) {
+	if (!swr)
+	{
 		mutex.lock();
 		avcodec_close(c);
 		mutex.unlock();
 		DeInit();
-		Status=DATA_ERR;
+		Status = DATA_ERR;
 		return Status;
 	}
 
@@ -297,8 +305,9 @@ CBaseDec::RetCode CFfmpegDec::Decoder(FILE *_in, int /*OutputFd*/, State* state,
 	av_opt_set_sample_fmt(swr, "in_sample_fmt",	c->sample_fmt,          0);
 	av_opt_set_sample_fmt(swr, "out_sample_fmt",   	AV_SAMPLE_FMT_S16,      0);
 
-	if (( swr_init(swr)) < 0) {
-		Status=DATA_ERR;
+	if ((swr_init(swr)) < 0)
+	{
+		Status = DATA_ERR;
 		return Status;
 	}
 
@@ -313,46 +322,56 @@ CBaseDec::RetCode CFfmpegDec::Decoder(FILE *_in, int /*OutputFd*/, State* state,
 	do
 	{
 		int actSecsToSkip = *secondsToSkip;
-		if (!is_stream && (actSecsToSkip || *state==FF || *state==REV) && avc->streams[best_stream]->time_base.num) {
-			if (!next_skip_pts || pts >= next_skip_pts) {
+		if (!is_stream && (actSecsToSkip || *state == FF || *state == REV) && avc->streams[best_stream]->time_base.num)
+		{
+			if (!next_skip_pts || pts >= next_skip_pts)
+			{
 				skip = avc->streams[best_stream]->time_base.den / avc->streams[best_stream]->time_base.num;
 				if (actSecsToSkip)
 					skip *= actSecsToSkip;
-				if (*state == REV) {
+				if (*state == REV)
+				{
 					next_skip_pts = pts - skip;
-					pts = next_skip_pts - skip/4;
+					pts = next_skip_pts - skip / 4;
 					seek_flags = AVSEEK_FLAG_BACKWARD;
-					if (pts < start_pts) {
+					if (pts < start_pts)
+					{
 						pts = start_pts;
 						*state = PAUSE;
 					}
-				} else {
+				}
+				else
+				{
 					pts += skip;
-					next_skip_pts = pts + skip/4;
+					next_skip_pts = pts + skip / 4;
 					seek_flags = 0;
 				}
 				int result = av_seek_frame(avc, best_stream, pts, seek_flags);
-				if (result < 0) {
-					fprintf(stderr,"av_seek_frame error\n");
+				if (result < 0)
+				{
+					fprintf(stderr, "av_seek_frame error\n");
 				}
 				avcodec_flush_buffers(c);
 				// if a custom value was set we only jump once
-				if (actSecsToSkip != 0) {
-					*state=PLAY;
+				if (actSecsToSkip != 0)
+				{
+					*state = PLAY;
 					*secondsToSkip = 0;
 				}
 			}
 		}
 
-		while(*state==PAUSE && !is_stream)
+		while (*state == PAUSE && !is_stream)
 			usleep(10000);
 
-		if (av_read_frame(avc, &rpacket)) {
-			Status=DATA_ERR;
+		if (av_read_frame(avc, &rpacket))
+		{
+			Status = DATA_ERR;
 			break;
 		}
 
-		if (rpacket.stream_index != best_stream) {
+		if (rpacket.stream_index != best_stream)
+		{
 #if (LIBAVFORMAT_VERSION_MAJOR == 57 && LIBAVFORMAT_VERSION_MINOR == 25)
 			av_packet_unref(&rpacket);
 #else
@@ -362,19 +381,25 @@ CBaseDec::RetCode CFfmpegDec::Decoder(FILE *_in, int /*OutputFd*/, State* state,
 		}
 
 		AVPacket packet = rpacket;
-		while (packet.size > 0) {
+		while (packet.size > 0)
+		{
 			int got_frame = 0;
-			if (!frame) {
-				if (!(frame = av_frame_alloc())) {
-					Status=DATA_ERR;
+			if (!frame)
+			{
+				if (!(frame = av_frame_alloc()))
+				{
+					Status = DATA_ERR;
 					break;
 				}
-			} else{
+			}
+			else
+			{
 				av_frame_unref(frame);
 			}
 #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57,37,100)
 			int len = avcodec_decode_audio4(c, frame, &got_frame, &packet);
-			if (len < 0) {
+			if (len < 0)
+			{
 				// skip frame
 				packet.size = 0;
 				avcodec_flush_buffers(c);
@@ -388,46 +413,54 @@ CBaseDec::RetCode CFfmpegDec::Decoder(FILE *_in, int /*OutputFd*/, State* state,
 			packet.data += len;
 #else
 			int ret = avcodec_send_packet(c, &packet);
-			if (ret < 0 && ret != AVERROR(EAGAIN) && ret != AVERROR_EOF){
+			if (ret < 0 && ret != AVERROR(EAGAIN) && ret != AVERROR_EOF)
+			{
 				break;
 			}
-			if (ret >= 0){
+			if (ret >= 0)
+			{
 				packet.size = 0;
 			}
 			ret = avcodec_receive_frame(c, frame);
-			if (ret < 0){
-				if (ret != AVERROR(EAGAIN) && ret != AVERROR_EOF){
+			if (ret < 0)
+			{
+				if (ret != AVERROR(EAGAIN) && ret != AVERROR_EOF)
+				{
 					break;
 				}
-				else{
+				else
+				{
 					continue;
 				}
 			}
 			got_frame = 1;
 #endif
-			if (got_frame && *state!=PAUSE) {
+			if (got_frame && *state != PAUSE)
+			{
 				int out_samples;
 				outsamples = av_rescale_rnd(swr_get_delay(swr, c->sample_rate) + frame->nb_samples,
-					c->sample_rate, c->sample_rate, AV_ROUND_UP);
-				if (outsamples > outsamples_max) {
+						c->sample_rate, c->sample_rate, AV_ROUND_UP);
+				if (outsamples > outsamples_max)
+				{
 					av_free(outbuf);
 					if (av_samples_alloc(&outbuf, &out_samples, mChannels, //c->channels,
-								frame->nb_samples, AV_SAMPLE_FMT_S16, 1) < 0) {
-						Status=WRITE_ERR;
+							frame->nb_samples, AV_SAMPLE_FMT_S16, 1) < 0)
+					{
+						Status = WRITE_ERR;
 						packet.size = 0;
 						break;
 					}
 					outsamples_max = outsamples;
 				}
 				outsamples = swr_convert(swr, &outbuf, outsamples,
-							(const uint8_t **) &frame->data[0], frame->nb_samples);
+						(const uint8_t **) &frame->data[0], frame->nb_samples);
 				int outbuf_size = av_samples_get_buffer_size(&out_samples, mChannels, //c->channels,
-									  outsamples, AV_SAMPLE_FMT_S16, 1);
+						outsamples, AV_SAMPLE_FMT_S16, 1);
 
-				if(audioDecoder->WriteClip((unsigned char*) outbuf, outbuf_size) != outbuf_size)
+				if (audioDecoder->WriteClip((unsigned char *) outbuf, outbuf_size) != outbuf_size)
 				{
-					fprintf(stderr,"%s: PCM write error (%s).\n", ProgName, strerror(errno));
-					Status=WRITE_ERR;
+					fprintf(stderr, "%s: PCM write error (%s).\n", ProgName, strerror(errno));
+					Status = WRITE_ERR;
 				}
 #if (LIBAVUTIL_VERSION_MAJOR < 54)
 				pts = av_frame_get_best_effort_timestamp(frame);
@@ -445,7 +478,8 @@ CBaseDec::RetCode CFfmpegDec::Decoder(FILE *_in, int /*OutputFd*/, State* state,
 #else
 		av_free_packet(&rpacket);
 #endif
-	} while (*state!=STOP_REQ && Status==OK);
+	}
+	while (*state != STOP_REQ && Status == OK);
 
 	audioDecoder->StopClip();
 	meta_data_valid = false;
@@ -460,29 +494,30 @@ CBaseDec::RetCode CFfmpegDec::Decoder(FILE *_in, int /*OutputFd*/, State* state,
 	av_frame_free(&frame);
 
 	DeInit();
-	if (_meta_data->cover_temporary && !_meta_data->cover.empty()) {
+	if (_meta_data->cover_temporary && !_meta_data->cover.empty())
+	{
 		_meta_data->cover_temporary = false;
 		unlink(_meta_data->cover.c_str());
 	}
 	return Status;
 }
 
-bool CFfmpegDec::GetMetaData(FILE *_in, const bool /*nice*/, CAudioMetaData* m)
+bool CFfmpegDec::GetMetaData(FILE *_in, const bool /*nice*/, CAudioMetaData *m)
 {
 	return SetMetaData(_in, m);
 }
 
-CFfmpegDec* CFfmpegDec::getInstance()
+CFfmpegDec *CFfmpegDec::getInstance()
 {
-	static CFfmpegDec* FfmpegDec = NULL;
-	if(FfmpegDec == NULL)
+	static CFfmpegDec *FfmpegDec = NULL;
+	if (FfmpegDec == NULL)
 	{
 		FfmpegDec = new CFfmpegDec();
 	}
 	return FfmpegDec;
 }
 
-bool CFfmpegDec::SetMetaData(FILE *_in, CAudioMetaData* m, bool save_cover)
+bool CFfmpegDec::SetMetaData(FILE *_in, CAudioMetaData *m, bool save_cover)
 {
 	if (!meta_data_valid)
 	{
@@ -491,17 +526,20 @@ bool CFfmpegDec::SetMetaData(FILE *_in, CAudioMetaData* m, bool save_cover)
 
 		mutex.lock();
 		int ret = avformat_find_stream_info(avc, NULL);
-		if (ret < 0) {
+		if (ret < 0)
+		{
 			mutex.unlock();
 			DeInit();
 			printf("avformat_find_stream_info error %d\n", ret);
 			return false;
 		}
 		mutex.unlock();
-		if (!is_stream) {
+		if (!is_stream)
+		{
 			GetMeta(avc->metadata);
-			for(unsigned int i = 0; i < avc->nb_streams; i++) {
-#if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT( 57,25,101 )
+			for (unsigned int i = 0; i < avc->nb_streams; i++)
+			{
+#if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(57,25,101)
 				if (avc->streams[i]->codec->codec_type == AVMEDIA_TYPE_AUDIO)
 #else
 				if (avc->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_AUDIO)
@@ -518,11 +556,12 @@ bool CFfmpegDec::SetMetaData(FILE *_in, CAudioMetaData* m, bool save_cover)
 		codec = NULL;
 		best_stream = av_find_best_stream(avc, AVMEDIA_TYPE_AUDIO, -1, -1, &codec, 0);
 
-		if (best_stream < 0) {
+		if (best_stream < 0)
+		{
 			DeInit();
 			return false;
 		}
-#if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT( 57,25,101 )
+#if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(57,25,101)
 		if (!codec)
 			codec = avcodec_find_decoder(avc->streams[best_stream]->codec->codec_id);
 		samplerate = avc->streams[best_stream]->codec->sample_rate;
@@ -537,11 +576,11 @@ bool CFfmpegDec::SetMetaData(FILE *_in, CAudioMetaData* m, bool save_cover)
 
 		if (codec && codec->long_name != NULL)
 			type_info = codec->long_name;
-		else if(codec && codec->name != NULL)
+		else if (codec && codec->name != NULL)
 			type_info = codec->name;
 		else
 			type_info = "unknown";
-		ss << " / " << mChannels << " channel" << ( mChannels > 1 ? "s" : "");
+		ss << " / " << mChannels << " channel" << (mChannels > 1 ? "s" : "");
 		type_info += ss.str();
 
 		bitrate = 0;
@@ -551,20 +590,23 @@ bool CFfmpegDec::SetMetaData(FILE *_in, CAudioMetaData* m, bool save_cover)
 			total_time = avc->duration / int64_t(AV_TIME_BASE);
 		printf("CFfmpegDec: format %s (%s) duration %ld\n", avc->iformat->name, type_info.c_str(), total_time);
 
-		for(unsigned int i = 0; i < avc->nb_streams; i++) {
-#if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT( 57,25,101 )
+		for (unsigned int i = 0; i < avc->nb_streams; i++)
+		{
+#if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(57,25,101)
 			if (avc->streams[i]->codec->bit_rate > 0)
 				bitrate += avc->streams[i]->codec->bit_rate;
 #else
 			if (avc->streams[i]->codecpar->bit_rate > 0)
 				bitrate += avc->streams[i]->codecpar->bit_rate;
 #endif
-			if (save_cover && (avc->streams[i]->disposition & AV_DISPOSITION_ATTACHED_PIC)) {
+			if (save_cover && (avc->streams[i]->disposition & AV_DISPOSITION_ATTACHED_PIC))
+			{
 				mkdir(COVERDIR_TMP, 0755);
 				std::string cover(COVERDIR_TMP);
 				cover += "/cover_" + to_string(cover_count++) + ".jpg";
 				FILE *f = fopen(cover.c_str(), "wb");
-				if (f) {
+				if (f)
+				{
 					AVPacket *pkt = &avc->streams[i]->attached_pic;
 					fwrite(pkt->data, pkt->size, 1, f);
 					fclose(f);
@@ -573,13 +615,14 @@ bool CFfmpegDec::SetMetaData(FILE *_in, CAudioMetaData* m, bool save_cover)
 				}
 			}
 		}
-		if(!total_time && m->filesize && bitrate)
+		if (!total_time && m->filesize && bitrate)
 			total_time = 8 * m->filesize / bitrate;
 
 		meta_data_valid = true;
 		m->changed = true;
 	}
-	if (!is_stream) {
+	if (!is_stream)
+	{
 		m->title = title;
 		m->artist = artist;
 		m->date = date;
@@ -595,40 +638,51 @@ bool CFfmpegDec::SetMetaData(FILE *_in, CAudioMetaData* m, bool save_cover)
 	return true;
 }
 
-void CFfmpegDec::GetMeta(AVDictionary * metadata)
+void CFfmpegDec::GetMeta(AVDictionary *metadata)
 {
 	AVDictionaryEntry *tag = NULL;
-	while ((tag = av_dict_get(metadata, "", tag, AV_DICT_IGNORE_SUFFIX))) {
-		if(!strcasecmp(tag->key,"Title")) {
-			if (title.empty()) {
+	while ((tag = av_dict_get(metadata, "", tag, AV_DICT_IGNORE_SUFFIX)))
+	{
+		if (!strcasecmp(tag->key, "Title"))
+		{
+			if (title.empty())
+			{
 				title = isUTF8(tag->value) ? tag->value : convertLatin1UTF8(tag->value);
 				title = trim(title);
 			}
 			continue;
 		}
-		if(!strcasecmp(tag->key,"Artist")) {
-			if (artist.empty()) {
+		if (!strcasecmp(tag->key, "Artist"))
+		{
+			if (artist.empty())
+			{
 				artist = isUTF8(tag->value) ? tag->value : convertLatin1UTF8(tag->value);
 				artist = trim(artist);
 			}
 			continue;
 		}
-		if(!strcasecmp(tag->key,"Year")) {
-			if (date.empty()) {
+		if (!strcasecmp(tag->key, "Year"))
+		{
+			if (date.empty())
+			{
 				date = isUTF8(tag->value) ? tag->value : convertLatin1UTF8(tag->value);
 				date = trim(date);
 			}
 			continue;
 		}
-		if(!strcasecmp(tag->key,"Album")) {
-			if (album.empty()) {
+		if (!strcasecmp(tag->key, "Album"))
+		{
+			if (album.empty())
+			{
 				album = isUTF8(tag->value) ? tag->value : convertLatin1UTF8(tag->value);
 				album = trim(album);
 			}
 			continue;
 		}
-		if(!strcasecmp(tag->key,"Genre")) {
-			if (genre.empty()) {
+		if (!strcasecmp(tag->key, "Genre"))
+		{
+			if (genre.empty())
+			{
 				genre = isUTF8(tag->value) ? tag->value : convertLatin1UTF8(tag->value);
 				genre = trim(genre);
 			}

@@ -80,7 +80,7 @@ typedef enum
 	SPARK_CYCLE = 9,
 	SPARK_DD = 10,
 	SPARK_CA = 11,
-	SPARK_CI= 12,
+	SPARK_CI = 12,
 	SPARK_USB = 13,
 	SPARK_DOUBLESCREEN = 14,
 	SPARK_HDD_A8 = 16,
@@ -152,40 +152,58 @@ class CLCD
 	public:
 		bool has_lcd;
 		void wake_up();
-		void setled(void) { return; };
+		void setled(void)
+		{
+			return;
+		};
 		void setlcdparameter(void);
 
-		static CLCD* getInstance();
-		void init(const char * fontfile, const char * fontname,
-		          const char * fontfile2=NULL, const char * fontname2=NULL,
-		          const char * fontfile3=NULL, const char * fontname3=NULL); 
+		static CLCD *getInstance();
+		void init(const char *fontfile, const char *fontname,
+			const char *fontfile2 = NULL, const char *fontname2 = NULL,
+			const char *fontfile3 = NULL, const char *fontname3 = NULL);
 
-		void setMode(const MODES m, const char * const title = "");
-		MODES getMode() { return mode; };
+		void setMode(const MODES m, const char *const title = "");
+		MODES getMode()
+		{
+			return mode;
+		};
 		void setHddUsage(int perc);
 
 		void showServicename(const std::string name, const int num, const bool clear_epg = false);
-		std::string getServicename(void) { return servicename; }
+		std::string getServicename(void)
+		{
+			return servicename;
+		}
 		void setEPGTitle(const std::string title);
 		void setMovieInfo(const AUDIOMODES playmode, const std::string big, const std::string small, const bool centered = false);
 		void setMovieAudio(const bool is_ac3);
-		std::string getMenutitle() { return menutitle; };
+		std::string getMenutitle()
+		{
+			return menutitle;
+		};
 		void showTime(bool force = false);
 		/** blocks for duration seconds */
 		void showRCLock(int duration = 2);
 		void showVolume(const char vol, const bool perform_update = true);
 		void showPercentOver(const unsigned char perc, const bool perform_update = true, const MODES m = MODE_TVRADIO);
-		void showMenuText(const int position, const char * text, const int highlight = -1, const bool utf_encoded = false);
-		void showAudioTrack(const std::string & artist, const std::string & title, const std::string & album);
-		void showAudioPlayMode(AUDIOMODES m=AUDIO_MODE_PLAY);
+		void showMenuText(const int position, const char *text, const int highlight = -1, const bool utf_encoded = false);
+		void showAudioTrack(const std::string &artist, const std::string &title, const std::string &album);
+		void showAudioPlayMode(AUDIOMODES m = AUDIO_MODE_PLAY);
 		void showAudioProgress(const char perc, bool isMuted = false);
 
 		void setBrightness(int);
 		int getBrightness();
 		void setBrightnessStandby(int);
 		int getBrightnessStandby();
-		void setBrightnessDeepStandby(int) { return ; };
-		int getBrightnessDeepStandby() { return 0; };
+		void setBrightnessDeepStandby(int)
+		{
+			return ;
+		};
+		int getBrightnessDeepStandby()
+		{
+			return 0;
+		};
 
 		void setScrollMode(int scroll_repeats);
 
@@ -202,7 +220,10 @@ class CLCD
 
 		void setAutoDimm(int);
 		int getAutoDimm();
-		void repaintIcons() { return; };
+		void repaintIcons()
+		{
+			return;
+		};
 		void setMuted(bool);
 
 		void resume();

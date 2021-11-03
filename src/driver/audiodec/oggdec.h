@@ -29,8 +29,6 @@
 #ifndef __OGG_DEC__
 #define __OGG_DEC__
 
-//#define DBOX
-
 #include <mad.h>
 #include <stdio.h>
 #include <fcntl.h>
@@ -51,26 +49,26 @@
 class COggDec : public CBaseDec
 {
 
-public:
-	static COggDec* getInstance();
-	virtual RetCode Decoder(FILE *, const int, State* const, CAudioMetaData*, time_t* const, unsigned int* const);
-	bool GetMetaData(FILE *in, const bool nice, CAudioMetaData* m);
-	COggDec(){};
-private:
-	void ParseUserComments(vorbis_comment*, CAudioMetaData*);
-	bool Open(FILE* , OggVorbis_File*);
-	void SetMetaData(OggVorbis_File*, CAudioMetaData*);
-	RetCode Status;
-	char* mPcmSlots[DECODE_SLOTS];
-	ogg_int64_t mSlotTime[DECODE_SLOTS];
-	int mWriteSlot;
-	int mReadSlot;
-	int mSlotSize;
-	int mOutputFd;
-	State* mState;
-	bool mSeekable;
-	time_t* mTimePlayed;
-	static void* OutputDsp(void *);
+	public:
+		static COggDec *getInstance();
+		virtual RetCode Decoder(FILE *, const int, State *const, CAudioMetaData *, time_t *const, unsigned int *const);
+		bool GetMetaData(FILE *in, const bool nice, CAudioMetaData *m);
+		COggDec() {};
+	private:
+		void ParseUserComments(vorbis_comment *, CAudioMetaData *);
+		bool Open(FILE *, OggVorbis_File *);
+		void SetMetaData(OggVorbis_File *, CAudioMetaData *);
+		RetCode Status;
+		char *mPcmSlots[DECODE_SLOTS];
+		ogg_int64_t mSlotTime[DECODE_SLOTS];
+		int mWriteSlot;
+		int mReadSlot;
+		int mSlotSize;
+		int mOutputFd;
+		State *mState;
+		bool mSeekable;
+		time_t *mTimePlayed;
+		static void *OutputDsp(void *);
 };
 
 

@@ -45,7 +45,7 @@
 #include <zapit/debug.h>
 
 #include <cs_api.h>
-extern CRemoteControl * g_RemoteControl; /* neutrino.cpp */
+extern CRemoteControl *g_RemoteControl;  /* neutrino.cpp */
 
 #ifdef HAVE_DUCKBOX_HARDWARE
 #include <zapit/zapit.h>
@@ -76,39 +76,49 @@ bool active_icon[16] = { false };
 
 pthread_t vfd_scrollText;
 
-struct vfd_ioctl_data {
+struct vfd_ioctl_data
+{
 	unsigned char start;
 	unsigned char data[64];
 	unsigned char length;
 };
 
-static void write_to_vfd(unsigned int DevType, struct vfd_ioctl_data * data, bool force = false)
+static void write_to_vfd(unsigned int DevType, struct vfd_ioctl_data *data, bool force = false)
 {
-	int __attribute__ ((unused)) file_closed = 0;
-	if (blocked) {
-		if (file_vfd > -1) {
+	int __attribute__((unused)) file_closed = 0;
+	if (blocked)
+	{
+		if (file_vfd > -1)
+		{
 			blocked_counter++;
 			usleep(SCROLL_TIME);
-		} else {
+		}
+		else
+		{
 			blocked = false;
 		}
 	}
-	if (blocked_counter > 10) {
+	if (blocked_counter > 10)
+	{
 		force = true;
 		blocked_counter = 0;
 	}
 //	printf("[CVFD] - blocked_counter=%i, blocked=%i, force=%i\n", blocked, blocked_counter, force);
-	if (force || !blocked) {
-		if (blocked) {
-			if (file_vfd > -1) {
+	if (force || !blocked)
+	{
+		if (blocked)
+		{
+			if (file_vfd > -1)
+			{
 				file_closed = close(file_vfd);
 				file_vfd = -1;
 			}
 		}
 		blocked = true;
 		if (file_vfd == -1)
-			file_vfd = open (VFD_DEVICE, O_RDWR);
-		if (file_vfd > -1) {
+			file_vfd = open(VFD_DEVICE, O_RDWR);
+		if (file_vfd > -1)
+		{
 			ioctl(file_vfd, DevType, data);
 			ioctl(file_vfd, I_FLUSH, FLUSHRW);
 			file_closed = close(file_vfd);
@@ -120,7 +130,7 @@ static void write_to_vfd(unsigned int DevType, struct vfd_ioctl_data * data, boo
 }
 
 #if defined (BOXMODEL_UFS910) || defined (BOXMODEL_UFS922)
-static void writeCG (unsigned char adress, unsigned char pixeldata[5])
+static void writeCG(unsigned char adress, unsigned char pixeldata[5])
 {
 	struct vfd_ioctl_data data;
 	data.start = adress & 0x07;
@@ -135,7 +145,7 @@ static void writeCG (unsigned char adress, unsigned char pixeldata[5])
 }
 #endif
 
-static void ShowNormalText(char * str, bool fromScrollThread = false)
+static void ShowNormalText(char *str, bool fromScrollThread = false)
 {
 	if (blocked)
 	{
@@ -148,7 +158,7 @@ static void ShowNormalText(char * str, bool fromScrollThread = false)
 
 	if (!fromScrollThread)
 	{
-		if(vfd_scrollText != 0)
+		if (vfd_scrollText != 0)
 		{
 			pthread_cancel(vfd_scrollText);
 			pthread_join(vfd_scrollText, NULL);
@@ -163,22 +173,22 @@ static void ShowNormalText(char * str, bool fromScrollThread = false)
 	}
 
 	if (strlen(str) < VFDLENGTH && VFDLENGTH > 7) // do not center on small displays
-		ws = (VFDLENGTH-strlen(str))/2;
+		ws = (VFDLENGTH - strlen(str)) / 2;
 	else
 		ws = 0;
 	memset(data.data, ' ', 63);
 	if (!fromScrollThread)
 	{
-		memcpy (data.data+ws, str, VFDLENGTH-ws);
+		memcpy(data.data + ws, str, VFDLENGTH - ws);
 		data.start = 0;
 		if ((strlen(str) % 2) == 1 && VFDLENGTH > 7) // do not center on small displays
-			data.length = VFDLENGTH-ws-1;
+			data.length = VFDLENGTH - ws - 1;
 		else
-			data.length = VFDLENGTH-ws;
+			data.length = VFDLENGTH - ws;
 	}
 	else
 	{
-		memcpy ( data.data, str, VFDLENGTH);
+		memcpy(data.data, str, VFDLENGTH);
 		data.start = 0;
 		data.length = VFDLENGTH;
 	}
@@ -196,7 +206,7 @@ void CVFD::ShowScrollText(char *str)
 	}
 
 	//stop scrolltextthread
-	if(vfd_scrollText != 0)
+	if (vfd_scrollText != 0)
 	{
 		pthread_cancel(vfd_scrollText);
 		pthread_join(vfd_scrollText, NULL);
@@ -210,17 +220,17 @@ void CVFD::ShowScrollText(char *str)
 	pthread_create(&vfd_scrollText, NULL, ThreadScrollText, (void *)scrollstr);
 }
 
-void* CVFD::ThreadScrollText(void * arg)
+void *CVFD::ThreadScrollText(void *arg)
 {
 	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
 
 	int i;
 	char *str = (char *)arg;
 	int len = strlen(str);
-	char out[VFDLENGTH+1];
-	char buf[VFDLENGTH+65];
+	char out[VFDLENGTH + 1];
+	char buf[VFDLENGTH + 65];
 
-	memset(out, 0, VFDLENGTH+1);
+	memset(out, 0, VFDLENGTH + 1);
 
 	int retries = g_settings.lcd_vfd_scroll;
 
@@ -230,21 +240,21 @@ void* CVFD::ThreadScrollText(void * arg)
 		memset(buf, ' ', (len + VFDLENGTH));
 		memcpy(buf, str, len);
 
-		while(retries--)
+		while (retries--)
 		{
 //			usleep(SCROLL_TIME);
 
-			for (i = 0; i <= (len-1); i++)
+			for (i = 0; i <= (len - 1); i++)
 			{
 				// scroll text until end
-				memcpy(out, buf+i, VFDLENGTH);
-				ShowNormalText(out,true);
+				memcpy(out, buf + i, VFDLENGTH);
+				ShowNormalText(out, true);
 				usleep(SCROLL_TIME);
 			}
 		}
 	}
 	memcpy(out, str, VFDLENGTH); // display first VFDLENGTH chars after scrolling
-	ShowNormalText(out,true);
+	ShowNormalText(out, true);
 
 	pthread_exit(0);
 
@@ -263,23 +273,24 @@ CVFD::CVFD()
 	service_number = -1;
 
 #ifdef VFD_UPDATE
-        m_fileList = NULL;
-        m_fileListPos = 0;
-        m_fileListHeader = "";
-        m_infoBoxText = "";
-        m_infoBoxAutoNewline = 0;
-        m_progressShowEscape = 0;
-        m_progressHeaderGlobal = "";
-        m_progressHeaderLocal = "";
-        m_progressGlobal = 0;
-        m_progressLocal = 0;
+	m_fileList = NULL;
+	m_fileListPos = 0;
+	m_fileListHeader = "";
+	m_infoBoxText = "";
+	m_infoBoxAutoNewline = 0;
+	m_progressShowEscape = 0;
+	m_progressHeaderGlobal = "";
+	m_progressHeaderLocal = "";
+	m_progressGlobal = 0;
+	m_progressLocal = 0;
 #endif // VFD_UPDATE
 
 	has_lcd = true;
 	has_led_segment = false;
 #if !HAVE_DUCKBOX_HARDWARE
 	fd = open("/dev/display", O_RDONLY);
-	if(fd < 0) {
+	if (fd < 0)
+	{
 		perror("/dev/display");
 		has_lcd = false;
 		has_led_segment = false;
@@ -295,57 +306,71 @@ CVFD::CVFD()
 CVFD::~CVFD()
 {
 #if !HAVE_DUCKBOX_HARDWARE
-	if(fd > 0){
+	if (fd > 0)
+	{
 		close(fd);
 		fd = -1;
 	}
 #endif
 }
 
-CVFD* CVFD::getInstance()
+CVFD *CVFD::getInstance()
 {
-	static CVFD* lcdd = NULL;
-	if(lcdd == NULL) {
+	static CVFD *lcdd = NULL;
+	if (lcdd == NULL)
+	{
 		lcdd = new CVFD();
 	}
 	return lcdd;
 }
 
-void CVFD::count_down() {
-	if (timeout_cnt > 0) {
+void CVFD::count_down()
+{
+	if (timeout_cnt > 0)
+	{
 		timeout_cnt--;
-		if (timeout_cnt == 0 ) {
-			if (g_settings.lcd_setting_dim_brightness > -1) {
+		if (timeout_cnt == 0)
+		{
+			if (g_settings.lcd_setting_dim_brightness > -1)
+			{
 				// save lcd brightness, setBrightness() changes global setting
 				int b = g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS];
 				setBrightness(g_settings.lcd_setting_dim_brightness);
 				g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] = b;
-			} else {
+			}
+			else
+			{
 				setPower(0);
 			}
 		}
 	}
-	if (g_settings.lcd_info_line && switch_name_time_cnt > 0) {
-	  switch_name_time_cnt--;
-		if (switch_name_time_cnt == 0) {
-			if (g_settings.lcd_setting_dim_brightness > -1) {
+	if (g_settings.lcd_info_line && switch_name_time_cnt > 0)
+	{
+		switch_name_time_cnt--;
+		if (switch_name_time_cnt == 0)
+		{
+			if (g_settings.lcd_setting_dim_brightness > -1)
+			{
 				CVFD::getInstance()->showTime(true);
 			}
 		}
 	}
 }
 
-void CVFD::wake_up() {
-	if(fd < 0) return;
+void CVFD::wake_up()
+{
+	if (fd < 0) return;
 
-	if (atoi(g_settings.lcd_setting_dim_time.c_str()) > 0) {
+	if (atoi(g_settings.lcd_setting_dim_time.c_str()) > 0)
+	{
 		timeout_cnt = atoi(g_settings.lcd_setting_dim_time.c_str());
 		g_settings.lcd_setting_dim_brightness > -1 ?
-			setBrightness(g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS]) : setPower(1);
+		setBrightness(g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS]) : setPower(1);
 	}
 	else
 		setPower(1);
-	if(g_settings.lcd_info_line){
+	if (g_settings.lcd_info_line)
+	{
 		switch_name_time_cnt = g_settings.timing[SNeutrinoSettings::TIMING_INFOBAR] + 10;
 	}
 #if defined (BOXMODEL_OCTAGON1008)
@@ -354,16 +379,19 @@ void CVFD::wake_up() {
 
 }
 
-void* CVFD::TimeThread(void *)
+void *CVFD::TimeThread(void *)
 {
-	while(1) {
+	while (1)
+	{
 		sleep(1);
 		struct stat buf;
-                if (stat("/tmp/vfd.locked", &buf) == -1) {
-                        CVFD::getInstance()->showTime();
-                        CVFD::getInstance()->count_down();
-                } else
-                        CVFD::getInstance()->wake_up();
+		if (stat("/tmp/vfd.locked", &buf) == -1)
+		{
+			CVFD::getInstance()->showTime();
+			CVFD::getInstance()->count_down();
+		}
+		else
+			CVFD::getInstance()->wake_up();
 	}
 	return NULL;
 }
@@ -375,7 +403,8 @@ void CVFD::init(const char * /*fontfile*/, const char * /*fontname*/)
 	brightness = -1;
 	setMode(MODE_TVRADIO);
 
-	if (pthread_create (&thrTime, NULL, TimeThread, NULL) != 0 ) {
+	if (pthread_create(&thrTime, NULL, TimeThread, NULL) != 0)
+	{
 		perror("[lcdd]: pthread_create(TimeThread)");
 		return ;
 	}
@@ -383,25 +412,25 @@ void CVFD::init(const char * /*fontfile*/, const char * /*fontname*/)
 
 void CVFD::setlcdparameter(int dimm, const int power)
 {
-	if(fd < 0) return;
+	if (fd < 0) return;
 
-	if(dimm < 0)
+	if (dimm < 0)
 		dimm = 0;
-	else if(dimm > 15)
+	else if (dimm > 15)
 		dimm = 15;
 
-	if(!power)
+	if (!power)
 		dimm = 0;
 
-	if(brightness == dimm)
+	if (brightness == dimm)
 		return;
 
 	brightness = dimm;
 
-printf("CVFD::setlcdparameter dimm %d power %d\n", dimm, power);
+	printf("CVFD::setlcdparameter dimm %d power %d\n", dimm, power);
 #if !HAVE_DUCKBOX_HARDWARE
 	int ret = ioctl(fd, IOC_FP_SET_BRIGHT, dimm);
-	if(ret < 0)
+	if (ret < 0)
 		perror("IOC_FP_SET_BRIGHT");
 #else
 // Brightness
@@ -416,7 +445,8 @@ printf("CVFD::setlcdparameter dimm %d power %d\n", dimm, power);
 	memset(&data, 0, sizeof(struct vfd_ioctl_data));
 	data.start = 0;
 	data.length = 5;
-	if (power) {
+	if (power)
+	{
 		data.data[0] = 0x01; // red led
 	}
 	else
@@ -431,7 +461,8 @@ printf("CVFD::setlcdparameter dimm %d power %d\n", dimm, power);
 	memset(&data, 0, sizeof(struct vfd_ioctl_data));
 	data.start = 0;
 	data.length = 5;
-	if (power) {
+	if (power)
+	{
 		data.data[0] = 0xf2; // cross plus blue led
 	}
 	else
@@ -439,14 +470,17 @@ printf("CVFD::setlcdparameter dimm %d power %d\n", dimm, power);
 		data.data[0] = 0x01; // red led
 	}
 	data.start = 0;
-	data.data[4] = brightness*2;
+	data.data[4] = brightness * 2;
 	data.length = 5;
 	write_to_vfd(VFDPWRLED, &data);
 #elif !defined (BOXMODEL_UFS912) && !defined (BOXMODEL_UFS913) && !defined (BOXMODEL_OCTAGON1008)
 // Power on/off
-	if (power) {
+	if (power)
+	{
 		data.start = 0x01;
-	} else {
+	}
+	else
+	{
 		data.start = 0x00;
 	}
 	data.length = 0;
@@ -456,17 +490,17 @@ printf("CVFD::setlcdparameter dimm %d power %d\n", dimm, power);
 
 void CVFD::setlcdparameter(void)
 {
-	if(fd < 0) return;
+	if (fd < 0) return;
 	last_toggle_state_power = g_settings.lcd_setting[SNeutrinoSettings::LCD_POWER];
 	setlcdparameter((mode == MODE_STANDBY) ? g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] : (mode == MODE_SHUTDOWN) ? g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] : g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS],
-			last_toggle_state_power);
+		last_toggle_state_power);
 }
 
-void CVFD::showServicename(const std::string & name, int number) // UTF-8
+void CVFD::showServicename(const std::string &name, int number)  // UTF-8
 {
-	if(fd < 0) return;
+	if (fd < 0) return;
 
-printf("CVFD::showServicename: %s\n", name.c_str());
+	printf("CVFD::showServicename: %s\n", name.c_str());
 	servicename = name;
 	service_number = number;
 
@@ -485,23 +519,27 @@ void CVFD::showTime(bool force)
 	//unsigned int system_rev = cs_get_revision();
 	static int recstatus = 0;
 #if 0
-	if(!has_lcd)
+	if (!has_lcd)
 		return;
 #endif
-	if(fd >= 0 && mode == MODE_SHUTDOWN) {
+	if (fd >= 0 && mode == MODE_SHUTDOWN)
+	{
 		ShowIcon(FP_ICON_CAM1, false);
 		return;
 	}
-	if (fd >= 0 && showclock) {
-		if (mode == MODE_STANDBY || ( g_settings.lcd_info_line && (MODE_TVRADIO == mode))) {
+	if (fd >= 0 && showclock)
+	{
+		if (mode == MODE_STANDBY || (g_settings.lcd_info_line && (MODE_TVRADIO == mode)))
+		{
 			char timestr[21];
 			struct timeb tm;
-			struct tm * t;
+			struct tm *t;
 			static int hour = 0, minute = 0;
 
 			ftime(&tm);
 			t = localtime(&tm.time);
-			if(force || ( switch_name_time_cnt == 0 && ((hour != t->tm_hour) || (minute != t->tm_min))) ) {
+			if (force || (switch_name_time_cnt == 0 && ((hour != t->tm_hour) || (minute != t->tm_min))))
+			{
 				hour = t->tm_hour;
 				minute = t->tm_min;
 #if defined (BOXMODEL_OCTAGON1008)
@@ -512,30 +550,39 @@ void CVFD::showTime(bool force)
 				strftime(timestr, 6, "%H:%M", t);
 #endif
 				ShowText(timestr);
-				if (support_text) {
+				if (support_text)
+				{
 					strftime(timestr, 20, "%H:%M", t);
 					ShowText(timestr);
-				} else if (support_numbers && has_led_segment) {
-					ShowNumber((t->tm_hour*100) + t->tm_min);
+				}
+				else if (support_numbers && has_led_segment)
+				{
+					ShowNumber((t->tm_hour * 100) + t->tm_min);
 				}
 			}
 		}
 	}
 
 	int tmp_recstatus = CNeutrinoApp::getInstance()->recordingstatus;
-	if (tmp_recstatus) {
-		if(clearClock) {
+	if (tmp_recstatus)
+	{
+		if (clearClock)
+		{
 			clearClock = 0;
-			if(has_lcd)
+			if (has_lcd)
 				ShowIcon(FP_ICON_CAM1, false);
-		} else {
+		}
+		else
+		{
 			clearClock = 1;
-			if(has_lcd)
+			if (has_lcd)
 				ShowIcon(FP_ICON_CAM1, true);
 		}
-	} else if(clearClock || (recstatus != tmp_recstatus)) { // in case icon ON after record stopped
+	}
+	else if (clearClock || (recstatus != tmp_recstatus))    // in case icon ON after record stopped
+	{
 		clearClock = 0;
-		if(has_lcd)
+		if (has_lcd)
 			ShowIcon(FP_ICON_CAM1, false);
 	}
 
@@ -545,11 +592,11 @@ void CVFD::showTime(bool force)
 #if HAVE_DUCKBOX_HARDWARE
 void CVFD::UpdateIcons()
 {
-	CZapitChannel * chan = CZapit::getInstance()->GetCurrentChannel();
+	CZapitChannel *chan = CZapit::getInstance()->GetCurrentChannel();
 	if (chan)
 	{
-		ShowIcon(FP_ICON_HD,chan->isHD());
-		ShowIcon(FP_ICON_LOCK,!chan->camap.empty());
+		ShowIcon(FP_ICON_HD, chan->isHD());
+		ShowIcon(FP_ICON_LOCK, !chan->camap.empty());
 		if (chan->getAudioChannel() != NULL)
 			ShowIcon(FP_ICON_DD, chan->getAudioChannel()->audioChannelType == CZapitAudioChannel::AC3);
 	}
@@ -573,11 +620,11 @@ void CVFD::showRCLock(int duration)
 void CVFD::showVolume(const char vol, const bool force_update)
 {
 	static int oldpp = 0;
-	if(!has_lcd) return;
+	if (!has_lcd) return;
 
 	ShowIcon(FP_ICON_MUTE, muted);
 
-	if(!force_update && vol == volume)
+	if (!force_update && vol == volume)
 		return;
 	volume = vol;
 
@@ -585,11 +632,12 @@ void CVFD::showVolume(const char vol, const bool force_update)
 	if (!allowed_mode)
 		return;
 
-	if (g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME] == 1) {
+	if (g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME] == 1)
+	{
 		wake_up();
 #if HAVE_DUCKBOX_HARDWARE
 		int pp = (int) round((double) vol / (double) 2);
-		if(oldpp != pp)
+		if (oldpp != pp)
 		{
 #if defined (BOXMODEL_UFS910) || defined (BOXMODEL_UFS922)
 			int i;
@@ -605,10 +653,10 @@ void CVFD::showVolume(const char vol, const bool force_update)
 			char c4[1] = {0x14};
 			char c5[1] = {0x15};
 			char VolumeBar[17];
-			memset (VolumeBar, 0, sizeof(VolumeBar));
+			memset(VolumeBar, 0, sizeof(VolumeBar));
 			char act[2] = {0x01, 0x20};
 			strncat(VolumeBar, act, 2);
-			for(i=1; i <= j; i++)
+			for (i = 1; i <= j; i++)
 			{
 				strncat(VolumeBar, c5, 1);
 			}
@@ -626,29 +674,30 @@ void CVFD::showVolume(const char vol, const bool force_update)
 					break;
 				case 4:
 					strncat(VolumeBar, c4, 1);
-				break;
+					break;
 			}
 			//dprintf(DEBUG_DEBUG,"CVFD::showVolume: vol %d - pp %d - fullblocks %d - mod %d - %s\n", vol, pp, j, i, VolumeBar);
-			if (strlen(VolumeBar) < 12) {
-				for (int a=strlen(VolumeBar); a < 12; a++)
+			if (strlen(VolumeBar) < 12)
+			{
+				for (int a = strlen(VolumeBar); a < 12; a++)
 					strncat(VolumeBar, c0, 1);
 			}
 			ShowText(VolumeBar);
 #elif defined (BOXMODEL_TF7700)
 			char vol_chr[64] = "";
-			snprintf(vol_chr, sizeof(vol_chr)-1, "VOL: %d%%", (int)vol);
+			snprintf(vol_chr, sizeof(vol_chr) - 1, "VOL: %d%%", (int)vol);
 			ShowText(vol_chr);
 #elif defined (BOXMODEL_OCTAGON1008)
 			char vol_chr[64] = "";
-			snprintf(vol_chr, sizeof(vol_chr)-1, "VOL=%3d", (int)vol);
+			snprintf(vol_chr, sizeof(vol_chr) - 1, "VOL=%3d", (int)vol);
 			ShowText(vol_chr);
 #elif defined (BOXMODEL_CUBEREVO_250HD) || defined (BOXMODEL_IPBOX55)
 			char vol_chr[64] = "";
-			snprintf(vol_chr, sizeof(vol_chr)-1, "v%3d", (int)vol);
+			snprintf(vol_chr, sizeof(vol_chr) - 1, "v%3d", (int)vol);
 			ShowText(vol_chr);
 #elif defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500) || defined (BOXMODEL_UFS912) || defined (BOXMODEL_UFS913) || defined (BOXMODEL_CUBEREVO) || defined (BOXMODEL_CUBEREVO_MINI) || defined (BOXMODEL_CUBEREVO_MINI2) || defined (BOXMODEL_CUBEREVO_2000HD) || defined (BOXMODEL_CUBEREVO_3000HD) || defined (BOXMODEL_IPBOX9900) || defined (BOXMODEL_IPBOX99)
 			char vol_chr[64] = "";
-			snprintf(vol_chr, sizeof(vol_chr)-1, "Volume: %d%%", (int)vol);
+			snprintf(vol_chr, sizeof(vol_chr) - 1, "Volume: %d%%", (int)vol);
 			ShowText(vol_chr);
 #endif
 			oldpp = pp;
@@ -656,17 +705,20 @@ void CVFD::showVolume(const char vol, const bool force_update)
 #else
 		ShowIcon(FP_ICON_FRAME, true);
 		int pp = (int) round((double) vol * (double) 8 / (double) 100);
-		if(pp > 8) pp = 8;
+		if (pp > 8) pp = 8;
 
-		if(force_update || oldpp != pp) {
-printf("CVFD::showVolume: %d, bar %d\n", (int) vol, pp);
+		if (force_update || oldpp != pp)
+		{
+			printf("CVFD::showVolume: %d, bar %d\n", (int) vol, pp);
 			int i;
 			int j = 0x00000200;
-			for(i = 0; i < pp; i++) {
+			for (i = 0; i < pp; i++)
+			{
 				ShowIcon((fp_icon) j, true);
 				j /= 2;
 			}
-			for(;i < 8; i++) {
+			for (; i < 8; i++)
+			{
 				ShowIcon((fp_icon) j, false);
 				j /= 2;
 			}
@@ -676,14 +728,14 @@ printf("CVFD::showVolume: %d, bar %d\n", (int) vol, pp);
 	}
 }
 
-void CVFD::showPercentOver(const unsigned char __attribute__ ((unused)) perc, const bool /*perform_update*/, const MODES __attribute__ ((unused)) origin)
+void CVFD::showPercentOver(const unsigned char __attribute__((unused)) perc, const bool /*perform_update*/, const MODES __attribute__((unused)) origin)
 {
 #if HAVE_DUCKBOX_HARDWARE
 	return;
 #else
 
 	static int ppold = 0;
-	if(!has_lcd) return;
+	if (!has_lcd) return;
 
 	percentOver = perc;
 
@@ -694,24 +746,28 @@ void CVFD::showPercentOver(const unsigned char __attribute__ ((unused)) perc, co
 	if (!allowed_mode)
 		return;
 
-	if (g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME] == 0) {
+	if (g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME] == 0)
+	{
 		ShowIcon(FP_ICON_FRAME, true);
 		int pp;
-		if(perc == 255)
+		if (perc == 255)
 			pp = 0;
 		else
 			pp = (int) round((double) perc * (double) 8 / (double) 100);
-		if(pp > 8) pp = 8;
+		if (pp > 8) pp = 8;
 
-		if(pp != ppold) {
+		if (pp != ppold)
+		{
 //printf("CVFD::showPercentOver: %d, bar %d\n", (int) perc, pp);
 			int i;
 			int j = 0x00000200;
-			for(i = 0; i < pp; i++) {
+			for (i = 0; i < pp; i++)
+			{
 				ShowIcon((fp_icon) j, true);
 				j /= 2;
 			}
-			for(;i < 8; i++) {
+			for (; i < 8; i++)
+			{
 				ShowIcon((fp_icon) j, false);
 				j /= 2;
 			}
@@ -721,9 +777,9 @@ void CVFD::showPercentOver(const unsigned char __attribute__ ((unused)) perc, co
 #endif
 }
 
-void CVFD::showMenuText(const int /*position*/, const char * ptext, const int /*highlight*/, const bool /*utf_encoded*/)
+void CVFD::showMenuText(const int /*position*/, const char *ptext, const int /*highlight*/, const bool /*utf_encoded*/)
 {
-	if(fd < 0) return;
+	if (fd < 0) return;
 	if (mode != MODE_MENU_UTF8)
 		return;
 
@@ -731,29 +787,30 @@ void CVFD::showMenuText(const int /*position*/, const char * ptext, const int /*
 	wake_up();
 }
 
-void CVFD::showAudioTrack(const std::string & /*artist*/, const std::string & title, const std::string & /*album*/)
+void CVFD::showAudioTrack(const std::string & /*artist*/, const std::string &title, const std::string & /*album*/)
 {
-	if(fd < 0) return;
+	if (fd < 0) return;
 	if (mode != MODE_AUDIO)
 		return;
-printf("CVFD::showAudioTrack: %s\n", title.c_str());
+	printf("CVFD::showAudioTrack: %s\n", title.c_str());
 	ShowText(title.c_str());
 	wake_up();
 
 #ifdef HAVE_LCD
-	fonts.menu->RenderString(0,22, 125, artist.c_str() , CLCDDisplay::PIXEL_ON);
-	fonts.menu->RenderString(0,35, 125, album.c_str() , CLCDDisplay::PIXEL_ON);
-	fonts.menu->RenderString(0,48, 125, title.c_str() , CLCDDisplay::PIXEL_ON);
+	fonts.menu->RenderString(0, 22, 125, artist.c_str(), CLCDDisplay::PIXEL_ON);
+	fonts.menu->RenderString(0, 35, 125, album.c_str(), CLCDDisplay::PIXEL_ON);
+	fonts.menu->RenderString(0, 48, 125, title.c_str(), CLCDDisplay::PIXEL_ON);
 #endif
 }
 
 void CVFD::showAudioPlayMode(AUDIOMODES m)
 {
-	if(fd < 0) return;
+	if (fd < 0) return;
 	if (mode != MODE_AUDIO)
 		return;
 
-	switch(m) {
+	switch (m)
+	{
 		case AUDIO_MODE_PLAY:
 			ShowIcon(FP_ICON_PLAY, true);
 			ShowIcon(FP_ICON_PAUSE, false);
@@ -796,109 +853,111 @@ void CVFD::showAudioPlayMode(AUDIOMODES m)
 
 void CVFD::showAudioProgress(const unsigned char perc)
 {
-	if(fd < 0) return;
+	if (fd < 0) return;
 	if (mode != MODE_AUDIO)
 		return;
 
 	showPercentOver(perc, true, MODE_AUDIO);
 }
 
-void CVFD::setMode(const MODES m, const char * const title)
+void CVFD::setMode(const MODES m, const char *const title)
 {
-	if(fd < 0) return;
+	if (fd < 0) return;
 
 	// Clear colon in display if it is still there
 
-	if(mode == MODE_AUDIO)
+	if (mode == MODE_AUDIO)
 		ShowIcon(FP_ICON_MP3, false);
 #if 0
-	else if(mode == MODE_STANDBY) {
+	else if (mode == MODE_STANDBY)
+	{
 		ShowIcon(FP_ICON_COL1, false);
 		ShowIcon(FP_ICON_COL2, false);
 	}
 #endif
 
-	if(strlen(title))
+	if (strlen(title))
 		ShowText(title);
 	mode = m;
 	setlcdparameter();
 
-	switch (m) {
-	case MODE_TVRADIO:
-		switch (g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME])
-		{
-		case 0:
-			showPercentOver(percentOver, false);
-			break;
-		case 1:
-			showVolume(volume, false);
-			break;
-#if 0
-		case 2:
-			showVolume(volume, false);
-			showPercentOver(percentOver, false);
-			break;
-#endif
-		}
-		showServicename(servicename);
-		showclock = true;
-		if(g_settings.lcd_info_line)
-			switch_name_time_cnt = g_settings.timing[SNeutrinoSettings::TIMING_INFOBAR] + 10;
-		break;
-	case MODE_AUDIO:
+	switch (m)
 	{
-		ShowIcon(FP_ICON_MP3, true);
-		showAudioPlayMode(AUDIO_MODE_STOP);
-		showVolume(volume, false);
-		showclock = true;
-		//showTime();      /* "showclock = true;" implies that "showTime();" does a "displayUpdate();" */
-		break;
-	}
-	case MODE_AVINPUT:
-		showVolume(volume, false);
-		showclock = true;
-		//showTime();      /* "showclock = true;" implies that "showTime();" does a "displayUpdate();" */
-		break;
-	case MODE_MENU_UTF8:
-		showclock = false;
-		//fonts.menutitle->RenderString(0,28, 140, title, CLCDDisplay::PIXEL_ON);
-		break;
-	case MODE_SHUTDOWN:
-		showclock = false;
-		Clear();
-		break;
-	case MODE_STANDBY:
+		case MODE_TVRADIO:
+			switch (g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME])
+			{
+				case 0:
+					showPercentOver(percentOver, false);
+					break;
+				case 1:
+					showVolume(volume, false);
+					break;
 #if 0
-		ShowIcon(FP_ICON_COL1, true);
-		ShowIcon(FP_ICON_COL2, true);
+				case 2:
+					showVolume(volume, false);
+					showPercentOver(percentOver, false);
+					break;
 #endif
-		ClearIcons();
-		ShowIcon(FP_ICON_USB, false);
-		ShowIcon(FP_ICON_HDD, false);
-		showclock = true;
-		showTime(true);      /* "showclock = true;" implies that "showTime();" does a "displayUpdate();" */
-		                 /* "showTime()" clears the whole lcd in MODE_STANDBY                         */
-		break;
+			}
+			showServicename(servicename);
+			showclock = true;
+			if (g_settings.lcd_info_line)
+				switch_name_time_cnt = g_settings.timing[SNeutrinoSettings::TIMING_INFOBAR] + 10;
+			break;
+		case MODE_AUDIO:
+		{
+			ShowIcon(FP_ICON_MP3, true);
+			showAudioPlayMode(AUDIO_MODE_STOP);
+			showVolume(volume, false);
+			showclock = true;
+			//showTime();      /* "showclock = true;" implies that "showTime();" does a "displayUpdate();" */
+			break;
+		}
+		case MODE_AVINPUT:
+			showVolume(volume, false);
+			showclock = true;
+			//showTime();      /* "showclock = true;" implies that "showTime();" does a "displayUpdate();" */
+			break;
+		case MODE_MENU_UTF8:
+			showclock = false;
+			//fonts.menutitle->RenderString(0,28, 140, title, CLCDDisplay::PIXEL_ON);
+			break;
+		case MODE_SHUTDOWN:
+			showclock = false;
+			Clear();
+			break;
+		case MODE_STANDBY:
+#if 0
+			ShowIcon(FP_ICON_COL1, true);
+			ShowIcon(FP_ICON_COL2, true);
+#endif
+			ClearIcons();
+			ShowIcon(FP_ICON_USB, false);
+			ShowIcon(FP_ICON_HDD, false);
+			showclock = true;
+			showTime(true);      /* "showclock = true;" implies that "showTime();" does a "displayUpdate();" */
+			/* "showTime()" clears the whole lcd in MODE_STANDBY                         */
+			break;
 #ifdef VFD_UPDATE
-        case MODE_FILEBROWSER:
-                showclock = true;
-                display.draw_fill_rect(-1, -1, 120, 64, CLCDDisplay::PIXEL_OFF); // clear lcd
-                showFilelist();
-                break;
-        case MODE_PROGRESSBAR:
-                showclock = false;
-                display.load_screen(&(background[BACKGROUND_SETUP]));
-                showProgressBar();
-                break;
-        case MODE_PROGRESSBAR2:
-                showclock = false;
-                display.load_screen(&(background[BACKGROUND_SETUP]));
-                showProgressBar2();
-                break;
-        case MODE_INFOBOX:
-                showclock = false;
-                showInfoBox();
-                break;
+		case MODE_FILEBROWSER:
+			showclock = true;
+			display.draw_fill_rect(-1, -1, 120, 64, CLCDDisplay::PIXEL_OFF); // clear lcd
+			showFilelist();
+			break;
+		case MODE_PROGRESSBAR:
+			showclock = false;
+			display.load_screen(&(background[BACKGROUND_SETUP]));
+			showProgressBar();
+			break;
+		case MODE_PROGRESSBAR2:
+			showclock = false;
+			display.load_screen(&(background[BACKGROUND_SETUP]));
+			showProgressBar2();
+			break;
+		case MODE_INFOBOX:
+			showclock = false;
+			showInfoBox();
+			break;
 #endif // VFD_UPDATE
 	}
 	wake_up();
@@ -906,7 +965,7 @@ void CVFD::setMode(const MODES m, const char * const title)
 
 void CVFD::setBrightness(int bright)
 {
-	if(!has_lcd && !has_led_segment) return;
+	if (!has_lcd && !has_led_segment) return;
 
 	g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] = bright;
 	setlcdparameter();
@@ -916,10 +975,10 @@ int CVFD::getBrightness()
 {
 	//FIXME for old neutrino.conf
 #if defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500)
-	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] > 7)
+	if (g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] > 7)
 		g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] = 7;
 #else
-	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] > 15)
+	if (g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] > 15)
 		g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS] = 15;
 #endif
 
@@ -928,7 +987,7 @@ int CVFD::getBrightness()
 
 void CVFD::setBrightnessStandby(int bright)
 {
-	if(!has_lcd && !has_led_segment) return;
+	if (!has_lcd && !has_led_segment) return;
 
 	g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] = bright;
 	setlcdparameter();
@@ -938,10 +997,10 @@ int CVFD::getBrightnessStandby()
 {
 	//FIXME for old neutrino.conf
 #if defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500)
-	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] > 7)
+	if (g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] > 7)
 		g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] = 7;
 #else
-	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] > 15)
+	if (g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] > 15)
 		g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] = 15;
 #endif
 	return g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS];
@@ -949,7 +1008,7 @@ int CVFD::getBrightnessStandby()
 
 void CVFD::setBrightnessDeepStandby(int bright)
 {
-	if(!has_lcd && !has_led_segment) return;
+	if (!has_lcd && !has_led_segment) return;
 
 	g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] = bright;
 	setlcdparameter();
@@ -959,10 +1018,10 @@ int CVFD::getBrightnessDeepStandby()
 {
 	//FIXME for old neutrino.conf
 #if defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_ATEVIO7500)
-	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] > 7)
+	if (g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] > 7)
 		g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] = 7;
 #else
-	if(g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] > 15)
+	if (g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] > 15)
 		g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] = 15;
 #endif
 	return g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS];
@@ -970,7 +1029,7 @@ int CVFD::getBrightnessDeepStandby()
 
 void CVFD::setPower(int /*power*/)
 {
-	if(!has_lcd) return;
+	if (!has_lcd) return;
 // old
 	//g_settings.lcd_setting[SNeutrinoSettings::LCD_POWER] = power;
 	//setlcdparameter();
@@ -983,48 +1042,48 @@ int CVFD::getPower()
 
 void CVFD::togglePower(void)
 {
-	if(fd < 0) return;
+	if (fd < 0) return;
 
 	last_toggle_state_power = 1 - last_toggle_state_power;
 	setlcdparameter((mode == MODE_STANDBY) ? g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] : (mode == MODE_SHUTDOWN) ? g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS] : g_settings.lcd_setting[SNeutrinoSettings::LCD_BRIGHTNESS],
-			last_toggle_state_power);
+		last_toggle_state_power);
 }
 
 void CVFD::setMuted(bool mu)
 {
-	if(!has_lcd) return;
+	if (!has_lcd) return;
 	muted = mu;
 	showVolume(volume);
 }
 
 void CVFD::resume()
 {
-	if(!has_lcd) return;
+	if (!has_lcd) return;
 }
 
 void CVFD::pause()
 {
-	if(!has_lcd) return;
+	if (!has_lcd) return;
 }
 
 void CVFD::Lock()
 {
-	if(fd < 0) return;
+	if (fd < 0) return;
 	creat("/tmp/vfd.locked", 0);
 }
 
 void CVFD::Unlock()
 {
-	if(fd < 0) return;
+	if (fd < 0) return;
 	unlink("/tmp/vfd.locked");
 }
 
 void CVFD::Clear()
 {
-	if(fd < 0) return;
+	if (fd < 0) return;
 #if !HAVE_DUCKBOX_HARDWARE
 	int ret = ioctl(fd, IOC_FP_CLEAR_ALL, 0);
-	if(ret < 0)
+	if (ret < 0)
 		perror("IOC_FP_SET_TEXT");
 	else
 		text.clear();
@@ -1044,10 +1103,10 @@ void CVFD::Clear()
 void CVFD::ShowIcon(fp_icon icon, bool show)
 {
 #if !HAVE_DUCKBOX_HARDWARE
-	if(!has_lcd || fd < 0) return;
+	if (!has_lcd || fd < 0) return;
 //printf("CVFD::ShowIcon %s %x\n", show ? "show" : "hide", (int) icon);
 	int ret = ioctl(fd, show ? IOC_FP_SET_ICON : IOC_FP_CLEAR_ICON, icon);
-	if(ret < 0)
+	if (ret < 0)
 		perror(show ? "IOC_FP_SET_ICON" : "IOC_FP_CLEAR_ICON");
 #else
 #if defined (BOXMODEL_ATEVIO7500)
@@ -1085,7 +1144,8 @@ void CVFD::ClearIcons()
 #if defined (BOXMODEL_ATEVIO7500)
 	return;
 #endif
-	for (int id = 0x10; id < FP_ICON_MAX; id++) {
+	for (int id = 0x10; id < FP_ICON_MAX; id++)
+	{
 #if defined (BOXMODEL_OCTAGON1008)
 		if (id != FP_ICON_USB && id != FP_ICON_HDD)
 #elif defined(BOXMODEL_FORTIS_HDBOX) || defined (BOXMODEL_TF7700)
@@ -1098,13 +1158,14 @@ void CVFD::ClearIcons()
 	return;
 }
 
-void CVFD::ShowText(const char * str)
+void CVFD::ShowText(const char *str)
 {
 	memset(g_str, 0, sizeof(g_str));
-	memcpy(g_str, str, sizeof(g_str)-1);
+	memcpy(g_str, str, sizeof(g_str) - 1);
 
 	int i = strlen(str);
-	if (i > 63) {
+	if (i > 63)
+	{
 		g_str[60] = '.';
 		g_str[61] = '.';
 		g_str[62] = '.';
@@ -1127,13 +1188,14 @@ void CVFD::repaintIcons()
 #endif
 }
 #else
-void CVFD::ShowText(const char * str)
+void CVFD::ShowText(const char *str)
 {
 	if (fd < 0 || !support_text)
 		return;
 
 	char flags[2] = { FP_FLAG_ALIGN_LEFT, 0 };
-	if (! str) {
+	if (! str)
+	{
 		printf("CVFD::ShowText: str is NULL!\n");
 		return;
 	}
@@ -1151,7 +1213,8 @@ void CVFD::ShowText(const char * str)
 
 	text = txt;
 	int ret = ioctl(fd, IOC_FP_SET_TEXT, len > 1 ? txt.c_str() : NULL);
-	if(ret < 0) {
+	if (ret < 0)
+	{
 		support_text = false;
 		perror("IOC_FP_SET_TEXT");
 	}
@@ -1188,63 +1251,63 @@ void CVFD::ShowNumber(int number)
 #define EPG_INFO_TEXT_WIDTH LCD_WIDTH - (2*EPG_INFO_WINDOW_POS)
 
 // timer 0: OFF, timer>0 time to show in seconds,  timer>=999 endless
-void CVFD::showInfoBox(const char * const title, const char * const text ,int autoNewline,int timer)
+void CVFD::showInfoBox(const char *const title, const char *const text, int autoNewline, int timer)
 {
 #ifdef HAVE_LCD
-	if(!has_lcd) return;
-        //printf("[lcdd] Info: \n");
-        if(text != NULL)
-                m_infoBoxText = text;
-        if(text != NULL)
-                m_infoBoxTitle = title;
-        if(timer != -1)
-                m_infoBoxTimer = timer;
-        if(autoNewline != -1)
-                m_infoBoxAutoNewline = autoNewline;
+	if (!has_lcd) return;
+	//printf("[lcdd] Info: \n");
+	if (text != NULL)
+		m_infoBoxText = text;
+	if (text != NULL)
+		m_infoBoxTitle = title;
+	if (timer != -1)
+		m_infoBoxTimer = timer;
+	if (autoNewline != -1)
+		m_infoBoxAutoNewline = autoNewline;
 
-        //printf("[lcdd] Info: %s,%s,%d,%d\n",m_infoBoxTitle.c_str(),m_infoBoxText.c_str(),m_infoBoxAutoNewline,m_infoBoxTimer);
-        if( mode == MODE_INFOBOX &&
-            !m_infoBoxText.empty())
-        {
-                // paint empty box
-                display.draw_fill_rect (EPG_INFO_WINDOW_POS, EPG_INFO_WINDOW_POS,       LCD_WIDTH-EPG_INFO_WINDOW_POS+1,          LCD_HEIGTH-EPG_INFO_WINDOW_POS+1,    CLCDDisplay::PIXEL_OFF);
-                display.draw_fill_rect (EPG_INFO_LINE_POS,       EPG_INFO_LINE_POS,     LCD_WIDTH-EPG_INFO_LINE_POS-1,    LCD_HEIGTH-EPG_INFO_LINE_POS-1,        CLCDDisplay::PIXEL_ON);
-                display.draw_fill_rect (EPG_INFO_BORDER_POS, EPG_INFO_BORDER_POS,       LCD_WIDTH-EPG_INFO_BORDER_POS-3,  LCD_HEIGTH-EPG_INFO_BORDER_POS-3, CLCDDisplay::PIXEL_OFF);
+	//printf("[lcdd] Info: %s,%s,%d,%d\n",m_infoBoxTitle.c_str(),m_infoBoxText.c_str(),m_infoBoxAutoNewline,m_infoBoxTimer);
+	if (mode == MODE_INFOBOX &&
+		!m_infoBoxText.empty())
+	{
+		// paint empty box
+		display.draw_fill_rect(EPG_INFO_WINDOW_POS, EPG_INFO_WINDOW_POS,       LCD_WIDTH - EPG_INFO_WINDOW_POS + 1,          LCD_HEIGTH - EPG_INFO_WINDOW_POS + 1,    CLCDDisplay::PIXEL_OFF);
+		display.draw_fill_rect(EPG_INFO_LINE_POS,       EPG_INFO_LINE_POS,     LCD_WIDTH - EPG_INFO_LINE_POS - 1,    LCD_HEIGTH - EPG_INFO_LINE_POS - 1,        CLCDDisplay::PIXEL_ON);
+		display.draw_fill_rect(EPG_INFO_BORDER_POS, EPG_INFO_BORDER_POS,       LCD_WIDTH - EPG_INFO_BORDER_POS - 3,  LCD_HEIGTH - EPG_INFO_BORDER_POS - 3, CLCDDisplay::PIXEL_OFF);
 
-                // paint title
-                if(!m_infoBoxTitle.empty())
-                {
-                        int width = fonts.menu->getRenderWidth(m_infoBoxTitle);
-                        if(width > 100)
-                                width = 100;
-                        int start_pos = (120-width) /2;
-                        display.draw_fill_rect (start_pos, EPG_INFO_WINDOW_POS-4,       start_pos+width+5,        EPG_INFO_WINDOW_POS+10,    CLCDDisplay::PIXEL_OFF);
-                        fonts.menu->RenderString(start_pos+4,EPG_INFO_WINDOW_POS+5, width+5, m_infoBoxTitle.c_str(), CLCDDisplay::PIXEL_ON);
-                }
+		// paint title
+		if (!m_infoBoxTitle.empty())
+		{
+			int width = fonts.menu->getRenderWidth(m_infoBoxTitle);
+			if (width > 100)
+				width = 100;
+			int start_pos = (120 - width) / 2;
+			display.draw_fill_rect(start_pos, EPG_INFO_WINDOW_POS - 4,       start_pos + width + 5,        EPG_INFO_WINDOW_POS + 10,    CLCDDisplay::PIXEL_OFF);
+			fonts.menu->RenderString(start_pos + 4, EPG_INFO_WINDOW_POS + 5, width + 5, m_infoBoxTitle.c_str(), CLCDDisplay::PIXEL_ON);
+		}
 
-                // paint info
-                std::string text_line;
-                int line;
-                int pos = 0;
-                int length = m_infoBoxText.size();
-                for(line = 0; line < 5; line++)
-                {
-                        text_line.clear();
-                        while ( m_infoBoxText[pos] != '\n' &&
-                                        ((fonts.menu->getRenderWidth(text_line) < EPG_INFO_TEXT_WIDTH-10) || !m_infoBoxAutoNewline )&&
-                                        (pos < length)) // UTF-8
-                        {
-                                if ( m_infoBoxText[pos] >= ' ' && m_infoBoxText[pos] <= '~' )  // any char between ASCII(32) and ASCII (126)
-                                        text_line += m_infoBoxText[pos];
-                                pos++;
-                        }
-                        //printf("[lcdd] line %d:'%s'\r\n",line,text_line.c_str());
-                        fonts.menu->RenderString(EPG_INFO_TEXT_POS+1,EPG_INFO_TEXT_POS+(line*EPG_INFO_FONT_HEIGHT)+EPG_INFO_FONT_HEIGHT+3, EPG_INFO_TEXT_WIDTH, text_line.c_str(), CLCDDisplay::PIXEL_ON);
-                        if ( m_infoBoxText[pos] == '\n' )
-                                pos++; // remove new line
-                }
-                displayUpdate();
-        }
+		// paint info
+		std::string text_line;
+		int line;
+		int pos = 0;
+		int length = m_infoBoxText.size();
+		for (line = 0; line < 5; line++)
+		{
+			text_line.clear();
+			while (m_infoBoxText[pos] != '\n' &&
+				((fonts.menu->getRenderWidth(text_line) < EPG_INFO_TEXT_WIDTH - 10) || !m_infoBoxAutoNewline) &&
+				(pos < length)) // UTF-8
+			{
+				if (m_infoBoxText[pos] >= ' ' && m_infoBoxText[pos] <= '~')    // any char between ASCII(32) and ASCII (126)
+					text_line += m_infoBoxText[pos];
+				pos++;
+			}
+			//printf("[lcdd] line %d:'%s'\r\n",line,text_line.c_str());
+			fonts.menu->RenderString(EPG_INFO_TEXT_POS + 1, EPG_INFO_TEXT_POS + (line * EPG_INFO_FONT_HEIGHT) + EPG_INFO_FONT_HEIGHT + 3, EPG_INFO_TEXT_WIDTH, text_line.c_str(), CLCDDisplay::PIXEL_ON);
+			if (m_infoBoxText[pos] == '\n')
+				pos++; // remove new line
+		}
+		displayUpdate();
+	}
 #endif
 }
 
@@ -1256,98 +1319,98 @@ void CVFD::showInfoBox(const char * const title, const char * const text ,int au
 #define BAR_POS_WIDTH     6
 #define BAR_POS_HEIGTH   40
 
-void CVFD::showFilelist(int flist_pos,CFileList* flist,const char * const mainDir)
+void CVFD::showFilelist(int flist_pos, CFileList *flist, const char *const mainDir)
 {
 #ifdef HAVE_LCD
-	if(!has_lcd) return;
-        //printf("[lcdd] FileList\n");
-        if(flist != NULL)
-                m_fileList = flist;
-        if(flist_pos != -1)
-                m_fileListPos = flist_pos;
-        if(mainDir != NULL)
-                m_fileListHeader = mainDir;
+	if (!has_lcd) return;
+	//printf("[lcdd] FileList\n");
+	if (flist != NULL)
+		m_fileList = flist;
+	if (flist_pos != -1)
+		m_fileListPos = flist_pos;
+	if (mainDir != NULL)
+		m_fileListHeader = mainDir;
 
-        if (mode == MODE_FILEBROWSER &&
-            m_fileList != NULL &&
-            !m_fileList->empty() )
-        {
+	if (mode == MODE_FILEBROWSER &&
+		m_fileList != NULL &&
+		!m_fileList->empty())
+	{
 
-                printf("[lcdd] FileList:OK\n");
-                int size = m_fileList->size();
+		printf("[lcdd] FileList:OK\n");
+		int size = m_fileList->size();
 
-                display.draw_fill_rect(-1, -1, 120, 52, CLCDDisplay::PIXEL_OFF); // clear lcd
+		display.draw_fill_rect(-1, -1, 120, 52, CLCDDisplay::PIXEL_OFF); // clear lcd
 
-                if(m_fileListPos > size)
-                        m_fileListPos = size-1;
+		if (m_fileListPos > size)
+			m_fileListPos = size - 1;
 
-                int width = fonts.menu->getRenderWidth(m_fileListHeader);
-                if(width>110)
-                        width=110;
-                fonts.menu->RenderString((120-width)/2, 11, width+5, m_fileListHeader.c_str(), CLCDDisplay::PIXEL_ON);
+		int width = fonts.menu->getRenderWidth(m_fileListHeader);
+		if (width > 110)
+			width = 110;
+		fonts.menu->RenderString((120 - width) / 2, 11, width + 5, m_fileListHeader.c_str(), CLCDDisplay::PIXEL_ON);
 
-                //printf("list%d,%d\r\n",m_fileListPos,(*m_fileList)[m_fileListPos].Marked);
-                std::string text;
-                int marked;
-                if(m_fileListPos >  0)
-                {
-                        if ( (*m_fileList)[m_fileListPos-1].Marked == false )
-                        {
-                                text ="";
-                                marked = CLCDDisplay::PIXEL_ON;
-                        }
-                        else
-                        {
-                                text ="*";
-                                marked = CLCDDisplay::PIXEL_INV;
-                        }
-                        text += (*m_fileList)[m_fileListPos-1].getFileName();
-                        fonts.menu->RenderString(1, 12+12, BAR_POS_X+5, text.c_str(), marked);
-                }
-                if(m_fileListPos <  size)
-                {
-                        if ((*m_fileList)[m_fileListPos-0].Marked == false )
-                        {
-                                text ="";
-                                marked = CLCDDisplay::PIXEL_ON;
-                        }
-                        else
-                        {
-                                text ="*";
-                                marked = CLCDDisplay::PIXEL_INV;
-                        }
-                        text += (*m_fileList)[m_fileListPos-0].getFileName();
-                        fonts.time->RenderString(1, 12+12+14, BAR_POS_X+5, text.c_str(), marked);
-                }
-                if(m_fileListPos <  size-1)
-                {
-                        if ((*m_fileList)[m_fileListPos+1].Marked == false )
-                        {
-                                text ="";
-                                marked = CLCDDisplay::PIXEL_ON;
-                        }
-                        else
-                        {
-                                text ="*";
-                                marked = CLCDDisplay::PIXEL_INV;
-                        }
-                        text += (*m_fileList)[m_fileListPos+1].getFileName();
-                        fonts.menu->RenderString(1, 12+12+14+12, BAR_POS_X+5, text.c_str(), marked);
-                }
-                // paint marker
-                int pages = (((size-1)/3 )+1);
-                int marker_length = (BAR_POS_HEIGTH-2) / pages;
-                if(marker_length <4)
-                        marker_length=4;// not smaller than 4 pixel
-                int marker_offset = ((BAR_POS_HEIGTH-2-marker_length) * m_fileListPos) /size  ;
-                //printf("%d,%d,%d\r\n",pages,marker_length,marker_offset);
+		//printf("list%d,%d\r\n",m_fileListPos,(*m_fileList)[m_fileListPos].Marked);
+		std::string text;
+		int marked;
+		if (m_fileListPos >  0)
+		{
+			if ((*m_fileList)[m_fileListPos - 1].Marked == false)
+			{
+				text = "";
+				marked = CLCDDisplay::PIXEL_ON;
+			}
+			else
+			{
+				text = "*";
+				marked = CLCDDisplay::PIXEL_INV;
+			}
+			text += (*m_fileList)[m_fileListPos - 1].getFileName();
+			fonts.menu->RenderString(1, 12 + 12, BAR_POS_X + 5, text.c_str(), marked);
+		}
+		if (m_fileListPos <  size)
+		{
+			if ((*m_fileList)[m_fileListPos - 0].Marked == false)
+			{
+				text = "";
+				marked = CLCDDisplay::PIXEL_ON;
+			}
+			else
+			{
+				text = "*";
+				marked = CLCDDisplay::PIXEL_INV;
+			}
+			text += (*m_fileList)[m_fileListPos - 0].getFileName();
+			fonts.time->RenderString(1, 12 + 12 + 14, BAR_POS_X + 5, text.c_str(), marked);
+		}
+		if (m_fileListPos <  size - 1)
+		{
+			if ((*m_fileList)[m_fileListPos + 1].Marked == false)
+			{
+				text = "";
+				marked = CLCDDisplay::PIXEL_ON;
+			}
+			else
+			{
+				text = "*";
+				marked = CLCDDisplay::PIXEL_INV;
+			}
+			text += (*m_fileList)[m_fileListPos + 1].getFileName();
+			fonts.menu->RenderString(1, 12 + 12 + 14 + 12, BAR_POS_X + 5, text.c_str(), marked);
+		}
+		// paint marker
+		int pages = (((size - 1) / 3) + 1);
+		int marker_length = (BAR_POS_HEIGTH - 2) / pages;
+		if (marker_length < 4)
+			marker_length = 4; // not smaller than 4 pixel
+		int marker_offset = ((BAR_POS_HEIGTH - 2 - marker_length) * m_fileListPos) / size  ;
+		//printf("%d,%d,%d\r\n",pages,marker_length,marker_offset);
 
-                display.draw_fill_rect (BAR_POS_X,   BAR_POS_Y,   BAR_POS_X+BAR_POS_WIDTH,   BAR_POS_Y+BAR_POS_HEIGTH,   CLCDDisplay::PIXEL_ON);
-                display.draw_fill_rect (BAR_POS_X+1, BAR_POS_Y+1, BAR_POS_X+BAR_POS_WIDTH-1, BAR_POS_Y+BAR_POS_HEIGTH-1, CLCDDisplay::PIXEL_OFF);
-                display.draw_fill_rect (BAR_POS_X+1, BAR_POS_Y+1+marker_offset, BAR_POS_X+BAR_POS_WIDTH-1, BAR_POS_Y+1+marker_offset+marker_length, CLCDDisplay::PIXEL_ON);
+		display.draw_fill_rect(BAR_POS_X,   BAR_POS_Y,   BAR_POS_X + BAR_POS_WIDTH,   BAR_POS_Y + BAR_POS_HEIGTH,   CLCDDisplay::PIXEL_ON);
+		display.draw_fill_rect(BAR_POS_X + 1, BAR_POS_Y + 1, BAR_POS_X + BAR_POS_WIDTH - 1, BAR_POS_Y + BAR_POS_HEIGTH - 1, CLCDDisplay::PIXEL_OFF);
+		display.draw_fill_rect(BAR_POS_X + 1, BAR_POS_Y + 1 + marker_offset, BAR_POS_X + BAR_POS_WIDTH - 1, BAR_POS_Y + 1 + marker_offset + marker_length, CLCDDisplay::PIXEL_ON);
 
-                displayUpdate();
-        }
+		displayUpdate();
+	}
 #endif
 }
 
@@ -1358,53 +1421,53 @@ void CVFD::showFilelist(int flist_pos,CFileList* flist,const char * const mainDi
 #define PROG_GLOB_POS_Y 30
 #define PROG_GLOB_POS_WIDTH 100
 #define PROG_GLOB_POS_HEIGTH 20
-void CVFD::showProgressBar(int global, const char * const text,int show_escape,int timer)
+void CVFD::showProgressBar(int global, const char *const text, int show_escape, int timer)
 {
 #ifdef HAVE_LCD
-	if(!has_lcd) return;
-        if(text != NULL)
-                m_progressHeaderGlobal = text;
+	if (!has_lcd) return;
+	if (text != NULL)
+		m_progressHeaderGlobal = text;
 
-        if(timer != -1)
-                m_infoBoxTimer = timer;
+	if (timer != -1)
+		m_infoBoxTimer = timer;
 
-        if(global >= 0)
-        {
-                if(global > 100)
-                        m_progressGlobal =100;
-                else
-                        m_progressGlobal = global;
-        }
+	if (global >= 0)
+	{
+		if (global > 100)
+			m_progressGlobal = 100;
+		else
+			m_progressGlobal = global;
+	}
 
-        if(show_escape != -1)
-                m_progressShowEscape = show_escape;
+	if (show_escape != -1)
+		m_progressShowEscape = show_escape;
 
-        if (mode == MODE_PROGRESSBAR)
-        {
-                //printf("[lcdd] prog:%s,%d,%d\n",m_progressHeaderGlobal.c_str(),m_progressGlobal,m_progressShowEscape);
-                // Clear Display
-                display.draw_fill_rect (0,12,120,64, CLCDDisplay::PIXEL_OFF);
+	if (mode == MODE_PROGRESSBAR)
+	{
+		//printf("[lcdd] prog:%s,%d,%d\n",m_progressHeaderGlobal.c_str(),m_progressGlobal,m_progressShowEscape);
+		// Clear Display
+		display.draw_fill_rect(0, 12, 120, 64, CLCDDisplay::PIXEL_OFF);
 
-                // paint progress header
-                int width = fonts.menu->getRenderWidth(m_progressHeaderGlobal);
-                if(width > 100)
-                        width = 100;
-                int start_pos = (120-width) /2;
-                fonts.menu->RenderString(start_pos, 12+12, width+10, m_progressHeaderGlobal.c_str(), CLCDDisplay::PIXEL_ON);
+		// paint progress header
+		int width = fonts.menu->getRenderWidth(m_progressHeaderGlobal);
+		if (width > 100)
+			width = 100;
+		int start_pos = (120 - width) / 2;
+		fonts.menu->RenderString(start_pos, 12 + 12, width + 10, m_progressHeaderGlobal.c_str(), CLCDDisplay::PIXEL_ON);
 
-                // paint global bar
-                int marker_length = (PROG_GLOB_POS_WIDTH * m_progressGlobal)/100;
+		// paint global bar
+		int marker_length = (PROG_GLOB_POS_WIDTH * m_progressGlobal) / 100;
 
-                display.draw_fill_rect (PROG_GLOB_POS_X,                                 PROG_GLOB_POS_Y,   PROG_GLOB_POS_X+PROG_GLOB_POS_WIDTH,   PROG_GLOB_POS_Y+PROG_GLOB_POS_HEIGTH,   CLCDDisplay::PIXEL_ON);
-                display.draw_fill_rect (PROG_GLOB_POS_X+1+marker_length, PROG_GLOB_POS_Y+1, PROG_GLOB_POS_X+PROG_GLOB_POS_WIDTH-1, PROG_GLOB_POS_Y+PROG_GLOB_POS_HEIGTH-1, CLCDDisplay::PIXEL_OFF);
+		display.draw_fill_rect(PROG_GLOB_POS_X,                                 PROG_GLOB_POS_Y,   PROG_GLOB_POS_X + PROG_GLOB_POS_WIDTH,   PROG_GLOB_POS_Y + PROG_GLOB_POS_HEIGTH,   CLCDDisplay::PIXEL_ON);
+		display.draw_fill_rect(PROG_GLOB_POS_X + 1 + marker_length, PROG_GLOB_POS_Y + 1, PROG_GLOB_POS_X + PROG_GLOB_POS_WIDTH - 1, PROG_GLOB_POS_Y + PROG_GLOB_POS_HEIGTH - 1, CLCDDisplay::PIXEL_OFF);
 
-                // paint foot
-                if(m_progressShowEscape  == true)
-                {
-                        fonts.menu->RenderString(90, 64, 40, "Home", CLCDDisplay::PIXEL_ON);
-                }
-                displayUpdate();
-        }
+		// paint foot
+		if (m_progressShowEscape  == true)
+		{
+			fonts.menu->RenderString(90, 64, 40, "Home", CLCDDisplay::PIXEL_ON);
+		}
+		displayUpdate();
+	}
 #endif
 }
 
@@ -1421,72 +1484,72 @@ void CVFD::showProgressBar(int global, const char * const text,int show_escape,i
 #define PROG2_LOCAL_POS_WIDTH PROG2_GLOB_POS_WIDTH
 #define PROG2_LOCAL_POS_HEIGTH PROG2_GLOB_POS_HEIGTH
 
-void CVFD::showProgressBar2(int local,const char * const text_local ,int global ,const char * const text_global ,int show_escape )
+void CVFD::showProgressBar2(int local, const char *const text_local, int global, const char *const text_global, int show_escape)
 {
 #ifdef HAVE_LCD
-	if(!has_lcd) return;
-        //printf("[lcdd] prog2\n");
-        if(text_local != NULL)
-                m_progressHeaderLocal = text_local;
+	if (!has_lcd) return;
+	//printf("[lcdd] prog2\n");
+	if (text_local != NULL)
+		m_progressHeaderLocal = text_local;
 
-        if(text_global != NULL)
-                m_progressHeaderGlobal = text_global;
+	if (text_global != NULL)
+		m_progressHeaderGlobal = text_global;
 
-        if(global >= 0)
-        {
-                if(global > 100)
-                        m_progressGlobal =100;
-                else
-                        m_progressGlobal = global;
-        }
-        if(local >= 0)
-        {
-                if(local > 100)
-                        m_progressLocal =100;
-                else
-                        m_progressLocal = local;
-        }
-        if(show_escape != -1)
-                m_progressShowEscape = show_escape;
+	if (global >= 0)
+	{
+		if (global > 100)
+			m_progressGlobal = 100;
+		else
+			m_progressGlobal = global;
+	}
+	if (local >= 0)
+	{
+		if (local > 100)
+			m_progressLocal = 100;
+		else
+			m_progressLocal = local;
+	}
+	if (show_escape != -1)
+		m_progressShowEscape = show_escape;
 
-        if (mode == MODE_PROGRESSBAR2)
-        {
+	if (mode == MODE_PROGRESSBAR2)
+	{
 
-                //printf("[lcdd] prog2:%s,%d,%d\n",m_progressHeaderGlobal.c_str(),m_progressGlobal,m_progressShowEscape);
-                // Clear Display
-                display.draw_fill_rect (0,12,120,64, CLCDDisplay::PIXEL_OFF);
+		//printf("[lcdd] prog2:%s,%d,%d\n",m_progressHeaderGlobal.c_str(),m_progressGlobal,m_progressShowEscape);
+		// Clear Display
+		display.draw_fill_rect(0, 12, 120, 64, CLCDDisplay::PIXEL_OFF);
 
-                // paint  global header
-                int width = fonts.menu->getRenderWidth(m_progressHeaderGlobal);
-                if(width > 100)
-                        width = 100;
-                int start_pos = (120-width) /2;
-                fonts.menu->RenderString(start_pos, PROG2_GLOB_POS_Y-3, width+10, m_progressHeaderGlobal.c_str(), CLCDDisplay::PIXEL_ON);
+		// paint  global header
+		int width = fonts.menu->getRenderWidth(m_progressHeaderGlobal);
+		if (width > 100)
+			width = 100;
+		int start_pos = (120 - width) / 2;
+		fonts.menu->RenderString(start_pos, PROG2_GLOB_POS_Y - 3, width + 10, m_progressHeaderGlobal.c_str(), CLCDDisplay::PIXEL_ON);
 
-                // paint global bar
-                int marker_length = (PROG2_GLOB_POS_WIDTH * m_progressGlobal)/100;
+		// paint global bar
+		int marker_length = (PROG2_GLOB_POS_WIDTH * m_progressGlobal) / 100;
 
-                display.draw_fill_rect (PROG2_GLOB_POS_X,                               PROG2_GLOB_POS_Y,   PROG2_GLOB_POS_X+PROG2_GLOB_POS_WIDTH,   PROG2_GLOB_POS_Y+PROG2_GLOB_POS_HEIGTH,   CLCDDisplay::PIXEL_ON);
-                display.draw_fill_rect (PROG2_GLOB_POS_X+1+marker_length, PROG2_GLOB_POS_Y+1, PROG2_GLOB_POS_X+PROG2_GLOB_POS_WIDTH-1, PROG2_GLOB_POS_Y+PROG2_GLOB_POS_HEIGTH-1, CLCDDisplay::PIXEL_OFF);
+		display.draw_fill_rect(PROG2_GLOB_POS_X,                               PROG2_GLOB_POS_Y,   PROG2_GLOB_POS_X + PROG2_GLOB_POS_WIDTH,   PROG2_GLOB_POS_Y + PROG2_GLOB_POS_HEIGTH,   CLCDDisplay::PIXEL_ON);
+		display.draw_fill_rect(PROG2_GLOB_POS_X + 1 + marker_length, PROG2_GLOB_POS_Y + 1, PROG2_GLOB_POS_X + PROG2_GLOB_POS_WIDTH - 1, PROG2_GLOB_POS_Y + PROG2_GLOB_POS_HEIGTH - 1, CLCDDisplay::PIXEL_OFF);
 
-                // paint  local header
-                width = fonts.menu->getRenderWidth(m_progressHeaderLocal);
-                if(width > 100)
-                        width = 100;
-                start_pos = (120-width) /2;
-                fonts.menu->RenderString(start_pos, PROG2_LOCAL_POS_Y + PROG2_LOCAL_POS_HEIGTH +10 , width+10, m_progressHeaderLocal.c_str(), CLCDDisplay::PIXEL_ON);
-                // paint local bar
-                marker_length = (PROG2_LOCAL_POS_WIDTH * m_progressLocal)/100;
+		// paint  local header
+		width = fonts.menu->getRenderWidth(m_progressHeaderLocal);
+		if (width > 100)
+			width = 100;
+		start_pos = (120 - width) / 2;
+		fonts.menu->RenderString(start_pos, PROG2_LOCAL_POS_Y + PROG2_LOCAL_POS_HEIGTH + 10, width + 10, m_progressHeaderLocal.c_str(), CLCDDisplay::PIXEL_ON);
+		// paint local bar
+		marker_length = (PROG2_LOCAL_POS_WIDTH * m_progressLocal) / 100;
 
-                display.draw_fill_rect (PROG2_LOCAL_POS_X,                              PROG2_LOCAL_POS_Y,   PROG2_LOCAL_POS_X+PROG2_LOCAL_POS_WIDTH,   PROG2_LOCAL_POS_Y+PROG2_LOCAL_POS_HEIGTH,   CLCDDisplay::PIXEL_ON);
-                display.draw_fill_rect (PROG2_LOCAL_POS_X+1+marker_length,   PROG2_LOCAL_POS_Y+1, PROG2_LOCAL_POS_X+PROG2_LOCAL_POS_WIDTH-1, PROG2_LOCAL_POS_Y+PROG2_LOCAL_POS_HEIGTH-1, CLCDDisplay::PIXEL_OFF);
-                // paint foot
-                if(m_progressShowEscape  == true)
-                {
-                        fonts.menu->RenderString(90, 64, 40, "Home", CLCDDisplay::PIXEL_ON);
-                }
-                displayUpdate();
-        }
+		display.draw_fill_rect(PROG2_LOCAL_POS_X,                              PROG2_LOCAL_POS_Y,   PROG2_LOCAL_POS_X + PROG2_LOCAL_POS_WIDTH,   PROG2_LOCAL_POS_Y + PROG2_LOCAL_POS_HEIGTH,   CLCDDisplay::PIXEL_ON);
+		display.draw_fill_rect(PROG2_LOCAL_POS_X + 1 + marker_length,   PROG2_LOCAL_POS_Y + 1, PROG2_LOCAL_POS_X + PROG2_LOCAL_POS_WIDTH - 1, PROG2_LOCAL_POS_Y + PROG2_LOCAL_POS_HEIGTH - 1, CLCDDisplay::PIXEL_OFF);
+		// paint foot
+		if (m_progressShowEscape  == true)
+		{
+			fonts.menu->RenderString(90, 64, 40, "Home", CLCDDisplay::PIXEL_ON);
+		}
+		displayUpdate();
+	}
 #endif
 }
 /*****************************************************************************************/

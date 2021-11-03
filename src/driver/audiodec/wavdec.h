@@ -35,18 +35,18 @@
 class CWavDec : public CBaseDec
 {
 
-public:
-	static CWavDec* getInstance();
-	virtual RetCode Decoder(FILE *,int , State* , CAudioMetaData* m, time_t* t, unsigned int* secondsToSkip);
-	bool GetMetaData(FILE *in, const bool nice, CAudioMetaData* m);
-	CWavDec(){};
+	public:
+		static CWavDec *getInstance();
+		virtual RetCode Decoder(FILE *, int, State *, CAudioMetaData *m, time_t *t, unsigned int *secondsToSkip);
+		bool GetMetaData(FILE *in, const bool nice, CAudioMetaData *m);
+		CWavDec() {};
 
-protected:
-	virtual bool SetMetaData(FILE* in, CAudioMetaData* m);
+	protected:
+		virtual bool SetMetaData(FILE *in, CAudioMetaData *m);
 
-	int mBitsPerSample;
-	int mChannels;
-	int header_size;
+		int mBitsPerSample;
+		int mChannels;
+		int header_size;
 };
 
 

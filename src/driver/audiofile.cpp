@@ -38,25 +38,25 @@
 
 /* default constructor */
 CAudiofile::CAudiofile()
-  : MetaData(), Filename(), FileType( CFile::FILE_UNKNOWN )
+	: MetaData(), Filename(), FileType(CFile::FILE_UNKNOWN)
 {
 }
 
 /* constructor */
-CAudiofile::CAudiofile( std::string name, CFile::FileType type )
-	: MetaData(), Filename( name ), FileType( type )
+CAudiofile::CAudiofile(std::string name, CFile::FileType type)
+	: MetaData(), Filename(name), FileType(type)
 {
 }
 
 /* copy constructor */
-CAudiofile::CAudiofile( const CAudiofile& src )
-  : MetaData( src.MetaData ), Filename( src.Filename ),
-	FileType( src.FileType )
+CAudiofile::CAudiofile(const CAudiofile &src)
+	: MetaData(src.MetaData), Filename(src.Filename),
+	  FileType(src.FileType)
 {
 }
 
 /* assignment operator */
-void CAudiofile::operator=( const CAudiofile& src )
+void CAudiofile::operator=(const CAudiofile &src)
 {
 	MetaData = src.MetaData;
 	Filename = src.Filename;

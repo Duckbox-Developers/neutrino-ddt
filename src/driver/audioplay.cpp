@@ -26,8 +26,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#define DBOX
-
 /****************************************************************************
  * Includes																	*
  ****************************************************************************/
@@ -48,64 +46,64 @@
 void CAudioPlayer::stop()
 {
 	state = CBaseDec::STOP_REQ;
-	if(thrPlay)
-		pthread_join(thrPlay,NULL);
+	if (thrPlay)
+		pthread_join(thrPlay, NULL);
 	thrPlay = 0;
 	state = CBaseDec::STOP;
 }
 void CAudioPlayer::pause()
 {
-   if(state==CBaseDec::PLAY || state==CBaseDec::FF || state==CBaseDec::REV)
-      state=CBaseDec::PAUSE;
-   else if(state==CBaseDec::PAUSE)
-      state=CBaseDec::PLAY;
+	if (state == CBaseDec::PLAY || state == CBaseDec::FF || state == CBaseDec::REV)
+		state = CBaseDec::PAUSE;
+	else if (state == CBaseDec::PAUSE)
+		state = CBaseDec::PLAY;
 }
 void CAudioPlayer::ff(unsigned int seconds)
 {
 	m_SecondsToSkip = seconds;
-	if(state==CBaseDec::PLAY || state==CBaseDec::PAUSE || state==CBaseDec::REV)
-		state=CBaseDec::FF;
-	else if(state==CBaseDec::FF)
-		state=CBaseDec::PLAY;
+	if (state == CBaseDec::PLAY || state == CBaseDec::PAUSE || state == CBaseDec::REV)
+		state = CBaseDec::FF;
+	else if (state == CBaseDec::FF)
+		state = CBaseDec::PLAY;
 }
 void CAudioPlayer::rev(unsigned int seconds)
 {
 	m_SecondsToSkip = seconds;
-	if(state==CBaseDec::PLAY || state==CBaseDec::PAUSE || state==CBaseDec::FF)
-		state=CBaseDec::REV;
-	else if(state==CBaseDec::REV)
-		state=CBaseDec::PLAY;
+	if (state == CBaseDec::PLAY || state == CBaseDec::PAUSE || state == CBaseDec::FF)
+		state = CBaseDec::REV;
+	else if (state == CBaseDec::REV)
+		state = CBaseDec::PLAY;
 }
-CAudioPlayer* CAudioPlayer::getInstance()
+CAudioPlayer *CAudioPlayer::getInstance()
 {
-	static CAudioPlayer* AudioPlayer = NULL;
-	if(AudioPlayer == NULL)
+	static CAudioPlayer *AudioPlayer = NULL;
+	if (AudioPlayer == NULL)
 	{
 		AudioPlayer = new CAudioPlayer();
 	}
 	return AudioPlayer;
 }
 
-void* CAudioPlayer::PlayThread( void* /*dummy*/ )
+void *CAudioPlayer::PlayThread(void * /*dummy*/)
 {
 	int soundfd = -1;
 	set_threadname("audio:play");
 	/* Decode stdin to stdout. */
 	CBaseDec::RetCode Status =
-		CBaseDec::DecoderBase( &getInstance()->m_Audiofile, soundfd,
-				&getInstance()->state,
-				&getInstance()->m_played_time,
-				&getInstance()->m_SecondsToSkip );
+		CBaseDec::DecoderBase(&getInstance()->m_Audiofile, soundfd,
+			&getInstance()->state,
+			&getInstance()->m_played_time,
+			&getInstance()->m_SecondsToSkip);
 
 	if (Status != CBaseDec::OK)
 	{
-		fprintf( stderr, "Error during decoding: %s.\n",
-				( Status == CBaseDec::READ_ERR ) ? "READ_ERR" :
-				( Status == CBaseDec::WRITE_ERR ) ? "WRITE_ERR" :
-				( Status == CBaseDec::DSPSET_ERR ) ? "DSPSET_ERR" :
-				( Status == CBaseDec::DATA_ERR ) ? "DATA_ERR" :
-				( Status == CBaseDec::INTERNAL_ERR ) ? "INTERNAL_ERR" :
-				"unknown" );
+		fprintf(stderr, "Error during decoding: %s.\n",
+			(Status == CBaseDec::READ_ERR) ? "READ_ERR" :
+			(Status == CBaseDec::WRITE_ERR) ? "WRITE_ERR" :
+			(Status == CBaseDec::DSPSET_ERR) ? "DSPSET_ERR" :
+			(Status == CBaseDec::DATA_ERR) ? "DATA_ERR" :
+			(Status == CBaseDec::INTERNAL_ERR) ? "INTERNAL_ERR" :
+			"unknown");
 	}
 
 	getInstance()->state = CBaseDec::STOP;
@@ -113,7 +111,7 @@ void* CAudioPlayer::PlayThread( void* /*dummy*/ )
 	return NULL;
 }
 
-bool CAudioPlayer::play(const CAudiofile* file, const bool highPrio)
+bool CAudioPlayer::play(const CAudiofile *file, const bool highPrio)
 {
 	if (state != CBaseDec::STOP)
 		stop();
@@ -131,19 +129,19 @@ bool CAudioPlayer::play(const CAudiofile* file, const bool highPrio)
 	pthread_attr_t attr;
 	pthread_attr_init(&attr);
 	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
-	if(highPrio)
+	if (highPrio)
 	{
 		struct sched_param param;
 		pthread_attr_setschedpolicy(&attr, SCHED_RR);
-		param.sched_priority=1;
+		param.sched_priority = 1;
 		pthread_attr_setschedparam(&attr, &param);
 		usleep(100000); // give the event thread some time to handle his stuff
-						// without this sleep there were duplicated events...
+		// without this sleep there were duplicated events...
 	}
 
 	bool ret = true;
 	//#warning fixme: There must be a way to call the playing thread without arguments. (NULL did not work for me)
-	if (pthread_create (&thrPlay, &attr, PlayThread, (void*)&ret) != 0 )
+	if (pthread_create(&thrPlay, &attr, PlayThread, (void *)&ret) != 0)
 	{
 		perror("audioplay: pthread_create(PlayThread)");
 		ret = false;
@@ -168,55 +166,55 @@ void CAudioPlayer::init()
 
 void CAudioPlayer::sc_callback(void *arg)
 {
-  bool changed=false;
-  CSTATE *stat = (CSTATE*)arg;
+	bool changed = false;
+	CSTATE *stat = (CSTATE *)arg;
 
-  const std::string artist	= isUTF8(stat->artist)	? stat->artist	: convertLatin1UTF8(stat->artist);
-  const std::string title	= isUTF8(stat->title)	? stat->title	: convertLatin1UTF8(stat->title);
-  const std::string station	= isUTF8(stat->station)	? stat->station	: convertLatin1UTF8(stat->station);
-  const std::string genre	= isUTF8(stat->genre)	? stat->artist	: convertLatin1UTF8(stat->genre);
+	const std::string artist	= isUTF8(stat->artist)	? stat->artist	: convertLatin1UTF8(stat->artist);
+	const std::string title	= isUTF8(stat->title)	? stat->title	: convertLatin1UTF8(stat->title);
+	const std::string station	= isUTF8(stat->station)	? stat->station	: convertLatin1UTF8(stat->station);
+	const std::string genre	= isUTF8(stat->genre)	? stat->artist	: convertLatin1UTF8(stat->genre);
 
-  if(m_Audiofile.MetaData.artist != artist)
-  {
-	  m_Audiofile.MetaData.artist = artist;
-	  changed=true;
-  }
-  if (m_Audiofile.MetaData.title != title)
-  {
-	  m_Audiofile.MetaData.title = title;
-	  changed=true;
-  }
-  if (m_Audiofile.MetaData.sc_station != station)
-  {
-	  m_Audiofile.MetaData.sc_station = station;
-	  changed=true;
-  }
-  if (m_Audiofile.MetaData.genre != genre)
-  {
-	  m_Audiofile.MetaData.genre = genre;
-	  changed=true;
-  }
-  if(changed)
-  {
-	  m_played_time = 0;
-  }
-  m_sc_buffered = stat->buffered;
-  m_Audiofile.MetaData.changed = changed;
-  //printf("Callback %s %s %s %d\n",stat->artist, stat->title, stat->station, stat->buffered);
+	if (m_Audiofile.MetaData.artist != artist)
+	{
+		m_Audiofile.MetaData.artist = artist;
+		changed = true;
+	}
+	if (m_Audiofile.MetaData.title != title)
+	{
+		m_Audiofile.MetaData.title = title;
+		changed = true;
+	}
+	if (m_Audiofile.MetaData.sc_station != station)
+	{
+		m_Audiofile.MetaData.sc_station = station;
+		changed = true;
+	}
+	if (m_Audiofile.MetaData.genre != genre)
+	{
+		m_Audiofile.MetaData.genre = genre;
+		changed = true;
+	}
+	if (changed)
+	{
+		m_played_time = 0;
+	}
+	m_sc_buffered = stat->buffered;
+	m_Audiofile.MetaData.changed = changed;
+	//printf("Callback %s %s %s %d\n",stat->artist, stat->title, stat->station, stat->buffered);
 }
 
 void CAudioPlayer::clearFileData()
 {
 	m_Audiofile.clear();
-	m_played_time=0;
-	m_sc_buffered=0;
+	m_played_time = 0;
+	m_sc_buffered = 0;
 	m_SecondsToSkip = 0;
 }
 
 CAudioMetaData CAudioPlayer::getMetaData()
 {
 	CAudioMetaData m = m_Audiofile.MetaData;
-	m_Audiofile.MetaData.changed=false;
+	m_Audiofile.MetaData.changed = false;
 	return m;
 }
 
@@ -225,7 +223,7 @@ bool CAudioPlayer::hasMetaDataChanged()
 	return m_Audiofile.MetaData.changed;
 }
 
-bool CAudioPlayer::readMetaData(CAudiofile* const file, const bool nice)
+bool CAudioPlayer::readMetaData(CAudiofile *const file, const bool nice)
 {
 	return CBaseDec::GetMetaDataBase(file, nice);
 }

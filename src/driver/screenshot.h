@@ -32,7 +32,8 @@
 class CScreenShot
 {
 	public:
-		typedef enum {
+		typedef enum
+		{
 			FORMAT_PNG,
 			FORMAT_JPG,
 			FORMAT_BMP
@@ -41,7 +42,7 @@ class CScreenShot
 	private:
 		screenshot_format_t format;
 		std::string filename;
-		unsigned char * pixel_data;
+		unsigned char *pixel_data;
 		int xres;
 		int yres;
 		bool extra_osd;
@@ -63,7 +64,7 @@ class CScreenShot
 		bool SaveBmp();
 
 		bool startThread();
-		static void* initThread(void *arg);
+		static void *initThread(void *arg);
 		void runThread();
 		static void cleanupThread(void *arg);
 #endif
@@ -73,10 +74,23 @@ class CScreenShot
 		~CScreenShot();
 
 		void MakeFileName(const t_channel_id channel_id);
-		void SetSize(int w, int h) { xres = w; yres = h; }
-		void EnableVideo(bool enable) { get_video = enable; }
-		void EnableOSD(bool enable) { get_osd = enable; }
-		void ScaleToVideo(bool enable) { scale_to_video = enable; }
+		void SetSize(int w, int h)
+		{
+			xres = w;
+			yres = h;
+		}
+		void EnableVideo(bool enable)
+		{
+			get_video = enable;
+		}
+		void EnableOSD(bool enable)
+		{
+			get_osd = enable;
+		}
+		void ScaleToVideo(bool enable)
+		{
+			scale_to_video = enable;
+		}
 		bool Start(const std::string custom_cmd = "");
 		bool StartSync();
 };

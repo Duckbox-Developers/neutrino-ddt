@@ -58,10 +58,10 @@ class CVFD
 			MODE_MENU_UTF8,
 			MODE_AUDIO
 #ifdef VFD_UPDATE
-                ,       MODE_FILEBROWSER,
-                        MODE_PROGRESSBAR,
-                        MODE_PROGRESSBAR2,
-                        MODE_INFOBOX
+			,       MODE_FILEBROWSER,
+			MODE_PROGRESSBAR,
+			MODE_PROGRESSBAR2,
+			MODE_INFOBOX
 #endif // LCD_UPDATE
 
 		};
@@ -105,7 +105,7 @@ class CVFD
 
 		CVFD();
 
-		static void* TimeThread(void*);
+		static void *TimeThread(void *);
 		void setlcdparameter(int dimm, int power);
 	public:
 
@@ -113,21 +113,24 @@ class CVFD
 		bool has_lcd;
 		bool has_led_segment;
 		void setlcdparameter(void);
-		static CVFD* getInstance();
-		void init(const char * fontfile, const char * fontname);
+		static CVFD *getInstance();
+		void init(const char *fontfile, const char *fontname);
 
-		void setMode(const MODES m, const char * const title = "");
+		void setMode(const MODES m, const char *const title = "");
 
-		void showServicename(const std::string & name, int number = -1); // UTF-8
-		void setEPGTitle(const std::string) { return; }
+		void showServicename(const std::string &name, int number = -1);  // UTF-8
+		void setEPGTitle(const std::string)
+		{
+			return;
+		}
 		void showTime(bool force = false);
 		/** blocks for duration seconds */
 		void showRCLock(int duration = 2);
 		void showVolume(const char vol, const bool perform_update = true);
 		void showPercentOver(const unsigned char perc, const bool perform_update = true, const MODES origin = MODE_TVRADIO);
-		void showMenuText(const int position, const char * text, const int highlight = -1, const bool utf_encoded = false);
-		void showAudioTrack(const std::string & artist, const std::string & title, const std::string & album);
-		void showAudioPlayMode(AUDIOMODES m=AUDIO_MODE_PLAY);
+		void showMenuText(const int position, const char *text, const int highlight = -1, const bool utf_encoded = false);
+		void showAudioTrack(const std::string &artist, const std::string &title, const std::string &album);
+		void showAudioPlayMode(AUDIOMODES m = AUDIO_MODE_PLAY);
 		void showAudioProgress(const unsigned char perc);
 		void setBrightness(int);
 		int getBrightness();
@@ -153,42 +156,51 @@ class CVFD
 		void Unlock();
 		void Clear();
 #if !HAVE_DUCKBOX_HARDWARE
-		void UpdateIcons() { return; }
+		void UpdateIcons()
+		{
+			return;
+		}
 #else
 		void repaintIcons();
 		void UpdateIcons();
-		void ShowScrollText(char * str);
-		static void* ThreadScrollText(void * arg);
+		void ShowScrollText(char *str);
+		static void *ThreadScrollText(void *arg);
 		void ClearIcons();
 #endif
 		void ShowIcon(fp_icon icon, bool show);
 		void ShowText(const char *str);
 		void ShowNumber(int number);
 		void wake_up();
-		MODES getMode(void) { return mode; };
-		std::string getServicename(void) { return servicename; }
+		MODES getMode(void)
+		{
+			return mode;
+		};
+		std::string getServicename(void)
+		{
+			return servicename;
+		}
 #ifdef LCD_UPDATE
-        private:
-                CFileList* m_fileList;
-                int m_fileListPos;
-                std::string m_fileListHeader;
+	private:
+		CFileList *m_fileList;
+		int m_fileListPos;
+		std::string m_fileListHeader;
 
-                std::string m_infoBoxText;
-                std::string m_infoBoxTitle;
-                int m_infoBoxTimer;   // for later use
-                bool m_infoBoxAutoNewline;
+		std::string m_infoBoxText;
+		std::string m_infoBoxTitle;
+		int m_infoBoxTimer;   // for later use
+		bool m_infoBoxAutoNewline;
 
-                bool m_progressShowEscape;
-                std::string  m_progressHeaderGlobal;
-                std::string  m_progressHeaderLocal;
-                int m_progressGlobal;
-                int m_progressLocal;
-        public:
+		bool m_progressShowEscape;
+		std::string  m_progressHeaderGlobal;
+		std::string  m_progressHeaderLocal;
+		int m_progressGlobal;
+		int m_progressLocal;
+	public:
 
-                void showFilelist(int flist_pos = -1,CFileList* flist = NULL,const char * const mainDir=NULL);
-                void showInfoBox(const char * const title = NULL,const char * const text = NULL,int autoNewline = -1,int timer = -1);
-                void showProgressBar(int global = -1,const char * const text = NULL,int show_escape = -1,int timer = -1);
-                void showProgressBar2(int local = -1,const char * const text_local = NULL,int global = -1,const char * const text_global = NULL,int show_escape = -1);
+		void showFilelist(int flist_pos = -1, CFileList *flist = NULL, const char *const mainDir = NULL);
+		void showInfoBox(const char *const title = NULL, const char *const text = NULL, int autoNewline = -1, int timer = -1);
+		void showProgressBar(int global = -1, const char *const text = NULL, int show_escape = -1, int timer = -1);
+		void showProgressBar2(int local = -1, const char *const text_local = NULL, int global = -1, const char *const text_global = NULL, int show_escape = -1);
 #endif // LCD_UPDATE
 
 };

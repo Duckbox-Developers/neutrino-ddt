@@ -90,7 +90,7 @@ int bcm_accel_sync()
 	{
 		if (ptr)
 		{
-			dprintf(DEBUG_NORMAL,"bcm_accel_sync: ptr %d\n", ptr);
+			dprintf(DEBUG_NORMAL, "bcm_accel_sync: ptr %d\n", ptr);
 			retval = exec_list();
 		}
 		accumulateoperations = false;
@@ -99,17 +99,17 @@ int bcm_accel_sync()
 }
 
 void bcm_accel_blit(
-		int src_addr, int src_width, int src_height, int src_stride, int src_format,
-		int dst_addr, int dst_width, int dst_height, int dst_stride,
-		int src_x, int src_y, int width, int height,
-		int dst_x, int dst_y, int dwidth, int dheight,
-		int pal_addr, int flags)
+	int src_addr, int src_width, int src_height, int src_stride, int src_format,
+	int dst_addr, int dst_width, int dst_height, int dst_stride,
+	int src_x, int src_y, int width, int height,
+	int dst_x, int dst_y, int dwidth, int dheight,
+	int pal_addr, int flags)
 {
 	if (accumulateoperations)
 	{
 		if (((sizeof(displaylist) / sizeof(displaylist[0]) - ptr) / 2) < 40)
 		{
-			dprintf(DEBUG_NORMAL,"bcm_accel_blit: not enough space to accumulate\n");
+			dprintf(DEBUG_NORMAL, "bcm_accel_blit: not enough space to accumulate\n");
 			bcm_accel_sync();
 			bcm_accel_accumulate();
 		}
@@ -127,15 +127,15 @@ void bcm_accel_blit(
 	P(0x3, src_height); // height
 	switch (src_format)
 	{
-	case 0:
-		P(0x4, 0x7e48888); // format: ARGB 8888
-		break;
-	case 1:
-		P(0x4, 0x12e40008); // indexed 8bit
-		P(0x78, 256);
-		P(0x79, pal_addr);
-		P(0x7a, 0x7e48888);
-		break;
+		case 0:
+			P(0x4, 0x7e48888); // format: ARGB 8888
+			break;
+		case 1:
+			P(0x4, 0x12e40008); // indexed 8bit
+			P(0x78, 256);
+			P(0x79, pal_addr);
+			P(0x7a, 0x7e48888);
+			break;
 	}
 
 	C(0x5); // set source surface (based on last parameters)
@@ -170,15 +170,15 @@ void bcm_accel_blit(
 }
 
 void bcm_accel_fill(
-		int dst_addr, int dst_width, int dst_height, int dst_stride,
-		int x, int y, int width, int height,
-		unsigned long color)
+	int dst_addr, int dst_width, int dst_height, int dst_stride,
+	int x, int y, int width, int height,
+	unsigned long color)
 {
 	if (accumulateoperations)
 	{
 		if (((sizeof(displaylist) / sizeof(displaylist[0]) - ptr) / 2) < 40)
 		{
-			dprintf(DEBUG_NORMAL,"bcm_accel_fill: not enough space to accumulate\n");
+			dprintf(DEBUG_NORMAL, "bcm_accel_fill: not enough space to accumulate\n");
 			bcm_accel_sync();
 			bcm_accel_accumulate();
 		}
@@ -310,7 +310,8 @@ void CFbAccelARM::setOsdResolutions()
 	res.bpp  = 32;
 	res.mode = OSDMODE_720;
 	osd_resolutions.push_back(res);
-	if (fullHdAvailable()) {
+	if (fullHdAvailable())
+	{
 		res.xRes = 1920;
 		res.yRes = 1080;
 		res.bpp  = 32;
@@ -338,7 +339,7 @@ void CFbAccelARM::setBlendLevel(int level)
 
 int CFbAccelARM::setMode(unsigned int nxRes, unsigned int nyRes, unsigned int nbpp)
 {
-	if (!available&&!active)
+	if (!available && !active)
 		return -1;
 
 	if (osd_resolutions.empty())
@@ -347,37 +348,40 @@ int CFbAccelARM::setMode(unsigned int nxRes, unsigned int nyRes, unsigned int nb
 	unsigned int nxRes_ = nxRes;
 	unsigned int nyRes_ = nyRes;
 	unsigned int nbpp_  = nbpp;
-	if (!fullHdAvailable()) {
+	if (!fullHdAvailable())
+	{
 		nxRes_ = 1280;
 		nyRes_ = 720;
 		nbpp_  = 32;
 	}
-	screeninfo.xres=nxRes_;
-	screeninfo.yres=nyRes_;
-	screeninfo.xres_virtual=nxRes_;
-	screeninfo.yres_virtual=nyRes_*2;
-	screeninfo.height=0;
-	screeninfo.width=0;
-	screeninfo.xoffset=screeninfo.yoffset=0;
-	screeninfo.bits_per_pixel=nbpp_;
+	screeninfo.xres = nxRes_;
+	screeninfo.yres = nyRes_;
+	screeninfo.xres_virtual = nxRes_;
+	screeninfo.yres_virtual = nyRes_ * 2;
+	screeninfo.height = 0;
+	screeninfo.width = 0;
+	screeninfo.xoffset = screeninfo.yoffset = 0;
+	screeninfo.bits_per_pixel = nbpp_;
 
-	if (ioctl(fd, FBIOPUT_VSCREENINFO, &screeninfo)<0)
+	if (ioctl(fd, FBIOPUT_VSCREENINFO, &screeninfo) < 0)
 		perror(LOGTAG "FBIOPUT_VSCREENINFO");
 
 	printf(LOGTAG "SetMode: %dbits, red %d:%d green %d:%d blue %d:%d transp %d:%d\n",
-	screeninfo.bits_per_pixel, screeninfo.red.length, screeninfo.red.offset, screeninfo.green.length, screeninfo.green.offset, screeninfo.blue.length, screeninfo.blue.offset, screeninfo.transp.length, screeninfo.transp.offset);
+		screeninfo.bits_per_pixel, screeninfo.red.length, screeninfo.red.offset, screeninfo.green.length, screeninfo.green.offset, screeninfo.blue.length, screeninfo.blue.offset, screeninfo.transp.length, screeninfo.transp.offset);
 	if ((screeninfo.xres != nxRes_) ||
-	    (screeninfo.yres != nyRes_) ||
-	    (screeninfo.bits_per_pixel != nbpp_)) {
+		(screeninfo.yres != nyRes_) ||
+		(screeninfo.bits_per_pixel != nbpp_))
+	{
 		printf(LOGTAG "SetMode failed: wanted: %dx%dx%d, got %dx%dx%d\n",
-			   nxRes_, nyRes_, nbpp_,
-			   screeninfo.xres, screeninfo.yres, screeninfo.bits_per_pixel);
+			nxRes_, nyRes_, nbpp_,
+			screeninfo.xres, screeninfo.yres, screeninfo.bits_per_pixel);
 		return -1;
 	}
 
 	fb_fix_screeninfo _fix;
 
-	if (ioctl(fd, FBIOGET_FSCREENINFO, &_fix) < 0) {
+	if (ioctl(fd, FBIOGET_FSCREENINFO, &_fix) < 0)
+	{
 		perror(LOGTAG "FBIOGET_FSCREENINFO");
 		return -1;
 	}
@@ -401,7 +405,7 @@ int CFbAccelARM::setMode(unsigned int nxRes, unsigned int nyRes, unsigned int nb
 	return 0; /* dont fail because of this */
 }
 
-fb_pixel_t * CFbAccelARM::getBackBufferPointer() const
+fb_pixel_t *CFbAccelARM::getBackBufferPointer() const
 {
 	return backbuffer;
 }
@@ -415,7 +419,7 @@ int CFbAccelARM::scale2Res(int size)
 
 #ifdef ENABLE_CHANGE_OSD_RESOLUTION
 	if (screeninfo.xres == 1920)
-		size += size/2;
+		size += size / 2;
 #endif
 
 	return size;
@@ -436,14 +440,15 @@ CFbAccelARM::Mode3D CFbAccelARM::get3DMode()
 
 void CFbAccelARM::set3DMode(Mode3D m)
 {
-	if (mode3D != m) {
+	if (mode3D != m)
+	{
 		mode3D = m;
-	const char *modes[] = { "off", "sidebyside", "topandbottom" };
-	std::string value = modes[mode3D];
-	int pfd = open("/proc/stb/fb/3dmode", O_WRONLY);
-	if (pfd)
-		write(pfd, value.c_str(), value.length());
-	close(pfd);
+		const char *modes[] = { "off", "sidebyside", "topandbottom" };
+		std::string value = modes[mode3D];
+		int pfd = open("/proc/stb/fb/3dmode", O_WRONLY);
+		if (pfd)
+			write(pfd, value.c_str(), value.length());
+		close(pfd);
 	}
 }
 
@@ -458,7 +463,8 @@ void CFbAccelARM::run()
 	blit_thread = true;
 	blit_mutex.lock();
 	set_threadname("armfb::autoblit");
-	while (blit_thread) {
+	while (blit_thread)
+	{
 		blit_cond.wait(&blit_mutex, blit_pending ? BLIT_INTERVAL_MIN : BLIT_INTERVAL_MAX);
 		int64_t now = time_monotonic_ms();
 		if (now - last_blit < BLIT_INTERVAL_MIN)
@@ -495,12 +501,12 @@ void CFbAccelARM::_blit()
 
 void CFbAccelARM::paintRect(const int x, const int y, const int dx, const int dy, const fb_pixel_t col)
 {
-	if(dx <1 || dy <1 )
+	if (dx < 1 || dy < 1)
 		return;
 
 	// do not accelerate small areas
 	if (fix.smem_start != 0 && dx > 25 && dy > 25)
-		bcm_accel_fill(fix.smem_start, screeninfo.xres, screeninfo.yres, stride,x, y, dx, dy,col);
+		bcm_accel_fill(fix.smem_start, screeninfo.xres, screeninfo.yres, stride, x, y, dx, dy, col);
 
 	int line = 0;
 	fb_pixel_t *fbp = getFrameBufferPointer() + (swidth * y);
@@ -513,7 +519,7 @@ void CFbAccelARM::paintRect(const int x, const int y, const int dx, const int dy
 		line++;
 	}
 
-	mark(x, y, x+dx, y+dy);
+	mark(x, y, x + dx, y + dy);
 	//blit();
 }
 #endif

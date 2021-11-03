@@ -38,31 +38,31 @@
 
 class CBaseDec
 {
-public:
-	enum State {STOP = 0, STOP_REQ, PLAY, PAUSE, FF, REV};
-	enum RetCode { OK = 0, READ_ERR, WRITE_ERR, DSPSET_ERR, DATA_ERR, INTERNAL_ERR };
+	public:
+		enum State {STOP = 0, STOP_REQ, PLAY, PAUSE, FF, REV};
+		enum RetCode { OK = 0, READ_ERR, WRITE_ERR, DSPSET_ERR, DATA_ERR, INTERNAL_ERR };
 
-	// the follwing two methods have to be implemented for new decoders
-	//@param secondsToSkip: a value of 0 indicates that normal FF/REV operation was requested
-	//                      a value  > 0 indicates that *one* jump forwards (FF) or backwards (REV) was requested
-	virtual RetCode Decoder(FILE *, const int, State* const, CAudioMetaData*, time_t* const, unsigned int* const)=0;
-	virtual bool GetMetaData(FILE *in, const bool nice, CAudioMetaData* m)=0;
+		// the follwing two methods have to be implemented for new decoders
+		//@param secondsToSkip: a value of 0 indicates that normal FF/REV operation was requested
+		//                      a value  > 0 indicates that *one* jump forwards (FF) or backwards (REV) was requested
+		virtual RetCode Decoder(FILE *, const int, State *const, CAudioMetaData *, time_t *const, unsigned int *const) = 0;
+		virtual bool GetMetaData(FILE *in, const bool nice, CAudioMetaData *m) = 0;
 
-	static RetCode DecoderBase(CAudiofile* const in, const int OutputFd,
-							   State* const state, time_t* const t,
-							   unsigned int* const secondsToSkip);
-	static bool GetMetaDataBase(CAudiofile* const in, const bool nice);
-	static void Init();
+		static RetCode DecoderBase(CAudiofile *const in, const int OutputFd,
+			State *const state, time_t *const t,
+			unsigned int *const secondsToSkip);
+		static bool GetMetaDataBase(CAudiofile *const in, const bool nice);
+		static void Init();
 
-	CBaseDec() {};
+		CBaseDec() {};
 
-	static OpenThreads::Mutex metaDataMutex;
-	static std::map<const std::string,CAudiofile> metaDataCache;
-	static void CacheMetaData(CAudiofile* const in);
-	static bool LookupMetaData(CAudiofile* const in);
-	static void ClearMetaData();
-private:
-	unsigned static int mSamplerate;
+		static OpenThreads::Mutex metaDataMutex;
+		static std::map<const std::string, CAudiofile> metaDataCache;
+		static void CacheMetaData(CAudiofile *const in);
+		static bool LookupMetaData(CAudiofile *const in);
+		static void ClearMetaData();
+	private:
+		unsigned static int mSamplerate;
 };
 
 

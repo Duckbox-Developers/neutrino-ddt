@@ -33,10 +33,10 @@
 
 class CCdrDec : public CWavDec
 {
- public:
-	static CCdrDec* getInstance();
- protected:
-	virtual bool SetMetaData(FILE* in, CAudioMetaData* m);
+	public:
+		static CCdrDec *getInstance();
+	protected:
+		virtual bool SetMetaData(FILE *in, CAudioMetaData *m);
 };
 
 #endif
