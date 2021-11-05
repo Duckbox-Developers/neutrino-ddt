@@ -1105,11 +1105,18 @@ bool CZapit::PrepareChannels()
 {
 	current_channel = 0;
 
-	if (!CServiceManager::getInstance()->LoadServices(false))
+	g_bouquetManager->empty = true;
+	if (!CServiceManager::getInstance()->LoadServices(false)){
+		g_bouquetManager->empty = false;
 		return false;
-
+	}
 	INFO("LoadServices: success");
+
+	if(CNeutrinoApp::getInstance()->channelList)
+		CNeutrinoApp::getInstance()->channelList->ClearChannelList();
+
 	g_bouquetManager->loadBouquets();
+	g_bouquetManager->empty = false;
 	/* save if services changed (update from sdt, etc) */
 	CServiceManager::getInstance()->SaveServices(true, true);
 	return true;
@@ -1430,7 +1437,6 @@ bool CZapit::ParseCommand(CBasicMessage::Header &rmsg, int connfd)
 	case CZapitMessages::CMD_REINIT_CHANNELS: {
 		// Houdini: save actual channel to restore it later, old version's channel was set to scans.conf initial channel
   		t_channel_id cid= current_channel ? current_channel->getChannelID() : 0;
-
    		PrepareChannels();
 
 		current_channel = CServiceManager::getInstance()->FindChannel(cid);
