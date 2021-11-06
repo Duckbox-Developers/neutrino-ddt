@@ -48,6 +48,7 @@ void CAit::setDemux(int dnum)
 {
 	dmxnum = dnum;
 }
+
 bool CAit::Start()
 {
 	if (running)
