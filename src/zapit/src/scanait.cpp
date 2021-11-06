@@ -41,25 +41,32 @@ CAit::CAit()
 {
 	dmxnum = 0;
 	pid = 0;
+	running = false;
 }
 
 void CAit::setDemux(int dnum)
 {
 	dmxnum = dnum;
 }
+
 bool CAit::Start()
 {
+	if (running)
+		return false;
+	running = true;
+
 	int ret = start();
 	return (ret == 0);
 }
 
 bool CAit::Stop()
 {
-	if(pid > 0){
-		int ret = join();
-		return (ret == 0);
-	}
-	return false;
+	if (!running)
+		return false;
+	running = false;
+
+	int ret = join();
+	return (ret == 0);
 }
 
 void CAit::run()
@@ -222,7 +229,7 @@ bool CAit::Parse()
 			}
 			if(!hbbtvUrl.empty())
 			{
-				printf("[ait] detected AppID: %d, AppName: %s, Url: %s\n", appid, applicationName.c_str(), hbbtvUrl.c_str());
+				printf("[ait] detected AppID: %d, AppName: %s, Url: %s profilecode: %i orgid: %i sectionLength: %i profileVersion %i\n", appid, applicationName.c_str(), hbbtvUrl.c_str(),profilecode,orgid,sectionLength,profileVersion);
 				if (pFile)
 				{
 					fprintf(pFile, "AppID: %d, AppName: %s, Url: %s\n", appid, applicationName.c_str(), hbbtvUrl.c_str());

@@ -1105,11 +1105,18 @@ bool CZapit::PrepareChannels()
 {
 	current_channel = 0;
 
-	if (!CServiceManager::getInstance()->LoadServices(false))
+	g_bouquetManager->empty = true;
+	if (!CServiceManager::getInstance()->LoadServices(false)){
+		g_bouquetManager->empty = false;
 		return false;
-
+	}
 	INFO("LoadServices: success");
+
+	if(CNeutrinoApp::getInstance()->channelList)
+		CNeutrinoApp::getInstance()->channelList->ClearChannelList();
+
 	g_bouquetManager->loadBouquets();
+	g_bouquetManager->empty = false;
 	/* save if services changed (update from sdt, etc) */
 	CServiceManager::getInstance()->SaveServices(true, true);
 	return true;
@@ -1430,7 +1437,6 @@ bool CZapit::ParseCommand(CBasicMessage::Header &rmsg, int connfd)
 	case CZapitMessages::CMD_REINIT_CHANNELS: {
 		// Houdini: save actual channel to restore it later, old version's channel was set to scans.conf initial channel
   		t_channel_id cid= current_channel ? current_channel->getChannelID() : 0;
-
    		PrepareChannels();
 
 		current_channel = CServiceManager::getInstance()->FindChannel(cid);
@@ -1496,6 +1502,10 @@ bool CZapit::ParseCommand(CBasicMessage::Header &rmsg, int connfd)
 				t_satellite_position satellitePosition = scanProviders.begin()->first;
 				printf("[zapit] tune to sat %s freq %d rate %d fec %d pol %d\n", name, TP.feparams.frequency, TP.feparams.symbol_rate, TP.feparams.fec_inner, TP.feparams.polarization);
 				live_fe->setInput(satellitePosition, TP.feparams.frequency,  TP.feparams.polarization);
+				if (TP.feparams.delsys == DVB_S)
+						TP.feparams.rolloff = ROLLOFF_35;
+				if (TP.feparams.delsys == DVB_S2)
+						TP.feparams.rolloff = ROLLOFF_AUTO;
 				live_fe->driveToSatellitePosition(satellitePosition);
 			} else if (CFrontend::isCable(TP.feparams.delsys)) {
 				printf("[zapit] tune to cable %s freq %d rate %d fec %d\n", name, TP.feparams.frequency, TP.feparams.symbol_rate, TP.feparams.fec_inner);

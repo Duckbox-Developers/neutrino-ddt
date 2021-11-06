@@ -115,8 +115,9 @@ class CBouquetManager
 		pthread_t thrLogo;
 		ZapitChannelList LogoList;
 	public:
-		CBouquetManager() { remainChannels = NULL; thrLogo = 0; };
+		CBouquetManager() { remainChannels = NULL; thrLogo = false; empty = false; };
 		~CBouquetManager();
+		bool empty;
 		class ChannelIterator
 		{
 			private:

@@ -226,6 +226,7 @@ bool CCECSetup::changeNotify(const neutrino_locale_t OptionName, void * /*data*/
 	{
 		if (g_settings.hdmi_cec_mode != VIDEO_HDMI_CEC_MODE_OFF)
 		{
+			g_settings.current_volume = 100;
 			videoDecoder->SetAudioDestination(g_settings.hdmi_cec_volume);
 		}
 	}
