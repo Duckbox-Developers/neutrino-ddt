@@ -94,7 +94,6 @@ extern int allow_flash;
 
 #if HAVE_DUCKBOX_HARDWARE
 #define UPDATE_LOCAL_FILENAME          "update.img"
-#define RELEASE_CYCLE                  "2.0"
 #define FILEBROWSER_UPDATE_FILTER      "img"
 #if BOXMODEL_UFS910 || BOXMODEL_FORTIS_HDBOX || BOXMODEL_OCTAGON1008
 #define MTD_OF_WHOLE_IMAGE              5
@@ -115,19 +114,16 @@ extern int allow_flash;
 #else
 #if HAVE_SPARK_HARDWARE
 #define FILEBROWSER_UPDATE_FILTER      "zip"
-#define RELEASE_CYCLE                  "2.0"
 #define MTD_OF_WHOLE_IMAGE              999
 #define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd999"
 #else
 // TODO: move this mess below to libstb-hal
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 #define FILEBROWSER_UPDATE_FILTER      "tgz"
-#define RELEASE_CYCLE                  "2.0"
 #define MTD_OF_WHOLE_IMAGE              999
 #define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd999"
 #else
 #define FILEBROWSER_UPDATE_FILTER      "img"
-#define RELEASE_CYCLE                  "2.0"
 #define MTD_OF_WHOLE_IMAGE             0
 #define MTD_DEVICE_OF_UPDATE_PART      "/dev/mtd3"
 #endif
