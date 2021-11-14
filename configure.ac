@@ -3,7 +3,7 @@ define(ver_major, 3)
 define(ver_minor, 9)
 define(ver_micro, 0)
 
-AC_INIT(DDT-Neutrino, ver_major, ver_minor, ver_micro)
+AC_INIT(DDT-Neutrino, ver_major.ver_minor.ver_micro)
 AM_INIT_AUTOMAKE([nostdinc foreign])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES])
 
