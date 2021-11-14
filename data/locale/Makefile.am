@@ -4,24 +4,7 @@ locale = \
 	deutsch.locale \
 	english.locale
 
-locale_unmaintained = \
-	unmaintained/bayrisch.locale \
-	unmaintained/bosanski.locale \
-	unmaintained/ch-baslerdeutsch.locale \
-	unmaintained/ch-berndeutsch.locale \
-	unmaintained/czech.locale \
-	unmaintained/francais.locale \
-	unmaintained/italiano.locale \
-	unmaintained/nederlands.locale \
-	unmaintained/polski.locale \
-	unmaintained/portugues.locale \
-	unmaintained/russkij.locale \
-	unmaintained/slovak.locale \
-	unmaintained/suomi.locale \
-	unmaintained/svenska.locale
-
 install_DATA  = $(locale)
-# install_DATA += $(locale_unmaintained)
 
 
 if MAINTAINER_MODE
