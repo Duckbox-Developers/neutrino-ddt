@@ -124,7 +124,6 @@ extern int allow_flash;
 #define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd999"
 #else
 #define FILEBROWSER_UPDATE_FILTER      "img"
-#define RELEASE_CYCLE                  "2.0"
 #define MTD_OF_WHOLE_IMAGE             0
 #define MTD_DEVICE_OF_UPDATE_PART      "/dev/mtd3"
 #endif

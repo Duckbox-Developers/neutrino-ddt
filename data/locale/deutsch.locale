@@ -2622,7 +2622,6 @@ videomenu.hdmi_cec_volume CEC Lautstärke Regelung
 videomenu.hdmi_cec_vol_audiosystem Audiosystem
 videomenu.hdmi_cec_vol_off aus
 videomenu.hdmi_cec_vol_tv TV
-videomenu.hue Farbton
 videomenu.letterbox Letterbox
 videomenu.masksetup Bildmaske
 videomenu.mixer_color Hintergrund-Farbe
@@ -2639,7 +2638,6 @@ videomenu.psi.step Videoregler-Schrittweite
 videomenu.psi.tint Farbton
 videomenu.scart Scart
 videomenu.screensetup Bildbereich
-videomenu.sharpness Schärfe
 videomenu.tv-scart TV Scart
 videomenu.vcrsignal VCR-Ausgang Signalart
 videomenu.videoformat Bildschirmformat
