@@ -122,7 +122,6 @@ int CVideoSettings::exec(CMenuTarget *parent, const std::string &/*actionKey*/)
 const CMenuOptionChooser::keyval VIDEOMENU_43MODE_OPTIONS[] =
 {
 	{ DISPLAY_AR_MODE_PANSCAN, LOCALE_VIDEOMENU_PANSCAN },
-	{ DISPLAY_AR_MODE_PANSCAN2, LOCALE_VIDEOMENU_PANSCAN2 },
 	{ DISPLAY_AR_MODE_LETTERBOX, LOCALE_VIDEOMENU_LETTERBOX },
 	{ DISPLAY_AR_MODE_NONE, LOCALE_VIDEOMENU_FULLSCREEN }
 };
@@ -679,9 +678,6 @@ void CVideoSettings::Init43ModeOptions()
 	videomenu_43mode_options.clear();
 	for (unsigned int i = 0; i < VIDEOMENU_43MODE_OPTION_COUNT; i++)
 	{
-		if (VIDEOMENU_43MODE_OPTIONS[i].key == DISPLAY_AR_MODE_PANSCAN2 &&
-			g_info.hw_caps->can_ps_14_9 == 0)
-			continue;
 		CMenuOptionChooser::keyval_ext o;
 		o = VIDEOMENU_43MODE_OPTIONS[i];
 		videomenu_43mode_options.push_back(o);

@@ -2595,7 +2595,6 @@ videomenu.letterbox Letterbox
 videomenu.masksetup Bildmaske
 videomenu.mixer_color Hintergrund-Farbe
 videomenu.panscan Pan & Scan
-videomenu.panscan2 14:9 Pan & Scan
 videomenu.pip PiP Setup
 videomenu.pip_error PiP Startfehler
 videomenu.psi Farbeinstellungen

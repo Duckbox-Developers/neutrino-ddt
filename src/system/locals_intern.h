@@ -2621,7 +2621,6 @@ const char * locale_real_names[] =
 	"videomenu.masksetup",
 	"videomenu.mixer_color",
 	"videomenu.panscan",
-	"videomenu.panscan2",
 	"videomenu.pip",
 	"videomenu.pip_error",
 	"videomenu.psi",
