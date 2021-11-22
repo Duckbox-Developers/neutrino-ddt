@@ -216,12 +216,11 @@ CMenuOptionChooser::keyval_ext VIDEOMENU_VIDEOMODE_OPTIONS[VIDEOMENU_VIDEOMODE_O
 };
 #endif
 
-#define VIDEOMENU_VIDEOFORMAT_OPTION_COUNT 3//2
+#define VIDEOMENU_VIDEOFORMAT_OPTION_COUNT 2
 const CMenuOptionChooser::keyval VIDEOMENU_VIDEOFORMAT_OPTIONS[VIDEOMENU_VIDEOFORMAT_OPTION_COUNT] =
 {
 	{ DISPLAY_AR_4_3, LOCALE_VIDEOMENU_VIDEOFORMAT_43         },
-	{ DISPLAY_AR_16_9, LOCALE_VIDEOMENU_VIDEOFORMAT_169       },
-	{ DISPLAY_AR_14_9, LOCALE_VIDEOMENU_VIDEOFORMAT_149       }
+	{ DISPLAY_AR_16_9, LOCALE_VIDEOMENU_VIDEOFORMAT_169       }
 };
 
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
@@ -276,7 +275,7 @@ int CVideoSettings::showVideoSetup()
 	vs_43mode_ch->setHint("", LOCALE_MENU_HINT_VIDEO_43MODE);
 
 	//display format
-	CMenuOptionChooser *vs_dispformat_ch = new CMenuOptionChooser(LOCALE_VIDEOMENU_VIDEOFORMAT, &g_settings.video_Format, VIDEOMENU_VIDEOFORMAT_OPTIONS, g_info.hw_caps->can_ar_14_9 ? VIDEOMENU_VIDEOFORMAT_OPTION_COUNT : VIDEOMENU_VIDEOFORMAT_OPTION_COUNT - 1, true, this); /* works only if 14:9 is last! */
+	CMenuOptionChooser *vs_dispformat_ch = new CMenuOptionChooser(LOCALE_VIDEOMENU_VIDEOFORMAT, &g_settings.video_Format, VIDEOMENU_VIDEOFORMAT_OPTIONS, VIDEOMENU_VIDEOFORMAT_OPTION_COUNT, true, this);
 	vs_dispformat_ch->setHint("", LOCALE_MENU_HINT_VIDEO_FORMAT);
 
 	//video system
@@ -584,8 +583,6 @@ void CVideoSettings::SwitchFormat()
 	}
 	curmode++;
 	if (curmode >= VIDEOMENU_VIDEOFORMAT_OPTION_COUNT)
-		curmode = 0;
-	if (VIDEOMENU_VIDEOFORMAT_OPTIONS[curmode].key == DISPLAY_AR_14_9 && g_info.hw_caps->can_ar_14_9 == 0)
 		curmode = 0;
 	text =  VIDEOMENU_VIDEOFORMAT_OPTIONS[curmode].value;
 	g_settings.video_Format = VIDEOMENU_VIDEOFORMAT_OPTIONS[curmode].key;
