@@ -2567,7 +2567,6 @@ videomenu.analog_sd_rgb RGB (SD)
 videomenu.analog_sd_rgb_scart RGB -> Scart (SD)
 videomenu.analog_sd_yprpb YPbPr (SD)
 videomenu.analog_sd_yprpb_scart YPbPr -> Scart (SD)
-videomenu.auto Automatisch
 videomenu.colorformat Farbraum
 videomenu.colorformat.cvbs CVBS
 videomenu.colorformat.rgb RGB
