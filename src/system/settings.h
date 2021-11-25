@@ -743,8 +743,6 @@ struct SNeutrinoSettings
 	int softupdate_autocheck;
 	int softupdate_name_mode_apply;
 	int softupdate_name_mode_backup;
-	int apply_settings;
-	int apply_kernel;
 
 	std::string	backup_dir;
 	std::string	update_dir;

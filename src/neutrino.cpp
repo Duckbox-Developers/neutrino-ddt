@@ -931,8 +931,6 @@ int CNeutrinoApp::loadSetup(const char * fname)
 
 	//Software-update
 	g_settings.softupdate_mode = configfile.getInt32( "softupdate_mode", 1 );
-	g_settings.apply_kernel = configfile.getBool("apply_kernel" , false);
-	g_settings.apply_settings = configfile.getBool("apply_settings" , false);
 	g_settings.softupdate_name_mode_apply = 0;
 	g_settings.softupdate_name_mode_backup = 0; /* unused, but still initialize it */
 
@@ -1643,8 +1641,6 @@ void CNeutrinoApp::saveSetup(const char * fname)
 
 	//Software-update
 	configfile.setInt32 ("softupdate_mode"          , g_settings.softupdate_mode          );
-	configfile.setBool("apply_kernel", g_settings.apply_kernel);
-	configfile.setBool("apply_settings", g_settings.apply_settings);
 	configfile.setString("softupdate_url_file"      , g_settings.softupdate_url_file      );
 	configfile.setInt32 ("softupdate_name_mode_apply", g_settings.softupdate_name_mode_apply);
 	configfile.setInt32 ("softupdate_name_mode_backup", g_settings.softupdate_name_mode_backup);

@@ -698,7 +698,6 @@ const char * locale_real_names[] =
 	"flashupdate.install_package",
 	"flashupdate.md5check",
 	"flashupdate.md5sumerror",
-	"flashupdate.menu_apply_kernel",
 	"flashupdate.mkfs_create_image",
 	"flashupdate.mkfs_preparing_files",
 	"flashupdate.mkfs_using_sumtool",

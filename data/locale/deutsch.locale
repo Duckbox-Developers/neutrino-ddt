@@ -671,7 +671,6 @@ flashupdate.install_image Heruntergeladenes Image installieren?
 flashupdate.install_package Heruntergeladenes Paket installieren?
 flashupdate.md5check Imageprüfung
 flashupdate.md5sumerror Das Image ist fehlerhaft
-flashupdate.menu_apply_kernel Kernel flashen
 flashupdate.mkfs_create_image Backup erstellen
 flashupdate.mkfs_preparing_files Dateien und Verzeichnisse vorbereiten
 flashupdate.mkfs_using_sumtool Benutze Sumtool

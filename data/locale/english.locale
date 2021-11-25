@@ -671,7 +671,6 @@ flashupdate.install_image Flash downloaded image?
 flashupdate.install_package Install downloadad pack?
 flashupdate.md5check checking image
 flashupdate.md5sumerror image has errors
-flashupdate.menu_apply_kernel Flashing kernel
 flashupdate.mkfs_create_image Create backup
 flashupdate.mkfs_preparing_files Preparing files and directories
 flashupdate.mkfs_using_sumtool Using sumtool
