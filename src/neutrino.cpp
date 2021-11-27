@@ -422,6 +422,8 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.psi_step = configfile.getInt32("video_psi_step", 2);
 
 	g_settings.video_Format = configfile.getInt32("video_Format", DISPLAY_AR_16_9);
+	if (g_settings.video_Format > 2)
+		g_settings.video_Format = 2;
 	g_settings.video_43mode = configfile.getInt32("video_43mode", DISPLAY_AR_MODE_LETTERBOX);
 	g_settings.current_volume = g_settings.hdmi_cec_volume ? 100 : configfile.getInt32("current_volume", 100);
 	g_settings.current_volume_step = configfile.getInt32("current_volume_step", 2);
