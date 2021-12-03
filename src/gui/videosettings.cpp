@@ -58,6 +58,7 @@
 
 #include <daemonc/remotecontrol.h>
 
+#include <system/helpers.h>
 #include <system/debug.h>
 
 #include <cs_api.h>
@@ -401,6 +402,7 @@ int CVideoSettings::showVideoSetup()
 #endif
 
 #endif
+
 #ifdef ENABLE_PIP
 	CPipSetup pip;
 	CMenuForwarder *pipsetup = new CMenuForwarder(LOCALE_VIDEOMENU_PIP, g_info.hw_caps->can_pip, NULL, &pip, NULL, CRCInput::convertDigitToKey(shortcut++));
@@ -414,16 +416,19 @@ int CVideoSettings::showVideoSetup()
 #endif
 
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
-	CMenuOptionChooser *zm = new CMenuOptionChooser(LOCALE_VIDEOMENU_ZAPPINGMODE, &g_settings.zappingmode, VIDEOMENU_ZAPPINGMODE_OPTIONS, VIDEOMENU_ZAPPINGMODE_OPTION_COUNT, true, this, CRCInput::convertDigitToKey(shortcut++));
-	zm->setHint("", LOCALE_MENU_HINT_VIDEO_ZAPPINGMODE);
-	videosetup->addItem(zm);
+	if (file_exists("/proc/stb/video/zapmode_choices"))
+	{
+		CMenuOptionChooser *zm = new CMenuOptionChooser(LOCALE_VIDEOMENU_ZAPPINGMODE, &g_settings.zappingmode, VIDEOMENU_ZAPPINGMODE_OPTIONS, VIDEOMENU_ZAPPINGMODE_OPTION_COUNT, true, this, CRCInput::convertDigitToKey(shortcut++));
+		zm->setHint("", LOCALE_MENU_HINT_VIDEO_ZAPPINGMODE);
+		videosetup->addItem(zm);
+	}
 
-//	videosetup->addItem(GenericMenuSeparatorLine);
-
-	CMenuOptionChooser *hm = new CMenuOptionChooser(LOCALE_VIDEOMENU_HDMI_MODE, &g_settings.hdmimode, VIDEOMENU_HDMI_MODE_OPTIONS, VIDEOMENU_HDMI_MODE_OPTION_COUNT, true, this, CRCInput::convertDigitToKey(shortcut++));
-	hm->setHint("", LOCALE_MENU_HINT_VIDEO_HDMI_MODE);
-	videosetup->addItem(hm);
-
+	if (file_exists("/proc/stb/video/hdmi_colorimetry_choices"))
+	{
+		CMenuOptionChooser *hm = new CMenuOptionChooser(LOCALE_VIDEOMENU_HDMI_MODE, &g_settings.hdmimode, VIDEOMENU_HDMI_MODE_OPTIONS, VIDEOMENU_HDMI_MODE_OPTION_COUNT, true, this, CRCInput::convertDigitToKey(shortcut++));
+		hm->setHint("", LOCALE_MENU_HINT_VIDEO_HDMI_MODE);
+		videosetup->addItem(hm);
+	}
 #endif
 
 	int res = videosetup->exec(NULL, "");
