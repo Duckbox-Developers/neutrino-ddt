@@ -280,7 +280,6 @@ struct SNeutrinoSettings
 #if HAVE_SH4_HARDWARE
 	int hdmi_cec_broadcast;
 #endif
-	int enabled_video_modes[VIDEOMENU_VIDEOMODE_OPTION_COUNT];
 	int make_hd_list;
 	int make_webtv_list;
 	int make_webradio_list;

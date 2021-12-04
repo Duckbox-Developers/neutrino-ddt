@@ -294,21 +294,7 @@ int CVideoSettings::showVideoSetup()
 
 	CMenuWidget videomodes(LOCALE_MAINSETTINGS_VIDEO, NEUTRINO_ICON_SETTINGS);
 
-	CAutoModeNotifier anotify;
-	CMenuForwarder *vs_videomodes_fw = NULL;
-
 	//video system modes submenue
-	if (g_info.hw_caps->has_HDMI) /* does this make sense on a box without HDMI? */
-	{
-		videomodes.addIntroItems(LOCALE_VIDEOMENU_ENABLED_MODES);
-
-		for (int i = 0; i < VIDEOMENU_VIDEOMODE_OPTION_COUNT; i++)
-			if (VIDEOMENU_VIDEOMODE_OPTIONS[i].key != -1)
-				videomodes.addItem(new CMenuOptionChooser(VIDEOMENU_VIDEOMODE_OPTIONS[i].valname, &g_settings.enabled_video_modes[i], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, &anotify));
-
-		vs_videomodes_fw = new CMenuForwarder(LOCALE_VIDEOMENU_ENABLED_MODES, true, NULL, &videomodes, NULL, CRCInput::RC_mode);
-		vs_videomodes_fw->setHint("", LOCALE_MENU_HINT_VIDEO_MODES);
-	}
 
 	if (vs_colorformat_analog || vs_colorformat_hdmi)
 	{
@@ -338,8 +324,6 @@ int CVideoSettings::showVideoSetup()
 	videosetup->addItem(vs_43mode_ch);	  //4:3 mode
 	videosetup->addItem(vs_dispformat_ch);	  //display format
 	videosetup->addItem(vs_videomodes_ch);	  //video system
-	if (vs_videomodes_fw != NULL)
-		videosetup->addItem(vs_videomodes_fw);	  //video modes submenue
 
 #if HAVE_SH4_HARDWARE
 	CColorSetupNotifier *colorSetupNotifier = new CColorSetupNotifier();
@@ -473,8 +457,6 @@ void CVideoSettings::setVideoSettings()
 		pipVideoDecoder[0]->setAspectRatio(g_settings.video_Format, g_settings.video_43mode);
 #endif
 
-	CAutoModeNotifier anotify;
-	anotify.changeNotify(NONEXISTANT_LOCALE, 0);
 #if HAVE_SH4_HARDWARE
 	frameBuffer->setMixerColor(g_settings.video_mixer_color);
 #endif
@@ -661,8 +643,6 @@ void CVideoSettings::nextMode(void)
 					curmode = 0;
 				if (VIDEOMENU_VIDEOMODE_OPTIONS[curmode].key == -1)
 					continue;
-				if (g_settings.enabled_video_modes[curmode])
-					break;
 				i++;
 				if (i >= VIDEOMENU_VIDEOMODE_OPTION_COUNT)
 				{

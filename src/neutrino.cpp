@@ -461,15 +461,6 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.avsync = configfile.getInt32( "avsync", 1);
 	g_settings.clockrec = configfile.getInt32( "clockrec", 1);
 
-	for (int i = 0; i < VIDEOMENU_VIDEOMODE_OPTION_COUNT; i++) {
-		sprintf(cfg_key, "enabled_video_mode_%d", i);
-		g_settings.enabled_video_modes[i] = configfile.getInt32(cfg_key, 0);
-	}
-#if VIDEOMENU_VIDEOMODE_OPTION_COUNT > 3
-	g_settings.enabled_video_modes[3] = 1; // 720p 50Hz
-	g_settings.enabled_video_modes[4] = 1; // 1080i 50Hz
-#endif
-
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	g_settings.zappingmode = configfile.getInt32( "zappingmode", 0);
 	g_settings.hdmimode = configfile.getInt32("hdmimode", 0);
@@ -1303,10 +1294,6 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32( "analog_out", g_settings.analog_out);
 	configfile.setInt32( "avsync", g_settings.avsync);
 	configfile.setInt32( "clockrec", g_settings.clockrec);
-	for(int i = 0; i < VIDEOMENU_VIDEOMODE_OPTION_COUNT; i++) {
-		sprintf(cfg_key, "enabled_video_mode_%d", i);
-		configfile.setInt32(cfg_key, g_settings.enabled_video_modes[i]);
-	}
 
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	configfile.setInt32( "zappingmode", g_settings.zappingmode);

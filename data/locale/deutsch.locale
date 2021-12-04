@@ -130,7 +130,7 @@ audiomenu.auto_subs Untertitel automatisch
 audiomenu.avs avs
 audiomenu.avsync A/V sync
 audiomenu.avsync_am Audio master
-audiomenu.clockrec 
+audiomenu.clockrec
 audiomenu.dolbydigital DD-Unterkanal automatisch
 audiomenu.dts DTS durchleiten
 audiomenu.hdmi_dd Dolby Digital über HDMI
@@ -409,7 +409,7 @@ eventfinder.history Frühere Suchen
 eventfinder.keyword Suche nach Textpassage
 eventfinder.max_history Max. Anzahl früherer Suchen
 eventfinder.search Suche
-eventfinder.search_all_epg Ganze 
+eventfinder.search_all_epg Ganze
 eventfinder.search_within_epg Suche innerhalb EPG-Daten
 eventfinder.search_within_list Suche innerhalb Text
 eventfinder.searching Suche ...
@@ -720,7 +720,7 @@ flashupdate.update_with_settings_skipped Ordner [%s] kann nicht gesichert werden
 flashupdate.update_with_settings_warning Warnung Flashspeicher!\n \nIm neuen Image sind nur noch %ld KB (von %ld KB) frei,\ndas ist möglicherweise zu wenig, um einen sicheren Betrieb zu gewährleisten.\n \nSoll der Vorgang trotzdem fortgesetzt werden?
 flashupdate.updatemode Updatemodus
 flashupdate.updatemode_internet Internet
-flashupdate.updatemode_manual von lokalem Update-Verzeichnis 
+flashupdate.updatemode_manual von lokalem Update-Verzeichnis
 flashupdate.url_file Internet Konfigurations-Datei
 flashupdate.versioncheck Versionsüberprüfung
 flashupdate.writeflash ganzes Flashimage einspielen
@@ -1554,7 +1554,7 @@ menu.hint_tvradio_switch Schaltet zwischen TV- und Radio-Modus um
 menu.hint_uni_setup Konfiguration Unikabel Frequenz, Userband und Pin
 menu.hint_upnp Zugriff auf UPNP-Server in Ihrem lokalen Netz
 menu.hint_vfd Frontdisplay und Power-LEDs
-menu.hint_vfd_brightness Definiert die Helligkeit im TV-Betrieb 
+menu.hint_vfd_brightness Definiert die Helligkeit im TV-Betrieb
 menu.hint_vfd_brightness_setup Konfiguriert die Helligkeit des Frontdisplays für verschiedene Modi
 menu.hint_vfd_brightnessdeepstandby Definiert die Helligkeit im Deep-Standby
 menu.hint_vfd_brightnessdim Definiert den Wert für das Dimmen des Display nach Ablauf der eingestellten Zeit
@@ -1576,7 +1576,6 @@ menu.hint_video_hdmi_mode Wählt das Farbprofil für die HDMI Ausgabe
 menu.hint_video_mask Definieren Sie einen kanalspezifischen Rahmen zum Ausblenden unerwünschter Inhalte am Bildschirmrand
 menu.hint_video_mixer_color Wenn kein Signal vorhanden ist, wird die gewählte Farbe als Hintergrundfarbe verwendet.
 menu.hint_video_mode Wählen Sie den Modus des Ausgangssignals für den HDMI-Anschluss
-menu.hint_video_modes Definiert, welche Videosysteme mit der VF-Taste der Fernbedienung ausgewählt werden können
 menu.hint_video_pip Bild in Bild Größe und Position
 menu.hint_video_psi On-Screen-Menü zur Änderung von Farbe, Kontrast und mehr
 menu.hint_video_psi_step Setzt die Schrittweite für das On-Screen-Menü
@@ -1782,9 +1781,9 @@ moviebrowser.directories Verzeichnisse
 moviebrowser.directories_additional Zusätzliche Verzeichnisse
 moviebrowser.edit_book Markierung ändern
 moviebrowser.edit_book_name_info1 Neuer Markierungsname
-moviebrowser.edit_book_name_info2 
+moviebrowser.edit_book_name_info2
 moviebrowser.edit_book_pos_info1 Neue Position (s)
-moviebrowser.edit_book_pos_info2 
+moviebrowser.edit_book_pos_info2
 moviebrowser.edit_book_type_info1 Neue Sprunglänge (s)
 moviebrowser.edit_book_type_info2 <0: zurück, >0: vor, 0: kein
 moviebrowser.edit_serie Name der Serie
@@ -1898,7 +1897,7 @@ moviebrowser.short_rating Vote
 moviebrowser.short_recorddate Datum
 moviebrowser.short_serie Serie
 moviebrowser.short_size Größe
-moviebrowser.short_spacer 
+moviebrowser.short_spacer
 moviebrowser.short_title Titel
 moviebrowser.start_head Film starten von Position:
 moviebrowser.start_record_start Aufnahmestart
@@ -1915,7 +1914,7 @@ moviecut.cancel Bearbeiten des Filmes abbrechen?
 movieplayer.bookmark Bookmarks
 movieplayer.bookmarkname Bookmark Name
 movieplayer.bookmarkname_hint1 Geben Sie den Namen für das neue Lesezeichen ein
-movieplayer.bookmarkname_hint2 
+movieplayer.bookmarkname_hint2
 movieplayer.chapters Kapitel
 movieplayer.display_playtime Zeige Spielzeit im VFD/LCD
 movieplayer.fileplayback_audio Multiformat-Audiowiedergabe
@@ -2576,7 +2575,6 @@ videomenu.colorformat.ycbcr444 YCbCr 4:4:4
 videomenu.colorformat.yuv YUV
 videomenu.colorformat_analog Cinch/Scart
 videomenu.colorformat_hdmi HDMI
-videomenu.enabled_modes Videosysteme auf der VF-Taste
 videomenu.fullscreen Vollbild
 videomenu.hdmi_cec HDMI-CEC
 videomenu.hdmi_cec_broadcast Senden an alle Geräte
