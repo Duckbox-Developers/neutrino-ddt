@@ -171,7 +171,7 @@ int CMiscMenue::exec(CMenuTarget* parent, const std::string &actionKey)
 			g_Sectionsd->readSIfromXMLTV((*it).c_str());
 		}
 
-		ShowHint(LOCALE_MISCSETTINGS_EPG_HEAD, g_Locale->getText(LOCALE_MISCSETTINGS_EPG_READ), 300, 5, NEUTRINO_ICON_SETTINGS);
+		//ShowHint(LOCALE_MISCSETTINGS_EPG_HEAD, g_Locale->getText(LOCALE_MISCSETTINGS_EPG_READ), 300, 5, NEUTRINO_ICON_SETTINGS);
 
 		if (actionKey == "epg_read_now_usermenu")
 			return menu_return::RETURN_EXIT_ALL;

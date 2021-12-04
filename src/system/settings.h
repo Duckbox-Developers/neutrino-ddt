@@ -223,6 +223,7 @@ struct SNeutrinoSettings
 	int zapto_pre_time;
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	int zappingmode;
+	int hdmimode;
 #endif
 	int infobar_sat_display;
 	int infobar_show_channeldesc;
@@ -279,7 +280,6 @@ struct SNeutrinoSettings
 #if HAVE_SH4_HARDWARE
 	int hdmi_cec_broadcast;
 #endif
-	int enabled_video_modes[VIDEOMENU_VIDEOMODE_OPTION_COUNT];
 	int make_hd_list;
 	int make_webtv_list;
 	int make_webradio_list;
@@ -744,8 +744,6 @@ struct SNeutrinoSettings
 	int softupdate_autocheck;
 	int softupdate_name_mode_apply;
 	int softupdate_name_mode_backup;
-	int apply_settings;
-	int apply_kernel;
 
 	std::string	backup_dir;
 	std::string	update_dir;

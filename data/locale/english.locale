@@ -130,7 +130,7 @@ audiomenu.auto_subs Auto select subtitles
 audiomenu.avs avs
 audiomenu.avsync A/V sync
 audiomenu.avsync_am Audio master
-audiomenu.clockrec 
+audiomenu.clockrec
 audiomenu.dolbydigital Prefer Dolby Digital (AC-3)
 audiomenu.dts DTS passthrough
 audiomenu.hdmi_dd Encoded DD on HDMI
@@ -605,7 +605,7 @@ extra.zap_cycle Zap cycle
 extra.zapit_fe_no_same Different tuners when same transponder
 extra.zapit_fe_retries Tune retries
 extra.zapit_fe_timeout Tune timeout
-extra.zapit_hvoltage 18V for rotor moving 
+extra.zapit_hvoltage 18V for rotor moving
 extra.zapit_motor_speed Motor moving speed
 extra.zapit_scanpids Scan/Use pids
 extra.zapit_sdt_changed Channels changed, reload settings.
@@ -671,7 +671,6 @@ flashupdate.install_image Flash downloaded image?
 flashupdate.install_package Install downloadad pack?
 flashupdate.md5check checking image
 flashupdate.md5sumerror image has errors
-flashupdate.menu_apply_kernel Flashing kernel
 flashupdate.mkfs_create_image Create backup
 flashupdate.mkfs_preparing_files Preparing files and directories
 flashupdate.mkfs_using_sumtool Using sumtool
@@ -1372,7 +1371,7 @@ menu.hint_progressbar_active Change color of active progress bar part
 menu.hint_progressbar_color Change appearance of progress bars
 menu.hint_progressbar_gradient Add a vertical brightness gradient to progress bars
 menu.hint_progressbar_infobar_position Selects the options of progressbar in the infobar
-menu.hint_progressbar_passive Change color of passive progress bar part 
+menu.hint_progressbar_passive Change color of passive progress bar part
 menu.hint_progressbar_preview Use OK to change the current progressbar state
 menu.hint_progressbar_timescale_green Choose the green portion of colored progressbars
 menu.hint_progressbar_timescale_invert Select your preferred color gradient
@@ -1420,7 +1419,7 @@ menu.hint_reset Reset GUI settings to defaults\nTuner config and channels not af
 menu.hint_restart_tuner Restart the internal tuner. This may help if you're experiencing reception problems
 menu.hint_restore Restore files from selected backup
 menu.hint_rotor_swap Swap rotor east/west directions\nin motor control
-menu.hint_rounded_corners Draw round or rectangular windows corners 
+menu.hint_rounded_corners Draw round or rectangular windows corners
 menu.hint_save_settings Save all settings to flash
 menu.hint_saveas Save GUI settings to a file named neutrino.conf
 menu.hint_scan_auto Auto-scan selected provider
@@ -1436,7 +1435,7 @@ menu.hint_scan_delsys Select delivery system for this channel/TP.
 menu.hint_scan_diseqc Select diseqc switch input for\nthis satellite
 menu.hint_scan_diseqcorder Diseqc command order for cascaded switches
 menu.hint_scan_diseqcrepeat Diseqc repeat for cascaded switches
-menu.hint_scan_diseqctype Select your diseqc switch protocol\nwith 'advanced' you can use uncommited switches
+menu.hint_scan_diseqctype Select your diseqc / unicable choice\nwith 'advanced' you can use uncommited switches
 menu.hint_scan_fast CanalDigitaal/TéléSAT/TV Vlaanderen provider scan\nWARNING: diseqc config will be overwritten
 menu.hint_scan_fastdiseqc Start diseqc auto-configuration
 menu.hint_scan_fastprov Select provider to scan
@@ -1555,7 +1554,7 @@ menu.hint_tvradio_switch Switches between TV and Radio mode
 menu.hint_uni_setup Configuration of unicable frequency, user band and pin
 menu.hint_upnp Access UPNP servers available in your local network
 menu.hint_vfd Frontpanel LEDs, VFD options
-menu.hint_vfd_brightness Working brightness 
+menu.hint_vfd_brightness Working brightness
 menu.hint_vfd_brightness_setup Configure frontpanel display brightness\nfor different modes
 menu.hint_vfd_brightnessdeepstandby Brightness in deep-standby mode
 menu.hint_vfd_brightnessdim Auto-dim brightness
@@ -1573,10 +1572,10 @@ menu.hint_video_colorformat_analog Select color space for analog output (SCART/R
 menu.hint_video_colorformat_hdmi Select color space for digital output (HDMI)
 menu.hint_video_contrast Change picture contrast
 menu.hint_video_format TV aspect ratio
+menu.hint_video_hdmi_mode Selects the color profile for HDMI output
 menu.hint_video_mask Define a channel-specific border to hide unwanted screen content
 menu.hint_video_mixer_color This color will be used for the background if there is no signal available.
 menu.hint_video_mode HDMI output video mode
-menu.hint_video_modes VF key will cycle between enabled modes 
 menu.hint_video_pip Picture in picture size and position
 menu.hint_video_psi On-screen menu for changing color, contrast and more
 menu.hint_video_psi_step Set the increment for the on-screen menu
@@ -1786,9 +1785,9 @@ moviebrowser.directories Directories
 moviebrowser.directories_additional Additional directories
 moviebrowser.edit_book Change bookmark
 moviebrowser.edit_book_name_info1 Enter new bookmark name
-moviebrowser.edit_book_name_info2 
+moviebrowser.edit_book_name_info2
 moviebrowser.edit_book_pos_info1 Enter new position (s)
-moviebrowser.edit_book_pos_info2 
+moviebrowser.edit_book_pos_info2
 moviebrowser.edit_book_type_info1 Enter new jump length (s)
 moviebrowser.edit_book_type_info2 <0: backward, >0: forward, 0: none
 moviebrowser.edit_serie Enter name of serie
@@ -1902,7 +1901,7 @@ moviebrowser.short_rating Vote
 moviebrowser.short_recorddate Date
 moviebrowser.short_serie Serie
 moviebrowser.short_size MB
-moviebrowser.short_spacer 
+moviebrowser.short_spacer
 moviebrowser.short_title Title
 moviebrowser.start_head Start movie from:
 moviebrowser.start_record_start Movie start
@@ -1944,7 +1943,7 @@ moviecut.cancel Cancel movie editing?
 movieplayer.bookmark Bookmarks
 movieplayer.bookmarkname Bookmarkname
 movieplayer.bookmarkname_hint1 Enter a name for your new bookmark
-movieplayer.bookmarkname_hint2 
+movieplayer.bookmarkname_hint2
 movieplayer.chapters Chapters
 movieplayer.display_playtime Show playtime in VFD
 movieplayer.fileplayback_audio Multiformat audio playback
@@ -2248,7 +2247,7 @@ satsetup.auto_scan_all Auto-Scan multiple Satellites
 satsetup.cable Cable scan
 satsetup.cable_nid Network ID
 satsetup.comm_input Commited input
-satsetup.diseqc DiSEqC
+satsetup.diseqc DiSEqC / Unicable
 satsetup.diseqc10 DiSEqC 1.0
 satsetup.diseqc11 DiSEqC 1.1
 satsetup.diseqc12 DiSEqC 1.2
@@ -2597,7 +2596,6 @@ videomenu.analog_sd_rgb RGB (SD)
 videomenu.analog_sd_rgb_scart RGB on scart (SD)
 videomenu.analog_sd_yprpb YPbPr (SD)
 videomenu.analog_sd_yprpb_scart YPbPr on scart (SD)
-videomenu.auto Auto
 videomenu.colorformat Color space
 videomenu.colorformat.cvbs CVBS
 videomenu.colorformat.rgb RGB
@@ -2607,7 +2605,6 @@ videomenu.colorformat.ycbcr444 YCbCr 4:4:4
 videomenu.colorformat.yuv YUV
 videomenu.colorformat_analog Cinch/Scart
 videomenu.colorformat_hdmi HDMI
-videomenu.enabled_modes VF key enabled modes
 videomenu.fullscreen Full screen
 videomenu.hdmi_cec HDMI-CEC
 videomenu.hdmi_cec_broadcast Send to all devices
@@ -2622,11 +2619,15 @@ videomenu.hdmi_cec_volume CEC volume control
 videomenu.hdmi_cec_vol_audiosystem Audiosystem
 videomenu.hdmi_cec_vol_off off
 videomenu.hdmi_cec_vol_tv TV
+videomenu.hdmi_mode Color profile
+videomenu.hdmi_mode_auto auto
+videomenu.hdmi_mode_bt2020ncl BT 2020 NCL
+videomenu.hdmi_mode_bt2020cl BT 2020 CL
+videomenu.hdmi_mode_bt709 BT 709
 videomenu.letterbox Letterbox
 videomenu.masksetup Mask Setup
 videomenu.mixer_color Background color
 videomenu.panscan Pan & Scan
-videomenu.panscan2 14:9 Pan & Scan
 videomenu.pip PiP setup
 videomenu.pip_error PiP start failed
 videomenu.psi Color settings
@@ -2641,7 +2642,6 @@ videomenu.screensetup Screen Setup
 videomenu.tv-scart Video
 videomenu.vcrsignal VCR Output Signal Type
 videomenu.videoformat Format
-videomenu.videoformat_149 14:9
 videomenu.videoformat_169 16:9
 videomenu.videoformat_43 4:3
 videomenu.videomode Digital video mode

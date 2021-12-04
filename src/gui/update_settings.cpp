@@ -104,22 +104,12 @@ int CUpdateSettings::initMenu()
 //	fw_url->setHint("", LOCALE_MENU_HINT_XXX);
 	CMenuForwarder * fw_update_dir 	= new CMenuForwarder(LOCALE_EXTRA_UPDATE_DIR, true, g_settings.update_dir , this, "update_dir", CRCInput::RC_red);
 //	fw_update_dir->setHint("", LOCALE_MENU_HINT_XXX);
-#if 0
-	CMenuOptionChooser *apply_kernel = new CMenuOptionChooser(LOCALE_FLASHUPDATE_MENU_APPLY_KERNEL, &g_settings.apply_kernel, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, g_settings.apply_settings);
-//	apply_kernel->setHint("", LOCALE_MENU_HINT_XXX);
-	OnOffNotifier->addItem(apply_kernel);
-#endif
-
 	CMenuOptionChooser *autocheck = new CMenuOptionChooser(LOCALE_FLASHUPDATE_AUTOCHECK, &g_settings.softupdate_autocheck, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, OnOffNotifier);
 //	apply_settings->setHint("", LOCALE_MENU_HINT_XXX);
 
 	w_upsettings.addItem(fw_update_dir);
 	w_upsettings.addItem(fw_url);
 	w_upsettings.addItem(autocheck);
-
-#if 0
-	w_upsettings.addItem(apply_kernel);
-#endif
 
 	int res = w_upsettings.exec (NULL, "");
 	delete OnOffNotifier;

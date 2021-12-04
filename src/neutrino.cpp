@@ -423,6 +423,8 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.psi_step = configfile.getInt32("video_psi_step", 2);
 
 	g_settings.video_Format = configfile.getInt32("video_Format", DISPLAY_AR_16_9);
+	if (g_settings.video_Format > 2)
+		g_settings.video_Format = 2;
 	g_settings.video_43mode = configfile.getInt32("video_43mode", DISPLAY_AR_MODE_LETTERBOX);
 	g_settings.current_volume = g_settings.hdmi_cec_volume ? 100 : configfile.getInt32("current_volume", 100);
 	g_settings.current_volume_step = configfile.getInt32("current_volume_step", 2);
@@ -460,17 +462,9 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.avsync = configfile.getInt32( "avsync", 1);
 	g_settings.clockrec = configfile.getInt32( "clockrec", 1);
 
-	for (int i = 0; i < VIDEOMENU_VIDEOMODE_OPTION_COUNT; i++) {
-		sprintf(cfg_key, "enabled_video_mode_%d", i);
-		g_settings.enabled_video_modes[i] = configfile.getInt32(cfg_key, 0);
-	}
-#if VIDEOMENU_VIDEOMODE_OPTION_COUNT > 3
-	g_settings.enabled_video_modes[3] = 1; // 720p 50Hz
-	g_settings.enabled_video_modes[4] = 1; // 1080i 50Hz
-#endif
-
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	g_settings.zappingmode = configfile.getInt32( "zappingmode", 0);
+	g_settings.hdmimode = configfile.getInt32("hdmimode", 0);
 #endif
 
 	// ci settings
@@ -932,8 +926,6 @@ int CNeutrinoApp::loadSetup(const char * fname)
 
 	//Software-update
 	g_settings.softupdate_mode = configfile.getInt32( "softupdate_mode", 1 );
-	g_settings.apply_kernel = configfile.getBool("apply_kernel" , false);
-	g_settings.apply_settings = configfile.getBool("apply_settings" , false);
 	g_settings.softupdate_name_mode_apply = 0;
 	g_settings.softupdate_name_mode_backup = 0; /* unused, but still initialize it */
 
@@ -1310,13 +1302,10 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32( "analog_out", g_settings.analog_out);
 	configfile.setInt32( "avsync", g_settings.avsync);
 	configfile.setInt32( "clockrec", g_settings.clockrec);
-	for(int i = 0; i < VIDEOMENU_VIDEOMODE_OPTION_COUNT; i++) {
-		sprintf(cfg_key, "enabled_video_mode_%d", i);
-		configfile.setInt32(cfg_key, g_settings.enabled_video_modes[i]);
-	}
 
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	configfile.setInt32( "zappingmode", g_settings.zappingmode);
+	configfile.setInt32( "hdmimode" , g_settings.hdmimode);
 #endif
 
 	// ci settings
@@ -1651,8 +1640,6 @@ void CNeutrinoApp::saveSetup(const char * fname)
 
 	//Software-update
 	configfile.setInt32 ("softupdate_mode"          , g_settings.softupdate_mode          );
-	configfile.setBool("apply_kernel", g_settings.apply_kernel);
-	configfile.setBool("apply_settings", g_settings.apply_settings);
 	configfile.setString("softupdate_url_file"      , g_settings.softupdate_url_file      );
 	configfile.setInt32 ("softupdate_name_mode_apply", g_settings.softupdate_name_mode_apply);
 	configfile.setInt32 ("softupdate_name_mode_backup", g_settings.softupdate_name_mode_backup);
@@ -2731,6 +2718,7 @@ TIMER_START();
 
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	videoDecoder->SetControl(VIDEO_CONTROL_ZAPPING_MODE, g_settings.zappingmode);
+	videoDecoder->SetHdmiMode((HDMI_MODE) g_settings.hdmimode);
 #endif
 
 TIMER_STOP("################################## after all ##################################");
@@ -4865,6 +4853,7 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 		} else
 			tuxtxt_close();
 
+		usleep(300000);
 		hintBox.hide();
 	}
 	else if (actionKey=="recording") {
@@ -4876,6 +4865,7 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 
 		g_Plugins->loadPlugins();
 
+		usleep(300000);
 		hintBox.hide();
 	}
 	else if (actionKey=="restarttuner") {

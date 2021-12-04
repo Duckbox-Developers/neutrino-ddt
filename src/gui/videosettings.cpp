@@ -58,6 +58,7 @@
 
 #include <daemonc/remotecontrol.h>
 
+#include <system/helpers.h>
 #include <system/debug.h>
 
 #include <cs_api.h>
@@ -122,7 +123,6 @@ int CVideoSettings::exec(CMenuTarget *parent, const std::string &/*actionKey*/)
 const CMenuOptionChooser::keyval VIDEOMENU_43MODE_OPTIONS[] =
 {
 	{ DISPLAY_AR_MODE_PANSCAN, LOCALE_VIDEOMENU_PANSCAN },
-	{ DISPLAY_AR_MODE_PANSCAN2, LOCALE_VIDEOMENU_PANSCAN2 },
 	{ DISPLAY_AR_MODE_LETTERBOX, LOCALE_VIDEOMENU_LETTERBOX },
 	{ DISPLAY_AR_MODE_NONE, LOCALE_VIDEOMENU_FULLSCREEN }
 };
@@ -217,12 +217,11 @@ CMenuOptionChooser::keyval_ext VIDEOMENU_VIDEOMODE_OPTIONS[VIDEOMENU_VIDEOMODE_O
 };
 #endif
 
-#define VIDEOMENU_VIDEOFORMAT_OPTION_COUNT 3//2
+#define VIDEOMENU_VIDEOFORMAT_OPTION_COUNT 2
 const CMenuOptionChooser::keyval VIDEOMENU_VIDEOFORMAT_OPTIONS[VIDEOMENU_VIDEOFORMAT_OPTION_COUNT] =
 {
 	{ DISPLAY_AR_4_3, LOCALE_VIDEOMENU_VIDEOFORMAT_43         },
-	{ DISPLAY_AR_16_9, LOCALE_VIDEOMENU_VIDEOFORMAT_169       },
-	{ DISPLAY_AR_14_9, LOCALE_VIDEOMENU_VIDEOFORMAT_149       }
+	{ DISPLAY_AR_16_9, LOCALE_VIDEOMENU_VIDEOFORMAT_169       }
 };
 
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
@@ -233,6 +232,15 @@ CMenuOptionChooser::keyval VIDEOMENU_ZAPPINGMODE_OPTIONS[VIDEOMENU_ZAPPINGMODE_O
 	{ 1, LOCALE_VIDEOMENU_ZAPPINGMODE_HOLD },
 	{ 2, LOCALE_VIDEOMENU_ZAPPINGMODE_MUTETILLLOCK },
 	{ 3, LOCALE_VIDEOMENU_ZAPPINGMODE_HOLDTILLLOCK }
+};
+
+#define VIDEOMENU_HDMI_MODE_OPTION_COUNT 4
+const CMenuOptionChooser::keyval VIDEOMENU_HDMI_MODE_OPTIONS[VIDEOMENU_HDMI_MODE_OPTION_COUNT] =
+{
+	{ HDMI_MODE_AUTO,	LOCALE_VIDEOMENU_HDMI_MODE_AUTO },
+	{ HDMI_MODE_BT2020NCL,	LOCALE_VIDEOMENU_HDMI_MODE_BT2020NCL },
+	{ HDMI_MODE_BT2020CL,	LOCALE_VIDEOMENU_HDMI_MODE_BT2020CL },
+	{ HDMI_MODE_BT709,	LOCALE_VIDEOMENU_HDMI_MODE_BT709 }
 };
 #endif
 
@@ -277,7 +285,7 @@ int CVideoSettings::showVideoSetup()
 	vs_43mode_ch->setHint("", LOCALE_MENU_HINT_VIDEO_43MODE);
 
 	//display format
-	CMenuOptionChooser *vs_dispformat_ch = new CMenuOptionChooser(LOCALE_VIDEOMENU_VIDEOFORMAT, &g_settings.video_Format, VIDEOMENU_VIDEOFORMAT_OPTIONS, g_info.hw_caps->can_ar_14_9 ? VIDEOMENU_VIDEOFORMAT_OPTION_COUNT : VIDEOMENU_VIDEOFORMAT_OPTION_COUNT - 1, true, this); /* works only if 14:9 is last! */
+	CMenuOptionChooser *vs_dispformat_ch = new CMenuOptionChooser(LOCALE_VIDEOMENU_VIDEOFORMAT, &g_settings.video_Format, VIDEOMENU_VIDEOFORMAT_OPTIONS, VIDEOMENU_VIDEOFORMAT_OPTION_COUNT, true, this);
 	vs_dispformat_ch->setHint("", LOCALE_MENU_HINT_VIDEO_FORMAT);
 
 	//video system
@@ -286,21 +294,7 @@ int CVideoSettings::showVideoSetup()
 
 	CMenuWidget videomodes(LOCALE_MAINSETTINGS_VIDEO, NEUTRINO_ICON_SETTINGS);
 
-	CAutoModeNotifier anotify;
-	CMenuForwarder *vs_videomodes_fw = NULL;
-
 	//video system modes submenue
-	if (g_info.hw_caps->has_HDMI) /* does this make sense on a box without HDMI? */
-	{
-		videomodes.addIntroItems(LOCALE_VIDEOMENU_ENABLED_MODES);
-
-		for (int i = 0; i < VIDEOMENU_VIDEOMODE_OPTION_COUNT; i++)
-			if (VIDEOMENU_VIDEOMODE_OPTIONS[i].key != -1)
-				videomodes.addItem(new CMenuOptionChooser(VIDEOMENU_VIDEOMODE_OPTIONS[i].valname, &g_settings.enabled_video_modes[i], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, &anotify));
-
-		vs_videomodes_fw = new CMenuForwarder(LOCALE_VIDEOMENU_ENABLED_MODES, true, NULL, &videomodes, NULL, CRCInput::RC_mode);
-		vs_videomodes_fw->setHint("", LOCALE_MENU_HINT_VIDEO_MODES);
-	}
 
 	if (vs_colorformat_analog || vs_colorformat_hdmi)
 	{
@@ -330,8 +324,6 @@ int CVideoSettings::showVideoSetup()
 	videosetup->addItem(vs_43mode_ch);	  //4:3 mode
 	videosetup->addItem(vs_dispformat_ch);	  //display format
 	videosetup->addItem(vs_videomodes_ch);	  //video system
-	if (vs_videomodes_fw != NULL)
-		videosetup->addItem(vs_videomodes_fw);	  //video modes submenue
 
 #if HAVE_SH4_HARDWARE
 	CColorSetupNotifier *colorSetupNotifier = new CColorSetupNotifier();
@@ -394,6 +386,7 @@ int CVideoSettings::showVideoSetup()
 #endif
 
 #endif
+
 #ifdef ENABLE_PIP
 	CPipSetup pip;
 	CMenuForwarder *pipsetup = new CMenuForwarder(LOCALE_VIDEOMENU_PIP, g_info.hw_caps->can_pip, NULL, &pip, NULL, CRCInput::convertDigitToKey(shortcut++));
@@ -407,9 +400,19 @@ int CVideoSettings::showVideoSetup()
 #endif
 
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
-	CMenuOptionChooser *zm = new CMenuOptionChooser(LOCALE_VIDEOMENU_ZAPPINGMODE, &g_settings.zappingmode, VIDEOMENU_ZAPPINGMODE_OPTIONS, VIDEOMENU_ZAPPINGMODE_OPTION_COUNT, true, this, CRCInput::convertDigitToKey(shortcut++));
-	zm->setHint("", LOCALE_MENU_HINT_VIDEO_ZAPPINGMODE);
-	videosetup->addItem(zm);
+	if (file_exists("/proc/stb/video/zapmode_choices"))
+	{
+		CMenuOptionChooser *zm = new CMenuOptionChooser(LOCALE_VIDEOMENU_ZAPPINGMODE, &g_settings.zappingmode, VIDEOMENU_ZAPPINGMODE_OPTIONS, VIDEOMENU_ZAPPINGMODE_OPTION_COUNT, true, this, CRCInput::convertDigitToKey(shortcut++));
+		zm->setHint("", LOCALE_MENU_HINT_VIDEO_ZAPPINGMODE);
+		videosetup->addItem(zm);
+	}
+
+	if (file_exists("/proc/stb/video/hdmi_colorimetry_choices"))
+	{
+		CMenuOptionChooser *hm = new CMenuOptionChooser(LOCALE_VIDEOMENU_HDMI_MODE, &g_settings.hdmimode, VIDEOMENU_HDMI_MODE_OPTIONS, VIDEOMENU_HDMI_MODE_OPTION_COUNT, true, this, CRCInput::convertDigitToKey(shortcut++));
+		hm->setHint("", LOCALE_MENU_HINT_VIDEO_HDMI_MODE);
+		videosetup->addItem(hm);
+	}
 #endif
 
 	int res = videosetup->exec(NULL, "");
@@ -454,8 +457,6 @@ void CVideoSettings::setVideoSettings()
 		pipVideoDecoder[0]->setAspectRatio(g_settings.video_Format, g_settings.video_43mode);
 #endif
 
-	CAutoModeNotifier anotify;
-	anotify.changeNotify(NONEXISTANT_LOCALE, 0);
 #if HAVE_SH4_HARDWARE
 	frameBuffer->setMixerColor(g_settings.video_mixer_color);
 #endif
@@ -537,6 +538,10 @@ bool CVideoSettings::changeNotify(const neutrino_locale_t OptionName, void *)
 	{
 		videoDecoder->SetControl(VIDEO_CONTROL_ZAPPING_MODE, g_settings.zappingmode);
 	}
+	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_VIDEOMENU_HDMI_MODE))
+	{
+		videoDecoder->SetHdmiMode((HDMI_MODE) g_settings.hdmimode);
+	}
 #endif
 	return false;
 }
@@ -585,8 +590,6 @@ void CVideoSettings::SwitchFormat()
 	}
 	curmode++;
 	if (curmode >= VIDEOMENU_VIDEOFORMAT_OPTION_COUNT)
-		curmode = 0;
-	if (VIDEOMENU_VIDEOFORMAT_OPTIONS[curmode].key == DISPLAY_AR_14_9 && g_info.hw_caps->can_ar_14_9 == 0)
 		curmode = 0;
 	text =  VIDEOMENU_VIDEOFORMAT_OPTIONS[curmode].value;
 	g_settings.video_Format = VIDEOMENU_VIDEOFORMAT_OPTIONS[curmode].key;
@@ -640,8 +643,6 @@ void CVideoSettings::nextMode(void)
 					curmode = 0;
 				if (VIDEOMENU_VIDEOMODE_OPTIONS[curmode].key == -1)
 					continue;
-				if (g_settings.enabled_video_modes[curmode])
-					break;
 				i++;
 				if (i >= VIDEOMENU_VIDEOMODE_OPTION_COUNT)
 				{
@@ -679,9 +680,6 @@ void CVideoSettings::Init43ModeOptions()
 	videomenu_43mode_options.clear();
 	for (unsigned int i = 0; i < VIDEOMENU_43MODE_OPTION_COUNT; i++)
 	{
-		if (VIDEOMENU_43MODE_OPTIONS[i].key == DISPLAY_AR_MODE_PANSCAN2 &&
-			g_info.hw_caps->can_ps_14_9 == 0)
-			continue;
 		CMenuOptionChooser::keyval_ext o;
 		o = VIDEOMENU_43MODE_OPTIONS[i];
 		videomenu_43mode_options.push_back(o);
