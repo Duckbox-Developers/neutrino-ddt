@@ -549,7 +549,7 @@ bool CVideoSettings::changeNotify(const neutrino_locale_t OptionName, void *)
 void CVideoSettings::next43Mode(void)
 {
 	printf("[neutrino VideoSettings] %s setting 43Mode...\n", __FUNCTION__);
-	neutrino_locale_t text;
+//	neutrino_locale_t text;
 	unsigned int curmode = 0;
 
 	for (unsigned int i = 0; i < videomenu_43mode_options.size(); i++)
@@ -564,7 +564,7 @@ void CVideoSettings::next43Mode(void)
 	if (curmode >= videomenu_43mode_options.size())
 		curmode = 0;
 
-	text = videomenu_43mode_options[curmode].value;
+//	text = videomenu_43mode_options[curmode].value;
 	g_settings.video_43mode = videomenu_43mode_options[curmode].key;
 	g_Zapit->setMode43(g_settings.video_43mode);
 #ifdef ENABLE_PIP
@@ -576,7 +576,7 @@ void CVideoSettings::next43Mode(void)
 void CVideoSettings::SwitchFormat()
 {
 	printf("[neutrino VideoSettings] %s setting videoformat...\n", __FUNCTION__);
-	neutrino_locale_t text;
+//	neutrino_locale_t text;
 	int curmode = 0;
 
 	for (int i = 0; i < VIDEOMENU_VIDEOFORMAT_OPTION_COUNT; i++)
@@ -590,7 +590,7 @@ void CVideoSettings::SwitchFormat()
 	curmode++;
 	if (curmode >= VIDEOMENU_VIDEOFORMAT_OPTION_COUNT)
 		curmode = 0;
-	text =  VIDEOMENU_VIDEOFORMAT_OPTIONS[curmode].value;
+//	text =  VIDEOMENU_VIDEOFORMAT_OPTIONS[curmode].value;
 	g_settings.video_Format = VIDEOMENU_VIDEOFORMAT_OPTIONS[curmode].key;
 
 	videoDecoder->setAspectRatio(g_settings.video_Format, -1);
@@ -646,7 +646,7 @@ void CVideoSettings::nextMode(void)
 				}
 			}
 
-			text =  VIDEOMENU_VIDEOMODE_OPTIONS[curmode].valname;
+//			text =  VIDEOMENU_VIDEOMODE_OPTIONS[curmode].valname;
 		}
 		else if (res == messages_return::cancel_info)
 		{
