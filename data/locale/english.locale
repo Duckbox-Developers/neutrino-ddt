@@ -2599,7 +2599,6 @@ videomenu.psi.tint Tint
 videomenu.scart Scart
 videomenu.screensetup Screen Setup
 videomenu.tv-scart Video
-videomenu.vcrsignal VCR Output Signal Type
 videomenu.videoformat Format
 videomenu.videoformat_169 16:9
 videomenu.videoformat_43 4:3
