@@ -435,23 +435,16 @@ int CVideoSettings::showVideoSetup()
 void CVideoSettings::setVideoSettings()
 {
 	printf("[neutrino VideoSettings] %s init video settings...\n", __FUNCTION__);
-#if 0
-	//FIXME focus: ?? this is different for different boxes
-	videoDecoder->SetVideoMode((analog_mode_t) g_settings.analog_mode1);
-#endif
+
 #if HAVE_SH4_HARDWARE
 	changeNotify(LOCALE_VIDEOMENU_COLORFORMAT_ANALOG, NULL);
 	changeNotify(LOCALE_VIDEOMENU_COLORFORMAT_HDMI, NULL);
 #else
 	changeNotify(LOCALE_VIDEOMENU_SCART, NULL);
 #endif
-	//setupVideoSystem(false/*don't ask*/);// focus: CVideoSettings constructor do this already ?
 
-#if 0
-	videoDecoder->setAspectRatio(-1, g_settings.video_43mode);
-	videoDecoder->setAspectRatio(g_settings.video_Format, -1);
-#endif
 	videoDecoder->setAspectRatio(g_settings.video_Format, g_settings.video_43mode);
+
 #ifdef ENABLE_PIP
 	if (pipVideoDecoder[0] != NULL)
 		pipVideoDecoder[0]->setAspectRatio(g_settings.video_Format, g_settings.video_43mode);
@@ -549,7 +542,6 @@ bool CVideoSettings::changeNotify(const neutrino_locale_t OptionName, void *)
 void CVideoSettings::next43Mode(void)
 {
 	printf("[neutrino VideoSettings] %s setting 43Mode...\n", __FUNCTION__);
-//	neutrino_locale_t text;
 	unsigned int curmode = 0;
 
 	for (unsigned int i = 0; i < videomenu_43mode_options.size(); i++)
@@ -564,7 +556,6 @@ void CVideoSettings::next43Mode(void)
 	if (curmode >= videomenu_43mode_options.size())
 		curmode = 0;
 
-//	text = videomenu_43mode_options[curmode].value;
 	g_settings.video_43mode = videomenu_43mode_options[curmode].key;
 	g_Zapit->setMode43(g_settings.video_43mode);
 #ifdef ENABLE_PIP
@@ -576,7 +567,6 @@ void CVideoSettings::next43Mode(void)
 void CVideoSettings::SwitchFormat()
 {
 	printf("[neutrino VideoSettings] %s setting videoformat...\n", __FUNCTION__);
-//	neutrino_locale_t text;
 	int curmode = 0;
 
 	for (int i = 0; i < VIDEOMENU_VIDEOFORMAT_OPTION_COUNT; i++)
@@ -590,7 +580,6 @@ void CVideoSettings::SwitchFormat()
 	curmode++;
 	if (curmode >= VIDEOMENU_VIDEOFORMAT_OPTION_COUNT)
 		curmode = 0;
-//	text =  VIDEOMENU_VIDEOFORMAT_OPTIONS[curmode].value;
 	g_settings.video_Format = VIDEOMENU_VIDEOFORMAT_OPTIONS[curmode].key;
 
 	videoDecoder->setAspectRatio(g_settings.video_Format, -1);
@@ -645,8 +634,6 @@ void CVideoSettings::nextMode(void)
 					return;
 				}
 			}
-
-//			text =  VIDEOMENU_VIDEOMODE_OPTIONS[curmode].valname;
 		}
 		else if (res == messages_return::cancel_info)
 		{
