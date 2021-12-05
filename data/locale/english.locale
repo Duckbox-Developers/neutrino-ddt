@@ -1572,7 +1572,7 @@ menu.hint_video_colorformat_analog Select color space for analog output (SCART/R
 menu.hint_video_colorformat_hdmi Select color space for digital output (HDMI)
 menu.hint_video_contrast Change picture contrast
 menu.hint_video_format TV aspect ratio
-menu.hint_video_hdmi_mode Selects the color profile for HDMI output
+menu.hint_video_hdmi_colorimetry Selects the color profile for HDMI output
 menu.hint_video_mask Define a channel-specific border to hide unwanted screen content
 menu.hint_video_mixer_color This color will be used for the background if there is no signal available.
 menu.hint_video_mode HDMI output video mode
@@ -2619,11 +2619,11 @@ videomenu.hdmi_cec_volume CEC volume control
 videomenu.hdmi_cec_vol_audiosystem Audiosystem
 videomenu.hdmi_cec_vol_off off
 videomenu.hdmi_cec_vol_tv TV
-videomenu.hdmi_mode Color profile
-videomenu.hdmi_mode_auto auto
-videomenu.hdmi_mode_bt2020ncl BT 2020 NCL
-videomenu.hdmi_mode_bt2020cl BT 2020 CL
-videomenu.hdmi_mode_bt709 BT 709
+videomenu.hdmi_colorimetry Color profile
+videomenu.hdmi_colorimetry_auto auto
+videomenu.hdmi_colorimetry_bt2020ncl BT 2020 ncl
+videomenu.hdmi_colorimetry_bt2020cl BT 2020 cl
+videomenu.hdmi_colorimetry_bt709 BT 709
 videomenu.letterbox Letterbox
 videomenu.masksetup Mask Setup
 videomenu.mixer_color Background color
