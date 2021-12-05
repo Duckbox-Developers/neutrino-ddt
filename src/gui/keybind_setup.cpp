@@ -227,8 +227,6 @@ const key_settings_struct_t key_settings[CKeybindSetup::KEYBINDS_COUNT] =
 	{LOCALE_EXTRA_KEY_TIMESHIFT,		&g_settings.key_timeshift,  		LOCALE_MENU_HINT_KEY_TIMESHIFT },
 	{LOCALE_EXTRA_KEY_UNLOCK,		&g_settings.key_unlock,			LOCALE_MENU_HINT_KEY_UNLOCK},
 	{LOCALE_EXTRA_KEY_HELP,			&g_settings.key_help,			NONEXISTANT_LOCALE},
-	{LOCALE_EXTRA_KEY_NEXT43MODE,		&g_settings.key_next43mode,		NONEXISTANT_LOCALE},
-	{LOCALE_EXTRA_KEY_SWITCHFORMAT,		&g_settings.key_switchformat,		NONEXISTANT_LOCALE},
 	{LOCALE_EXTRA_KEY_SCREENSHOT,		&g_settings.key_screenshot,		LOCALE_MENU_HINT_KEY_SCREENSHOT },
 #if ENABLE_PIP
 	{LOCALE_EXTRA_KEY_PIP_CLOSE,		&g_settings.key_pip_close,		LOCALE_MENU_HINT_KEY_PIP_CLOSE },
@@ -395,14 +393,6 @@ void CKeybindSetup::showKeyBindSetup(CMenuWidget *bindSettings)
 	mf = new CMenuDForwarder(LOCALE_MOVIEBROWSER_HEAD, true, NULL, bindSettings_mbrowser, NULL, CRCInput::RC_nokey);
 	mf->setHint("", LOCALE_MENU_HINT_KEY_MOVIEBROWSER);
 	bindSettings->addItem(mf);
-
-	//video
-	bindSettings->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_KEYBINDINGMENU_VIDEO));
-	for (int i = NKEY_NEXT43MODE; i <= NKEY_SWITCHFORMAT; i++) {
-		mf = new CMenuForwarder(key_settings[i].keydescription, true, keychooser[i]->getKeyName(), keychooser[i]);
-		mf->setHint("", key_settings[i].hint);
-		bindSettings->addItem(mf);
-	}
 
 	//navigation
 	bindSettings->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_KEYBINDINGMENU_NAVIGATION));

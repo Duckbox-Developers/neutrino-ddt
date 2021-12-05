@@ -3691,14 +3691,6 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 		audioDecoder->EnableAnalogOut(false);
 		return messages_return::handled;
 	}
-	else if( msg == (neutrino_msg_t) g_settings.key_next43mode ) {
-		g_videoSettings->next43Mode();
-		return messages_return::handled;
-	}
-	else if( msg == (neutrino_msg_t) g_settings.key_switchformat) {
-		g_videoSettings->SwitchFormat();
-		return messages_return::handled;
-	}
 	else if( msg == CRCInput::RC_sleep ) {
 		CSleepTimerWidget *sleepTimer = new CSleepTimerWidget;
 		sleepTimer->exec(NULL, "");
@@ -5228,8 +5220,6 @@ void CNeutrinoApp::loadKeys(const char * fname)
 
 	g_settings.key_help = tconfig->getInt32( "key_help", CRCInput::RC_help );
 	g_settings.key_record = tconfig->getInt32( "key_record", CRCInput::RC_record );
-	g_settings.key_switchformat = tconfig->getInt32("key_switchformat", CRCInput::RC_nokey);
-	g_settings.key_next43mode = tconfig->getInt32("key_next43mode", CRCInput::RC_nokey);
 	g_settings.key_volumeup = tconfig->getInt32( "key_volumeup",  CRCInput::RC_plus );
 	g_settings.key_volumedown = tconfig->getInt32( "key_volumedown", CRCInput::RC_minus );
 
@@ -5316,8 +5306,6 @@ void CNeutrinoApp::saveKeys(const char * fname)
 
 	tconfig->setInt32( "key_help", g_settings.key_help );
 	tconfig->setInt32( "key_record", g_settings.key_record );
-	tconfig->setInt32( "key_switchformat", g_settings.key_switchformat );
-	tconfig->setInt32( "key_next43mode", g_settings.key_next43mode );
 	tconfig->setInt32( "key_volumeup", g_settings.key_volumeup );
 	tconfig->setInt32( "key_volumedown", g_settings.key_volumedown );
 

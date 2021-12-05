@@ -577,8 +577,6 @@ struct SNeutrinoSettings
 	int record_hours;
 	int key_record;
 	int key_help;
-	int key_next43mode;
-	int key_switchformat;
 	int key_volumeup;
 	int key_volumedown;
 
