@@ -571,7 +571,6 @@ void CVideoSettings::next43Mode(void)
 	if (pipVideoDecoder[0] != NULL)
 		pipVideoDecoder[0]->setAspectRatio(-1, g_settings.video_43mode);
 #endif
-	ShowHint(LOCALE_VIDEOMENU_43MODE, g_Locale->getText(text), 450, 2);
 }
 
 void CVideoSettings::SwitchFormat()
@@ -599,7 +598,6 @@ void CVideoSettings::SwitchFormat()
 	if (pipVideoDecoder[0] != NULL)
 		pipVideoDecoder[0]->setAspectRatio(g_settings.video_Format, -1);
 #endif
-	ShowHint(LOCALE_VIDEOMENU_VIDEOFORMAT, g_Locale->getText(text), 450, 2);
 }
 
 void CVideoSettings::nextMode(void)
@@ -624,9 +622,6 @@ void CVideoSettings::nextMode(void)
 	while (1)
 	{
 		CVFD::getInstance()->ShowText(text);
-
-		if (res != messages_return::cancel_info) // avoid unnecessary display of messageboxes, when user is trying to press repeated format button
-			res = ShowHint(LOCALE_VIDEOMENU_VIDEOMODE, text, 450, 2);
 
 		if (disp_cur && res != messages_return::handled)
 			break;
@@ -672,7 +667,6 @@ void CVideoSettings::nextMode(void)
 	frameBuffer->resChange();
 #endif
 	CVFD::getInstance()->showServicename(g_RemoteControl->getCurrentChannelName(), g_RemoteControl->getCurrentChannelNumber());
-	//ShowHint(LOCALE_VIDEOMENU_VIDEOMODE, text, 450, 2);
 }
 
 void CVideoSettings::Init43ModeOptions()
