@@ -90,9 +90,6 @@ class CKeybindSetup : public CMenuTarget, public CChangeObserver
 			NKEY_PIP_SETUP,
 			NKEY_PIP_SWAP,
 #endif
-			NKEY_FORMAT_MODE,
-			NKEY_PIC_MODE,
-			NKEY_PIC_SIZE,
 			NKEY_RECORD,
 			MBKEY_COPY_ONEFILE,
 			MBKEY_COPY_SEVERAL,
@@ -116,7 +113,6 @@ class CKeybindSetup : public CMenuTarget, public CChangeObserver
 		void showKeyBindQuickzapSetup(CMenuWidget *bindSettings_qzap);
 		void showKeyBindMovieplayerSetup(CMenuWidget *bindSettings_mplayer);
 		void showKeyBindMoviebrowserSetup(CMenuWidget *bindSettings_mbrowser);
-		void showKeyBindSpecialSetup(CMenuWidget *bindSettings_special);
 		int getRemoteCode();
 		bool setRemoteCode(int code);
 		

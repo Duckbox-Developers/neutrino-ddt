@@ -631,10 +631,6 @@ struct SNeutrinoSettings
 	int key_pip_swap;
 #endif
 
-	int key_format_mode_active;
-	int key_pic_mode_active;
-	int key_pic_size_active;
-
 	int cacheTXT;
 	int minimode;
 	int mode_clock;

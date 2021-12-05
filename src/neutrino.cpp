@@ -3691,15 +3691,11 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 		audioDecoder->EnableAnalogOut(false);
 		return messages_return::handled;
 	}
-	else if(( msg == CRCInput::RC_mode ) && g_settings.key_format_mode_active ) {
-		g_videoSettings->nextMode();
-		return messages_return::handled;
-	}
-	else if(( msg == (neutrino_msg_t) g_settings.key_next43mode ) && g_settings.key_pic_size_active ) {
+	else if( msg == (neutrino_msg_t) g_settings.key_next43mode ) {
 		g_videoSettings->next43Mode();
 		return messages_return::handled;
 	}
-	else if(( msg == (neutrino_msg_t) g_settings.key_switchformat) && g_settings.key_pic_mode_active ) {
+	else if( msg == (neutrino_msg_t) g_settings.key_switchformat) {
 		g_videoSettings->SwitchFormat();
 		return messages_return::handled;
 	}
@@ -5216,10 +5212,6 @@ void CNeutrinoApp::loadKeys(const char * fname)
 	g_settings.mpkey_goto = tconfig->getInt32( "mpkey.goto", CRCInput::RC_nokey );
 	g_settings.mpkey_next_repeat_mode = tconfig->getInt32( "mpkey.next_repeat_mode", CRCInput::RC_nokey);
 
-	g_settings.key_format_mode_active = tconfig->getInt32( "key_format_mode_active", 1 );
-	g_settings.key_pic_mode_active = tconfig->getInt32( "key_pic_mode_active", 1 );
-	g_settings.key_pic_size_active = tconfig->getInt32( "key_pic_size_active", 1 );
-
 	/* options */
 	g_settings.menu_left_exit = tconfig->getInt32( "menu_left_exit", 0 );
 	g_settings.repeat_blocker = tconfig->getInt32("repeat_blocker", 450);
@@ -5308,10 +5300,6 @@ void CNeutrinoApp::saveKeys(const char * fname)
 
 	tconfig->setInt32( "mpkey.goto", g_settings.mpkey_goto );
 	tconfig->setInt32( "mpkey.next_repeat_mode", g_settings.mpkey_next_repeat_mode );
-
-	tconfig->setInt32( "key_format_mode_active", g_settings.key_format_mode_active );
-	tconfig->setInt32( "key_pic_mode_active", g_settings.key_pic_mode_active );
-	tconfig->setInt32( "key_pic_size_active", g_settings.key_pic_size_active );
 
 	tconfig->setInt32( "menu_left_exit", g_settings.menu_left_exit );
 	tconfig->setInt32( "repeat_blocker", g_settings.repeat_blocker );
