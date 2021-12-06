@@ -915,7 +915,6 @@ const char * locale_real_names[] =
 	"kerneloptions.hint.enabled_not_loaded",
 	"kerneloptions.modules",
 	"kerneloptions.reset",
-	"keybindingmenu.RC",
 	"keybindingmenu.accept_other_remotes",
 	"keybindingmenu.addrecord",
 	"keybindingmenu.addremind",

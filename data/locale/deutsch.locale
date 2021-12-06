@@ -888,7 +888,6 @@ kerneloptions.hint.enabled_loaded Das Kernel-Modul ist geladen und verwendbar.
 kerneloptions.hint.enabled_not_loaded Wenden Sie die Einstellungen an, um das Kernel-Modul zu laden.
 kerneloptions.modules Kernel-Module
 kerneloptions.reset Einstellungen zurücksetzen
-keybindingmenu.RC Fernbedienung abstimmen
 keybindingmenu.accept_other_remotes Andere Fernbedienungen akzeptieren
 keybindingmenu.addrecord Aufnahme-Timer hinzufügen
 keybindingmenu.addremind Umschalt-Timer hinzufügen

@@ -888,7 +888,6 @@ kerneloptions.hint.enabled_loaded The kernel module is loaded and may be used.
 kerneloptions.hint.enabled_not_loaded Apply the settings to load the module.
 kerneloptions.modules Kernel modules
 kerneloptions.reset Reset settings
-keybindingmenu.RC Tune Remote-Control
 keybindingmenu.accept_other_remotes Accept other remote controls
 keybindingmenu.addrecord add record timer
 keybindingmenu.addremind add zapto timer
