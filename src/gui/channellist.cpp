@@ -671,7 +671,7 @@ int CChannelList::show()
 			if(fader.FadeDone())
 				loop = false;
 		}
-		else if ( ( msg == CRCInput::RC_timeout ) || ( msg == (neutrino_msg_t)g_settings.key_channelList_cancel) ) {
+		else if ( ( msg == CRCInput::RC_timeout ) || ( msg == CRCInput::RC_home) ) {
 			if (move_state == beMoving) {
 				cancelMoveChannel();
 			} else if (edit_state) {

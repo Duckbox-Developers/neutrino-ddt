@@ -1265,7 +1265,7 @@ int CEpgData::show(const t_channel_id channel_id, uint64_t a_id, time_t* a_start
 					loop = false;
 				break;
 			default:
-				if (msg == (neutrino_msg_t)g_settings.key_channelList_cancel) {
+				if (msg == CRCInput::RC_home) {
 					if(fader.StartFadeOut()) {
 						timeoutEnd = CRCInput::calcTimeoutEnd(1);
 						msg = 0;

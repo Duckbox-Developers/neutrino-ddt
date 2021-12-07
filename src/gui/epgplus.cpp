@@ -954,7 +954,7 @@ int EpgPlus::exec(CChannelList * pchannelList, int selectedChannelIndex, CBouque
 				if (fader.FadeDone())
 					loop = false;
 			}
-			else if ((msg == CRCInput::RC_timeout) || (msg == (neutrino_msg_t) g_settings.key_channelList_cancel))
+			else if ((msg == CRCInput::RC_timeout) || (msg == CRCInput::RC_home))
 			{
 				if (fader.StartFadeOut())
 				{

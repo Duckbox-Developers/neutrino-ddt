@@ -555,7 +555,6 @@ struct SNeutrinoSettings
 	int key_pageup;
 	int key_pagedown;
 
-	int key_channelList_cancel;
 	int key_channelList_sort;
 	int key_channelList_addrecord;
 	int key_channelList_addremind;

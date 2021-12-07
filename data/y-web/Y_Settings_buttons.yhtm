@@ -31,8 +31,6 @@ function do_init()
 		document.f.key_channelList_addrecord.value = itoKey(val);
 	val = "{=ini-get:%(CONFIGDIR)/neutrino.conf;key_channelList_addremind;400~cache=}";
 		document.f.key_channelList_addremind.value = itoKey(val);
-	val = "{=ini-get:%(CONFIGDIR)/neutrino.conf;key_channelList_cancel;102~cache=}";
-		document.f.key_channelList_cancel.value = itoKey(val);
 	val = "{=ini-get:%(CONFIGDIR)/neutrino.conf;key_channelList_pagedown;115~cache=}";
 		document.f.key_channelList_pagedown.value = itoKey(val);
 	val = "{=ini-get:%(CONFIGDIR)/neutrino.conf;key_channelList_pageup;114~cache=}";
@@ -177,7 +175,6 @@ function setDefault()
 	document.f.key_bouquet_up.value = "KEY_RIGHT"; //106
 	document.f.key_channelList_addrecord.value = "KEY_RED"; //398
 	document.f.key_channelList_addremind.value = "KEY_YELLOW"; //400
-	document.f.key_channelList_cancel.value = "KEY_HOME"; //102
 	document.f.key_channelList_pagedown.value = "KEY_VOLUMEUP"; //115
 	document.f.key_channelList_pageup.value = "KEY_VOLUMEDOWN"; //114
 	document.f.key_channelList_reload.value = "KEY_SETUP"; //141
@@ -234,11 +231,6 @@ function do_submit()
 				<td><input type="radio" name="but" onclick="setFocus()" /> Seite runterbl&auml;ttern</td>
 				<td><input type="text" name="key_channelList_pagedown" id="id102" onclick="setradio(2)" readonly="readonly" />
 				&nbsp;<input type="button" class="butnokey" id="id202" onclick="killkey()" value="Keine Taste" /></td>
-			</tr>
-			<tr>
-				<td><input type="radio" name="but" onclick="setFocus()" /> Kanalliste schlie&szlig;en</td>
-				<td><input type="text" name="key_channelList_cancel" id="id103" onclick="setradio(3)" readonly="readonly" />
-				&nbsp;<input type="button" class="butnokey" id="id203" onclick="killkey()" value="Keine Taste" /></td>
 			</tr>
 			<tr>
 				<td><input type="radio" name="but" onclick="setFocus()" /> Sortierreihenfolge &auml;ndern</td>

@@ -5137,7 +5137,6 @@ void CNeutrinoApp::loadKeys(const char * fname)
 
 	g_settings.key_pageup = tconfig->getInt32( "key_channelList_pageup",  CRCInput::RC_page_up );
 	g_settings.key_pagedown = tconfig->getInt32( "key_channelList_pagedown", CRCInput::RC_page_down );
-	g_settings.key_channelList_cancel = tconfig->getInt32( "key_channelList_cancel",  CRCInput::RC_home );
 	g_settings.key_channelList_sort = tconfig->getInt32( "key_channelList_sort",  CRCInput::RC_blue );
 	g_settings.key_channelList_addrecord = tconfig->getInt32( "key_channelList_addrecord",  CRCInput::RC_red );
 	g_settings.key_channelList_addremind = tconfig->getInt32( "key_channelList_addremind",  CRCInput::RC_yellow );
@@ -5241,7 +5240,6 @@ void CNeutrinoApp::saveKeys(const char * fname)
 
 	tconfig->setInt32( "key_channelList_pageup", g_settings.key_pageup );
 	tconfig->setInt32( "key_channelList_pagedown", g_settings.key_pagedown );
-	tconfig->setInt32( "key_channelList_cancel", g_settings.key_channelList_cancel );
 	tconfig->setInt32( "key_channelList_sort", g_settings.key_channelList_sort );
 	tconfig->setInt32( "key_channelList_addrecord", g_settings.key_channelList_addrecord );
 	tconfig->setInt32( "key_channelList_addremind", g_settings.key_channelList_addremind );
