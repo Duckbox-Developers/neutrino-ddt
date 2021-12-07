@@ -742,9 +742,6 @@ struct SNeutrinoSettings
 	std::string	update_dir;
 	std::string	update_dir_opkg;
 
-	//BouquetHandling
-	int bouquetlist_mode;
-
 	// parentallock
 	int parentallock_prompt;
 	int parentallock_lockage;

@@ -919,7 +919,6 @@ const char * locale_real_names[] =
 	"keybindingmenu.addrecord",
 	"keybindingmenu.addremind",
 	"keybindingmenu.bouquetdown",
-	"keybindingmenu.bouquethandling",
 	"keybindingmenu.bouquetup",
 	"keybindingmenu.cancel",
 	"keybindingmenu.channeldown",

@@ -23,8 +23,6 @@ input[type="text"],select {
 function do_init()
 {
 	var val = "";
-	val = "{=ini-get:%(CONFIGDIR)/neutrino.conf;bouquetlist_mode;0~open=}";
-		document.f.bouquetlist_mode.selectedIndex = val;
 	val = "{=ini-get:%(CONFIGDIR)/neutrino.conf;key_bouquet_down;105~cache=}";
 		document.f.key_bouquet_down.value = itoKey(val);	
 	val = "{=ini-get:%(CONFIGDIR)/neutrino.conf;key_bouquet_up;106~cache=}";
@@ -175,7 +173,6 @@ var _key;
 }
 function setDefault()
 {
-	document.f.bouquetlist_mode.selectedIndex = 0;
 	document.f.key_bouquet_down.value = "KEY_LEFT"; //105
 	document.f.key_bouquet_up.value = "KEY_RIGHT"; //106
 	document.f.key_channelList_addrecord.value = "KEY_RED"; //398
@@ -227,16 +224,6 @@ function do_submit()
 			</tr>
 			<tr>
 				<td colspan="2" class="y_form_header">Kanalliste</td>
-			</tr>
-			<tr>
-				<td>&nbsp;OK-Taste f&uuml;r</td>
-				<td>
-					<select name="bouquetlist_mode" title="OK-Button for...">
-					<option value="0" selected="selected">Bouquet-Kan&auml;le</option>
-					<option value="1">Bouquetliste</option>
-					<option value="2">Kanalliste</option>
-					</select>
-				</td>				
 			</tr>
 			<tr>
 				<td><input type="radio" name="but" onclick="setFocus()" /> Seite hochbl&auml;ttern</td>

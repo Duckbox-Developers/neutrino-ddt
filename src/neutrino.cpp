@@ -5213,7 +5213,6 @@ void CNeutrinoApp::loadKeys(const char * fname)
 	g_settings.accept_other_remotes = tconfig->getInt32( "accept_other_remotes", 1);
 #endif
 
-	g_settings.bouquetlist_mode = tconfig->getInt32( "bouquetlist_mode", 0 );
 	g_settings.sms_channel = tconfig->getInt32( "sms_channel", 0 );
 	g_settings.sms_movie = tconfig->getInt32( "sms_movie", 0 );
 	g_settings.mode_left_right_key_tv = tconfig->getInt32( "mode_left_right_key_tv",  SNeutrinoSettings::ZAP);
@@ -5299,7 +5298,6 @@ void CNeutrinoApp::saveKeys(const char * fname)
 	tconfig->setInt32("accept_other_remotes", g_settings.accept_other_remotes);
 #endif
 
-	tconfig->setInt32( "bouquetlist_mode", g_settings.bouquetlist_mode );
 	tconfig->setInt32( "sms_channel", g_settings.sms_channel );
 	tconfig->setInt32( "sms_movie", g_settings.sms_movie );
 	tconfig->setInt32( "mode_left_right_key_tv", g_settings.mode_left_right_key_tv );

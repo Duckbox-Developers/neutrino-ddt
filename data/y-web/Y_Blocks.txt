@@ -66,7 +66,6 @@ end-block~nhttpd_save_settings
 
 # ------- Buttons save Settings
 start-block~buttons_save_settings
-{=ini-set:%(CONFIGDIR)/neutrino.conf;bouquetlist_mode;{=bouquetlist_mode=}~open=}
 {=ini-set:%(CONFIGDIR)/neutrino.conf;key_bouquet_down;{=key_bouquet_down=}~cache=}
 {=ini-set:%(CONFIGDIR)/neutrino.conf;key_bouquet_up;{=key_bouquet_up=}~cache=}
 {=ini-set:%(CONFIGDIR)/neutrino.conf;key_channelList_addrecord;{=key_channelList_addrecord=}~cache=}
