@@ -1195,7 +1195,6 @@ menu.hint_key_addremind Assign button to add zap timer\nfrom event list
 menu.hint_key_binding Re-define keys used for common operations
 menu.hint_key_bouquetdown Assign button to switch channel list\nto previous bouquet
 menu.hint_key_bouquetup Assign button to switch channel list\nto next bouquet
-menu.hint_key_cancel Assign button to close GUI window
 menu.hint_key_channeldown Assign button for fast switch to previous\nchannel in channel list
 menu.hint_key_channellist Configure keybingdings for channel list
 menu.hint_key_channelup Assign button for fast switch to next\nchannel in channel list
