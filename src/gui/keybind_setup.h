@@ -41,8 +41,8 @@
 
 class CKeybindSetup : public CMenuTarget, public CChangeObserver
 {
-	public:	
-		enum keynames 
+	public:
+		enum keynames
 		{
 			NKEY_TV_RADIO_MODE,
 			NKEY_POWER_OFF,
@@ -52,7 +52,6 @@ class CKeybindSetup : public CMenuTarget, public CChangeObserver
 			NKEY_VOLUME_DOWN,
 			NKEY_LIST_START,
 			NKEY_LIST_END,
-			NKEY_CANCEL_ACTION,
 			NKEY_SORT,
 			NKEY_ADD_RECORD,
 			NKEY_ADD_REMIND,
@@ -81,8 +80,6 @@ class CKeybindSetup : public CMenuTarget, public CChangeObserver
 			NKEY_TIMESHIFT,
 			NKEY_UNLOCK,
 			NKEY_HELP,
-			NKEY_NEXT43MODE,
-			NKEY_SWITCHFORMAT,
 			NKEY_SCREENSHOT,
 #if ENABLE_PIP
 			NKEY_PIP_CLOSE,
@@ -90,16 +87,13 @@ class CKeybindSetup : public CMenuTarget, public CChangeObserver
 			NKEY_PIP_SETUP,
 			NKEY_PIP_SWAP,
 #endif
-			NKEY_FORMAT_MODE,
-			NKEY_PIC_MODE,
-			NKEY_PIC_SIZE,
 			NKEY_RECORD,
 			MBKEY_COPY_ONEFILE,
 			MBKEY_COPY_SEVERAL,
 			MBKEY_CUT,
 			MBKEY_TRUNCATE,
 			MBKEY_COVER,
-			
+
 			KEYBINDS_COUNT
 		};
 
@@ -116,15 +110,14 @@ class CKeybindSetup : public CMenuTarget, public CChangeObserver
 		void showKeyBindQuickzapSetup(CMenuWidget *bindSettings_qzap);
 		void showKeyBindMovieplayerSetup(CMenuWidget *bindSettings_mplayer);
 		void showKeyBindMoviebrowserSetup(CMenuWidget *bindSettings_mbrowser);
-		void showKeyBindSpecialSetup(CMenuWidget *bindSettings_special);
 		int getRemoteCode();
 		bool setRemoteCode(int code);
-		
-	public:				
+
+	public:
 		CKeybindSetup();
 		~CKeybindSetup();
-		int exec(CMenuTarget* parent, const std::string & actionKey);
-		bool changeNotify(const neutrino_locale_t OptionName, void * data);
+		int exec(CMenuTarget *parent, const std::string &actionKey);
+		bool changeNotify(const neutrino_locale_t OptionName, void *data);
 		static const char *getMoviePlayerButtonName(const neutrino_msg_t key, bool &active, bool return_title = false);
 };
 

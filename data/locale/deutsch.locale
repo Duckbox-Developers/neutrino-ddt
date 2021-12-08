@@ -470,20 +470,15 @@ extra.fec_2_3_L 2/3L
 extra.fec_5_9_L 5/9L
 extra.fec_26_45_L 26/45L
 extra.key_current_transponder Aktuelle Transponder Taste
-extra.key_format_mode Videoformat
 extra.key_help Hilfe-Taste
 extra.key_list_end Listenende
 extra.key_list_start Listenanfang
-extra.key_next43mode Nächstes Seitenformat
-extra.key_pic_mode Bildschirmformat
-extra.key_pic_size 4:3 Anzeigeverhalten
 extra.key_pip_close Stop/Start PiP
 extra.key_pip_close_avinput Stop/Start PiP (HDMI)
 extra.key_pip_setup PiP Konfiguration
 extra.key_pip_swap Umschalten PiP/live
 extra.key_record Aufnahme-Taste
 extra.key_screenshot Screenshot Taste
-extra.key_switchformat Nächste Auflösung
 extra.key_timeshift Timeshift
 extra.key_unlock Entsperrtaste
 extra.ladirection Breitengrad-Ausrichtung
@@ -893,14 +888,11 @@ kerneloptions.hint.enabled_loaded Das Kernel-Modul ist geladen und verwendbar.
 kerneloptions.hint.enabled_not_loaded Wenden Sie die Einstellungen an, um das Kernel-Modul zu laden.
 kerneloptions.modules Kernel-Module
 kerneloptions.reset Einstellungen zurücksetzen
-keybindingmenu.RC Fernbedienung abstimmen
 keybindingmenu.accept_other_remotes Andere Fernbedienungen akzeptieren
 keybindingmenu.addrecord Aufnahme-Timer hinzufügen
 keybindingmenu.addremind Umschalt-Timer hinzufügen
 keybindingmenu.bouquetdown Bouquet zurück
-keybindingmenu.bouquethandling OK-Taste für
 keybindingmenu.bouquetup Bouquet weiter
-keybindingmenu.cancel Kanalliste schließen
 keybindingmenu.channeldown Kanal runter
 keybindingmenu.channellist Kanalliste
 keybindingmenu.channelup Kanal hoch
@@ -929,11 +921,9 @@ keybindingmenu.remotecontrol_code_save Neuen Code speichern
 keybindingmenu.repeatblock Anfangsverzögerung
 keybindingmenu.repeatblockgeneric Wiederholungsverzögerung
 keybindingmenu.sort Sortierreihenfolge ändern
-keybindingmenu.special_active Sondertasten
 keybindingmenu.subchanneldown Unterkanal zurück
 keybindingmenu.subchannelup Unterkanal weiter
 keybindingmenu.tvradiomode Fernseh-/Radio-Modus
-keybindingmenu.video Video
 keybindingmenu.volume Lautstärke
 keybindingmenu.volumedown Leiser
 keybindingmenu.volumeup Lauter
@@ -1205,11 +1195,9 @@ menu.hint_key_addremind Weisen Sie eine Taste für das Umschalten im EPG über d
 menu.hint_key_binding In diesem Menü können Einstellungen für die Tasten der Fernbedienung angepasst werden
 menu.hint_key_bouquetdown Weisen Sie eine Taste für das Zurückblättern in den Bouquets zu
 menu.hint_key_bouquetup Weisen Sie eine Taste für das Vorblättern in den Bouquets zu
-menu.hint_key_cancel Weisen Sie eine Taste für das Schließen der Menüs zu
 menu.hint_key_channeldown Weisen Sie eine Taste für das Herunterschalten in der Kanalliste zu
 menu.hint_key_channellist Konfigurieren Sie die Tastenbelegung für die Kanalliste
 menu.hint_key_channelup Weisen Sie eine Taste für das Hochschalten in der Kanalliste zu
-menu.hint_key_format_mode_active Die Taste für das Videoformat deaktivieren/aktivieren
 menu.hint_key_history Definieren Sie eine Taste für das Anzeigen der letzten Programme, die Sie schauten
 menu.hint_key_lastchannel Definieren Sie eine Taste, die in den vorher eingestellten Kanal zurückschaltet
 menu.hint_key_left_exit Weisen Sie der Taste 'links' das Wechseln in das vorherige Menü zu
@@ -1231,8 +1219,6 @@ menu.hint_key_mpsubtitle Weisen Sie eine Taste für die Untertitel-Auswahl zu
 menu.hint_key_mptime Weisen Sie eine Taste für die Restzeitanzeige ihrer Aufnahmen zu
 menu.hint_key_pagedown Weisen Sie eine Taste für das Herunterblättern zu
 menu.hint_key_pageup Weisen Sie eine Taste für das Hochblättern zu
-menu.hint_key_pic_mode_active Die Taste für das Bildschirmformat deaktivieren/aktivieren
-menu.hint_key_pic_size_active Die Taste für das 4:3 Anzeigeverhalten deaktivieren/aktivieren
 menu.hint_key_pip_close Tastenzuordnung für Stop PiP oder Start mit aktuellem Kanal
 menu.hint_key_pip_setup Tastenzuordnung für PiP Konfiguration
 menu.hint_key_poweroff Wählen Sie eine Taste für den Standby und für das Verhalten für Standby und Deep-Standby
@@ -1244,7 +1230,6 @@ menu.hint_key_right Wählen Sie die Funktion für die Tasten 'links' und 'rechts
 menu.hint_key_save Speichern Sie Ihre Tastenbelegungen in einer Datei namens keys.conf ab
 menu.hint_key_screenshot Weisen Sie eine Taste zu, um Menü- und/oder TV-Screenshots zu speichern
 menu.hint_key_sort Weisen Sie eine Taste für das Sortieren in der Kanalliste zu
-menu.hint_key_special_active Deaktivieren oder aktivieren einiger Sondertasten
 menu.hint_key_subchanneldown Weisen Sie eine Taste für das Zurückschalten in den Unterkanälen zu
 menu.hint_key_subchannelup Weisen Sie eine Taste für das Weiterschalten in den Unterkanälen zu
 menu.hint_key_timeshift Weisen Sie eine Taste für das Starten von Timeshift zu
@@ -1363,7 +1348,6 @@ menu.hint_plugin_type_lua Legt fest, ob Plugins im Benutzermenü unter der Rubri
 menu.hint_plugin_type_scripts Legt fest, ob Skripte im Benutzermenü unter der Rubrik 'Plugin-Typen' gezeigt werden sollen
 menu.hint_plugin_type_tools Legt fest, ob Werkzeuge im Benutzermenü unter der Rubrik 'Plugin-Typen' gezeigt werden sollen
 menu.hint_plugins_hdd_dir Auswahl des Verzeichnisses zum Laden der Plugins von einem externen Datenträger
-menu.hint_power_leds Konfiguriert das Verhalten der LEDs an der Power-Taste
 menu.hint_pref_lang Wählen Sie ihre bevorzugte Tonspur und EPG-Sprache,\ndie Einstellung 'none' deaktiviert diese Option
 menu.hint_pref_subs Wählen Sie ihre bevorzugte Untertitel-Sprache,\ndie Einstellung 'none' deaktiviert diese Option
 menu.hint_progressbar Wählen Sie die Optionen für die Fortschrittsbalken-Anzeige
@@ -1877,7 +1861,6 @@ moviebrowser.option_browser Anzeigeoptionen
 moviebrowser.reload_at_start Filminfos neu laden bei Start
 moviebrowser.remount_at_start Filmdepot verbinden bei Start
 moviebrowser.scan_for_movies Suche Aufnahmen ...
-moviebrowser.scan_for_videos Suche YT-Videos ...
 moviebrowser.serie_auto_create Serien automatisch zuordnen
 moviebrowser.serie_head Serie
 moviebrowser.serie_name Name ändern
@@ -2624,6 +2607,7 @@ videomenu.hdmi_colorimetry_auto auto
 videomenu.hdmi_colorimetry_bt2020ncl BT 2020 ncl
 videomenu.hdmi_colorimetry_bt2020cl BT 2020 cl
 videomenu.hdmi_colorimetry_bt709 BT 709
+videomenu.hdmi_colorimetry_bt470 BT 470
 videomenu.letterbox Letterbox
 videomenu.masksetup Bildmaske
 videomenu.mixer_color Hintergrund-Farbe
@@ -2640,7 +2624,6 @@ videomenu.psi.tint Farbton
 videomenu.scart Scart
 videomenu.screensetup Bildbereich
 videomenu.tv-scart TV Scart
-videomenu.vcrsignal VCR-Ausgang Signalart
 videomenu.videoformat Bildschirmformat
 videomenu.videoformat_169 16:9
 videomenu.videoformat_43 4:3

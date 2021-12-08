@@ -89,7 +89,6 @@ CVideoSettings::CVideoSettings(int wizard_mode)
 	is_wizard = wizard_mode;
 
 	SyncControlerForwarder = NULL;
-	VcrVideoOutSignalOptionChooser = NULL;
 
 	width = 35;
 	selected = -1;
@@ -234,6 +233,15 @@ CMenuOptionChooser::keyval VIDEOMENU_ZAPPINGMODE_OPTIONS[VIDEOMENU_ZAPPINGMODE_O
 	{ 3, LOCALE_VIDEOMENU_ZAPPINGMODE_HOLDTILLLOCK }
 };
 
+#if BOXMODEL_VUPLUS_ARM
+#define VIDEOMENU_HDMI_COLORIMETRY_OPTION_COUNT 3
+const CMenuOptionChooser::keyval VIDEOMENU_HDMI_COLORIMETRY_OPTIONS[VIDEOMENU_HDMI_COLORIMETRY_OPTION_COUNT] =
+{
+	{ HDMI_COLORIMETRY_AUTO,	LOCALE_VIDEOMENU_HDMI_COLORIMETRY_AUTO },
+	{ HDMI_COLORIMETRY_BT709,	LOCALE_VIDEOMENU_HDMI_COLORIMETRY_BT709 },
+	{ HDMI_COLORIMETRY_BT470,	LOCALE_VIDEOMENU_HDMI_COLORIMETRY_BT470 }
+};
+#else
 #define VIDEOMENU_HDMI_COLORIMETRY_OPTION_COUNT 4
 const CMenuOptionChooser::keyval VIDEOMENU_HDMI_COLORIMETRY_OPTIONS[VIDEOMENU_HDMI_COLORIMETRY_OPTION_COUNT] =
 {
@@ -242,6 +250,7 @@ const CMenuOptionChooser::keyval VIDEOMENU_HDMI_COLORIMETRY_OPTIONS[VIDEOMENU_HD
 	{ HDMI_COLORIMETRY_BT2020CL,	LOCALE_VIDEOMENU_HDMI_COLORIMETRY_BT2020CL },
 	{ HDMI_COLORIMETRY_BT709,	LOCALE_VIDEOMENU_HDMI_COLORIMETRY_BT709 }
 };
+#endif
 #endif
 
 int CVideoSettings::showVideoSetup()
@@ -407,7 +416,11 @@ int CVideoSettings::showVideoSetup()
 		videosetup->addItem(zm);
 	}
 
+#if BOXMODEL_VUPLUS_ARM
+	if (file_exists("/proc/stb/video/hdmi_colorspace"))
+#else
 	if (file_exists("/proc/stb/video/hdmi_colorimetry_choices"))
+#endif
 	{
 		CMenuOptionChooser *hm = new CMenuOptionChooser(LOCALE_VIDEOMENU_HDMI_COLORIMETRY, &g_settings.hdmi_colorimetry, VIDEOMENU_HDMI_COLORIMETRY_OPTIONS, VIDEOMENU_HDMI_COLORIMETRY_OPTION_COUNT, true, this, CRCInput::convertDigitToKey(shortcut++));
 		hm->setHint("", LOCALE_MENU_HINT_VIDEO_HDMI_COLORIMETRY);
@@ -435,23 +448,16 @@ int CVideoSettings::showVideoSetup()
 void CVideoSettings::setVideoSettings()
 {
 	printf("[neutrino VideoSettings] %s init video settings...\n", __FUNCTION__);
-#if 0
-	//FIXME focus: ?? this is different for different boxes
-	videoDecoder->SetVideoMode((analog_mode_t) g_settings.analog_mode1);
-#endif
+
 #if HAVE_SH4_HARDWARE
 	changeNotify(LOCALE_VIDEOMENU_COLORFORMAT_ANALOG, NULL);
 	changeNotify(LOCALE_VIDEOMENU_COLORFORMAT_HDMI, NULL);
 #else
 	changeNotify(LOCALE_VIDEOMENU_SCART, NULL);
 #endif
-	//setupVideoSystem(false/*don't ask*/);// focus: CVideoSettings constructor do this already ?
 
-#if 0
-	videoDecoder->setAspectRatio(-1, g_settings.video_43mode);
-	videoDecoder->setAspectRatio(g_settings.video_Format, -1);
-#endif
 	videoDecoder->setAspectRatio(g_settings.video_Format, g_settings.video_43mode);
+
 #ifdef ENABLE_PIP
 	if (pipVideoDecoder[0] != NULL)
 		pipVideoDecoder[0]->setAspectRatio(g_settings.video_Format, g_settings.video_43mode);
@@ -501,9 +507,6 @@ bool CVideoSettings::changeNotify(const neutrino_locale_t OptionName, void *)
 	{
 		videoDecoder->SetVideoMode((analog_mode_t) g_settings.analog_mode1);
 	}
-	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_VIDEOMENU_VCRSIGNAL))
-	{
-	}
 	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_VIDEOMENU_VIDEOFORMAT) ||
 		ARE_LOCALES_EQUAL(OptionName, LOCALE_VIDEOMENU_43MODE))
 	{
@@ -549,7 +552,6 @@ bool CVideoSettings::changeNotify(const neutrino_locale_t OptionName, void *)
 void CVideoSettings::next43Mode(void)
 {
 	printf("[neutrino VideoSettings] %s setting 43Mode...\n", __FUNCTION__);
-	neutrino_locale_t text;
 	unsigned int curmode = 0;
 
 	for (unsigned int i = 0; i < videomenu_43mode_options.size(); i++)
@@ -564,20 +566,17 @@ void CVideoSettings::next43Mode(void)
 	if (curmode >= videomenu_43mode_options.size())
 		curmode = 0;
 
-	text = videomenu_43mode_options[curmode].value;
 	g_settings.video_43mode = videomenu_43mode_options[curmode].key;
 	g_Zapit->setMode43(g_settings.video_43mode);
 #ifdef ENABLE_PIP
 	if (pipVideoDecoder[0] != NULL)
 		pipVideoDecoder[0]->setAspectRatio(-1, g_settings.video_43mode);
 #endif
-	ShowHint(LOCALE_VIDEOMENU_43MODE, g_Locale->getText(text), 450, 2);
 }
 
 void CVideoSettings::SwitchFormat()
 {
 	printf("[neutrino VideoSettings] %s setting videoformat...\n", __FUNCTION__);
-	neutrino_locale_t text;
 	int curmode = 0;
 
 	for (int i = 0; i < VIDEOMENU_VIDEOFORMAT_OPTION_COUNT; i++)
@@ -591,7 +590,6 @@ void CVideoSettings::SwitchFormat()
 	curmode++;
 	if (curmode >= VIDEOMENU_VIDEOFORMAT_OPTION_COUNT)
 		curmode = 0;
-	text =  VIDEOMENU_VIDEOFORMAT_OPTIONS[curmode].value;
 	g_settings.video_Format = VIDEOMENU_VIDEOFORMAT_OPTIONS[curmode].key;
 
 	videoDecoder->setAspectRatio(g_settings.video_Format, -1);
@@ -599,7 +597,6 @@ void CVideoSettings::SwitchFormat()
 	if (pipVideoDecoder[0] != NULL)
 		pipVideoDecoder[0]->setAspectRatio(g_settings.video_Format, -1);
 #endif
-	ShowHint(LOCALE_VIDEOMENU_VIDEOFORMAT, g_Locale->getText(text), 450, 2);
 }
 
 void CVideoSettings::nextMode(void)
@@ -625,9 +622,6 @@ void CVideoSettings::nextMode(void)
 	{
 		CVFD::getInstance()->ShowText(text);
 
-		if (res != messages_return::cancel_info) // avoid unnecessary display of messageboxes, when user is trying to press repeated format button
-			res = ShowHint(LOCALE_VIDEOMENU_VIDEOMODE, text, 450, 2);
-
 		if (disp_cur && res != messages_return::handled)
 			break;
 
@@ -650,8 +644,6 @@ void CVideoSettings::nextMode(void)
 					return;
 				}
 			}
-
-			text =  VIDEOMENU_VIDEOMODE_OPTIONS[curmode].valname;
 		}
 		else if (res == messages_return::cancel_info)
 		{
@@ -672,7 +664,6 @@ void CVideoSettings::nextMode(void)
 	frameBuffer->resChange();
 #endif
 	CVFD::getInstance()->showServicename(g_RemoteControl->getCurrentChannelName(), g_RemoteControl->getCurrentChannelNumber());
-	//ShowHint(LOCALE_VIDEOMENU_VIDEOMODE, text, 450, 2);
 }
 
 void CVideoSettings::Init43ModeOptions()

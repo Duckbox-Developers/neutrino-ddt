@@ -470,20 +470,15 @@ extra.fec_2_3_L 2/3L
 extra.fec_5_9_L 5/9L
 extra.fec_26_45_L 26/45L
 extra.key_current_transponder Current Transponder Key
-extra.key_format_mode Video format
 extra.key_help Help key
 extra.key_list_end end
 extra.key_list_start home
-extra.key_next43mode Next aspect ratio
-extra.key_pic_mode Screen format
-extra.key_pic_size 4:3 Display behavior
 extra.key_pip_close Stop/Start PiP
 extra.key_pip_close_avinput Stop/Start PiP (HDMI)
 extra.key_pip_setup Configure PiP
 extra.key_pip_swap Swap PiP/live
 extra.key_record Record key
 extra.key_screenshot Screenshot key
-extra.key_switchformat Next resolution
 extra.key_timeshift Timeshift
 extra.key_unlock Unlock key
 extra.ladirection LaDirection
@@ -893,14 +888,11 @@ kerneloptions.hint.enabled_loaded The kernel module is loaded and may be used.
 kerneloptions.hint.enabled_not_loaded Apply the settings to load the module.
 kerneloptions.modules Kernel modules
 kerneloptions.reset Reset settings
-keybindingmenu.RC Tune Remote-Control
 keybindingmenu.accept_other_remotes Accept other remote controls
 keybindingmenu.addrecord add record timer
 keybindingmenu.addremind add zapto timer
 keybindingmenu.bouquetdown bouquet back
-keybindingmenu.bouquethandling Bouquet-control
 keybindingmenu.bouquetup next bouquet
-keybindingmenu.cancel close channellist
 keybindingmenu.channeldown channel down
 keybindingmenu.channellist Channellist
 keybindingmenu.channelup channel up
@@ -929,11 +921,9 @@ keybindingmenu.remotecontrol_code_save Save new code
 keybindingmenu.repeatblock generic delay
 keybindingmenu.repeatblockgeneric repeat delay
 keybindingmenu.sort change sort order
-keybindingmenu.special_active Special Keys
 keybindingmenu.subchanneldown subchannel down
 keybindingmenu.subchannelup subchannel up
 keybindingmenu.tvradiomode TV/Radio-mode
-keybindingmenu.video Video
 keybindingmenu.volume Volume
 keybindingmenu.volumedown Decrease
 keybindingmenu.volumeup Increase
@@ -1205,11 +1195,9 @@ menu.hint_key_addremind Assign button to add zap timer\nfrom event list
 menu.hint_key_binding Re-define keys used for common operations
 menu.hint_key_bouquetdown Assign button to switch channel list\nto previous bouquet
 menu.hint_key_bouquetup Assign button to switch channel list\nto next bouquet
-menu.hint_key_cancel Assign button to close GUI window
 menu.hint_key_channeldown Assign button for fast switch to previous\nchannel in channel list
 menu.hint_key_channellist Configure keybingdings for channel list
 menu.hint_key_channelup Assign button for fast switch to next\nchannel in channel list
-menu.hint_key_format_mode_active Disable/enable key for the video format conversion
 menu.hint_key_history Assign button to show channel\nchannel switch history
 menu.hint_key_lastchannel Assign button for fast zap to\nprevious channel in history
 menu.hint_key_left_exit Allow return to previous menu with 'left' key
@@ -1231,8 +1219,6 @@ menu.hint_key_mpsubtitle Assign button to show subtitle selection
 menu.hint_key_mptime Assign button to show play time\nleft time
 menu.hint_key_pagedown Assign button to show next items page
 menu.hint_key_pageup Assign button to show previous items page
-menu.hint_key_pic_mode_active Disable/enable key for the screen format
-menu.hint_key_pic_size_active Disable/enable key for the 4:3 display behavior
 menu.hint_key_pip_close Assign button to stop PiP\nor start it for current channel
 menu.hint_key_pip_setup Assign button to configure PiP
 menu.hint_key_poweroff Assign button to switch power state\n (standby/deepstandby <-> running)
@@ -1244,7 +1230,6 @@ menu.hint_key_right Select function for 'left' and 'right' keys in live TV/Radio
 menu.hint_key_save Save keybindings to a file named keys.conf
 menu.hint_key_screenshot Assign button to save GUI and/or TV screenshot
 menu.hint_key_sort Assign button to change channel list sort order
-menu.hint_key_special_active Disable or enable some special keys
 menu.hint_key_subchanneldown Assign button for fast switch\n to previous subchannel
 menu.hint_key_subchannelup Assign button for fast switch\n to next subchannel
 menu.hint_key_timeshift Assign button to start timeshift
@@ -1363,7 +1348,6 @@ menu.hint_plugin_type_lua Show plugins in usermenu at selection 'Plugin types'
 menu.hint_plugin_type_scripts Show scripts in usermenu at selection 'Plugin types'
 menu.hint_plugin_type_tools Show tools in usermenu at selection 'Plugin types'
 menu.hint_plugins_hdd_dir Select directory to load\nplugins from
-menu.hint_power_leds Configure power-button LEDs behavior
 menu.hint_pref_lang Select preferred audio and EPG language\nselect 'none' to disable
 menu.hint_pref_subs Select preferred subtitle language\nselect 'none' to disable
 menu.hint_progressbar Select the options for the progressbar
@@ -1877,7 +1861,6 @@ moviebrowser.option_browser Browser Options
 moviebrowser.reload_at_start Reload movie info at start
 moviebrowser.remount_at_start Remount at start
 moviebrowser.scan_for_movies Scan for recordings...
-moviebrowser.scan_for_videos Scan for YT-Videos ...
 moviebrowser.serie_auto_create Serie auto create
 moviebrowser.serie_head Serie
 moviebrowser.serie_name Change name
@@ -2624,6 +2607,7 @@ videomenu.hdmi_colorimetry_auto auto
 videomenu.hdmi_colorimetry_bt2020ncl BT 2020 ncl
 videomenu.hdmi_colorimetry_bt2020cl BT 2020 cl
 videomenu.hdmi_colorimetry_bt709 BT 709
+videomenu.hdmi_colorimetry_bt470 BT 470
 videomenu.letterbox Letterbox
 videomenu.masksetup Mask Setup
 videomenu.mixer_color Background color
@@ -2640,7 +2624,6 @@ videomenu.psi.tint Tint
 videomenu.scart Scart
 videomenu.screensetup Screen Setup
 videomenu.tv-scart Video
-videomenu.vcrsignal VCR Output Signal Type
 videomenu.videoformat Format
 videomenu.videoformat_169 16:9
 videomenu.videoformat_43 4:3

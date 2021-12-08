@@ -455,7 +455,7 @@ int CBouquetList::show(bool bShowChannelList)
 				loop = false;
 		}
 		else if ((msg == CRCInput::RC_timeout                             ) ||
-				(msg == (neutrino_msg_t)g_settings.key_channelList_cancel) ||
+				(msg == CRCInput::RC_home) ||
 				((msg == CRCInput::RC_favorites) && (CNeutrinoApp::getInstance()->GetChannelMode() == LIST_MODE_FAV)))
 		{
 			selected = oldselected;

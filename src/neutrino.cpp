@@ -3703,18 +3703,6 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 		audioDecoder->EnableAnalogOut(false);
 		return messages_return::handled;
 	}
-	else if(( msg == CRCInput::RC_mode ) && g_settings.key_format_mode_active ) {
-		g_videoSettings->nextMode();
-		return messages_return::handled;
-	}
-	else if(( msg == (neutrino_msg_t) g_settings.key_next43mode ) && g_settings.key_pic_size_active ) {
-		g_videoSettings->next43Mode();
-		return messages_return::handled;
-	}
-	else if(( msg == (neutrino_msg_t) g_settings.key_switchformat) && g_settings.key_pic_mode_active ) {
-		g_videoSettings->SwitchFormat();
-		return messages_return::handled;
-	}
 	else if( msg == CRCInput::RC_sleep ) {
 		CSleepTimerWidget *sleepTimer = new CSleepTimerWidget;
 		sleepTimer->exec(NULL, "");
@@ -5161,7 +5149,6 @@ void CNeutrinoApp::loadKeys(const char * fname)
 
 	g_settings.key_pageup = tconfig->getInt32( "key_channelList_pageup",  CRCInput::RC_page_up );
 	g_settings.key_pagedown = tconfig->getInt32( "key_channelList_pagedown", CRCInput::RC_page_down );
-	g_settings.key_channelList_cancel = tconfig->getInt32( "key_channelList_cancel",  CRCInput::RC_home );
 	g_settings.key_channelList_sort = tconfig->getInt32( "key_channelList_sort",  CRCInput::RC_blue );
 	g_settings.key_channelList_addrecord = tconfig->getInt32( "key_channelList_addrecord",  CRCInput::RC_red );
 	g_settings.key_channelList_addremind = tconfig->getInt32( "key_channelList_addremind",  CRCInput::RC_yellow );
@@ -5228,10 +5215,6 @@ void CNeutrinoApp::loadKeys(const char * fname)
 	g_settings.mpkey_goto = tconfig->getInt32( "mpkey.goto", CRCInput::RC_nokey );
 	g_settings.mpkey_next_repeat_mode = tconfig->getInt32( "mpkey.next_repeat_mode", CRCInput::RC_nokey);
 
-	g_settings.key_format_mode_active = tconfig->getInt32( "key_format_mode_active", 1 );
-	g_settings.key_pic_mode_active = tconfig->getInt32( "key_pic_mode_active", 1 );
-	g_settings.key_pic_size_active = tconfig->getInt32( "key_pic_size_active", 1 );
-
 	/* options */
 	g_settings.menu_left_exit = tconfig->getInt32( "menu_left_exit", 0 );
 	g_settings.repeat_blocker = tconfig->getInt32("repeat_blocker", 450);
@@ -5241,15 +5224,12 @@ void CNeutrinoApp::loadKeys(const char * fname)
 	g_settings.accept_other_remotes = tconfig->getInt32( "accept_other_remotes", 1);
 #endif
 
-	g_settings.bouquetlist_mode = tconfig->getInt32( "bouquetlist_mode", 0 );
 	g_settings.sms_channel = tconfig->getInt32( "sms_channel", 0 );
 	g_settings.sms_movie = tconfig->getInt32( "sms_movie", 0 );
 	g_settings.mode_left_right_key_tv = tconfig->getInt32( "mode_left_right_key_tv",  SNeutrinoSettings::ZAP);
 
 	g_settings.key_help = tconfig->getInt32( "key_help", CRCInput::RC_help );
 	g_settings.key_record = tconfig->getInt32( "key_record", CRCInput::RC_record );
-	g_settings.key_switchformat = tconfig->getInt32("key_switchformat", CRCInput::RC_nokey);
-	g_settings.key_next43mode = tconfig->getInt32("key_next43mode", CRCInput::RC_nokey);
 	g_settings.key_volumeup = tconfig->getInt32( "key_volumeup",  CRCInput::RC_plus );
 	g_settings.key_volumedown = tconfig->getInt32( "key_volumedown", CRCInput::RC_minus );
 
@@ -5272,7 +5252,6 @@ void CNeutrinoApp::saveKeys(const char * fname)
 
 	tconfig->setInt32( "key_channelList_pageup", g_settings.key_pageup );
 	tconfig->setInt32( "key_channelList_pagedown", g_settings.key_pagedown );
-	tconfig->setInt32( "key_channelList_cancel", g_settings.key_channelList_cancel );
 	tconfig->setInt32( "key_channelList_sort", g_settings.key_channelList_sort );
 	tconfig->setInt32( "key_channelList_addrecord", g_settings.key_channelList_addrecord );
 	tconfig->setInt32( "key_channelList_addremind", g_settings.key_channelList_addremind );
@@ -5321,10 +5300,6 @@ void CNeutrinoApp::saveKeys(const char * fname)
 	tconfig->setInt32( "mpkey.goto", g_settings.mpkey_goto );
 	tconfig->setInt32( "mpkey.next_repeat_mode", g_settings.mpkey_next_repeat_mode );
 
-	tconfig->setInt32( "key_format_mode_active", g_settings.key_format_mode_active );
-	tconfig->setInt32( "key_pic_mode_active", g_settings.key_pic_mode_active );
-	tconfig->setInt32( "key_pic_size_active", g_settings.key_pic_size_active );
-
 	tconfig->setInt32( "menu_left_exit", g_settings.menu_left_exit );
 	tconfig->setInt32( "repeat_blocker", g_settings.repeat_blocker );
 	tconfig->setInt32( "repeat_genericblocker", g_settings.repeat_genericblocker );
@@ -5333,15 +5308,12 @@ void CNeutrinoApp::saveKeys(const char * fname)
 	tconfig->setInt32("accept_other_remotes", g_settings.accept_other_remotes);
 #endif
 
-	tconfig->setInt32( "bouquetlist_mode", g_settings.bouquetlist_mode );
 	tconfig->setInt32( "sms_channel", g_settings.sms_channel );
 	tconfig->setInt32( "sms_movie", g_settings.sms_movie );
 	tconfig->setInt32( "mode_left_right_key_tv", g_settings.mode_left_right_key_tv );
 
 	tconfig->setInt32( "key_help", g_settings.key_help );
 	tconfig->setInt32( "key_record", g_settings.key_record );
-	tconfig->setInt32( "key_switchformat", g_settings.key_switchformat );
-	tconfig->setInt32( "key_next43mode", g_settings.key_next43mode );
 	tconfig->setInt32( "key_volumeup", g_settings.key_volumeup );
 	tconfig->setInt32( "key_volumedown", g_settings.key_volumedown );
 

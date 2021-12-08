@@ -556,7 +556,6 @@ struct SNeutrinoSettings
 	int key_pageup;
 	int key_pagedown;
 
-	int key_channelList_cancel;
 	int key_channelList_sort;
 	int key_channelList_addrecord;
 	int key_channelList_addremind;
@@ -578,8 +577,6 @@ struct SNeutrinoSettings
 	int record_hours;
 	int key_record;
 	int key_help;
-	int key_next43mode;
-	int key_switchformat;
 	int key_volumeup;
 	int key_volumedown;
 
@@ -631,10 +628,6 @@ struct SNeutrinoSettings
 	int key_pip_setup;
 	int key_pip_swap;
 #endif
-
-	int key_format_mode_active;
-	int key_pic_mode_active;
-	int key_pic_size_active;
 
 	int cacheTXT;
 	int minimode;
@@ -748,9 +741,6 @@ struct SNeutrinoSettings
 	std::string	backup_dir;
 	std::string	update_dir;
 	std::string	update_dir_opkg;
-
-	//BouquetHandling
-	int bouquetlist_mode;
 
 	// parentallock
 	int parentallock_prompt;
