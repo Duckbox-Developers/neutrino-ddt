@@ -1375,7 +1375,6 @@ const char * locale_real_names[] =
 	"menu.hint_plugin_type_scripts",
 	"menu.hint_plugin_type_tools",
 	"menu.hint_plugins_hdd_dir",
-	"menu.hint_power_leds",
 	"menu.hint_pref_lang",
 	"menu.hint_pref_subs",
 	"menu.hint_progressbar",
