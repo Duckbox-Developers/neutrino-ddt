@@ -52,7 +52,6 @@ class CKeybindSetup : public CMenuTarget, public CChangeObserver
 			NKEY_VOLUME_DOWN,
 			NKEY_LIST_START,
 			NKEY_LIST_END,
-			NKEY_CANCEL_ACTION,
 			NKEY_SORT,
 			NKEY_ADD_RECORD,
 			NKEY_ADD_REMIND,
