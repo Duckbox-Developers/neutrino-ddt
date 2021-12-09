@@ -327,9 +327,6 @@ bool CAudioSetupNotifier::changeNotify(const neutrino_locale_t OptionName, void 
 		videoDemux->SetSyncMode((AVSYNC_TYPE)g_settings.avsync);
 		audioDemux->SetSyncMode((AVSYNC_TYPE)g_settings.avsync);
 		pcrDemux->SetSyncMode((AVSYNC_TYPE)g_settings.avsync);
-	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_CLOCKREC)) {
-		//.Clock recovery enable/disable
-		// FIXME add code here.
 #if HAVE_SH4_HARDWARE
 	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_MIXER_VOLUME_ANALOG)) {
 			audioDecoder->setMixerVolume("Analog", (long)(*((int *)(data))));

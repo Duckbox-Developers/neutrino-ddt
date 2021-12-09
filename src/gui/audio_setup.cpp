@@ -116,13 +116,6 @@ const CMenuOptionChooser::keyval AUDIOMENU_HDMI_DD_OPTIONS[AUDIOMENU_HDMI_DD_OPT
 	{ HDMI_ENCODED_FORCED,		LOCALE_AUDIOMENU_HDMI_DD_FORCE	}
 };
 
-// #define AUDIOMENU_CLOCKREC_OPTION_COUNT 2
-// const CMenuOptionChooser::keyval AUDIOMENU_CLOCKREC_OPTIONS[AUDIOMENU_CLOCKREC_OPTION_COUNT] =
-// {
-// 	{ 0, LOCALE_OPTIONS_OFF },
-// 	{ 1, LOCALE_OPTIONS_ON  },
-// };
-
 /* audio settings menu */
 int CAudioSetup::showAudioSetup()
 {
@@ -172,8 +165,6 @@ int CAudioSetup::showAudioSetup()
 
 	st = new CMenuOptionNumberChooser(LOCALE_AUDIOMENU_VOLUME_START, &g_settings.start_volume, true, -1, 100, NULL, CRCInput::RC_nokey, NULL, 0, -1, LOCALE_OPTIONS_OFF);
 	st->setHint("", LOCALE_MENU_HINT_AUDIO_VOLSTART);
-	//clock rec
-	//CMenuOptionChooser * as_oj_clockrec new CMenuOptionChooser(LOCALE_AUDIOMENU_CLOCKREC, &g_settings.clockrec, AUDIOMENU_CLOCKREC_OPTIONS, AUDIOMENU_CLOCKREC_OPTION_COUNT, true, audioSetupNotifier);
 
 	// ac3,pcm and clear volume adjustment
 	CMenuOptionNumberChooser *adj_ac3 = NULL, *adj_pcm = NULL;
@@ -212,7 +203,6 @@ int CAudioSetup::showAudioSetup()
 	audioSettings->addItem(as_oj_avsync);
 	audioSettings->addItem(as_oj_vsteps);
 	audioSettings->addItem(st);
-	//audioSettings->addItem(as_clockrec);
 	//---------------------------------------------------------
 
 #if 0
