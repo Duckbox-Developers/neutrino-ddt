@@ -76,17 +76,12 @@ date.sa=Sa
 date.saturday=Saturday
 
 #========= MAIN Menue
-main.live_tv_desc=LiveTV
-main.live_tv_popup_desc=LiveTV popup
 main.remote_full_desc=Remote & OSD full
 main.stream_to_vlc_client_desc=Stream to VLC Client
-main.version=Version
 
 # =========Main Menue
 main.boxcontrol=Boxcontrol
 main.boxcontrol_desc=Boxcontrol & Bouquets
-main.live=Live
-main.live_desc=LiveView, Timer Sync &amp; Settings
 main.tools=Tools
 main.tools_desc=Mounts, WOL, Expert Tools
 main.settings=Settings
@@ -393,54 +388,10 @@ tools.boot_logo=Boot Logo
 tools.filemgr_desc=organize files and directorys
 tools.filemgr=File manager
 
-=========== LIVE Menue
-live.heading=Live/Timer
-live.live=Live
-live.tv_popup_desc=LiveTV (popup)
-live.tv=TV
-live.radio_popup_desc=LiveRadio (popup)
-live.radio=Radio
+=========== LIVE Menue now Main
 live.timer=Timer
-live.epg=EPG
 live.epg_plus_popup_desc=EPG+ (popup)
 live.epg_plus=EPG Plus
-
-=========== LIVE tv/radio
-live.get_stream_info=Getting <br/>Streaming-Informationen.
-live.getting_bouquets=getting bouquets ...
-live.getting_channels=getting channels ...
-live.select_resolution=select resolution
-live.change_channel=change channel
-live.view_epg=view epg for selected channel
-live.reload=reload bouquets and channels
-live.getting_subchannels=getting subchannels ...
-live.mute=mute / unmute volume
-live.stop=stop streaming
-live.play_or_pause=play or pause streaming
-live.lower_volume=lower volume
-live.higher_volume=higher volume
-live.fullscreen=switch to fullscreen-mode - or use double-click
-live.lock_unlock=lock / unlock TV (record mode, rc, lcd)
-live.toggle_udp=UDP Streaming on/off
-live.settings=LiveView settings
-live.snapshot=create snapshot picture
-live.record=record mode
-live.transcode=transcode mode
-live.build_vlc=... build vlc control ...
-live.select_bouquet=select bouquet - channels will be updated
-live.select_channel=select channel - use go to zap
-live.live_popup_msg=Under Live-View do not zap channels direct by the web or by the box' RC.
-live.unlock=unlock RC
-
-=========== LIVE Settings
-live.set.vlc_settings=VLC Settings (IE &amp; Mozilla >= 0.8.6.1)
-live.set.deinterlace=Deinterlace
-live.set.http_caching=http caching
-live.set.udp_defaul=UDP as default
-live.set.slavebox_ip=Slave Box IP (2. dbox)
-live.set.enter_ip=enter IP (xxx.xxx.xxx.xxx) of slave-box
-live.set.vlc_rec_dir=VLC Recording Directory
-live.set.refresh_liveview=Refresh LiveView
 
 =========== LIVE Timer Edit
 live.timer_edit.timer=Timer

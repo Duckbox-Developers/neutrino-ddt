@@ -28,17 +28,11 @@ install_DATA =	channels.js \
 		Y_Info_Menue.yhtm \
 		Y_Live_EPG_Info.yhtm \
 		Y_Live_EPG.yhtm \
-		Y_Live.js \
-		Y_Live_Menue.yhtm \
-		Y_Live_Msg.yhtm \
-		Y_LiveViewFull.yhtm \
-		Y_Live.yhtm \
 		Y_Main.css \
 		Y_Menue.yhtm \
 		Y_neutrino_Blocks.txt \
 		Y_Refresh.yhtm \
 		Y_Settings_buttons.yhtm \
-		Y_Settings_Live.yhtm \
 		Y_Settings_Menue.yhtm \
 		Y_Settings_mount_liste.yhtm \
 		Y_Settings_mount.yhtm \
@@ -64,8 +58,6 @@ install_DATA =	channels.js \
 		Y_Tools_tvshot.yhtm \
 		Y_User.css \
 		Y_Version.txt \
-		Y_VLC.js \
-		Y_Wait.yhtm \
 		ywidget.css \
 		ywidget.js \
 		Y_yweb.js
