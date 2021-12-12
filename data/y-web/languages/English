@@ -433,28 +433,6 @@ live.select_channel=select channel - use go to zap
 live.live_popup_msg=Under Live-View do not zap channels direct by the web or by the box' RC.
 live.unlock=unlock RC
 
-=========== LIVE Record
-live.rec.record_mode=Record Mode
-live.rec.filename=Filename
-live.rec.display_on=Display on
-live.rec.transcoding_on=Transcoding on
-live.rec.record=Record
-live.rec.stop_record=Stop Record
-live.rec.tanscode=Record Transcode
-live.rec.profile=Profile
-live.rec.video=Video
-live.rec.width=Width
-live.rec.height=Height
-live.rec.codec=Codec
-live.rec.bitrate=Bitrate
-live.rec.scale=Scale
-live.rec.audio=Audio
-live.rec.channels=Channels
-live.rec.trans_broadcast=Transcode-Broadcast
-live.rec.access=Access
-live.rec.type=Type
-live.rec.ip_port=IP:Port
-
 =========== LIVE Settings
 live.set.vlc_settings=VLC Settings (IE &amp; Mozilla >= 0.8.6.1)
 live.set.deinterlace=Deinterlace

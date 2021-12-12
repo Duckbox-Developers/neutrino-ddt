@@ -31,8 +31,6 @@ install_DATA =	channels.js \
 		Y_Live.js \
 		Y_Live_Menue.yhtm \
 		Y_Live_Msg.yhtm \
-		Y_Live_Record.yhtm \
-		Y_Live_Transcode.yhtm \
 		Y_LiveViewFull.yhtm \
 		Y_Live.yhtm \
 		Y_Main.css \
