@@ -70,4 +70,3 @@ class CVideoSettings : public CMenuWidget, CChangeObserver
 		int exec(CMenuTarget *parent, const std::string &actionKey);
 };
 #endif
-
