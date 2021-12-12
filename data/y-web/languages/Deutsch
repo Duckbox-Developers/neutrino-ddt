@@ -400,7 +400,6 @@ live.tv_popup_desc=LiveTV (popup)
 live.tv=TV
 live.radio_popup_desc=LiveRadio (popup)
 live.radio=Radio
-live.double_view=DoubleView
 live.timer=Timer
 live.epg=EPG
 live.epg_plus_popup_desc=EPG+ (popup)
