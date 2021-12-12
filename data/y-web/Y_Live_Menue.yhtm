@@ -45,7 +45,6 @@ function init(){
 					<a target="work" href="Y_LiveViewFull.yhtm?mode=radio&amp;typ=live">{=L:live.radio=}</a>
 					<a class="y_menu_popup_link" title="{=L:live.radio_popup_desc=}" href="javascript:go_live_popup_radio()"><img src="/images/popup.png"/></a>
 				</li>
-				<!-- <li><a target="work" title="use LiveView with 2 boxes" href="Y_Live_DoubleView.yhtm">{=L:live.double_view=}</a></li> -->
 			</ul>
 		</div>
 		<div class="y_menu_sec_section">{=L:live.epg=}</div>

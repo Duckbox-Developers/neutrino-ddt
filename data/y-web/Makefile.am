@@ -26,7 +26,6 @@ install_DATA =	channels.js \
 		Y_EPG_Plus.yhtm \
 		Y_Info_Help.yhtm \
 		Y_Info_Menue.yhtm \
-		Y_Live_DoubleView.yhtm \
 		Y_Live_EPG_Info.yhtm \
 		Y_Live_EPG.yhtm \
 		Y_Live.js \
