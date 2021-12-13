@@ -111,6 +111,8 @@ bc.menue.switch_to_radio=Zum Radio umschalten
 bc.menue.volumen_display=Lautst&auml;rke Anzeige
 
 bc.menue.signal=Signalst&auml;rke
+bc.menue.sig_display=Signal
+bc.menue.snr_display=Signal Rauschabstand
 
 ========= Boxcontrol
 bc.control.freemem=FreeMem

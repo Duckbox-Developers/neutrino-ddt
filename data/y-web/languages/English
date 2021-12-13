@@ -111,6 +111,8 @@ bc.menue.switch_to_radio=switch to Radio
 bc.menue.volumen_display=volumen display
 
 bc.menue.signal=Signal strength
+bc.menue.sig_display=Signal
+bc.menue.snr_display=Signal to noise ratio
 
 ========= Boxcontrol
 bc.control.freemem=FreeMem
