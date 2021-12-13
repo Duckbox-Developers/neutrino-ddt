@@ -114,17 +114,17 @@ function set_mode(_mode){
 function init(){
 	volumen_set_audiobar(volumen_get());
 	set_mute_button();
-	add_yExtensions('boxcontrol', 'secmenu_boxcontrol');
-
 	set_sigbar(sig_get());
 	set_snrbar(snr_get());
 	ber_get();
+//	add_yExtensions('boxcontrol', 'secmenu_boxcontrol');
 }
 function get_data(){
 	volumen_set_audiobar(volumen_get());
 	set_sigbar(sig_get());
 	set_snrbar(snr_get());
 	ber_get();
+	add_yExtensions('boxcontrol', 'secmenu_boxcontrol');
 }
 function epg_plus_popup() {
 	window.open("Y_EPG_Plus.yhtm","_blank","resizable=yes,scrollbars=yes");
