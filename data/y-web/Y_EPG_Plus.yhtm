@@ -4,9 +4,6 @@
 <script type="text/javascript" src="/prototype.js"></script>
 <script type="text/javascript" src="/Y_EPG.js"></script>
 <script type="text/javascript">
-function epg_imdb(){
-	
-}
 </script>
 
 </head>
@@ -50,13 +47,13 @@ function epg_imdb(){
 				<br/>
 			</td>
 		</tr>
-		<tr>
+<!---		<tr>
 			<td colspan="3">
 				{=L:lookup=}:
 				<span id="d_lookup"></span>
 			</td>
 		</tr>
-		<tr>
+--->		<tr>
 			<td colspan="3">
 				<br/>
 				<button ytype="record" title="{=L:epg.set_timer_rec=}" onclick="epg_set_timer_rec();show_obj('epg_info',false);">{=L:record=}</button>
