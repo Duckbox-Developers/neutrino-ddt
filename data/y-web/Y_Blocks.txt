@@ -35,16 +35,6 @@ start-block~yWeb_save_settings
 {=ini-set:%(CONFIGDIR)/Y-Web.conf;yweb_box_color;{=yweb_box_color=}~save=}
 end-block~yWeb_save_settings
 
-# ------- Live save Settings
-start-block~Live_save_settings
-{=ini-set:%(CONFIGDIR)/Y-Web.conf;slavebox;{=slavebox=}~open=}
-{=ini-set:%(CONFIGDIR)/Y-Web.conf;vlc_record_path;{=vlc_record_path=}~cache=}
-{=ini-set:%(CONFIGDIR)/Y-Web.conf;deinterlace;{=deinterlace=}~cache=}
-{=ini-set:%(CONFIGDIR)/Y-Web.conf;deinterlace_filter;{=v=}~cache=}
-{=ini-set:%(CONFIGDIR)/Y-Web.conf;udp;{=udp=}~cache=}
-{=ini-set:%(CONFIGDIR)/Y-Web.conf;http_caching;{=http_caching=}~save=}
-end-block~Live_save_settings
-
 # ------- nhttpd save Settings
 start-block~nhttpd_save_settings
 {=ini-set:%(CONFIGDIR)/nhttpd.conf;mod_auth.username;{=authuser=}~open=}
