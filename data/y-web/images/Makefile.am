@@ -36,9 +36,6 @@ install_DATA =	accept.png \
 		inlink.gif \
 		key.png \
 		live.png \
-		live_popup.png \
-		livelock.png \
-		liveunlock.png \
 		lock.png \
 		modify.png \
 		new.png \
