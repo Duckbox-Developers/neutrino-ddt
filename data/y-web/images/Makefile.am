@@ -14,18 +14,7 @@ install_DATA =	accept.png \
 		elist.png \
 		epg.png \
 		exlink.gif \
-		ext_add.png \
-		ext_delete.png \
-		ext_edit.png \
-		ext_error.png \
-		ext_ex.png \
-		ext_menu.png \
-		ext_mgr.png \
-		ext_normal.png \
-		ext_plugin.png \
-		ext_script.png \
 		fb.png \
-		flash.png \
 		ftype_file.gif \
 		ftype_folder.gif \
 		ftype_link.gif \
@@ -40,8 +29,6 @@ install_DATA =	accept.png \
 		modify.png \
 		new.png \
 		ok.gif \
-		pause.png \
-		play.png \
 		popup.png \
 		properties.png \
 		radio.png \
@@ -60,10 +47,7 @@ install_DATA =	accept.png \
 		time_down.png \
 		timer.gif \
 		time_up.png \
-		transcode.png \
 		tux-yweb.png \
-		udp_switch_off.png \
-		udp_switch_on.png \
 		unlock.png \
 		visible.png \
 		vlc.png \
