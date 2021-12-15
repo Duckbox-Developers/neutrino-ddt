@@ -501,7 +501,7 @@ static std::string ass_subtitle_header(const char *font, int font_size,
 		"\r\n"
 		"[Events]\r\n"
 		"Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\r\n",
-		(AV_CODEC_FLAG_BITEXACT) ? AV_STRINGIFY(LIBAVCODEC_VERSION) : "",
+		AV_STRINGIFY(LIBAVCODEC_VERSION),
 		ASS_DEFAULT_PLAYRESX, ASS_DEFAULT_PLAYRESY,
 		font, font_size, color, color, back_color, back_color, -bold, -italic, -underline, border_style, alignment);
 	return std::string(buf);
