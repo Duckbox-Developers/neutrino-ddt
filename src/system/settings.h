@@ -288,7 +288,6 @@ struct SNeutrinoSettings
 	int keep_channel_numbers;
 	int show_empty_favorites;
 	int avsync;
-	int clockrec;
 	int ci_standby_reset;
 	int ci_clock[4];
 #if BOXMODEL_VUPLUS_ALL

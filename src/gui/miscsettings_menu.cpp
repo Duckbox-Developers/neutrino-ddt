@@ -158,6 +158,11 @@ int CMiscMenue::exec(CMenuTarget* parent, const std::string &actionKey)
 	}
 	else if(actionKey == "epg_read_now" || actionKey == "epg_read_now_usermenu")
 	{
+
+		CHintBox * hintBox = new CHintBox(LOCALE_MESSAGEBOX_INFO,
+			g_Locale->getText(LOCALE_MISCSETTINGS_EPG_READ));
+		hintBox->paint();
+
 		struct stat my_stat;
 		if (stat(g_settings.epg_dir.c_str(), &my_stat) == 0)
 		{
@@ -171,7 +176,9 @@ int CMiscMenue::exec(CMenuTarget* parent, const std::string &actionKey)
 			g_Sectionsd->readSIfromXMLTV((*it).c_str());
 		}
 
-		//ShowHint(LOCALE_MISCSETTINGS_EPG_HEAD, g_Locale->getText(LOCALE_MISCSETTINGS_EPG_READ), 300, 5, NEUTRINO_ICON_SETTINGS);
+		sleep(2);
+		hintBox->hide();
+		delete hintBox;
 
 		if (actionKey == "epg_read_now_usermenu")
 			return menu_return::RETURN_EXIT_ALL;

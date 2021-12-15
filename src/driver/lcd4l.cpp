@@ -826,7 +826,7 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 	std::string Info1 = "";
 	std::string Info2 = "";
 	int Progress = 0;
-	char Duration[sizeof(m_Duration)] = {0};
+	char Duration[sizeof(m_Duration) + 9] = {0};
 	char Start[6] = {0};
 	char End[6] = {0};
 

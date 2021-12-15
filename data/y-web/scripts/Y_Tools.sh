@@ -287,7 +287,6 @@ case "$1" in
 	screenshot_clear)		do_screenshot_clear ;;
 	exec_cmd)				shift 1; $* ;;
 	restart_neutrino)		restart_neutrino ;;
-	have_plugin_scripts)	 find %(PLUGINDIR) -name '*.sh' ;;
 
 	timer_get_tvinfo)
 		shift 1

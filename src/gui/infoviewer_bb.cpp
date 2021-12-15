@@ -658,7 +658,7 @@ void CInfoViewerBB::showIcon_Tuner()
 		return;
 	}
 
-	char icon_name[12];
+	char icon_name[18];
 	sprintf(icon_name, "tuner_%d", CFEManager::getInstance()->getLiveFE()->getNumber() + 1);
 	showBBIcons(CInfoViewerBB::ICON_TUNER, icon_name);
 }

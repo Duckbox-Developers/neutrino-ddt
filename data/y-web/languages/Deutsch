@@ -76,17 +76,12 @@ date.sa=Sa
 date.saturday=Samstag
 
 #========= MAIN Menue
-main.live_tv_desc=LiveTV
-main.live_tv_popup_desc=LiveTV Popup
 main.remote_full_desc=Fernbedienung & OSD Vollbild
 main.stream_to_vlc_client_desc=Live TV direkt im VLC Client
-main.version=Version
 
 # =========Main Menue
 main.boxcontrol=Boxsteuerung
 main.boxcontrol_desc=Boxcontrol & Bouquets
-main.live=Live
-main.live_desc=LiveView, Aufnahmeliste, EPG
 main.tools=Werkzeuge
 main.tools_desc=Mounts, WOL, Experten Werkzeuge
 main.settings=Einstellungen
@@ -113,10 +108,11 @@ bc.menue.increase_volume=Lautst&auml;rke erh&ouml;hen
 bc.menue.mute_volume=Lautst&auml;rke an / aus
 bc.menue.switch_to_tv=Zum TV umschalten
 bc.menue.switch_to_radio=Zum Radio umschalten
-bc.menue.webinf_slavebox=Webinterface der SlaveBox
 bc.menue.volumen_display=Lautst&auml;rke Anzeige
 
 bc.menue.signal=Signalst&auml;rke
+bc.menue.sig_display=Signal
+bc.menue.snr_display=Signal Rauschabstand
 
 ========= Boxcontrol
 bc.control.freemem=FreeMem
@@ -393,77 +389,10 @@ tools.boot_logo=Boot Logo
 tools.filemgr_desc=Dateien und Verzeichnisse organisieren
 tools.filemgr=Dateimanager
 
-=========== LIVE Menue
-live.heading=Live/Timer
-live.live=Live
-live.tv_popup_desc=LiveTV (popup)
-live.tv=TV
-live.radio_popup_desc=LiveRadio (popup)
-live.radio=Radio
-live.double_view=DoubleView
+=========== LIVE Menue now Main
 live.timer=Timer
-live.epg=EPG
 live.epg_plus_popup_desc=EPG+ (popup)
 live.epg_plus=EPG Plus
-
-=========== LIVE tv/radio
-live.get_stream_info=Streaming-Informationen<br/>werden ermittelt.
-live.getting_bouquets=Hole Bouquets ...
-live.getting_channels=Hole Sender ...
-live.select_resolution=Aufl&ouml;sung ausw&auml;hlen
-live.change_channel=Sender wechseln
-live.view_epg=EPG f&uuml;r aktuellen Sender anzeigen
-live.reload=Bouquets und Sender neu laden
-live.getting_subchannels=Hole Unterkan&auml;le ...
-live.play_or_pause=Abspielen oder Pause
-live.stop=Stoppen
-live.mute=Stummschaltung an / aus
-live.lower_volume=leiser
-live.higher_volume=lauter
-live.fullscreen=Ganzer Bildschirm (auch mit Doppelklick) mit ESC zur&uuml;ck
-live.lock_unlock=Box sperren / entsperren
-live.toggle_udp=UDP Streaming an/aus
-live.settings=LiveView Einstellungen
-live.snapshot=Schnappschuss erstellen
-live.record=Aufnahmemodus
-live.transcode=Transkodiermodus
-live.build_vlc=... erstelle Live ...
-live.select_bouquet=Bouquet ausw&auml;hlen - Sender werden aktualisiert
-live.select_channel=Sender wechseln - nutze zap
-live.live_popup_msg=W&auml;hrend des LiveTVs keine Sender wechseln!
-live.unlock=FB freigeben
-
-=========== LIVE Record
-live.rec.record_mode=Aufnahmemodus
-live.rec.filename=Dateiname
-live.rec.display_on=Bildschirm an
-live.rec.transcoding_on=Transkodierung an
-live.rec.record=Aufname
-live.rec.stop_record=Aufnahme Stopp
-live.rec.tanscode=Afnahme transkodiert
-live.rec.profile=Profile
-live.rec.video=Video
-live.rec.width=Breite
-live.rec.height=H&ouml;he
-live.rec.codec=Codec
-live.rec.bitrate=Bitrate
-live.rec.scale=Skalierung
-live.rec.audio=Audio
-live.rec.channels=Sender
-live.rec.trans_broadcast=Transkodierung als Broadcast
-live.rec.access=Zugriff
-live.rec.type=Typ
-live.rec.ip_port=IP:Port
-
-=========== LIVE Settings
-live.set.vlc_settings=VLC Einstellungen (IE &amp; Mozilla >= 0.8.6.1)
-live.set.deinterlace=Deinterlace
-live.set.http_caching=http caching
-live.set.udp_defaul=UDP als Standard
-live.set.slavebox_ip=Slave Box IP (2. Box)
-live.set.enter_ip=IP (xxx.xxx.xxx.xxx) der Slavebox eingeben
-live.set.vlc_rec_dir=VLC Aufnahmepfad
-live.set.refresh_liveview=LiveView aktualisieren
 
 =========== LIVE Timer Edit
 live.timer_edit.timer=Timer

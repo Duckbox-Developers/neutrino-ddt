@@ -35,16 +35,6 @@ start-block~yWeb_save_settings
 {=ini-set:%(CONFIGDIR)/Y-Web.conf;yweb_box_color;{=yweb_box_color=}~save=}
 end-block~yWeb_save_settings
 
-# ------- Live save Settings
-start-block~Live_save_settings
-{=ini-set:%(CONFIGDIR)/Y-Web.conf;slavebox;{=slavebox=}~open=}
-{=ini-set:%(CONFIGDIR)/Y-Web.conf;vlc_record_path;{=vlc_record_path=}~cache=}
-{=ini-set:%(CONFIGDIR)/Y-Web.conf;deinterlace;{=deinterlace=}~cache=}
-{=ini-set:%(CONFIGDIR)/Y-Web.conf;deinterlace_filter;{=v=}~cache=}
-{=ini-set:%(CONFIGDIR)/Y-Web.conf;udp;{=udp=}~cache=}
-{=ini-set:%(CONFIGDIR)/Y-Web.conf;http_caching;{=http_caching=}~save=}
-end-block~Live_save_settings
-
 # ------- nhttpd save Settings
 start-block~nhttpd_save_settings
 {=ini-set:%(CONFIGDIR)/nhttpd.conf;mod_auth.username;{=authuser=}~open=}
@@ -354,20 +344,6 @@ start-block~frame_boxcontrol
 	=}=}
 {=include-block:Y_Blocks.txt;frame_secondary=}
 end-block~frame_boxcontrol
-
-# ------- Lay-Frame Live-Menu
-start-block~frame_live
-{=var-set:sec_menu=Y_Live_Menue.yhtm?start={=dostart=}=}
-{=var-set:work=Y_blank.htm=}
-{=include-block:Y_Blocks.txt;frame_secondary=}
-end-block~frame_live
-
-# ------- Lay-Frame Live-Menu
-start-block~frame_live_directtv
-{=var-set:sec_menu=Y_Live_Menue.yhtm=}
-{=var-set:work=Y_LiveViewFull.yhtm?mode=tv&amp;typ=live=}
-{=include-block:Y_Blocks.txt;frame_secondary=}
-end-block~frame_live_directtv
 
 # ------- Lay-Frame Tools-Menu
 start-block~frame_tools

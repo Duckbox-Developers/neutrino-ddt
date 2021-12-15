@@ -49,7 +49,7 @@
 
 #include <system/debug.h>
 
-extern CAudioSetupNotifier	* audioSetupNotifier;
+extern CAudioSetupNotifier	 *audioSetupNotifier;
 extern cAudio *audioDecoder;
 
 CAudioSetup::CAudioSetup(int wizard_mode)
@@ -65,9 +65,10 @@ CAudioSetup::~CAudioSetup()
 
 }
 
-int CAudioSetup::exec(CMenuTarget* parent, const std::string &actionKey)
+int CAudioSetup::exec(CMenuTarget *parent, const std::string &actionKey)
 {
-	if (actionKey == "clear_vol_map") {
+	if (actionKey == "clear_vol_map")
+	{
 		CZapit::getInstance()->ClearVolumeMap();
 		CZapit::getInstance()->SetVolumePercent(g_settings.audio_volume_percent_ac3, g_settings.audio_volume_percent_pcm);
 		return menu_return::RETURN_NONE;
@@ -103,64 +104,54 @@ const CMenuOptionChooser::keyval AUDIOMENU_AVSYNC_OPTIONS[AUDIOMENU_AVSYNC_OPTIO
 };
 
 #if HAVE_SH4_HARDWARE
-#define AUDIOMENU_HDMI_DD_OPTION_COUNT 2
-#else
 #define AUDIOMENU_HDMI_DD_OPTION_COUNT 3
-#endif
 const CMenuOptionChooser::keyval AUDIOMENU_HDMI_DD_OPTIONS[AUDIOMENU_HDMI_DD_OPTION_COUNT] =
 {
 	{ HDMI_ENCODED_OFF,		LOCALE_OPTIONS_OFF		},
-#if !HAVE_SH4_HARDWARE
 	{ HDMI_ENCODED_AUTO,		LOCALE_AUDIOMENU_HDMI_DD_AUTO	},
-#endif
 	{ HDMI_ENCODED_FORCED,		LOCALE_AUDIOMENU_HDMI_DD_FORCE	}
 };
-
-// #define AUDIOMENU_CLOCKREC_OPTION_COUNT 2
-// const CMenuOptionChooser::keyval AUDIOMENU_CLOCKREC_OPTIONS[AUDIOMENU_CLOCKREC_OPTION_COUNT] =
-// {
-// 	{ 0, LOCALE_OPTIONS_OFF },
-// 	{ 1, LOCALE_OPTIONS_ON  },
-// };
+#endif
 
 /* audio settings menu */
 int CAudioSetup::showAudioSetup()
 {
 	//menue init
-	CMenuWidget* audioSettings = new CMenuWidget(LOCALE_MAINSETTINGS_HEAD, NEUTRINO_ICON_SETTINGS, width);
+	CMenuWidget *audioSettings = new CMenuWidget(LOCALE_MAINSETTINGS_HEAD, NEUTRINO_ICON_SETTINGS, width);
 	audioSettings->setSelected(selected);
 	audioSettings->setWizardMode(is_wizard);
 
 	//analog modes (stereo, mono l/r...)
-	CMenuOptionChooser * as_oj_analogmode 	= new CMenuOptionChooser(LOCALE_AUDIOMENU_ANALOG_MODE, &g_settings.audio_AnalogMode, AUDIOMENU_ANALOGOUT_OPTIONS, AUDIOMENU_ANALOGOUT_OPTION_COUNT, true, audioSetupNotifier);
+	CMenuOptionChooser *as_oj_analogmode 	= new CMenuOptionChooser(LOCALE_AUDIOMENU_ANALOG_MODE, &g_settings.audio_AnalogMode, AUDIOMENU_ANALOGOUT_OPTIONS, AUDIOMENU_ANALOGOUT_OPTION_COUNT, true, audioSetupNotifier);
 	as_oj_analogmode->setHint("", LOCALE_MENU_HINT_AUDIO_ANALOG_MODE);
 
 	//dd subchannel auto on/off
-	CMenuOptionChooser * as_oj_ddsubchn = new CMenuOptionChooser(LOCALE_AUDIOMENU_DOLBYDIGITAL, &g_settings.audio_DolbyDigital, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, audioSetupNotifier);
+	CMenuOptionChooser *as_oj_ddsubchn = new CMenuOptionChooser(LOCALE_AUDIOMENU_DOLBYDIGITAL, &g_settings.audio_DolbyDigital, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, audioSetupNotifier);
 	as_oj_ddsubchn->setHint("", LOCALE_MENU_HINT_AUDIO_DD);
 
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
-	CMenuOptionChooser * as_oj_ac3 = new CMenuOptionChooser(LOCALE_AUDIOMENU_AC3, &g_settings.ac3_pass, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, audioSetupNotifier);
+	CMenuOptionChooser *as_oj_ac3 = new CMenuOptionChooser(LOCALE_AUDIOMENU_AC3, &g_settings.ac3_pass, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, audioSetupNotifier);
 	as_oj_ac3->setHint("", LOCALE_MENU_HINT_AUDIO_AC3);
 
-	CMenuOptionChooser * as_oj_dts = new CMenuOptionChooser(LOCALE_AUDIOMENU_DTS, &g_settings.dts_pass, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, audioSetupNotifier);
+	CMenuOptionChooser *as_oj_dts = new CMenuOptionChooser(LOCALE_AUDIOMENU_DTS, &g_settings.dts_pass, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, audioSetupNotifier);
 	as_oj_dts->setHint("", LOCALE_MENU_HINT_AUDIO_DTS);
 #else
 	//dd via hdmi
-	CMenuOptionChooser * as_oj_dd_hdmi = NULL;
-	if (g_info.hw_caps->has_HDMI) {
+	CMenuOptionChooser *as_oj_dd_hdmi = NULL;
+	if (g_info.hw_caps->has_HDMI)
+	{
 		as_oj_dd_hdmi = new CMenuOptionChooser(LOCALE_AUDIOMENU_HDMI_DD, &g_settings.hdmi_dd, AUDIOMENU_HDMI_DD_OPTIONS, AUDIOMENU_HDMI_DD_OPTION_COUNT, true, audioSetupNotifier);
 		as_oj_dd_hdmi->setHint("", LOCALE_MENU_HINT_AUDIO_HDMI_DD);
 	}
 
 	//dd via spdif
-	CMenuOptionChooser * as_oj_dd_spdif 	= new CMenuOptionChooser(LOCALE_AUDIOMENU_SPDIF_DD, &g_settings.spdif_dd, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, audioSetupNotifier);
+	CMenuOptionChooser *as_oj_dd_spdif 	= new CMenuOptionChooser(LOCALE_AUDIOMENU_SPDIF_DD, &g_settings.spdif_dd, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, audioSetupNotifier);
 	as_oj_dd_spdif->setHint("", LOCALE_MENU_HINT_AUDIO_SPDIF_DD);
 #endif // HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 
-	CMenuOptionChooser * as_oj_avsync = NULL;
-	CMenuOptionNumberChooser * as_oj_vsteps = NULL;
-	CMenuOptionNumberChooser * st = NULL;
+	CMenuOptionChooser *as_oj_avsync = NULL;
+	CMenuOptionNumberChooser *as_oj_vsteps = NULL;
+	CMenuOptionNumberChooser *st = NULL;
 
 	//av synch
 	as_oj_avsync = new CMenuOptionChooser(LOCALE_AUDIOMENU_AVSYNC, &g_settings.avsync, AUDIOMENU_AVSYNC_OPTIONS, AUDIOMENU_AVSYNC_OPTION_COUNT, true, audioSetupNotifier);
@@ -172,20 +163,18 @@ int CAudioSetup::showAudioSetup()
 
 	st = new CMenuOptionNumberChooser(LOCALE_AUDIOMENU_VOLUME_START, &g_settings.start_volume, true, -1, 100, NULL, CRCInput::RC_nokey, NULL, 0, -1, LOCALE_OPTIONS_OFF);
 	st->setHint("", LOCALE_MENU_HINT_AUDIO_VOLSTART);
-	//clock rec
-	//CMenuOptionChooser * as_oj_clockrec new CMenuOptionChooser(LOCALE_AUDIOMENU_CLOCKREC, &g_settings.clockrec, AUDIOMENU_CLOCKREC_OPTIONS, AUDIOMENU_CLOCKREC_OPTION_COUNT, true, audioSetupNotifier);
 
 	// ac3,pcm and clear volume adjustment
 	CMenuOptionNumberChooser *adj_ac3 = NULL, *adj_pcm = NULL;
 	CMenuForwarder *adj_clear = NULL;
 
 	adj_ac3 = new CMenuOptionNumberChooser(LOCALE_AUDIOMENU_VOLUME_ADJUSTMENT_AC3,
-	(int *)&g_settings.audio_volume_percent_ac3, true, 0, 100, audioSetupNotifier);
+		(int *)&g_settings.audio_volume_percent_ac3, true, 0, 100, audioSetupNotifier);
 	adj_ac3->setNumberFormat("%d%%");
 	adj_ac3->setHint("", LOCALE_MENU_HINT_AUDIO_ADJUST_VOL_AC3);
 
 	adj_pcm  = new CMenuOptionNumberChooser(LOCALE_AUDIOMENU_VOLUME_ADJUSTMENT_PCM,
-	(int *)&g_settings.audio_volume_percent_pcm, true, 0, 100, audioSetupNotifier);
+		(int *)&g_settings.audio_volume_percent_pcm, true, 0, 100, audioSetupNotifier);
 	adj_pcm->setNumberFormat("%d%%");
 	adj_pcm->setHint("", LOCALE_MENU_HINT_AUDIO_ADJUST_VOL_PCM);
 
@@ -212,7 +201,6 @@ int CAudioSetup::showAudioSetup()
 	audioSettings->addItem(as_oj_avsync);
 	audioSettings->addItem(as_oj_vsteps);
 	audioSettings->addItem(st);
-	//audioSettings->addItem(as_clockrec);
 	//---------------------------------------------------------
 
 #if 0

@@ -366,6 +366,13 @@ else
 	HWLIB_CFLAGS="$HWLIB_CFLAGS "'-D__path_file__="\"$(subst $(top_srcdir)/,,$(abspath $<))\""'
 fi
 
+AC_CHECK_PROG(AR, ar, , ar)
+dnl Set default for ARFLAGS, since autoconf does not have a macro for it.
+dnl This allows people to set it when running configure or make
+test -n "$ARFLAGS" || ARFLAGS="cr"
+
+AC_SUBST(AR)
+AC_SUBST(ARFLAGS)
 AC_SUBST(HWLIB_CFLAGS)
 AC_SUBST(FREETYPE_CFLAGS)
 AC_SUBST(FREETYPE_LIBS)

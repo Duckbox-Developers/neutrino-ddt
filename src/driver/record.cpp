@@ -330,7 +330,7 @@ record_error_msg_t CRecordInstance::Start(CZapitChannel *channel)
 
 bool CRecordInstance::Stop(bool remove_event)
 {
-	char buf[FILENAMEBUFFERSIZE + 4] = {0};
+	char buf[FILENAMEBUFFERSIZE + 24] = {0};
 
 	struct stat test;
 	snprintf(buf, sizeof(buf), "%s.xml", filename);
