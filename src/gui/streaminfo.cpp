@@ -838,7 +838,7 @@ struct row
 
 void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 {
-	char buf[100], buf2[259];
+	char buf[100], buf2[520];
 	bool has_vpid = false;
 	bool is_webchan = false;
 	int xres = 0, yres = 0, aspectRatio = 0, framerate = -1, i = 0;
