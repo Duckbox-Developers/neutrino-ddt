@@ -636,6 +636,10 @@ void CNetworkSetup::restoreNetworkSettings()
 bool CNetworkSetup::changeNotify(const neutrino_locale_t locale, void * /*Data*/)
 {
 	if(locale == LOCALE_NETWORKMENU_IPADDRESS) {
+		if (!network_netmask[0]) {
+			networkConfig->netmask = (network_address[0] == 10) ? "255.0.0.0" : "255.255.255.0";
+			network_netmask = networkConfig->netmask;
+		}
 		setBroadcast();
 	} else if(locale == LOCALE_NETWORKMENU_NETMASK) {
 		setBroadcast();
