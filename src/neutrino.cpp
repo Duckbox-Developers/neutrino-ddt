@@ -2582,7 +2582,6 @@ TIMER_START();
 
 #if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99
 	//fan speed
-	dprintf(DEBUG_NORMAL, "g_info.has_fan: %d\n", g_info.hw_caps->has_fan);
 	CFanControlNotifier::setSpeed(g_settings.fan_speed);
 #endif
 	dvbsub_init();
