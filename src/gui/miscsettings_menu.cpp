@@ -347,6 +347,7 @@ void CMiscMenue::showMiscSettingsMenuGeneral(CMenuWidget *ms_general)
 	mc->setHint("", LOCALE_MENU_HINT_CACHE_TXT);
 	ms_general->addItem(mc);
 
+#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99
 	//fan speed
 	if (g_info.hw_caps->has_fan)
 	{
@@ -362,6 +363,7 @@ void CMiscMenue::showMiscSettingsMenuGeneral(CMenuWidget *ms_general)
 	}
 
 	ms_general->addItem(GenericMenuSeparatorLine);
+#endif
 
 	CMenuForwarder * mf = new CMenuForwarder(LOCALE_PLUGINS_HDD_DIR, true, g_settings.plugin_hdd_dir, this, "plugin_dir");
 	mf->setHint("", LOCALE_MENU_HINT_PLUGINS_HDD_DIR);
