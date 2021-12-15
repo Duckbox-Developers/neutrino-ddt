@@ -447,8 +447,11 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	if (g_settings.channel_mode_initial_radio > -1)
 		g_settings.channel_mode_radio = g_settings.channel_mode_initial_radio;
 
+if (g_info.hw_caps->has_fan)
+{
 	g_settings.fan_speed = configfile.getInt32( "fan_speed", 1);
 	if(g_settings.fan_speed < 1) g_settings.fan_speed = 1;
+}
 
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	g_settings.ac3_pass = configfile.getInt32( "ac3_pass", 0);
@@ -517,6 +520,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.shutdown_real = false;
 	if (g_info.hw_caps->can_shutdown)
 		g_settings.shutdown_real = configfile.getBool("shutdown_real"        , false );
+
 	g_settings.shutdown_real_rcdelay = configfile.getBool("shutdown_real_rcdelay", false );
 	g_settings.shutdown_count = configfile.getInt32("shutdown_count", 0);
 
@@ -1281,7 +1285,10 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32( "channel_mode_initial", g_settings.channel_mode_initial );
 	configfile.setInt32( "channel_mode_initial_radio", g_settings.channel_mode_initial_radio );
 
+if (g_info.hw_caps->has_fan)
+{
 	configfile.setInt32( "fan_speed", g_settings.fan_speed);
+}
 
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	configfile.setInt32( "ac3_pass", g_settings.ac3_pass);
@@ -2574,10 +2581,11 @@ TIMER_START();
 	powerManager->Open();
 
 	//fan speed
+if (g_info.hw_caps->has_fan)
+{
 	dprintf(DEBUG_NORMAL, "g_info.has_fan: %d\n", g_info.hw_caps->has_fan);
-	if (g_info.hw_caps->has_fan)
-		CFanControlNotifier::setSpeed(g_settings.fan_speed);
-
+	CFanControlNotifier::setSpeed(g_settings.fan_speed);
+}
 	dvbsub_init();
 
 	pthread_t nhttpd_thread;
