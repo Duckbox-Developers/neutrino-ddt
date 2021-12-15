@@ -666,7 +666,7 @@ void CFanControlNotifier::setSpeed(unsigned int speed)
 	close(cfd);
 }
 #else
-void CFanControlNotifier::setSpeed(unsigned int speed)
+void CFanControlNotifier::setSpeed(unsigned int __attribute__ ((unused)) speed)
 {
 #if defined (BOXMODEL_DM8000)
 	int cfd;

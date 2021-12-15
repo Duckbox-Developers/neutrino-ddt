@@ -79,7 +79,7 @@ static inline int dev_open()
 	return fd;
 }
 
-static void replace_umlauts(std::string &s)
+static void replace_umlauts(std::string __attribute__((unused)) &s)
 {
 #if BOXMODEL_HD51 || BOXMODEL_BRE2ZE4K || BOXMODEL_H7 || BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4KSE || BOXMODEL_VUDUO4K || BOXMODEL_VUDUO4KSE || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4KSE
 	return;
