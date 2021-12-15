@@ -518,9 +518,11 @@ if (g_info.hw_caps->has_fan)
 	g_settings.hdd_statfs_mode = configfile.getInt32( "hdd_statfs_mode", SNeutrinoSettings::HDD_STATFS_RECORDING);
 
 	g_settings.shutdown_real = false;
-	if (g_info.hw_caps->can_shutdown)
-		g_settings.shutdown_real = configfile.getBool("shutdown_real"        , false );
 
+if (g_info.hw_caps->can_shutdown)
+{
+	g_settings.shutdown_real = configfile.getBool("shutdown_real"        , false );
+}
 	g_settings.shutdown_real_rcdelay = configfile.getBool("shutdown_real_rcdelay", false );
 	g_settings.shutdown_count = configfile.getInt32("shutdown_count", 0);
 
