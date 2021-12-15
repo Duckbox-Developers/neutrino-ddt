@@ -69,7 +69,9 @@ CMiscMenue::CMiscMenue()
 {
 	width = 40;
 
+#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99
 	fanNotifier = NULL;
+#endif
 	sectionsdConfigNotifier = NULL;
 
 	epg_save = NULL;
@@ -318,8 +320,10 @@ int CMiscMenue::showMiscSettingsMenu()
 
 	int res = misc_menue.exec(NULL, "");
 
+#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99
 	delete fanNotifier;
 	fanNotifier = NULL;
+#endif
 	delete sectionsdConfigNotifier;
 	sectionsdConfigNotifier = NULL;
 

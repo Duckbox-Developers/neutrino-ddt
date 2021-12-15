@@ -4299,8 +4299,10 @@ void CNeutrinoApp::ExitRun(int exit_code)
 	delete g_RCInput;
 	g_RCInput = NULL;
 
+#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99
 	if (g_info.hw_caps->has_fan)
 		CFanControlNotifier::setSpeed(0);
+#endif
 
 	delete CVFD::getInstance();
 	delete SHTDCNT::getInstance();
@@ -4552,9 +4554,11 @@ void CNeutrinoApp::standbyMode( bool bOnOff, bool fromDeepStandby )
 		bool alive = recordingstatus || CEpgScan::getInstance()->Running() ||
 			CStreamManager::getInstance()->StreamStatus();
 #endif
+#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99
 		//fan speed
 		if (g_info.hw_caps->has_fan)
 			CFanControlNotifier::setSpeed(1);
+#endif
 
 		frameBuffer->setActive(false);
 		// Active standby on

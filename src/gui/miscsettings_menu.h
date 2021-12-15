@@ -36,7 +36,9 @@
 class CMiscMenue : public CMenuTarget, CChangeObserver
 {
 	private:
+#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99
 		CFanControlNotifier *fanNotifier;
+#endif
 		CSectionsdConfigNotifier* sectionsdConfigNotifier;
 		//COnOffNotifier* miscNotifier;
 		CMenuOptionChooser * epg_save;
