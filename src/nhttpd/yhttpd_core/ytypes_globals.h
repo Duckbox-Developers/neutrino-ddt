@@ -49,7 +49,7 @@ typedef enum
 	HTTP_NOT_FOUND 			= 404,
 	HTTP_METHOD_NOT_ALLOWED		= 405, // not used
 	HTTP_NOT_ACCEPTABLE 		= 406, // not used
-	HTTP_PROXY_AUTHENTICATION_REQUIRED= 407, // not used
+	HTTP_PROXY_AUTHENTICATION_REQUIRED = 407, // not used
 	HTTP_REQUEST_TIMEOUT 		= 408, // not used
 	HTTP_CONFLICT			= 409, // not used
 	HTTP_GONE 			= 410, // not used
@@ -58,7 +58,7 @@ typedef enum
 	HTTP_REQUEST_ENTITY_TOO_LARGE 	= 413, // not used
 	HTTP_REQUEST_URI_TOO_LARGE 	= 414, // not used
 	HTTP_UNSUPPORTED_MEDIA_TYPE 	= 415, // not used
-	HTTP_REQUEST_RANGE_NOT_SATISFIABLE= 416, // not used
+	HTTP_REQUEST_RANGE_NOT_SATISFIABLE = 416, // not used
 	HTTP_EXPECTAION_FAILED 		= 417, // not used
 	HTTP_INTERNAL_SERVER_ERROR 	= 500,
 	HTTP_NOT_IMPLEMENTED 		= 501,
@@ -75,7 +75,8 @@ typedef struct
 	const char *info;
 } HttpEnumString;
 
-static const HttpEnumString httpResponseNames[] = {
+static const HttpEnumString httpResponseNames[] =
+{
 	{ HTTP_CONTINUE, 			"Continue", 			""		},
 	{ HTTP_SWITCHING_PROTOCOLS, 		"Switching Protocols", 		""		},
 	{ HTTP_OK, 				"OK", 				""		},
@@ -139,7 +140,8 @@ typedef struct
 	const char *fileext;
 	const char *mime;
 } TMimePair;
-static const TMimePair MimeFileExtensions[] = {
+static const TMimePair MimeFileExtensions[] =
+{
 	{"xml",		"text/xml"},
 	{"htm",		"text/html"},
 	{"html",	"text/html"},

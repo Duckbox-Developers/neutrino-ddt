@@ -63,21 +63,23 @@ CStringList CmodSendfile::sendfileTypes;
 // HOOK: Response Prepare Handler
 // Response Prepare Check.
 //-----------------------------------------------------------------------------
-THandleStatus CmodSendfile::Hook_PrepareResponse(CyhookHandler *hh) {
+THandleStatus CmodSendfile::Hook_PrepareResponse(CyhookHandler *hh)
+{
 	hh->status = HANDLED_NONE;
 
 	log_level_printf(4, "mod_sendfile prepare hook start url:%s\n", hh->UrlData["fullurl"].c_str());
 
 #ifdef Y_CONFIG_USE_HOSTEDWEB
 	// for hosted webs: rewrite URL
-	std::string _hosted=HOSTEDDOCUMENTURL;
-	if((hh->UrlData["path"]).compare(0,_hosted.length(),HOSTEDDOCUMENTURL) == 0) // hosted Web ?
-		hh->UrlData["path"]=hh->WebserverConfigList["WebsiteMain.hosted_directory"]+(hh->UrlData["path"]).substr(_hosted.length()-1);
+	std::string _hosted = HOSTEDDOCUMENTURL;
+	if ((hh->UrlData["path"]).compare(0, _hosted.length(), HOSTEDDOCUMENTURL) == 0) // hosted Web ?
+		hh->UrlData["path"] = hh->WebserverConfigList["WebsiteMain.hosted_directory"] + (hh->UrlData["path"]).substr(_hosted.length() - 1);
 #endif //Y_CONFIG_USE_HOSTEDWEB
 
 	std::string mime = sendfileTypes[hh->UrlData["fileext"]];
 	if (((!mime.empty()) || (hh->WebserverConfigList["mod_sendfile.sendAll"] == "true"))
-			&& !(hh->UrlData["fileext"] == "yhtm" || hh->UrlData["fileext"] == "yjs" || hh->UrlData["fileext"] == "ysh")) {
+		&& !(hh->UrlData["fileext"] == "yhtm" || hh->UrlData["fileext"] == "yjs" || hh->UrlData["fileext"] == "ysh"))
+	{
 		//TODO: Check allowed directories / actually in GetFileName
 		// build filename
 		std::string fullfilename = GetFileName(hh, hh->UrlData["path"],
@@ -89,7 +91,8 @@ THandleStatus CmodSendfile::Hook_PrepareResponse(CyhookHandler *hh) {
 			hh->LastModified = (time_t) 0;
 			// It is a regular file?
 			fstat(filed, &statbuf);
-			if (S_ISREG(statbuf.st_mode)) {
+			if (S_ISREG(statbuf.st_mode))
+			{
 				// get file size and modify date
 				hh->ContentLength = statbuf.st_size;
 				hh->LastModified = statbuf.st_mtime;
@@ -98,10 +101,12 @@ THandleStatus CmodSendfile::Hook_PrepareResponse(CyhookHandler *hh) {
 
 			// check If-Modified-Since
 			time_t if_modified_since = (time_t) - 1;
-			if (!hh->HeaderList["If-Modified-Since"].empty()) {
+			if (!hh->HeaderList["If-Modified-Since"].empty())
+			{
 				struct tm mod;
 				if (strptime(hh->HeaderList["If-Modified-Since"].c_str(),
-						RFC1123FMT, &mod) != NULL) {
+						RFC1123FMT, &mod) != NULL)
+				{
 					mod.tm_isdst = 0; // daylight saving flag!
 					if_modified_since = mktime(&mod);
 				}
@@ -111,36 +116,43 @@ THandleStatus CmodSendfile::Hook_PrepareResponse(CyhookHandler *hh) {
 			struct tm *tmp = gmtime(&(hh->LastModified));
 			time_t LastModifiedGMT = mktime(tmp);
 			bool modified = (if_modified_since == (time_t) - 1)
-					|| (if_modified_since < LastModifiedGMT);
+				|| (if_modified_since < LastModifiedGMT);
 
 			// Send normal or not-modified header
-			if (modified) {
+			if (modified)
+			{
 				hh->RangeStart = 0;
 				hh->RangeEnd = hh->ContentLength - 1;
 				const char *range = (hh->HeaderList["Range"].empty()) ? NULL : hh->HeaderList["Range"].c_str();
 				if ((range &&
-				     (2 != sscanf(range, "bytes=%" PRId64 "-%" PRId64, &hh->RangeStart, &hh->RangeEnd)) &&
-				     (1 != sscanf(range, "bytes=%" PRId64 "-", &hh->RangeStart)))
-				 || (hh->RangeStart > hh->RangeEnd)
-				 || (hh->RangeEnd > hh->ContentLength - 1)) {
+						(2 != sscanf(range, "bytes=%" PRId64 "-%" PRId64, &hh->RangeStart, &hh->RangeEnd)) &&
+						(1 != sscanf(range, "bytes=%" PRId64 "-", &hh->RangeStart)))
+					|| (hh->RangeStart > hh->RangeEnd)
+					|| (hh->RangeEnd > hh->ContentLength - 1))
+				{
 					hh->SetError(HTTP_REQUEST_RANGE_NOT_SATISFIABLE);
 					aprintf("mod_sendfile: Client requested range '%s' which is outside of [0,%lld]\n", range, hh->ContentLength - 1);
-				} else {
+				}
+				else
+				{
 					hh->SendFile(fullfilename);
 					hh->ResponseMimeType = mime;
 					if (hh->RangeStart && (hh->RangeEnd != hh->ContentLength - 1))
 						hh->httpStatus = HTTP_PARTIAL_CONTENT;
 				}
-			} else
+			}
+			else
 				hh->SetHeader(HTTP_NOT_MODIFIED, mime, HANDLED_READY);
-		} else {
+		}
+		else
+		{
 			aprintf("mod_sendfile: File not found. url:(%s) fullfilename:(%s)\n",
-					hh->UrlData["url"].c_str(), fullfilename.c_str());
+				hh->UrlData["url"].c_str(), fullfilename.c_str());
 			hh->SetError(HTTP_NOT_FOUND);
 		}
 	}
 	log_level_printf(4, "mod_sendfile prepare hook end status:%d\n",
-			(int) hh->status);
+		(int) hh->status);
 
 	return hh->status;
 }
@@ -150,7 +162,8 @@ THandleStatus CmodSendfile::Hook_PrepareResponse(CyhookHandler *hh) {
 // This hook ist called from ReadConfig
 //-----------------------------------------------------------------------------
 THandleStatus CmodSendfile::Hook_ReadConfig(CConfigFile *Config,
-		CStringList &ConfigList) {
+	CStringList &ConfigList)
+{
 	std::string exttypes = Config->getString("mod_sendfile.mime_types",
 			HTTPD_SENDFILE_EXT);
 	ConfigList["mod_sendfile.mime_types"] = exttypes;
@@ -160,10 +173,12 @@ THandleStatus CmodSendfile::Hook_ReadConfig(CConfigFile *Config,
 	bool ende = false;
 	std::string item, ext, mime;
 	sendfileTypes.clear();
-	while (!ende) {
+	while (!ende)
+	{
 		if (!ySplitStringExact(exttypes, ",", item, exttypes))
 			ende = true;
-		if (ySplitStringExact(item, ":", ext, mime)) {
+		if (ySplitStringExact(item, ":", ext, mime))
+		{
 			ext = trim(ext);
 			sendfileTypes[ext] = trim(mime);
 		}
@@ -175,7 +190,8 @@ THandleStatus CmodSendfile::Hook_ReadConfig(CConfigFile *Config,
 // Send File: Build Filename
 // First Look at PublicDocumentRoot than PrivateDocumentRoot than pure path
 //-----------------------------------------------------------------------------
-std::string CmodSendfile::GetFileName(CyhookHandler *hh, std::string path, std::string filename) {
+std::string CmodSendfile::GetFileName(CyhookHandler *hh, std::string path, std::string filename)
+{
 	std::string tmpfilename;
 	if (path[path.length() - 1] != '/')
 		tmpfilename = path + "/" + filename;
@@ -190,10 +206,11 @@ std::string CmodSendfile::GetFileName(CyhookHandler *hh, std::string path, std::
 	else if (access(hh->WebserverConfigList["WebsiteMain.directory"] + tmpfilename + ".gz", R_OK) == 0)
 		tmpfilename = hh->WebserverConfigList["WebsiteMain.directory"] + tmpfilename + ".gz";
 #ifdef Y_CONFIG_FEATUE_SENDFILE_CAN_ACCESS_ALL
-	else if(access(tmpfilename,R_OK) == 0)
-	;
+	else if (access(tmpfilename, R_OK) == 0)
+		;
 #endif
-	else {
+	else
+	{
 		return "";
 	}
 	return tmpfilename;
@@ -201,11 +218,14 @@ std::string CmodSendfile::GetFileName(CyhookHandler *hh, std::string path, std::
 //-----------------------------------------------------------------------------
 // Send File: Open File and check file type
 //-----------------------------------------------------------------------------
-int CmodSendfile::OpenFile(CyhookHandler *, std::string fullfilename) {
+int CmodSendfile::OpenFile(CyhookHandler *, std::string fullfilename)
+{
 	int fd = -1;
-	if (!fullfilename.empty()) {
+	if (!fullfilename.empty())
+	{
 		fd = open(fullfilename.c_str(), O_RDONLY | O_LARGEFILE);
-		if (fd <= 0) {
+		if (fd <= 0)
+		{
 			aprintf("cannot open file %s: ", fullfilename.c_str());
 			dperror("");
 		}
@@ -215,12 +235,14 @@ int CmodSendfile::OpenFile(CyhookHandler *, std::string fullfilename) {
 //-----------------------------------------------------------------------------
 // Send File: Determine MIME-Type for File-Extention
 //-----------------------------------------------------------------------------
-std::string CmodSendfile::GetContentType(std::string ext) {
+std::string CmodSendfile::GetContentType(std::string ext)
+{
 	std::string ctype = "text/plain";
 	ext = string_tolower(ext);
 	for (unsigned int i = 0; i < (sizeof(MimeFileExtensions)
 			/ sizeof(MimeFileExtensions[0])); i++)
-		if (MimeFileExtensions[i].fileext == ext) {
+		if (MimeFileExtensions[i].fileext == ext)
+		{
 			ctype = MimeFileExtensions[i].mime;
 			break;
 		}

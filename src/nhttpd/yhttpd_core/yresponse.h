@@ -20,37 +20,46 @@ class CWebserverConnection;
 //-----------------------------------------------------------------------------
 class CWebserverResponse
 {
-private:
+	private:
 
-protected:
-	bool WriteData(char const *data, long length);
-	bool Sendfile(std::string filename, off_t start = 0, off_t end = -1);
-	std::string	redirectURI;		// URI for redirection else: empty
+	protected:
+		bool WriteData(char const *data, long length);
+		bool Sendfile(std::string filename, off_t start = 0, off_t end = -1);
+		std::string	redirectURI;		// URI for redirection else: empty
 
-public:
-	class CWebserver *Webserver;
-	class CWebserverConnection *Connection;
-	
-	// con/destructors
-	CWebserverResponse();
-	CWebserverResponse(CWebserver *pWebserver);
+	public:
+		class CWebserver *Webserver;
+		class CWebserverConnection *Connection;
 
-	// response control
-	bool SendResponse(void);
+		// con/destructors
+		CWebserverResponse();
+		CWebserverResponse(CWebserver *pWebserver);
 
-	// output methods
-	void printf(const char *fmt, ...);
-	bool Write(char const *text);
-	bool WriteLn(char const *text);
-	bool Write(const std::string &text) { return Write(text.c_str()); }
-	bool WriteLn(const std::string &text) { return WriteLn(text.c_str()); }
+		// response control
+		bool SendResponse(void);
 
-	// Headers
-	void SendError(HttpResponseType responseType) {SendHeader(responseType, false, "text/html");}
-	void SendHeader(HttpResponseType responseType, bool cache=false, std::string ContentType="text/html");
+		// output methods
+		void printf(const char *fmt, ...);
+		bool Write(char const *text);
+		bool WriteLn(char const *text);
+		bool Write(const std::string &text)
+		{
+			return Write(text.c_str());
+		}
+		bool WriteLn(const std::string &text)
+		{
+			return WriteLn(text.c_str());
+		}
 
-	// Helpers
-	std::string GetContentType(std::string ext);
+		// Headers
+		void SendError(HttpResponseType responseType)
+		{
+			SendHeader(responseType, false, "text/html");
+		}
+		void SendHeader(HttpResponseType responseType, bool cache = false, std::string ContentType = "text/html");
+
+		// Helpers
+		std::string GetContentType(std::string ext);
 };
 
 #endif /* __yhttpd_response_h__ */

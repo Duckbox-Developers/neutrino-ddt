@@ -24,14 +24,16 @@ CLogging *CLogging::instance = NULL;
 //-----------------------------------------------------------------------------
 // There is only one Instance
 //-----------------------------------------------------------------------------
-CLogging *CLogging::getInstance(void) {
+CLogging *CLogging::getInstance(void)
+{
 	if (!instance)
 		instance = new CLogging();
 	return instance;
 }
 
 //-----------------------------------------------------------------------------
-void CLogging::deleteInstance(void) {
+void CLogging::deleteInstance(void)
+{
 	if (instance)
 		delete instance;
 	instance = NULL;
@@ -40,7 +42,8 @@ void CLogging::deleteInstance(void) {
 //-----------------------------------------------------------------------------
 // Constructor
 //-----------------------------------------------------------------------------
-CLogging::CLogging(void) {
+CLogging::CLogging(void)
+{
 	Debug = false;
 	LogToFile = false; //not implemented
 	LogLevel = 0;
@@ -49,16 +52,19 @@ CLogging::CLogging(void) {
 }
 
 //-----------------------------------------------------------------------------
-CLogging::~CLogging(void) {
+CLogging::~CLogging(void)
+{
 }
 //=============================================================================
 
 //-----------------------------------------------------------------------------
-void CLogging::setDebug(bool _debug) {
+void CLogging::setDebug(bool _debug)
+{
 	Debug = _debug;
 }
 //-----------------------------------------------------------------------------
-bool CLogging::getDebug(void) {
+bool CLogging::getDebug(void)
+{
 	return Debug;
 }
 //=============================================================================
@@ -68,7 +74,8 @@ bool CLogging::getDebug(void) {
 //=============================================================================
 #define bufferlen 1024*8
 //-----------------------------------------------------------------------------
-void CLogging::printf(const char *fmt, ...) {
+void CLogging::printf(const char *fmt, ...)
+{
 	char buffer[bufferlen];
 
 	va_list arglist;
@@ -77,11 +84,12 @@ void CLogging::printf(const char *fmt, ...) {
 	va_end(arglist);
 
 	pthread_mutex_lock(&Log_mutex);
-	buffer[bufferlen-1]='\0';
-	::printf("%s",buffer);
+	buffer[bufferlen - 1] = '\0';
+	::printf("%s", buffer);
 	fflush(stdout);
 
-	if (LogToFile) {
+	if (LogToFile)
+	{
 		; //FIXME Logging to File
 	}
 	pthread_mutex_unlock(&Log_mutex);

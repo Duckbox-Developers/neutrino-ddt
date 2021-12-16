@@ -17,21 +17,23 @@
 //=============================================================================
 // Initialization of static variables
 //=============================================================================
-	pthread_mutex_t CmWebLog::WebLog_mutex = PTHREAD_MUTEX_INITIALIZER;
-	FILE *CmWebLog::WebLogFile = NULL;
-	int CmWebLog::RefCounter = 0;
-	std::string CmWebLog::WebLogFilename=LOG_FILE;
-	std::string CmWebLog::LogFormat =LOG_FORMAT;
+pthread_mutex_t CmWebLog::WebLog_mutex = PTHREAD_MUTEX_INITIALIZER;
+FILE *CmWebLog::WebLogFile = NULL;
+int CmWebLog::RefCounter = 0;
+std::string CmWebLog::WebLogFilename = LOG_FILE;
+std::string CmWebLog::LogFormat = LOG_FORMAT;
 //=============================================================================
 // Constructor & Destructor
 //=============================================================================
-CmWebLog::CmWebLog(void) {
+CmWebLog::CmWebLog(void)
+{
 	pthread_mutex_lock(&WebLog_mutex); // yea, its mine
 	RefCounter++;
 	pthread_mutex_unlock(&WebLog_mutex);
 }
 //-----------------------------------------------------------------------------
-CmWebLog::~CmWebLog(void) {
+CmWebLog::~CmWebLog(void)
+{
 	pthread_mutex_lock(&WebLog_mutex); // yea, its mine
 	--RefCounter;
 	if (RefCounter <= 0)
@@ -44,7 +46,8 @@ CmWebLog::~CmWebLog(void) {
 //-----------------------------------------------------------------------------
 // HOOK: Hook_EndConnection
 //-----------------------------------------------------------------------------
-THandleStatus CmWebLog::Hook_EndConnection(CyhookHandler *hh) {
+THandleStatus CmWebLog::Hook_EndConnection(CyhookHandler *hh)
+{
 	if (LogFormat == "CLF")
 		AddLogEntry_CLF(hh);
 	else if (LogFormat == "ELF")
@@ -56,23 +59,28 @@ THandleStatus CmWebLog::Hook_EndConnection(CyhookHandler *hh) {
 // HOOK: Hook_ReadConfig
 // This hook ist called from ReadConfig
 //-----------------------------------------------------------------------------
-THandleStatus CmWebLog::Hook_ReadConfig(CConfigFile *Config, CStringList &) {
+THandleStatus CmWebLog::Hook_ReadConfig(CConfigFile *Config, CStringList &)
+{
 	LogFormat = Config->getString("mod_weblog.log_format", LOG_FORMAT);
 	WebLogFilename = Config->getString("mod_weblog.logfile", LOG_FILE);
 	return HANDLED_CONTINUE;
 }
 //-----------------------------------------------------------------------------
-bool CmWebLog::OpenLogFile() {
+bool CmWebLog::OpenLogFile()
+{
 	if (WebLogFilename.empty())
 		return false;
-	if (WebLogFile == NULL) {
+	if (WebLogFile == NULL)
+	{
 		bool isNew = false;
 		pthread_mutex_lock(&WebLog_mutex); // yeah, its mine
 		if (access(WebLogFilename, R_OK) != 0)
 			isNew = true;
 		WebLogFile = fopen(WebLogFilename.c_str(), "a");
-		if (isNew) {
-			if (LogFormat == "ELF") {
+		if (isNew)
+		{
+			if (LogFormat == "ELF")
+			{
 				printf("#Version: 1.0\n");
 				printf("#Remarks: yhttpd" WEBSERVERNAME "\n");
 				printf("#Fields: c-ip username date time x-request cs-uri sc-status cs-method bytes time-taken x-time-request x-time-response cached\n");
@@ -83,22 +91,26 @@ bool CmWebLog::OpenLogFile() {
 	return (WebLogFile != NULL);
 }
 //-----------------------------------------------------------------------------
-void CmWebLog::CloseLogFile() {
-	if (WebLogFile != NULL) {
+void CmWebLog::CloseLogFile()
+{
+	if (WebLogFile != NULL)
+	{
 		pthread_mutex_lock(&WebLog_mutex); // yeah, its mine
-		fclose( WebLogFile);
+		fclose(WebLogFile);
 		WebLogFile = NULL;
 		pthread_mutex_unlock(&WebLog_mutex);
 	}
 }
 //-----------------------------------------------------------------------------
 #define bufferlen 1024*8
-bool CmWebLog::printf(const char *fmt, ...) {
+bool CmWebLog::printf(const char *fmt, ...)
+{
 	if (!OpenLogFile())
 		return false;
 	bool success = false;
-	if (WebLogFile != NULL) {
-		char buffer[bufferlen]={0};
+	if (WebLogFile != NULL)
+	{
+		char buffer[bufferlen] = {0};
 		pthread_mutex_lock(&WebLog_mutex); // yeah, its mine
 		va_list arglist;
 		va_start(arglist, fmt);
@@ -106,7 +118,7 @@ bool CmWebLog::printf(const char *fmt, ...) {
 		va_end(arglist);
 		unsigned int len = strlen(buffer);
 		success = (fwrite(buffer, len, 1, WebLogFile) == len);
-		fflush( WebLogFile);
+		fflush(WebLogFile);
 		pthread_mutex_unlock(&WebLog_mutex);
 	}
 	return success;
@@ -135,9 +147,15 @@ void CmWebLog::AddLogEntry_CLF(CyhookHandler *hh)
 	std::string cs_method;
 	switch (hh->Method)
 	{
-		case M_GET:	cs_method = "GET";	break;
-		case M_POST:	cs_method = "POST";	break;
-		case M_HEAD:	cs_method = "HEAD";	break;
+		case M_GET:
+			cs_method = "GET";
+			break;
+		case M_POST:
+			cs_method = "POST";
+			break;
+		case M_HEAD:
+			cs_method = "HEAD";
+			break;
 
 		default:
 			cs_method = "unknown";
@@ -307,9 +325,15 @@ void CmWebLog::AddLogEntry_ELF(CyhookHandler *hh)
 	std::string cs_method;
 	switch (hh->Method)
 	{
-		case M_GET:	cs_method = "GET";	break;
-		case M_POST:	cs_method = "POST";	break;
-		case M_HEAD:	cs_method = "HEAD";	break;
+		case M_GET:
+			cs_method = "GET";
+			break;
+		case M_POST:
+			cs_method = "POST";
+			break;
+		case M_HEAD:
+			cs_method = "HEAD";
+			break;
 
 		default:
 			cs_method = "unknown";
@@ -352,5 +376,5 @@ void CmWebLog::AddLogEntry_ELF(CyhookHandler *hh)
 		time_taken_request.c_str(),
 		time_taken_response.c_str(),
 		cached
-		);
+	);
 }
