@@ -68,7 +68,7 @@ typedef enum
 	MB_INFO_RATING			= 20,
 	MB_INFO_SPACER			= 21,
 	MB_INFO_MAX_NUMBER		= 22 	// MUST be allways the last item in the list
-}MB_INFO_ITEM;
+} MB_INFO_ITEM;
 
 typedef enum
 {
@@ -76,13 +76,13 @@ typedef enum
 	MB_DIRECTION_UP = 1,
 	MB_DIRECTION_DOWN = 2,
 	MB_DIRECTION_MAX_NUMBER = 3	// MUST be allways the last item in the list
-}MB_DIRECTION;
+} MB_DIRECTION;
 
 typedef struct
 {
 	MB_INFO_ITEM item;
 	MB_DIRECTION direction;
-}MB_SORTING;
+} MB_SORTING;
 
 typedef enum
 {
@@ -90,14 +90,14 @@ typedef enum
 	MB_STORAGE_TYPE_NFS = 1,
 	MB_STORAGE_TYPE_VLC = 2,
 	MB_STORAGE_MAX_NUMBER = 3	// MUST be allways the last item in the list
-}MB_STORAGE_TYPE;
+} MB_STORAGE_TYPE;
 
 typedef struct
 {
 	MB_INFO_ITEM item;
 	std::string optionString;
 	int optionVar;
-}MB_FILTER;
+} MB_FILTER;
 
 typedef enum
 {
@@ -108,7 +108,7 @@ typedef enum
 	MB_FOCUS_MOVIE_INFO2 = 4,
 	MB_FOCUS_FILTER = 5,
 	MB_FOCUS_MAX_NUMBER = 6	// MUST be allways the last item in the list
-}MB_FOCUS;
+} MB_FOCUS;
 
 typedef enum
 {
@@ -118,7 +118,7 @@ typedef enum
 	MB_GUI_LAST_RECORD = 3,
 	MB_GUI_FILTER = 4,
 	MB_GUI_MAX_NUMBER = 5	// MUST be allways the last item in the list
-}MB_GUI;
+} MB_GUI;
 
 typedef enum
 {
@@ -126,13 +126,13 @@ typedef enum
 	MB_PARENTAL_LOCK_ACTIVE = 1,
 	MB_PARENTAL_LOCK_OFF_TMP = 2, // use this to activate the lock temporarily until next dbox start up
 	MB_PARENTAL_LOCK_MAX_NUMBER = 3  // MUST be allways the last item in the list
-}MB_PARENTAL_LOCK;
+} MB_PARENTAL_LOCK;
 
 typedef struct
 {
-    std::string name;
-    int* used;
-}MB_DIR;
+	std::string name;
+	int *used;
+} MB_DIR;
 
 typedef enum
 {
