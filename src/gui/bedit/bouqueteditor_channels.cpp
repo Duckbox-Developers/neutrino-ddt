@@ -44,7 +44,7 @@
 
 extern CBouquetManager *g_bouquetManager;
 
-CBEChannelWidget::CBEChannelWidget(const std::string & Caption, unsigned int Bouquet)
+CBEChannelWidget::CBEChannelWidget(const std::string &Caption, unsigned int Bouquet)
 {
 	selected = 0;
 	origPosition = 0;
@@ -78,7 +78,7 @@ CBEChannelWidget::~CBEChannelWidget()
 
 void CBEChannelWidget::paintItem(int pos)
 {
-	int ypos = y + header_height + pos*item_height;
+	int ypos = y + header_height + pos * item_height;
 	unsigned int current = liststart + pos;
 
 	bool i_selected	= current == selected;
@@ -113,8 +113,8 @@ void CBEChannelWidget::paintItem(int pos)
 		else
 			frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_DUMMY_SMALL, x + OFFSET_INNER_MID, ypos, item_height);
 
-		int text_offset = 2*OFFSET_INNER_MID + action_icon_width;
-		item_font->RenderString(x + text_offset, ypos + item_height, width - text_offset - SCROLLBAR_WIDTH - 3*OFFSET_INNER_MID - 2*status_icon_width, (*Channels)[current]->getName(), color);
+		int text_offset = 2 * OFFSET_INNER_MID + action_icon_width;
+		item_font->RenderString(x + text_offset, ypos + item_height, width - text_offset - SCROLLBAR_WIDTH - 3 * OFFSET_INNER_MID - 2 * status_icon_width, (*Channels)[current]->getName(), color);
 
 		if ((*Channels)[current]->scrambled)
 			frameBuffer->paintIcon(NEUTRINO_ICON_SCRAMBLED, x + width - SCROLLBAR_WIDTH - OFFSET_INNER_MID - status_icon_width, ypos, item_height);
@@ -122,15 +122,15 @@ void CBEChannelWidget::paintItem(int pos)
 			frameBuffer->paintIcon(NEUTRINO_ICON_STREAMING, x + width - SCROLLBAR_WIDTH - OFFSET_INNER_MID - status_icon_width, ypos, item_height);
 
 		if ((*Channels)[current]->bLocked)
-			frameBuffer->paintIcon(NEUTRINO_ICON_LOCK, x + width - SCROLLBAR_WIDTH - 2*OFFSET_INNER_MID - 2*status_icon_width, ypos, item_height);
+			frameBuffer->paintIcon(NEUTRINO_ICON_LOCK, x + width - SCROLLBAR_WIDTH - 2 * OFFSET_INNER_MID - 2 * status_icon_width, ypos, item_height);
 	}
 }
 
 void CBEChannelWidget::paintItems()
 {
-	liststart = (selected/items_count)*items_count;
+	liststart = (selected / items_count) * items_count;
 
-	for(unsigned int count = 0; count < items_count; count++)
+	for (unsigned int count = 0; count < items_count; count++)
 		paintItem(count);
 
 	int total_pages;
@@ -145,7 +145,7 @@ void CBEChannelWidget::paintHead()
 	if (!header->isPainted())
 		header->addContextButton(CComponentsHeader::CC_BTN_LEFT | CComponentsHeader::CC_BTN_RIGHT);
 	CBEGlobals::paintHead(caption + (mode == CZapitClient::MODE_TV ? " - TV" : " - Radio"),
-					mode == CZapitClient::MODE_TV ? NEUTRINO_ICON_VIDEO : NEUTRINO_ICON_AUDIO);
+		mode == CZapitClient::MODE_TV ? NEUTRINO_ICON_VIDEO : NEUTRINO_ICON_AUDIO);
 }
 
 const struct button_label CBEChannelWidgetButtons[] =
@@ -161,7 +161,7 @@ const struct button_label CBEChannelWidgetButtons[] =
 
 void CBEChannelWidget::paintFoot()
 {
-	size_t numbuttons = sizeof(CBEChannelWidgetButtons)/sizeof(CBEChannelWidgetButtons[0]);
+	size_t numbuttons = sizeof(CBEChannelWidgetButtons) / sizeof(CBEChannelWidgetButtons[0]);
 
 	CBEGlobals::paintFoot(numbuttons, CBEChannelWidgetButtons);
 	frameBuffer->blit();
@@ -197,7 +197,7 @@ std::string CBEChannelWidget::getInfoText(int index)
 
 void CBEChannelWidget::updateSelection(unsigned int newpos)
 {
-	if (newpos == selected || newpos == (unsigned int)-1)
+	if (newpos == selected || newpos == (unsigned int) -1)
 		return;
 
 	unsigned int prev_selected = selected;
@@ -206,7 +206,7 @@ void CBEChannelWidget::updateSelection(unsigned int newpos)
 	if (state == beDefault)
 	{
 		unsigned int oldliststart = liststart;
-		liststart = (selected/items_count)*items_count;
+		liststart = (selected / items_count) * items_count;
 		if (oldliststart != liststart)
 		{
 			paintItems();
@@ -223,7 +223,7 @@ void CBEChannelWidget::updateSelection(unsigned int newpos)
 	}
 }
 
-int CBEChannelWidget::exec(CMenuTarget* parent, const std::string & /*actionKey*/)
+int CBEChannelWidget::exec(CMenuTarget *parent, const std::string & /*actionKey*/)
 {
 	neutrino_msg_t      msg;
 	neutrino_msg_data_t data;
@@ -270,7 +270,7 @@ int CBEChannelWidget::exec(CMenuTarget* parent, const std::string & /*actionKey*
 			}
 		}
 		else if (msg == CRCInput::RC_up || msg == (neutrino_msg_t)g_settings.key_pageup ||
-			 msg == CRCInput::RC_down || msg == (neutrino_msg_t)g_settings.key_pagedown)
+			msg == CRCInput::RC_down || msg == (neutrino_msg_t)g_settings.key_pagedown)
 		{
 			int new_selected = UpDownKey(*Channels, msg, items_count, selected);
 			updateSelection(new_selected);
@@ -297,7 +297,7 @@ int CBEChannelWidget::exec(CMenuTarget* parent, const std::string & /*actionKey*
 		}
 		else if (msg == CRCInput::RC_yellow)
 		{
-			liststart = (selected/items_count)*items_count;
+			liststart = (selected / items_count) * items_count;
 			if (state == beDefault)
 				beginMoveChannel();
 			else if (state == beMoving)
@@ -320,16 +320,16 @@ int CBEChannelWidget::exec(CMenuTarget* parent, const std::string & /*actionKey*
 					switchLockChannel();
 			}
 		}
-/* TODO upgrade
-		else if (msg == CRCInput::RC_forward)
-		{
-			if (selected < Channels->size())
-			{
-				if (state == beDefault)
-					moveChannelToBouquet();
-			}
-		}
-*/
+		/* TODO upgrade
+				else if (msg == CRCInput::RC_forward)
+				{
+					if (selected < Channels->size())
+					{
+						if (state == beDefault)
+							moveChannelToBouquet();
+					}
+				}
+		*/
 		else if (msg == (neutrino_msg_t) g_settings.key_tvradio_mode || msg == CRCInput::RC_tv || msg == CRCInput::RC_radio)
 		{
 			if (msg == CRCInput::RC_radio)
@@ -426,7 +426,7 @@ void CBEChannelWidget::deleteChannel()
 	if (selected >= Channels->size()) /* Channels.size() might be 0 */
 		return;
 
-	if (ShowMsg(LOCALE_FILEBROWSER_DELETE, (*Channels)[selected]->getName(), CMsgBox::mbrNo, CMsgBox::mbYes|CMsgBox::mbNo)!=CMsgBox::mbrYes)
+	if (ShowMsg(LOCALE_FILEBROWSER_DELETE, (*Channels)[selected]->getName(), CMsgBox::mbrNo, CMsgBox::mbYes | CMsgBox::mbNo) != CMsgBox::mbrYes)
 		return;
 
 	g_bouquetManager->Bouquets[bouquet]->removeService((*Channels)[selected]->getChannelID());
@@ -441,7 +441,7 @@ void CBEChannelWidget::deleteChannel()
 
 void CBEChannelWidget::renameChannel()
 {
-	std::string newName= inputName((*Channels)[selected]->getName().c_str(), LOCALE_BOUQUETEDITOR_NEWBOUQUETNAME);
+	std::string newName = inputName((*Channels)[selected]->getName().c_str(), LOCALE_BOUQUETEDITOR_NEWBOUQUETNAME);
 
 	if (newName != (*Channels)[selected]->getName())
 	{
@@ -470,7 +470,7 @@ void CBEChannelWidget::switchLockChannel()
 
 void CBEChannelWidget::addChannel()
 {
-	CBEChannelSelectWidget* channelSelectWidget = new CBEChannelSelectWidget(caption, g_bouquetManager->Bouquets[bouquet], mode);
+	CBEChannelSelectWidget *channelSelectWidget = new CBEChannelSelectWidget(caption, g_bouquetManager->Bouquets[bouquet], mode);
 
 	channelSelectWidget->exec(this, "");
 	if (channelSelectWidget->hasChanged())
@@ -533,11 +533,11 @@ void CBEChannelWidget::internalMoveChannel(unsigned int fromPosition, unsigned i
 	paintItems();
 }
 
-std::string CBEChannelWidget::inputName(const char * const defaultName, const neutrino_locale_t _caption)
+std::string CBEChannelWidget::inputName(const char *const defaultName, const neutrino_locale_t _caption)
 {
 	std::string Name = defaultName;
 
-	CKeyboardInput * nameInput = new CKeyboardInput(_caption, &Name);
+	CKeyboardInput *nameInput = new CKeyboardInput(_caption, &Name);
 	nameInput->exec(this, "");
 
 	delete nameInput;

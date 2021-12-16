@@ -61,14 +61,14 @@ void CBEGlobals::init()
 		footer = new CComponentsFooter();
 	footer_height = footer->getHeight();
 
-	info_height = 2*info_font->getHeight() + 2*OFFSET_INNER_SMALL;
+	info_height = 2 * info_font->getHeight() + 2 * OFFSET_INNER_SMALL;
 
-	items_count = (height - header_height - footer_height - OFFSET_INTER - info_height - 2*OFFSET_SHADOW) / item_height;
-	body_height = items_count*item_height;
-	height = header_height + body_height + footer_height + OFFSET_INTER + info_height + 2*OFFSET_SHADOW; // recalc height
+	items_count = (height - header_height - footer_height - OFFSET_INTER - info_height - 2 * OFFSET_SHADOW) / item_height;
+	body_height = items_count * item_height;
+	height = header_height + body_height + footer_height + OFFSET_INTER + info_height + 2 * OFFSET_SHADOW; // recalc height
 
-        x = getScreenStartX(width);
-        y = getScreenStartY(height);
+	x = getScreenStartX(width);
+	y = getScreenStartY(height);
 }
 
 CBEGlobals::~CBEGlobals()
@@ -78,33 +78,41 @@ CBEGlobals::~CBEGlobals()
 
 void CBEGlobals::ResetModules()
 {
-	if (dline){
-		delete dline; dline = NULL;
+	if (dline)
+	{
+		delete dline;
+		dline = NULL;
 	}
-	if (ibox){
-		delete ibox; ibox = NULL;
+	if (ibox)
+	{
+		delete ibox;
+		ibox = NULL;
 	}
-	if (header){
-		delete header; header = NULL;
+	if (header)
+	{
+		delete header;
+		header = NULL;
 	}
-	if (footer){
-		delete footer; footer = NULL;
+	if (footer)
+	{
+		delete footer;
+		footer = NULL;
 	}
 }
 
 void CBEGlobals::paintDetails(int pos, int current)
 {
 	int xpos  = x - DETAILSLINE_WIDTH;
-	int ypos1 = y + header_height + pos*item_height;
+	int ypos1 = y + header_height + pos * item_height;
 	int ypos2 = y + height - info_height - OFFSET_SHADOW;
-	int ypos1a = ypos1 + (item_height/2);
-	int ypos2a = ypos2 + (info_height/2);
+	int ypos1a = ypos1 + (item_height / 2);
+	int ypos2a = ypos2 + (info_height / 2);
 
 	if (pos >= 0)
 	{
 		if (dline == NULL)
 			dline = new CComponentsDetailsLine();
-		dline->setDimensionsAll(xpos, ypos1a, ypos2a, item_height/2, info_height - RADIUS_LARGE*2);
+		dline->setDimensionsAll(xpos, ypos1a, ypos2a, item_height / 2, info_height - RADIUS_LARGE * 2);
 
 		dline->paint();
 
@@ -156,7 +164,7 @@ void CBEGlobals::killDetails()
 		ibox->kill();
 }
 
-void CBEGlobals::paintFoot(const size_t& label_count, const struct button_label * const content)
+void CBEGlobals::paintFoot(const size_t &label_count, const struct button_label *const content)
 {
 	if (!footer)
 		footer = new CComponentsFooter();
@@ -165,7 +173,7 @@ void CBEGlobals::paintFoot(const size_t& label_count, const struct button_label 
 	footer->paintButtons(x, y + header_height + body_height, width, footer_height, label_count, content);
 }
 
-void CBEGlobals::paintHead(const std::string& Caption, const char* Icon)
+void CBEGlobals::paintHead(const std::string &Caption, const char *Icon)
 {
 	if (!header)
 		header = new CComponentsHeader();

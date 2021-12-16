@@ -54,13 +54,13 @@ class CBEGlobals
 		int status_icon_width;
 
 		unsigned int items_count;
-		int* timeout_ptr;
+		int *timeout_ptr;
 
 		void init();
 
-		void paintHead(const std::string& Caption, const char* Icon);
+		void paintHead(const std::string &Caption, const char *Icon);
 		void paintBody();
-		void paintFoot(const size_t& label_count, const struct button_label * const content);
+		void paintFoot(const size_t &label_count, const struct button_label *const content);
 
 		virtual std::string getInfoText(int index) = 0;
 		void paintDetails(int pos, int current);
