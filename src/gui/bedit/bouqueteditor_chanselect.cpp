@@ -39,7 +39,7 @@
 
 extern CBouquetManager *g_bouquetManager;
 
-CBEChannelSelectWidget::CBEChannelSelectWidget(const std::string & Caption, CZapitBouquet* Bouquet, CZapitClient::channelsMode Mode)
+CBEChannelSelectWidget::CBEChannelSelectWidget(const std::string &Caption, CZapitBouquet *Bouquet, CZapitClient::channelsMode Mode)
 {
 	caption = Caption;
 	bouquet = Bouquet;
@@ -66,7 +66,7 @@ CBEChannelSelectWidget::~CBEChannelSelectWidget()
 
 void CBEChannelSelectWidget::paintItem(int pos)
 {
-	int ypos = y + header_height + pos*item_height;
+	int ypos = y + header_height + pos * item_height;
 	unsigned int current = liststart + pos;
 
 	bool i_selected	= current == selected;
@@ -101,8 +101,8 @@ void CBEChannelSelectWidget::paintItem(int pos)
 		else
 			frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_DUMMY_SMALL, x + OFFSET_INNER_MID, ypos, item_height);
 
-		int text_offset = 2*OFFSET_INNER_MID + action_icon_width;
-		item_font->RenderString(x + text_offset, ypos + item_height, width - text_offset - SCROLLBAR_WIDTH - 2*OFFSET_INNER_MID - status_icon_width, Channels[current]->getName(), color);
+		int text_offset = 2 * OFFSET_INNER_MID + action_icon_width;
+		item_font->RenderString(x + text_offset, ypos + item_height, width - text_offset - SCROLLBAR_WIDTH - 2 * OFFSET_INNER_MID - status_icon_width, Channels[current]->getName(), color);
 
 		if (Channels[current]->scrambled)
 			frameBuffer->paintIcon(NEUTRINO_ICON_SCRAMBLED, x + width - SCROLLBAR_WIDTH - OFFSET_INNER_MID - status_icon_width, ypos, item_height);
@@ -114,9 +114,9 @@ void CBEChannelSelectWidget::paintItem(int pos)
 
 void CBEChannelSelectWidget::paintItems()
 {
-	liststart = (selected/items_count)*items_count;
+	liststart = (selected / items_count) * items_count;
 
-	for(unsigned int count = 0; count < items_count; count++)
+	for (unsigned int count = 0; count < items_count; count++)
 		paintItem(count);
 
 	int total_pages;
@@ -128,7 +128,7 @@ void CBEChannelSelectWidget::paintItems()
 void CBEChannelSelectWidget::paintHead()
 {
 	CBEGlobals::paintHead(caption + (mode == CZapitClient::MODE_TV ? " - TV" : " - Radio"),
-				mode == CZapitClient::MODE_TV ? NEUTRINO_ICON_VIDEO : NEUTRINO_ICON_AUDIO);
+		mode == CZapitClient::MODE_TV ? NEUTRINO_ICON_VIDEO : NEUTRINO_ICON_AUDIO);
 }
 
 struct button_label CBEChannelSelectButtons[] =
@@ -165,7 +165,7 @@ void CBEChannelSelectWidget::paintFoot()
 		}
 	}
 
-	const short numbuttons = sizeof(CBEChannelSelectButtons)/sizeof(CBEChannelSelectButtons[0]);
+	const short numbuttons = sizeof(CBEChannelSelectButtons) / sizeof(CBEChannelSelectButtons[0]);
 
 	CBEGlobals::paintFoot(numbuttons, CBEChannelSelectButtons);
 }
@@ -200,14 +200,14 @@ std::string CBEChannelSelectWidget::getInfoText(int index)
 
 void CBEChannelSelectWidget::updateSelection(unsigned int newpos)
 {
-	if (newpos == selected || newpos == (unsigned int)-1)
+	if (newpos == selected || newpos == (unsigned int) -1)
 		return;
 
 	unsigned int prev_selected = selected;
 	selected = newpos;
 
 	unsigned int oldliststart = liststart;
-	liststart = (selected/items_count)*items_count;
+	liststart = (selected / items_count) * items_count;
 	if (oldliststart != liststart)
 	{
 		paintItems();
@@ -219,7 +219,7 @@ void CBEChannelSelectWidget::updateSelection(unsigned int newpos)
 	}
 }
 
-int CBEChannelSelectWidget::exec(CMenuTarget* parent, const std::string & /*actionKey*/)
+int CBEChannelSelectWidget::exec(CMenuTarget *parent, const std::string & /*actionKey*/)
 {
 	neutrino_msg_t      msg;
 	neutrino_msg_data_t data;
@@ -262,7 +262,7 @@ int CBEChannelSelectWidget::exec(CMenuTarget* parent, const std::string & /*acti
 			loop = false;
 		}
 		else if (msg == CRCInput::RC_up || msg == (neutrino_msg_t)g_settings.key_pageup ||
-			 msg == CRCInput::RC_down || msg == (neutrino_msg_t)g_settings.key_pagedown)
+			msg == CRCInput::RC_down || msg == (neutrino_msg_t)g_settings.key_pagedown)
 		{
 			int new_selected = UpDownKey(Channels, msg, items_count, selected);
 			updateSelection(new_selected);
@@ -349,7 +349,7 @@ void CBEChannelSelectWidget::selectChannel()
 
 bool CBEChannelSelectWidget::isChannelInBouquet(int index)
 {
-	for (unsigned int i=0; i< bouquetChannels->size(); i++)
+	for (unsigned int i = 0; i < bouquetChannels->size(); i++)
 	{
 		if ((*bouquetChannels)[i]->getChannelID() == Channels[index]->getChannelID())
 			return true;

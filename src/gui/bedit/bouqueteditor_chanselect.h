@@ -37,7 +37,8 @@
 class CBEChannelSelectWidget : public CBEGlobals, public CMenuTarget, public CListHelpers
 {
 	private:
-		enum {
+		enum
+		{
 			SORT_ALPHA,
 			SORT_FREQ,
 			SORT_SAT,
@@ -49,7 +50,7 @@ class CBEChannelSelectWidget : public CBEGlobals, public CMenuTarget, public CLi
 		unsigned int liststart;
 
 		CZapitClient::channelsMode mode;
-		CZapitBouquet * bouquet;
+		CZapitBouquet *bouquet;
 		short int channellist_sort_mode;
 		bool isChannelInBouquet(int index);
 
@@ -71,13 +72,16 @@ class CBEChannelSelectWidget : public CBEGlobals, public CMenuTarget, public CLi
 		std::string getInfoText(int index);
 
 	public:
-		CBEChannelSelectWidget(const std::string & Caption, CZapitBouquet* Bouquet, CZapitClient::channelsMode Mode);
+		CBEChannelSelectWidget(const std::string &Caption, CZapitBouquet *Bouquet, CZapitClient::channelsMode Mode);
 		~CBEChannelSelectWidget();
 
 		ZapitChannelList Channels;
-		ZapitChannelList * bouquetChannels;
-		int exec(CMenuTarget* parent, const std::string & actionKey);
-		void hide(){CBEGlobals::hide();}
+		ZapitChannelList *bouquetChannels;
+		int exec(CMenuTarget *parent, const std::string &actionKey);
+		void hide()
+		{
+			CBEGlobals::hide();
+		}
 		bool hasChanged();
 };
 

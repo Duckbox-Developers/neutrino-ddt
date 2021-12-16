@@ -40,8 +40,8 @@
 /* (libevent) */
 class CBouquetEditorEvents
 {
-public:
-	virtual void onBouquetsChanged() {};
+	public:
+		virtual void onBouquetsChanged() {};
 };
 
 class CBEBouquetWidget : public CBEGlobals, public CMenuTarget, public CListHelpers
@@ -84,16 +84,22 @@ class CBEBouquetWidget : public CBEGlobals, public CMenuTarget, public CListHelp
 		void saveChanges();
 		void discardChanges();
 
-		std::string inputName(const char* const defaultName, const neutrino_locale_t caption);
-		std::string getInfoText(int /*index*/) { return ""; };
+		std::string inputName(const char *const defaultName, const neutrino_locale_t caption);
+		std::string getInfoText(int /*index*/)
+		{
+			return "";
+		};
 
 	public:
 		CBEBouquetWidget();
 
 		//CZapitClient::BouquetList Bouquets;
-		BouquetList * Bouquets;
-		int exec(CMenuTarget* parent, const std::string & actionKey);
-		void hide(){CBEGlobals::hide();}
+		BouquetList *Bouquets;
+		int exec(CMenuTarget *parent, const std::string &actionKey);
+		void hide()
+		{
+			CBEGlobals::hide();
+		}
 };
 
 #endif

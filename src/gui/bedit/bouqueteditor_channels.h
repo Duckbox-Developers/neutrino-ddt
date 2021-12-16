@@ -76,18 +76,24 @@ class CBEChannelWidget : public CBEGlobals, public CMenuTarget, public CListHelp
 		void internalMoveChannel(unsigned int fromPosition, unsigned int toPosition);
 
 		std::string getInfoText(int index);
-		std::string inputName(const char* const defaultName, const neutrino_locale_t caption);
+		std::string inputName(const char *const defaultName, const neutrino_locale_t caption);
 
 	public:
-		CBEChannelWidget( const std::string & Caption, unsigned int Bouquet);
+		CBEChannelWidget(const std::string &Caption, unsigned int Bouquet);
 		~CBEChannelWidget();
 
 		//CZapitClient::BouquetChannelList	Channels;
-		ZapitChannelList * Channels;
-		int exec(CMenuTarget* parent, const std::string & actionKey);
-		void hide(){CBEGlobals::hide();}
+		ZapitChannelList *Channels;
+		int exec(CMenuTarget *parent, const std::string &actionKey);
+		void hide()
+		{
+			CBEGlobals::hide();
+		}
 		bool hasChanged();
-		unsigned int getBouquet() { return bouquet; };
+		unsigned int getBouquet()
+		{
+			return bouquet;
+		};
 };
 
 #endif
