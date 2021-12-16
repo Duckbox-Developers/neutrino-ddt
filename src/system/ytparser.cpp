@@ -658,8 +658,8 @@ bool cYTFeedParser::ParseVideoInfo(cYTVideoInfo &vinfo, CURL *_curl_handle)
 		std::string vurl = "https://www.youtube.com/get_video_info?video_id=";
 		vurl += vinfo.id;
 		vurl += estr[i];
-		vurl += "&eurl=https://youtube.googleapis.com/v/"
-			vurl += vinfo.id;
+		vurl += "&eurl=https://youtube.googleapis.com/v/";
+		vurl += vinfo.id;
 		vurl += "&ps=default&eurl=&gl=US&hl=en&html5=1&c=TVHTML5&cver=6.20180913";
 		printf("cYTFeedParser::ParseVideoInfo: get [%s]\n", vurl.c_str());
 		std::string answer;
