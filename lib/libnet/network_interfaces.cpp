@@ -106,7 +106,7 @@ bool write_interface(const std::string &filename, const std::string &name, const
 
 	read_file(filename, line); /* ignore return value */
 
-	for (std::list<std::string>::iterator it = line.begin(); it != line.end(); )
+	for (std::list<std::string>::iterator it = line.begin(); it != line.end();)
 	{
 		{
 			std::istringstream in((*it).c_str());
@@ -357,7 +357,8 @@ bool setStaticAttributes(const std::string &name, const bool automatic_start, co
 	attribute["address"] = address;
 	attribute["netmask"] = netmask;
 
-	if(wireless) {
+	if (wireless)
+	{
 		attribute["pre-up"] = "/etc/network/pre-" + name + ".sh";
 		attribute["post-down"] = "/etc/network/post-" + name + ".sh";
 	}
@@ -375,10 +376,11 @@ bool setDhcpAttributes(const std::string &name, const bool automatic_start, bool
 {
 	std::map<std::string, std::string> attribute;
 	char hostname[100];
-	if(gethostname(hostname, sizeof(hostname)) == 0)
+	if (gethostname(hostname, sizeof(hostname)) == 0)
 		attribute["hostname"] = hostname;
 
-	if(wireless) {
+	if (wireless)
+	{
 		attribute["pre-up"] = "/etc/network/pre-" + name + ".sh";
 		attribute["post-down"] = "/etc/network/post-" + name + ".sh";
 	}

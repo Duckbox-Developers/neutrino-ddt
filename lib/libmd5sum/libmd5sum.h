@@ -35,7 +35,7 @@ extern "C"
 #endif /* __cplusplus */
 
 
-int md5_file (const char *filename, int binary, unsigned char *md5_result);
+int md5_file(const char *filename, int binary, unsigned char *md5_result);
 
 
 #ifdef __cplusplus

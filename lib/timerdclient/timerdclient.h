@@ -35,13 +35,13 @@
 #include <timerdclient/timerdtypes.h>
 #include <system/helpers.h>
 
-class CTimerdClient:private CBasicClient
+class CTimerdClient: private CBasicClient
 {
- private:
-	virtual unsigned char   getVersion   () const;
-	virtual const          char * getSocketName() const;
+	private:
+		virtual unsigned char   getVersion() const;
+		virtual const          char *getSocketName() const;
 
- public:
+	public:
 		virtual ~CTimerdClient() {};
 		enum events
 		{
@@ -60,29 +60,29 @@ class CTimerdClient:private CBasicClient
 			EVT_EXEC_PLUGIN
 		};
 
-		void registerEvent(unsigned int eventID, unsigned int clientID, const char * const udsName);
+		void registerEvent(unsigned int eventID, unsigned int clientID, const char *const udsName);
 		void unRegisterEvent(unsigned int eventID, unsigned int clientID);
 
 		bool isTimerdAvailable();			// check if timerd is running
 
-		CTimerd::TimerList getOverlappingTimers(time_t& announcetime, time_t& stoptime);
-		bool checkDouble(CTimerd::CTimerEventTypes evType, void* data, time_t announcetime, time_t alarmtime,time_t stoptime, CTimerd::CTimerEventRepeat /*evrepeat*/, uint32_t repeatcount);
+		CTimerd::TimerList getOverlappingTimers(time_t &announcetime, time_t &stoptime);
+		bool checkDouble(CTimerd::CTimerEventTypes evType, void *data, time_t announcetime, time_t alarmtime, time_t stoptime, CTimerd::CTimerEventRepeat /*evrepeat*/, uint32_t repeatcount);
 
-		int addTimerEvent( CTimerd::CTimerEventTypes evType, void* data, time_t alarmtime,time_t announcetime = 0, time_t stoptime = 0,
-				   CTimerd::CTimerEventRepeat evrepeat = CTimerd::TIMERREPEAT_ONCE, uint32_t repeatcount = 0, bool forceadd=true);
+		int addTimerEvent(CTimerd::CTimerEventTypes evType, void *data, time_t alarmtime, time_t announcetime = 0, time_t stoptime = 0,
+			CTimerd::CTimerEventRepeat evrepeat = CTimerd::TIMERREPEAT_ONCE, uint32_t repeatcount = 0, bool forceadd = true);
 
-		void removeTimerEvent( int evId);	// remove timer event
-		void stopTimerEvent( int evId);	// set timer state to stoped (rescedule on demand)
+		void removeTimerEvent(int evId);	// remove timer event
+		void stopTimerEvent(int evId);	// set timer state to stoped (rescedule on demand)
 
-		void getTimerList( CTimerd::TimerList &timerlist);		// returns the list of all timers
-		void getTimer( CTimerd::responseGetTimer &timer, unsigned timerID);		// returns specified timer
+		void getTimerList(CTimerd::TimerList &timerlist);		// returns the list of all timers
+		void getTimer(CTimerd::responseGetTimer &timer, unsigned timerID);		// returns specified timer
 
 		// modify existing timer event
-		bool modifyTimerEvent(int eventid, time_t announcetime, time_t alarmtime, time_t stoptime, CTimerd::CTimerEventRepeat evrepeat = CTimerd::TIMERREPEAT_ONCE, uint32_t repeatcount=0);
+		bool modifyTimerEvent(int eventid, time_t announcetime, time_t alarmtime, time_t stoptime, CTimerd::CTimerEventRepeat evrepeat = CTimerd::TIMERREPEAT_ONCE, uint32_t repeatcount = 0);
 		bool modifyTimerEvent(int eventid, time_t announcetime, time_t alarmtime, time_t stoptime, CTimerd::CTimerEventRepeat evrepeat, uint32_t repeatcount,
-				      void *data,int datalen=0);
+			void *data, int datalen = 0);
 
-		bool modifyRecordTimerEvent(int eventid, time_t announcetime, time_t alarmtime, time_t stoptime, CTimerd::CTimerEventRepeat evrepeat, uint32_t repeatcount, const char * const recordingdir);
+		bool modifyRecordTimerEvent(int eventid, time_t announcetime, time_t alarmtime, time_t stoptime, CTimerd::CTimerEventRepeat evrepeat, uint32_t repeatcount, const char *const recordingdir);
 
 		void modifyTimerAPid(int eventid, unsigned char apids);
 
@@ -102,17 +102,21 @@ class CTimerdClient:private CBasicClient
 		bool rescheduleTimerEvent(int eventid, time_t announcediff, time_t alarmdiff, time_t stoptime);
 
 		// adds new sleeptimer event
-		int addSleepTimerEvent(time_t announcetime,time_t alarmtime)	// sleeptimer setzen
-			{return addTimerEvent(CTimerd::TIMER_SLEEPTIMER, NULL, announcetime, alarmtime, 0);};
+		int addSleepTimerEvent(time_t announcetime, time_t alarmtime)	// sleeptimer setzen
+		{
+			return addTimerEvent(CTimerd::TIMER_SLEEPTIMER, NULL, announcetime, alarmtime, 0);
+		};
 
 		// adds new shutdown timer event
 		int addShutdownTimerEvent(time_t alarmtime, time_t announcetime = 0, time_t stoptime = 0)
-			{return addTimerEvent(CTimerd::TIMER_SHUTDOWN, NULL, announcetime, alarmtime, stoptime);};
+		{
+			return addTimerEvent(CTimerd::TIMER_SHUTDOWN, NULL, announcetime, alarmtime, stoptime);
+		};
 
 		// adds new record timer event
 		int addRecordTimerEvent(const t_channel_id channel_id, time_t alarmtime, time_t stoptime,
-					uint64_t epg_id=0, time_t epg_starttime=0, time_t announcetime = 0,
-					unsigned char apids=TIMERD_APIDS_STD, bool safety=false,bool autoAdjust=false, std::string recDir="", bool forceAdd=true, CTimerd::CTimerEventRepeat evrepeat = CTimerd::TIMERREPEAT_ONCE, uint32_t repeatcount = 0)
+			uint64_t epg_id = 0, time_t epg_starttime = 0, time_t announcetime = 0,
+			unsigned char apids = TIMERD_APIDS_STD, bool safety = false, bool autoAdjust = false, std::string recDir = "", bool forceAdd = true, CTimerd::CTimerEventRepeat evrepeat = CTimerd::TIMERREPEAT_ONCE, uint32_t repeatcount = 0)
 		{
 			CTimerd::RecordingInfo eventInfo;
 			eventInfo.channel_id = channel_id;
@@ -121,12 +125,12 @@ class CTimerdClient:private CBasicClient
 			eventInfo.apids = apids;
 			eventInfo.recordingSafety = safety;
 			eventInfo.autoAdjustToEPG = autoAdjust;
-			strncpy(eventInfo.recordingDir, recDir.c_str(), RECORD_DIR_MAXLEN-1);
-			return addTimerEvent(CTimerd::TIMER_RECORD, &eventInfo, announcetime, alarmtime, stoptime, evrepeat, repeatcount,forceAdd);
+			strncpy(eventInfo.recordingDir, recDir.c_str(), RECORD_DIR_MAXLEN - 1);
+			return addTimerEvent(CTimerd::TIMER_RECORD, &eventInfo, announcetime, alarmtime, stoptime, evrepeat, repeatcount, forceAdd);
 		};
 
 		int addImmediateRecordTimerEvent(const t_channel_id channel_id, time_t alarmtime, time_t stoptime,
-						 uint64_t epg_id=0, time_t epg_starttime=0,unsigned char apids=TIMERD_APIDS_STD)
+			uint64_t epg_id = 0, time_t epg_starttime = 0, unsigned char apids = TIMERD_APIDS_STD)
 		{
 			CTimerd::EventInfo eventInfo;
 			eventInfo.channel_id = channel_id;
@@ -139,13 +143,15 @@ class CTimerdClient:private CBasicClient
 		};
 
 		// adds new standby timer event
-		int addStandbyTimerEvent(bool standby_on,time_t alarmtime, time_t announcetime = 0, time_t stoptime = 0)
-			{return addTimerEvent(CTimerd::TIMER_STANDBY, &standby_on,  announcetime, alarmtime, stoptime);};
+		int addStandbyTimerEvent(bool standby_on, time_t alarmtime, time_t announcetime = 0, time_t stoptime = 0)
+		{
+			return addTimerEvent(CTimerd::TIMER_STANDBY, &standby_on,  announcetime, alarmtime, stoptime);
+		};
 
 		// adds new zapto timer event
 		int addZaptoTimerEvent(const t_channel_id channel_id, time_t alarmtime, time_t announcetime = 0,
-				       time_t stoptime = 0, uint64_t epg_id=0, time_t epg_starttime=0,
-				       unsigned char apids=TIMERD_APIDS_STD)
+			time_t stoptime = 0, uint64_t epg_id = 0, time_t epg_starttime = 0,
+			unsigned char apids = TIMERD_APIDS_STD)
 		{
 			CTimerd::EventInfo eventInfo;
 			eventInfo.channel_id = channel_id;
@@ -157,7 +163,7 @@ class CTimerdClient:private CBasicClient
 		};
 
 #if 0
-		int addNextProgramTimerEvent(CTimerd::EventInfo eventInfo,time_t alarmtime, time_t announcetime = 0, time_t stoptime = 0)
+		int addNextProgramTimerEvent(CTimerd::EventInfo eventInfo, time_t alarmtime, time_t announcetime = 0, time_t stoptime = 0)
 		{
 			// mal auf verdacht eingebaut
 			// keine ahnung ob / was hier noch fehlt

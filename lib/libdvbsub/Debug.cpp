@@ -11,7 +11,8 @@ Debug::Debug() :
 
 Debug::~Debug()
 {
-	if (fp_ && fp_ != stdout) {
+	if (fp_ && fp_ != stdout)
+	{
 		fclose(fp_);
 	}
 }
@@ -21,10 +22,11 @@ void Debug::set_level(int level)
 	level_ = level;
 }
 
-FILE* Debug::set_file(char* file)
+FILE *Debug::set_file(char *file)
 {
-	FILE* fp = fopen(file, "a");
-	if (!fp) {
+	FILE *fp = fopen(file, "a");
+	if (!fp)
+	{
 		return NULL;
 	}
 	fp_ = fp;
@@ -40,15 +42,16 @@ void Debug::print(int level, const char *fmt, ...)
 	int len;
 	struct tm tv;
 
-	if (level < level_) {
+	if (level < level_)
+	{
 		ftime(&tp);
-		localtime_r (&tp.time, &tv);
-		strftime (tbuf, 14, "%H:%M:%S", &tv);
+		localtime_r(&tp.time, &tv);
+		strftime(tbuf, 14, "%H:%M:%S", &tv);
 		len = sprintf(buf, "[ %s.%03d ] ", tbuf, tp.millitm);
 
 		va_start(argp, fmt);
 		//vfprintf(fp_, fmt, argp);
-		vsnprintf (&buf[len], 512, fmt, argp);
+		vsnprintf(&buf[len], 512, fmt, argp);
 		va_end(argp);
 		fprintf(fp_, "%s", buf);
 	}

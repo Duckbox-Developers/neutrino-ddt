@@ -23,38 +23,38 @@
 
 #include "messagetools.h"
 
-size_t write_length_field (unsigned char * buffer, unsigned int length)
+size_t write_length_field(unsigned char *buffer, unsigned int length)
 {
-        if (length < 128)
-        {
-                buffer[0] = static_cast<unsigned char>(length);
-                return 1;
-        }
-        else
-        {
-                unsigned int pos = 0;
-                unsigned int shiftby = 8;
-                unsigned char length_field_size = 1;
+	if (length < 128)
+	{
+		buffer[0] = static_cast<unsigned char>(length);
+		return 1;
+	}
+	else
+	{
+		unsigned int pos = 0;
+		unsigned int shiftby = 8;
+		unsigned char length_field_size = 1;
 
-                while ((length >> shiftby) != 0)
-                {
-                        length_field_size++;
-                        shiftby += 8;
-                }
+		while ((length >> shiftby) != 0)
+		{
+			length_field_size++;
+			shiftby += 8;
+		}
 
-                buffer[pos++] = ((1 << 7) | length_field_size);
+		buffer[pos++] = ((1 << 7) | length_field_size);
 
-                while (shiftby != 0)
-                {
+		while (shiftby != 0)
+		{
 			shiftby -= 8;
-                        buffer[pos++] = static_cast<unsigned char>(length >> shiftby);
-                }
-                return pos;
-        }
+			buffer[pos++] = static_cast<unsigned char>(length >> shiftby);
+		}
+		return pos;
+	}
 
 }
 
-unsigned int parse_length_field (const unsigned char * buffer)
+unsigned int parse_length_field(const unsigned char *buffer)
 {
 	unsigned char size_indicator = (buffer[0] >> 7) & 0x01;
 	unsigned int length_value = 0;
@@ -78,7 +78,7 @@ unsigned int parse_length_field (const unsigned char * buffer)
 	return length_value;
 }
 
-size_t get_length_field_size (const unsigned int length)
+size_t get_length_field_size(const unsigned int length)
 {
 	if (length < 0x80)
 		return 0x01;

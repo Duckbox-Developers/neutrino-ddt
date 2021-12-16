@@ -30,7 +30,7 @@
 
 CSectionsdClient client;
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
 	for (int i = 1; i < argc; i++)
 	{
@@ -39,39 +39,39 @@ int main(int argc, char** argv)
 			printf("setPauseScanning true\n");
 			client.setPauseScanning(true);
 		}
-		else
-		if (!strcmp(argv[i], "--nopause"))
+		else if (!strcmp(argv[i], "--nopause"))
 		{
 			printf("setPauseScanning false\n");
 			client.setPauseScanning(false);
 		}
-		else
-		if (!strcmp(argv[i], "--state"))
-			printf("Scanning is active: %s\n", client.getIsScanningActive()?"true":"false");
-		else
-		if (!strcmp(argv[i], "--saveepg")) {
-			if(argv[i+1]) {
+		else if (!strcmp(argv[i], "--state"))
+			printf("Scanning is active: %s\n", client.getIsScanningActive() ? "true" : "false");
+		else if (!strcmp(argv[i], "--saveepg"))
+		{
+			if (argv[i + 1])
+			{
 				char path[255];
-				sprintf(path, "%s/", argv[i+1]);
+				sprintf(path, "%s/", argv[i + 1]);
 				printf("writing epg cache to %s...\n", path);
 				client.writeSI2XML(path);
 			}
 		}
-		else
-		if (!strcmp(argv[i], "--readepg")) {
-			if(argv[i+1]) {
+		else if (!strcmp(argv[i], "--readepg"))
+		{
+			if (argv[i + 1])
+			{
 				char path[255];
-				sprintf(path, "%s/", argv[i+1]);
+				sprintf(path, "%s/", argv[i + 1]);
 				printf("Reading epg cache from %s....\n", path);
 				client.readSIfromXML(path);
 			}
 		}
-		else
-		if (!strcmp(argv[i], "--dump")) {
+		else if (!strcmp(argv[i], "--dump"))
+		{
 			client.dumpStatus();
 		}
-		else
-		if (!strcmp(argv[i], "--freemem")) {
+		else if (!strcmp(argv[i], "--freemem"))
+		{
 			printf("Removing all cached epg...\n");
 			client.freeMemory();
 		}

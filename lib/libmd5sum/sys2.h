@@ -12,14 +12,14 @@
 #  include <alloca.h>
 # else
 #  ifdef _AIX
- #  pragma alloca
+#  pragma alloca
 #  else
 #   ifdef _WIN32
 #    include <malloc.h>
 #    include <io.h>
 #   else
 #    ifndef alloca
-char *alloca ();
+char *alloca();
 #    endif
 #   endif
 #  endif
@@ -27,9 +27,9 @@ char *alloca ();
 #endif
 
 #ifdef __DJGPP__
-  /* We need the declaration of setmode.  */
+/* We need the declaration of setmode.  */
 # include <io.h>
-  /* We need the declaration of __djgpp_set_ctrl_c.  */
+/* We need the declaration of __djgpp_set_ctrl_c.  */
 # include <sys/exceptn.h>
 #endif
 
@@ -132,7 +132,7 @@ char *alloca ();
 #define STREQ(a, b) (strcmp ((a), (b)) == 0)
 
 #ifndef HAVE_DECL_FREE
-void free ();
+void free();
 #endif
 
 //#ifndef HAVE_DECL_MALLOC
@@ -144,25 +144,25 @@ void free ();
 //#endif
 
 #ifndef HAVE_DECL_REALLOC
-char *realloc ();
+char *realloc();
 #endif
 
 #ifndef HAVE_DECL_STPCPY
 # ifndef stpcpy
-char *stpcpy ();
+char *stpcpy();
 # endif
 #endif
 
 #ifndef HAVE_DECL_STRSTR
-char *strstr ();
+char *strstr();
 #endif
 
 #ifndef HAVE_DECL_GETENV
-char *getenv ();
+char *getenv();
 #endif
 
 #ifndef HAVE_DECL_LSEEK
-off_t lseek ();
+off_t lseek();
 #endif
 
 #if ! defined HAVE_MEMPCPY && ! defined mempcpy
@@ -231,22 +231,22 @@ off_t lseek ();
 #endif
 
 #define SAME_INODE(Stat_buf_1, Stat_buf_2) \
-  ((Stat_buf_1).st_ino == (Stat_buf_2).st_ino \
-   && (Stat_buf_1).st_dev == (Stat_buf_2).st_dev)
+	((Stat_buf_1).st_ino == (Stat_buf_2).st_ino \
+		&& (Stat_buf_1).st_dev == (Stat_buf_2).st_dev)
 
 #define DOT_OR_DOTDOT(Basename) \
-  (Basename[0] == '.' && (Basename[1] == '\0' \
-			  || (Basename[1] == '.' && Basename[2] == '\0')))
+	(Basename[0] == '.' && (Basename[1] == '\0' \
+			|| (Basename[1] == '.' && Basename[2] == '\0')))
 
 #if SETVBUF_REVERSED
 # define SETVBUF(Stream, Buffer, Type, Size) \
-    setvbuf (Stream, Type, Buffer, Size)
+	setvbuf (Stream, Type, Buffer, Size)
 #else
 # define SETVBUF(Stream, Buffer, Type, Size) \
-    setvbuf (Stream, Buffer, Type, Size)
+	setvbuf (Stream, Buffer, Type, Size)
 #endif
 
-char *base_name PARAMS ((char const *));
+char *base_name PARAMS((char const *));
 
 /* Factor out some of the common --help and --version processing code.  */
 
@@ -254,21 +254,21 @@ char *base_name PARAMS ((char const *));
 #define GETOPT_VERSION_CHAR 251
 
 #define GETOPT_HELP_OPTION_DECL \
-  "help", no_argument, 0, GETOPT_HELP_CHAR
+	"help", no_argument, 0, GETOPT_HELP_CHAR
 #define GETOPT_VERSION_OPTION_DECL \
-  "version", no_argument, 0, GETOPT_VERSION_CHAR
+	"version", no_argument, 0, GETOPT_VERSION_CHAR
 
 #define case_GETOPT_HELP_CHAR			\
-  case GETOPT_HELP_CHAR:			\
-    usage (EXIT_SUCCESS);			\
-    break;
+	case GETOPT_HELP_CHAR:			\
+	usage (EXIT_SUCCESS);			\
+	break;
 
 #define case_GETOPT_VERSION_CHAR(Program_name, Authors)			\
-  case GETOPT_VERSION_CHAR:						\
-    version_etc (stdout, Program_name, GNU_PACKAGE, VERSION, Authors);	\
-    close_stdout ();							\
-    exit (EXIT_SUCCESS);						\
-    break;
+	case GETOPT_VERSION_CHAR:						\
+	version_etc (stdout, Program_name, GNU_PACKAGE, VERSION, Authors);	\
+	close_stdout ();							\
+	exit (EXIT_SUCCESS);						\
+	break;
 
 #ifndef MAX
 # define MAX(a, b) ((a) > (b) ? (a) : (b))
@@ -287,7 +287,7 @@ char *base_name PARAMS ((char const *));
 /* The outer cast is needed to work around a bug in Cray C 5.0.3.0.
    It is necessary at least when t == time_t.  */
 #define TYPE_MINIMUM(t) ((t) (TYPE_SIGNED (t) \
-			      ? ~ (t) 0 << (sizeof (t) * CHAR_BIT - 1) : (t) 0))
+		? ~ (t) 0 << (sizeof (t) * CHAR_BIT - 1) : (t) 0))
 #define TYPE_MAXIMUM(t) ((t) (~ (t) 0 - TYPE_MINIMUM (t)))
 
 #ifndef CHAR_MIN

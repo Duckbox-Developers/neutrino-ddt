@@ -41,34 +41,34 @@
 #define RECEIVE_TIMEOUT_IN_SECONDS 60
 #define SEND_TIMEOUT_IN_SECONDS 60
 
-bool CBasicServer::receive_data(int fd, void * data, const size_t size)
+bool CBasicServer::receive_data(int fd, void *data, const size_t size)
 {
-        timeval timeout;
-        timeout.tv_sec  = RECEIVE_TIMEOUT_IN_SECONDS;
-        timeout.tv_usec = 0;
-        return ::receive_data(fd, data, size, timeout);
+	timeval timeout;
+	timeout.tv_sec  = RECEIVE_TIMEOUT_IN_SECONDS;
+	timeout.tv_usec = 0;
+	return ::receive_data(fd, data, size, timeout);
 }
 
-bool CBasicServer::send_data(int fd, const void * data, const size_t size)
+bool CBasicServer::send_data(int fd, const void *data, const size_t size)
 {
-        timeval timeout;
-        timeout.tv_sec  = SEND_TIMEOUT_IN_SECONDS;
-        timeout.tv_usec = 0;
-        return ::send_data(fd, data, size, timeout);
+	timeval timeout;
+	timeout.tv_sec  = SEND_TIMEOUT_IN_SECONDS;
+	timeout.tv_usec = 0;
+	return ::send_data(fd, data, size, timeout);
 }
 
-void CBasicServer::delete_string(char * data)
+void CBasicServer::delete_string(char *data)
 {
 	free((void *)data);
 }
 
-char * CBasicServer::receive_string(int fd)
+char *CBasicServer::receive_string(int fd)
 {
 	uint8_t length;
 
 	if (receive_data(fd, &length, sizeof(length)))
 	{
-		char * data = (char *)malloc(((size_t)length) + 1);
+		char *data = (char *)malloc(((size_t)length) + 1);
 		if (receive_data(fd, data, length))
 		{
 			data[length] = 0; /* add terminating 0 */
@@ -83,7 +83,7 @@ char * CBasicServer::receive_string(int fd)
 	return NULL;
 }
 
-bool CBasicServer::prepare(const char* socketname)
+bool CBasicServer::prepare(const char *socketname)
 {
 	struct sockaddr_un servaddr;
 	int clilen;
@@ -101,7 +101,7 @@ bool CBasicServer::prepare(const char* socketname)
 		perror(socketname);
 		return false;
 	}
-	if (bind(sock_fd, (struct sockaddr*) &servaddr, clilen) < 0)
+	if (bind(sock_fd, (struct sockaddr *) &servaddr, clilen) < 0)
 	{
 		printf("[CBasicServer] bind failed.\n");
 		perror(socketname);
@@ -130,7 +130,7 @@ bool CBasicServer::parse(bool (parse_command)(CBasicMessage::Header &rmsg, int c
 	bool parse_another_command = true;
 
 	CBasicMessage::Header rmsg;
-	conn_fd = accept(sock_fd, (struct sockaddr*) &servaddr, (socklen_t*) &clilen);
+	conn_fd = accept(sock_fd, (struct sockaddr *) &servaddr, (socklen_t *) &clilen);
 	memset(&rmsg, 0, sizeof(rmsg));
 	ssize_t r = read(conn_fd, &rmsg, sizeof(rmsg));
 
@@ -146,7 +146,8 @@ bool CBasicServer::parse(bool (parse_command)(CBasicMessage::Header &rmsg, int c
 
 bool CBasicServer::run(bool (parse_command)(CBasicMessage::Header &rmsg, int connfd), const CBasicMessage::t_version version, bool non_blocking)
 {
-	if (non_blocking) {
+	if (non_blocking)
+	{
 		struct pollfd pfd;
 
 		pfd.fd = sock_fd;
@@ -157,8 +158,9 @@ bool CBasicServer::run(bool (parse_command)(CBasicMessage::Header &rmsg, int con
 		else
 			return true;
 	}
-	else {
-		while(parse(parse_command, version))
+	else
+	{
+		while (parse(parse_command, version))
 		{};
 
 		stop();
@@ -170,6 +172,6 @@ bool CBasicServer::run(bool (parse_command)(CBasicMessage::Header &rmsg, int con
 void CBasicServer::stop(void)
 {
 	close(sock_fd);
-        unlink(name.c_str());
+	unlink(name.c_str());
 }
 

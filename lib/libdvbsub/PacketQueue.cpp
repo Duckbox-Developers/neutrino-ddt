@@ -11,13 +11,14 @@ PacketQueue::PacketQueue()
 
 PacketQueue::~PacketQueue()
 {
-	while (queue.begin() != queue.end()) {
+	while (queue.begin() != queue.end())
+	{
 		delete[] queue.front();
 		queue.pop_front();
 	}
 }
 
-void PacketQueue::push(uint8_t* data)
+void PacketQueue::push(uint8_t *data)
 {
 	pthread_mutex_lock(&mutex);
 
@@ -26,13 +27,14 @@ void PacketQueue::push(uint8_t* data)
 	pthread_mutex_unlock(&mutex);
 }
 
-uint8_t* PacketQueue::pop()
+uint8_t *PacketQueue::pop()
 {
-	uint8_t* retval = NULL;
+	uint8_t *retval = NULL;
 
 	pthread_mutex_lock(&mutex);
 
-	if (queue.size() > 0) {
+	if (queue.size() > 0)
+	{
 		retval = queue.front();
 		queue.pop_front();
 	}

@@ -109,33 +109,33 @@ class CTimerd
 		};
 
 		class RecordingInfo : public EventInfo
-			{
+		{
 			public:
-				RecordingInfo(){};
-				RecordingInfo(EventInfo& e)
-					{
-						apids = e.apids;
-						channel_id = e.channel_id;
-						epg_id = e.epg_id;
-						epg_starttime = e.epg_starttime;
-						recordingSafety = e.recordingSafety;
-						autoAdjustToEPG = e.autoAdjustToEPG;
-					};
-				RecordingInfo& operator = (EventInfo& e)
-					{
-						apids = e.apids;
-						channel_id = e.channel_id;
-						epg_id = e.epg_id;
-						epg_starttime = e.epg_starttime;
-						recordingSafety = e.recordingSafety;
-						autoAdjustToEPG = e.autoAdjustToEPG;
-						return *this;
-					}
+				RecordingInfo() {};
+				RecordingInfo(EventInfo &e)
+				{
+					apids = e.apids;
+					channel_id = e.channel_id;
+					epg_id = e.epg_id;
+					epg_starttime = e.epg_starttime;
+					recordingSafety = e.recordingSafety;
+					autoAdjustToEPG = e.autoAdjustToEPG;
+				};
+				RecordingInfo &operator = (EventInfo &e)
+				{
+					apids = e.apids;
+					channel_id = e.channel_id;
+					epg_id = e.epg_id;
+					epg_starttime = e.epg_starttime;
+					recordingSafety = e.recordingSafety;
+					autoAdjustToEPG = e.autoAdjustToEPG;
+					return *this;
+				}
 				unsigned char apids;
 				int eventID;
 				char recordingDir[RECORD_DIR_MAXLEN];
 				char epgTitle[EPG_TITLE_MAXLEN];
-			};
+		};
 
 		struct RecordingStopInfo
 		{
@@ -166,7 +166,7 @@ class CTimerd
 			int               rem_pre;
 			int               rem_post;
 
-			bool operator< (const responseGetTimer& a) const
+			bool operator< (const responseGetTimer &a) const
 			{
 				return this->alarmTime < a.alarmTime ;
 			}

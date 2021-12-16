@@ -31,11 +31,11 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-bool send_data(int fd, const void * data, const size_t size, const timeval timeout)
+bool send_data(int fd, const void *data, const size_t size, const timeval timeout)
 {
 	fd_set       writefds;
 	timeval      tv;
-	const void * buffer;
+	const void *buffer;
 	size_t       n;
 	int          rc;
 
@@ -49,8 +49,8 @@ bool send_data(int fd, const void * data, const size_t size, const timeval timeo
 		if (rc == -1)
 		{
 			perror("[basicsocket] send_data");
-char * buf = (char *) data;
-printf("send_data: errno %d data %X\n", errno, buf[0]);
+			char *buf = (char *) data;
+			printf("send_data: errno %d data %X\n", errno, buf[0]);
 			//if (errno == EPIPE)
 			if (errno == EPIPE || errno == ESPIPE)
 				return false;
@@ -80,11 +80,11 @@ printf("send_data: errno %d data %X\n", errno, buf[0]);
 }
 
 
-bool receive_data(int fd, void * data, const size_t size, const timeval timeout)
+bool receive_data(int fd, void *data, const size_t size, const timeval timeout)
 {
 	fd_set    readfds;
 	timeval   tv;
-	void    * buffer;
+	void     *buffer;
 	size_t    n;
 	int       rc;
 

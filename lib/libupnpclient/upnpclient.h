@@ -49,34 +49,37 @@ class CUPnPService;
 
 class CUPnPDevice
 {
-  friend class CUPnPService;
-  friend class CUPnPSocket;
+		friend class CUPnPService;
+		friend class CUPnPSocket;
 
-private:
-  std::string  descurl;
-  std::list<CUPnPService> services;
-  std::string HTTP(std::string url,std::string post="", std::string action="");
-  bool check_response(std::string header, std::string& charset, std::string& rcode);
-  std::list<UPnPIcon> icons;
+	private:
+		std::string  descurl;
+		std::list<CUPnPService> services;
+		std::string HTTP(std::string url, std::string post = "", std::string action = "");
+		bool check_response(std::string header, std::string &charset, std::string &rcode);
+		std::list<UPnPIcon> icons;
 
-public:
-  std::string friendlyname;
-  std::string devicetype;
-  std::string manufacturer;
-  std::string manufacturerurl;
-  std::string modeldescription;
-  std::string modelname;
-  std::string modelnumber;
-  std::string modelurl;
-  std::string serialnumber;
-  std::string udn;
-  std::string upc;
-  std::list<UPnPAttribute> SendSOAP(std::string service, std::string action, std::list<UPnPAttribute> attribs);
-  std::list<std::string> GetServices(void);
-  std::list<UPnPIcon> GetIcons() const { return icons; };
+	public:
+		std::string friendlyname;
+		std::string devicetype;
+		std::string manufacturer;
+		std::string manufacturerurl;
+		std::string modeldescription;
+		std::string modelname;
+		std::string modelnumber;
+		std::string modelurl;
+		std::string serialnumber;
+		std::string udn;
+		std::string upc;
+		std::list<UPnPAttribute> SendSOAP(std::string service, std::string action, std::list<UPnPAttribute> attribs);
+		std::list<std::string> GetServices(void);
+		std::list<UPnPIcon> GetIcons() const
+		{
+			return icons;
+		};
 
-  CUPnPDevice(std::string url);
-  ~CUPnPDevice();
+		CUPnPDevice(std::string url);
+		~CUPnPDevice();
 };
 
 /******************************************
@@ -86,15 +89,15 @@ public:
 class CUPnPService
 {
 
-public:
-  std::string  controlurl;
-  std::string  eventurl;
-  std::string  servicename;
-  CUPnPDevice *device;
+	public:
+		std::string  controlurl;
+		std::string  eventurl;
+		std::string  servicename;
+		CUPnPDevice *device;
 
-  CUPnPService(CUPnPDevice *dev, std::string curl, std::string eurl, std::string service);
-  ~CUPnPService();
-  std::list<UPnPAttribute> SendSOAP(std::string action, std::list<UPnPAttribute> attribs);
+		CUPnPService(CUPnPDevice *dev, std::string curl, std::string eurl, std::string service);
+		~CUPnPService();
+		std::list<UPnPAttribute> SendSOAP(std::string action, std::list<UPnPAttribute> attribs);
 };
 
 /******************************************
@@ -104,15 +107,15 @@ public:
 class CUPnPSocket
 {
 
-public:
-  CUPnPSocket();
-  ~CUPnPSocket();
+	public:
+		CUPnPSocket();
+		~CUPnPSocket();
 
-  void SetTTL(int ttl);
-  std::vector<CUPnPDevice> Discover(std::string service);
+		void SetTTL(int ttl);
+		std::vector<CUPnPDevice> Discover(std::string service);
 
-private:
-  int m_socket;
+	private:
+		int m_socket;
 
 };
 

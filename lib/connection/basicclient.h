@@ -31,21 +31,21 @@
 
 class CBasicClient
 {
- private:
-	int sock_fd;
+	private:
+		int sock_fd;
 
- protected:
-	virtual unsigned char   getVersion   () const = 0;
-	virtual const    char * getSocketName() const = 0;
+	protected:
+		virtual unsigned char   getVersion() const = 0;
+		virtual const    char *getSocketName() const = 0;
 
-	bool open_connection();
-	bool send_data(const char * data, const size_t size);
-	bool send_string(const char * data);
-	bool receive_data(char* data, const size_t size, bool use_max_timeout = false);
-	bool send(const unsigned char command, const char* data = NULL, const unsigned int size = 0);
-	void close_connection();
+		bool open_connection();
+		bool send_data(const char *data, const size_t size);
+		bool send_string(const char *data);
+		bool receive_data(char *data, const size_t size, bool use_max_timeout = false);
+		bool send(const unsigned char command, const char *data = NULL, const unsigned int size = 0);
+		void close_connection();
 
-	CBasicClient();
+		CBasicClient();
 };
 
 #endif

@@ -64,7 +64,7 @@ bool CBasicClient::open_connection()
 		return false;
 	}
 
-	if (connect(sock_fd, (struct sockaddr*) &servaddr, clilen) < 0)
+	if (connect(sock_fd, (struct sockaddr *) &servaddr, clilen) < 0)
 	{
 		printf("[CBasicClient] connect failed.\n");
 		perror(getSocketName());
@@ -83,7 +83,7 @@ void CBasicClient::close_connection()
 	}
 }
 
-bool CBasicClient::send_data(const char* data, const size_t size)
+bool CBasicClient::send_data(const char *data, const size_t size)
 {
 	timeval timeout;
 
@@ -102,7 +102,7 @@ bool CBasicClient::send_data(const char* data, const size_t size)
 	return true;
 }
 
-bool CBasicClient::send_string(const char* data)
+bool CBasicClient::send_string(const char *data)
 {
 	uint8_t send_length;
 	size_t length = strlen(data);
@@ -116,10 +116,10 @@ bool CBasicClient::send_string(const char* data)
 		send_length = static_cast<uint8_t>(length);
 	}
 	return (send_data((char *)&send_length, sizeof(send_length)) &&
-		send_data(data, send_length));
+			send_data(data, send_length));
 }
 
-bool CBasicClient::receive_data(char* data, const size_t size, bool use_max_timeout)
+bool CBasicClient::receive_data(char *data, const size_t size, bool use_max_timeout)
 {
 	timeval timeout;
 
@@ -146,7 +146,7 @@ bool CBasicClient::receive_data(char* data, const size_t size, bool use_max_time
 	return true;
 }
 
-bool CBasicClient::send(const unsigned char command, const char* data, const unsigned int size)
+bool CBasicClient::send(const unsigned char command, const char *data, const unsigned int size)
 {
 	CBasicMessage::Header msgHead;
 	msgHead.version = getVersion();
@@ -154,11 +154,11 @@ bool CBasicClient::send(const unsigned char command, const char* data, const uns
 
 	open_connection(); // if the return value is false, the next send_data call will return false, too
 
-	if (!send_data((char*)&msgHead, sizeof(msgHead)))
-	    return false;
+	if (!send_data((char *)&msgHead, sizeof(msgHead)))
+		return false;
 
 	if (size != 0)
-	    return send_data(data, size);
+		return send_data(data, size);
 
 	return true;
 }

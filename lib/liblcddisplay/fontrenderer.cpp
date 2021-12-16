@@ -214,7 +214,7 @@ FT_Error LcdFont::getGlyphBitmap(FT_ULong glyph_index, FTC_SBit *sbit)
 	return renderer->getGlyphBitmap(&font, glyph_index, sbit);
 }
 
-extern int UTF8ToUnicode(const char*&text, const bool utf8_encoded);	//defined in src/driver/fontrenderer.cpp
+extern int UTF8ToUnicode(const char *&text, const bool utf8_encoded);	//defined in src/driver/fontrenderer.cpp
 #if 0 //defined (ENABLE_FRIBIDI)
 std::string fribidiShapeChar(const char *text, const bool utf8_encoded);
 #endif
