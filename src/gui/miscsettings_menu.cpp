@@ -69,7 +69,9 @@ CMiscMenue::CMiscMenue()
 {
 	width = 40;
 
+#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99
 	fanNotifier = NULL;
+#endif
 	sectionsdConfigNotifier = NULL;
 
 	epg_save = NULL;
@@ -318,8 +320,10 @@ int CMiscMenue::showMiscSettingsMenu()
 
 	int res = misc_menue.exec(NULL, "");
 
+#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99
 	delete fanNotifier;
 	fanNotifier = NULL;
+#endif
 	delete sectionsdConfigNotifier;
 	sectionsdConfigNotifier = NULL;
 
@@ -347,21 +351,20 @@ void CMiscMenue::showMiscSettingsMenuGeneral(CMenuWidget *ms_general)
 	mc->setHint("", LOCALE_MENU_HINT_CACHE_TXT);
 	ms_general->addItem(mc);
 
+#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99
 	//fan speed
-	if (g_info.hw_caps->has_fan)
-	{
-		if (fanNotifier == NULL)
-			fanNotifier = new CFanControlNotifier();
+	if (fanNotifier == NULL)
+		fanNotifier = new CFanControlNotifier();
 #if defined (BOXMODEL_IPBOX9900) || defined (BOXMODEL_IPBOX99) || defined (BOXMODEL_DM8000)
-		CMenuOptionNumberChooser * mn = new CMenuOptionNumberChooser(LOCALE_FAN_SPEED, &g_settings.fan_speed, true, 0, 1, fanNotifier, CRCInput::RC_nokey, NULL, 0, 0, LOCALE_OPTIONS_OFF);
+	CMenuOptionNumberChooser * mn = new CMenuOptionNumberChooser(LOCALE_FAN_SPEED, &g_settings.fan_speed, true, 0, 1, fanNotifier, CRCInput::RC_nokey, NULL, 0, 0, LOCALE_OPTIONS_OFF);
 #else
-		CMenuOptionNumberChooser * mn = new CMenuOptionNumberChooser(LOCALE_FAN_SPEED, &g_settings.fan_speed, true, 1, 14, fanNotifier, CRCInput::RC_nokey, NULL, 0, 0, LOCALE_OPTIONS_OFF);
+	CMenuOptionNumberChooser * mn = new CMenuOptionNumberChooser(LOCALE_FAN_SPEED, &g_settings.fan_speed, true, 1, 14, fanNotifier, CRCInput::RC_nokey, NULL, 0, 0, LOCALE_OPTIONS_OFF);
 #endif
-		mn->setHint("", LOCALE_MENU_HINT_FAN_SPEED);
-		ms_general->addItem(mn);
-	}
+	mn->setHint("", LOCALE_MENU_HINT_FAN_SPEED);
+	ms_general->addItem(mn);
 
 	ms_general->addItem(GenericMenuSeparatorLine);
+#endif
 
 	CMenuForwarder * mf = new CMenuForwarder(LOCALE_PLUGINS_HDD_DIR, true, g_settings.plugin_hdd_dir, this, "plugin_dir");
 	mf->setHint("", LOCALE_MENU_HINT_PLUGINS_HDD_DIR);
