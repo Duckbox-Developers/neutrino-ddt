@@ -36,25 +36,25 @@
 #define VALGRIND_PARANOIA(x) {}
 #endif
 
-unsigned char   CSectionsdClient::getVersion   () const
+unsigned char   CSectionsdClient::getVersion() const
 {
 	return sectionsd::ACTVERSION;
 }
 
-const          char * CSectionsdClient::getSocketName() const
+const          char *CSectionsdClient::getSocketName() const
 {
 	return SECTIONSD_UDS_NAME;
 }
 
-int CSectionsdClient::readResponse(char* data,unsigned int size)
+int CSectionsdClient::readResponse(char *data, unsigned int size)
 {
 	struct sectionsd::msgResponseHeader responseHeader;
-	if (!receive_data((char*)&responseHeader, sizeof(responseHeader)))
+	if (!receive_data((char *)&responseHeader, sizeof(responseHeader)))
 		return 0;
 
-	if ( data != NULL )
+	if (data != NULL)
 	{
-		if ( responseHeader.dataLength != (unsigned)size )
+		if (responseHeader.dataLength != (unsigned)size)
 			return -1;
 		else
 			return receive_data(data, size);
@@ -63,7 +63,7 @@ int CSectionsdClient::readResponse(char* data,unsigned int size)
 		return responseHeader.dataLength;
 }
 
-bool CSectionsdClient::send(const unsigned char command, const char* data, const unsigned int size)
+bool CSectionsdClient::send(const unsigned char command, const char *data, const unsigned int size)
 {
 	sectionsd::msgRequestHeader msgHead;
 	VALGRIND_PARANOIA(msgHead);
@@ -74,16 +74,16 @@ bool CSectionsdClient::send(const unsigned char command, const char* data, const
 
 	open_connection(); // if the return value is false, the next send_data call will return false, too
 
-        if (!send_data((char*)&msgHead, sizeof(msgHead)))
-            return false;
+	if (!send_data((char *)&msgHead, sizeof(msgHead)))
+		return false;
 
-        if (size != 0)
-            return send_data(data, size);
+	if (size != 0)
+		return send_data(data, size);
 
-        return true;
+	return true;
 }
 
-void CSectionsdClient::registerEvent(const unsigned int eventID, const unsigned int clientID, const char * const udsName)
+void CSectionsdClient::registerEvent(const unsigned int eventID, const unsigned int clientID, const char *const udsName)
 {
 	CEventServer::commandRegisterEvent msg2;
 	VALGRIND_PARANOIA(msg2);
@@ -93,7 +93,7 @@ void CSectionsdClient::registerEvent(const unsigned int eventID, const unsigned 
 
 	cstrncpy(msg2.udsName, udsName, sizeof(msg2.udsName));
 
-	send(sectionsd::CMD_registerEvents, (char*)&msg2, sizeof(msg2));
+	send(sectionsd::CMD_registerEvents, (char *)&msg2, sizeof(msg2));
 
 	close_connection();
 }
@@ -106,7 +106,7 @@ void CSectionsdClient::unRegisterEvent(const unsigned int eventID, const unsigne
 	msg2.eventID = eventID;
 	msg2.clientID = clientID;
 
-	send(sectionsd::CMD_unregisterEvents, (char*)&msg2, sizeof(msg2));
+	send(sectionsd::CMD_unregisterEvents, (char *)&msg2, sizeof(msg2));
 
 	close_connection();
 }
@@ -117,7 +117,7 @@ bool CSectionsdClient::getIsTimeSet()
 
 	if (send(sectionsd::getIsTimeSet))
 	{
-		readResponse((char*)&rmsg, sizeof(rmsg));
+		readResponse((char *)&rmsg, sizeof(rmsg));
 		close_connection();
 
 		return rmsg.IsTimeSet;
@@ -133,7 +133,7 @@ void CSectionsdClient::setPauseScanning(const bool doPause)
 {
 	int PauseIt = (doPause) ? 1 : 0;
 
-	send(sectionsd::pauseScanning, (char*)&PauseIt, sizeof(PauseIt));
+	send(sectionsd::pauseScanning, (char *)&PauseIt, sizeof(PauseIt));
 
 	readResponse();
 	close_connection();
@@ -145,7 +145,7 @@ bool CSectionsdClient::getIsScanningActive()
 
 	if (send(sectionsd::getIsScanningActive))
 	{
-		readResponse((char*)&scanning, sizeof(scanning));
+		readResponse((char *)&scanning, sizeof(scanning));
 		close_connection();
 
 		return scanning;
@@ -188,25 +188,25 @@ void CSectionsdClient::freeMemory()
 	close_connection();
 }
 
-void CSectionsdClient::readSIfromXML(const char * epgxmlname)
+void CSectionsdClient::readSIfromXML(const char *epgxmlname)
 {
-	send(sectionsd::readSIfromXML, (char*) epgxmlname, strlen(epgxmlname));
+	send(sectionsd::readSIfromXML, (char *) epgxmlname, strlen(epgxmlname));
 
 	readResponse();
 	close_connection();
 }
 
-void CSectionsdClient::readSIfromXMLTV(const char * url)
+void CSectionsdClient::readSIfromXMLTV(const char *url)
 {
-	send(sectionsd::readSIfromXMLTV, (char*) url, strlen(url));
+	send(sectionsd::readSIfromXMLTV, (char *) url, strlen(url));
 
 	readResponse();
 	close_connection();
 }
 
-void CSectionsdClient::writeSI2XML(const char * epgxmlname)
+void CSectionsdClient::writeSI2XML(const char *epgxmlname)
 {
-	send(sectionsd::writeSI2XML, (char*) epgxmlname, strlen(epgxmlname));
+	send(sectionsd::writeSI2XML, (char *) epgxmlname, strlen(epgxmlname));
 
 	readResponse();
 	close_connection();
@@ -215,7 +215,7 @@ void CSectionsdClient::writeSI2XML(const char * epgxmlname)
 void CSectionsdClient::setConfig(const epg_config config)
 {
 	sectionsd::commandSetConfig *msg;
-	char* pData = new char[sizeof(sectionsd::commandSetConfig) + config.network_ntpserver.length() + 1 + config.epg_dir.length() + 1];
+	char *pData = new char[sizeof(sectionsd::commandSetConfig) + config.network_ntpserver.length() + 1 + config.epg_dir.length() + 1];
 	msg = (sectionsd::commandSetConfig *)pData;
 
 	msg->epg_cache		= config.epg_cache;
@@ -224,14 +224,14 @@ void CSectionsdClient::setConfig(const epg_config config)
 	msg->network_ntprefresh	= config.network_ntprefresh;
 	msg->network_ntpenable	= config.network_ntpenable;
 	msg->epg_extendedcache	= config.epg_extendedcache;
-	msg->epg_save_frequently= config.epg_save_frequently;
-	msg->epg_read_frequently= config.epg_read_frequently;
+	msg->epg_save_frequently = config.epg_save_frequently;
+	msg->epg_read_frequently = config.epg_read_frequently;
 //	config.network_ntpserver:
 	strcpy(&pData[sizeof(sectionsd::commandSetConfig)], config.network_ntpserver.c_str());
 //	config.epg_dir:
 	strcpy(&pData[sizeof(sectionsd::commandSetConfig) + config.network_ntpserver.length() + 1], config.epg_dir.c_str());
 
-	send(sectionsd::setConfig, (char*)pData, sizeof(sectionsd::commandSetConfig) + config.network_ntpserver.length() + 1 + config.epg_dir.length() + 1);
+	send(sectionsd::setConfig, (char *)pData, sizeof(sectionsd::commandSetConfig) + config.network_ntpserver.length() + 1 + config.epg_dir.length() + 1);
 	readResponse();
 	close_connection();
 	delete[] pData;
@@ -244,34 +244,34 @@ void CSectionsdClient::dumpStatus()
 }
 
 #if 0
-bool CSectionsdClient::getComponentTagsUniqueKey(const t_event_id uniqueKey, CSectionsdClient::ComponentTagList& tags)
+bool CSectionsdClient::getComponentTagsUniqueKey(const t_event_id uniqueKey, CSectionsdClient::ComponentTagList &tags)
 {
-	if (send(sectionsd::ComponentTagsUniqueKey, (char*)&uniqueKey, sizeof(uniqueKey)))
+	if (send(sectionsd::ComponentTagsUniqueKey, (char *)&uniqueKey, sizeof(uniqueKey)))
 	{
 		tags.clear();
 
 		int nBufSize = readResponse();
 
-		char* pData = new char[nBufSize];
+		char *pData = new char[nBufSize];
 		receive_data(pData, nBufSize);
-		char* dp = pData;
+		char *dp = pData;
 
-		int	count= *(int *) pData;
-		dp+= sizeof(int);
+		int	count = *(int *) pData;
+		dp += sizeof(int);
 
 		CSectionsdClient::responseGetComponentTags response;
-		for (int i= 0; i<count; i++)
+		for (int i = 0; i < count; i++)
 		{
 			response.component = dp;
-			dp+= strlen(dp)+1;
+			dp += strlen(dp) + 1;
 			response.componentType = *(unsigned char *) dp;
-			dp+=sizeof(unsigned char);
+			dp += sizeof(unsigned char);
 			response.componentTag = *(unsigned char *) dp;
-			dp+=sizeof(unsigned char);
+			dp += sizeof(unsigned char);
 			response.streamContent = *(unsigned char *) dp;
-			dp+=sizeof(unsigned char);
+			dp += sizeof(unsigned char);
 
-			tags.insert( tags.end(), response);
+			tags.insert(tags.end(), response);
 		}
 		delete[] pData;
 		close_connection();
@@ -285,34 +285,34 @@ bool CSectionsdClient::getComponentTagsUniqueKey(const t_event_id uniqueKey, CSe
 	}
 }
 
-bool CSectionsdClient::getLinkageDescriptorsUniqueKey(const t_event_id uniqueKey, CSectionsdClient::LinkageDescriptorList& descriptors)
+bool CSectionsdClient::getLinkageDescriptorsUniqueKey(const t_event_id uniqueKey, CSectionsdClient::LinkageDescriptorList &descriptors)
 {
-	if (send(sectionsd::LinkageDescriptorsUniqueKey, (char*)&uniqueKey, sizeof(uniqueKey)))
+	if (send(sectionsd::LinkageDescriptorsUniqueKey, (char *)&uniqueKey, sizeof(uniqueKey)))
 	{
 		descriptors.clear();
 
 		int nBufSize = readResponse();
 
-		char* pData = new char[nBufSize];
+		char *pData = new char[nBufSize];
 		receive_data(pData, nBufSize);
-		char* dp = pData;
+		char *dp = pData;
 
-		int count= *(int *) pData;
-		dp+= sizeof(int);
+		int count = *(int *) pData;
+		dp += sizeof(int);
 
 		CSectionsdClient::responseGetLinkageDescriptors response;
-		for (int i= 0; i<count; i++)
+		for (int i = 0; i < count; i++)
 		{
 			response.name = dp;
-			dp+= strlen(dp)+1;
+			dp += strlen(dp) + 1;
 			response.transportStreamId = *(t_transport_stream_id *) dp;
-			dp+=sizeof(t_transport_stream_id);
+			dp += sizeof(t_transport_stream_id);
 			response.originalNetworkId = *(t_original_network_id *) dp;
-			dp+=sizeof(t_original_network_id);
+			dp += sizeof(t_original_network_id);
 			response.serviceId = *(t_service_id *) dp;
-			dp+=sizeof(t_service_id);
+			dp += sizeof(t_service_id);
 
-			descriptors.insert( descriptors.end(), response);
+			descriptors.insert(descriptors.end(), response);
 		}
 		delete[] pData;
 		close_connection();
@@ -325,28 +325,32 @@ bool CSectionsdClient::getLinkageDescriptorsUniqueKey(const t_event_id uniqueKey
 	}
 }
 
-bool CSectionsdClient::getNVODTimesServiceKey(const t_channel_id channel_id, CSectionsdClient::NVODTimesList& nvod_list)
+bool CSectionsdClient::getNVODTimesServiceKey(const t_channel_id channel_id, CSectionsdClient::NVODTimesList &nvod_list)
 {
-	if (send(sectionsd::timesNVODservice, (char*)&channel_id, sizeof(channel_id)))
+	if (send(sectionsd::timesNVODservice, (char *)&channel_id, sizeof(channel_id)))
 	{
 		nvod_list.clear();
 
 		int nBufSize = readResponse();
 
-		char* pData = new char[nBufSize];
+		char *pData = new char[nBufSize];
 		receive_data(pData, nBufSize);
-		char* dp = pData;
+		char *dp = pData;
 
 		CSectionsdClient::responseGetNVODTimes response;
 
-		while( dp< pData+ nBufSize )
+		while (dp < pData + nBufSize)
 		{
-			response.service_id = *(t_service_id *) dp;			dp += sizeof(t_service_id);
-			response.original_network_id = *(t_original_network_id *) dp;	dp += sizeof(t_original_network_id);
-			response.transport_stream_id = *(t_transport_stream_id *) dp;	dp += sizeof(t_transport_stream_id);
-			response.zeit = *(CSectionsdClient::sectionsdTime*) dp;		dp += sizeof(CSectionsdClient::sectionsdTime);
+			response.service_id = *(t_service_id *) dp;
+			dp += sizeof(t_service_id);
+			response.original_network_id = *(t_original_network_id *) dp;
+			dp += sizeof(t_original_network_id);
+			response.transport_stream_id = *(t_transport_stream_id *) dp;
+			dp += sizeof(t_transport_stream_id);
+			response.zeit = *(CSectionsdClient::sectionsdTime *) dp;
+			dp += sizeof(CSectionsdClient::sectionsdTime);
 
-			nvod_list.insert( nvod_list.end(), response);
+			nvod_list.insert(nvod_list.end(), response);
 		}
 		delete[] pData;
 		close_connection();
@@ -359,36 +363,36 @@ bool CSectionsdClient::getNVODTimesServiceKey(const t_channel_id channel_id, CSe
 	}
 }
 
-bool CSectionsdClient::getCurrentNextServiceKey(const t_channel_id channel_id, CSectionsdClient::responseGetCurrentNextInfoChannelID& current_next)
+bool CSectionsdClient::getCurrentNextServiceKey(const t_channel_id channel_id, CSectionsdClient::responseGetCurrentNextInfoChannelID &current_next)
 {
-	if (send(sectionsd::currentNextInformationID, (char*)&channel_id, sizeof(channel_id)))
+	if (send(sectionsd::currentNextInformationID, (char *)&channel_id, sizeof(channel_id)))
 	{
 		int nBufSize = readResponse();
 
-		char* pData = new char[nBufSize];
+		char *pData = new char[nBufSize];
 		receive_data(pData, nBufSize);
-		char* dp = pData;
+		char *dp = pData;
 
 		// current
 		current_next.current_uniqueKey = *((t_event_id *)dp);
-		dp+= sizeof(t_event_id);
-		current_next.current_zeit = *(CSectionsdClient::sectionsdTime*) dp;
-		dp+= sizeof(CSectionsdClient::sectionsdTime);
+		dp += sizeof(t_event_id);
+		current_next.current_zeit = *(CSectionsdClient::sectionsdTime *) dp;
+		dp += sizeof(CSectionsdClient::sectionsdTime);
 		current_next.current_name = dp;
-		dp+=strlen(dp)+1;
+		dp += strlen(dp) + 1;
 
 		// next
 		current_next.next_uniqueKey = *((t_event_id *)dp);
-		dp+= sizeof(t_event_id);
-		current_next.next_zeit = *(CSectionsdClient::sectionsdTime*) dp;
-		dp+= sizeof(CSectionsdClient::sectionsdTime);
+		dp += sizeof(t_event_id);
+		current_next.next_zeit = *(CSectionsdClient::sectionsdTime *) dp;
+		dp += sizeof(CSectionsdClient::sectionsdTime);
 		current_next.next_name = dp;
-		dp+=strlen(dp)+1;
+		dp += strlen(dp) + 1;
 
-		current_next.flags = *(unsigned*) dp;
-		dp+= sizeof(unsigned);
+		current_next.flags = *(unsigned *) dp;
+		dp += sizeof(unsigned);
 
-		current_next.current_fsk = *(char*) dp;
+		current_next.current_fsk = *(char *) dp;
 
 		delete[] pData;
 		close_connection();
@@ -406,35 +410,35 @@ CChannelEventList CSectionsdClient::getChannelEvents(const bool tv_mode, t_chann
 {
 	CChannelEventList eList;
 
-	if (send(tv_mode ? sectionsd::actualEventListTVshortIDs : sectionsd::actualEventListRadioShortIDs, (char*)p_requested_channels, size_requested_channels))
+	if (send(tv_mode ? sectionsd::actualEventListTVshortIDs : sectionsd::actualEventListRadioShortIDs, (char *)p_requested_channels, size_requested_channels))
 	{
 		int nBufSize = readResponse();
 
-		if( nBufSize > 0)
+		if (nBufSize > 0)
 		{
-			char* pData = new char[nBufSize];
+			char *pData = new char[nBufSize];
 			receive_data(pData, nBufSize);
 
-			char* dp = pData;
+			char *dp = pData;
 
-			while(dp < pData + nBufSize)
+			while (dp < pData + nBufSize)
 			{
 				CChannelEvent aEvent;
 
 				aEvent.eventID = *((t_event_id *) dp);
-				dp+=sizeof(aEvent.eventID);
+				dp += sizeof(aEvent.eventID);
 
 				aEvent.startTime = *((time_t *) dp);
-				dp+=sizeof(aEvent.startTime);
+				dp += sizeof(aEvent.startTime);
 
 				aEvent.duration = *((unsigned *) dp);
-				dp+=sizeof(aEvent.duration);
+				dp += sizeof(aEvent.duration);
 
-				aEvent.description= dp;
-				dp+=strlen(dp)+1;
+				aEvent.description = dp;
+				dp += strlen(dp) + 1;
 
-				aEvent.text= dp;
-				dp+=strlen(dp)+1;
+				aEvent.text = dp;
+				dp += strlen(dp) + 1;
 
 				eList.push_back(aEvent);
 			}
@@ -454,54 +458,54 @@ CChannelEventList CSectionsdClient::getChannelEvents(const bool tv_mode, t_chann
 	 3: keyword search in EPG description (INFO2)
   In case of a match, the EPG event is added to the Eventlist eList.
   */
-bool CSectionsdClient::getEventsServiceKeySearchAdd(CChannelEventList& eList,const t_channel_id channel_id,char search_typ,std::string& search_text)
+bool CSectionsdClient::getEventsServiceKeySearchAdd(CChannelEventList &eList, const t_channel_id channel_id, char search_typ, std::string &search_text)
 {
-	int nBufSize=0;
+	int nBufSize = 0;
 
 	nBufSize += sizeof(t_channel_id);
 	nBufSize += sizeof(char);
-	nBufSize += search_text.size()+1;
+	nBufSize += search_text.size() + 1;
 
-	char* pSData = new char[nBufSize];
-	char* pSData_ptr = pSData;
+	char *pSData = new char[nBufSize];
+	char *pSData_ptr = pSData;
 
-	*(t_channel_id*)pSData_ptr = channel_id;
+	*(t_channel_id *)pSData_ptr = channel_id;
 	pSData_ptr += sizeof(t_channel_id);
 	*pSData_ptr = search_typ;
 	pSData_ptr += sizeof(char);
-	strcpy(pSData_ptr,search_text.c_str());
+	strcpy(pSData_ptr, search_text.c_str());
 
 	if (send(sectionsd::allEventsChannelIDSearch, pSData, nBufSize))
 	{
 		int nBufSize2 = readResponse();
 
-		if( nBufSize2 > 0)
+		if (nBufSize2 > 0)
 		{
-			char* pData = new char[nBufSize2];
+			char *pData = new char[nBufSize2];
 			receive_data(pData, nBufSize2);
 
-			char* dp = pData;
+			char *dp = pData;
 
 //			int a = eList.size();
 
-			while(dp < pData + nBufSize2)
+			while (dp < pData + nBufSize2)
 			{
 				CChannelEvent aEvent;
 
 				aEvent.eventID = *((t_event_id *) dp);
-				dp+=sizeof(aEvent.eventID);
+				dp += sizeof(aEvent.eventID);
 
 				aEvent.startTime = *((time_t *) dp);
-				dp+=sizeof(aEvent.startTime);
+				dp += sizeof(aEvent.startTime);
 
 				aEvent.duration = *((unsigned *) dp);
-				dp+=sizeof(aEvent.duration);
+				dp += sizeof(aEvent.duration);
 
-				aEvent.description= dp;
-				dp+=aEvent.description.length()+1;
+				aEvent.description = dp;
+				dp += aEvent.description.length() + 1;
 
-				aEvent.text= dp;
-				dp+=aEvent.text.length()+1;
+				aEvent.text = dp;
+				dp += aEvent.text.length() + 1;
 
 				eList.push_back(aEvent);
 			}
@@ -519,35 +523,35 @@ CChannelEventList CSectionsdClient::getEventsServiceKey(const t_channel_id chann
 {
 	CChannelEventList eList;
 
-	if (send(sectionsd::allEventsChannelID_, (char*)&channel_id, sizeof(channel_id)))
+	if (send(sectionsd::allEventsChannelID_, (char *)&channel_id, sizeof(channel_id)))
 	{
 		int nBufSize = readResponse();
 
-		if( nBufSize > 0)
+		if (nBufSize > 0)
 		{
-			char* pData = new char[nBufSize];
+			char *pData = new char[nBufSize];
 			receive_data(pData, nBufSize);
 
-			char* dp = pData;
+			char *dp = pData;
 
-			while(dp < pData + nBufSize)
+			while (dp < pData + nBufSize)
 			{
 				CChannelEvent aEvent;
 
 				aEvent.eventID = *((t_event_id *) dp);
-				dp+=sizeof(aEvent.eventID);
+				dp += sizeof(aEvent.eventID);
 
 				aEvent.startTime = *((time_t *) dp);
-				dp+=sizeof(aEvent.startTime);
+				dp += sizeof(aEvent.startTime);
 
 				aEvent.duration = *((unsigned *) dp);
-				dp+=sizeof(aEvent.duration);
+				dp += sizeof(aEvent.duration);
 
-				aEvent.description= dp;
-				dp+=strlen(dp)+1;
+				aEvent.description = dp;
+				dp += strlen(dp) + 1;
 
-				aEvent.text= dp;
-				dp+=strlen(dp)+1;
+				aEvent.text = dp;
+				dp += strlen(dp) + 1;
 
 				eList.push_back(aEvent);
 			}
@@ -560,127 +564,137 @@ CChannelEventList CSectionsdClient::getEventsServiceKey(const t_channel_id chann
 }
 
 //never used
-void showhexdumpa (char *label, unsigned char * from, int len)
+void showhexdumpa(char *label, unsigned char *from, int len)
 {
-  int i, j, k;
-  char buf[128];
-  char abuf[128];
-  unsigned char fl, ol;
+	int i, j, k;
+	char buf[128];
+	char abuf[128];
+	unsigned char fl, ol;
 
-  fl = len / 16;
-  ol = len % 16;
-  if (label) {
-        time_t tt = time (0);
-        printf("\n%s -- %s", label, ctime (&tt));
-        printf("----------------------------------------------------\n");
-  }
+	fl = len / 16;
+	ol = len % 16;
+	if (label)
+	{
+		time_t tt = time(0);
+		printf("\n%s -- %s", label, ctime(&tt));
+		printf("----------------------------------------------------\n");
+	}
 
-  for (i = 0; i < fl; i++) {
-        j = i * 16;
-        sprintf (buf, "%03X: %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x", i * 16, from[j + 0], from[j + 1], from[j + 2], from[j + 3], from[j + 4], from[j + 5], from[j + 6], from[j + 7], from[j + 8], from[j + 9], from[j + 10], from[j + 11], from[j + 12], from[j + 13], from[j + 14], from[j + 15]);
-        printf ("%s  ", buf);
-        for (k = 0; k < 16; k++) {
-          abuf[k] = (from[j + k] >= 0x20 && from[j + k] <= 0x7b) ? from[j + k] : 0x2E;
-        }
-        abuf[16] = 0;
-        printf("%s\n", abuf);
-  }
-  if (ol) {
-        j = fl * 16;
-        sprintf (buf, "%03X: ", j);
-        for (i = 0; i < ol; i++) {
-          sprintf (&buf[5 + i * 3], "%02x ", from[j + i]);
-          abuf[i] = (from[j + i] >= 0x20 && from[j + i] <= 0x7b) ? from[j + i] : 0x2E;
-        }
-        abuf[ol] = 0;
-        for (i = ol; i < 16; i++)
-          sprintf (&buf[5 + i * 3], "   ");
-        printf ("%s ", buf);
-        printf ("%s\n", abuf);
-  }
-  printf ("\n");
+	for (i = 0; i < fl; i++)
+	{
+		j = i * 16;
+		sprintf(buf, "%03X: %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x", i * 16, from[j + 0], from[j + 1], from[j + 2], from[j + 3], from[j + 4], from[j + 5], from[j + 6], from[j + 7], from[j + 8], from[j + 9], from[j + 10], from[j + 11], from[j + 12], from[j + 13], from[j + 14], from[j + 15]);
+		printf("%s  ", buf);
+		for (k = 0; k < 16; k++)
+		{
+			abuf[k] = (from[j + k] >= 0x20 && from[j + k] <= 0x7b) ? from[j + k] : 0x2E;
+		}
+		abuf[16] = 0;
+		printf("%s\n", abuf);
+	}
+	if (ol)
+	{
+		j = fl * 16;
+		sprintf(buf, "%03X: ", j);
+		for (i = 0; i < ol; i++)
+		{
+			sprintf(&buf[5 + i * 3], "%02x ", from[j + i]);
+			abuf[i] = (from[j + i] >= 0x20 && from[j + i] <= 0x7b) ? from[j + i] : 0x2E;
+		}
+		abuf[ol] = 0;
+		for (i = ol; i < 16; i++)
+			sprintf(&buf[5 + i * 3], "   ");
+		printf("%s ", buf);
+		printf("%s\n", abuf);
+	}
+	printf("\n");
 }
 
 // 21.07.2005 - rainerk
 // Convert line-terminated extended events to vector of strings
-char * CSectionsdClient::parseExtendedEvents(char * dp, CEPGData * epgdata) {
-	char * pItemDescriptions = dp, * pItemDescriptionStart;
-	dp+=strlen(dp)+1;
-	char * pItems = dp, * pItemStart;
-	dp+=strlen(dp)+1;
+char *CSectionsdClient::parseExtendedEvents(char *dp, CEPGData *epgdata)
+{
+	char *pItemDescriptions = dp, * pItemDescriptionStart;
+	dp += strlen(dp) + 1;
+	char *pItems = dp, * pItemStart;
+	dp += strlen(dp) + 1;
 	/* Clear vector since epgdata seems to be reused */
 	epgdata->itemDescriptions.clear();
-	while (*pItemDescriptions) {
+	while (*pItemDescriptions)
+	{
 		pItemDescriptionStart = pItemDescriptions;
-		while (*pItemDescriptions && '\n' != *pItemDescriptions) {
+		while (*pItemDescriptions && '\n' != *pItemDescriptions)
+		{
 			pItemDescriptions++;
 		}
 		char pp = *pItemDescriptions;
 		*pItemDescriptions = 0;
 		epgdata->itemDescriptions.push_back(pItemDescriptionStart);
-/*printf("CSectionsdClient::parseExtendedEvents: desc %s\n", pItemDescriptionStart);*/
-		if(!pp)
+		/*printf("CSectionsdClient::parseExtendedEvents: desc %s\n", pItemDescriptionStart);*/
+		if (!pp)
 			break;
 		pItemDescriptions++;
 	}
 	/* Clear vector since epgdata seems to be reused */
 	epgdata->items.clear();
-	while (*pItems) {
+	while (*pItems)
+	{
 		pItemStart = pItems;
-		while (*pItems && '\n' != *pItems) {
+		while (*pItems && '\n' != *pItems)
+		{
 			pItems++;
 		}
 		char pp = *pItemDescriptions;
 		*pItems = 0;
 		epgdata->items.push_back(pItemStart);
-/*printf("CSectionsdClient::parseExtendedEvents: item %s\n", pItemStart);*/
-		if(!pp)
+		/*printf("CSectionsdClient::parseExtendedEvents: item %s\n", pItemStart);*/
+		if (!pp)
 			break;
 		pItems++;
 	}
 	return dp;
 }
 
-bool CSectionsdClient::getActualEPGServiceKey(const t_channel_id channel_id, CEPGData * epgdata)
+bool CSectionsdClient::getActualEPGServiceKey(const t_channel_id channel_id, CEPGData *epgdata)
 {
 	epgdata->title = "";
 
-	if (send(sectionsd::actualEPGchannelID, (char*)&channel_id, sizeof(channel_id)))
+	if (send(sectionsd::actualEPGchannelID, (char *)&channel_id, sizeof(channel_id)))
 	{
 		int nBufSize = readResponse();
-		if( nBufSize > 0)
+		if (nBufSize > 0)
 		{
-			char* pData = new char[nBufSize];
+			char *pData = new char[nBufSize];
 			receive_data(pData, nBufSize);
 			close_connection();
 
-			char* dp = pData;
+			char *dp = pData;
 
 			epgdata->eventID = *((t_event_id *)dp);
-			dp+= sizeof(epgdata->eventID);
+			dp += sizeof(epgdata->eventID);
 
 			epgdata->title = dp;
-			dp+=strlen(dp)+1;
+			dp += strlen(dp) + 1;
 			epgdata->info1 = dp;
-			dp+=strlen(dp)+1;
+			dp += strlen(dp) + 1;
 			epgdata->info2 = dp;
-			dp+=strlen(dp)+1;
+			dp += strlen(dp) + 1;
 			// 21.07.2005 - rainerk
 			// Convert line-terminated extended events to vector of strings
 //showhexdumpa("Data:", (unsigned char *)pData, nBufSize);
 			dp = parseExtendedEvents(dp, epgdata);
 
 			// *dp is the length, dp+1 is the chararray[]
-			epgdata->contentClassification = std::string(dp+1, *dp);
-			dp+=*dp+1;
-			epgdata->userClassification = std::string(dp+1, *dp);
-			dp+=*dp+1;
+			epgdata->contentClassification = std::string(dp + 1, *dp);
+			dp += *dp + 1;
+			epgdata->userClassification = std::string(dp + 1, *dp);
+			dp += *dp + 1;
 
 			epgdata->fsk = *dp++;
 
 			epgdata->epg_times.startzeit = ((CSectionsdClient::sectionsdTime *) dp)->startzeit;
 			epgdata->epg_times.dauer = ((CSectionsdClient::sectionsdTime *) dp)->dauer;
-			dp+= sizeof(CSectionsdClient::sectionsdTime);
+			dp += sizeof(CSectionsdClient::sectionsdTime);
 
 			delete[] pData;
 			return true;
@@ -694,7 +708,7 @@ bool CSectionsdClient::getActualEPGServiceKey(const t_channel_id channel_id, CEP
 	return false;
 }
 
-bool CSectionsdClient::getEPGid(const t_event_id eventid, const time_t starttime, CEPGData * epgdata)
+bool CSectionsdClient::getEPGid(const t_event_id eventid, const time_t starttime, CEPGData *epgdata)
 {
 	sectionsd::commandGetEPGid msg;
 
@@ -706,36 +720,36 @@ bool CSectionsdClient::getEPGid(const t_event_id eventid, const time_t starttime
 		int nBufSize = readResponse();
 		if (nBufSize > 0)
 		{
-			char* pData = new char[nBufSize];
+			char *pData = new char[nBufSize];
 			receive_data(pData, nBufSize);
 			close_connection();
 
-			char* dp = pData;
+			char *dp = pData;
 
 			epgdata->eventID = *((t_event_id *)dp);
-			dp+= sizeof(epgdata->eventID);
+			dp += sizeof(epgdata->eventID);
 
 			epgdata->title = dp;
-			dp+=strlen(dp)+1;
+			dp += strlen(dp) + 1;
 			epgdata->info1 = dp;
-			dp+=strlen(dp)+1;
+			dp += strlen(dp) + 1;
 			epgdata->info2 = dp;
-			dp+=strlen(dp)+1;
+			dp += strlen(dp) + 1;
 			// 21.07.2005 - rainerk
 			// Convert line-terminated extended events to vector of strings
 			dp = parseExtendedEvents(dp, epgdata);
 
 			// *dp is the length, dp+1 is the chararray[]
-			epgdata->contentClassification = std::string(dp+1, *dp);
-			dp+=*dp+1;
-			epgdata->userClassification = std::string(dp+1, *dp);
-			dp+=*dp+1;
+			epgdata->contentClassification = std::string(dp + 1, *dp);
+			dp += *dp + 1;
+			epgdata->userClassification = std::string(dp + 1, *dp);
+			dp += *dp + 1;
 
 			epgdata->fsk = *dp++;
 
 			epgdata->epg_times.startzeit = ((CSectionsdClient::sectionsdTime *) dp)->startzeit;
 			epgdata->epg_times.dauer = ((CSectionsdClient::sectionsdTime *) dp)->dauer;
-			dp+= sizeof(CSectionsdClient::sectionsdTime);
+			dp += sizeof(CSectionsdClient::sectionsdTime);
 
 			delete[] pData;
 			return true;
@@ -749,30 +763,30 @@ bool CSectionsdClient::getEPGid(const t_event_id eventid, const time_t starttime
 	return false;
 }
 
-bool CSectionsdClient::getEPGidShort(const t_event_id eventid, CShortEPGData * epgdata)
+bool CSectionsdClient::getEPGidShort(const t_event_id eventid, CShortEPGData *epgdata)
 {
-	if (send(sectionsd::epgEPGidShort, (char*)&eventid, sizeof(eventid)))
+	if (send(sectionsd::epgEPGidShort, (char *)&eventid, sizeof(eventid)))
 	{
 		int nBufSize = readResponse();
-		if( nBufSize > 0)
+		if (nBufSize > 0)
 		{
-			char* pData = new char[nBufSize];
+			char *pData = new char[nBufSize];
 			receive_data(pData, nBufSize);
 
 			close_connection();
 
-			char* dp = pData;
+			char *dp = pData;
 
-			for(int i = 0; i < nBufSize;i++)
-				if(((unsigned char)pData[i]) == 0xff)
+			for (int i = 0; i < nBufSize; i++)
+				if (((unsigned char)pData[i]) == 0xff)
 					pData[i] = 0;
 
 			epgdata->title = dp;
-			dp+=strlen(dp)+1;
+			dp += strlen(dp) + 1;
 			epgdata->info1 = dp;
-			dp+=strlen(dp)+1;
+			dp += strlen(dp) + 1;
 			epgdata->info2 = dp;
-			dp+=strlen(dp)+1;
+			dp += strlen(dp) + 1;
 //			printf("titel: %s\n",epgdata->title.c_str());
 
 
@@ -790,7 +804,7 @@ bool CSectionsdClient::getEPGidShort(const t_event_id eventid, CShortEPGData * e
 #ifdef ENABLE_PPT
 void CSectionsdClient::setPrivatePid(const unsigned short pid)
 {
-	send(sectionsd::setPrivatePid, (char*)&pid, sizeof(pid));
+	send(sectionsd::setPrivatePid, (char *)&pid, sizeof(pid));
 
 	readResponse();
 	close_connection();

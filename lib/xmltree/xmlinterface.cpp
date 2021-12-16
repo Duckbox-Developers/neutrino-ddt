@@ -40,7 +40,7 @@
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
 #include <libxml/parserInternals.h>
-#elif  (defined( USE_PUGIXML ) )
+#elif  (defined(USE_PUGIXML))
 #include "gzstream.h"
 #include <stdint.h>
 #else  /* USE_LIBXML */
@@ -70,7 +70,7 @@ long xmlGetSignedNumericAttribute(const xmlNodePtr node, const char *name, const
 	return strtol(ptr, 0, base);
 }
 
-xmlNodePtr xmlGetNextOccurence(xmlNodePtr cur, const char * s)
+xmlNodePtr xmlGetNextOccurence(xmlNodePtr cur, const char *s)
 {
 	while ((cur != NULL) && (strcmp(xmlGetName(cur), s) != 0))
 		cur = xmlNextNode(cur);
@@ -93,12 +93,12 @@ std::string to_utf8(unsigned int cp)
 	else
 		return result;
 	result.resize(count);
-	for (int i = count-1; i > 0; --i)
+	for (int i = count - 1; i > 0; --i)
 	{
-		result[i] = (char) (0x80 | (cp & 0x3F));
+		result[i] = (char)(0x80 | (cp & 0x3F));
 		cp >>= 6;
 	}
-	cp |= mask[count-1];
+	cp |= mask[count - 1];
 
 	result[0] = (char) cp;
 	return result;
@@ -109,8 +109,8 @@ std::string Unicode_Character_to_UTF8(const int character)
 #ifdef USE_LIBXML
 	xmlChar buf[5];
 	int length = xmlCopyChar(4, buf, character);
-	return std::string((char*)buf, length);
-#elif  (defined( USE_PUGIXML ) )
+	return std::string((char *)buf, length);
+#elif  (defined(USE_PUGIXML))
 	return to_utf8(character);
 #else  /* USE_LIBXML */
 	char buf[XML_UTF8_ENCODE_MAX];
@@ -119,7 +119,7 @@ std::string Unicode_Character_to_UTF8(const int character)
 #endif /* USE_LIBXML */
 }
 
-std::string convert_UTF8_To_UTF8_XML(const char* s)
+std::string convert_UTF8_To_UTF8_XML(const char *s)
 {
 	std::string r;
 
@@ -132,24 +132,24 @@ std::string convert_UTF8_To_UTF8_XML(const char* s)
 		 */
 		switch (*s)
 		{
-		case '<':
-			r += "&lt;";
-			break;
-		case '>':
-			r += "&gt;";
-			break;
-		case '&':
-			r += "&amp;";
-			break;
-		case '\"':
-			r += "&quot;";
-			break;
-		case '\'':
-			r += "&apos;";
-			break;
-		default:
-			if ((unsigned char)*s >= 32)
-				r += *s;
+			case '<':
+				r += "&lt;";
+				break;
+			case '>':
+				r += "&gt;";
+				break;
+			case '&':
+				r += "&amp;";
+				break;
+			case '\"':
+				r += "&quot;";
+				break;
+			case '\'':
+				r += "&apos;";
+				break;
+			default:
+				if ((unsigned char)*s >= 32)
+					r += *s;
 		}
 		s++;
 	}
@@ -157,7 +157,7 @@ std::string convert_UTF8_To_UTF8_XML(const char* s)
 }
 
 #ifdef USE_LIBXML
-xmlDocPtr parseXml(const char * data,char *)
+xmlDocPtr parseXml(const char *data, char *)
 {
 	xmlDocPtr doc;
 	xmlNodePtr cur;
@@ -183,7 +183,7 @@ xmlDocPtr parseXml(const char * data,char *)
 	}
 }
 
-xmlDocPtr parseXmlFile(const char * filename, bool warning_by_nonexistence /* = true */,char *)
+xmlDocPtr parseXmlFile(const char *filename, bool warning_by_nonexistence /* = true */, char *)
 {
 	xmlDocPtr doc;
 	xmlNodePtr cur;
@@ -209,13 +209,13 @@ xmlDocPtr parseXmlFile(const char * filename, bool warning_by_nonexistence /* = 
 	}
 }
 
-#elif  (defined( USE_PUGIXML ) )
+#elif  (defined(USE_PUGIXML))
 
 #include <fstream>
 
-xmlDocPtr parseXml(const char * data,const char* /*encoding*/)
+xmlDocPtr parseXml(const char *data, const char * /*encoding*/)
 {
-	pugi::xml_document* tree_parser = new pugi::xml_document();
+	pugi::xml_document *tree_parser = new pugi::xml_document();
 	if (!tree_parser->load_string(data))
 	{
 		delete tree_parser;
@@ -231,7 +231,7 @@ xmlDocPtr parseXml(const char * data,const char* /*encoding*/)
 	return tree_parser;
 }
 
-xmlDocPtr parseXmlFile(const char * filename, bool,const char* encoding)
+xmlDocPtr parseXmlFile(const char *filename, bool, const char *encoding)
 {
 	pugi::xml_encoding enc = pugi::encoding_auto;
 	std::string fn = filename;
@@ -239,7 +239,7 @@ xmlDocPtr parseXmlFile(const char * filename, bool,const char* encoding)
 	std::ifstream in;
 	bool zipped = (fn.substr(fn.find_last_of(".") + 1) == "gz");
 
-	if(encoding==NULL)
+	if (encoding == NULL)
 	{
 		if (zipped)
 		{
@@ -250,7 +250,7 @@ xmlDocPtr parseXmlFile(const char * filename, bool,const char* encoding)
 				getline(inz, line);
 				for (std::string::iterator it = line.begin(); it != line.end(); ++ it)
 					*it = toupper(*it);
-				if (line.find("ISO-8859-1",0)!= std::string::npos)
+				if (line.find("ISO-8859-1", 0) != std::string::npos)
 				{
 					enc = pugi::encoding_latin1;
 				}
@@ -266,7 +266,7 @@ xmlDocPtr parseXmlFile(const char * filename, bool,const char* encoding)
 				getline(in, line);
 				for (std::string::iterator it = line.begin(); it != line.end(); ++ it)
 					*it = toupper(*it);
-				if (line.find("ISO-8859-1",0)!= std::string::npos)
+				if (line.find("ISO-8859-1", 0) != std::string::npos)
 				{
 					enc = pugi::encoding_latin1;
 				}
@@ -278,12 +278,12 @@ xmlDocPtr parseXmlFile(const char * filename, bool,const char* encoding)
 			}
 		}
 	}
-	pugi::xml_document* tree_parser = new pugi::xml_document();
+	pugi::xml_document *tree_parser = new pugi::xml_document();
 
 	if (zipped)
 	{
-        int fd = open(filename, O_RDONLY);
-		if(fd == -1)
+		int fd = open(filename, O_RDONLY);
+		if (fd == -1)
 		{
 			delete tree_parser;
 			return NULL;
@@ -292,14 +292,14 @@ xmlDocPtr parseXmlFile(const char * filename, bool,const char* encoding)
 		uint32_t gzsize = 0;
 		lseek(fd, -4, SEEK_END);
 		int res = read(fd, &gzsize, 4);
-		if(res <= 0)
+		if (res <= 0)
 		{
 			delete tree_parser;
 			return NULL;
 		}
 		lseek(fd, 0, SEEK_SET);
 
-		gzFile xmlgz_file = gzdopen(fd,"rb");
+		gzFile xmlgz_file = gzdopen(fd, "rb");
 
 		if (xmlgz_file == NULL)
 		{
@@ -307,21 +307,21 @@ xmlDocPtr parseXmlFile(const char * filename, bool,const char* encoding)
 			return NULL;
 		}
 
-		gzbuffer(xmlgz_file, 64*1024);
+		gzbuffer(xmlgz_file, 64 * 1024);
 
-		void* buffer = pugi::get_memory_allocation_function()(gzsize);
+		void *buffer = pugi::get_memory_allocation_function()(gzsize);
 
 		if (!buffer)
-			{
-				gzclose(xmlgz_file);
-				delete tree_parser;
-				return NULL;
-			}
+		{
+			gzclose(xmlgz_file);
+			delete tree_parser;
+			return NULL;
+		}
 
-		size_t read_size = gzread(xmlgz_file,buffer,gzsize);
+		size_t read_size = gzread(xmlgz_file, buffer, gzsize);
 
 		char utf8[4];
-		strncpy(utf8,(char *)buffer,sizeof(utf8)-1);
+		strncpy(utf8, (char *)buffer, sizeof(utf8) - 1);
 		if ((utf8[0] == 0xef) && (utf8[1] == 0xbb) && (utf8[2] == 0xbf))
 			enc = pugi::encoding_utf8;
 
@@ -335,14 +335,14 @@ xmlDocPtr parseXmlFile(const char * filename, bool,const char* encoding)
 
 		gzclose(xmlgz_file);
 
-		const pugi::xml_parse_result result = tree_parser->load_buffer_inplace_own(buffer,gzsize, pugi::parse_default, enc);
+		const pugi::xml_parse_result result = tree_parser->load_buffer_inplace_own(buffer, gzsize, pugi::parse_default, enc);
 		if (result.status != 0 /*pugi::xml_parse_status::status_ok*/)
-			{
-				printf("Error: Loading %s (%d)\n", filename, result.status);
-				free( buffer);
-				delete tree_parser;
-				return NULL;
-			}
+		{
+			printf("Error: Loading %s (%d)\n", filename, result.status);
+			free(buffer);
+			delete tree_parser;
+			return NULL;
+		}
 	}
 	else
 	{
@@ -363,17 +363,17 @@ xmlDocPtr parseXmlFile(const char * filename, bool,const char* encoding)
 }
 
 #else /* USE_LIBXML */
-xmlDocPtr parseXml(const char * data,const char *encoding)
+xmlDocPtr parseXml(const char *data, const char *encoding)
 {
-	XMLTreeParser* tree_parser;
+	XMLTreeParser *tree_parser;
 
 	tree_parser = new XMLTreeParser(encoding);
 
 	if (!tree_parser->Parse(data, strlen(data), true))
 	{
 		printf("Error parsing XML Data: %s at line %d\n",
-		       tree_parser->ErrorString(tree_parser->GetErrorCode()),
-		       tree_parser->GetCurrentLineNumber());
+			tree_parser->ErrorString(tree_parser->GetErrorCode()),
+			tree_parser->GetCurrentLineNumber());
 
 		delete tree_parser;
 		return NULL;
@@ -388,27 +388,27 @@ xmlDocPtr parseXml(const char * data,const char *encoding)
 	return tree_parser;
 }
 
-xmlDocPtr parseXmlFile(const char * filename, bool warning_by_nonexistence /* = true */,const char *encoding)
+xmlDocPtr parseXmlFile(const char *filename, bool warning_by_nonexistence /* = true */, const char *encoding)
 {
 	char buffer[2048];
-	XMLTreeParser* tree_parser;
+	XMLTreeParser *tree_parser;
 	size_t done;
 	size_t length;
-	FILE* xml_file = NULL;
+	FILE *xml_file = NULL;
 	gzFile xmlgz_file = NULL;
 	std::string fn = filename;
 	bool zipped = (fn.substr(fn.find_last_of(".") + 1) == "gz");
 
 	if (zipped)
 	{
-		xmlgz_file = gzopen(filename,"r");
+		xmlgz_file = gzopen(filename, "r");
 		if (xmlgz_file == NULL)
 		{
 			if (warning_by_nonexistence)
 				perror(filename);
 			return NULL;
 		}
-		gzbuffer(xmlgz_file, 64*1024);
+		gzbuffer(xmlgz_file, 64 * 1024);
 	}
 	else
 	{

@@ -12,7 +12,7 @@ tests and demonstration applications, are licensed under the following
 conditions...
 
 Baptiste Lepilleur and The JsonCpp Authors explicitly disclaim copyright in all
-jurisdictions which recognize such a disclaimer. In such jurisdictions, 
+jurisdictions which recognize such a disclaimer. In such jurisdictions,
 this software is released into the Public Domain.
 
 In jurisdictions which do not recognize Public Domain property (e.g. Germany as of
@@ -96,9 +96,9 @@ license you like.
 
 /* own assert() which does not abort... */
 #define assert(x) do { \
-       if (x) \
-               fprintf(stderr, "JSONCPP:%s:%d assert(%s) failed\n", __func__, __LINE__, #x); \
-} while (0)
+		if (x) \
+			fprintf(stderr, "JSONCPP:%s:%d assert(%s) failed\n", __func__, __LINE__, #x); \
+	} while (0)
 
 /// If defined, indicates that json library is embedded in CppTL library.
 //# define JSON_IN_CPPTL 1
@@ -152,18 +152,18 @@ license you like.
 
 #if defined(_MSC_VER) // MSVC
 #  if _MSC_VER <= 1200 // MSVC 6
-    // Microsoft Visual Studio 6 only support conversion from __int64 to double
-    // (no conversion from unsigned __int64).
+// Microsoft Visual Studio 6 only support conversion from __int64 to double
+// (no conversion from unsigned __int64).
 #    define JSON_USE_INT64_DOUBLE_CONVERSION 1
-    // Disable warning 4786 for VS6 caused by STL (identifier was truncated to '255'
-    // characters in the debug information)
-    // All projects I've ever seen with VS6 were using this globally (not bothering
-    // with pragma push/pop).
+// Disable warning 4786 for VS6 caused by STL (identifier was truncated to '255'
+// characters in the debug information)
+// All projects I've ever seen with VS6 were using this globally (not bothering
+// with pragma push/pop).
 #    pragma warning(disable : 4786)
 #  endif // MSVC 6
 
 #  if _MSC_VER >= 1500 // MSVC 2008
-    /// Indicates that the following function is deprecated.
+/// Indicates that the following function is deprecated.
 #    define JSONCPP_DEPRECATED(message) __declspec(deprecated(message))
 #  endif
 
@@ -240,7 +240,8 @@ license you like.
 
 #endif // if !defined(JSON_IS_AMALGAMATION)
 
-namespace Json {
+namespace Json
+{
 typedef int Int;
 typedef unsigned int UInt;
 #if defined(JSON_NO_INT64)
@@ -302,7 +303,8 @@ typedef UInt64 LargestUInt;
 #include "config.h"
 #endif // if !defined(JSON_IS_AMALGAMATION)
 
-namespace Json {
+namespace Json
+{
 
 // writer.h
 class FastWriter;

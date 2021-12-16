@@ -26,9 +26,9 @@
 
 #include <malloc.h>
 
-size_t write_length_field (unsigned char * buffer, const unsigned int length);
-size_t get_length_field_size (const unsigned int length);
-unsigned int parse_length_field (const unsigned char * buffer);
+size_t write_length_field(unsigned char *buffer, const unsigned int length);
+size_t get_length_field_size(const unsigned int length);
+unsigned int parse_length_field(const unsigned char *buffer);
 
 
 #endif /* __messagetools_h__ */

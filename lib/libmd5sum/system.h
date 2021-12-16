@@ -170,7 +170,7 @@ extern int errno;
 /* For systems that distinguish between text and binary I/O.
    O_BINARY is usually declared in fcntl.h  */
 #if !defined O_BINARY && defined _O_BINARY
-  /* For MSC-compatible compilers.  */
+/* For MSC-compatible compilers.  */
 # define O_BINARY _O_BINARY
 # define O_TEXT _O_TEXT
 #endif
@@ -181,14 +181,14 @@ extern int errno;
 # endif /* not DJGPP */
 # define SET_BINARY(_f) do {if (!isatty(_f)) setmode (_f, O_BINARY);} while (0)
 # define SET_BINARY2(_f1, _f2)		\
-  do {					\
-    if (!isatty (_f1))			\
-      {					\
-        setmode (_f1, O_BINARY);	\
-	if (!isatty (_f2))		\
-	  setmode (_f2, O_BINARY);	\
-      }					\
-  } while(0)
+	do {					\
+		if (!isatty (_f1))			\
+		{					\
+			setmode (_f1, O_BINARY);	\
+			if (!isatty (_f2))		\
+				setmode (_f2, O_BINARY);	\
+		}					\
+	} while(0)
 #else
 # define SET_BINARY(f) (void)0
 # define SET_BINARY2(f1,f2) (void)0
@@ -239,7 +239,7 @@ extern int errno;
 #else /* HAVE_ST_BLKSIZE */
 /* Some systems, like Sequents, return st_blksize of 0 on pipes. */
 # define ST_BLKSIZE(statbuf) ((statbuf).st_blksize > 0 \
-			       ? (statbuf).st_blksize : DEV_BSIZE)
+	? (statbuf).st_blksize : DEV_BSIZE)
 #endif /* HAVE_ST_BLKSIZE */
 
 #include "sys2.h"

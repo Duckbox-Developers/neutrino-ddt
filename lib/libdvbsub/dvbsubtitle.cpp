@@ -27,9 +27,9 @@ extern "C" {
 #include "Debug.hpp"
 
 #if LIBAVCODEC_VERSION_INT <= AV_VERSION_INT(57, 1, 99)
-	#define CODEC_DVB_SUB CODEC_ID_DVB_SUBTITLE
+#define CODEC_DVB_SUB CODEC_ID_DVB_SUBTITLE
 #else
-	#define CODEC_DVB_SUB AV_CODEC_ID_DVB_SUBTITLE
+#define CODEC_DVB_SUB AV_CODEC_ID_DVB_SUBTITLE
 #endif
 
 // Set these to 'true' for debug output:
@@ -38,7 +38,7 @@ static bool DebugConverter = true;
 #define dbgconverter(a...) if (DebugConverter) sub_debug.print(Debug::VERBOSE, a)
 
 #if 0
-class cDvbSubtitleBitmaps : public cListObject 
+class cDvbSubtitleBitmaps : public cListObject
 {
 	private:
 		int64_t pts;
@@ -46,11 +46,23 @@ class cDvbSubtitleBitmaps : public cListObject
 	public:
 		cDvbSubtitleBitmaps(int64_t Pts);
 		~cDvbSubtitleBitmaps();
-		int64_t Pts(void) { return pts; }
-		int Timeout(void) { return sub.end_display_time; }
+		int64_t Pts(void)
+		{
+			return pts;
+		}
+		int Timeout(void)
+		{
+			return sub.end_display_time;
+		}
 		void Draw(int &min_x, int &min_y, int &max_x, int &max_y);
-		int Count(void) { return sub.num_rects; };
-		AVSubtitle * GetSub(void) { return &sub; };
+		int Count(void)
+		{
+			return sub.num_rects;
+		};
+		AVSubtitle *GetSub(void)
+		{
+			return &sub;
+		};
 };
 #endif
 
@@ -66,15 +78,16 @@ cDvbSubtitleBitmaps::~cDvbSubtitleBitmaps()
 	avsubtitle_free(&sub);
 }
 
-fb_pixel_t * simple_resize32(uint8_t * orgin, uint32_t * colors, int nb_colors, int ox, int oy, int dx, int dy)
+fb_pixel_t *simple_resize32(uint8_t *orgin, uint32_t *colors, int nb_colors, int ox, int oy, int dx, int dy)
 {
-	fb_pixel_t  *cr,*l;
-	int i,j,k,ip;
+	fb_pixel_t  *cr, *l;
+	int i, j, k, ip;
 
 #if !HAVE_SH4_HARDWARE
-	cr = (fb_pixel_t *) malloc(dx*dy*sizeof(fb_pixel_t));
+	cr = (fb_pixel_t *) malloc(dx * dy * sizeof(fb_pixel_t));
 
-	if(cr == NULL) {
+	if (cr == NULL)
+	{
 		printf("Error: malloc\n");
 		return NULL;
 	}
@@ -83,17 +96,18 @@ fb_pixel_t * simple_resize32(uint8_t * orgin, uint32_t * colors, int nb_colors, 
 #endif
 	l = cr;
 
-	for(j = 0; j < dy; j++, l += dx)
+	for (j = 0; j < dy; j++, l += dx)
 	{
-		uint8_t * p = orgin + (j*oy/dy*ox);
-		for(i = 0, k = 0; i < dx; i++, k++) {
-			ip = i*ox/dx;
+		uint8_t *p = orgin + (j * oy / dy * ox);
+		for (i = 0, k = 0; i < dx; i++, k++)
+		{
+			ip = i * ox / dx;
 			int idx = p[ip];
-			if(idx < nb_colors)
+			if (idx < nb_colors)
 				l[k] = colors[idx];
 		}
 	}
-	return(cr);
+	return (cr);
 }
 
 void cDvbSubtitleBitmaps::Draw(int &min_x, int &min_y, int &max_x, int &max_y)
@@ -107,7 +121,7 @@ void cDvbSubtitleBitmaps::Draw(int &min_x, int &min_y, int &max_x, int &max_y)
 
 	dbgconverter("cDvbSubtitleBitmaps::%s: start\n", __func__);
 
-	CFrameBuffer* fb = CFrameBuffer::getInstance();
+	CFrameBuffer *fb = CFrameBuffer::getInstance();
 	fb_pixel_t *b = fb->getBackBufferPointer();
 
 	// HACK. When having just switched channels we may not yet have yet
@@ -116,20 +130,22 @@ void cDvbSubtitleBitmaps::Draw(int &min_x, int &min_y, int &max_x, int &max_y)
 	// accordingly. Plus, me may not get the authoring data at all, e.g. for
 	// blu-ray playback.
 	if (max_x == 720 && max_y == 576)
-		switch (sub.rects[0]->w) {
-		case 1280:
-			min_x = min_y = 0, max_x = 1280, max_y = 720;
-			break;
-		case 1920:
-			min_x = min_y = 0, max_x = 1920, max_y = 1080;
-			break;
+		switch (sub.rects[0]->w)
+		{
+			case 1280:
+				min_x = min_y = 0, max_x = 1280, max_y = 720;
+				break;
+			case 1920:
+				min_x = min_y = 0, max_x = 1920, max_y = 1080;
+				break;
 		}
 
-	for (int i = 0; i < Count(); i++) {
+	for (int i = 0; i < Count(); i++)
+	{
 #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(59,0,100)
-		uint32_t * colors = (uint32_t *) sub.rects[i]->pict.data[1];
+		uint32_t *colors = (uint32_t *) sub.rects[i]->pict.data[1];
 #else
-		uint32_t * colors = (uint32_t *) sub.rects[i]->data[1];
+		uint32_t *colors = (uint32_t *) sub.rects[i]->data[1];
 #endif
 		int width = sub.rects[i]->w;
 		int height = sub.rects[i]->h;
@@ -165,11 +181,12 @@ void cDvbSubtitleBitmaps::Draw(int &min_x, int &min_y, int &max_x, int &max_y)
 	int sw = CFrameBuffer::getInstance()->getScreenWidth(true);
 	int sh = CFrameBuffer::getInstance()->getScreenHeight(true);
 
-	for (i = 0; i < Count(); i++) {
+	for (i = 0; i < Count(); i++)
+	{
 #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57, 5, 0)
-		uint32_t * colors = (uint32_t *) sub.rects[i]->pict.data[1];
+		uint32_t *colors = (uint32_t *) sub.rects[i]->pict.data[1];
 #else
-		uint32_t * colors = (uint32_t *) sub.rects[i]->data[1];
+		uint32_t *colors = (uint32_t *) sub.rects[i]->data[1];
 #endif
 		int width = sub.rects[i]->w;
 		int height = sub.rects[i]->h;
@@ -178,8 +195,12 @@ void cDvbSubtitleBitmaps::Draw(int &min_x, int &min_y, int &max_x, int &max_y)
 		int h2 = 576;
 		switch (width)
 		{
-			case 1280:	h2 = 720;  break;
-			case 1920:	h2 = 1080; break;
+			case 1280:
+				h2 = 720;
+				break;
+			case 1920:
+				h2 = 1080;
+				break;
 		}
 
 		xoff = sub.rects[i]->x * sw / width;
@@ -187,29 +208,29 @@ void cDvbSubtitleBitmaps::Draw(int &min_x, int &min_y, int &max_x, int &max_y)
 		int nw = width * sw / width;
 		int nh = height * sh / h2;
 
-		dbgconverter("cDvbSubtitleBitmaps::Draw: #%d at %d,%d size %dx%d colors %d (x=%d y=%d w=%d h=%d) \n", i+1, 
-				sub.rects[i]->x, sub.rects[i]->y, sub.rects[i]->w, sub.rects[i]->h, sub.rects[i]->nb_colors, xoff, yoff, nw, nh);
+		dbgconverter("cDvbSubtitleBitmaps::Draw: #%d at %d,%d size %dx%d colors %d (x=%d y=%d w=%d h=%d) \n", i + 1,
+			sub.rects[i]->x, sub.rects[i]->y, sub.rects[i]->w, sub.rects[i]->h, sub.rects[i]->nb_colors, xoff, yoff, nw, nh);
 
 #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57, 5, 0)
-		fb_pixel_t * newdata = simple_resize32 (sub.rects[i]->pict.data[0], colors, sub.rects[i]->nb_colors, width, height, nw, nh);
+		fb_pixel_t *newdata = simple_resize32(sub.rects[i]->pict.data[0], colors, sub.rects[i]->nb_colors, width, height, nw, nh);
 #else
-		fb_pixel_t * newdata = simple_resize32 (sub.rects[i]->data[0], colors, sub.rects[i]->nb_colors, width, height, nw, nh);
+		fb_pixel_t *newdata = simple_resize32(sub.rects[i]->data[0], colors, sub.rects[i]->nb_colors, width, height, nw, nh);
 #endif
 
 		CFrameBuffer::getInstance()->blit2FB(newdata, nw, nh, xoff, yoff, 0, 0, true);
 
-		if(min_x > xoff)
+		if (min_x > xoff)
 			min_x = xoff;
-		if(min_y > yoff)
+		if (min_y > yoff)
 			min_y = yoff;
-		if(max_x < (xoff + nw))
+		if (max_x < (xoff + nw))
 			max_x = xoff + nw;
-		if(max_y < (yoff + nh))
+		if (max_y < (yoff + nh))
 			max_y = yoff + nh;
 	}
 
-	if(Count())
-		dbgconverter("cDvbSubtitleBitmaps::Draw: finish, min/max screen: x=% d y= %d, w= %d, h= %d\n", min_x, min_y, max_x-min_x, max_y-min_y);
+	if (Count())
+		dbgconverter("cDvbSubtitleBitmaps::Draw: finish, min/max screen: x=% d y= %d, w= %d, h= %d\n", min_x, min_y, max_x - min_x, max_y - min_y);
 	dbgconverter("\n");
 #endif
 }
@@ -237,7 +258,8 @@ cDvbSubtitleConverter::cDvbSubtitleConverter(void)
 	avcodec_register_all();
 #endif
 	avcodec = avcodec_find_decoder(CODEC_DVB_SUB);//CODEC_ID_DVB_SUBTITLE or AV_CODEC_ID_DVB_SUBTITLE from 57.1.100
-	if (!avcodec) {
+	if (!avcodec)
+	{
 		dbgconverter("cDvbSubtitleConverter: unable to get dvb subtitle codec!\n");
 		return;
 	}
@@ -253,12 +275,13 @@ cDvbSubtitleConverter::cDvbSubtitleConverter(void)
 	screen_h = min_y = CFrameBuffer::getInstance()->getScreenHeight();
 	screen_x = max_x = CFrameBuffer::getInstance()->getScreenX();
 	screen_y = max_y = CFrameBuffer::getInstance()->getScreenY();
-	Timeout.Set(0xFFFF*1000);
+	Timeout.Set(0xFFFF * 1000);
 }
 
 cDvbSubtitleConverter::~cDvbSubtitleConverter()
 {
-	if (avctx) {
+	if (avctx)
+	{
 		avcodec_close(avctx);
 		av_free(avctx);
 		avctx = NULL;
@@ -279,14 +302,17 @@ void cDvbSubtitleConverter::Unlock(void)
 void cDvbSubtitleConverter::Pause(bool pause)
 {
 	dbgconverter("cDvbSubtitleConverter::Pause: %s\n", pause ? "pause" : "resume");
-	if(pause) {
-		if(!running)
+	if (pause)
+	{
+		if (!running)
 			return;
 		Lock();
 		Clear();
 		running = false;
 		Unlock();
-	} else {
+	}
+	else
+	{
 		// Assume that we've switched channel. Drop the existing display_definition.
 		avctx->width = 0;
 		avctx->height = 0;
@@ -298,14 +324,16 @@ void cDvbSubtitleConverter::Pause(bool pause)
 void cDvbSubtitleConverter::Clear(void)
 {
 #if HAVE_SH4_HARDWARE
-	if (running && painted) {
+	if (running && painted)
+	{
 		CFrameBuffer::getInstance()->Clear();
 		painted = false;
 	}
 #else
-	if(running && (max_x-min_x > 0) && (max_y-min_y > 0)) {
-		dbgconverter("cDvbSubtitleConverter::Clear: x=% d y= %d, w= %d, h= %d\n", min_x, min_y, max_x-min_x, max_y-min_y);
-		CFrameBuffer::getInstance()->paintBackgroundBoxRel (min_x, min_y, max_x-min_x, max_y-min_y);
+	if (running && (max_x - min_x > 0) && (max_y - min_y > 0))
+	{
+		dbgconverter("cDvbSubtitleConverter::Clear: x=% d y= %d, w= %d, h= %d\n", min_x, min_y, max_x - min_x, max_y - min_y);
+		CFrameBuffer::getInstance()->paintBackgroundBoxRel(min_x, min_y, max_x - min_x, max_y - min_y);
 		/* reset area to clear */
 		min_x = screen_w;
 		min_y = screen_h;
@@ -321,7 +349,7 @@ void cDvbSubtitleConverter::Reset(void)
 	Lock();
 	bitmaps->Clear();
 	Unlock();
-	Timeout.Set(0xFFFF*1000);
+	Timeout.Set(0xFFFF * 1000);
 }
 
 int cDvbSubtitleConverter::Convert(AVSubtitle *sub, int64_t pts)
@@ -337,17 +365,18 @@ int cDvbSubtitleConverter::Convert(const uchar *Data, int Length, int64_t pts)
 	AVPacket avpkt;
 	int got_subtitle = 0;
 
-	if(!avctx) {
+	if (!avctx)
+	{
 		dbgconverter("cDvbSubtitleConverter::Convert: no context\n");
 		return -1;
 	}
 
 	cDvbSubtitleBitmaps *Bitmaps = new cDvbSubtitleBitmaps(pts);
 
-	AVSubtitle * sub = Bitmaps->GetSub();
+	AVSubtitle *sub = Bitmaps->GetSub();
 
 	av_init_packet(&avpkt);
-	avpkt.data = (uint8_t*) Data;
+	avpkt.data = (uint8_t *) Data;
 	avpkt.size = Length;
 
 	dbgconverter("cDvbSubtitleConverter::Convert: sub %x pkt %x pts %lld\n", sub, &avpkt, pts);
@@ -355,16 +384,20 @@ int cDvbSubtitleConverter::Convert(const uchar *Data, int Length, int64_t pts)
 	avcodec_decode_subtitle2(avctx, sub, &got_subtitle, &avpkt);
 //	dbgconverter("cDvbSubtitleConverter::Convert: pts %lld subs ? %s, %d bitmaps\n", pts, got_subtitle? "yes" : "no", sub->num_rects);
 
-	if(got_subtitle) {
-		if(DebugConverter) {
+	if (got_subtitle)
+	{
+		if (DebugConverter)
+		{
 			unsigned int i;
-			for(i = 0; i < sub->num_rects; i++) {
+			for (i = 0; i < sub->num_rects; i++)
+			{
 //				dbgconverter("cDvbSubtitleConverter::Convert: #%d at %d,%d size %d x %d colors %d\n", i+1,
 //						sub->rects[i]->x, sub->rects[i]->y, sub->rects[i]->w, sub->rects[i]->h, sub->rects[i]->nb_colors);
 			}
 		}
 		bitmaps->Add(Bitmaps);
-	} else
+	}
+	else
 		delete Bitmaps;
 
 	return 0;
@@ -376,7 +409,7 @@ int cDvbSubtitleConverter::Convert(const uchar *Data, int Length, int64_t pts)
 #define SHOW_DELTA 20
 #define WAITMS 500
 
-void dvbsub_get_stc(int64_t * STC);
+void dvbsub_get_stc(int64_t *STC);
 
 int cDvbSubtitleConverter::Action(void)
 {
@@ -385,7 +418,8 @@ int cDvbSubtitleConverter::Action(void)
 	if (!running)
 		return 0;
 
-	if(!avctx) {
+	if (!avctx)
+	{
 		dbgconverter("cDvbSubtitleConverter::Action: no context\n");
 		return -1;
 	}
@@ -395,7 +429,8 @@ int cDvbSubtitleConverter::Action(void)
 	max_x = 720;
 	max_y = 576;
 
-	if (avctx->width && avctx->height) {
+	if (avctx->width && avctx->height)
+	{
 		min_x = 0;
 		min_y = 0;
 		max_x = avctx->width;
@@ -405,7 +440,8 @@ int cDvbSubtitleConverter::Action(void)
 #endif
 
 	Lock();
-	if (cDvbSubtitleBitmaps *sb = bitmaps->First()) {
+	if (cDvbSubtitleBitmaps *sb = bitmaps->First())
+	{
 		int64_t STC;
 		dvbsub_get_stc(&STC);
 		int64_t Delta = 0;
@@ -414,16 +450,20 @@ int cDvbSubtitleConverter::Action(void)
 		Delta /= 90; // STC and PTS are in 1/90000s
 //		dbgconverter("cDvbSubtitleConverter::Action: PTS: %016llx STC: %016llx (%lld) timeout: %d\n", sb->Pts(), STC, Delta, sb->Timeout());
 
-		if (Delta <= MAXDELTA) {
-			if (Delta <= SHOW_DELTA) {
+		if (Delta <= MAXDELTA)
+		{
+			if (Delta <= SHOW_DELTA)
+			{
 				dbgconverter("cDvbSubtitleConverter::Action: PTS: %012llx STC: %012llx (%lld) timeout: %d bmp %d/%d\n", sb->Pts(), STC, Delta, sb->Timeout(), bitmaps->Count(), sb->Index() + 1);
 				dbgconverter("cDvbSubtitleConverter::Action: Got %d bitmaps, showing #%d\n", bitmaps->Count(), sb->Index() + 1);
-				if (running) {
+				if (running)
+				{
 					Clear();
 					sb->Draw(min_x, min_y, max_x, max_y);
 					Timeout.Set(sb->Timeout());
 				}
-				if(sb->Count()) {
+				if (sb->Count())
+				{
 					WaitMs = MIN_DISPLAY_TIME;
 #if HAVE_SH4_HARDWARE
 					painted = true;
@@ -439,16 +479,19 @@ int cDvbSubtitleConverter::Action(void)
 			dbgconverter("deleted because delta (%lld) > MAXDELTA (%d)\n", Delta, MAXDELTA);
 			bitmaps->Del(sb, true);
 		}
-	} else {
-		if (Timeout.TimedOut()) {
+	}
+	else
+	{
+		if (Timeout.TimedOut())
+		{
 			dbgconverter("cDvbSubtitleConverter::Action: timeout, elapsed %lld\n", Timeout.Elapsed());
 			Clear();
-			Timeout.Set(0xFFFF*1000);
+			Timeout.Set(0xFFFF * 1000);
 		}
 	}
 	Unlock();
-	if(WaitMs != WAITMS)
+	if (WaitMs != WAITMS)
 		dbgconverter("cDvbSubtitleConverter::Action: finish, WaitMs %d\n", WaitMs);
 
-	return WaitMs*1000;
+	return WaitMs * 1000;
 }

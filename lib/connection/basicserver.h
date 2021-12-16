@@ -32,29 +32,29 @@
 
 class CBasicServer
 {
- private:
-	int sock_fd;
-	std::string name;
+	private:
+		int sock_fd;
+		std::string name;
 
-	// used by run
-	bool parse(bool (parse_command)(CBasicMessage::Header &rmsg, int connfd), const CBasicMessage::t_version version);
+		// used by run
+		bool parse(bool (parse_command)(CBasicMessage::Header &rmsg, int connfd), const CBasicMessage::t_version version);
 
- public:
-	static bool   receive_data  (int fd, void * data, const size_t size);
-	static bool   send_data     (int fd, const void * data, const size_t size);
-	static char * receive_string(int fd);
-	static void   delete_string (char * data);
+	public:
+		static bool   receive_data(int fd, void *data, const size_t size);
+		static bool   send_data(int fd, const void *data, const size_t size);
+		static char *receive_string(int fd);
+		static void   delete_string(char *data);
 
-	bool prepare(const char* socketname);
+		bool prepare(const char *socketname);
 
-	// run the server socket
-	// if set to non-blocking, it will leave the socket open but
-	// will return immediately without parsing a command if no data
-	// is sent by a client
-	bool run(bool (parse_command)(CBasicMessage::Header &rmsg, int connfd), const CBasicMessage::t_version version, bool non_blocking = false);
+		// run the server socket
+		// if set to non-blocking, it will leave the socket open but
+		// will return immediately without parsing a command if no data
+		// is sent by a client
+		bool run(bool (parse_command)(CBasicMessage::Header &rmsg, int connfd), const CBasicMessage::t_version version, bool non_blocking = false);
 
-	// manual stop, can and should only be used in non-blocking mode
-	void stop(void);
+		// manual stop, can and should only be used in non-blocking mode
+		void stop(void);
 };
 
 #endif

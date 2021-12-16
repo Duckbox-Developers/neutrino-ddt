@@ -44,40 +44,40 @@ struct sectionsd
 		unsigned char command;
 		unsigned short stuff_bytes;
 		unsigned int dataLength;
-	} __attribute__ ((packed)) ;
+	} __attribute__((packed)) ;
 
 	struct msgResponseHeader
 	{
 		unsigned int dataLength;
-	} __attribute__ ((packed)) ;
+	} __attribute__((packed)) ;
 
-        enum commands
-        {
-                dumpStatusinformation,          // commandDumpStatusInformation
-                pauseScanning,                  // commandPauseScanning // for the grabbers ;)
-                getIsScanningActive,            // commandGetIsScanningActive
-                getIsTimeSet,                   // commandGetIsTimeSet
-                serviceChanged,                 // commandserviceChanged
-                serviceStopped,                 // commandserviceChanged
-                CMD_registerEvents,             // commandRegisterEventClient
-                CMD_unregisterEvents,           // commandUnRegisterEventClient
-                freeMemory,                     // commandFreeMemory
-                readSIfromXML,                  // commandReadSIfromXML
-                writeSI2XML,                    // commandWriteSI2XML
+	enum commands
+	{
+		dumpStatusinformation,          // commandDumpStatusInformation
+		pauseScanning,                  // commandPauseScanning // for the grabbers ;)
+		getIsScanningActive,            // commandGetIsScanningActive
+		getIsTimeSet,                   // commandGetIsTimeSet
+		serviceChanged,                 // commandserviceChanged
+		serviceStopped,                 // commandserviceChanged
+		CMD_registerEvents,             // commandRegisterEventClient
+		CMD_unregisterEvents,           // commandUnRegisterEventClient
+		freeMemory,                     // commandFreeMemory
+		readSIfromXML,                  // commandReadSIfromXML
+		writeSI2XML,                    // commandWriteSI2XML
 
-                setConfig,                      // commandSetConfig
+		setConfig,                      // commandSetConfig
 
-                readSIfromXMLTV,                // commandReadSIfromXMLTV
+		readSIfromXMLTV,                // commandReadSIfromXMLTV
 
-                numberOfCommands        // <- no actual command, end of command marker
-        };
+		numberOfCommands        // <- no actual command, end of command marker
+	};
 
 #if 0
 	struct commandGetEPGid
 	{
 		uint64_t eventid;
 		time_t             starttime;
-	} __attribute__ ((packed)) ;
+	} __attribute__((packed)) ;
 #endif
 
 	struct commandSetServiceChanged
@@ -184,7 +184,7 @@ struct sectionsd
 //     4 bytes with start time (ctime) of the above event
 //   data of response:
 //     is a string (c-string) describing the EPG:
-//     unique key (long long, hex) 0xff name  0xff text  0xff extended text  0xff start time GMT (ctime, hex ) 0xff duration (seconds, hex)
+//     unique key (long long, hex) 0xff name  0xff text  0xff extended text  0xff start time GMT (ctime, hex) 0xff duration (seconds, hex)
 //
 // getNextShort:
 //   data of request:
@@ -192,7 +192,7 @@ struct sectionsd
 //     4 bytes with start time (ctime) of the above event
 //   data of response:
 //     is a string (c-string) describing the Event in short terms:
-//     1. line unique key (long long, hex), 2. line name, 3. line start time GMT (ctime, hex ), 4 line  duration (seconds, hex)
+//     1. line unique key (long long, hex), 2. line name, 3. line start time GMT (ctime, hex), 4 line  duration (seconds, hex)
 //
 // pauseScanning:
 //   data of request:
@@ -205,7 +205,7 @@ struct sectionsd
 //     is channel ID
 //   data of response:
 //     is a string (c-string) describing the EPG:
-//     unique key (long long, hex) 0xff name  0xff text  0xff extended text  0xff start time GMT (ctime, hex ) 0xff duration (seconds, hex) 0xff
+//     unique key (long long, hex) 0xff name  0xff text  0xff extended text  0xff start time GMT (ctime, hex) 0xff duration (seconds, hex) 0xff
 //
 // actualEventListTVshortIDs:
 //   data of request:
@@ -241,7 +241,7 @@ struct sectionsd
 //     time_t starttime GMT (4 bytes)
 //   data of response:
 //     is a string (c-string) describing the EPG:
-//     name 0xff text 0xff extended text 0xff start time GMT (ctime, hex ) 0xff duration (seconds, hex) 0xff
+//     name 0xff text 0xff extended text 0xff start time GMT (ctime, hex) 0xff duration (seconds, hex) 0xff
 //
 // epgEPGidShort:
 //   data of request:
@@ -285,8 +285,8 @@ struct sectionsd
 //     4 bytes with start time (ctime) of the above event
 //   data of response:
 //     is a string (c-string) describing the EPG:
-//     unique key (long long, hex) 0xff start time GMT (ctime, hex ) for previous event
-//     unique key (long long, hex) 0xff start time GMT (ctime, hex ) for next event
+//     unique key (long long, hex) 0xff start time GMT (ctime, hex) for previous event
+//     unique key (long long, hex) 0xff start time GMT (ctime, hex) for next event
 
 //
 // LoadLanguages

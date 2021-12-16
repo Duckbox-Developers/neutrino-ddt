@@ -29,7 +29,7 @@
 #include <sys/time.h>
 #include <unistd.h>
 
-bool send_data(int fd, const void * data, const size_t size, const timeval timeout);
-bool receive_data(int fd, void * data, const size_t size, const timeval timeout);
+bool send_data(int fd, const void *data, const size_t size, const timeval timeout);
+bool receive_data(int fd, void *data, const size_t size, const timeval timeout);
 
 #endif

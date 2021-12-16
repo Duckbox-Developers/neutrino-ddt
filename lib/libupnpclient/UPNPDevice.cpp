@@ -42,7 +42,10 @@
 
 struct ToLower
 {
-	char operator() (char c) const { return std::tolower(c); }
+	char operator()(char c) const
+	{
+		return std::tolower(c);
+	}
 };
 
 static void trim(std::string &buf)
@@ -52,24 +55,24 @@ static void trim(std::string &buf)
 	pos1 = buf.find_first_not_of(" \t\n\r");
 	pos2 = buf.find_last_not_of(" \t\n\r");
 	if ((pos1 == std::string::npos) || (pos2 == std::string::npos))
-		buf="";
+		buf = "";
 	else
 		buf = buf.substr(pos1, pos2 - pos1 + 1);
 }
 
-bool CUPnPDevice::check_response(std::string header, std::string& charset, std::string& rcode)
+bool CUPnPDevice::check_response(std::string header, std::string &charset, std::string &rcode)
 {
 	std::string::size_type pos;
 	std::string content, attrib, chars;
 
-	charset="ISO-8859-1";
+	charset = "ISO-8859-1";
 
 	pos = header.find("\r");
 	if (pos == std::string::npos)
 		return false;
 
 	rcode = header.substr(0, pos);
-	if (rcode.substr(0,5) != "HTTP/")
+	if (rcode.substr(0, 5) != "HTTP/")
 		return false;
 
 	pos = rcode.find(" ");
@@ -93,17 +96,17 @@ bool CUPnPDevice::check_response(std::string header, std::string& charset, std::
 		return false;
 
 	content = header.substr(pos);
-	content.erase(0,13);
+	content.erase(0, 13);
 	pos = content.find("\n");
 	if (pos != std::string::npos)
 		content.erase(pos);
 
 	trim(content);
 
-	pos=content.find(";");
-	if (pos!=std::string::npos)
+	pos = content.find(";");
+	if (pos != std::string::npos)
 	{
-		attrib=content.substr(pos+1);
+		attrib = content.substr(pos + 1);
 		content.erase(pos);
 		trim(content);
 	}
@@ -111,20 +114,20 @@ bool CUPnPDevice::check_response(std::string header, std::string& charset, std::
 		return false;
 
 	trim(attrib);
-	if (attrib.substr(0,8) == "charset=")
+	if (attrib.substr(0, 8) == "charset=")
 	{
-		attrib.erase(0,8);
+		attrib.erase(0, 8);
 		pos = attrib.find("\"");
-		if (pos!=std::string::npos)
+		if (pos != std::string::npos)
 		{
-			attrib.erase(0,pos+1);
+			attrib.erase(0, pos + 1);
 			pos = attrib.find("\"");
-			if (pos==std::string::npos)
+			if (pos == std::string::npos)
 				return false;
-			chars=attrib.substr(0,pos);
+			chars = attrib.substr(0, pos);
 		}
 		else
-			chars=attrib;
+			chars = attrib;
 		if (!strcasecmp(chars.c_str(), "utf-8"))
 			charset = "UTF-8";
 	}
@@ -146,9 +149,9 @@ CUPnPDevice::CUPnPDevice(std::string url)
 	urlbase = url.substr(7);
 	pos = urlbase.find("/");
 	if (pos != std::string::npos)
-		urlbase=url.substr(0,pos+7);
+		urlbase = url.substr(0, pos + 7);
 	else
-		urlbase=url;
+		urlbase = url;
 
 	result = HTTP(url);
 
@@ -157,8 +160,8 @@ CUPnPDevice::CUPnPDevice(std::string url)
 	if (pos == std::string::npos)
 		throw std::runtime_error(std::string("no desc body"));
 
-	head = result.substr(0,pos);
-	body = result.substr(pos+4);
+	head = result.substr(0, pos);
+	body = result.substr(pos + 4);
 
 	if (body.empty())
 		throw std::runtime_error(std::string("desc body empty"));
@@ -169,24 +172,24 @@ CUPnPDevice::CUPnPDevice(std::string url)
 	if (rcode != "200")
 		throw std::runtime_error(std::string("description url returned ") + rcode);
 
-	xmlDocPtr parser = parseXml(body.c_str(),charset.c_str());
-	if(!parser)
+	xmlDocPtr parser = parseXml(body.c_str(), charset.c_str());
+	if (!parser)
 		throw std::runtime_error(std::string("XML: parser error"));
 
 	root = xmlDocGetRootElement(parser);
 	if (!root)
 		throw std::runtime_error(std::string("XML: no root node"));
 
-	if (strcmp(xmlGetName(root),"root"))
+	if (strcmp(xmlGetName(root), "root"))
 		throw std::runtime_error(std::string("XML: no root"));
 
-	for (node = xmlChildrenNode(root); node; node=xmlNextNode(node))
+	for (node = xmlChildrenNode(root); node; node = xmlNextNode(node))
 	{
-		if (!strcmp(xmlGetName(node),"URLBase"))
+		if (!strcmp(xmlGetName(node), "URLBase"))
 		{
 			urlbase = std::string(xmlGetData(node));
-			if ((!urlbase.empty() ) && (urlbase[urlbase.length()-1] == '/'))
-				urlbase.erase(urlbase.length()-1);
+			if ((!urlbase.empty()) && (urlbase[urlbase.length() - 1] == '/'))
+				urlbase.erase(urlbase.length() - 1);
 		}
 
 	}
@@ -195,7 +198,7 @@ CUPnPDevice::CUPnPDevice(std::string url)
 	if (!node)
 		throw std::runtime_error(std::string("XML: no root child"));
 
-	while (strcmp(xmlGetName(node),"device"))
+	while (strcmp(xmlGetName(node), "device"))
 	{
 		node = xmlNextNode(node);
 		if (!node)
@@ -203,44 +206,44 @@ CUPnPDevice::CUPnPDevice(std::string url)
 	}
 	device = node;
 
-	for (node=xmlChildrenNode(device); node; node=xmlNextNode(node))
+	for (node = xmlChildrenNode(device); node; node = xmlNextNode(node))
 	{
-		if (!strcmp(xmlGetName(node),"deviceType"))
-			devicetype = std::string(xmlGetData(node)?xmlGetData(node):"");
+		if (!strcmp(xmlGetName(node), "deviceType"))
+			devicetype = std::string(xmlGetData(node) ? xmlGetData(node) : "");
 
-		if (!strcmp(xmlGetName(node),"friendlyName"))
-			friendlyname = std::string(xmlGetData(node)?xmlGetData(node):"");
+		if (!strcmp(xmlGetName(node), "friendlyName"))
+			friendlyname = std::string(xmlGetData(node) ? xmlGetData(node) : "");
 
-		if (!strcmp(xmlGetName(node),"manufacturer"))
-			manufacturer = std::string(xmlGetData(node)?xmlGetData(node):"");
+		if (!strcmp(xmlGetName(node), "manufacturer"))
+			manufacturer = std::string(xmlGetData(node) ? xmlGetData(node) : "");
 
-		if (!strcmp(xmlGetName(node),"manufacturerURL"))
-			manufacturerurl = std::string(xmlGetData(node)?xmlGetData(node):"");
+		if (!strcmp(xmlGetName(node), "manufacturerURL"))
+			manufacturerurl = std::string(xmlGetData(node) ? xmlGetData(node) : "");
 
-		if (!strcmp(xmlGetName(node),"modelDescription"))
-			modeldescription = std::string(xmlGetData(node)?xmlGetData(node):"");
+		if (!strcmp(xmlGetName(node), "modelDescription"))
+			modeldescription = std::string(xmlGetData(node) ? xmlGetData(node) : "");
 
-		if (!strcmp(xmlGetName(node),"modelName"))
-			modelname = std::string(xmlGetData(node)?xmlGetData(node):"");
+		if (!strcmp(xmlGetName(node), "modelName"))
+			modelname = std::string(xmlGetData(node) ? xmlGetData(node) : "");
 
-		if (!strcmp(xmlGetName(node),"modelNumber"))
-			modelnumber = std::string(xmlGetData(node)?xmlGetData(node):"");
+		if (!strcmp(xmlGetName(node), "modelNumber"))
+			modelnumber = std::string(xmlGetData(node) ? xmlGetData(node) : "");
 
-		if (!strcmp(xmlGetName(node),"modelURL"))
-			modelurl = std::string(xmlGetData(node)?xmlGetData(node):"");
+		if (!strcmp(xmlGetName(node), "modelURL"))
+			modelurl = std::string(xmlGetData(node) ? xmlGetData(node) : "");
 
-		if (!strcmp(xmlGetName(node),"serialNumber"))
-			serialnumber = std::string(xmlGetData(node)?xmlGetData(node):"");
+		if (!strcmp(xmlGetName(node), "serialNumber"))
+			serialnumber = std::string(xmlGetData(node) ? xmlGetData(node) : "");
 
-		if (!strcmp(xmlGetName(node),"UDN"))
-			udn = std::string(xmlGetData(node)?xmlGetData(node):"");
+		if (!strcmp(xmlGetName(node), "UDN"))
+			udn = std::string(xmlGetData(node) ? xmlGetData(node) : "");
 
-		if (!strcmp(xmlGetName(node),"UPC"))
-			upc = std::string(xmlGetData(node)?xmlGetData(node):"");
+		if (!strcmp(xmlGetName(node), "UPC"))
+			upc = std::string(xmlGetData(node) ? xmlGetData(node) : "");
 
-		if (!strcmp(xmlGetName(node),"iconList"))
+		if (!strcmp(xmlGetName(node), "iconList"))
 		{
-			for (icon=xmlChildrenNode(node); icon; icon=xmlNextNode(icon))
+			for (icon = xmlChildrenNode(node); icon; icon = xmlNextNode(icon))
 			{
 				bool foundm = false;
 				bool foundw = false;
@@ -248,33 +251,33 @@ CUPnPDevice::CUPnPDevice(std::string url)
 				bool foundd = false;
 				bool foundu = false;
 
-				if (strcmp(xmlGetName(icon),"icon"))
+				if (strcmp(xmlGetName(icon), "icon"))
 					throw std::runtime_error(std::string("XML: no icon"));
-				for (snode=xmlChildrenNode(icon); snode; snode=xmlNextNode(snode))
+				for (snode = xmlChildrenNode(icon); snode; snode = xmlNextNode(snode))
 				{
-					if (!strcmp(xmlGetName(snode),"mimetype"))
+					if (!strcmp(xmlGetName(snode), "mimetype"))
 					{
-						mimetype=std::string(xmlGetData(snode)?xmlGetData(snode):"");
+						mimetype = std::string(xmlGetData(snode) ? xmlGetData(snode) : "");
 						foundm = true;
 					}
-					if (!strcmp(xmlGetName(snode),"width"))
+					if (!strcmp(xmlGetName(snode), "width"))
 					{
-						width=xmlGetData(snode)?atoi(xmlGetData(snode)):0;
+						width = xmlGetData(snode) ? atoi(xmlGetData(snode)) : 0;
 						foundw = true;
 					}
-					if (!strcmp(xmlGetName(snode),"height"))
+					if (!strcmp(xmlGetName(snode), "height"))
 					{
-						height=xmlGetData(snode)?atoi(xmlGetData(snode)):0;
+						height = xmlGetData(snode) ? atoi(xmlGetData(snode)) : 0;
 						foundh = true;
 					}
-					if (!strcmp(xmlGetName(snode),"depth"))
+					if (!strcmp(xmlGetName(snode), "depth"))
 					{
-						depth=xmlGetData(snode)?atoi(xmlGetData(snode)):0;
+						depth = xmlGetData(snode) ? atoi(xmlGetData(snode)) : 0;
 						foundd = true;
 					}
-					if (!strcmp(xmlGetName(snode),"url"))
+					if (!strcmp(xmlGetName(snode), "url"))
 					{
-						url=std::string(xmlGetData(snode)?xmlGetData(snode):"");
+						url = std::string(xmlGetData(snode) ? xmlGetData(snode) : "");
 						foundu = true;
 					}
 				}
@@ -288,48 +291,48 @@ CUPnPDevice::CUPnPDevice(std::string url)
 					throw std::runtime_error(std::string("XML: icon without depth"));
 				if (!foundu)
 					throw std::runtime_error(std::string("XML: icon without url"));
-				UPnPIcon e={mimetype, url, width, height, depth};
+				UPnPIcon e = {mimetype, url, width, height, depth};
 				icons.push_back(e);
 			}
 		}
-		if (!strcmp(xmlGetName(node),"serviceList"))
+		if (!strcmp(xmlGetName(node), "serviceList"))
 		{
 			servicefound = true;
-			for (service=xmlChildrenNode(node); service; service=xmlNextNode(service))
+			for (service = xmlChildrenNode(node); service; service = xmlNextNode(service))
 			{
 				bool foundc = false;
 				bool founde = false;
 				bool foundn = false;
 
-				if (strcmp(xmlGetName(service),"service"))
+				if (strcmp(xmlGetName(service), "service"))
 					throw std::runtime_error(std::string("XML: no service"));
-				for (snode=xmlChildrenNode(service); snode; snode=xmlNextNode(snode))
+				for (snode = xmlChildrenNode(service); snode; snode = xmlNextNode(snode))
 				{
-					if (!strcmp(xmlGetName(snode),"serviceType"))
+					if (!strcmp(xmlGetName(snode), "serviceType"))
 					{
-						name=std::string(xmlGetData(snode)?xmlGetData(snode):"");
+						name = std::string(xmlGetData(snode) ? xmlGetData(snode) : "");
 						foundn = true;
 					}
-					if (!strcmp(xmlGetName(snode),"eventSubURL"))
+					if (!strcmp(xmlGetName(snode), "eventSubURL"))
 					{
 						const char *p = xmlGetData(snode);
 						if (!p)
-							eurl=urlbase + "/";
-						else if (p[0]=='/')
-							eurl=urlbase + std::string(p);
+							eurl = urlbase + "/";
+						else if (p[0] == '/')
+							eurl = urlbase + std::string(p);
 						else
-							eurl=urlbase + "/" + std::string(p);
+							eurl = urlbase + "/" + std::string(p);
 						founde = true;
 					}
-					if (!strcmp(xmlGetName(snode),"controlURL"))
+					if (!strcmp(xmlGetName(snode), "controlURL"))
 					{
 						const char *p = xmlGetData(snode);
 						if (!p)
-							curl=urlbase + "/";
-						else if (p[0]=='/')
-							curl=urlbase + std::string(p);
+							curl = urlbase + "/";
+						else if (p[0] == '/')
+							curl = urlbase + std::string(p);
 						else
-							curl=urlbase + "/" + std::string(p);
+							curl = urlbase + "/" + std::string(p);
 						foundc = true;
 					}
 				}
@@ -372,10 +375,10 @@ std::string CUPnPDevice::HTTP(std::string url, std::string post, std::string act
 	std::string::size_type pos1, pos2;
 	char buf[4096];
 
-	if (url.substr(0,7) != "http://")
+	if (url.substr(0, 7) != "http://")
 		return "";
 
-	url.erase(0,7);
+	url.erase(0, 7);
 
 	pos1 = url.find(":", 0);
 	pos2 = url.find("/", 0);
@@ -384,13 +387,13 @@ std::string CUPnPDevice::HTTP(std::string url, std::string post, std::string act
 		return "";
 	if ((pos1 == std::string::npos) || (pos1 > pos2))
 	{
-		hostname = url.substr(0,pos2);
-		port=80;
+		hostname = url.substr(0, pos2);
+		port = 80;
 	}
 	else
 	{
-		hostname = url.substr(0,pos1);
-		portname = url.substr(pos1+1, pos2-pos1-1);
+		hostname = url.substr(0, pos1);
+		portname = url.substr(pos1 + 1, pos2 - pos1 - 1);
 		port = atoi(portname.c_str());
 	}
 	path = url.substr(pos2);
@@ -432,7 +435,7 @@ std::string CUPnPDevice::HTTP(std::string url, std::string post, std::string act
 	socktcp.sin_port = htons(port);
 	memmove((char *)&socktcp.sin_addr, hp->h_addr, hp->h_length);
 
-	if (connect(t_socket, (struct sockaddr*) &socktcp, sizeof(struct sockaddr_in)))
+	if (connect(t_socket, (struct sockaddr *) &socktcp, sizeof(struct sockaddr_in)))
 	{
 		close(t_socket);
 		throw std::runtime_error(std::string("connect"));
@@ -441,7 +444,7 @@ std::string CUPnPDevice::HTTP(std::string url, std::string post, std::string act
 	commandstr = command.str();
 	send(t_socket, commandstr.c_str(), commandstr.size(), 0);
 #if 0
-	while ((received = recv(t_socket, buf, sizeof(buf)-1, 0)) > 0)
+	while ((received = recv(t_socket, buf, sizeof(buf) - 1, 0)) > 0)
 	{
 		buf[received] = 0;
 		reply << buf;
@@ -450,17 +453,20 @@ std::string CUPnPDevice::HTTP(std::string url, std::string post, std::string act
 	struct pollfd fds[1];
 	fds[0].fd = t_socket;
 	fds[0].events = POLLIN;
-	while (true) {
+	while (true)
+	{
 		int result = poll(fds, 1, 4000);
-		if (result < 0) {
+		if (result < 0)
+		{
 			printf("CUPnPDevice::HTTP: poll error %s\n", strerror(errno));
 			break;
 		}
-		if (result == 0) {
+		if (result == 0)
+		{
 			printf("CUPnPDevice::HTTP: poll timeout\n");
 			break;
 		}
-		received = recv(t_socket, buf, sizeof(buf)-1, 0);
+		received = recv(t_socket, buf, sizeof(buf) - 1, 0);
 		if (received <= 0)
 			break;
 		buf[received] = 0;
@@ -475,7 +481,7 @@ std::list<UPnPAttribute> CUPnPDevice::SendSOAP(std::string servicename, std::str
 	std::list<CUPnPService>::iterator i;
 	std::list<UPnPAttribute> empty;
 
-	for (i=services.begin(); i != services.end(); ++i)
+	for (i = services.begin(); i != services.end(); ++i)
 	{
 		if (i->servicename == servicename)
 			return i->SendSOAP(action, attribs);
@@ -488,7 +494,7 @@ std::list<std::string> CUPnPDevice::GetServices(void)
 	std::list<CUPnPService>::iterator i;
 	std::list<std::string> result;
 
-	for (i=services.begin(); i != services.end(); ++i)
+	for (i = services.begin(); i != services.end(); ++i)
 		result.push_back(i->servicename);
 	return result;
 }

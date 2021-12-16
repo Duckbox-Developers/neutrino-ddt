@@ -39,7 +39,8 @@ static void device_up(std::string dev)
 
 	sockfd = socket(AF_INET, SOCK_DGRAM, 0);
 
-	if (sockfd < 0) {
+	if (sockfd < 0)
+	{
 		perror("socket");
 		return;
 	}
@@ -61,18 +62,18 @@ bool get_wlan_list(std::string dev, std::vector<wlan_network> &networks)
 {
 	int skfd;
 	struct iwreq          wrq;
-	unsigned char *       buffer = NULL;          /* Results */
+	unsigned char        *buffer = NULL;          /* Results */
 	int                   buflen = IW_SCAN_MAX_DATA; /* Min for compat WE<17 */
 	struct iw_range       range;
 	int                   has_range;
 	struct timeval        tv;                             /* Select timeout */
 	int                   timeout = 15000000;             /* 15s */
-	const char * ifname = dev.c_str();
+	const char *ifname = dev.c_str();
 
 	networks.clear();
 	device_up(dev);
 
-	if((skfd = iw_sockets_open()) < 0)
+	if ((skfd = iw_sockets_open()) < 0)
 	{
 		perror("socket");
 		return false;
@@ -82,10 +83,10 @@ bool get_wlan_list(std::string dev, std::vector<wlan_network> &networks)
 	has_range = (iw_get_range_info(skfd, ifname, &range) >= 0);
 
 	/* Check if the interface could support scanning. */
-	if((!has_range) || (range.we_version_compiled < 14))
+	if ((!has_range) || (range.we_version_compiled < 14))
 	{
 		fprintf(stderr, "%-8.16s  Interface doesn't support scanning.\n\n",
-				ifname);
+			ifname);
 		goto _return;
 	}
 
@@ -98,12 +99,12 @@ bool get_wlan_list(std::string dev, std::vector<wlan_network> &networks)
 	wrq.u.data.length = 0;
 
 	/* Initiate Scanning */
-	if(iw_set_ext(skfd, ifname, SIOCSIWSCAN, &wrq) < 0)
+	if (iw_set_ext(skfd, ifname, SIOCSIWSCAN, &wrq) < 0)
 	{
-		if(errno != EPERM)
+		if (errno != EPERM)
 		{
 			fprintf(stderr, "%-8.16s  Interface doesn't support scanning : %s\n\n",
-					ifname, strerror(errno));
+				ifname, strerror(errno));
 			goto _return;
 		}
 		/* If we don't have the permission to initiate the scan, we may
@@ -114,7 +115,7 @@ bool get_wlan_list(std::string dev, std::vector<wlan_network> &networks)
 	timeout -= tv.tv_usec;
 
 	/* Forever */
-	while(1)
+	while (1)
 	{
 		fd_set            rfds;           /* File descriptors for select */
 		int               last_fd;        /* Last fd */
@@ -130,23 +131,23 @@ bool get_wlan_list(std::string dev, std::vector<wlan_network> &networks)
 		ret = select(last_fd + 1, &rfds, NULL, NULL, &tv);
 
 		/* Check if there was an error */
-		if(ret < 0)
+		if (ret < 0)
 		{
-			if(errno == EAGAIN || errno == EINTR)
+			if (errno == EAGAIN || errno == EINTR)
 				continue;
 			fprintf(stderr, "Unhandled signal - exiting...\n");
 			goto _return;
 		}
 
 		/* Check if there was a timeout */
-		if(ret == 0)
+		if (ret == 0)
 		{
-			unsigned char *       newbuf;
+			unsigned char        *newbuf;
 
 realloc:
 			/* (Re)allocate the buffer - realloc(NULL, len) == malloc(len) */
 			newbuf = (unsigned char *) realloc(buffer, buflen);
-			if(newbuf == NULL)
+			if (newbuf == NULL)
 			{
 				fprintf(stderr, "%s: Allocation failed\n", __FUNCTION__);
 				goto _return;
@@ -157,10 +158,10 @@ realloc:
 			wrq.u.data.pointer = buffer;
 			wrq.u.data.flags = 0;
 			wrq.u.data.length = buflen;
-			if(iw_get_ext(skfd, ifname, SIOCGIWSCAN, &wrq) < 0)
+			if (iw_get_ext(skfd, ifname, SIOCGIWSCAN, &wrq) < 0)
 			{
 				/* Check if buffer was too small (WE-17 only) */
-				if((errno == E2BIG) && (range.we_version_compiled > 16))
+				if ((errno == E2BIG) && (range.we_version_compiled > 16))
 				{
 					/* Some driver may return very large scan results, either
 					 * because there are many cells, or because they have many
@@ -171,7 +172,7 @@ realloc:
 					 * various increasing sizes. Jean II */
 
 					/* Check if the driver gave us any hints. */
-					if(wrq.u.data.length > buflen)
+					if (wrq.u.data.length > buflen)
 						buflen = wrq.u.data.length;
 					else
 						buflen *= 2;
@@ -181,19 +182,19 @@ realloc:
 				}
 
 				/* Check if results not available yet */
-				if(errno == EAGAIN)
+				if (errno == EAGAIN)
 				{
 					/* Restart timer for only 100ms*/
 					tv.tv_sec = 0;
 					tv.tv_usec = 100000;
 					timeout -= tv.tv_usec;
-					if(timeout > 0)
+					if (timeout > 0)
 						continue;   /* Try again later */
 				}
 
 				/* Bad error */
 				fprintf(stderr, "%-8.16s  Failed to read scan data : %s\n\n",
-						ifname, strerror(errno));
+					ifname, strerror(errno));
 				goto _return;
 			}
 			else
@@ -205,17 +206,17 @@ realloc:
 		 * if scan event, read results. All errors bad & no reset timeout */
 	}
 
-	if(wrq.u.data.length)
+	if (wrq.u.data.length)
 	{
 		struct iw_event           iwe;
-		struct iw_event * event = &iwe;
+		struct iw_event *event = &iwe;
 		struct stream_descr       stream;
 		int                       ret;
 
 		printf("%-8.16s  Scan completed :\n", ifname);
 		iw_init_event_stream(&stream, (char *) buffer, wrq.u.data.length);
 		int count = -1;
-		while(1)
+		while (1)
 		{
 			wlan_network network;
 			/* Extract an event and print it */
@@ -223,63 +224,65 @@ realloc:
 					range.we_version_compiled);
 			if (ret <= 0)
 				break;
-			switch(event->cmd) {
+			switch (event->cmd)
+			{
 				case SIOCGIWAP:
 					count++;
 					networks.push_back(network);
-					printf("          Network %d:\n", count+1);
+					printf("          Network %d:\n", count + 1);
 					break;
 				case SIOCGIWESSID:
+				{
+					char essid[IW_ESSID_MAX_SIZE + 1];
+					memset(essid, '\0', sizeof(essid));
+					if ((event->u.essid.pointer) && (event->u.essid.length))
+						memcpy(essid, event->u.essid.pointer, event->u.essid.length);
+					if (event->u.essid.flags)
 					{
-						char essid[IW_ESSID_MAX_SIZE+1];
-						memset(essid, '\0', sizeof(essid));
-						if((event->u.essid.pointer) && (event->u.essid.length))
-							memcpy(essid, event->u.essid.pointer, event->u.essid.length);
-						if(event->u.essid.flags)
-						{
-							printf("                    ESSID:\"%s\"\n", essid);
-							networks[count].ssid = essid;
-						}
-						else {
-							printf("                    ESSID:off/any/hidden\n");
-							networks[count].ssid = "(hidden)";
-						}
+						printf("                    ESSID:\"%s\"\n", essid);
+						networks[count].ssid = essid;
 					}
+					else
+					{
+						printf("                    ESSID:off/any/hidden\n");
+						networks[count].ssid = "(hidden)";
+					}
+				}
 
-					break;
+				break;
 				case SIOCGIWFREQ:
-					{
-						double          freq;                   /* Frequency/channel */
-						int             channel = -1;           /* Converted to channel */
-						char          buf[128];
-						freq = iw_freq2float(&(event->u.freq));
-						/* Convert to channel if possible */
-						if(has_range)
-							channel = iw_freq_to_channel(freq, &range);
-						iw_print_freq(buf, sizeof(buf),
-								freq, channel, event->u.freq.flags);
+				{
+					double          freq;                   /* Frequency/channel */
+					int             channel = -1;           /* Converted to channel */
+					char          buf[128];
+					freq = iw_freq2float(&(event->u.freq));
+					/* Convert to channel if possible */
+					if (has_range)
+						channel = iw_freq_to_channel(freq, &range);
+					iw_print_freq(buf, sizeof(buf),
+						freq, channel, event->u.freq.flags);
 #if 0
-						if ((channel < 0) && (freq < KILO))
-							channel = freq;
+					if ((channel < 0) && (freq < KILO))
+						channel = freq;
 #endif
-						printf("                    %s\n", buf);
-						networks[count].channel = buf;
-					}
-					break;
+					printf("                    %s\n", buf);
+					networks[count].channel = buf;
+				}
+				break;
 				case IWEVQUAL:
-					{
-						char          buf[128];
-						iw_print_stats(buf, sizeof(buf),
-								&event->u.qual, &range, has_range);
-						printf("                    %s\n", buf);
-						networks[count].qual = buf;
-						std::size_t found = networks[count].qual.find_first_of(' ');
-						if (found != std::string::npos)
-							networks[count].qual = networks[count].qual.substr(0, found);
-					}
-					break;
+				{
+					char          buf[128];
+					iw_print_stats(buf, sizeof(buf),
+						&event->u.qual, &range, has_range);
+					printf("                    %s\n", buf);
+					networks[count].qual = buf;
+					std::size_t found = networks[count].qual.find_first_of(' ');
+					if (found != std::string::npos)
+						networks[count].qual = networks[count].qual.substr(0, found);
+				}
+				break;
 				case SIOCGIWENCODE:
-					if(event->u.data.flags & IW_ENCODE_DISABLED)
+					if (event->u.data.flags & IW_ENCODE_DISABLED)
 						networks[count].encrypted = 0;
 					else
 						networks[count].encrypted = 1;

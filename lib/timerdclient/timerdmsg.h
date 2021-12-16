@@ -36,11 +36,11 @@
 class CTimerdMsg : public CBasicMessage
 {
 
- public:
+	public:
 
-	static const CBasicMessage::t_version ACTVERSION = 2;
+		static const CBasicMessage::t_version ACTVERSION = 2;
 
-	enum commands
+		enum commands
 		{
 			CMD_ADDTIMER = 1,
 			CMD_REMOVETIMER,
@@ -61,94 +61,94 @@ class CTimerdMsg : public CBasicMessage
 		};
 
 
-	struct commandAddTimer
-	{
-		CTimerd::CTimerEventTypes  eventType;
-		CTimerd::CTimerEventRepeat eventRepeat;
-		time_t                     alarmTime;
-		time_t                     announceTime;
-		time_t                     stopTime;
-		uint32_t                       repeatCount;
-	};
+		struct commandAddTimer
+		{
+			CTimerd::CTimerEventTypes  eventType;
+			CTimerd::CTimerEventRepeat eventRepeat;
+			time_t                     alarmTime;
+			time_t                     announceTime;
+			time_t                     stopTime;
+			uint32_t                       repeatCount;
+		};
 
-	struct commandGetTimer
-	{
-		int   eventID;
-	};
+		struct commandGetTimer
+		{
+			int   eventID;
+		};
 
-	struct commandModifyTimer
-	{
-		int                        eventID;
-		time_t                     announceTime;
-		time_t                     alarmTime;
-		time_t                     stopTime;
-		CTimerd::CTimerEventRepeat eventRepeat;
-		uint32_t                       repeatCount;
-	};
-
-
-	struct commandRemind
-	{
-		char message[REMINDER_MESSAGE_MAXLEN];
-	};
-
-	struct commandExecPlugin
-	{
-		char name[EXEC_PLUGIN_NAME_MAXLEN];
-	};
-
-	struct commandRecordDir
-	{
-		char recDir[RECORD_DIR_MAXLEN];
-	};
-
-	struct commandSetAPid
-	{
-		int   eventID;
-		unsigned char  apids;
-	};
-
-	struct commandRemoveTimer
-	{
-		int   eventID;
-	};
-
-	struct commandSetStandby
-	{
-		bool standby_on;
-	};
-
-	struct commandRecordingSafety
-	{
-		int pre;
-		int post;
-	};
+		struct commandModifyTimer
+		{
+			int                        eventID;
+			time_t                     announceTime;
+			time_t                     alarmTime;
+			time_t                     stopTime;
+			CTimerd::CTimerEventRepeat eventRepeat;
+			uint32_t                       repeatCount;
+		};
 
 
-	struct generalInteger
-	{
-		int number;
-	};
+		struct commandRemind
+		{
+			char message[REMINDER_MESSAGE_MAXLEN];
+		};
 
-	struct responseAddTimer
-	{
-		int   eventID;
-	};
+		struct commandExecPlugin
+		{
+			char name[EXEC_PLUGIN_NAME_MAXLEN];
+		};
 
-	struct responseAvailable
-	{
-		bool available;
-	};
+		struct commandRecordDir
+		{
+			char recDir[RECORD_DIR_MAXLEN];
+		};
 
-	struct responseGetSleeptimer
-	{
-		int   eventID;
-	};
+		struct commandSetAPid
+		{
+			int   eventID;
+			unsigned char  apids;
+		};
 
-	struct responseStatus
-	{
-		bool status;
-	};
+		struct commandRemoveTimer
+		{
+			int   eventID;
+		};
+
+		struct commandSetStandby
+		{
+			bool standby_on;
+		};
+
+		struct commandRecordingSafety
+		{
+			int pre;
+			int post;
+		};
+
+
+		struct generalInteger
+		{
+			int number;
+		};
+
+		struct responseAddTimer
+		{
+			int   eventID;
+		};
+
+		struct responseAvailable
+		{
+			bool available;
+		};
+
+		struct responseGetSleeptimer
+		{
+			int   eventID;
+		};
+
+		struct responseStatus
+		{
+			bool status;
+		};
 
 };
 
