@@ -17,12 +17,12 @@ class CWebserverConnection;
 // Log Level
 //-----------------------------------------------------------------------------
 //	1 : Connection Information (called URL)
-//	2 : Parameters?? 
+//	2 : Parameters??
 //	3 : yParser Main Infos
 //	5 : ycmd: Every yParser Loop Command expansion
 //	6 : yresult: Every yParser Loop Command expansion
 //  	8 : Central Functions Detailed
-//  	9 : Socket Operations 
+//  	9 : Socket Operations
 //-----------------------------------------------------------------------------
 class CLogging
 {
@@ -31,7 +31,7 @@ class CLogging
 		FILE *Logfile;
 		bool Debug;
 		bool LogToFile;
-				
+
 		static CLogging *instance;
 
 		CLogging(void);
@@ -58,7 +58,7 @@ class CLogging
 // print always
 #define aprintf(fmt, args...) \
 	do { CLogging::getInstance()->printf("[yhttpd] " fmt, ## args); } while (0)
-	
+
 // print show file and linenumber
 #define log_printfX(fmt, args...) \
 	do { CLogging::getInstance()->printf("[yhttpd(%s:%d)] " fmt, __file__, __LINE__, ## args); } while (0)

@@ -47,9 +47,9 @@
 
 extern CPictureViewer *g_PicViewer;
 extern CBouquetManager *g_bouquetManager;
-extern CFrontend * frontend;
-extern cVideo * videoDecoder;
-extern cAudio * audioDecoder;
+extern CFrontend *frontend;
+extern cVideo *videoDecoder;
+extern cAudio *audioDecoder;
 
 extern CRemoteControl *g_RemoteControl;	/* neutrino.cpp */
 extern CZapitClient::SatelliteList satList;
@@ -84,12 +84,12 @@ bool _initialize_iso639_map(void)
 		in.close();
 		return true;
 	}
- 	else
+	else
 		return false;
 }
 #endif
 //-----------------------------------------------------------------------------
-const char * _getISO639Description(const char * const iso)
+const char *_getISO639Description(const char *const iso)
 {
 	std::map<std::string, std::string>::const_iterator it = iso639.find(std::string(iso));
 	if (it == iso639.end())
@@ -103,7 +103,7 @@ const char * _getISO639Description(const char * const iso)
 //=============================================================================
 std::string CNeutrinoAPI::videooutput_names[5]	= {"CVBS", "RGB with CVBS", "S-Video", "YUV with VBS", "YUV with CVBS"};
 std::string CNeutrinoAPI::videoformat_names[5]	= {"automatic", "4:3", "14:9", "16:9", "20:9"};
-std::string CNeutrinoAPI::audiotype_names[5] 	= {"none", "single channel","dual channel","joint stereo","stereo"};
+std::string CNeutrinoAPI::audiotype_names[5] 	= {"none", "single channel", "dual channel", "joint stereo", "stereo"};
 std::string CNeutrinoAPI::mpegmodes[] 			= { "stereo", "joint_st", "dual_ch", "single_ch" };
 std::string CNeutrinoAPI::ddmodes[] 			= { "CH1/CH2", "C", "L/R", "L/C/R", "L/R/S", "L/C/R/S", "L/R/SL/SR", "L/C/R/SL/SR" };
 
@@ -122,24 +122,24 @@ CNeutrinoAPI::CNeutrinoAPI()
 	UpdateBouquets();
 
 	EventServer = new CEventServer;
-	EventServer->registerEvent2( NeutrinoMessages::SHUTDOWN, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
-	EventServer->registerEvent2( NeutrinoMessages::REBOOT, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
-	EventServer->registerEvent2( NeutrinoMessages::STANDBY_ON, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
-	EventServer->registerEvent2( NeutrinoMessages::STANDBY_OFF, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
-	EventServer->registerEvent2( NeutrinoMessages::STANDBY_TOGGLE, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
-	EventServer->registerEvent2( NeutrinoMessages::EVT_POPUP, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
-	EventServer->registerEvent2( NeutrinoMessages::EVT_EXTMSG, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
-	EventServer->registerEvent2( NeutrinoMessages::CHANGEMODE, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
-	EventServer->registerEvent2( NeutrinoMessages::EVT_START_PLUGIN, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
-	EventServer->registerEvent2( NeutrinoMessages::LOCK_RC, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
-	EventServer->registerEvent2( NeutrinoMessages::UNLOCK_RC, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
-	EventServer->registerEvent2( NeutrinoMessages::RELOAD_SETUP, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");//reload neutrino conf
-	EventServer->registerEvent2( NeutrinoMessages::EVT_HDMI_CEC_VIEW_ON, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
-	EventServer->registerEvent2( NeutrinoMessages::EVT_HDMI_CEC_STANDBY, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
-	EventServer->registerEvent2( NeutrinoMessages::EVT_SET_MUTE, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
-	EventServer->registerEvent2( NeutrinoMessages::EVT_SET_VOLUME, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
-	EventServer->registerEvent2( NeutrinoMessages::RECORD_START, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
-	EventServer->registerEvent2( NeutrinoMessages::RECORD_STOP, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
+	EventServer->registerEvent2(NeutrinoMessages::SHUTDOWN, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
+	EventServer->registerEvent2(NeutrinoMessages::REBOOT, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
+	EventServer->registerEvent2(NeutrinoMessages::STANDBY_ON, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
+	EventServer->registerEvent2(NeutrinoMessages::STANDBY_OFF, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
+	EventServer->registerEvent2(NeutrinoMessages::STANDBY_TOGGLE, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
+	EventServer->registerEvent2(NeutrinoMessages::EVT_POPUP, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
+	EventServer->registerEvent2(NeutrinoMessages::EVT_EXTMSG, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
+	EventServer->registerEvent2(NeutrinoMessages::CHANGEMODE, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
+	EventServer->registerEvent2(NeutrinoMessages::EVT_START_PLUGIN, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
+	EventServer->registerEvent2(NeutrinoMessages::LOCK_RC, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
+	EventServer->registerEvent2(NeutrinoMessages::UNLOCK_RC, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
+	EventServer->registerEvent2(NeutrinoMessages::RELOAD_SETUP, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock"); //reload neutrino conf
+	EventServer->registerEvent2(NeutrinoMessages::EVT_HDMI_CEC_VIEW_ON, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
+	EventServer->registerEvent2(NeutrinoMessages::EVT_HDMI_CEC_STANDBY, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
+	EventServer->registerEvent2(NeutrinoMessages::EVT_SET_MUTE, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
+	EventServer->registerEvent2(NeutrinoMessages::EVT_SET_VOLUME, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
+	EventServer->registerEvent2(NeutrinoMessages::RECORD_START, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
+	EventServer->registerEvent2(NeutrinoMessages::RECORD_STOP, CEventServer::INITID_HTTPD, "/tmp/neutrino.sock");
 
 	pmutex = new OpenThreads::Mutex(OpenThreads::Mutex::MUTEX_RECURSIVE);
 }
@@ -170,7 +170,7 @@ void CNeutrinoAPI::UpdateBouquets(void)
 }
 
 //-------------------------------------------------------------------------
-void CNeutrinoAPI::ZapTo(const char * const target)
+void CNeutrinoAPI::ZapTo(const char *const target)
 {
 	OpenThreads::ScopedPointerLock<OpenThreads::Mutex> lock(pmutex);
 	t_channel_id channel_id;
@@ -196,7 +196,7 @@ void CNeutrinoAPI::ZapToChannelId(t_channel_id channel_id)
 }
 //-------------------------------------------------------------------------
 
-void CNeutrinoAPI::ZapToSubService(const char * const target)
+void CNeutrinoAPI::ZapToSubService(const char *const target)
 {
 	OpenThreads::ScopedPointerLock<OpenThreads::Mutex> lock(pmutex);
 	t_channel_id channel_id;
@@ -214,12 +214,14 @@ t_channel_id CNeutrinoAPI::ChannelNameToChannelId(std::string search_channel_nam
 	OpenThreads::ScopedPointerLock<OpenThreads::Mutex> lock(pmutex);
 //FIXME depending on mode missing
 	//int mode = Zapit->getMode();
-	t_channel_id channel_id = (t_channel_id)-1;
+	t_channel_id channel_id = (t_channel_id) - 1;
 	CStringArray channel_names = ySplitStringVector(search_channel_name, ",");
 
-	for(unsigned int j=0;j<channel_names.size();j++) {
-		CZapitChannel * channel = CServiceManager::getInstance()->FindChannelByName(channel_names[j]);
-		if(channel) {
+	for (unsigned int j = 0; j < channel_names.size(); j++)
+	{
+		CZapitChannel *channel = CServiceManager::getInstance()->FindChannelByName(channel_names[j]);
+		if (channel)
+		{
 			channel_id = channel->getChannelID();
 			break;
 		}
@@ -243,20 +245,20 @@ bool CNeutrinoAPI::GetStreamInfo(int bitInfo[10])
 
 	if (fd == NULL)
 	{
-		dprintf("error while opening proc-bitstream\n" );
+		dprintf("error while opening proc-bitstream\n");
 		return false;
 	}
 
-	fgets(buf,35,fd);//dummy
-	while(!feof(fd))
+	fgets(buf, 35, fd); //dummy
+	while (!feof(fd))
 	{
-		if(fgets(buf,35,fd)!=NULL)
+		if (fgets(buf, 35, fd) != NULL)
 		{
-			buf[strlen(buf)-1]=0;
-			tmpptr=buf;
+			buf[strlen(buf) - 1] = 0;
+			tmpptr = buf;
 			//key=strsep(&tmpptr,":");
-			value=strtoul(tmpptr,NULL,0);
-			bitInfo[pos]= value;
+			value = strtoul(tmpptr, NULL, 0);
+			bitInfo[pos] = value;
 			pos++;
 		}
 	}
@@ -291,11 +293,11 @@ void CNeutrinoAPI::GetChannelEvent(t_channel_id channel_id, CChannelEvent &event
 	event.eventID = 0;
 
 	t_channel_id epg_id = channel_id;
-	CZapitChannel * ch = CServiceManager::getInstance()->FindChannel(channel_id);
+	CZapitChannel *ch = CServiceManager::getInstance()->FindChannel(channel_id);
 	if (ch)
 		epg_id = ch->getEpgID();
 
-	CChannelEvent * evt = ChannelListEvents[epg_id];
+	CChannelEvent *evt = ChannelListEvents[epg_id];
 	if (evt)
 		event = *evt;
 }
@@ -343,36 +345,37 @@ void CNeutrinoAPI::UpdateChannelList(void)
 std::string CNeutrinoAPI::timerEventType2Str(CTimerd::CTimerEventTypes type)
 {
 	std::string result;
-	switch (type) {
-	case CTimerd::TIMER_SHUTDOWN:
-		result = "{=L:timerlist.type.shutdown=}";
-		break;
+	switch (type)
+	{
+		case CTimerd::TIMER_SHUTDOWN:
+			result = "{=L:timerlist.type.shutdown=}";
+			break;
 #if 0
-	case CTimerd::TIMER_NEXTPROGRAM:
-		result = "{=L:timerlist.type.nextprogram=}";
-		break;
+		case CTimerd::TIMER_NEXTPROGRAM:
+			result = "{=L:timerlist.type.nextprogram=}";
+			break;
 #endif
-	case CTimerd::TIMER_ZAPTO:
-		result = "{=L:timerlist.type.zapto=}";
-		break;
-	case CTimerd::TIMER_STANDBY:
-		result = "{=L:timerlist.type.standby=}";
-		break;
-	case CTimerd::TIMER_RECORD:
-		result = "{=L:timerlist.type.record=}";
-		break;
-	case CTimerd::TIMER_REMIND:
-		result = "{=L:timerlist.type.remind=}";
-		break;
-	case CTimerd::TIMER_EXEC_PLUGIN:
-		result = "{=L:timerlist.type.execplugin=}";
-		break;
-	case CTimerd::TIMER_SLEEPTIMER:
-		result = "{=L:timerlist.type.sleeptimer=}";
-		break;
-	default:
-		result = "{=L:timerlist.type.unknown=}";
-		break;
+		case CTimerd::TIMER_ZAPTO:
+			result = "{=L:timerlist.type.zapto=}";
+			break;
+		case CTimerd::TIMER_STANDBY:
+			result = "{=L:timerlist.type.standby=}";
+			break;
+		case CTimerd::TIMER_RECORD:
+			result = "{=L:timerlist.type.record=}";
+			break;
+		case CTimerd::TIMER_REMIND:
+			result = "{=L:timerlist.type.remind=}";
+			break;
+		case CTimerd::TIMER_EXEC_PLUGIN:
+			result = "{=L:timerlist.type.execplugin=}";
+			break;
+		case CTimerd::TIMER_SLEEPTIMER:
+			result = "{=L:timerlist.type.sleeptimer=}";
+			break;
+		default:
+			result = "{=L:timerlist.type.unknown=}";
+			break;
 	}
 	return result;
 }
@@ -382,51 +385,52 @@ std::string CNeutrinoAPI::timerEventType2Str(CTimerd::CTimerEventTypes type)
 std::string CNeutrinoAPI::timerEventRepeat2Str(CTimerd::CTimerEventRepeat rep)
 {
 	std::string result;
-	switch (rep) {
-	case CTimerd::TIMERREPEAT_ONCE:
-		result = "{=L:timerlist.repeat.once=}";
-		break;
-	case CTimerd::TIMERREPEAT_DAILY:
-		result = "{=L:timerlist.repeat.daily=}";
-		break;
-	case CTimerd::TIMERREPEAT_WEEKLY:
-		result = "{=L:timerlist.repeat.weekly=}";
-		break;
-	case CTimerd::TIMERREPEAT_BIWEEKLY:
-		result = "{=L:timerlist.repeat.biweekly=}";
-		break;
-	case CTimerd::TIMERREPEAT_FOURWEEKLY:
-		result = "{=L:timerlist.repeat.fourweekly=}";
-		break;
-	case CTimerd::TIMERREPEAT_MONTHLY:
-		result = "{=L:timerlist.repeat.monthly=}";
-		break;
-	case CTimerd::TIMERREPEAT_BYEVENTDESCRIPTION:
-		result = "{=L:timerlist.repeat.byeventdescription=}";
-		break;
-	case CTimerd::TIMERREPEAT_WEEKDAYS:
-		result = "{=L:timerlist.repeat.weekdays=}";
-		break;
-	default:
-		if (rep > CTimerd::TIMERREPEAT_WEEKDAYS)
-		{
-			if (rep & 0x0200)
-				result += "{=L:date.mo=} ";
-			if (rep & 0x0400)
-				result += "{=L:date.tu=} ";
-			if (rep & 0x0800)
-				result += "{=L:date.we=} ";
-			if (rep & 0x1000)
-				result += "{=L:date.th=} ";
-			if (rep & 0x2000)
-				result += "{=L:date.fr=} ";
-			if (rep & 0x4000)
-				result += "{=L:date.sa=} ";
-			if (rep & 0x8000)
-				result += "{=L:date.su=} ";
-		}
-		else
-			result = "{=L:timerlist.type.unknown=}";
+	switch (rep)
+	{
+		case CTimerd::TIMERREPEAT_ONCE:
+			result = "{=L:timerlist.repeat.once=}";
+			break;
+		case CTimerd::TIMERREPEAT_DAILY:
+			result = "{=L:timerlist.repeat.daily=}";
+			break;
+		case CTimerd::TIMERREPEAT_WEEKLY:
+			result = "{=L:timerlist.repeat.weekly=}";
+			break;
+		case CTimerd::TIMERREPEAT_BIWEEKLY:
+			result = "{=L:timerlist.repeat.biweekly=}";
+			break;
+		case CTimerd::TIMERREPEAT_FOURWEEKLY:
+			result = "{=L:timerlist.repeat.fourweekly=}";
+			break;
+		case CTimerd::TIMERREPEAT_MONTHLY:
+			result = "{=L:timerlist.repeat.monthly=}";
+			break;
+		case CTimerd::TIMERREPEAT_BYEVENTDESCRIPTION:
+			result = "{=L:timerlist.repeat.byeventdescription=}";
+			break;
+		case CTimerd::TIMERREPEAT_WEEKDAYS:
+			result = "{=L:timerlist.repeat.weekdays=}";
+			break;
+		default:
+			if (rep > CTimerd::TIMERREPEAT_WEEKDAYS)
+			{
+				if (rep & 0x0200)
+					result += "{=L:date.mo=} ";
+				if (rep & 0x0400)
+					result += "{=L:date.tu=} ";
+				if (rep & 0x0800)
+					result += "{=L:date.we=} ";
+				if (rep & 0x1000)
+					result += "{=L:date.th=} ";
+				if (rep & 0x2000)
+					result += "{=L:date.fr=} ";
+				if (rep & 0x4000)
+					result += "{=L:date.sa=} ";
+				if (rep & 0x8000)
+					result += "{=L:date.su=} ";
+			}
+			else
+				result = "{=L:timerlist.type.unknown=}";
 	}
 	return result;
 }
@@ -445,12 +449,13 @@ int CNeutrinoAPI::setVideoAspectRatioAsString(std::string newRatioString)
 {
 	OpenThreads::ScopedPointerLock<OpenThreads::Mutex> lock(pmutex);
 	int newRatioInt = -1;
-	for(int i=0;i<(int)sizeof(videoformat_names);i++)
-		if( videoformat_names[i] == newRatioString){
+	for (int i = 0; i < (int)sizeof(videoformat_names); i++)
+		if (videoformat_names[i] == newRatioString)
+		{
 			newRatioInt = i;
 			break;
 		}
-	if(newRatioInt != -1)
+	if (newRatioInt != -1)
 		videoDecoder->setAspectRatio(newRatioInt, -1);
 	return newRatioInt;
 }
@@ -470,11 +475,14 @@ std::string CNeutrinoAPI::getVideoFramerateAsString(void)
 	int xres = 0, yres = 0, framerate = 0;
 	std::string sframerate = "{=L:unknown=}";
 	videoDecoder->getPictureInfo(xres, yres, framerate);
-	switch(framerate){
+	switch (framerate)
+	{
 		case 2:
-			sframerate="25fps";break;
+			sframerate = "25fps";
+			break;
 		case 5:
-			sframerate="50fps";break;
+			sframerate = "50fps";
+			break;
 	}
 	return sframerate;
 }
@@ -485,10 +493,10 @@ std::string CNeutrinoAPI::getAudioInfoAsString(void)
 	int type = 0, layer = 0, freq = 0, mode = 0, lbitrate = 0;
 	audioDecoder->getAudioInfo(type, layer, freq, lbitrate, mode);
 	std::stringstream out;
-	if(type == 0)
-		out << "MPEG " << mpegmodes[mode] << " (" << freq <<")";
+	if (type == 0)
+		out << "MPEG " << mpegmodes[mode] << " (" << freq << ")";
 	else
-		out << "DD " << ddmodes[mode] << " (" << freq <<")";
+		out << "DD " << ddmodes[mode] << " (" << freq << ")";
 	return out.str();
 }
 
@@ -498,17 +506,20 @@ std::string CNeutrinoAPI::getAudioInfoAsString(void)
 std::string CNeutrinoAPI::getCryptInfoAsString(void)
 {
 	std::stringstream out;
-	std::string casys[NUM_CAIDS] = {"Irdeto:","Betacrypt:","Seca:","Viaccess:","Nagra:","Conax:","Cryptoworks:","Videoguard:","Biss:","XCrypt:","PowerVU:","Tandberg:","Verimatrix:"};
+	std::string casys[NUM_CAIDS] = {"Irdeto:", "Betacrypt:", "Seca:", "Viaccess:", "Nagra:", "Conax:", "Cryptoworks:", "Videoguard:", "Biss:", "XCrypt:", "PowerVU:", "Tandberg:", "Verimatrix:"};
 	int caids[] =                  { 0x600, 0x1700, 0x0100, 0x0500, 0x1800, 0xB00, 0xD00, 0x900, 0x2600, 0x4a00, 0x0E00, 0x1000, 0x5600 };
 	OpenThreads::ScopedPointerLock<OpenThreads::Mutex> lock(pmutex);
-	CZapitChannel * channel = CZapit::getInstance()->GetCurrentChannel();
-	if(channel) {
-                for (unsigned short i = 0; i < NUM_CAIDS; i++) {
-                        for(casys_map_iterator_t it = channel->camap.begin(); it != channel->camap.end(); ++it) {
-                                int caid = (*it) & 0xFF00;
-                                if(caid == caids[i])
+	CZapitChannel *channel = CZapit::getInstance()->GetCurrentChannel();
+	if (channel)
+	{
+		for (unsigned short i = 0; i < NUM_CAIDS; i++)
+		{
+			for (casys_map_iterator_t it = channel->camap.begin(); it != channel->camap.end(); ++it)
+			{
+				int caid = (*it) & 0xFF00;
+				if (caid == caids[i])
 					out << casys[i] << std::hex << (*it) << "\n";
-                        }
+			}
 
 		}
 	}
@@ -533,7 +544,7 @@ std::string CNeutrinoAPI::GetRemoteBoxIP(std::string _rbname)
 		if (it->rbname == _rbname)
 		{
 			if (!it->user.empty() && !it->pass.empty())
-				c_url += it->user + ":" + it->pass +"@";
+				c_url += it->user + ":" + it->pass + "@";
 			c_url += it->rbaddress;
 			c_url += ":" + to_string(it->port);
 			break;
@@ -549,14 +560,15 @@ void CNeutrinoAPI::SendAllTimers(std::string url, bool force)
 	Timerd->getTimerList(timerlist);
 	sort(timerlist.begin(), timerlist.end());
 
-	int pre = 0,post = 0;
-	Timerd->getRecordingSafety(pre,post);
+	int pre = 0, post = 0;
+	Timerd->getRecordingSafety(pre, post);
 	CHTTPTool httpTool;
 	std::string r_url;
 
-	for(CTimerd::TimerList::iterator timer = timerlist.begin(); timer != timerlist.end(); ++timer)
+	for (CTimerd::TimerList::iterator timer = timerlist.begin(); timer != timerlist.end(); ++timer)
 	{
-		if (timer->eventType == CTimerd::TIMER_RECORD) {
+		if (timer->eventType == CTimerd::TIMER_RECORD)
+		{
 			r_url = "http://";
 			r_url += url;
 			r_url += "/control/timer?action=new";
@@ -569,7 +581,7 @@ void CNeutrinoAPI::SendAllTimers(std::string url, bool force)
 
 			r_url = httpTool.downloadString(r_url, -1, 300);
 
-			if ((r_url=="ok") || force)
+			if ((r_url == "ok") || force)
 				Timerd->removeTimerEvent(timer->eventID);
 		}
 	}

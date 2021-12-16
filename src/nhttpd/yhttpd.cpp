@@ -66,7 +66,8 @@ static CNeutrinoAPI *NeutrinoAPI;
 // Main: Main Entry, Webserver thread
 //=============================================================================
 
-void yhttpd_reload_config() {
+void yhttpd_reload_config()
+{
 	if (yhttpd)
 		yhttpd->ReadConfig();
 }
@@ -75,17 +76,19 @@ void yhttpd_reload_config() {
 // Main Entry
 //-----------------------------------------------------------------------------
 
-void thread_cleanup (void *p)
+void thread_cleanup(void *p)
 {
 	Cyhttpd *y = (Cyhttpd *)p;
-	if (y) {
+	if (y)
+	{
 		y->stop_webserver();
 		delete y;
 	}
 	y = NULL;
 }
 
-void * nhttpd_main_thread(void *) {
+void *nhttpd_main_thread(void *)
+{
 	set_threadname("yweb:main_thread");
 	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, 0);
 	pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
@@ -93,7 +96,8 @@ void * nhttpd_main_thread(void *) {
 	yhttpd = new Cyhttpd();
 	//CLogging::getInstance()->setDebug(true);
 	//CLogging::getInstance()->LogLevel = 9;
-	if (!yhttpd) {
+	if (!yhttpd)
+	{
 		aprintf("Error initializing WebServer\n");
 		return (void *) EXIT_FAILURE;
 	}
@@ -105,7 +109,8 @@ void * nhttpd_main_thread(void *) {
 
 	yhttpd->hooks_attach();
 	yhttpd->ReadConfig();
-	if (yhttpd->Configure()) {
+	if (yhttpd->Configure())
+	{
 		// Start Webserver: fork ist if not in debug mode
 		aprintf("Webserver starting...\n");
 		dprintf("Start in Debug-Mode\n"); // non forked debugging loop
@@ -122,12 +127,14 @@ void * nhttpd_main_thread(void *) {
 //=============================================================================
 // Class yhttpd
 //=============================================================================
-Cyhttpd::Cyhttpd() {
+Cyhttpd::Cyhttpd()
+{
 	webserver = new CWebserver();
 	flag_threading_off = false;
 }
 //-----------------------------------------------------------------------------
-Cyhttpd::~Cyhttpd() {
+Cyhttpd::~Cyhttpd()
+{
 	if (webserver)
 		delete webserver;
 	CLanguage::deleteInstance();
@@ -137,7 +144,8 @@ Cyhttpd::~Cyhttpd() {
 //-----------------------------------------------------------------------------
 // Change to Root
 //-----------------------------------------------------------------------------
-bool Cyhttpd::Configure() {
+bool Cyhttpd::Configure()
+{
 
 	if (!getuid()) // you must be root to do that!
 	{
@@ -146,21 +154,21 @@ bool Cyhttpd::Configure() {
 		struct passwd *pwd = NULL;
 		struct group *grp = NULL;
 		std::string username = ConfigList["server.user_name"];
-		std::string groupname= ConfigList["server.group_name"];
+		std::string groupname = ConfigList["server.group_name"];
 
 		// get user data
-		if(!username.empty())
+		if (!username.empty())
 		{
-			if((pwd = getpwnam(username.c_str())) == NULL)
+			if ((pwd = getpwnam(username.c_str())) == NULL)
 			{
 				dperror("Dont know user to set uid\n");
 				return false;
 			}
 		}
 		// get group data
-		if(!groupname.empty())
+		if (!groupname.empty())
 		{
-			if((grp = getgrnam(groupname.c_str())) == NULL)
+			if ((grp = getgrnam(groupname.c_str())) == NULL)
 			{
 				aprintf("Can not get Group-Information. Group: %s\n", groupname.c_str());
 				return false;
@@ -169,17 +177,17 @@ bool Cyhttpd::Configure() {
 #endif
 		// change root directory
 #ifdef Y_CONFIG_FEATURE_CHROOT
-		if(!ConfigList["server.chroot"].empty())
+		if (!ConfigList["server.chroot"].empty())
 		{
-			log_level_printf(2, "do chroot to dir:%s\n", ConfigList["server.chroot"].c_str() );
+			log_level_printf(2, "do chroot to dir:%s\n", ConfigList["server.chroot"].c_str());
 			// do change Root
-			if(chroot(ConfigList["server.chroot"].c_str()) == -1)
+			if (chroot(ConfigList["server.chroot"].c_str()) == -1)
 			{
 				dperror("Change Root failed\n");
 				return false;
 			}
 			// Set Working Dir
-			if(chdir("/") == -1)
+			if (chdir("/") == -1)
 			{
 				dperror("Change Directory to Root failed\n");
 				return false;
@@ -187,7 +195,7 @@ bool Cyhttpd::Configure() {
 		}
 #endif
 #ifdef Y_CONFIG_FEATURE_HTTPD_USER
-		if(!username.empty() && pwd != NULL && grp != NULL)
+		if (!username.empty() && pwd != NULL && grp != NULL)
 		{
 			log_level_printf(2, "set user and groups\n");
 
@@ -195,10 +203,10 @@ bool Cyhttpd::Configure() {
 			setgid(grp->gr_gid);
 			setgroups(0, NULL);
 			// set user group
-			if(!groupname.empty())
-			initgroups(username.c_str(), grp->gr_gid);
+			if (!groupname.empty())
+				initgroups(username.c_str(), grp->gr_gid);
 			// set user
-			if(setuid(pwd->pw_uid) == -1)
+			if (setuid(pwd->pw_uid) == -1)
 			{
 				dperror("Change User Context failed\n");
 				return false;
@@ -211,30 +219,36 @@ bool Cyhttpd::Configure() {
 //-----------------------------------------------------------------------------
 // Main Webserver call
 //-----------------------------------------------------------------------------
-void Cyhttpd::run() {
+void Cyhttpd::run()
+{
 	set_threadname("yweb:run");
-	if (webserver) {
+	if (webserver)
+	{
 		if (flag_threading_off)
 			webserver->is_threading = false;
 		webserver->run();
 		stop_webserver();
-	} else
+	}
+	else
 		aprintf("Error initializing WebServer\n");
 }
 
 //-----------------------------------------------------------------------------
 // Show Version Text and Number
 //-----------------------------------------------------------------------------
-void Cyhttpd::version(FILE *dest) {
+void Cyhttpd::version(FILE *dest)
+{
 	fprintf(dest, "%s - Webserver v%s\n", HTTPD_NAME, HTTPD_VERSION);
 }
 
 //-----------------------------------------------------------------------------
 // Stop WebServer
 //-----------------------------------------------------------------------------
-void Cyhttpd::stop_webserver() {
+void Cyhttpd::stop_webserver()
+{
 	aprintf("stop requested......\n");
-	if (webserver) {
+	if (webserver)
+	{
 		webserver->stop();
 		hooks_detach();
 	}
@@ -242,7 +256,8 @@ void Cyhttpd::stop_webserver() {
 //-----------------------------------------------------------------------------
 // Attach hooks (use hook order carefully)
 //-----------------------------------------------------------------------------
-void Cyhttpd::hooks_attach() {
+void Cyhttpd::hooks_attach()
+{
 #ifdef Y_CONFIG_USE_AUTHHOOK
 	// First Check Authentication
 	auth = new CmAuth();
@@ -276,7 +291,8 @@ void Cyhttpd::hooks_attach() {
 //-----------------------------------------------------------------------------
 // Detach hooks & Destroy
 //-----------------------------------------------------------------------------
-void Cyhttpd::hooks_detach() {
+void Cyhttpd::hooks_detach()
+{
 #ifdef Y_CONFIG_USE_AUTHHOOK
 	CyhookHandler::detach(auth);
 	delete auth;
@@ -308,7 +324,8 @@ void Cyhttpd::hooks_detach() {
 // Read Webserver Configurationfile
 // Call "Hooks_ReadConfig" so Hooks can read/write own Configuration Values
 //-----------------------------------------------------------------------------
-void Cyhttpd::ReadConfig(void) {
+void Cyhttpd::ReadConfig(void)
+{
 	log_level_printf(3, "ReadConfig Start\n");
 	CConfigFile *Config = new CConfigFile(',');
 	bool have_config = false;
@@ -316,8 +333,10 @@ void Cyhttpd::ReadConfig(void) {
 		have_config = true;
 	Config->loadConfig(HTTPD_CONFIGFILE);
 	// convert old config files
-	if (have_config) {
-		if (Config->getInt32("configfile.version", 0) == 0) {
+	if (have_config)
+	{
+		if (Config->getInt32("configfile.version", 0) == 0)
+		{
 			CConfigFile OrgConfig = *Config;
 			Config->clear();
 
@@ -341,14 +360,16 @@ void Cyhttpd::ReadConfig(void) {
 
 		}
 		// Add Defaults for Version 2
-		if (Config->getInt32("configfile.version") < 2) {
+		if (Config->getInt32("configfile.version") < 2)
+		{
 			Config->setString("mod_sendfile.mime_types", HTTPD_SENDFILE_EXT);
 			Config->setInt32("configfile.version", CONF_VERSION);
 			Config->setString("mod_sendfile.sendAll", HTTPD_SENDFILE_ALL);
 			Config->saveConfig(HTTPD_CONFIGFILE);
 		}
 		// Add Defaults for Version 4
-		if (Config->getInt32("configfile.version") < 4) {
+		if (Config->getInt32("configfile.version") < 4)
+		{
 			Config->setInt32("configfile.version", CONF_VERSION);
 			Config->setString("Language.selected", HTTPD_DEFAULT_LANGUAGE);
 			Config->setString("Language.directory", HTTPD_LANGUAGEDIR);
@@ -380,17 +401,21 @@ void Cyhttpd::ReadConfig(void) {
 
 	ConfigList["Tuxbox.DisplayLogos"] = Config->getString("Tuxbox.DisplayLogos", "true");
 	// Check location of logos
-	if (Config->getString("Tuxbox.LogosURL", "").empty()) {
-		if (access(ConfigList["WebsiteMain.override_directory"] + "/logos", R_OK) == 0) {
+	if (Config->getString("Tuxbox.LogosURL", "").empty())
+	{
+		if (access(ConfigList["WebsiteMain.override_directory"] + "/logos", R_OK) == 0)
+		{
 			Config->setString("Tuxbox.LogosURL", ConfigList["WebsiteMain.override_directory"] + "/logos");
 			have_config = false; //save config
 		}
-		else if (access(ConfigList["WebsiteMain.directory"] + "/logos", R_OK) == 0){
+		else if (access(ConfigList["WebsiteMain.directory"] + "/logos", R_OK) == 0)
+		{
 			Config->setString("Tuxbox.LogosURL", ConfigList["WebsiteMain.directory"] + "/logos");
 			have_config = false; //save config
 		}
 #ifdef Y_CONFIG_USE_HOSTEDWEB
-		else if (access(ConfigList["WebsiteMain.hosted_directory"] + "/logos", R_OK) == 0){
+		else if (access(ConfigList["WebsiteMain.hosted_directory"] + "/logos", R_OK) == 0)
+		{
 			Config->setString("Tuxbox.LogosURL", ConfigList["WebsiteMain.hosted_directory"] + "/logos");
 			have_config = false; //save config
 		}
@@ -405,8 +430,8 @@ void Cyhttpd::ReadConfig(void) {
 
 	CySocket::SSL_pemfile = ConfigList["SSL_pemfile"];
 	CySocket::SSL_CA_file = ConfigList["SSL_CA_file"];
-	if(ConfigList["SSL"] == "true")
-	CySocket::initSSL();
+	if (ConfigList["SSL"] == "true")
+		CySocket::initSSL();
 #endif
 	ConfigList["server.user_name"] = Config->getString("server.user_name", "");
 	ConfigList["server.group_name"] = Config->getString("server.group_name", "");
@@ -429,7 +454,8 @@ void Cyhttpd::ReadConfig(void) {
 //-----------------------------------------------------------------------------
 // Read Webserver Configurationfile for languages
 //-----------------------------------------------------------------------------
-void Cyhttpd::ReadLanguage(void) {
+void Cyhttpd::ReadLanguage(void)
+{
 	// Init Class vars
 	CLanguage *lang = CLanguage::getInstance();
 	log_level_printf(3, "ReadLanguage:%s\n", ConfigList["Language.selected"].c_str());

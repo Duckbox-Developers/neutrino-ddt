@@ -11,15 +11,18 @@
 //-----------------------------------------------------------------------------
 // HOOK: response_hook
 //-----------------------------------------------------------------------------
-THandleStatus CmAuth::Hook_PrepareResponse(CyhookHandler *hh) {
+THandleStatus CmAuth::Hook_PrepareResponse(CyhookHandler *hh)
+{
 	THandleStatus status = HANDLED_CONTINUE;
 
 	// dont check local calls or calls from NoAuthClient
-	if (authenticate) {
+	if (authenticate)
+	{
 		if ((hh->UrlData["clientaddr"]).find(IADDR_LOCAL) > 0
 			&& (no_auth_client.empty() || (hh->UrlData["clientaddr"]).compare(no_auth_client) != 0))
 		{
-			if (!CheckAuth(hh)) {
+			if (!CheckAuth(hh))
+			{
 				hh->SetError(HTTP_UNAUTHORIZED);
 				status = HANDLED_ERROR;
 			}
@@ -33,7 +36,8 @@ THandleStatus CmAuth::Hook_PrepareResponse(CyhookHandler *hh) {
 // This hook ist called from ReadConfig
 //-----------------------------------------------------------------------------
 THandleStatus CmAuth::Hook_ReadConfig(CConfigFile *Config,
-		CStringList &ConfigList) {
+	CStringList &ConfigList)
+{
 	username = Config->getString("mod_auth.username", AUTHUSER);
 	password = Config->getString("mod_auth.password", AUTHPASSWORD);
 	no_auth_client = Config->getString("mod_auth.no_auth_client", "");
@@ -49,7 +53,8 @@ THandleStatus CmAuth::Hook_ReadConfig(CConfigFile *Config,
 //-----------------------------------------------------------------------------
 // check if given username an pssword are valid
 //-----------------------------------------------------------------------------
-bool CmAuth::CheckAuth(CyhookHandler *hh) {
+bool CmAuth::CheckAuth(CyhookHandler *hh)
+{
 	if (hh->HeaderList["Authorization"].empty())
 		return false;
 	std::string encodet = hh->HeaderList["Authorization"].substr(6,
@@ -64,18 +69,21 @@ bool CmAuth::CheckAuth(CyhookHandler *hh) {
 //-----------------------------------------------------------------------------
 // decode Base64 buffer to String
 //-----------------------------------------------------------------------------
-std::string CmAuth::decodeBase64(const char *b64buffer) {
-	if(b64buffer==NULL)
+std::string CmAuth::decodeBase64(const char *b64buffer)
+{
+	if (b64buffer == NULL)
 		return "";
 	char *newString; //shorter then b64buffer
 	std::string result;
 	if ((newString = (char *) malloc(sizeof(char) * strlen(b64buffer) + 1))
-			!= NULL) {
+		!= NULL)
+	{
 		char *org_newString = newString;
 		int i = 0;
 		unsigned long c = 0;
 
-		while (*b64buffer) {
+		while (*b64buffer)
+		{
 			int oneChar = *b64buffer++;
 			if (oneChar >= '0' && oneChar <= '9')
 				oneChar = oneChar - '0' + 52;
@@ -93,9 +101,10 @@ std::string CmAuth::decodeBase64(const char *b64buffer) {
 				continue;
 
 			c = (c << 6) | oneChar;
-			if (++i == 4) {
-				*newString++ = (char) (c >> 16);
-				*newString++ = (char) (c >> 8);
+			if (++i == 4)
+			{
+				*newString++ = (char)(c >> 16);
+				*newString++ = (char)(c >> 8);
 				*newString++ = (char) c;
 				i = 0;
 			}
@@ -104,7 +113,8 @@ std::string CmAuth::decodeBase64(const char *b64buffer) {
 		result = std::string(org_newString);
 		free(org_newString);
 		return result;
-	} else
+	}
+	else
 		return "";
 }
 

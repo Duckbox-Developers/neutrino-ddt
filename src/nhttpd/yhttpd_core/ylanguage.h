@@ -36,7 +36,10 @@ class CLanguage
 		static std::string	language_dir;
 
 		void setLanguage(std::string _language);
-		std::string getLanguage(void) {return language;};
+		std::string getLanguage(void)
+		{
+			return language;
+		};
 		std::string 		getLanguageDir(void);
 
 		std::string getTranslation(std::string id);
