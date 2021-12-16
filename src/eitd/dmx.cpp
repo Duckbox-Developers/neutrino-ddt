@@ -88,7 +88,7 @@ void DMX::init()
 #else
 	pthread_mutex_init(&start_stop_mutex, NULL); // default = fast mutex
 #endif
-	pthread_cond_init (&change_cond, NULL);
+	pthread_cond_init(&change_cond, NULL);
 	seen_section = false;
 }
 
@@ -97,14 +97,14 @@ DMX::~DMX()
 	first_skipped = 0;
 	myDMXOrderUniqueKey.clear();
 	pthread_mutex_destroy(&start_stop_mutex);
-	pthread_cond_destroy (&change_cond);
+	pthread_cond_destroy(&change_cond);
 	//closefd();
 	close();
 }
 
 void DMX::close(void)
 {
-	if(dmx)
+	if (dmx)
 		delete dmx;
 	dmx = NULL;
 }
@@ -116,9 +116,10 @@ void DMX::closefd(void)
 #endif
 	if (isOpen())
 	{
-		if (dmx) {
-		delete dmx;
-		dmx = NULL;
+		if (dmx)
+		{
+			delete dmx;
+			dmx = NULL;
 		}
 	}
 }
@@ -186,52 +187,55 @@ void DMX::unlock(void)
 }
 
 inline sections_id_t create_sections_id(const uint8_t table_id, const uint16_t extension_id,
-		const uint16_t onid, const uint16_t tsid, const uint8_t section_number)
+	const uint16_t onid, const uint16_t tsid, const uint8_t section_number)
 {
-	return 	(sections_id_t) (	((sections_id_t) table_id 	<< 56) |
-					((sections_id_t) extension_id 	<< 40) |
-					((sections_id_t) onid		<< 24) |
-					((sections_id_t) tsid		<< 8) |
-					((sections_id_t) section_number));
+	return	(sections_id_t)(((sections_id_t) table_id 	<< 56) |
+			((sections_id_t) extension_id 	<< 40) |
+			((sections_id_t) onid		<< 24) |
+			((sections_id_t) tsid		<< 8) |
+			((sections_id_t) section_number));
 }
 
-bool DMX::check_complete(sections_id_t s_id, uint8_t number, uint8_t last, uint8_t segment_last) 
+bool DMX::check_complete(sections_id_t s_id, uint8_t number, uint8_t last, uint8_t segment_last)
 {
 	bool ret = false;
 
 	section_map_t::iterator it = seenSections.find(s_id);
 
-	if (it == seenSections.end()) {
+	if (it == seenSections.end())
+	{
 		seenSections.insert(s_id);
 		calcedSections.insert(s_id);
 		uint64_t tmpval = s_id & 0xFFFFFFFFFFFFFF00ULL;
 
 		uint8_t tid = (s_id >> 56);
 		uint8_t incr = ((tid >> 4) == 4) ? 1 : 8;
-		for ( int i = 0; i <= last; i+=incr )
+		for (int i = 0; i <= last; i += incr)
 		{
-			if ( i == number )
+			if (i == number)
 			{
 				for (int x = i; x <= segment_last; ++x)
-					calcedSections.insert((sections_id_t) tmpval | (sections_id_t) (x&0xFF));
+					calcedSections.insert((sections_id_t) tmpval | (sections_id_t)(x & 0xFF));
 			}
 			else
-				calcedSections.insert((sections_id_t) tmpval | (sections_id_t)(i&0xFF));
+				calcedSections.insert((sections_id_t) tmpval | (sections_id_t)(i & 0xFF));
 		}
 #ifdef DEBUG_COMPLETE_SECTIONS
-debug(DEBUG_NORMAL, "	[%s cache] new section for table 0x%02x sid 0x%04x section 0x%02x last 0x%02x slast 0x%02x seen %d calc %d", name.c_str(),
-		(int)(s_id >> 56), (int) ((s_id >> 40) & 0xFFFF), (int)(s_id & 0xFF), last,
-		segment_last, seenSections.size(), calcedSections.size());
+		debug(DEBUG_NORMAL, "	[%s cache] new section for table 0x%02x sid 0x%04x section 0x%02x last 0x%02x slast 0x%02x seen %d calc %d", name.c_str(),
+			(int)(s_id >> 56), (int)((s_id >> 40) & 0xFFFF), (int)(s_id & 0xFF), last,
+			segment_last, seenSections.size(), calcedSections.size());
 #endif
 	}
 #ifdef DEBUG_COMPLETE_SECTIONS
-	else {
-debug(DEBUG_NORMAL, "	[%s cache] old section for table 0x%02x sid 0x%04x section 0x%02x last 0x%02x slast 0x%02x seen %d calc %d", name.c_str(),
-		(int)(s_id >> 56), (int) ((s_id >> 40) & 0xFFFF), (int)(s_id & 0xFF), last,
-		segment_last, seenSections.size(), calcedSections.size());
+	else
+	{
+		debug(DEBUG_NORMAL, "	[%s cache] old section for table 0x%02x sid 0x%04x section 0x%02x last 0x%02x slast 0x%02x seen %d calc %d", name.c_str(),
+			(int)(s_id >> 56), (int)((s_id >> 40) & 0xFFFF), (int)(s_id & 0xFF), last,
+			segment_last, seenSections.size(), calcedSections.size());
 	}
 #endif
-	if(seenSections == calcedSections) {
+	if (seenSections == calcedSections)
+	{
 #ifdef DEBUG_COMPLETE
 		debug_colored(DEBUG_ERROR, "	%s cache %02x complete: %d", name.c_str(), filters[filter_index].filter, (int)seenSections.size());
 #endif
@@ -244,7 +248,7 @@ debug(DEBUG_NORMAL, "	[%s cache] old section for table 0x%02x sid 0x%04x section
 		* 16:18:25.220   cnThread cache 4e complete: 3
 		*	[cnThread cache] new section for table 0x4e sid 0x0a2b section 0x00 last 0x00 slast 0x00 seen 4 calc 4
 		*/
-		if(seenSections.size() > 10)
+		if (seenSections.size() > 10)
 			ret = true;
 	}
 	return ret;
@@ -252,14 +256,15 @@ debug(DEBUG_NORMAL, "	[%s cache] old section for table 0x%02x sid 0x%04x section
 
 int DMX::getSection(uint8_t *buf, const unsigned timeoutInMSeconds, int &timeouts)
 {
-	struct eit_extended_section_header {
+	struct eit_extended_section_header
+	{
 		unsigned transport_stream_id_hi	  : 8;
 		unsigned transport_stream_id_lo	  : 8;
 		unsigned original_network_id_hi   : 8;
 		unsigned original_network_id_lo   : 8;
 		unsigned segment_last_section_number : 8;
 		unsigned last_table_id		  : 8;
-	} __attribute__ ((packed));  // 6 bytes total
+	} __attribute__((packed));   // 6 bytes total
 	static int bad_count = 0;
 
 	eit_extended_section_header *eit_extended_header;
@@ -280,7 +285,8 @@ int DMX::getSection(uint8_t *buf, const unsigned timeoutInMSeconds, int &timeout
 	}
 
 	lock();
-	if (!isOpen()) {
+	if (!isOpen())
+	{
 		unlock();
 		timeouts = -3;
 		return -1;
@@ -294,7 +300,7 @@ int DMX::getSection(uint8_t *buf, const unsigned timeoutInMSeconds, int &timeout
 		if (rc <= 0)
 		{
 			debug(DEBUG_INFO, "dmx.read timeout - filter: %x - timeout# %d", filters[filter_index].filter, timeouts);
-			if(!seen_section)
+			if (!seen_section)
 				timeouts++;
 		}
 		else
@@ -314,7 +320,7 @@ int DMX::getSection(uint8_t *buf, const unsigned timeoutInMSeconds, int &timeout
 	if (section_length <= 0)
 	{
 		unlock();
-		debug(DEBUG_ERROR, "section_length <= 0: %d [%s:%s:%d] please report!", section_length, __file__,__func__,__LINE__);
+		debug(DEBUG_ERROR, "section_length <= 0: %d [%s:%s:%d] please report!", section_length, __file__, __func__, __LINE__);
 		return -1;
 	}
 
@@ -337,7 +343,8 @@ int DMX::getSection(uint8_t *buf, const unsigned timeoutInMSeconds, int &timeout
 		debug_colored(DEBUG_ERROR, "	%s: filter 0x%x mask 0x%x -> skip sections for table 0x%x", name.c_str(), filters[filter_index].filter, filters[filter_index].mask, table_id);
 		unlock();
 		bad_count++;
-		if(bad_count >= 5) {
+		if (bad_count >= 5)
+		{
 			bad_count = 0;
 			timeouts = -1;
 			return -1;
@@ -353,7 +360,7 @@ int DMX::getSection(uint8_t *buf, const unsigned timeoutInMSeconds, int &timeout
 
 	// skip sections which are too short
 	if ((section_length < 5) ||
-			(table_id >= 0x4e && table_id <= 0x6f && section_length < 14))
+		(table_id >= 0x4e && table_id <= 0x6f && section_length < 14))
 	{
 		debug(DEBUG_INFO, "section too short: table %x, length: %d", table_id, section_length);
 		unlock();
@@ -361,7 +368,8 @@ int DMX::getSection(uint8_t *buf, const unsigned timeoutInMSeconds, int &timeout
 	}
 
 	// check if it's extended syntax, e.g. NIT, BAT, SDT, EIT, only current sections
-	if (!section.getSectionSyntaxIndicator() || !section.getCurrentNextIndicator()) {
+	if (!section.getSectionSyntaxIndicator() || !section.getCurrentNextIndicator())
+	{
 		unlock();
 		return rc;
 	}
@@ -374,8 +382,9 @@ int DMX::getSection(uint8_t *buf, const unsigned timeoutInMSeconds, int &timeout
 	if (!cache)
 	{
 		if (table_id == 0x4e &&
-				eh_tbl_extension_id == (current_service & 0xFFFF) &&
-				version_number != eit_version) {
+			eh_tbl_extension_id == (current_service & 0xFFFF) &&
+			version_number != eit_version)
+		{
 			debug(DEBUG_INFO, "EIT old: %d new version: %d", eit_version, version_number);
 			eit_version = version_number;
 		}
@@ -391,8 +400,9 @@ int DMX::getSection(uint8_t *buf, const unsigned timeoutInMSeconds, int &timeout
 	unsigned short current_tsid = 0;
 	uint8_t segment_last_section_number = last_section_number;
 
-	if (pID == 0x12 || use_viasat_epg_pid) {
-		eit_extended_header = (eit_extended_section_header *)(buf+8);
+	if (pID == 0x12 || use_viasat_epg_pid)
+	{
+		eit_extended_header = (eit_extended_section_header *)(buf + 8);
 		current_onid = 	eit_extended_header->original_network_id_hi * 256 +
 			eit_extended_header->original_network_id_lo;
 		current_tsid = 	eit_extended_header->transport_stream_id_hi * 256 +
@@ -408,8 +418,9 @@ int DMX::getSection(uint8_t *buf, const unsigned timeoutInMSeconds, int &timeout
 
 	/* if we are not caching the already read sections (CN-thread), check EIT version and get out */
 	if (table_id == 0x4e &&
-			eh_tbl_extension_id == (current_service & 0xFFFF) &&
-			version_number != eit_version) {
+		eh_tbl_extension_id == (current_service & 0xFFFF) &&
+		version_number != eit_version)
+	{
 		debug(DEBUG_INFO, "EIT old: %d new version: %d", eit_version, version_number);
 		eit_version = version_number;
 	}
@@ -418,11 +429,15 @@ int DMX::getSection(uint8_t *buf, const unsigned timeoutInMSeconds, int &timeout
 	if (di != myDMXOrderUniqueKey.end())
 	{
 		//the current section was read before
-		if (di->second == version_number) {
-                        if (first_skipped == 0) {
-                                //the last section was new - this is the 1st dup
-                                first_skipped = s_id;
-			} else {
+		if (di->second == version_number)
+		{
+			if (first_skipped == 0)
+			{
+				//the last section was new - this is the 1st dup
+				first_skipped = s_id;
+			}
+			else
+			{
 				//this is not the 1st new - check if it's the last
 				//or to be more precise only dups occured since
 				if (first_skipped == s_id)
@@ -430,15 +445,17 @@ int DMX::getSection(uint8_t *buf, const unsigned timeoutInMSeconds, int &timeout
 			}
 #ifdef DEBUG_CACHED_SECTIONS
 			debug(DEBUG_NORMAL, "[%s] skipped duplicate section for table 0x%02x table_extension 0x%04x section 0x%02x last 0x%02x touts %d", name.c_str(),
-					table_id, eh_tbl_extension_id, section_number,
-					last_section_number, timeouts);
+				table_id, eh_tbl_extension_id, section_number,
+				last_section_number, timeouts);
 #endif
 			rc = -1;
-		} else {
+		}
+		else
+		{
 #ifdef DEBUG_CACHED_SECTIONS
 			debug(DEBUG_NORMAL, "[%s] version update from 0x%02x to 0x%02x for table 0x%02x table_extension 0x%04x section 0x%02x", name.c_str(),
-					di->second, version_number, table_id,
-					eh_tbl_extension_id, section_number);
+				di->second, version_number, table_id,
+				eh_tbl_extension_id, section_number);
 #endif
 			//update version number
 			di->second = version_number;
@@ -450,23 +467,25 @@ int DMX::getSection(uint8_t *buf, const unsigned timeoutInMSeconds, int &timeout
 		myDMXOrderUniqueKey.insert(std::make_pair(s_id, version_number));
 #ifdef DEBUG_CACHED_SECTIONS
 		debug(DEBUG_NORMAL, "[%s] new section for table 0x%02x table_extension 0x%04x section 0x%02x last 0x%02x slast 0x%02x", name.c_str(),
-				table_id, eh_tbl_extension_id,
-				section_number, last_section_number, segment_last_section_number);
+			table_id, eh_tbl_extension_id,
+			section_number, last_section_number, segment_last_section_number);
 #endif
 	}
 	//debug
 #ifdef DEBUG_SKIP_LOOPED
-	if(timeouts == -1) {
+	if (timeouts == -1)
+	{
 		debug_colored(DEBUG_ERROR, "	%s: skipped looped", name.c_str());
 	}
 #endif
 
-	if(complete) {
+	if (complete)
+	{
 		seenSections.clear();
 		calcedSections.clear();
 		timeouts = -2;
 	}
-	if(rc > 0)
+	if (rc > 0)
 		first_skipped = 0;
 
 	unlock();
@@ -484,17 +503,19 @@ int DMX::immediate_start(void)
 		closefd();
 	}
 
-	if (real_pauseCounter != 0) {
+	if (real_pauseCounter != 0)
+	{
 		debug(DEBUG_INFO, "DMX::immediate_start: realPausecounter !=0 (%d)!", real_pauseCounter);
 		return 0;
 	}
 
-	if(dmx == NULL) {
+	if (dmx == NULL)
+	{
 #ifdef DEBUG_DEMUX
 		debug_colored(DEBUG_ERROR, "	%s: open demux #%d", name.c_str(), dmx_num);
 #endif
 		dmx = new cDemux(dmx_num);
-		dmx->Open(DMX_PSI_CHANNEL, NULL, dmxBufferSizeInKB*1024UL);
+		dmx->Open(DMX_PSI_CHANNEL, NULL, dmxBufferSizeInKB * 1024UL);
 	}
 
 	/* setfilter() only if this is no dummy filter... */
@@ -530,7 +551,8 @@ int DMX::start(void)
 
 int DMX::real_pause(void)
 {
-	if (!isOpen()) {
+	if (!isOpen())
+	{
 		debug(DEBUG_INFO, "DMX::real_pause: (!isOpen())");
 		return 1;
 	}
@@ -598,14 +620,16 @@ int DMX::request_unpause(void)
 
 bool DMX::next_filter()
 {
-	if (filter_index + 1 < (signed) filters.size()) {
+	if (filter_index + 1 < (signed) filters.size())
+	{
 		change(filter_index + 1);
 		return true;
 	}
 	return false;
 }
 
-const char *dmx_filter_types [] = {
+const char *dmx_filter_types [] =
+{
 	"dummy filter",
 	"actual transport stream, scheduled",
 	"other transport stream, now/next",
@@ -629,7 +653,7 @@ int DMX::change(const int new_filter_index, const t_channel_id new_current_servi
 	seenSections.clear();
 	calcedSections.clear();
 	seen_section = false;
-	if(!cache)
+	if (!cache)
 		myDMXOrderUniqueKey.clear();
 
 	if (new_current_service)
@@ -642,26 +666,30 @@ int DMX::change(const int new_filter_index, const t_channel_id new_current_servi
 	if (real_pauseCounter > 0)
 	{
 		debug(DEBUG_NORMAL, "changeDMX: for 0x%x not ignored! even though real_pauseCounter> 0 (%d)",
-		       filters[new_filter_index].filter, real_pauseCounter);
+			filters[new_filter_index].filter, real_pauseCounter);
 		/* immediate_start() checks for real_pauseCounter again (and
 		   does nothing in that case), so we can just continue here. */
 	}
 
-	if (sections_debug >= DEBUG_INFO) { // friendly debug output...
+	if (sections_debug >= DEBUG_INFO)   // friendly debug output...
+	{
 		bool use_viasat_epg_pid = false;
 #ifdef ENABLE_VIASATEPG
 		if (pID == 0x39)
 			use_viasat_epg_pid = true;
 #endif
-		if((pID==0x12 || use_viasat_epg_pid) && filters[0].filter != 0x4e) { // Only EIT
+		if ((pID == 0x12 || use_viasat_epg_pid) && filters[0].filter != 0x4e) // Only EIT
+		{
 			debug(DEBUG_ERROR, "changeDMX [EIT]-> %d (0x%x/0x%x) %s (%ld seconds)",
 				new_filter_index, filters[new_filter_index].filter,
 				filters[new_filter_index].mask, dmx_filter_types[new_filter_index],
-				time_monotonic()-lastChanged);
-		} else {
+				time_monotonic() - lastChanged);
+		}
+		else
+		{
 			debug(DEBUG_ERROR, "changeDMX [%x]-> %d (0x%x/0x%x) (%ld seconds)", pID,
 				new_filter_index, filters[new_filter_index].filter,
-				filters[new_filter_index].mask, time_monotonic()-lastChanged);
+				filters[new_filter_index].mask, time_monotonic() - lastChanged);
 		}
 	}
 

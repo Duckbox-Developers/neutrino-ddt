@@ -47,9 +47,9 @@ time_t changeUTCtoCtime(const unsigned char *buffer, int local_time)
 	minutes = buffer[3];
 	seconds = buffer[4];
 
-	y_   = (int) ((mjd - 15078.2) / 365.25);
-	m_   = (int) ((mjd - 14956.1 - (int) (y_ * 365.25)) / 30.6001);
-	day  = mjd - 14956 - (int) (y_ * 365.25) - (int) (m_ * 30.60001);
+	y_   = (int)((mjd - 15078.2) / 365.25);
+	m_   = (int)((mjd - 14956.1 - (int)(y_ * 365.25)) / 30.6001);
+	day  = mjd - 14956 - (int)(y_ * 365.25) - (int)(m_ * 30.60001);
 
 	k = !!((m_ == 14) || (m_ == 15));
 
@@ -67,9 +67,9 @@ time_t changeUTCtoCtime(const unsigned char *buffer, int local_time)
 	time.tm_sec = (seconds >> 4) * 10 + (seconds & 0x0f);
 
 #if 0
-	printf ("Startzeit: GMT: %.2d.%.2d.%.4d  %.2x:%.2x:%.2x\n",
+	printf("Startzeit: GMT: %.2d.%.2d.%.4d  %.2x:%.2x:%.2x\n",
 		day, month, year, hour, minutes, seconds);
-	printf ("Startzeit: GMT: %.2d.%.2d.%.4d  %.2d:%.2d:%.2d\n",
+	printf("Startzeit: GMT: %.2d.%.2d.%.4d  %.2d:%.2d:%.2d\n",
 		time.tm_mday, time.tm_mon + 1, time.tm_year + 1900,
 		time.tm_hour, time.tm_min, time.tm_sec);
 #endif
@@ -81,9 +81,9 @@ time_t parseDVBtime(uint16_t mjd, uint32_t bcd, bool local_time)
 {
 	int year, month, day, y_, m_, k, hour, minutes, seconds;
 
-	y_   = (int) ((mjd - 15078.2) / 365.25);
-	m_   = (int) ((mjd - 14956.1 - (int) (y_ * 365.25)) / 30.6001);
-	day  = mjd - 14956 - (int) (y_ * 365.25) - (int) (m_ * 30.60001);
+	y_   = (int)((mjd - 15078.2) / 365.25);
+	m_   = (int)((mjd - 14956.1 - (int)(y_ * 365.25)) / 30.6001);
+	day  = mjd - 14956 - (int)(y_ * 365.25) - (int)(m_ * 30.60001);
 
 	hour = (bcd >> 16) & 0xFF;
 	minutes = (bcd >> 8) & 0xFF;
@@ -110,7 +110,7 @@ time_t parseDVBtime(uint16_t mjd, uint32_t bcd, bool local_time)
 // Thanks to tmbinc
 int saveStringToXMLfile(FILE *out, const char *c, int /*withControlCodes*/)
 {
-	if(!c)
+	if (!c)
 		return 1;
 	// Die Umlaute sind ISO-8859-9 [5]
 	/*
@@ -122,57 +122,59 @@ int saveStringToXMLfile(FILE *out, const char *c, int /*withControlCodes*/)
 	  buf[outlen]=0;
 	  c=buf;
 	*/
-	for(; *c; c++) {
-		switch ((unsigned char)*c) {
-		case '<':
-			fprintf(out, "&lt;");
-			break;
-		case '>':
-			fprintf(out, "&gt;");
-			break;
-		case '&':
-			fprintf(out, "&amp;");
-			break;
-		case '\"':
-			fprintf(out, "&quot;");
-			break;
-		case '\'':
-			fprintf(out, "&apos;");
-			break;
-		case 0x0a:
-			fprintf(out,"&#x0a;");
-			break;
-		case 0x0d:
-			fprintf(out,"&#x0d;");
-			break;
+	for (; *c; c++)
+	{
+		switch ((unsigned char)*c)
+		{
+			case '<':
+				fprintf(out, "&lt;");
+				break;
+			case '>':
+				fprintf(out, "&gt;");
+				break;
+			case '&':
+				fprintf(out, "&amp;");
+				break;
+			case '\"':
+				fprintf(out, "&quot;");
+				break;
+			case '\'':
+				fprintf(out, "&apos;");
+				break;
+			case 0x0a:
+				fprintf(out, "&#x0a;");
+				break;
+			case 0x0d:
+				fprintf(out, "&#x0d;");
+				break;
 #if 0
-		case 0x81:
-		case 0x82:
-			break;
-		case 0x86:
-			if(withControlCodes)
-				fprintf(out, "<b>");
-			break;
-		case 0x87:
-			if(withControlCodes)
-				fprintf(out, "</b>");
-			break;
-		case 0x8a:
-			if(withControlCodes)
-				fprintf(out, "<br/>");
-			break;
-		default:
-			if (*c<32)
+			case 0x81:
+			case 0x82:
 				break;
-			if ((*c>=32) && (((unsigned char)*c)<128))
-				fprintf(out, "%c", *c);
-			else
-				fprintf(out, "&#%d;", *c);
+			case 0x86:
+				if (withControlCodes)
+					fprintf(out, "<b>");
+				break;
+			case 0x87:
+				if (withControlCodes)
+					fprintf(out, "</b>");
+				break;
+			case 0x8a:
+				if (withControlCodes)
+					fprintf(out, "<br/>");
+				break;
+			default:
+				if (*c < 32)
+					break;
+				if ((*c >= 32) && (((unsigned char)*c) < 128))
+					fprintf(out, "%c", *c);
+				else
+					fprintf(out, "&#%d;", *c);
 #else
-		default:
-			if ((unsigned char)*c<32)
-				break;
-			fprintf(out, "%c", *c);
+			default:
+				if ((unsigned char)*c < 32)
+					break;
+				fprintf(out, "%c", *c);
 #endif
 		} // case
 
@@ -183,11 +185,11 @@ int saveStringToXMLfile(FILE *out, const char *c, int /*withControlCodes*/)
 // Entfernt die ControlCodes aus dem String (-> String wird evtl. kuerzer)
 void removeControlCodes(char *string)
 {
-	if(!string)
+	if (!string)
 		return;
-	for(; *string; )
-		if (!((*string>=32) && (((unsigned char)*string)<128)))
-			memmove(string, string+1, strlen(string+1)+1);
+	for (; *string;)
+		if (!((*string >= 32) && (((unsigned char)*string) < 128)))
+			memmove(string, string + 1, strlen(string + 1) + 1);
 		else
 			string++;
 	return ;
@@ -219,7 +221,7 @@ std::string freesatHuffmanDecode(std::string input)
 		unsigned value = 0, byte = 2, bit = 0;
 		while (byte < 6 && byte < size)
 		{
-			value |= src[byte] << ((5-byte) * 8);
+			value |= src[byte] << ((5 - byte) * 8);
 			byte++;
 		}
 		char lastch = START;
@@ -238,7 +240,7 @@ std::string freesatHuffmanDecode(std::string input)
 				if ((nextCh & 0x80) == 0)
 					lastch = nextCh;
 				if (p >= uncompressed.length())
-					uncompressed.resize(p+10);
+					uncompressed.resize(p + 10);
 				uncompressed[p++] = nextCh;
 			}
 			else
@@ -260,7 +262,7 @@ std::string freesatHuffmanDecode(std::string input)
 							if (nextCh != STOP && nextCh != ESCAPE)
 							{
 								if (p >= uncompressed.length())
-									uncompressed.resize(p+10);
+									uncompressed.resize(p + 10);
 								uncompressed[p++] = nextCh;
 							}
 							found = true;
@@ -277,7 +279,7 @@ std::string freesatHuffmanDecode(std::string input)
 				{
 					value = (value << 1) & 0xfffffffe;
 					if (byte < size)
-						value |= (src[byte] >> (7-bit)) & 1;
+						value |= (src[byte] >> (7 - bit)) & 1;
 					if (bit == 7)
 					{
 						bit = 0;
@@ -293,7 +295,8 @@ std::string freesatHuffmanDecode(std::string input)
 				uncompressed.append("...");
 				return uncompressed;
 			}
-		} while (lastch != STOP && value != 0);
+		}
+		while (lastch != STOP && value != 0);
 
 		uncompressed.resize(p);
 		return uncompressed;

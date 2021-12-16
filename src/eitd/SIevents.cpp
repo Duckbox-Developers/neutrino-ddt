@@ -48,21 +48,24 @@
 #include <OpenThreads/Condition>
 #include <OpenThreads/ScopedLock>
 
-struct descr_generic_header {
+struct descr_generic_header
+{
 	unsigned descriptor_tag                 : 8;
 	unsigned descriptor_length              : 8;
-} __attribute__ ((packed)) ;
+} __attribute__((packed)) ;
 
-struct descr_short_event_header {
+struct descr_short_event_header
+{
 	unsigned descriptor_tag                 : 8;
 	unsigned descriptor_length              : 8;
 	unsigned language_code_hi               : 8;
 	unsigned language_code_mid              : 8;
 	unsigned language_code_lo               : 8;
 	unsigned event_name_length              : 8;
-} __attribute__ ((packed)) ;
+} __attribute__((packed)) ;
 
-struct descr_extended_event_header {
+struct descr_extended_event_header
+{
 	unsigned descriptor_tag                 : 8;
 	unsigned descriptor_length              : 8;
 	unsigned descriptor_number              : 4;
@@ -71,11 +74,11 @@ struct descr_extended_event_header {
 	unsigned iso_639_2_language_code_mid    : 8;
 	unsigned iso_639_2_language_code_lo     : 8;
 	unsigned length_of_items                : 8;
-} __attribute__ ((packed)) ;
+} __attribute__((packed)) ;
 
 inline unsigned min(unsigned a, unsigned b)
 {
-        return b < a ? b : a;
+	return b < a ? b : a;
 }
 
 static OpenThreads::Mutex countryMutex;
@@ -85,7 +88,8 @@ unsigned int getCountryIndex(const std::string &country)
 {
 	unsigned int ix = 0;
 	OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(countryMutex);
-	if (countryVector.empty()) {
+	if (countryVector.empty())
+	{
 		countryVector.push_back("DEU"); // 0
 		countryVector.push_back("FRA"); // 1
 		countryVector.push_back("ITA"); // 2
@@ -100,21 +104,24 @@ unsigned int getCountryIndex(const std::string &country)
 
 static OpenThreads::Mutex componentMutex;
 static std::vector<std::string> componentVector;
-static std::map<std::string,unsigned int> componentMap;
+static std::map<std::string, unsigned int> componentMap;
 
 void SIcomponent::setComponent(const std::string &component_description)
 {
 	OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(componentMutex);
-	if (componentVector.empty()) {
+	if (componentVector.empty())
+	{
 		componentMap[""] = 0;
 		componentVector.push_back("");
 	}
-	std::map<std::string,unsigned int>::const_iterator it = componentMap.find(component_description);
-	if (it == componentMap.end()) {
+	std::map<std::string, unsigned int>::const_iterator it = componentMap.find(component_description);
+	if (it == componentMap.end())
+	{
 		component = componentVector.size();
 		componentMap[component_description] = component;
 		componentVector.push_back(component_description);
-	} else
+	}
+	else
 		component = it->second;
 }
 
@@ -127,8 +134,8 @@ const char *SIcomponent::getComponentName() const
 
 SIparentalRating::SIparentalRating(const std::string &cc, unsigned char rate)
 {
-	rating=rate;
-	countryCode=getCountryIndex(cc);
+	rating = rate;
+	countryCode = getCountryIndex(cc);
 }
 
 void SIparentalRating::dump(void) const
@@ -138,13 +145,13 @@ void SIparentalRating::dump(void) const
 
 int SIparentalRating::saveXML(FILE *file) const
 {
-	if(fprintf(file, "\t\t\t<parental_rating country=\"%s\" rating=\"%hhu\"/>\n", countryVector[countryCode].c_str(), rating)<0)
+	if (fprintf(file, "\t\t\t<parental_rating country=\"%s\" rating=\"%hhu\"/>\n", countryVector[countryCode].c_str(), rating) < 0)
 		return 1;
 	return 0;
 }
 
 SIevent::SIevent(const t_original_network_id _original_network_id, const t_transport_stream_id _transport_stream_id, const t_service_id _service_id,
-		 const unsigned short _event_id)
+	const unsigned short _event_id)
 {
 	original_network_id = _original_network_id;
 	transport_stream_id = _transport_stream_id;
@@ -162,9 +169,9 @@ SIevent::SIevent(const struct eit_event *e)
 	unsigned long duration = 0;
 
 	if (!((e->duration_hi == 0xff) && (e->duration_mid == 0xff) && (e->duration_lo == 0xff)))
-		duration = ((e->duration_hi)>>4)*10*3600L + ((e->duration_hi)&0x0f)*3600L +
-			((e->duration_mid)>>4)*10*60L + ((e->duration_mid)&0x0f)*60L +
-			((e->duration_lo)>>4)*10 + ((e->duration_lo)&0x0f);
+		duration = ((e->duration_hi) >> 4) * 10 * 3600L + ((e->duration_hi) & 0x0f) * 3600L +
+			((e->duration_mid) >> 4) * 10 * 60L + ((e->duration_mid) & 0x0f) * 60L +
+			((e->duration_lo) >> 4) * 10 + ((e->duration_lo) & 0x0f);
 
 	if (start_time && duration)
 		times.insert(SItime(start_time, duration));
@@ -193,9 +200,9 @@ void SIevent::parse(Event &event)
 	uint8_t duration_lo = duration & 0xFF;
 
 	if (!((duration_hi == 0xff) && (duration_mid == 0xff) && (duration_lo == 0xff)))
-		duration = ((duration_hi)>>4)*10*3600L + ((duration_hi)&0x0f)*3600L +
-			   ((duration_mid)>>4)*10*60L + ((duration_mid)&0x0f)*60L +
-			   ((duration_lo)>>4)*10 + ((duration_lo)&0x0f);
+		duration = ((duration_hi) >> 4) * 10 * 3600L + ((duration_hi) & 0x0f) * 3600L +
+			((duration_mid) >> 4) * 10 * 60L + ((duration_mid) & 0x0f) * 60L +
+			((duration_lo) >> 4) * 10 + ((duration_lo) & 0x0f);
 
 //printf("SIevent::parse  : eventID %x start %d duration %d\n", eventID, (int) start_time, (int) duration);
 	if (start_time && duration)
@@ -203,116 +210,124 @@ void SIevent::parse(Event &event)
 	const DescriptorList &dlist = *event.getDescriptors();
 
 	int countExtandetText = 0, appendcheck = 0;
-	for (DescriptorConstIterator dit = dlist.begin(); dit != dlist.end(); ++dit){
-		switch ((*dit)->getTag()) {
+	for (DescriptorConstIterator dit = dlist.begin(); dit != dlist.end(); ++dit)
+	{
+		switch ((*dit)->getTag())
+		{
 			case EXTENDED_EVENT_DESCRIPTOR:
 				countExtandetText++;
-			break;
+				break;
 			default:
-			break;
+				break;
 		}
 	}
 	appendcheck = countExtandetText;
-	for (DescriptorConstIterator dit = dlist.begin(); dit != dlist.end(); ++dit) {
-	    switch ((*dit)->getTag()) {
-		case SHORT_EVENT_DESCRIPTOR:
+	for (DescriptorConstIterator dit = dlist.begin(); dit != dlist.end(); ++dit)
+	{
+		switch ((*dit)->getTag())
 		{
-			const ShortEventDescriptor *d = (ShortEventDescriptor*) *dit;
-			std::string lang = d->getIso639LanguageCode();
-			std::transform(lang.begin(), lang.end(), lang.begin(), tolower);
-			int table = getCountryCodeDefaultMapping(lang);
-			unsigned int _lang = getLangIndex(lang);
-			setName(_lang, stringDVBUTF8(d->getEventName(), table, tsidonid));
-			setText(_lang, stringDVBUTF8(d->getText(), table, tsidonid));
-			break;
-		}
-		case EXTENDED_EVENT_DESCRIPTOR:
-		{
-			if(now && secondsExtendedTextCache && start_time > now + secondsExtendedTextCache)
-				continue;
-			const ExtendedEventDescriptor *d = (ExtendedEventDescriptor*) *dit;
-			std::string lang = d->getIso639LanguageCode();
-			std::transform(lang.begin(), lang.end(), lang.begin(), tolower);
-			int table = getCountryCodeDefaultMapping(lang);
+			case SHORT_EVENT_DESCRIPTOR:
+			{
+				const ShortEventDescriptor *d = (ShortEventDescriptor *) *dit;
+				std::string lang = d->getIso639LanguageCode();
+				std::transform(lang.begin(), lang.end(), lang.begin(), tolower);
+				int table = getCountryCodeDefaultMapping(lang);
+				unsigned int _lang = getLangIndex(lang);
+				setName(_lang, stringDVBUTF8(d->getEventName(), table, tsidonid));
+				setText(_lang, stringDVBUTF8(d->getText(), table, tsidonid));
+				break;
+			}
+			case EXTENDED_EVENT_DESCRIPTOR:
+			{
+				if (now && secondsExtendedTextCache && start_time > now + secondsExtendedTextCache)
+					continue;
+				const ExtendedEventDescriptor *d = (ExtendedEventDescriptor *) *dit;
+				std::string lang = d->getIso639LanguageCode();
+				std::transform(lang.begin(), lang.end(), lang.begin(), tolower);
+				int table = getCountryCodeDefaultMapping(lang);
 #ifdef USE_ITEM_DESCRIPTION
-			const ExtendedEventList *itemlist = d->getItems();
-			for (ExtendedEventConstIterator it = itemlist->begin(); it != itemlist->end(); ++it) {
-				itemDescription.append(stringDVBUTF8((*it)->getItemDescription(), table, tsidonid));
-				itemDescription.append("\n");
-				item.append(stringDVBUTF8((*it)->getItem(), table, tsidonid));
-				item.append("\n");
-			}
+				const ExtendedEventList *itemlist = d->getItems();
+				for (ExtendedEventConstIterator it = itemlist->begin(); it != itemlist->end(); ++it)
+				{
+					itemDescription.append(stringDVBUTF8((*it)->getItemDescription(), table, tsidonid));
+					itemDescription.append("\n");
+					item.append(stringDVBUTF8((*it)->getItem(), table, tsidonid));
+					item.append("\n");
+				}
 #endif
-			appendExtendedText(getLangIndex(lang), stringDVBUTF8(d->getText(), table, tsidonid),(appendcheck > countExtandetText),(countExtandetText==1));
-			countExtandetText--;
-			break;
-		}
-		case CONTENT_DESCRIPTOR:
-		{
-			const ContentDescriptor * d = (ContentDescriptor *) *dit;
-			const ContentClassificationList *clist = d->getClassifications();
-			if (clist->size()) {
+				appendExtendedText(getLangIndex(lang), stringDVBUTF8(d->getText(), table, tsidonid), (appendcheck > countExtandetText), (countExtandetText == 1));
+				countExtandetText--;
+				break;
+			}
+			case CONTENT_DESCRIPTOR:
+			{
+				const ContentDescriptor *d = (ContentDescriptor *) *dit;
+				const ContentClassificationList *clist = d->getClassifications();
+				if (clist->size())
+				{
 #ifdef FULL_CONTENT_CLASSIFICATION
-				ssize_t off = classifications.reserve(clist->size() * 2);
-				for (ContentClassificationConstIterator cit = clist->begin(); cit != clist->end(); ++cit)
-					off = classifications.set(off,
-								  (*cit)->getContentNibbleLevel1() << 4 | (*cit)->getContentNibbleLevel2(),
-								  (*cit)->getUserNibble1() << 4 | (*cit)->getUserNibble2());
+					ssize_t off = classifications.reserve(clist->size() * 2);
+					for (ContentClassificationConstIterator cit = clist->begin(); cit != clist->end(); ++cit)
+						off = classifications.set(off,
+								(*cit)->getContentNibbleLevel1() << 4 | (*cit)->getContentNibbleLevel2(),
+								(*cit)->getUserNibble1() << 4 | (*cit)->getUserNibble2());
 #else
-				ContentClassificationConstIterator cit = clist->begin();
-				classifications.content = (*cit)->getContentNibbleLevel1() << 4 | (*cit)->getContentNibbleLevel2();
-				classifications.user = (*cit)->getUserNibble1() << 4 | (*cit)->getUserNibble2();
+					ContentClassificationConstIterator cit = clist->begin();
+					classifications.content = (*cit)->getContentNibbleLevel1() << 4 | (*cit)->getContentNibbleLevel2();
+					classifications.user = (*cit)->getUserNibble1() << 4 | (*cit)->getUserNibble2();
 #endif
+				}
+				break;
 			}
-			break;
-		}
-		case COMPONENT_DESCRIPTOR:
-		{
-			const ComponentDescriptor *d = (ComponentDescriptor*)*dit;
-			SIcomponent c;
-			c.streamContent = d->getStreamContent();
-			c.componentType = d->getComponentType();
-			c.componentTag = d->getComponentTag();
-			std::string lang = d->getIso639LanguageCode();
-			std::transform(lang.begin(), lang.end(), lang.begin(), tolower);
-			int table = getCountryCodeDefaultMapping(lang);
-			c.setComponent(stringDVBUTF8(d->getText(), table, tsidonid));
-			//components.insert(c);
-			components.push_back(c);
-			break;
-		}
-		case PARENTAL_RATING_DESCRIPTOR:
-		{
-			const ParentalRatingDescriptor *d = (ParentalRatingDescriptor*) *dit;
-			const ParentalRatingList *plist = d->getParentalRatings();
-			for (ParentalRatingConstIterator it = plist->begin(); it != plist->end(); ++it) {
-				SIparentalRating p((*it)->getCountryCode(), (*it)->getRating());
-				//ratings.insert(p);
-				ratings.push_back(p);
+			case COMPONENT_DESCRIPTOR:
+			{
+				const ComponentDescriptor *d = (ComponentDescriptor *)*dit;
+				SIcomponent c;
+				c.streamContent = d->getStreamContent();
+				c.componentType = d->getComponentType();
+				c.componentTag = d->getComponentTag();
+				std::string lang = d->getIso639LanguageCode();
+				std::transform(lang.begin(), lang.end(), lang.begin(), tolower);
+				int table = getCountryCodeDefaultMapping(lang);
+				c.setComponent(stringDVBUTF8(d->getText(), table, tsidonid));
+				//components.insert(c);
+				components.push_back(c);
+				break;
 			}
-			break;
-		}
-		case LINKAGE_DESCRIPTOR:
-		{
-			const LinkageDescriptor * d = (LinkageDescriptor *) *dit;
-			SIlinkage l;
-			l.linkageType = d->getLinkageType();
-			l.transportStreamId = d->getTransportStreamId();
-			l.originalNetworkId = d->getOriginalNetworkId();
-			l.serviceId = d->getServiceId();
-			const PrivateDataByteVector *privateData = d->getPrivateDataBytes();
-			l.name = convertDVBUTF8((const char*)&((*privateData)[0]), privateData->size(), 1, tsidonid);
-			linkage_descs.insert(linkage_descs.end(), l);
-			break;
-		}
+			case PARENTAL_RATING_DESCRIPTOR:
+			{
+				const ParentalRatingDescriptor *d = (ParentalRatingDescriptor *) *dit;
+				const ParentalRatingList *plist = d->getParentalRatings();
+				for (ParentalRatingConstIterator it = plist->begin(); it != plist->end(); ++it)
+				{
+					SIparentalRating p((*it)->getCountryCode(), (*it)->getRating());
+					//ratings.insert(p);
+					ratings.push_back(p);
+				}
+				break;
+			}
+			case LINKAGE_DESCRIPTOR:
+			{
+				const LinkageDescriptor *d = (LinkageDescriptor *) *dit;
+				SIlinkage l;
+				l.linkageType = d->getLinkageType();
+				l.transportStreamId = d->getTransportStreamId();
+				l.originalNetworkId = d->getOriginalNetworkId();
+				l.serviceId = d->getServiceId();
+				const PrivateDataByteVector *privateData = d->getPrivateDataBytes();
+				l.name = convertDVBUTF8((const char *) & ((*privateData)[0]), privateData->size(), 1, tsidonid);
+				linkage_descs.insert(linkage_descs.end(), l);
+				break;
+			}
 #if 0 // TODO ? vps was never used
-		case PDC_DESCRIPTOR) {
-			break;
-		}
+			case PDC_DESCRIPTOR)
+			{
+				break;
+			}
 #endif
-		default:
-			break;
-		}
+			default:
+					break;
+				}
 	}
 }
 
@@ -323,41 +338,43 @@ void SIevent::parseDescriptors(const uint8_t *des, unsigned len)
 	 *            skip it here... */
 	des += sizeof(struct eit_event);
 	len -= sizeof(struct eit_event);
-	while(len>=sizeof(struct descr_generic_header)) {
-		desc=(struct descr_generic_header *)des;
+	while (len >= sizeof(struct descr_generic_header))
+	{
+		desc = (struct descr_generic_header *)des;
 		/*printf("Type: %s\n", decode_descr(desc->descriptor_tag)); */
-		if(desc->descriptor_tag==SHORT_EVENT_DESCRIPTOR)
+		if (desc->descriptor_tag == SHORT_EVENT_DESCRIPTOR)
 			parseShortEventDescriptor((const uint8_t *)desc, len);
-		else if(desc->descriptor_tag==EXTENDED_EVENT_DESCRIPTOR)
+		else if (desc->descriptor_tag == EXTENDED_EVENT_DESCRIPTOR)
 			parseExtendedEventDescriptor((const uint8_t *)desc, len);
-		else if(desc->descriptor_tag==CONTENT_DESCRIPTOR)
+		else if (desc->descriptor_tag == CONTENT_DESCRIPTOR)
 			parseContentDescriptor((const uint8_t *)desc, len);
-		else if(desc->descriptor_tag==COMPONENT_DESCRIPTOR)
+		else if (desc->descriptor_tag == COMPONENT_DESCRIPTOR)
 			parseComponentDescriptor((const uint8_t *)desc, len);
-		else if(desc->descriptor_tag==PARENTAL_RATING_DESCRIPTOR)
+		else if (desc->descriptor_tag == PARENTAL_RATING_DESCRIPTOR)
 			parseParentalRatingDescriptor((const uint8_t *)desc, len);
-		else if(desc->descriptor_tag==LINKAGE_DESCRIPTOR) {
+		else if (desc->descriptor_tag == LINKAGE_DESCRIPTOR)
+		{
 			parseLinkageDescriptor((const uint8_t *)desc, len);
 		}
 #if 0
-		else if(desc->descriptor_tag==PDC_DESCRIPTOR)
+		else if (desc->descriptor_tag == PDC_DESCRIPTOR)
 			parsePDCDescriptor((const char *)desc, e, len);
 #endif
-		if((unsigned)(desc->descriptor_length+2)>len)
+		if ((unsigned)(desc->descriptor_length + 2) > len)
 			break;
-		len-=desc->descriptor_length+2;
-		des+=desc->descriptor_length+2;
+		len -= desc->descriptor_length + 2;
+		des += desc->descriptor_length + 2;
 	}
 }
 
 void SIevent::parseShortEventDescriptor(const uint8_t *buf, unsigned maxlen)
 {
-        struct descr_short_event_header *evt=(struct descr_short_event_header *)buf;
-        if((evt->descriptor_length+sizeof(descr_generic_header) > maxlen) ||
-			(evt->descriptor_length<sizeof(struct descr_short_event_header)-sizeof(descr_generic_header)))
-                return;
+	struct descr_short_event_header *evt = (struct descr_short_event_header *)buf;
+	if ((evt->descriptor_length + sizeof(descr_generic_header) > maxlen) ||
+		(evt->descriptor_length < sizeof(struct descr_short_event_header) - sizeof(descr_generic_header)))
+		return;
 
-        int tsidonid = (transport_stream_id << 16) | original_network_id;
+	int tsidonid = (transport_stream_id << 16) | original_network_id;
 
 	char lang[4];
 	lang[0] = tolower(evt->language_code_hi);
@@ -368,61 +385,64 @@ void SIevent::parseShortEventDescriptor(const uint8_t *buf, unsigned maxlen)
 	int table = getCountryCodeDefaultMapping(language);
 	unsigned int _language = getLangIndex(language);
 
-        buf+=sizeof(struct descr_short_event_header);
-        if(evt->event_name_length)
-                setName(_language, convertDVBUTF8((const char*) buf, evt->event_name_length, table, tsidonid));
+	buf += sizeof(struct descr_short_event_header);
+	if (evt->event_name_length)
+		setName(_language, convertDVBUTF8((const char *) buf, evt->event_name_length, table, tsidonid));
 
-        buf+=evt->event_name_length;
-        unsigned char textlength=*((unsigned char *)buf);
-        if(textlength > 2)
-                setText(_language, convertDVBUTF8((const char*) (++buf), textlength, table, tsidonid));
+	buf += evt->event_name_length;
+	unsigned char textlength = *((unsigned char *)buf);
+	if (textlength > 2)
+		setText(_language, convertDVBUTF8((const char *)(++buf), textlength, table, tsidonid));
 }
 
 void SIevent::parseExtendedEventDescriptor(const uint8_t *buf, unsigned maxlen)
 {
-        struct descr_extended_event_header *evt=(struct descr_extended_event_header *)buf;
-        if((evt->descriptor_length+sizeof(descr_generic_header)>maxlen) ||
-			(evt->descriptor_length<sizeof(struct descr_extended_event_header)-sizeof(descr_generic_header)))
-                return;
+	struct descr_extended_event_header *evt = (struct descr_extended_event_header *)buf;
+	if ((evt->descriptor_length + sizeof(descr_generic_header) > maxlen) ||
+		(evt->descriptor_length < sizeof(struct descr_extended_event_header) - sizeof(descr_generic_header)))
+		return;
 
-        int tsidonid = (transport_stream_id << 16) | original_network_id;
+	int tsidonid = (transport_stream_id << 16) | original_network_id;
 
 	char lang[4];
 	lang[0] = tolower(evt->iso_639_2_language_code_hi);
 	lang[1] = tolower(evt->iso_639_2_language_code_mid);
 	lang[2] = tolower(evt->iso_639_2_language_code_lo);
 	lang[3] = '\0';
-        std::string language(lang);
+	std::string language(lang);
 	int table = getCountryCodeDefaultMapping(language);
 	unsigned int _language = getLangIndex(language);
 
-        unsigned char *items=(unsigned char *)(buf+sizeof(struct descr_extended_event_header));
-        while(items < (unsigned char *)(buf + sizeof(struct descr_extended_event_header) + evt->length_of_items)) {
+	unsigned char *items = (unsigned char *)(buf + sizeof(struct descr_extended_event_header));
+	while (items < (unsigned char *)(buf + sizeof(struct descr_extended_event_header) + evt->length_of_items))
+	{
 #ifdef USE_ITEM_DESCRIPTION
-                if(*items) {
-                        itemDescription.append(convertDVBUTF8((const char *)(items+1), min(maxlen-(items+1-buf), *items), table, tsidonid));
-                        itemDescription.append("\n");
-                }
+		if (*items)
+		{
+			itemDescription.append(convertDVBUTF8((const char *)(items + 1), min(maxlen - (items + 1 - buf), *items), table, tsidonid));
+			itemDescription.append("\n");
+		}
 #endif
-                items+=1+*items;
+		items += 1 + *items;
 #ifdef USE_ITEM_DESCRIPTION
-                if(*items) {
-                        item.append(convertDVBUTF8((const char *)(items+1), min(maxlen-(items+1-buf), *items), table, tsidonid));
-                        item.append("\n");
-                }
+		if (*items)
+		{
+			item.append(convertDVBUTF8((const char *)(items + 1), min(maxlen - (items + 1 - buf), *items), table, tsidonid));
+			item.append("\n");
+		}
 #endif
-                items+=1+*items;
-        }
-        if(*items) 
-                appendExtendedText(_language, convertDVBUTF8((const char *)(items+1), min(maxlen-(items+1-buf), (*items)), table, tsidonid));
+		items += 1 + *items;
+	}
+	if (*items)
+		appendExtendedText(_language, convertDVBUTF8((const char *)(items + 1), min(maxlen - (items + 1 - buf), (*items)), table, tsidonid));
 }
 
 void SIevent::parseContentDescriptor(const uint8_t *buf, unsigned maxlen)
 {
-	struct descr_generic_header *cont=(struct descr_generic_header *)buf;
-	if(cont->descriptor_length+sizeof(struct descr_generic_header)>maxlen)
+	struct descr_generic_header *cont = (struct descr_generic_header *)buf;
+	if (cont->descriptor_length + sizeof(struct descr_generic_header) > maxlen)
 		return;
-	if(!cont->descriptor_length)
+	if (!cont->descriptor_length)
 		return;
 #ifdef FULL_CONTENT_CLASSIFICATION
 	ssize_t off = classifications.reserve(cont->descriptor_length);
@@ -430,33 +450,35 @@ void SIevent::parseContentDescriptor(const uint8_t *buf, unsigned maxlen)
 #else
 	classifications.content = buf[sizeof(struct descr_generic_header)];
 	if (cont->descriptor_length > 1)
-		classifications.user = buf[sizeof(struct descr_generic_header)+1];
+		classifications.user = buf[sizeof(struct descr_generic_header) + 1];
 #endif
 }
 
 void SIevent::parseComponentDescriptor(const uint8_t *buf, unsigned maxlen)
 {
-	if(maxlen>=sizeof(struct descr_component_header))
+	if (maxlen >= sizeof(struct descr_component_header))
 		components.push_back(SIcomponent((const struct descr_component_header *)buf));
-		//components.insert(SIcomponent((const struct descr_component_header *)buf));
+	//components.insert(SIcomponent((const struct descr_component_header *)buf));
 }
 
 void SIevent::parseParentalRatingDescriptor(const uint8_t *buf, unsigned maxlen)
 {
-        struct descr_generic_header *cont=(struct descr_generic_header *)buf;
-        if(cont->descriptor_length+sizeof(struct descr_generic_header)>maxlen)
-                return;
-        const uint8_t *s=buf+sizeof(struct descr_generic_header);
-        while(s<buf+sizeof(struct descr_generic_header)+cont->descriptor_length-4) {
-                //ratings.insert(SIparentalRating(std::string((const char *)s, 3), *(s+3)));
-                ratings.push_back(SIparentalRating(std::string((const char *)s, 3), *(s+3)));
-                s+=4;
-        }
+	struct descr_generic_header *cont = (struct descr_generic_header *)buf;
+	if (cont->descriptor_length + sizeof(struct descr_generic_header) > maxlen)
+		return;
+	const uint8_t *s = buf + sizeof(struct descr_generic_header);
+	while (s < buf + sizeof(struct descr_generic_header) + cont->descriptor_length - 4)
+	{
+		//ratings.insert(SIparentalRating(std::string((const char *)s, 3), *(s+3)));
+		ratings.push_back(SIparentalRating(std::string((const char *)s, 3), *(s + 3)));
+		s += 4;
+	}
 }
 
 void SIevent::parseLinkageDescriptor(const uint8_t *buf, unsigned maxlen)
 {
-	if(maxlen>=sizeof(struct descr_linkage_header)) {
+	if (maxlen >= sizeof(struct descr_linkage_header))
+	{
 		SIlinkage l((const struct descr_linkage_header *)buf);
 		linkage_descs.insert(linkage_descs.end(), l);
 	}
@@ -466,22 +488,26 @@ char SIevent::getFSK() const
 {
 	for (SIparentalRatings::const_iterator it = ratings.begin(); it != ratings.end(); ++it)
 	{
-		if (it->countryCode == 0 /*"DEU"*/) {
+		if (it->countryCode == 0 /*"DEU"*/)
+		{
 			if ((it->rating >= 0x01) && (it->rating <= 0x0F))
 				return (it->rating + 3);           // 0x01 to 0x0F minimum age = rating + 3 years
 			return (it->rating == 0 ? 0 : 18); // return FSK 18 for : 0x10 to 0xFF defined by the broadcaster
 		}
-		if( it->countryCode == 1 /*"FRA"*/ && it->rating == 0x10) {
+		if (it->countryCode == 1 /*"FRA"*/ && it->rating == 0x10)
+		{
 			// workaround for ITA ESP FRA fsk.
-		  	return 0;
-		}
-		if(it->countryCode == 2 /*"ITA"*/ && it->rating == 1) {
 			return 0;
 		}
-		if( it->countryCode == 3 /*"ESP"*/ ) {
-			if(it->rating == 0x10 || it->rating == 0x11)
+		if (it->countryCode == 2 /*"ITA"*/ && it->rating == 1)
+		{
+			return 0;
+		}
+		if (it->countryCode == 3 /*"ESP"*/)
+		{
+			if (it->rating == 0x10 || it->rating == 0x11)
 				return 0;
-			if(it->rating == 0x12)
+			if (it->rating == 0x12)
 				return 18;
 			return (it->rating + 1);
 		}
@@ -498,11 +524,14 @@ char SIevent::getFSK() const
 
 std::string SIevent::getName() const
 {
-	if (CSectionsdClient::LANGUAGE_MODE_OFF == SIlanguage::getMode()) {
+	if (CSectionsdClient::LANGUAGE_MODE_OFF == SIlanguage::getMode())
+	{
 		if (!langData.empty())
 			return langData.begin()->text[SILangData::langName];
 		return "";
-	} else {
+	}
+	else
+	{
 		std::string retval;
 		SIlanguage::filter(langData, SILangData::langName, 1, retval);
 		return retval;
@@ -523,7 +552,8 @@ void SIevent::setName(unsigned int lang, const std::string &name)
 		lang = 0;
 
 	for (std::list<SILangData>::iterator it = langData.begin(); it != langData.end(); ++it)
-		if (it->lang == lang) {
+		if (it->lang == lang)
+		{
 			it->text[SILangData::langName] = tmp;
 			return;
 		}
@@ -536,7 +566,8 @@ void SIevent::setName(unsigned int lang, const std::string &name)
 
 std::string SIevent::getText() const
 {
-	if (CSectionsdClient::LANGUAGE_MODE_OFF == SIlanguage::getMode()) {
+	if (CSectionsdClient::LANGUAGE_MODE_OFF == SIlanguage::getMode())
+	{
 		if (!langData.empty())
 			return langData.begin()->text[SILangData::langText];
 		return "";
@@ -557,7 +588,8 @@ void SIevent::setText(unsigned int lang, const std::string &text)
 		lang = 0;
 
 	for (std::list<SILangData>::iterator it = langData.begin(); it != langData.end(); ++it)
-		if (it->lang == lang) {
+		if (it->lang == lang)
+		{
 			it->text[SILangData::langText] = text;
 			return;
 		}
@@ -570,7 +602,8 @@ void SIevent::setText(unsigned int lang, const std::string &text)
 
 std::string SIevent::getExtendedText() const
 {
-	if (CSectionsdClient::LANGUAGE_MODE_OFF == SIlanguage::getMode()) {
+	if (CSectionsdClient::LANGUAGE_MODE_OFF == SIlanguage::getMode())
+	{
 		if (!langData.empty())
 			return langData.begin()->text[SILangData::langExtendedText];
 		return "";
@@ -591,14 +624,18 @@ void SIevent::appendExtendedText(unsigned int lang, const std::string &text, boo
 		lang = 0;
 
 	for (std::list<SILangData>::iterator it = langData.begin(); it != langData.end(); ++it)
-		if (it->lang == lang) {
-			if (append){
+		if (it->lang == lang)
+		{
+			if (append)
+			{
 				it->text[SILangData::langExtendedText] += text;
-				if(endappend && it->text[SILangData::langExtendedText].capacity() > it->text[SILangData::langExtendedText].size()){
+				if (endappend && it->text[SILangData::langExtendedText].capacity() > it->text[SILangData::langExtendedText].size())
+				{
 					it->text[SILangData::langExtendedText].reserve();
 				}
 			}
-			else{
+			else
+			{
 				it->text[SILangData::langExtendedText] = text;
 			}
 			return;
@@ -612,13 +649,14 @@ void SIevent::appendExtendedText(unsigned int lang, const std::string &text, boo
 
 int SIevent::saveXML(FILE *file, const char *serviceName) const
 {
-	if(saveXML0(file))
+	if (saveXML0(file))
 		return 1;
-	if(serviceName) {
-		if(fprintf(file, "    <service_name>")<0)
+	if (serviceName)
+	{
+		if (fprintf(file, "    <service_name>") < 0)
 			return 2;
 		saveStringToXMLfile(file, serviceName);
-		if(fprintf(file, "</service_name>\n")<0)
+		if (fprintf(file, "</service_name>\n") < 0)
 			return 3;
 	}
 	return saveXML2(file);
@@ -626,41 +664,49 @@ int SIevent::saveXML(FILE *file, const char *serviceName) const
 
 int SIevent::saveXML0(FILE *file) const
 {
-	if(fprintf(file, "\t\t<event id=\"%04x\" tid=\"%02x\">\n", eventID, table_id)<0)
+	if (fprintf(file, "\t\t<event id=\"%04x\" tid=\"%02x\">\n", eventID, table_id) < 0)
 		return 1;
 	return 0;
 }
 
 int SIevent::saveXML2(FILE *file) const
 {
-	for (std::list<SILangData>::const_iterator i = langData.begin(); i != langData.end(); ++i) {
-		if (!i->text[SILangData::langName].empty()) {
+	for (std::list<SILangData>::const_iterator i = langData.begin(); i != langData.end(); ++i)
+	{
+		if (!i->text[SILangData::langName].empty())
+		{
 			fprintf(file, "\t\t\t<name lang=\"%s\" string=\"", langIndex[i->lang].c_str());
 			saveStringToXMLfile(file, i->text[SILangData::langName].c_str());
 			fprintf(file, "\"/>\n");
 		}
 	}
-	for (std::list<SILangData>::const_iterator i = langData.begin(); i != langData.end(); ++i) {
-		if (!i->text[SILangData::langText].empty()) {
+	for (std::list<SILangData>::const_iterator i = langData.begin(); i != langData.end(); ++i)
+	{
+		if (!i->text[SILangData::langText].empty())
+		{
 			fprintf(file, "\t\t\t<text lang=\"%s\" string=\"", langIndex[i->lang].c_str());
 			saveStringToXMLfile(file, i->text[SILangData::langText].c_str());
 			fprintf(file, "\"/>\n");
 		}
 	}
 #ifdef USE_ITEM_DESCRIPTION
-	if(!item.empty()) {
+	if (!item.empty())
+	{
 		fprintf(file, "\t\t\t<item string=\"");
 		saveStringToXMLfile(file, item.c_str());
 		fprintf(file, "\"/>\n");
 	}
-	if(!itemDescription.empty()) {
+	if (!itemDescription.empty())
+	{
 		fprintf(file, "\t\t\t<item_description string=\"");
 		saveStringToXMLfile(file, itemDescription.c_str());
 		fprintf(file, "\"/>\n");
 	}
 #endif
-	for (std::list<SILangData>::const_iterator i = langData.begin(); i != langData.end(); ++i) {
-		if (!i->text[SILangData::langExtendedText].empty()) {
+	for (std::list<SILangData>::const_iterator i = langData.begin(); i != langData.end(); ++i)
+	{
+		if (!i->text[SILangData::langExtendedText].empty())
+		{
 			fprintf(file, "\t\t\t<extended_text lang=\"%s\" string=\"", langIndex[i->lang].c_str());
 			saveStringToXMLfile(file, i->text[SILangData::langExtendedText].c_str());
 			fprintf(file, "\"/>\n");
@@ -670,9 +716,10 @@ int SIevent::saveXML2(FILE *file) const
 #ifdef FULL_CONTENT_CLASSIFICATION
 	std::string contentClassification, userClassification;
 	classifications.get(contentClassification, userClassification);
-	for(unsigned i=0; i<contentClassification.length(); i++) {
+	for (unsigned i = 0; i < contentClassification.length(); i++)
+	{
 		/* focus: i think no sense to save 'unknown' */
-		if(contentClassification[i] || userClassification[i])
+		if (contentClassification[i] || userClassification[i])
 			fprintf(file, "\t\t\t<content class=\"%02x\" user=\"%02x\"/>\n", contentClassification[i], userClassification[i]);
 	}
 #else
@@ -690,18 +737,19 @@ int SIevent::saveXML2(FILE *file) const
 void SIevent::dump(void) const
 {
 	printf("Unique key: %" PRIx64 "\n", uniqueKey());
-	if(original_network_id)
+	if (original_network_id)
 		printf("Original-Network-ID: %hu\n", original_network_id);
 	if (service_id)
 		printf("Service-ID: %hu\n", service_id);
 	printf("Event-ID: %hu\n", eventID);
 #ifdef USE_ITEM_DESCRIPTION
-	if(!item.empty())
+	if (!item.empty())
 		printf("Item: %s\n", item.c_str());
-	if(!itemDescription.empty())
+	if (!itemDescription.empty())
 		printf("Item-Description: %s\n", itemDescription.c_str());
 #endif
-	for (std::list<SILangData>::const_iterator it = langData.begin(); it != langData.end(); ++it) {
+	for (std::list<SILangData>::const_iterator it = langData.begin(); it != langData.end(); ++it)
+	{
 		printf("Name (%s): %s\n",	   langIndex[it->lang].c_str(), it->text[SILangData::langName].c_str());
 		printf("Text (%s): %s\n",	   langIndex[it->lang].c_str(), it->text[SILangData::langText].c_str());
 		printf("Extended-Text (%s): %s\n", langIndex[it->lang].c_str(), it->text[SILangData::langExtendedText].c_str());
@@ -710,20 +758,23 @@ void SIevent::dump(void) const
 #ifdef FULL_CONTENT_CLASSIFICATION
 	std::string contentClassification, userClassification;
 	classifications.get(contentClassification, userClassification);
-	if(!contentClassification.empty()) {
+	if (!contentClassification.empty())
+	{
 		printf("Content classification:");
-		for(unsigned i=0; i<contentClassification.length(); i++)
+		for (unsigned i = 0; i < contentClassification.length(); i++)
 			printf(" 0x%02hhx", contentClassification[i]);
 		printf("\n");
 	}
-	if(!userClassification.empty()) {
+	if (!userClassification.empty())
+	{
 		printf("User classification:");
-		for(unsigned i=0; i<userClassification.length(); i++)
+		for (unsigned i = 0; i < userClassification.length(); i++)
 			printf(" 0x%02hhx", userClassification[i]);
 		printf("\n");
 	}
 #else
-	if (classifications.content || classifications.user) {
+	if (classifications.content || classifications.user)
+	{
 		printf("Content classification: 0x%02hhx\n", classifications.content);
 		printf("User classification: 0x%02hhx\n", classifications.user);
 	}
