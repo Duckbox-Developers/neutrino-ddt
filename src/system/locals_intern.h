@@ -22,7 +22,7 @@
  *
  */
 
-const char * locale_real_names[] =
+const char *locale_real_names[] =
 {
 	"INTERNAL ERROR - PLEASE REPORT",
 	"AUDIOSelectMenue.head",

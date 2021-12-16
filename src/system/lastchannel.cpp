@@ -1,13 +1,13 @@
 /*
 DBOX2 -- Projekt
- 
-(c) 2001 rasc Lizenz: GPL 
- 
+
+(c) 2001 rasc Lizenz: GPL
+
 Lastchannel History buffer
- 
+
 Einfache Klasse fuer schnelles Zappen zum letzten Kanal.
 Ggf. laesst sich damit ein kleines ChannelHistory-Menue aufbauen-
- 
+
 Das ganze ist als sich selbst ueberschreibender Ringpuffer realisiert,
 welcher nach dem LIFO-prinzip wieder ausgelesen wird.
 Es wird aber gecheckt, ob ein Neuer Wert ein Mindestzeitabstand zum alten
@@ -22,31 +22,31 @@ nicht gespeichert werden.
 #include <neutrino.h>
 #include "lastchannel.h"
 
-CLastChannel::CLastChannel (void)
-: secs_diff_before_store(3)
-, maxSize(11)
-, shallRemoveEqualChannel(true)
+CLastChannel::CLastChannel(void)
+	: secs_diff_before_store(3)
+	, maxSize(11)
+	, shallRemoveEqualChannel(true)
 {
 }
 
 // // -- Clear the last channel buffer //
-void CLastChannel::clear (void)
+void CLastChannel::clear(void)
 {
-  this->lastChannels.clear();
+	this->lastChannels.clear();
 }
 
 // -- Store a channelnumber in Buffer
 // -- Store only if channel != last channel and time store delay is large enough
 // forceStoreToLastChannels default to false
 
-void CLastChannel::store (t_channel_id channel_id)
+void CLastChannel::store(t_channel_id channel_id)
 {
 	struct timeval  tv;
 	unsigned long lastTimestamp(0);
 	unsigned long timeDiff;
 	std::list<_LastCh>::iterator It;
 
-	gettimeofday (&tv, NULL);
+	gettimeofday(&tv, NULL);
 
 	if (!this->lastChannels.empty())
 		lastTimestamp  = this->lastChannels.front().timestamp;
@@ -54,7 +54,7 @@ void CLastChannel::store (t_channel_id channel_id)
 	timeDiff = tv.tv_sec - lastTimestamp;
 
 	/* prev zap time was less than treshhold, remove prev channel */
-	if(!this->lastChannels.empty() && (timeDiff <= secs_diff_before_store))
+	if (!this->lastChannels.empty() && (timeDiff <= secs_diff_before_store))
 		this->lastChannels.pop_front();
 
 	/* push new channel to the head */
@@ -67,11 +67,14 @@ void CLastChannel::store (t_channel_id channel_id)
 		this->lastChannels.pop_back();
 
 	/* remove this channel at other than 0 position */
-	if(this->lastChannels.size() > 1) {
+	if (this->lastChannels.size() > 1)
+	{
 		It = this->lastChannels.begin();
 		++It;
-		for (; It != this->lastChannels.end() ; ++It) {
-			if (channel_id == It->channel_id) {
+		for (; It != this->lastChannels.end() ; ++It)
+		{
+			if (channel_id == It->channel_id)
+			{
 				this->lastChannels.erase(It);
 				break;
 			}
@@ -79,22 +82,22 @@ void CLastChannel::store (t_channel_id channel_id)
 	}
 }
 
-unsigned int CLastChannel::size () const
+unsigned int CLastChannel::size() const
 {
-  return this->lastChannels.size();
+	return this->lastChannels.size();
 }
 
 // -- Clear store time delay
 // -- means: set last time stamp to zero
 // -- means: store next channel with "store" always
 
-void CLastChannel::clear_storedelay (void)
+void CLastChannel::clear_storedelay(void)
 
 {
-  if (!this->lastChannels.empty())
-  {
-    this->lastChannels.front().timestamp = 0;
-  }
+	if (!this->lastChannels.empty())
+	{
+		this->lastChannels.front().timestamp = 0;
+	}
 }
 
 // -- Get last Channel-Entry
@@ -102,9 +105,9 @@ void CLastChannel::clear_storedelay (void)
 // --       0 = current channel
 // -- Return:  channelnumber or <0  (end of list)
 
-t_channel_id CLastChannel::getlast (int n)
+t_channel_id CLastChannel::getlast(int n)
 {
-	if((n < int(this->lastChannels.size())) && (n > -1) && (!this->lastChannels.empty()))
+	if ((n < int(this->lastChannels.size())) && (n > -1) && (!this->lastChannels.empty()))
 	{
 		std::list<_LastCh>::const_iterator It = this->lastChannels.begin();
 		std::advance(It, n);
@@ -118,7 +121,7 @@ t_channel_id CLastChannel::getlast (int n)
 // -- set delaytime in secs, for accepting a new value
 // -- get returns the value
 
-void CLastChannel::set_store_difftime (int secs)
+void CLastChannel::set_store_difftime(int secs)
 {
 	secs_diff_before_store = secs;
 }
@@ -127,7 +130,8 @@ int CLastChannel::get_mode(t_channel_id channel_id)
 {
 	std::list<_LastCh>::iterator It;
 
-	for (It = this->lastChannels.begin(); It != this->lastChannels.end() ; ++It) {
+	for (It = this->lastChannels.begin(); It != this->lastChannels.end() ; ++It)
+	{
 		if (channel_id == It->channel_id)
 			return It->channel_mode;
 	}
@@ -138,8 +142,10 @@ bool CLastChannel::set_mode(t_channel_id channel_id)
 {
 	std::list<_LastCh>::iterator It;
 
-	for (It = this->lastChannels.begin(); It != this->lastChannels.end() ; ++It) {
-		if (channel_id == It->channel_id) {
+	for (It = this->lastChannels.begin(); It != this->lastChannels.end() ; ++It)
+	{
+		if (channel_id == It->channel_id)
+		{
 			It->channel_mode = CNeutrinoApp::getInstance()->GetChannelMode();
 			return true;
 		}

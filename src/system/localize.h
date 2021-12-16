@@ -40,7 +40,7 @@
 #include <map>
 
 void initialize_iso639_map(void);
-const char * getISO639Description(const char * const iso);
+const char *getISO639Description(const char *const iso);
 extern std::map<std::string, std::string> iso639;
 extern std::map<std::string, std::string> iso639rev;
 
@@ -49,31 +49,34 @@ extern std::map<std::string, std::string> iso639rev;
 class CLocaleManager
 {
 	private:
-		char * * localeData;
-		char * * defaultData;
+		char * *localeData;
+		char * *defaultData;
 
-		char * localeDataMem;
-		char * defaultDataMem;
+		char *localeDataMem;
+		char *defaultDataMem;
 
 	public:
 		enum loadLocale_ret_t
-			{
-				ISO_8859_1_FONT =  0,
-				UNICODE_FONT    =  1,
-				NO_SUCH_LOCALE  = -1
-			};
+		{
+			ISO_8859_1_FONT =  0,
+			UNICODE_FONT    =  1,
+			NO_SUCH_LOCALE  = -1
+		};
 
 		CLocaleManager();
 		~CLocaleManager();
 
-		loadLocale_ret_t loadLocale(const char * const locale, bool asdefault = false);
+		loadLocale_ret_t loadLocale(const char *const locale, bool asdefault = false);
 
-		const char * getText(const neutrino_locale_t keyName) const;
-		std::string getTextAsString(const neutrino_locale_t keyName) const {return (static_cast<std::string>(getText(keyName)));}
+		const char *getText(const neutrino_locale_t keyName) const;
+		std::string getTextAsString(const neutrino_locale_t keyName) const
+		{
+			return (static_cast<std::string>(getText(keyName)));
+		}
 
-		static neutrino_locale_t getMonth  (const struct tm * struct_tm_p);
-		static neutrino_locale_t getMonth  (const int mon);
-		static neutrino_locale_t getWeekday(const struct tm * struct_tm_p);
+		static neutrino_locale_t getMonth(const struct tm *struct_tm_p);
+		static neutrino_locale_t getMonth(const int mon);
+		static neutrino_locale_t getWeekday(const struct tm *struct_tm_p);
 		static neutrino_locale_t getWeekday(const int wday);
 };
 #endif

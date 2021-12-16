@@ -42,8 +42,8 @@
 class CFlashTool
 {
 	private:
-	
-		CProgressWindow* statusViewer;
+
+		CProgressWindow *statusViewer;
 		std::string mtdDevice;
 		std::string ErrorMessage;
 
@@ -52,22 +52,22 @@ class CFlashTool
 		bool isnand;
 
 		bool getInfo();
-		bool erase(int globalProgressEnd=-1);
+		bool erase(int globalProgressEnd = -1);
 
 	public:
 		CFlashTool();
 		~CFlashTool();
 
-		const std::string & getErrorMessage(void) const;
+		const std::string &getErrorMessage(void) const;
 
-		void setMTDDevice( const std::string & mtddevice );
-		void setStatusViewer( CProgressWindow* statusview );
+		void setMTDDevice(const std::string &mtddevice);
+		void setStatusViewer(CProgressWindow *statusview);
 
-		bool program( const std::string & filename, int globalProgressEndErase=-1, int globalProgressEndFlash=-1 );
-		bool readFromMTD( const std::string & filename, int globalProgressEnd=-1 );
+		bool program(const std::string &filename, int globalProgressEndErase = -1, int globalProgressEndFlash = -1);
+		bool readFromMTD(const std::string &filename, int globalProgressEnd = -1);
 
-		bool check_cramfs( const std::string & filename );
-		bool check_md5( const std::string & filename, const std::string & smd5);
+		bool check_cramfs(const std::string &filename);
+		bool check_md5(const std::string &filename, const std::string &smd5);
 
 		void reboot();
 };
@@ -75,25 +75,28 @@ class CFlashTool
 
 class CFlashVersionInfo
 {
- private:
-	
-	char date[11];
-	char time[6];
-	char releaseCycle[5];
-	int  version;
-	time_t datetime;
-	
- public:
-	char snapshot;
-	
-	CFlashVersionInfo(const std::string & versionString);
-	
-	const char *getDate(void) const;
-	const char *getTime(void) const;
-	const char *getReleaseCycle(void) const;
-	const char *getType(void) const;
-	int   getVersion(void) const;
-	time_t getDateTime(void) const { return datetime; };
+	private:
+
+		char date[11];
+		char time[6];
+		char releaseCycle[5];
+		int  version;
+		time_t datetime;
+
+	public:
+		char snapshot;
+
+		CFlashVersionInfo(const std::string &versionString);
+
+		const char *getDate(void) const;
+		const char *getTime(void) const;
+		const char *getReleaseCycle(void) const;
+		const char *getType(void) const;
+		int   getVersion(void) const;
+		time_t getDateTime(void) const
+		{
+			return datetime;
+		};
 };
 
 
@@ -109,31 +112,31 @@ class CMTDInfo
 			std::string filename;
 		};
 
-		std::vector<SMTDPartition*> mtdData;
-		
+		std::vector<SMTDPartition *> mtdData;
+
 		void getPartitionInfo();
 
 		CMTDInfo();
 		~CMTDInfo();
 
-	public: 
-		static CMTDInfo* getInstance();
-	
+	public:
+		static CMTDInfo *getInstance();
+
 		int getMTDCount();
 
 		//mtdinfos abfragen (nach mtdnummer)
-		std::string getMTDName(const int pos );
-		std::string getMTDFileName(const int pos );
-		int getMTDSize(const int pos );
-		int getMTDEraseSize(const int pos );
+		std::string getMTDName(const int pos);
+		std::string getMTDFileName(const int pos);
+		int getMTDSize(const int pos);
+		int getMTDEraseSize(const int pos);
 
 		//mtdinfos abfragen (nach mtd-filename)
-		std::string getMTDName(const std::string & filename);
-		int getMTDSize( const std::string & filename );
-		int getMTDEraseSize( const std::string & filename );
+		std::string getMTDName(const std::string &filename);
+		int getMTDSize(const std::string &filename);
+		int getMTDEraseSize(const std::string &filename);
 
-		int findMTDNumber(const std::string & filename);
-		int findMTDNumberFromName(const char* name);
+		int findMTDNumber(const std::string &filename);
+		int findMTDNumberFromName(const char *name);
 		std::string findMTDsystem();
 };
 

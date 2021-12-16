@@ -55,22 +55,30 @@ void *cSysLoad::Run(void *arg)
 	class cSysLoad *caller = (class cSysLoad *)arg;
 	unsigned long stat_idle = 0, stat_total = 0;
 
-	while (caller->running) {
+	while (caller->running)
+	{
 		std::ifstream in("/proc/stat");
-		if (in.is_open()) {
+		if (in.is_open())
+		{
 			std::string line;
-			while (getline(in, line)) {
+			while (getline(in, line))
+			{
 				unsigned long _stat_user, _stat_nice, _stat_system, _stat_idle;
-				if (4 == sscanf(line.c_str(), "cpu %lu %lu %lu %lu", &_stat_user, &_stat_nice, &_stat_system, &_stat_idle)) {
+				if (4 == sscanf(line.c_str(), "cpu %lu %lu %lu %lu", &_stat_user, &_stat_nice, &_stat_system, &_stat_idle))
+				{
 					unsigned long _stat_total = _stat_user + _stat_nice + _stat_system + _stat_idle;
-					if (stat_total) {
+					if (stat_total)
+					{
 						unsigned long div = _stat_total - stat_total;
 						if (!div) // prevent division by zero if previous stat_total is equal to new.
 							break;
 						caller->data_last = (int)(1000 - 1000 * (_stat_idle - stat_idle) / div);
-						if (caller->data_avail < caller->data_size) {
+						if (caller->data_avail < caller->data_size)
+						{
 							caller->data[caller->data_avail++] = caller->data_last;
-						} else {
+						}
+						else
+						{
 							memmove(caller->data, caller->data + 1, (caller->data_size - 1) * sizeof(int));
 							caller->data[caller->data_size - 1] = caller->data_last;
 						}
@@ -96,7 +104,7 @@ cSysLoad::cSysLoad(void)
 	data_last = -1;
 	data_avail = 0;
 	period = 5;
-	data_size = 1800/period;
+	data_size = 1800 / period;
 	data = new int[data_size];
 	for (unsigned int i = 0; i < data_size; i++)
 		data[i] = -1;
@@ -108,7 +116,8 @@ cSysLoad::cSysLoad(void)
 
 cSysLoad::~cSysLoad(void)
 {
-	if (running) {
+	if (running)
+	{
 		running = false;
 		sem_post(&sem);
 		pthread_join(thr, NULL);

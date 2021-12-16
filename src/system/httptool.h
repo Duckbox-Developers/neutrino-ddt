@@ -44,16 +44,16 @@ class CHTTPTool
 		int	iGlobalProgressEnd;
 		int	iGlobalProgressBegin;
 
-		CProgressWindow*	statusViewer;
-		static int show_progress( void *clientp, double dltotal, double dlnow, double ultotal, double ulnow);
+		CProgressWindow	*statusViewer;
+		static int show_progress(void *clientp, double dltotal, double dlnow, double ultotal, double ulnow);
 		static size_t CurlWriteToString(void *ptr, size_t size, size_t nmemb, void *data);
 
 	public:
 		CHTTPTool();
-		void setStatusViewer( CProgressWindow* statusview );
+		void setStatusViewer(CProgressWindow *statusview);
 
-		bool downloadFile( const std::string & URL, const char * const downloadTarget, int globalProgressEnd=-1, int connecttimeout=10000, int timeout=1800);
-		std::string downloadString(const std::string & URL, int globalProgressEnd=-1, int connecttimeout=10000, int timeout=1800);
+		bool downloadFile(const std::string &URL, const char *const downloadTarget, int globalProgressEnd = -1, int connecttimeout = 10000, int timeout = 1800);
+		std::string downloadString(const std::string &URL, int globalProgressEnd = -1, int connecttimeout = 10000, int timeout = 1800);
 
 };
 

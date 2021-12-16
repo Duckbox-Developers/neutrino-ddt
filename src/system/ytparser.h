@@ -64,7 +64,7 @@ class cYTVideoInfo
 
 		void Dump();
 		std::string GetUrl(int *fmt = NULL, bool mandatory = true);
-		
+
 };
 
 typedef std::vector<cYTVideoInfo> yt_video_list_t;
@@ -92,25 +92,25 @@ class cYTFeedParser : public CProgressSignals
 		yt_video_list_t videos;
 
 		std::string getXmlName(xmlNodePtr node);
-		std::string getXmlAttr(xmlNodePtr node, const char * attr);
+		std::string getXmlAttr(xmlNodePtr node, const char *attr);
 		std::string getXmlData(xmlNodePtr node);
 
 		CURL *curl_handle;
 		OpenThreads::Mutex mutex;
 		int worker_index;
-		static void* GetVideoUrlsThread(void*);
-		static void* DownloadThumbnailsThread(void*);
+		static void *GetVideoUrlsThread(void *);
+		static void *DownloadThumbnailsThread(void *);
 
 		static size_t CurlWriteToString(void *ptr, size_t size, size_t nmemb, void *data);
 		void encodeUrl(std::string &txt);
 		void decodeUrl(std::string &url);
 		static void splitString(std::string &str, std::string delim, std::vector<std::string> &strlist, int start = 0);
-		static void splitString(std::string &str, std::string delim, std::map<std::string,std::string> &strmap, int start = 0);
-		static bool saveToFile(const char * name, std::string str);
+		static void splitString(std::string &str, std::string delim, std::map<std::string, std::string> &strmap, int start = 0);
+		static bool saveToFile(const char *name, std::string str);
 		bool getUrl(std::string &url, std::string &answer, CURL *_curl_handle = NULL);
 		bool DownloadUrl(std::string &url, std::string &file, CURL *_curl_handle = NULL);
 		bool parseFeedJSON(std::string &answer);
-		bool parseFeedDetailsJSON(cYTVideoInfo* vinfo);
+		bool parseFeedDetailsJSON(cYTVideoInfo *vinfo);
 		bool decodeVideoInfo(std::string &answer, cYTVideoInfo &vinfo);
 		bool supportedFormat(int fmt);
 		bool ParseFeed(std::string &url);
@@ -144,17 +144,47 @@ class cYTFeedParser : public CProgressSignals
 		void Dump();
 		void Cleanup(bool delete_thumbnails = false);
 
-		yt_video_list_t &GetVideoList() { return videos; }
-		bool Parsed() { return parsed; }
-		int GetFeedMode() { return feedmode; }
-		bool HaveNext(void) { return !next.empty(); }
-		bool HavePrev(void) { return !prev.empty(); }
-		std::string GetTotal(void) { return total; }
-		std::string GetError(void) { return error; }
+		yt_video_list_t &GetVideoList()
+		{
+			return videos;
+		}
+		bool Parsed()
+		{
+			return parsed;
+		}
+		int GetFeedMode()
+		{
+			return feedmode;
+		}
+		bool HaveNext(void)
+		{
+			return !next.empty();
+		}
+		bool HavePrev(void)
+		{
+			return !prev.empty();
+		}
+		std::string GetTotal(void)
+		{
+			return total;
+		}
+		std::string GetError(void)
+		{
+			return error;
+		}
 
-		void SetRegion(std::string reg) { region = reg; }
-		void SetMaxResults(int count) { max_results = count; }
-		void SetConcurrentDownloads(int count) { concurrent_downloads = count; }
+		void SetRegion(std::string reg)
+		{
+			region = reg;
+		}
+		void SetMaxResults(int count)
+		{
+			max_results = count;
+		}
+		void SetConcurrentDownloads(int count)
+		{
+			concurrent_downloads = count;
+		}
 		void SetThumbnailDir(std::string &_thumbnail_dir);
 };
 
