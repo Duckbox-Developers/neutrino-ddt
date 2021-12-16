@@ -642,9 +642,6 @@ struct SNeutrinoSettings
 	};
 	int mode_left_right_key_tv;
 
-	int spectrum;
-
-
 #if ENABLE_PIP
 	int pip_width;
 	int pip_height;

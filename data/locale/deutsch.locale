@@ -196,7 +196,6 @@ audioplayer.save_playlist Playlist speichern
 audioplayer.select_title_by_name Titelsuche nach Name (SMS)
 audioplayer.show_playlist Playlist anzeigen
 audioplayer.shuffle Zufällig
-audioplayer.spectrum LCD Skala
 audioplayer.stop Stopp
 audioplayer.title_artist Titel, Interpret
 bookmarkmanager.delete Löschen
