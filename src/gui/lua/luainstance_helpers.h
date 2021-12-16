@@ -29,11 +29,11 @@
 #include <math.h>
 
 typedef uint32_t lua_Unsigned;
-int lua_absindex (lua_State *L, int i);
-void lua_rawgetp (lua_State *L, int i, const void *p);
-void lua_rawsetp (lua_State *L, int i, const void *p);
-void lua_pushunsigned (lua_State *L, lua_Unsigned n);
-lua_Unsigned luaL_checkunsigned (lua_State *L, int i);
+int lua_absindex(lua_State *L, int i);
+void lua_rawgetp(lua_State *L, int i, const void *p);
+void lua_rawsetp(lua_State *L, int i, const void *p);
+void lua_pushunsigned(lua_State *L, lua_Unsigned n);
+lua_Unsigned luaL_checkunsigned(lua_State *L, int i);
 #define lua_pushglobaltable(L) \
 	lua_pushvalue(L, LUA_GLOBALSINDEX)
 
@@ -73,30 +73,34 @@ lua_Unsigned luaL_checkunsigned (lua_State *L, int i);
 
 class Font;
 
-typedef std::pair<lua_Integer, Font*> fontmap_pair_t;
-typedef std::map<lua_Integer, Font*> fontmap_t;
+typedef std::pair<lua_Integer, Font *> fontmap_pair_t;
+typedef std::map<lua_Integer, Font *> fontmap_t;
 typedef fontmap_t::iterator fontmap_iterator_t;
 
-typedef std::pair<lua_Integer, fb_pixel_t*> screenmap_pair_t;
-typedef std::map<lua_Integer, fb_pixel_t*> screenmap_t;
+typedef std::pair<lua_Integer, fb_pixel_t *> screenmap_pair_t;
+typedef std::map<lua_Integer, fb_pixel_t *> screenmap_t;
 typedef screenmap_t::iterator screenmap_iterator_t;
 
-struct table_key {
+struct table_key
+{
 	const char *name;
 	lua_Integer code;
 };
 
-struct table_key_u {
+struct table_key_u
+{
 	const char *name;
 	lua_Unsigned code;
 };
 
-struct lua_envexport {
+struct lua_envexport
+{
 	const char *name;
 	table_key *t;
 };
 
-struct lua_envexport_u {
+struct lua_envexport_u
+{
 	const char *name;
 	table_key_u *t;
 };
@@ -112,16 +116,16 @@ struct CLuaData
 
 bool _luaL_checkbool(lua_State *L, int numArg);
 
-void paramBoolDeprecated(lua_State *L, const char* val);
-void paramDeprecated(lua_State *L, const char* oldParam, const char* newParam);
-void functionDeprecated(lua_State *L, const char* oldFunc, const char* newFunc);
+void paramBoolDeprecated(lua_State *L, const char *val);
+void paramDeprecated(lua_State *L, const char *oldParam, const char *newParam);
+void functionDeprecated(lua_State *L, const char *oldFunc, const char *newFunc);
 void obsoleteHideParameter(lua_State *L);
 lua_Unsigned checkMagicMask(lua_Unsigned col);
 
-bool tableLookup(lua_State*, const char*, std::string&);
-bool tableLookup(lua_State*, const char*, lua_Integer&);
-bool tableLookup(lua_State*, const char*, lua_Unsigned&);
-bool tableLookup(lua_State*, const char*, void**);
-bool tableLookup(lua_State*, const char*, bool &value);
+bool tableLookup(lua_State *, const char *, std::string &);
+bool tableLookup(lua_State *, const char *, lua_Integer &);
+bool tableLookup(lua_State *, const char *, lua_Unsigned &);
+bool tableLookup(lua_State *, const char *, void **);
+bool tableLookup(lua_State *, const char *, bool &value);
 
 #endif // _LUAINSTANCEHELPERS_H

@@ -37,11 +37,11 @@
 #include "lua_cc_window.h"
 #include "lua_cc_text.h"
 
-CLuaInstCCText* CLuaInstCCText::getInstance()
+CLuaInstCCText *CLuaInstCCText::getInstance()
 {
-	static CLuaInstCCText* LuaInstCCText = NULL;
+	static CLuaInstCCText *LuaInstCCText = NULL;
 
-	if(!LuaInstCCText)
+	if (!LuaInstCCText)
 		LuaInstCCText = new CLuaInstCCText();
 	return LuaInstCCText;
 }
@@ -53,7 +53,8 @@ CLuaCCText *CLuaInstCCText::CCTextCheck(lua_State *L, int n)
 
 void CLuaInstCCText::CCTextRegister(lua_State *L)
 {
-	luaL_Reg meth[] = {
+	luaL_Reg meth[] =
+	{
 		{ "new",              CLuaInstCCText::CCTextNew },
 		{ "paint",            CLuaInstCCText::CCTextPaint },
 		{ "hide",             CLuaInstCCText::CCTextHide },
@@ -76,10 +77,10 @@ void CLuaInstCCText::CCTextRegister(lua_State *L)
 
 int CLuaInstCCText::CCTextNew(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 
-	CLuaCCWindow* parent = NULL;
-	lua_Integer x=10, y=10, dx=-1, dy=-1;
+	CLuaCCWindow *parent = NULL;
+	lua_Integer x = 10, y = 10, dx = -1, dy = -1;
 	std::string text = "";
 	std::string tmpMode       = "";
 	lua_Integer mode          = CTextBox::AUTO_WIDTH;
@@ -89,7 +90,7 @@ int CLuaInstCCText::CCTextNew(lua_State *L)
 	lua_Unsigned color_body   = (lua_Unsigned)COL_MENUCONTENT_PLUS_0;
 	lua_Unsigned color_shadow = (lua_Unsigned)COL_SHADOW_PLUS_0;
 
-	tableLookup(L, "parent",    (void**)&parent);
+	tableLookup(L, "parent", (void **)&parent);
 	tableLookup(L, "x",         x);
 	tableLookup(L, "y",         y);
 	tableLookup(L, "dx",        dx);
@@ -103,7 +104,8 @@ int CLuaInstCCText::CCTextNew(lua_State *L)
 		font_text = SNeutrinoSettings::FONT_TYPE_MENU;
 
 	lua_Integer shadow_mode = CC_SHADOW_OFF;
-	if (!tableLookup(L, "has_shadow", shadow_mode)) {
+	if (!tableLookup(L, "has_shadow", shadow_mode))
+	{
 		std::string tmp1 = "false";
 		if (tableLookup(L, "has_shadow", tmp1))
 			paramBoolDeprecated(L, tmp1.c_str());
@@ -120,8 +122,10 @@ int CLuaInstCCText::CCTextNew(lua_State *L)
 	color_body   = checkMagicMask(color_body);
 	color_shadow = checkMagicMask(color_shadow);
 
-	if (!tmpMode.empty()) {
-		table_key txt_align[] = {
+	if (!tmpMode.empty())
+	{
+		table_key txt_align[] =
+		{
 			{ "ALIGN_AUTO_WIDTH",		CTextBox::AUTO_WIDTH },
 			{ "ALIGN_AUTO_HIGH",		CTextBox::AUTO_HIGH },
 			{ "ALIGN_SCROLL",		CTextBox::SCROLL },
@@ -134,7 +138,8 @@ int CLuaInstCCText::CCTextNew(lua_State *L)
 			{ NULL,				0 }
 		};
 		mode = 0;
-		for (int i = 0; txt_align[i].name; i++) {
+		for (int i = 0; txt_align[i].name; i++)
+		{
 			if (tmpMode.find(txt_align[i].name) != std::string::npos)
 				mode |= txt_align[i].code;
 		}
@@ -142,16 +147,17 @@ int CLuaInstCCText::CCTextNew(lua_State *L)
 			htmlEntityDecode(text);
 	}
 
-	CComponentsForm* pw = (parent && parent->w) ? parent->w->getBodyObject() : NULL;
-	if(pw){
-		if(dy < 1)
+	CComponentsForm *pw = (parent && parent->w) ? parent->w->getBodyObject() : NULL;
+	if (pw)
+	{
+		if (dy < 1)
 			dy = pw->getHeight();
-		if(dx < 1)
+		if (dx < 1)
 			dx = pw->getWidth();
 	}
-	if(dx < 1)
+	if (dx < 1)
 		dx = 100;
-	if(dy < 1)
+	if (dy < 1)
 		dy = 100;
 
 	CLuaCCText **udata = (CLuaCCText **) lua_newuserdata(L, sizeof(CLuaCCText *));
@@ -167,12 +173,13 @@ int CLuaInstCCText::CCTextNew(lua_State *L)
 
 int CLuaInstCCText::CCTextPaint(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 	CLuaCCText *D = CCTextCheck(L, 1);
 	if (!D) return 0;
 
 	bool do_save_bg = true;
-	if (!tableLookup(L, "do_save_bg", do_save_bg)) {
+	if (!tableLookup(L, "do_save_bg", do_save_bg))
+	{
 		std::string tmp = "true";
 		if (tableLookup(L, "do_save_bg", tmp))
 			paramBoolDeprecated(L, tmp.c_str());
@@ -184,7 +191,7 @@ int CLuaInstCCText::CCTextPaint(lua_State *L)
 
 int CLuaInstCCText::CCTextHide(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 	CLuaCCText *D = CCTextCheck(L, 1);
 	if (!D) return 0;
 
@@ -193,24 +200,27 @@ int CLuaInstCCText::CCTextHide(lua_State *L)
 	if ((tableLookup(L, "no_restore", tmp1)) || (tableLookup(L, "no_restore", tmp2)))
 		obsoleteHideParameter(L);
 
-	if (D->parent) {
+	if (D->parent)
+	{
 		D->ct->setText("", D->mode, g_Font[D->font_text]);
 		D->ct->paint();
-	} else
+	}
+	else
 		D->ct->hide();
 	return 0;
 }
 
 int CLuaInstCCText::CCTextSetText(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 	CLuaCCText *D = CCTextCheck(L, 1);
 	if (!D) return 0;
 
 	std::string text = "";
 	lua_Integer mode = D->mode;
 	lua_Integer font_text = D->font_text;
-	if (lua_istable(L, -1)){
+	if (lua_istable(L, -1))
+	{
 		tableLookup(L, "text", text);
 		tableLookup(L, "mode", mode);
 		tableLookup(L, "font_text", font_text);
@@ -225,12 +235,14 @@ int CLuaInstCCText::CCTextGetLines(lua_State *L)
 	if (!D) return 0;
 
 	lua_Integer lines = 0;
-	if (lua_gettop(L) == 2) {
-		const char* Text = luaL_checkstring(L, 2);
+	if (lua_gettop(L) == 2)
+	{
+		const char *Text = luaL_checkstring(L, 2);
 		lines = (lua_Integer)CTextBox::getLines(Text);
 	}
-	else {
-		CTextBox* ctb = D->ct->getCTextBoxObject();
+	else
+	{
+		CTextBox *ctb = D->ct->getCTextBoxObject();
 		D->ct->initCCText();
 		if (ctb)
 			lines = (lua_Integer)ctb->getLines();
@@ -242,7 +254,7 @@ int CLuaInstCCText::CCTextGetLines(lua_State *L)
 
 int CLuaInstCCText::CCTextScroll(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 	CLuaCCText *D = CCTextCheck(L, 1);
 	if (!D) return 0;
 
@@ -253,8 +265,9 @@ int CLuaInstCCText::CCTextScroll(lua_State *L)
 	tableLookup(L, "pages", pages);
 
 	//get the textbox instance from lua object and use CTexBbox scroll methods
-	CTextBox* ctb = D->ct->getCTextBoxObject();
-	if (ctb) {
+	CTextBox *ctb = D->ct->getCTextBoxObject();
+	if (ctb)
+	{
 		if (pages == -1)
 			pages = ctb->getPages();
 		ctb->enableBackgroundPaint(true);
@@ -269,14 +282,14 @@ int CLuaInstCCText::CCTextScroll(lua_State *L)
 
 int CLuaInstCCText::CCTextSetCenterPos(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 	CLuaCCText *D = CCTextCheck(L, 1);
 	if (!D) return 0;
 	lua_Integer  tmp_along_mode, along_mode = CC_ALONG_X | CC_ALONG_Y;
 	tableLookup(L, "along_mode", tmp_along_mode);
 
 	if (tmp_along_mode & CC_ALONG_X || tmp_along_mode & CC_ALONG_Y)
-		along_mode=tmp_along_mode;
+		along_mode = tmp_along_mode;
 
 	D->ct->setCenterPos(along_mode);
 	return 0;
@@ -284,12 +297,13 @@ int CLuaInstCCText::CCTextSetCenterPos(lua_State *L)
 
 int CLuaInstCCText::CCTextEnableUTF8(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 	CLuaCCText *D = CCTextCheck(L, 1);
 	if (!D) return 0;
 
 	bool utf8_encoded = true;
-	if (!tableLookup(L, "utf8_encoded", utf8_encoded)) {
+	if (!tableLookup(L, "utf8_encoded", utf8_encoded))
+	{
 		std::string tmp = "true";
 		if (tableLookup(L, "utf8_encoded", tmp))
 			paramBoolDeprecated(L, tmp.c_str());
@@ -307,16 +321,17 @@ int CLuaInstCCText::CCTextSetDimensionsAll(lua_State *L)
 	lua_Integer y = luaL_checkint(L, 3);
 	lua_Integer w = luaL_checkint(L, 4);
 	lua_Integer h = luaL_checkint(L, 5);
-	if(x>-1 && y > -1 && w > 1 && h > 1){
+	if (x > -1 && y > -1 && w > 1 && h > 1)
+	{
 		if (h > (lua_Integer)CFrameBuffer::getInstance()->getScreenHeight())
 			h = (lua_Integer)CFrameBuffer::getInstance()->getScreenHeight();
 		if (w > (lua_Integer)CFrameBuffer::getInstance()->getScreenWidth())
 			w = (lua_Integer)CFrameBuffer::getInstance()->getScreenWidth();
-		if(x > w)
+		if (x > w)
 			x = 0;
-		if(y > h)
+		if (y > h)
 			y = 0;
-		D->ct->setDimensionsAll(x,y,w,h);
+		D->ct->setDimensionsAll(x, y, w, h);
 	}
 	return 0;
 }

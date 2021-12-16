@@ -36,11 +36,11 @@
 
 #include <zapit/femanager.h>
 
-CLuaInstCCSignalbox* CLuaInstCCSignalbox::getInstance()
+CLuaInstCCSignalbox *CLuaInstCCSignalbox::getInstance()
 {
-	static CLuaInstCCSignalbox* LuaInstCCSignalbox = NULL;
+	static CLuaInstCCSignalbox *LuaInstCCSignalbox = NULL;
 
-	if(!LuaInstCCSignalbox)
+	if (!LuaInstCCSignalbox)
 		LuaInstCCSignalbox = new CLuaInstCCSignalbox();
 	return LuaInstCCSignalbox;
 }
@@ -52,7 +52,8 @@ CLuaCCSignalBox *CLuaInstCCSignalbox::CCSignalBoxCheck(lua_State *L, int n)
 
 void CLuaInstCCSignalbox::CCSignalBoxRegister(lua_State *L)
 {
-	luaL_Reg meth[] = {
+	luaL_Reg meth[] =
+	{
 		{ "new",          CLuaInstCCSignalbox::CCSignalBoxNew },
 		{ "paint",        CLuaInstCCSignalbox::CCSignalBoxPaint },
 		{ "setCenterPos", CLuaInstCCSignalbox::CCSignalBoxSetCenterPos },
@@ -69,22 +70,22 @@ void CLuaInstCCSignalbox::CCSignalBoxRegister(lua_State *L)
 
 int CLuaInstCCSignalbox::CCSignalBoxNew(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 
 	lua_Integer x = 110, y = 150, dx = 430, dy = 150;
 	lua_Integer vertical = true;
-	CLuaCCWindow* parent = NULL;
+	CLuaCCWindow *parent = NULL;
 	tableLookup(L, "x", x);
 	tableLookup(L, "y", y);
 	tableLookup(L, "dx", dx);
 	tableLookup(L, "dy", dy);
 	tableLookup(L, "vertical", vertical);
-	tableLookup(L, "parent", (void**)&parent);
+	tableLookup(L, "parent", (void **)&parent);
 
-	CComponentsForm* pw = (parent && parent->w) ? parent->w->getBodyObject() : NULL;
+	CComponentsForm *pw = (parent && parent->w) ? parent->w->getBodyObject() : NULL;
 	CLuaCCSignalBox **udata = (CLuaCCSignalBox **) lua_newuserdata(L, sizeof(CLuaCCSignalBox *));
 	*udata = new CLuaCCSignalBox();
-	(*udata)->s = new CSignalBox(x, y, dx, dy, CFEManager::getInstance()->getLiveFE(), (vertical!=0)?true:false, pw);
+	(*udata)->s = new CSignalBox(x, y, dx, dy, CFEManager::getInstance()->getLiveFE(), (vertical != 0) ? true : false, pw);
 	(*udata)->parent = pw;
 	luaL_getmetatable(L, "signalbox");
 	lua_setmetatable(L, -2);
@@ -93,12 +94,13 @@ int CLuaInstCCSignalbox::CCSignalBoxNew(lua_State *L)
 
 int CLuaInstCCSignalbox::CCSignalBoxPaint(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 	CLuaCCSignalBox *D = CCSignalBoxCheck(L, 1);
 	if (!D) return 0;
 
 	bool do_save_bg = true;
-	if (!tableLookup(L, "do_save_bg", do_save_bg)) {
+	if (!tableLookup(L, "do_save_bg", do_save_bg))
+	{
 		std::string tmp = "true";
 		if (tableLookup(L, "do_save_bg", tmp))
 			paramBoolDeprecated(L, tmp.c_str());
@@ -110,14 +112,14 @@ int CLuaInstCCSignalbox::CCSignalBoxPaint(lua_State *L)
 
 int CLuaInstCCSignalbox::CCSignalBoxSetCenterPos(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 	CLuaCCSignalBox *D = CCSignalBoxCheck(L, 1);
 	if (!D) return 0;
 	lua_Integer  tmp_along_mode, along_mode = CC_ALONG_X | CC_ALONG_Y;
 	tableLookup(L, "along_mode", tmp_along_mode);
 
 	if (tmp_along_mode & CC_ALONG_X || tmp_along_mode & CC_ALONG_Y)
-		along_mode=tmp_along_mode;
+		along_mode = tmp_along_mode;
 
 	D->s->setCenterPos(along_mode);
 	return 0;

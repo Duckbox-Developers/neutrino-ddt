@@ -35,7 +35,7 @@ class CLuaInstMessagebox
 	public:
 		CLuaInstMessagebox() {};
 		~CLuaInstMessagebox() {};
-		static CLuaInstMessagebox* getInstance();
+		static CLuaInstMessagebox *getInstance();
 		static void MessageboxRegister(lua_State *L);
 
 	private:

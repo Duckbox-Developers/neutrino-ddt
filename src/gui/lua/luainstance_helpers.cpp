@@ -36,52 +36,53 @@ bool _luaL_checkbool(lua_State *L, int numArg)
 	bool b = false;
 	if (lua_isboolean(L, numArg))
 		b = lua_toboolean(L, numArg);
-	else {
+	else
+	{
 		lua_Debug ar;
 		lua_getstack(L, 0, &ar);
 		lua_getinfo(L, "n", &ar);
 		luaL_error(L, "bad argument #%d to '%s' (%s expected, got %s)\n",
-				numArg-1, ar.name,
-				lua_typename(L, LUA_TBOOLEAN),
-				lua_typename(L, lua_type(L, numArg)));
+			numArg - 1, ar.name,
+			lua_typename(L, LUA_TBOOLEAN),
+			lua_typename(L, lua_type(L, numArg)));
 	}
 	return b;
 }
 
-void paramBoolDeprecated(lua_State *L, const char* val)
+void paramBoolDeprecated(lua_State *L, const char *val)
 {
 	lua_Debug ar;
 	lua_getstack(L, 1, &ar);
 	lua_getinfo(L, "Sl", &ar);
 	printf("[Lua Script] \33[1;31m%s\33[0m %s (\33[31m\"%s\"\33[0m)\n                      %s \33[32mtrue\33[0m.\n                      (%s:%d)\n",
-					g_Locale->getText(LOCALE_LUA_BOOLPARAM_DEPRECATED1),
-					g_Locale->getText(LOCALE_LUA_BOOLPARAM_DEPRECATED2), val,
-					g_Locale->getText(LOCALE_LUA_BOOLPARAM_DEPRECATED3),
-					ar.short_src, ar.currentline);
+		g_Locale->getText(LOCALE_LUA_BOOLPARAM_DEPRECATED1),
+		g_Locale->getText(LOCALE_LUA_BOOLPARAM_DEPRECATED2), val,
+		g_Locale->getText(LOCALE_LUA_BOOLPARAM_DEPRECATED3),
+		ar.short_src, ar.currentline);
 }
 
-void paramDeprecated(lua_State *L, const char* oldParam, const char* newParam)
+void paramDeprecated(lua_State *L, const char *oldParam, const char *newParam)
 {
 	lua_Debug ar;
 	lua_getstack(L, 1, &ar);
 	lua_getinfo(L, "Sl", &ar);
 	printf("[Lua Script] \33[1;31m%s\33[0m %s \33[33m%s\33[0m %s \33[1;33m%s\33[0m.\n                      (%s:%d)\n",
-					g_Locale->getText(LOCALE_LUA_FUNCTION_DEPRECATED1),
-					g_Locale->getText(LOCALE_LUA_PARAMETER_DEPRECATED2), oldParam,
-					g_Locale->getText(LOCALE_LUA_FUNCTION_DEPRECATED3), newParam,
-					ar.short_src, ar.currentline);
+		g_Locale->getText(LOCALE_LUA_FUNCTION_DEPRECATED1),
+		g_Locale->getText(LOCALE_LUA_PARAMETER_DEPRECATED2), oldParam,
+		g_Locale->getText(LOCALE_LUA_FUNCTION_DEPRECATED3), newParam,
+		ar.short_src, ar.currentline);
 }
 
-void functionDeprecated(lua_State *L, const char* oldFunc, const char* newFunc)
+void functionDeprecated(lua_State *L, const char *oldFunc, const char *newFunc)
 {
 	lua_Debug ar;
 	lua_getstack(L, 1, &ar);
 	lua_getinfo(L, "Sl", &ar);
 	printf("[Lua Script] \33[1;31m%s\33[0m %s \33[33m%s\33[0m %s \33[1;33m%s\33[0m.\n                      (%s:%d)\n",
-					g_Locale->getText(LOCALE_LUA_FUNCTION_DEPRECATED1),
-					g_Locale->getText(LOCALE_LUA_FUNCTION_DEPRECATED2), oldFunc,
-					g_Locale->getText(LOCALE_LUA_FUNCTION_DEPRECATED3), newFunc,
-					ar.short_src, ar.currentline);
+		g_Locale->getText(LOCALE_LUA_FUNCTION_DEPRECATED1),
+		g_Locale->getText(LOCALE_LUA_FUNCTION_DEPRECATED2), oldFunc,
+		g_Locale->getText(LOCALE_LUA_FUNCTION_DEPRECATED3), newFunc,
+		ar.short_src, ar.currentline);
 }
 
 void obsoleteHideParameter(lua_State *L)
@@ -132,7 +133,7 @@ bool tableLookup(lua_State *L, const char *what, lua_Unsigned &value)
 	return res;
 }
 
-bool tableLookup(lua_State *L, const char *what, void** value)
+bool tableLookup(lua_State *L, const char *what, void **value)
 {
 	lua_pushstring(L, what);
 	lua_gettable(L, -2);

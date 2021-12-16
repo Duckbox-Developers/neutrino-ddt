@@ -23,7 +23,8 @@
 #ifndef _LUAMENUE_H
 #define _LUAMENUE_H
 
-struct CLuaMenuItem {
+struct CLuaMenuItem
+{
 	int int_val;
 	std::string str_val;
 	std::string name;
@@ -35,8 +36,8 @@ class CLuaMenuChangeObserver : public CChangeObserver
 		bool changeNotify(lua_State *, const std::string &, const std::string &, void *);
 };
 
-typedef std::pair<lua_Integer, CMenuItem*> itemmap_pair_t;
-typedef std::map<lua_Integer, CMenuItem*> itemmap_t;
+typedef std::pair<lua_Integer, CMenuItem *> itemmap_pair_t;
+typedef std::map<lua_Integer, CMenuItem *> itemmap_t;
 typedef itemmap_t::iterator itemmap_iterator_t;
 
 class CLuaMenu
@@ -62,7 +63,7 @@ class CLuaMenuForwarder : public CMenuTarget
 		std::string luaId;
 		CLuaMenuForwarder(lua_State *L, std::string _luaAction, std::string _luaId);
 		~CLuaMenuForwarder();
-		int exec(CMenuTarget* parent=NULL, const std::string & actionKey="");
+		int exec(CMenuTarget *parent = NULL, const std::string &actionKey = "");
 };
 
 class CLuaMenuFilebrowser : public CLuaMenuForwarder
@@ -74,8 +75,11 @@ class CLuaMenuFilebrowser : public CLuaMenuForwarder
 		void Init(std::string *_value, bool _dirMode);
 	public:
 		CLuaMenuFilebrowser(lua_State *_L, std::string _luaAction, std::string _luaId, std::string *_value, bool _dirMode);
-		int exec(CMenuTarget* parent=NULL, const std::string & actionKey="");
-		void addFilter(std::string s) { filter.push_back(s); };
+		int exec(CMenuTarget *parent = NULL, const std::string &actionKey = "");
+		void addFilter(std::string s)
+		{
+			filter.push_back(s);
+		};
 };
 
 class CLuaMenuStringinput : public CLuaMenuForwarder
@@ -91,7 +95,7 @@ class CLuaMenuStringinput : public CLuaMenuForwarder
 		void Init(const char *_name, std::string *_value, int _size, std::string _valid_chars, CChangeObserver *_observ, const char *_icon, bool _sms);
 	public:
 		CLuaMenuStringinput(lua_State *_L, std::string _luaAction, std::string _luaId, const char *_name, std::string *_value, int _size, std::string _valid_chars, CChangeObserver *_observ, const char *_icon, bool _sms);
-		int exec(CMenuTarget* parent=NULL, const std::string & actionKey="");
+		int exec(CMenuTarget *parent = NULL, const std::string &actionKey = "");
 };
 
 class CLuaMenuKeyboardinput : public CLuaMenuForwarder
@@ -106,7 +110,7 @@ class CLuaMenuKeyboardinput : public CLuaMenuForwarder
 		void Init(const char *_name, std::string *_value, int _size, CChangeObserver *_observ, const char *_icon, std::string _help, std::string _help2);
 	public:
 		CLuaMenuKeyboardinput(lua_State *_L, std::string _luaAction, std::string _luaId, const char *_name, std::string *_value, int _size, CChangeObserver *_observ, const char *_icon, std::string _help, std::string _help2);
-		int exec(CMenuTarget* parent=NULL, const std::string & actionKey="");
+		int exec(CMenuTarget *parent = NULL, const std::string &actionKey = "");
 };
 
 class CLuaInstMenu
@@ -114,7 +118,7 @@ class CLuaInstMenu
 	public:
 		CLuaInstMenu() {};
 		~CLuaInstMenu() {};
-		static CLuaInstMenu* getInstance();
+		static CLuaInstMenu *getInstance();
 		static void MenuRegister(lua_State *L);
 
 	private:

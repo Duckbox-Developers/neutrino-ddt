@@ -39,7 +39,7 @@ extern "C"
 #endif
 
 #if LUA_COMPAT_5_2
-void lua_rawsetp (lua_State *L, int i, const void *p);
+void lua_rawsetp(lua_State *L, int i, const void *p);
 #endif
 
 #define OS_THREAD_RETURN void *
@@ -73,21 +73,24 @@ typedef pthread_t os_thread_t;
 #define LLTHREAD_TAG LLTHREAD_NAME
 #define LLTHREAD_LOGGER_HOLDER LLTHREAD_NAME " logger holder"
 
-typedef struct llthread_child_t {
-	lua_State*  L;
+typedef struct llthread_child_t
+{
+	lua_State  *L;
 	int         status;
 	flags_t     flags;
 } llthread_child_t;
 
-typedef struct llthread_t {
-	llthread_child_t* child;
+typedef struct llthread_t
+{
+	llthread_child_t *child;
 	os_thread_t       thread;
 	flags_t           flags;
 } llthread_t;
 
-typedef struct {
-	lua_State* from_L;
-	lua_State* to_L;
+typedef struct
+{
+	lua_State *from_L;
+	lua_State *to_L;
 	int        has_cache;
 	int        cache_idx;
 	int        is_arg;
@@ -105,20 +108,20 @@ typedef struct {
 
 #endif /* Lua 5.3 */
 
-int __strerror_r(int err, char* buf, size_t len);
+int __strerror_r(int err, char *buf, size_t len);
 
 class CLLThread
 {
 	public:
 		CLLThread() {};
 //		~CLLThread() {};
-		static CLLThread* getInstance();
+		static CLLThread *getInstance();
 		static void LuaThreadsRegister(lua_State *L);
 
 	private:
 		static void llthread_log(lua_State *L, const char *hdr, const char *msg);
 		static int fail(lua_State *L, const char *msg);
-		static int traceback (lua_State *L);
+		static int traceback(lua_State *L);
 		static void open_thread_libs(lua_State *L);
 		static llthread_child_t *llthread_child_new();
 		static llthread_t *llthread_new();
@@ -126,11 +129,11 @@ class CLLThread
 		static int llthread_push_results(lua_State *L, llthread_child_t *child, int idx, int top);
 		static void llthread_validate(llthread_t *_this);
 		static llthread_t *llthread_create(lua_State *L, const char *code, size_t code_len);
-		static llthread_t *l_llthread_at (lua_State *L, int i);
+		static llthread_t *l_llthread_at(lua_State *L, int i);
 		static void llthread_child_destroy(llthread_child_t *_this);
 		static void llthread_cleanup_child(llthread_t *_this);
 		static int llthread_detach(llthread_t *_this);
-		static void* llthread_child_thread_run(void *arg);
+		static void *llthread_child_thread_run(void *arg);
 		static int llthread_start(llthread_t *_this, int start_detached, int joinable);
 		static int llthread_cancel(llthread_t *_this);
 		static int llthread_join(llthread_t *_this, join_timeout_t timeout);

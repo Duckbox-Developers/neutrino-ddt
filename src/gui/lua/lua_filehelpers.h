@@ -33,7 +33,7 @@ class CLuaInstFileHelpers
 
 		CLuaInstFileHelpers() {};
 		~CLuaInstFileHelpers() {};
-		static CLuaInstFileHelpers* getInstance();
+		static CLuaInstFileHelpers *getInstance();
 		static void LuaFileHelpersRegister(lua_State *L);
 
 	private:

@@ -33,18 +33,19 @@
 #include "luainstance.h"
 #include "lua_cc_window.h"
 
-CLuaInstCCWindow* CLuaInstCCWindow::getInstance()
+CLuaInstCCWindow *CLuaInstCCWindow::getInstance()
 {
-	static CLuaInstCCWindow* LuaInstCCWindow = NULL;
+	static CLuaInstCCWindow *LuaInstCCWindow = NULL;
 
-	if(!LuaInstCCWindow)
+	if (!LuaInstCCWindow)
 		LuaInstCCWindow = new CLuaInstCCWindow();
 	return LuaInstCCWindow;
 }
 
 void CLuaInstCCWindow::CCWindowRegister(lua_State *L)
 {
-	luaL_Reg meth[] = {
+	luaL_Reg meth[] =
+	{
 		{ "new",            CLuaInstCCWindow::CCWindowNew },
 		{ "paint",          CLuaInstCCWindow::CCWindowPaint },
 		{ "hide",           CLuaInstCCWindow::CCWindowHide },
@@ -71,7 +72,7 @@ void CLuaInstCCWindow::CCWindowRegister(lua_State *L)
 
 int CLuaInstCCWindow::CCWindowNew(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 
 	std::string name, icon    = std::string(NEUTRINO_ICON_INFO);
 	lua_Unsigned color_frame  = (lua_Unsigned)COL_FRAME_PLUS_0;
@@ -105,7 +106,8 @@ int CLuaInstCCWindow::CCWindowNew(lua_State *L)
 	tableLookup(L, "icon", icon);
 
 	lua_Integer has_shadow = CC_SHADOW_OFF;
-	if (!tableLookup(L, "has_shadow", has_shadow)) {
+	if (!tableLookup(L, "has_shadow", has_shadow))
+	{
 		tmp1 = "false";
 		if (tableLookup(L, "has_shadow", tmp1))
 			paramBoolDeprecated(L, tmp1.c_str());
@@ -113,8 +115,8 @@ int CLuaInstCCWindow::CCWindowNew(lua_State *L)
 			has_shadow = CC_SHADOW_ON;
 	}
 
-	tableLookup(L, "color_frame" , color_frame);
-	tableLookup(L, "color_body"  , color_body);
+	tableLookup(L, "color_frame", color_frame);
+	tableLookup(L, "color_body", color_body);
 	tableLookup(L, "color_shadow", color_shadow);
 	tableLookup(L, "btnRed", btnRed);
 	tableLookup(L, "btnGreen", btnGreen);
@@ -139,14 +141,16 @@ int CLuaInstCCWindow::CCWindowNew(lua_State *L)
 	color_shadow = checkMagicMask(color_shadow);
 
 	bool show_header = true;
-	if (!tableLookup(L, "show_header", show_header)) {
+	if (!tableLookup(L, "show_header", show_header))
+	{
 		tmp1 = "true";
 		if (tableLookup(L, "show_header", tmp1))
 			paramBoolDeprecated(L, tmp1.c_str());
 		show_header = (tmp1 == "true" || tmp1 == "1" || tmp1 == "yes");
 	}
 	bool show_footer = true;
-	if (!tableLookup(L, "show_footer", show_footer)) {
+	if (!tableLookup(L, "show_footer", show_footer))
+	{
 		tmp1 = "true";
 		if (tableLookup(L, "show_footer", tmp1))
 			paramBoolDeprecated(L, tmp1.c_str());
@@ -165,113 +169,133 @@ int CLuaInstCCWindow::CCWindowNew(lua_State *L)
 		(*udata)->w->showHeader(false);
 	if (!show_footer)
 		(*udata)->w->showFooter(false);
-	else {
-		CComponentsFooter* footer = (*udata)->w->getFooterObject();
-		if (footer) {
+	else
+	{
+		CComponentsFooter *footer = (*udata)->w->getFooterObject();
+		if (footer)
+		{
 			std::vector<button_label_cc> buttons;
-			if (!btnRed.empty()) {
+			if (!btnRed.empty())
+			{
 				button_label_cc btnSred;
 				btnSred.button 		= NEUTRINO_ICON_BUTTON_RED;
 				btnSred.text 		= btnRed;
 				buttons.push_back(btnSred);
 			}
-			if (!btnGreen.empty()) {
+			if (!btnGreen.empty())
+			{
 				button_label_cc btnSgreen;
 				btnSgreen.button 	= NEUTRINO_ICON_BUTTON_GREEN;
 				btnSgreen.text		= btnGreen;
 				buttons.push_back(btnSgreen);
 			}
-			if (!btnYellow.empty()) {
+			if (!btnYellow.empty())
+			{
 				button_label_cc btnSyellow;
 				btnSyellow.button 	= NEUTRINO_ICON_BUTTON_YELLOW;
 				btnSyellow.text 	= btnYellow;
 				buttons.push_back(btnSyellow);
 			}
-			if (!btnBlue.empty()) {
+			if (!btnBlue.empty())
+			{
 				button_label_cc btnSblue;
 				btnSblue.button 	= NEUTRINO_ICON_BUTTON_BLUE;
 				btnSblue.text 		= btnBlue;
 				buttons.push_back(btnSblue);
 			}
-			if (!btn0.empty()) {
+			if (!btn0.empty())
+			{
 				button_label_cc btnS0;
 				btnS0.button		= NEUTRINO_ICON_BUTTON_0;
 				btnS0.text		= btn0;
 				buttons.push_back(btnS0);
 			}
-			if (!btn1.empty()) {
+			if (!btn1.empty())
+			{
 				button_label_cc btnS1;
 				btnS1.button		= NEUTRINO_ICON_BUTTON_1;
 				btnS1.text		= btn1;
 				buttons.push_back(btnS1);
 			}
-			if (!btn2.empty()) {
+			if (!btn2.empty())
+			{
 				button_label_cc btnS2;
 				btnS2.button		= NEUTRINO_ICON_BUTTON_2;
 				btnS2.text		= btn2;
 				buttons.push_back(btnS2);
 			}
-			if (!btn3.empty()) {
+			if (!btn3.empty())
+			{
 				button_label_cc btnS3;
 				btnS3.button		= NEUTRINO_ICON_BUTTON_3;
 				btnS3.text		= btn3;
 				buttons.push_back(btnS3);
 			}
-			if (!btn4.empty()) {
+			if (!btn4.empty())
+			{
 				button_label_cc btnS4;
 				btnS4.button		= NEUTRINO_ICON_BUTTON_4;
 				btnS4.text		= btn4;
 				buttons.push_back(btnS4);
 			}
-			if (!btn5.empty()) {
+			if (!btn5.empty())
+			{
 				button_label_cc btnS5;
 				btnS5.button		= NEUTRINO_ICON_BUTTON_5;
 				btnS5.text		= btn5;
 				buttons.push_back(btnS5);
 			}
-			if (!btn6.empty()) {
+			if (!btn6.empty())
+			{
 				button_label_cc btnS6;
 				btnS6.button		= NEUTRINO_ICON_BUTTON_6;
 				btnS6.text		= btn6;
 				buttons.push_back(btnS6);
 			}
-			if (!btn7.empty()) {
+			if (!btn7.empty())
+			{
 				button_label_cc btnS7;
 				btnS7.button		= NEUTRINO_ICON_BUTTON_7;
 				btnS7.text		= btn7;
 				buttons.push_back(btnS7);
 			}
-			if (!btn8.empty()) {
+			if (!btn8.empty())
+			{
 				button_label_cc btnS8;
 				btnS8.button		= NEUTRINO_ICON_BUTTON_8;
 				btnS8.text		= btn8;
 				buttons.push_back(btnS8);
 			}
-			if (!btn9.empty()) {
+			if (!btn9.empty())
+			{
 				button_label_cc btnS9;
 				btnS9.button		= NEUTRINO_ICON_BUTTON_9;
 				btnS9.text		= btn9;
 				buttons.push_back(btnS9);
 			}
-			if (!btnPlay.empty()) {
+			if (!btnPlay.empty())
+			{
 				button_label_cc btnSPlay;
 				btnSPlay.button		= NEUTRINO_ICON_BUTTON_PLAY;
 				btnSPlay.text		= btnPlay;
 				buttons.push_back(btnSPlay);
 			}
-			if (!btnPlayPause.empty()) {
+			if (!btnPlayPause.empty())
+			{
 				button_label_cc btnSPlayPause;
 				btnSPlayPause.button	= NEUTRINO_ICON_BUTTON_PLAY;
 				btnSPlayPause.text	= btnPlayPause;
 				buttons.push_back(btnSPlayPause);
 			}
-			if (!btnOk.empty()) {
+			if (!btnOk.empty())
+			{
 				button_label_cc btnSOk;
 				btnSOk.button	= NEUTRINO_ICON_BUTTON_OKAY;
 				btnSOk.text	= btnOk;
 				buttons.push_back(btnSOk);
 			}
-			if (!btnSetup.empty()) {
+			if (!btnSetup.empty())
+			{
 				button_label_cc btnSSetup;
 				btnSSetup.button	= NEUTRINO_ICON_BUTTON_MENU;
 				btnSSetup.text		= btnSetup;
@@ -294,12 +318,13 @@ CLuaCCWindow *CLuaInstCCWindow::CCWindowCheck(lua_State *L, int n)
 
 int CLuaInstCCWindow::CCWindowPaint(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 	CLuaCCWindow *D = CCWindowCheck(L, 1);
 	if (!D) return 0;
 
 	bool do_save_bg = true;
-	if (!tableLookup(L, "do_save_bg", do_save_bg)) {
+	if (!tableLookup(L, "do_save_bg", do_save_bg))
+	{
 		std::string tmp = "true";
 		if (tableLookup(L, "do_save_bg", tmp))
 			paramBoolDeprecated(L, tmp.c_str());
@@ -311,7 +336,7 @@ int CLuaInstCCWindow::CCWindowPaint(lua_State *L)
 
 int CLuaInstCCWindow::CCWindowHide(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 	CLuaCCWindow *D = CCWindowCheck(L, 1);
 	if (!D) return 0;
 
@@ -326,7 +351,7 @@ int CLuaInstCCWindow::CCWindowHide(lua_State *L)
 
 int CLuaInstCCWindow::CCWindowSetCaption(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 	CLuaCCWindow *D = CCWindowCheck(L, 1);
 	if (!D) return 0;
 
@@ -342,20 +367,23 @@ int CLuaInstCCWindow::CCWindowSetCaption(lua_State *L)
 
 int CLuaInstCCWindow::CCWindowSetWindowColor(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 	CLuaCCWindow *D = CCWindowCheck(L, 1);
 	if (!D) return 0;
 
 	lua_Unsigned color;
-	if (tableLookup(L, "color_frame"  , color)) {
+	if (tableLookup(L, "color_frame", color))
+	{
 		color = checkMagicMask(color);
 		D->w->setColorFrame(color);
 	}
-	if (tableLookup(L, "color_body"  , color)) {
+	if (tableLookup(L, "color_body", color))
+	{
 		color = checkMagicMask(color);
 		D->w->setColorBody(color);
 	}
-	if (tableLookup(L, "color_shadow"  , color)) {
+	if (tableLookup(L, "color_shadow", color))
+	{
 		color = checkMagicMask(color);
 		D->w->setColorShadow(color);
 	}
@@ -368,8 +396,9 @@ int CLuaInstCCWindow::CCWindowPaintHeader(lua_State *L)
 	CLuaCCWindow *D = CCWindowCheck(L, 1);
 	if (!D) return 0;
 
-	CComponentsHeader* header = D->w->getHeaderObject();
-	if (header){
+	CComponentsHeader *header = D->w->getHeaderObject();
+	if (header)
+	{
 		D->w->showHeader();
 		header->paint();
 	}
@@ -395,7 +424,7 @@ int CLuaInstCCWindow::CCWindowGetHeaderHeight(lua_State *L)
 	CLuaCCWindow *D = CCWindowCheck(L, 1);
 	if (!D) return 0;
 
-	CComponentsHeader* header = D->w->getHeaderObject();
+	CComponentsHeader *header = D->w->getHeaderObject();
 	int hh = 0;
 	if (header)
 		hh = header->getHeight();
@@ -408,7 +437,7 @@ int CLuaInstCCWindow::CCWindowGetFooterHeight(lua_State *L)
 	CLuaCCWindow *D = CCWindowCheck(L, 1);
 	if (!D) return 0;
 
-	CComponentsFooter* footer = D->w->getFooterObject();
+	CComponentsFooter *footer = D->w->getFooterObject();
 	int fh = 0;
 	if (footer)
 		fh = footer->getHeight();
@@ -424,30 +453,31 @@ int CLuaInstCCWindow::CCWindowSetDimensionsAll(lua_State *L)
 	lua_Integer y = luaL_checkint(L, 3);
 	lua_Integer w = luaL_checkint(L, 4);
 	lua_Integer h = luaL_checkint(L, 5);
-	if(x>-1 && y > -1 && w > 1 && h > 1){
+	if (x > -1 && y > -1 && w > 1 && h > 1)
+	{
 		if (h > (lua_Integer)CFrameBuffer::getInstance()->getScreenHeight())
 			h = (lua_Integer)CFrameBuffer::getInstance()->getScreenHeight();
 		if (w > (lua_Integer)CFrameBuffer::getInstance()->getScreenWidth())
 			w = (lua_Integer)CFrameBuffer::getInstance()->getScreenWidth();
-		if(x > w)
+		if (x > w)
 			x = 0;
-		if(y > h)
+		if (y > h)
 			y = 0;
-		D->w->setDimensionsAll(x,y,w,h);
+		D->w->setDimensionsAll(x, y, w, h);
 	}
 	return 0;
 }
 
 int CLuaInstCCWindow::CCWindowSetCenterPos(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 	CLuaCCWindow *D = CCWindowCheck(L, 1);
 	if (!D) return 0;
 	lua_Integer  tmp_along_mode, along_mode = CC_ALONG_X | CC_ALONG_Y;
 	tableLookup(L, "along_mode", tmp_along_mode);
 
 	if (tmp_along_mode & CC_ALONG_X || tmp_along_mode & CC_ALONG_Y)
-		along_mode=tmp_along_mode;
+		along_mode = tmp_along_mode;
 
 	D->w->setCenterPos(along_mode);
 	return 0;
@@ -455,7 +485,7 @@ int CLuaInstCCWindow::CCWindowSetCenterPos(lua_State *L)
 
 int CLuaInstCCWindow::CCWindowSetBodyImage(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 	CLuaCCWindow *D = CCWindowCheck(L, 1);
 	if (!D) return 0;
 

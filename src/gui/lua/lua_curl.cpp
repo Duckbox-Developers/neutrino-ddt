@@ -35,9 +35,9 @@
 #include "luainstance.h"
 #include "lua_curl.h"
 
-CLuaInstCurl* CLuaInstCurl::getInstance()
+CLuaInstCurl *CLuaInstCurl::getInstance()
 {
-	static CLuaInstCurl* LuaInstCurl = NULL;
+	static CLuaInstCurl *LuaInstCurl = NULL;
 
 	if (!LuaInstCurl)
 		LuaInstCurl = new CLuaInstCurl();
@@ -51,7 +51,8 @@ CLuaCurl *CLuaInstCurl::CurlCheckData(lua_State *L, int n)
 
 void CLuaInstCurl::LuaCurlRegister(lua_State *L)
 {
-	luaL_Reg meth[] = {
+	luaL_Reg meth[] =
+	{
 		{ "new",	CLuaInstCurl::CurlNew },
 		{ "download",	CLuaInstCurl::CurlDownload },
 		{ "encodeUri",	CLuaInstCurl::CurlEncodeUri },
@@ -79,11 +80,12 @@ int CLuaInstCurl::CurlNew(lua_State *L)
 
 size_t CLuaInstCurl::CurlWriteToString(void *ptr, size_t size, size_t nmemb, void *data)
 {
-	if (size * nmemb > 0) {
-		std::string* pStr = (std::string*) data;
-		pStr->append((char*) ptr, nmemb);
+	if (size * nmemb > 0)
+	{
+		std::string *pStr = (std::string *) data;
+		pStr->append((char *) ptr, nmemb);
 	}
-	return size*nmemb;
+	return size * nmemb;
 }
 
 int CLuaInstCurl::CurlProgressFunc(void *p, curl_off_t dltotal, curl_off_t dlnow, curl_off_t /*ultotal*/, curl_off_t /*ulnow*/)
@@ -91,7 +93,7 @@ int CLuaInstCurl::CurlProgressFunc(void *p, curl_off_t dltotal, curl_off_t dlnow
 	if (dltotal == 0)
 		return 0;
 
-	struct progressData *_pgd = static_cast<struct progressData*>(p);
+	struct progressData *_pgd = static_cast<struct progressData *>(p);
 	if (_pgd->last_dlnow == dlnow)
 		return 0;
 	_pgd->last_dlnow = dlnow;
@@ -103,7 +105,8 @@ int CLuaInstCurl::CurlProgressFunc(void *p, curl_off_t dltotal, curl_off_t dlnow
 
 	uint32_t MUL = 0x7FFF;
 	uint32_t dlFragment = (uint32_t)((dlnow * MUL) / dltotal);
-	if (responseCode != 200) {
+	if (responseCode != 200)
+	{
 		dlFragment = 0;
 		dlSpeed    = 0;
 	}
@@ -112,15 +115,17 @@ int CLuaInstCurl::CurlProgressFunc(void *p, curl_off_t dltotal, curl_off_t dlnow
 	int dots = (dlFragment * showDots) / MUL;
 	printf(" %d%% [", (dlFragment * 100) / MUL);
 	int i = 0;
-	for (; i < dots-1; i++)
+	for (; i < dots - 1; i++)
 		printf("=");
-	if (i < showDots) {
+	if (i < showDots)
+	{
 		printf(">");
 		i++;
 	}
 	for (; i < showDots; i++)
 		printf(" ");
-	printf("] speed: %.03f KB/sec     \r", dlSpeed/1024); fflush(stdout);
+	printf("] speed: %.03f KB/sec     \r", dlSpeed / 1024);
+	fflush(stdout);
 	return 0;
 }
 
@@ -133,59 +138,60 @@ int CLuaInstCurl::CurlProgressFunc_old(void *p, double dltotal, double dlnow, do
 
 int CLuaInstCurl::CurlDownload(lua_State *L)
 {
-/*
-	parameter	typ		default
-	----------------------------------------
-	url		string		required
-	o, outputfile	string		when empty then save to string
-					as secund return value
-	A, userAgent	string		empty
-	P, postfields	string		empty
-	v, verbose	bool		false
-	s, silent	bool		false
-	h, header	bool		false
-	connectTimeout	number		20
-	ipv4		bool		false
-	ipv6		bool		false
-	useProxy	bool		true (default)
-	followRedir	bool		true
-	maxRedirs	number		20
-*/
+	/*
+		parameter	typ		default
+		----------------------------------------
+		url		string		required
+		o, outputfile	string		when empty then save to string
+						as secund return value
+		A, userAgent	string		empty
+		P, postfields	string		empty
+		v, verbose	bool		false
+		s, silent	bool		false
+		h, header	bool		false
+		connectTimeout	number		20
+		ipv4		bool		false
+		ipv6		bool		false
+		useProxy	bool		true (default)
+		followRedir	bool		true
+		maxRedirs	number		20
+	*/
 
-/*
-Example:
-	-- simplest program call:
-	-- ----------------------
-	local curl = curl.new()
-	local ret, data = curl:download{url="http://example.com", o="/tmp/test.txt"}
-	if ret ~= CURL.OK then
-		print("Error: " .. data)
-	end
+	/*
+	Example:
+		-- simplest program call:
+		-- ----------------------
+		local curl = curl.new()
+		local ret, data = curl:download{url="http://example.com", o="/tmp/test.txt"}
+		if ret ~= CURL.OK then
+			print("Error: " .. data)
+		end
 
-	-- or --
+		-- or --
 
-	local curl = curl.new()
-	local ret, data = curl:download{url="http://example.com"}
-	if ret == CURL.OK then
-		-- downloaded data
-		print(data)
-		..
-	else
-		print("Error: " .. data)
-	end
-*/
+		local curl = curl.new()
+		local ret, data = curl:download{url="http://example.com"}
+		if ret == CURL.OK then
+			-- downloaded data
+			print(data)
+			..
+		else
+			print("Error: " .. data)
+		end
+	*/
 
 #define CURL_MSG_ERROR "[curl:download \33[1;31mERROR!\33[0m]"
 
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 	CLuaCurl *D = CurlCheckData(L, 1);
 	if (!D) return 0;
 
-	char errMsg[1024]={0};
+	char errMsg[1024] = {0};
 	CURL *curl_handle = curl_easy_init();
-	if (!curl_handle) {
+	if (!curl_handle)
+	{
 		memset(errMsg, '\0', sizeof(errMsg));
-		snprintf(errMsg, sizeof(errMsg)-1, "error creating cUrl handle.");
+		snprintf(errMsg, sizeof(errMsg) - 1, "error creating cUrl handle.");
 		printf("%s %s\n", CURL_MSG_ERROR, errMsg);
 		lua_pushinteger(L, LUA_CURL_ERR_HANDLE);
 		lua_pushstring(L, errMsg);
@@ -194,10 +200,11 @@ Example:
 
 	std::string url = "";
 	tableLookup(L, "url", url);
-	if (url.empty()) {
+	if (url.empty())
+	{
 		curl_easy_cleanup(curl_handle);
 		memset(errMsg, '\0', sizeof(errMsg));
-		snprintf(errMsg, sizeof(errMsg)-1, "no url given.");
+		snprintf(errMsg, sizeof(errMsg) - 1, "no url given.");
 		printf("%s %s\n", CURL_MSG_ERROR, errMsg);
 		lua_pushinteger(L, LUA_CURL_ERR_NO_URL);
 		lua_pushstring(L, errMsg);
@@ -208,11 +215,13 @@ Example:
 	bool toFile = tableLookup(L, "o", outputfile) || tableLookup(L, "outputfile", outputfile);
 	std::string retString = "";
 	FILE *fp = NULL;
-	if (toFile) {
+	if (toFile)
+	{
 		fp = fopen(outputfile.c_str(), "wb");
-		if (fp == NULL) {
+		if (fp == NULL)
+		{
 			memset(errMsg, '\0', sizeof(errMsg));
-			snprintf(errMsg, sizeof(errMsg)-1, "Can't create %s", outputfile.c_str());
+			snprintf(errMsg, sizeof(errMsg) - 1, "Can't create %s", outputfile.c_str());
 			printf("%s %s\n", CURL_MSG_ERROR, errMsg);
 			curl_easy_cleanup(curl_handle);
 			lua_pushinteger(L, LUA_CURL_ERR_CREATE_FILE);
@@ -238,14 +247,17 @@ Example:
 	tableLookup(L, "header", pass_header);
 
 	/* httpheader */
-	curl_slist* hlist = NULL;
+	curl_slist *hlist = NULL;
 	lua_pushstring(L, "httpheader");
 	lua_gettable(L, -2);
-	if (lua_istable(L, -1)) {
-		for (lua_pushnil(L); lua_next(L, -2); lua_pop(L, 2)) {
+	if (lua_istable(L, -1))
+	{
+		for (lua_pushnil(L); lua_next(L, -2); lua_pop(L, 2))
+		{
 			lua_pushvalue(L, -2);
 			const char *val = lua_tostring(L, -2);
-			if (val){
+			if (val)
+			{
 				hlist = curl_slist_append(hlist, val);
 			}
 		}
@@ -271,16 +283,18 @@ Example:
 	tableLookup(L, "maxRedirs", maxRedirs);
 
 	curl_easy_setopt(curl_handle, CURLOPT_URL, url.c_str());
-	if (toFile) {
+	if (toFile)
+	{
 		curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, NULL);
 		curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, fp);
 	}
-	else {
+	else
+	{
 		curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, &CLuaInstCurl::CurlWriteToString);
-		curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void*)&retString);
+		curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&retString);
 	}
 	curl_easy_setopt(curl_handle, CURLOPT_FAILONERROR, 1L);
-	curl_easy_setopt(curl_handle, CURLOPT_TIMEOUT, (long)(4*connectTimeout));
+	curl_easy_setopt(curl_handle, CURLOPT_TIMEOUT, (long)(4 * connectTimeout));
 	curl_easy_setopt(curl_handle, CURLOPT_CONNECTTIMEOUT, (long)connectTimeout);
 	curl_easy_setopt(curl_handle, CURLOPT_NOSIGNAL, 1L);
 	curl_easy_setopt(curl_handle, CURLOPT_SSL_VERIFYPEER, 0L);
@@ -290,7 +304,8 @@ Example:
 	if (!userAgent.empty())
 		curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, userAgent.c_str());
 
-	if (!postfields.empty()) {
+	if (!postfields.empty())
+	{
 		curl_easy_setopt(curl_handle, CURLOPT_POSTFIELDSIZE, static_cast<long>(postfields.length()));
 		curl_easy_setopt(curl_handle, CURLOPT_POSTFIELDS, postfields.c_str());
 	}
@@ -302,26 +317,30 @@ Example:
 	else if (ipv6)
 		curl_easy_setopt(curl_handle, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V6);
 
-	if (!g_settings.softupdate_proxyserver.empty() && useProxy) {
+	if (!g_settings.softupdate_proxyserver.empty() && useProxy)
+	{
 		curl_easy_setopt(curl_handle, CURLOPT_PROXY, g_settings.softupdate_proxyserver.c_str());
-		if (!g_settings.softupdate_proxyusername.empty()) {
+		if (!g_settings.softupdate_proxyusername.empty())
+		{
 			std::string tmp = g_settings.softupdate_proxyusername + ":" + g_settings.softupdate_proxypassword;
 			curl_easy_setopt(curl_handle, CURLOPT_PROXYUSERPWD, tmp.c_str());
 		}
 	}
 
-	curl_easy_setopt(curl_handle, CURLOPT_FOLLOWLOCATION, (followRedir)?1L:0L);
+	curl_easy_setopt(curl_handle, CURLOPT_FOLLOWLOCATION, (followRedir) ? 1L : 0L);
 	curl_easy_setopt(curl_handle, CURLOPT_MAXREDIRS, (long)maxRedirs);
-	curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, (silent)?1L:0L);
-	curl_easy_setopt(curl_handle, CURLOPT_VERBOSE, (verbose)?1L:0L);
-	curl_easy_setopt(curl_handle, CURLOPT_HEADER, (pass_header)?1L:0L);
-	if (hlist) {
+	curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, (silent) ? 1L : 0L);
+	curl_easy_setopt(curl_handle, CURLOPT_VERBOSE, (verbose) ? 1L : 0L);
+	curl_easy_setopt(curl_handle, CURLOPT_HEADER, (pass_header) ? 1L : 0L);
+	if (hlist)
+	{
 		/* set our custom set of headers */
 		curl_easy_setopt(curl_handle, CURLOPT_HTTPHEADER, hlist);
 	}
 	progressData pgd;
 
-	if (!silent) {
+	if (!silent)
+	{
 		pgd.curl = curl_handle;
 		pgd.last_dlnow = -1;
 #if LIBCURL_VERSION_NUM >= 0x072000
@@ -333,10 +352,10 @@ Example:
 #endif
 	}
 
-	char cerror[CURL_ERROR_SIZE]={0};
+	char cerror[CURL_ERROR_SIZE] = {0};
 	curl_easy_setopt(curl_handle, CURLOPT_ERRORBUFFER, cerror);
 
-	printf("\n[curl:download] download %s => %s\n", url.c_str(), (toFile)?outputfile.c_str():"return string");
+	printf("\n[curl:download] download %s => %s\n", url.c_str(), (toFile) ? outputfile.c_str() : "return string");
 	if (!silent)
 		printf("\e[?25l"); /* cursor off */
 	printf("\n");
@@ -346,24 +365,26 @@ Example:
 	printf("\n");
 
 	std::string msg;
-	if (!silent) {
+	if (!silent)
+	{
 		double dsize, dtime;
-		char *dredirect=NULL, *deffektive=NULL;
+		char *dredirect = NULL, *deffektive = NULL;
 		curl_easy_getinfo(curl_handle, CURLINFO_SIZE_DOWNLOAD, &dsize);
 		curl_easy_getinfo(curl_handle, CURLINFO_TOTAL_TIME, &dtime);
 		CURLcode res1 = curl_easy_getinfo(curl_handle, CURLINFO_EFFECTIVE_URL, &deffektive);
 		CURLcode res2 = curl_easy_getinfo(curl_handle, CURLINFO_REDIRECT_URL, &dredirect);
 
-		char msg1[1024]={0};
+		char msg1[1024] = {0};
 		memset(msg1, '\0', sizeof(msg1));
-		snprintf(msg1, sizeof(msg1)-1, "\n[curl:download] O.K. size: %.0f bytes, time: %.02f sec.", dsize, dtime);
+		snprintf(msg1, sizeof(msg1) - 1, "\n[curl:download] O.K. size: %.0f bytes, time: %.02f sec.", dsize, dtime);
 		msg = msg1;
 		if (toFile)
 			msg += std::string("\n		     file: ") + outputfile;
 		else
 			msg += std::string("\n		   output: return string");
 		msg += std::string("\n		      url: ") + url;
-		if ((res1 == CURLE_OK) && deffektive) {
+		if ((res1 == CURLE_OK) && deffektive)
+		{
 			std::string tmp1 = std::string(deffektive);
 			std::string tmp2 = url;
 			if (trim(tmp1, " /") != trim(tmp2, " /"))
@@ -372,15 +393,16 @@ Example:
 		if ((res2 == CURLE_OK) && dredirect)
 			msg += std::string("\n	      redirect to: ") + dredirect;
 	}
-	if(hlist)
+	if (hlist)
 		curl_slist_free_all(hlist);
 	curl_easy_cleanup(curl_handle);
 	if (toFile)
 		fclose(fp);
 
-	if (ret != 0) {
+	if (ret != 0)
+	{
 		memset(errMsg, '\0', sizeof(errMsg));
-		snprintf(errMsg, sizeof(errMsg)-1, "%s", cerror);
+		snprintf(errMsg, sizeof(errMsg) - 1, "%s", cerror);
 		printf("%s curl error: %s\n", CURL_MSG_ERROR, errMsg);
 		if (toFile)
 			unlink(outputfile.c_str());
@@ -401,14 +423,16 @@ std::string CLuaInstCurl::CurlUriInternal(std::string data, bool decode)
 {
 	std::string retString = "";
 	CURL *curl_handle = curl_easy_init();
-	if (curl_handle) {
+	if (curl_handle)
+	{
 		int outlength;
 		char *pfTmp;
 		if (decode)
 			pfTmp = curl_easy_unescape(curl_handle, data.c_str(), data.length(), &outlength);
 		else
 			pfTmp = curl_easy_escape(curl_handle, data.c_str(), data.length());
-		if (pfTmp) {
+		if (pfTmp)
+		{
 			retString = static_cast<std::string>(pfTmp);
 			curl_free(pfTmp);
 		}
@@ -420,12 +444,14 @@ std::string CLuaInstCurl::CurlUriInternal(std::string data, bool decode)
 int CLuaInstCurl::CurlEncodeUri(lua_State *L)
 {
 	CLuaCurl *D = CurlCheckData(L, 1);
-	if (!D) {
+	if (!D)
+	{
 		lua_pushnil(L);
 		return 1;
 	}
 	const char *data = luaL_checkstring(L, 2);
-	if (!data) {
+	if (!data)
+	{
 		lua_pushnil(L);
 		return 1;
 	}
@@ -443,12 +469,14 @@ int CLuaInstCurl::CurlEncodeUri(lua_State *L)
 int CLuaInstCurl::CurlDecodeUri(lua_State *L)
 {
 	CLuaCurl *D = CurlCheckData(L, 1);
-	if (!D) {
+	if (!D)
+	{
 		lua_pushnil(L);
 		return 1;
 	}
 	const char *data = luaL_checkstring(L, 2);
-	if (!data) {
+	if (!data)
+	{
 		lua_pushnil(L);
 		return 1;
 	}
@@ -466,13 +494,15 @@ int CLuaInstCurl::CurlDecodeUri(lua_State *L)
 int CLuaInstCurl::CurlSetUriData(lua_State *L)
 {
 	CLuaCurl *D = CurlCheckData(L, 1);
-	if (!D) {
+	if (!D)
+	{
 		lua_pushnil(L);
 		return 1;
 	}
 	int numargs = lua_gettop(L);
-	if (numargs < 3) {
-		printf("CLuaInstVideo::%s: not enough arguments (%d, expected at least 2)\n", __func__, numargs-1);
+	if (numargs < 3)
+	{
+		printf("CLuaInstVideo::%s: not enough arguments (%d, expected at least 2)\n", __func__, numargs - 1);
 		lua_pushnil(L);
 		return 1;
 	}
@@ -480,10 +510,12 @@ int CLuaInstCurl::CurlSetUriData(lua_State *L)
 	const char *key;
 	const char *data;
 	std::string retString = "";
-	for (int i = 2; i < numargs; i += 2) {
+	for (int i = 2; i < numargs; i += 2)
+	{
 		key = luaL_checkstring(L, i);
-		data = luaL_checkstring(L, i+1);
-		if (key && data && (strlen(key) > 0)) {
+		data = luaL_checkstring(L, i + 1);
+		if (key && data && (strlen(key) > 0))
+		{
 			if (i > 2)
 				retString += "&";
 			retString += static_cast<std::string>(key) + "=";
