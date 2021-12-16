@@ -60,24 +60,24 @@
 extern cAudio *audioDecoder;
 
 //void id3_tag_addref(struct id3_tag *);
-	void my_id3_tag_delref(struct id3_tag *);
-	struct filetag
-	{
-		struct id3_tag *tag;
-		unsigned long location;
-		id3_length_t length;
-	};
-	struct id3_file
-	{
-		FILE *iofile;
-		enum id3_file_mode mode;
-		char *path;
-		int flags;
-		struct id3_tag *primary;
-		unsigned int ntags;
-		struct filetag *tags;
-	};
-	void id3_finish_file(struct id3_file *file);
+void my_id3_tag_delref(struct id3_tag *);
+struct filetag
+{
+	struct id3_tag *tag;
+	unsigned long location;
+	id3_length_t length;
+};
+struct id3_file
+{
+	FILE *iofile;
+	enum id3_file_mode mode;
+	char *path;
+	int flags;
+	struct id3_tag *primary;
+	unsigned int ntags;
+	struct filetag *tags;
+};
+void id3_finish_file(struct id3_file *file);
 }
 
 // Frames to skip in ff/rev mode

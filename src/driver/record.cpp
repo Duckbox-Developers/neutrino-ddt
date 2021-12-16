@@ -1851,7 +1851,7 @@ bool CRecordManager::RunStopScript(void)
  * if zap ok
  * 	set record mode
  */
-bool CRecordManager::CutBackNeutrino(const t_channel_id channel_id, CFrontend*&frontend)
+bool CRecordManager::CutBackNeutrino(const t_channel_id channel_id, CFrontend *&frontend)
 {
 	bool ret = true;
 	CZapitChannel *channel = CServiceManager::getInstance()->FindChannel(channel_id);

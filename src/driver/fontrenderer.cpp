@@ -353,7 +353,7 @@ int Font::getMaxDigitWidth(void)
 	return maxdigitwidth;
 }
 
-int UTF8ToUnicode(const char*&text, const bool utf8_encoded)  // returns -1 on error
+int UTF8ToUnicode(const char *&text, const bool utf8_encoded) // returns -1 on error
 {
 	int unicode_value;
 //printf("%c ", (unsigned char)(*text));
