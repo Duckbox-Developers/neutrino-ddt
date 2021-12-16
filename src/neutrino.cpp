@@ -860,7 +860,6 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.minimode = configfile.getInt32( "minimode",  0);
 	g_settings.mode_clock = configfile.getInt32( "mode_clock",  0);
 	g_settings.zapto_pre_time = configfile.getInt32( "zapto_pre_time",  0);
-	g_settings.spectrum         = configfile.getBool("spectrum"          , false);
 	g_settings.channellist_additional = configfile.getInt32("channellist_additional", 1);
 	g_settings.eventlist_additional = configfile.getInt32("eventlist_additional", 0);
 	g_settings.eventlist_epgplus = configfile.getInt32("eventlist_epgplus", 1);
@@ -1596,7 +1595,6 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32( "minimode", g_settings.minimode );
 	configfile.setInt32( "mode_clock", g_settings.mode_clock );
 	configfile.setInt32( "zapto_pre_time", g_settings.zapto_pre_time );
-	configfile.setBool("spectrum", g_settings.spectrum);
 	configfile.setInt32("eventlist_additional", g_settings.eventlist_additional);
 	configfile.setInt32("eventlist_epgplus", g_settings.eventlist_epgplus);
 	configfile.setInt32("channellist_additional", g_settings.channellist_additional);

@@ -223,7 +223,6 @@ const char * locale_real_names[] =
 	"audioplayer.select_title_by_name",
 	"audioplayer.show_playlist",
 	"audioplayer.shuffle",
-	"audioplayer.spectrum",
 	"audioplayer.stop",
 	"audioplayer.title_artist",
 	"bookmarkmanager.delete",

@@ -59,19 +59,6 @@
 #include <driver/display.h>
 extern cAudio *audioDecoder;
 
-//#define SPECTRUM
-
-#ifdef SPECTRUM
-void sanalyzer_render_freq(short data[1024]);
-#endif
-/* libid3tag extension: This is neccessary in order to call fclose
-   on the file. Normally libid3tag closes the file implicit.
-   For the netfile extension to work properly netfiles fclose must be called.
-   To close an id3 file (usually by calling id3_file_close) without fclosing it,
-   call following i3_finish_file function. It's just a copy of libid3tags
-   finish_file function. */
-extern "C"
-{
 //void id3_tag_addref(struct id3_tag *);
 	void my_id3_tag_delref(struct id3_tag *);
 	struct filetag
@@ -390,14 +377,6 @@ CBaseDec::RetCode CMP3Dec::Decoder(FILE *InputFp, const int /*OutputFd*/,
 	int 					ret;
 	unsigned long		FrameCount = 0;
 
-#ifdef SPECTRUM
-	bool update_lcd = false;
-	int i = 0, j = 0;
-	signed short data[1024];
-	if (g_settings.spectrum)
-		CVFD::getInstance()->Lock();
-	int scnt = 0;
-#endif
 	signed short ll, rr;
 
 	SaveCover(InputFp, meta_data);
@@ -750,20 +729,6 @@ CBaseDec::RetCode CMP3Dec::Decoder(FILE *InputFp, const int /*OutputFd*/,
 					*(((signed short *)OutputPtr) + 1) = rr;
 
 					OutputPtr += 4;
-#ifdef SPECTRUM
-#define DDIFF 0
-					if (g_settings.spectrum)
-					{
-						j += 4;
-						if ((i < 512) && (j > DDIFF))
-						{
-//if(i == 0) printf("Filling on j = %d\n", j);
-							int tmp = (ll + rr) / 2;
-							data[i] = (signed short)tmp;
-							i++;
-						}
-					}
-#endif
 
 					/* Flush the buffer if it is full. */
 					if (OutputPtr == OutputBufferEnd)
@@ -779,21 +744,6 @@ CBaseDec::RetCode CMP3Dec::Decoder(FILE *InputFp, const int /*OutputFd*/,
 						}
 
 						OutputPtr = OutputBuffer;
-#ifdef SPECTRUM
-						if (g_settings.spectrum)
-						{
-							i = 0;
-							j = 0;
-							update_lcd = true;
-
-//gettimeofday (&tv2, NULL);
-//int ms = (tv2.tv_sec - tv1.tv_sec) * 1000 + (tv2.tv_usec - tv1.tv_usec) / 1000;
-//if(ms)printf("Write takes %dms\n", ms);
-							//sanalyzer_render_vu(data);
-							scnt = 0;
-							sanalyzer_render_freq(data);
-						}
-#endif
 					}
 				}
 			}
@@ -811,20 +761,6 @@ CBaseDec::RetCode CMP3Dec::Decoder(FILE *InputFp, const int /*OutputFd*/,
 					*(((signed short *)OutputPtr) + 1) = *((signed short *)OutputPtr) = ll;
 
 					OutputPtr += 4;
-#ifdef SPECTRUM
-#define DDIFF 1024
-					if (g_settings.spectrum)
-					{
-						j += 4;
-						if ((i < 512) && (j > DDIFF))
-						{
-//if(i == 0) printf("Filling on j = %d\n", j);
-							int tmp = (ll + rr) / 2;
-							data[i] = (signed short)tmp;
-							i++;
-						}
-					}
-#endif
 
 					/* Flush the buffer if it is full. */
 					if (OutputPtr == OutputBufferEnd)
@@ -840,19 +776,6 @@ CBaseDec::RetCode CMP3Dec::Decoder(FILE *InputFp, const int /*OutputFd*/,
 						}
 
 						OutputPtr = OutputBuffer;
-#ifdef SPECTRUM
-						if (g_settings.spectrum)
-						{
-							i = 0;
-							j = 0;
-							update_lcd = true;
-
-//gettimeofday (&tv2, NULL);
-//int ms = (tv2.tv_sec - tv1.tv_sec) * 1000 + (tv2.tv_usec - tv1.tv_usec) / 1000;
-//if(ms)printf("Write takes %dms\n", ms);
-							sanalyzer_render_freq(data);
-						}
-#endif
 					}
 				}
 			}
@@ -890,9 +813,7 @@ CBaseDec::RetCode CMP3Dec::Decoder(FILE *InputFp, const int /*OutputFd*/,
 		}
 	}
 	audioDecoder->StopClip();
-#ifdef SPECTRUM
-	CVFD::getInstance()->Unlock();
-#endif
+
 	/* Accounting report if no error occured. */
 	if (Status == OK)
 	{
