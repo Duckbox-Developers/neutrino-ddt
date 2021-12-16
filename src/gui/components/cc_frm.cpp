@@ -37,13 +37,13 @@ using namespace std;
 
 //-------------------------------------------------------------------------------------------------------
 //sub class CComponentsForm from CComponentsItem
-CComponentsForm::CComponentsForm(	const int x_pos, const int y_pos, const int w, const int h,
-					CComponentsForm* parent,
-					int shadow_mode,
-					fb_pixel_t color_frame,
-					fb_pixel_t color_body,
-					fb_pixel_t color_shadow)
-					:CComponentsItem(parent)
+CComponentsForm::CComponentsForm(const int x_pos, const int y_pos, const int w, const int h,
+	CComponentsForm *parent,
+	int shadow_mode,
+	fb_pixel_t color_frame,
+	fb_pixel_t color_body,
+	fb_pixel_t color_shadow)
+	: CComponentsItem(parent)
 {
 	cc_item_type 	= CC_ITEMTYPE_FRM;
 
@@ -73,14 +73,14 @@ CComponentsForm::CComponentsForm(	const int x_pos, const int y_pos, const int w,
 	page_scroll_mode = PG_SCROLL_M_UP_DOWN_KEY;
 
 	//connect page scroll slot
-	sigc::slot4<void, neutrino_msg_t&, neutrino_msg_data_t&, int&, bool&> sl = sigc::mem_fun(*this, &CComponentsForm::execPageScroll);
+	sigc::slot4<void, neutrino_msg_t &, neutrino_msg_data_t &, int &, bool &> sl = sigc::mem_fun(*this, &CComponentsForm::execPageScroll);
 	this->OnExec.connect(sl);
 }
 
-void CComponentsForm::Init(	const int& x_pos, const int& y_pos, const int& w, const int& h,
-				const fb_pixel_t& color_frame,
-				const fb_pixel_t& color_body,
-				const fb_pixel_t& color_shadow)
+void CComponentsForm::Init(const int &x_pos, const int &y_pos, const int &w, const int &h,
+	const fb_pixel_t &color_frame,
+	const fb_pixel_t &color_body,
+	const fb_pixel_t &color_shadow)
 {
 	setDimensionsAll(x_pos, y_pos, w, h);
 	setColorAll(color_frame, color_body, color_shadow);
@@ -110,7 +110,7 @@ int CComponentsForm::exec()
 
 	while (!cancel_exec)
 	{
-		g_RCInput->getMsgAbsoluteTimeout( &msg, &data, &timeoutEnd );
+		g_RCInput->getMsgAbsoluteTimeout(&msg, &data, &timeoutEnd);
 
 		//execute connected slots
 		OnExec(msg, data, res, cancel_exec);
@@ -132,18 +132,21 @@ int CComponentsForm::exec()
 }
 
 
-void CComponentsForm::execKey(neutrino_msg_t& msg, neutrino_msg_data_t& data, int& res, bool& cancel_exec, const std::vector<neutrino_msg_t>& v_msg_list, bool force_exit)
+void CComponentsForm::execKey(neutrino_msg_t &msg, neutrino_msg_data_t &data, int &res, bool &cancel_exec, const std::vector<neutrino_msg_t> &v_msg_list, bool force_exit)
 {
-	for(size_t i = 0; i < v_msg_list.size(); i++){
-		if (execKey(msg, data, res, cancel_exec, v_msg_list[i], force_exit)){
+	for (size_t i = 0; i < v_msg_list.size(); i++)
+	{
+		if (execKey(msg, data, res, cancel_exec, v_msg_list[i], force_exit))
+		{
 			break;
 		}
 	}
 }
 
-inline bool CComponentsForm::execKey(neutrino_msg_t& msg, neutrino_msg_data_t& data, int& res, bool& cancel_exec, const neutrino_msg_t& msg_val, bool force_exit)
+inline bool CComponentsForm::execKey(neutrino_msg_t &msg, neutrino_msg_data_t &data, int &res, bool &cancel_exec, const neutrino_msg_t &msg_val, bool force_exit)
 {
-	if (msg == msg_val){
+	if (msg == msg_val)
+	{
 		OnExecMsg(msg, data, res);
 		if (force_exit)
 			cancel_exec = EXIT;
@@ -153,12 +156,13 @@ inline bool CComponentsForm::execKey(neutrino_msg_t& msg, neutrino_msg_data_t& d
 }
 
 
-void CComponentsForm::execPageScroll(neutrino_msg_t& msg, neutrino_msg_data_t& /*data*/, int& /*res*/, bool& /*cancel_exec*/)
+void CComponentsForm::execPageScroll(neutrino_msg_t &msg, neutrino_msg_data_t & /*data*/, int & /*res*/, bool & /*cancel_exec*/)
 {
 	if (page_scroll_mode == PG_SCROLL_M_OFF)
 		return;
 
-	if (page_scroll_mode & PG_SCROLL_M_UP_DOWN_KEY){
+	if (page_scroll_mode & PG_SCROLL_M_UP_DOWN_KEY)
+	{
 #if HAVE_SH4_HARDWARE
 		if (msg == CRCInput::RC_page_up || msg == CRCInput::RC_up)
 #else
@@ -173,7 +177,8 @@ void CComponentsForm::execPageScroll(neutrino_msg_t& msg, neutrino_msg_data_t& /
 			ScrollPage(SCROLL_P_UP);
 	}
 
-	if (page_scroll_mode & PG_SCROLL_M_LEFT_RIGHT_KEY){
+	if (page_scroll_mode & PG_SCROLL_M_LEFT_RIGHT_KEY)
+	{
 		if (msg == CRCInput::RC_left)
 			ScrollPage(SCROLL_P_DOWN);
 		if (msg == CRCInput::RC_right)
@@ -181,7 +186,7 @@ void CComponentsForm::execPageScroll(neutrino_msg_t& msg, neutrino_msg_data_t& /
 	}
 }
 
-void CComponentsForm::execExit(neutrino_msg_t& msg, neutrino_msg_data_t& data, int& res, bool& cancel_exec, const std::vector<neutrino_msg_t>& v_msg_list)
+void CComponentsForm::execExit(neutrino_msg_t &msg, neutrino_msg_data_t &data, int &res, bool &cancel_exec, const std::vector<neutrino_msg_t> &v_msg_list)
 {
 	execKey(msg, data, res, cancel_exec, v_msg_list, true);
 }
@@ -189,12 +194,14 @@ void CComponentsForm::execExit(neutrino_msg_t& msg, neutrino_msg_data_t& data, i
 
 void CComponentsForm::clear()
 {
- 	if (v_cc_items.empty())
+	if (v_cc_items.empty())
 		return;
 
-	for(size_t i=0; i<v_cc_items.size(); i++) {
-		if (v_cc_items[i]){
-			dprintf(DEBUG_DEBUG, "[CComponentsForm] %s... delete form cc-item %d of %d (type=%d)\taddress = %p\n", __func__, (int)i+1, (int)v_cc_items.size(), v_cc_items[i]->getItemType(), v_cc_items[i]);
+	for (size_t i = 0; i < v_cc_items.size(); i++)
+	{
+		if (v_cc_items[i])
+		{
+			dprintf(DEBUG_DEBUG, "[CComponentsForm] %s... delete form cc-item %d of %d (type=%d)\taddress = %p\n", __func__, (int)i + 1, (int)v_cc_items.size(), v_cc_items[i]->getItemType(), v_cc_items[i]);
 			delete v_cc_items[i];
 			v_cc_items[i] = NULL;
 		}
@@ -203,9 +210,10 @@ void CComponentsForm::clear()
 }
 
 
-int CComponentsForm::addCCItem(CComponentsItem* cc_Item)
+int CComponentsForm::addCCItem(CComponentsItem *cc_Item)
 {
-	if (cc_Item){
+	if (cc_Item)
+	{
 		dprintf(DEBUG_DEBUG, "[CComponentsForm]  %s-%d try to add cc_Item [type %d] to form [current index=%d] \n", __func__, __LINE__, cc_Item->getItemType(), cc_item_index);
 
 		cc_Item->setParent(this);
@@ -226,17 +234,18 @@ int CComponentsForm::addCCItem(CComponentsItem* cc_Item)
 	return -1;
 }
 
-int CComponentsForm::addCCItem(const std::vector<CComponentsItem*> &cc_Items)
+int CComponentsForm::addCCItem(const std::vector<CComponentsItem *> &cc_Items)
 {
-	for (size_t i= 0; i< cc_Items.size(); i++)
+	for (size_t i = 0; i < cc_Items.size(); i++)
 		addCCItem(cc_Items[i]);
 	return size();
 }
 
-int CComponentsForm::getCCItemId(CComponentsItem* cc_Item)
+int CComponentsForm::getCCItemId(CComponentsItem *cc_Item)
 {
-	if (cc_Item){
-		for (size_t i= 0; i< v_cc_items.size(); i++)
+	if (cc_Item)
+	{
+		for (size_t i = 0; i < v_cc_items.size(); i++)
 			if (v_cc_items[i] == cc_Item)
 				return i;
 	}
@@ -253,9 +262,10 @@ int CComponentsForm::genIndex()
 	return ret;
 }
 
-CComponentsItem* CComponentsForm::getCCItem(const uint& cc_item_id)
+CComponentsItem *CComponentsForm::getCCItem(const uint &cc_item_id)
 {
-	if (cc_item_id >= size()){
+	if (cc_item_id >= size())
+	{
 		dprintf(DEBUG_NORMAL, "[CComponentsForm]   [%s - %d]  Error: parameter cc_item_id = %u, out of range (size = %zx)...\n", __func__, __LINE__, cc_item_id, size());
 		return NULL;
 	}
@@ -265,22 +275,24 @@ CComponentsItem* CComponentsForm::getCCItem(const uint& cc_item_id)
 	return NULL;
 }
 
-CComponentsItem* CComponentsForm::getPrevCCItem(CComponentsItem* current_cc_item)
+CComponentsItem *CComponentsForm::getPrevCCItem(CComponentsItem *current_cc_item)
 {
 	return getCCItem(getCCItemId(current_cc_item) - 1);
 }
 
-CComponentsItem* CComponentsForm::getNextCCItem(CComponentsItem* current_cc_item)
+CComponentsItem *CComponentsForm::getNextCCItem(CComponentsItem *current_cc_item)
 {
 	return getCCItem(getCCItemId(current_cc_item) + 1);
 }
 
-void CComponentsForm::replaceCCItem(const uint& cc_item_id, CComponentsItem* new_cc_Item)
+void CComponentsForm::replaceCCItem(const uint &cc_item_id, CComponentsItem *new_cc_Item)
 {
-	if (!v_cc_items.empty()){
-		CComponentsItem* old_Item = v_cc_items[cc_item_id];
-		if (old_Item){
-			CComponentsForm * old_parent = old_Item->getParent();
+	if (!v_cc_items.empty())
+	{
+		CComponentsItem *old_Item = v_cc_items[cc_item_id];
+		if (old_Item)
+		{
+			CComponentsForm *old_parent = old_Item->getParent();
 			new_cc_Item->setParent(old_parent);
 			new_cc_Item->setIndex(old_parent->getIndex());
 			delete old_Item;
@@ -292,24 +304,28 @@ void CComponentsForm::replaceCCItem(const uint& cc_item_id, CComponentsItem* new
 		dprintf(DEBUG_NORMAL, "[CComponentsForm]  %s replace cc_Item not possible, v_cc_items is empty\n", __func__);
 }
 
-void CComponentsForm::replaceCCItem(CComponentsItem* old_cc_Item, CComponentsItem* new_cc_Item)
+void CComponentsForm::replaceCCItem(CComponentsItem *old_cc_Item, CComponentsItem *new_cc_Item)
 {
 	replaceCCItem(getCCItemId(old_cc_Item), new_cc_Item);
 }
 
-void CComponentsForm::insertCCItem(const uint& cc_item_id, CComponentsItem* cc_Item)
+void CComponentsForm::insertCCItem(const uint &cc_item_id, CComponentsItem *cc_Item)
 {
 
-	if (cc_Item == NULL){
+	if (cc_Item == NULL)
+	{
 		dprintf(DEBUG_DEBUG, "[CComponentsForm]  %s parameter: cc_Item = %p...\n", __func__, cc_Item);
 		return;
 	}
 
-	if (v_cc_items.empty()){
+	if (v_cc_items.empty())
+	{
 		addCCItem(cc_Item);
 		dprintf(DEBUG_NORMAL, "[CComponentsForm]  %s insert cc_Item not possible, v_cc_items is empty, cc_Item added\n", __func__);
-	}else{
-		v_cc_items.insert(v_cc_items.begin()+cc_item_id, cc_Item);
+	}
+	else
+	{
+		v_cc_items.insert(v_cc_items.begin() + cc_item_id, cc_Item);
 		cc_Item->setParent(this);
 		//assign item index
 		int index = genIndex();
@@ -317,13 +333,15 @@ void CComponentsForm::insertCCItem(const uint& cc_item_id, CComponentsItem* cc_I
 	}
 }
 
-void CComponentsForm::removeCCItem(const uint& cc_item_id)
+void CComponentsForm::removeCCItem(const uint &cc_item_id)
 {
-	if (!v_cc_items.empty()){
-		if (v_cc_items[cc_item_id]) {
+	if (!v_cc_items.empty())
+	{
+		if (v_cc_items[cc_item_id])
+		{
 			delete v_cc_items[cc_item_id];
 			v_cc_items[cc_item_id] = NULL;
-			v_cc_items.erase(v_cc_items.begin()+cc_item_id);
+			v_cc_items.erase(v_cc_items.begin() + cc_item_id);
 			dprintf(DEBUG_DEBUG, "[CComponentsForm]  %s removing cc_Item [id=%u]...\n", __func__, cc_item_id);
 		}
 	}
@@ -331,19 +349,19 @@ void CComponentsForm::removeCCItem(const uint& cc_item_id)
 		dprintf(DEBUG_NORMAL, "[CComponentsForm]  %s removing of cc_Item [id=%u] not possible, v_cc_items is empty...\n", __func__, cc_item_id);
 }
 
-void CComponentsForm::removeCCItem(CComponentsItem* cc_Item)
+void CComponentsForm::removeCCItem(CComponentsItem *cc_Item)
 {
-	uint id = getCCItemId(cc_Item);	
+	uint id = getCCItemId(cc_Item);
 	removeCCItem(id);
 }
 
-void CComponentsForm::exchangeCCItem(const uint& cc_item_id_a, const uint& cc_item_id_b)
+void CComponentsForm::exchangeCCItem(const uint &cc_item_id_a, const uint &cc_item_id_b)
 {
 	if (!v_cc_items.empty())
 		swap(v_cc_items[cc_item_id_a], v_cc_items[cc_item_id_b]);
 }
 
-void CComponentsForm::exchangeCCItem(CComponentsItem* item_a, CComponentsItem* item_b)
+void CComponentsForm::exchangeCCItem(CComponentsItem *item_a, CComponentsItem *item_b)
 {
 	exchangeCCItem(getCCItemId(item_a), getCCItemId(item_b));
 }
@@ -360,7 +378,7 @@ void CComponentsForm::paintForm(bool do_save_bg)
 
 void CComponentsForm::paint(bool do_save_bg)
 {
-	if(is_painted)
+	if (is_painted)
 		OnBeforeRePaint();
 	OnBeforePaint();
 	paintForm(do_save_bg);
@@ -368,14 +386,15 @@ void CComponentsForm::paint(bool do_save_bg)
 
 bool CComponentsForm::isPageChanged()
 {
-	for(size_t i=0; i<v_cc_items.size(); i++){
+	for (size_t i = 0; i < v_cc_items.size(); i++)
+	{
 		if (v_cc_items[i]->getPageNumber() != cur_page)
 			return true;
 	}
 	return false;
 }
 
-void CComponentsForm::paintPage(const uint8_t& page_number, bool do_save_bg)
+void CComponentsForm::paintPage(const uint8_t &page_number, bool do_save_bg)
 {
 	cur_page = page_number;
 	paint(do_save_bg);
@@ -388,7 +407,8 @@ void CComponentsForm::paintCCItems()
 	//using of real x/y values to paint items if this text object is bound in a parent form
 	int this_x = x, auto_x = x, this_y = y, auto_y = y, this_w = 0;
 	int w_parent_frame = 0;
-	if (cc_parent){
+	if (cc_parent)
+	{
 		this_x = auto_x = cc_xr;
 		this_y = auto_y = cc_yr;
 		w_parent_frame = cc_parent->getFrameThickness();
@@ -399,9 +419,12 @@ void CComponentsForm::paintCCItems()
 	int y_sb = this_y;
 	int x_sb = this_x + width - w_sb;
 	int h_sb = height;
-	if (sb == NULL){
+	if (sb == NULL)
+	{
 		sb = new CComponentsScrollBar(x_sb, y_sb, w_sb, h_sb);
-	}else{
+	}
+	else
+	{
 		//clean background, if dimension of scrollbar was changed
 		if (w_sb != sb->getWidth())
 			sb->kill(col_body);
@@ -410,23 +433,28 @@ void CComponentsForm::paintCCItems()
 		sb->setDimensionsAll(x_sb, y_sb, w_sb, h_sb);
 	}
 
-	if(page_count > 1){
+	if (page_count > 1)
+	{
 		sb->setSegmentCount(page_count);
 		sb->setMarkID(cur_page);
 		this_w = width - w_sb;
 		sb->paint(false);
-	}else{
+	}
+	else
+	{
 		if (sb->isPainted())
 			sb->kill(col_body);
 		this_w = width;
 	}
 
 	//detect if current page has changed, if true then kill items from screen
-	if(isPageChanged()){
+	if (isPageChanged())
+	{
 		this->killCCItems(col_body, true);
 	}
 
-	for(size_t i=0; i<items_count; i++){
+	for (size_t i = 0; i < items_count; i++)
+	{
 		//assign item object
 		CComponentsItem *cc_item = v_cc_items[i];
 
@@ -441,7 +469,8 @@ void CComponentsForm::paintCCItems()
 		int h_item = cc_item->getHeight() - (ypos <= fr_thickness ? fr_thickness : 0);
 
 		//check item for corrupt position, skip current item if found problems
-		if (ypos > height || xpos > this_w){
+		if (ypos > height || xpos > this_w)
+		{
 			dprintf(DEBUG_INFO, "[CComponentsForm] %s: [form: %d] [item-index %d] [type=%d] WARNING: item position is out of form size:\ndefinied x=%d, defined this_w=%d \ndefinied y=%d, defined height=%d \n",
 				__func__, cc_item_index, cc_item->getIndex(), cc_item->getItemType(), xpos, this_w, ypos, height);
 			if (this->cc_item_type != CC_ITEMTYPE_FRM_CHAIN)
@@ -453,17 +482,20 @@ void CComponentsForm::paintCCItems()
 
 		//set required x-position to item:
 		//append vertical
-		if (xpos == CC_APPEND){
+		if (xpos == CC_APPEND)
+		{
 			auto_x += append_x_offset;
 			cc_item->setRealXPos(auto_x + xpos + w_parent_frame);
 			auto_x += w_item;
 		}
 		//positionize vertical centered
-		else if (xpos == CC_CENTERED){
-			auto_x =  this_w/2 - w_item/2;
+		else if (xpos == CC_CENTERED)
+		{
+			auto_x =  this_w / 2 - w_item / 2;
 			cc_item->setRealXPos(this_x + auto_x + w_parent_frame);
 		}
-		else{
+		else
+		{
 			cc_item->setRealXPos(this_x + xpos + w_parent_frame);
 			auto_x = (cc_item->getRealXPos() + w_item);
 		}
@@ -473,17 +505,20 @@ void CComponentsForm::paintCCItems()
 
 		//set required y-position to item
 		//append hor
-		if (ypos == CC_APPEND){
+		if (ypos == CC_APPEND)
+		{
 			auto_y += append_y_offset;
 			cc_item->setRealYPos(auto_y + ypos + w_parent_frame);
 			auto_y += h_item;
 		}
 		//positionize hor centered
-		else if (ypos == CC_CENTERED){
-			auto_y =  height/2 - h_item/2;
+		else if (ypos == CC_CENTERED)
+		{
+			auto_y =  height / 2 - h_item / 2;
 			cc_item->setRealYPos(this_y + auto_y + w_parent_frame);
 		}
-		else{
+		else
+		{
 			cc_item->setRealYPos(this_y + ypos + w_parent_frame);
 			auto_y = (cc_item->getRealYPos() + h_item);
 		}
@@ -491,7 +526,7 @@ void CComponentsForm::paintCCItems()
 		//reduce corner radius, if we have a frame around parent item, ensure matching corners inside of embedded item, this avoids ugly unpainted spaces between frame and item border
 		//TODO: other constellations not considered at the moment
 		if (w_parent_frame)
-			cc_item->setCorner(max(0, cc_item->getCornerRadius()- w_parent_frame), cc_item->getCornerType());
+			cc_item->setCorner(max(0, cc_item->getCornerRadius() - w_parent_frame), cc_item->getCornerType());
 
 		//These steps check whether the element can be painted into the container.
 		//Is it too wide or too high, it will be shortened and displayed in the log.
@@ -502,9 +537,10 @@ void CComponentsForm::paintCCItems()
 		int w_diff = right_item - right_frm;
 		int new_w = w_item - w_diff;
 		//avoid of width error due to odd values (1 line only)
-		right_item -= (new_w%2);
-		w_item -= (new_w%2);
-		if (right_item > right_frm){
+		right_item -= (new_w % 2);
+		w_item -= (new_w % 2);
+		if (right_item > right_frm)
+		{
 			dprintf(DEBUG_INFO, "[CComponentsForm] %s: [form: %d] [item-index %d] [type=%d] this_w is too large, definied width=%d, possible width=%d \n",
 				__func__, cc_item_index, cc_item->getIndex(), cc_item->getItemType(), w_item, new_w);
 			cc_item->setWidth(new_w);
@@ -516,11 +552,12 @@ void CComponentsForm::paintCCItems()
 		int h_diff = bottom_item - bottom_frm;
 		int new_h = h_item - h_diff;
 		//avoid of height error due to odd values (1 line only)
-		bottom_item -= (new_h%2);
-		h_item -= (new_h%2);
-		if (bottom_item > bottom_frm){
+		bottom_item -= (new_h % 2);
+		h_item -= (new_h % 2);
+		if (bottom_item > bottom_frm)
+		{
 			dprintf(DEBUG_INFO, "[CComponentsForm] %s: [form: %d] [item-index %d] [type=%d] height is too large, definied height=%d, possible height=%d \n",
-			       __func__, cc_item_index, cc_item->getIndex(), cc_item->getItemType(), h_item, new_h);
+				__func__, cc_item_index, cc_item->getIndex(), cc_item->getItemType(), h_item, new_h);
 			cc_item->setHeight(new_h);
 		}
 
@@ -544,19 +581,19 @@ void CComponentsForm::paintCCItems()
 }
 
 //erase or paint over rendered objects
-void CComponentsForm::killCCItems(const fb_pixel_t& bg_color, bool ignore_parent)
+void CComponentsForm::killCCItems(const fb_pixel_t &bg_color, bool ignore_parent)
 {
-	for(size_t i=0; i<v_cc_items.size(); i++)
+	for (size_t i = 0; i < v_cc_items.size(); i++)
 		v_cc_items[i]->kill(bg_color, ignore_parent);
 }
 
 void CComponentsForm::hideCCItems()
 {
-	for(size_t i=0; i<v_cc_items.size(); i++)
+	for (size_t i = 0; i < v_cc_items.size(); i++)
 		v_cc_items[i]->hide();
 }
 
-void CComponentsForm::setPageCount(const uint8_t& pageCount)
+void CComponentsForm::setPageCount(const uint8_t &pageCount)
 {
 	uint8_t new_val = pageCount;
 	if (new_val <  page_count)
@@ -567,52 +604,55 @@ void CComponentsForm::setPageCount(const uint8_t& pageCount)
 uint8_t CComponentsForm::getPageCount()
 {
 	uint8_t num = 0;
-	for(size_t i=0; i<v_cc_items.size(); i++){
+	for (size_t i = 0; i < v_cc_items.size(); i++)
+	{
 		uint8_t item_num = v_cc_items[i]->getPageNumber();
 		num = max(item_num, num);
 	}
 
 	//convert type, possible -Wconversion warnings!
-	page_count = static_cast<uint8_t>(num+1);
+	page_count = static_cast<uint8_t>(num + 1);
 
 	return page_count;
 }
 
 
-void CComponentsForm::setSelectedItem(int item_id, const fb_pixel_t& sel_frame_col, const fb_pixel_t& frame_col, const fb_pixel_t& sel_body_col, const fb_pixel_t& body_col, const int& frame_w, const int& sel_frame_w)
+void CComponentsForm::setSelectedItem(int item_id, const fb_pixel_t &sel_frame_col, const fb_pixel_t &frame_col, const fb_pixel_t &sel_body_col, const fb_pixel_t &body_col, const int &frame_w, const int &sel_frame_w)
 {
 	size_t count = v_cc_items.size();
 	int id = item_id;
 
-	if (id > (int)(count-1) || id < 0 || (count == 0)){
+	if (id > (int)(count - 1) || id < 0 || (count == 0))
+	{
 		dprintf(DEBUG_NORMAL, "[CComponentsForm]   [%s - %d] invalid parameter item_id = %u, available items = %zu, allowed values are: 0...%zu! \n", 	__func__,
-																				__LINE__, 
-																				item_id, 
-																				count, 
-																				count==0 ? 0:count-1);
+			__LINE__,
+			item_id,
+			count,
+			count == 0 ? 0 : count - 1);
 		//exit if no item is available
 		if (count == 0)
 			return;
 
 		//jump to last item
 		if (id < 0)
-			id = count-1;
+			id = count - 1;
 		//jump to 1st item, if id is out of range, avoids also possible segfault
-		if (id > (int)(count-1))
+		if (id > (int)(count - 1))
 			id = 0;
 	}
 
-	for (size_t i= 0; i< count; i++)
+	for (size_t i = 0; i < count; i++)
 		v_cc_items[i]->setSelected(i == (size_t)id, sel_frame_col, frame_col, sel_body_col, body_col, frame_w, sel_frame_w);
 
 	OnSelect();
 }
 
-void CComponentsForm::setSelectedItem(CComponentsItem* cc_item, const fb_pixel_t& sel_frame_col, const fb_pixel_t& frame_col, const fb_pixel_t& sel_body_col, const fb_pixel_t& body_col, const int& frame_w, const int& sel_frame_w)
+void CComponentsForm::setSelectedItem(CComponentsItem *cc_item, const fb_pixel_t &sel_frame_col, const fb_pixel_t &frame_col, const fb_pixel_t &sel_body_col, const fb_pixel_t &body_col, const int &frame_w, const int &sel_frame_w)
 {
 	int id = getCCItemId(cc_item);
-	if (id == -1){
-		dprintf(DEBUG_NORMAL, "[CComponentsForm]   [%s - %d] invalid item parameter, no object available\n", __func__,__LINE__);
+	if (id == -1)
+	{
+		dprintf(DEBUG_NORMAL, "[CComponentsForm]   [%s - %d] invalid item parameter, no object available\n", __func__, __LINE__);
 		return;
 	}
 	setSelectedItem(id, sel_frame_col, frame_col, sel_body_col, body_col, frame_w, sel_frame_w);
@@ -620,18 +660,18 @@ void CComponentsForm::setSelectedItem(CComponentsItem* cc_item, const fb_pixel_t
 
 int CComponentsForm::getSelectedItem()
 {
-	for (size_t i= 0; i< size(); i++)
+	for (size_t i = 0; i < size(); i++)
 		if (getCCItem(i)->isSelected())
 			return static_cast<int>(i);
 	return -1;
 }
 
-CComponentsItem* CComponentsForm::getSelectedItemObject()
+CComponentsItem *CComponentsForm::getSelectedItemObject()
 {
 	int sel = getSelectedItem();
-	CComponentsItem* ret = NULL;
+	CComponentsItem *ret = NULL;
 	if (sel != -1)
-		ret = static_cast<CComponentsItem*>(this->getCCItem(sel));
+		ret = static_cast<CComponentsItem *>(this->getCCItem(sel));
 
 	return ret;
 }
@@ -639,7 +679,8 @@ CComponentsItem* CComponentsForm::getSelectedItemObject()
 
 void CComponentsForm::ScrollPage(int direction, bool do_paint)
 {
-	if (getPageCount() == 1){
+	if (getPageCount() == 1)
+	{
 		cur_page = 0;
 		return;
 	}
@@ -648,11 +689,11 @@ void CComponentsForm::ScrollPage(int direction, bool do_paint)
 
 	int target_page_id = (int)page_count - 1;
 	int target_page = (int)cur_page;
-	
+
 	if (direction == SCROLL_P_UP)
-		target_page = target_page+1 > target_page_id ? 0 : target_page+1;	
+		target_page = target_page + 1 > target_page_id ? 0 : target_page + 1;
 	else if	(direction == SCROLL_P_DOWN)
-		target_page = target_page-1 < 0 ? target_page_id : target_page-1;
+		target_page = target_page - 1 < 0 ? target_page_id : target_page - 1;
 
 	if (do_paint)
 		paintPage((uint8_t)target_page);
@@ -667,8 +708,9 @@ void CComponentsForm::ScrollPage(int direction, bool do_paint)
 
 bool CComponentsForm::clearSavedScreen()
 {
-	if (CCDraw::clearSavedScreen()){
-		for(size_t i=0; i<v_cc_items.size(); i++)
+	if (CCDraw::clearSavedScreen())
+	{
+		for (size_t i = 0; i < v_cc_items.size(); i++)
 			v_cc_items[i]->clearSavedScreen();
 		return true;
 	}
@@ -678,8 +720,9 @@ bool CComponentsForm::clearSavedScreen()
 
 bool CComponentsForm::clearPaintCache()
 {
-	if (CCDraw::clearPaintCache()){
-		for(size_t i=0; i<v_cc_items.size(); i++)
+	if (CCDraw::clearPaintCache())
+	{
+		for (size_t i = 0; i < v_cc_items.size(); i++)
 			v_cc_items[i]->clearPaintCache();
 		return true;
 	}
@@ -690,8 +733,9 @@ bool CComponentsForm::clearPaintCache()
 //clean old gradient buffer
 bool CComponentsForm::clearFbGradientData()
 {
-	if (CCDraw::clearFbGradientData()){
-		for(size_t i=0; i<v_cc_items.size(); i++)
+	if (CCDraw::clearFbGradientData())
+	{
+		for (size_t i = 0; i < v_cc_items.size(); i++)
 			v_cc_items[i]->clearFbGradientData();
 		return true;
 	}
@@ -699,10 +743,11 @@ bool CComponentsForm::clearFbGradientData()
 	return false;
 }
 
-bool CComponentsForm::enableColBodyGradient(const int& enable_mode, const fb_pixel_t& sec_color, const int& direction)
+bool CComponentsForm::enableColBodyGradient(const int &enable_mode, const fb_pixel_t &sec_color, const int &direction)
 {
-	if (CCDraw::enableColBodyGradient(enable_mode, sec_color, direction)){
-		for (size_t i= 0; i< v_cc_items.size(); i++)
+	if (CCDraw::enableColBodyGradient(enable_mode, sec_color, direction))
+	{
+		for (size_t i = 0; i < v_cc_items.size(); i++)
 			v_cc_items[i]->clearScreenBuffer();
 		return true;
 	}
@@ -712,7 +757,7 @@ bool CComponentsForm::enableColBodyGradient(const int& enable_mode, const fb_pix
 int CComponentsForm::getUsedDY()
 {
 	int y_res = 0;
-	for (size_t i= 0; i< v_cc_items.size(); i++)
+	for (size_t i = 0; i < v_cc_items.size(); i++)
 		y_res  = max(v_cc_items[i]->getYPos() + v_cc_items[i]->getHeight(), y_res);
 
 	return y_res;
@@ -721,7 +766,7 @@ int CComponentsForm::getUsedDY()
 int CComponentsForm::getUsedDX()
 {
 	int x_res = 0;
-	for (size_t i= 0; i< v_cc_items.size(); i++)
+	for (size_t i = 0; i < v_cc_items.size(); i++)
 		x_res  = max(v_cc_items[i]->getXPos() + v_cc_items[i]->getWidth(), x_res);
 
 	return x_res;

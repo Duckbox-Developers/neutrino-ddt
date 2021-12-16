@@ -1,5 +1,5 @@
 /*
-	Based up Neutrino-GUI - Tuxbox-Project 
+	Based up Neutrino-GUI - Tuxbox-Project
 	Copyright (C) 2001 by Steffen Hehn 'McClean'
 
 	Classes for generic GUI-related components.
@@ -36,19 +36,25 @@ Basic attributes and member functions for component sub classes
 class CComponents : public CCDraw
 {
 	protected:
-	
+
 		///property: tag for component, can contains any value if required, default value is NULL, you can fill with a cast, see also setTag() and getTag()
 		void *cc_tag;
 
 	public:
 		///basic component class constructor.
 		CComponents();
-		virtual~CComponents(){};
+		virtual~CComponents() {};
 
 		///sets tag as void*, see also cc_tag
-		virtual void setTag(void* tag){cc_tag = tag;};
+		virtual void setTag(void *tag)
+		{
+			cc_tag = tag;
+		};
 		///gets tag as void*, see also cc_tag
-		virtual void* getTag(){return cc_tag;};
+		virtual void *getTag()
+		{
+			return cc_tag;
+		};
 };
 
 #endif

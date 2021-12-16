@@ -47,11 +47,11 @@ class CComponentsTimer : public sigc::trackable
 
 		///refresh interval in seconds
 		int tm_interval;
-		
+
 		bool tm_enable_nano;
 
 		///init function to init shared timer action
-		static void* initThreadAction(void *arg);
+		static void *initThreadAction(void *arg);
 
 		///init function to start/stop timer in own thread
 		void initThread();
@@ -83,7 +83,7 @@ class CComponentsTimer : public sigc::trackable
 		* @see
 		* 	setTimerInterval();
 		*/
-		CComponentsTimer(const int& interval = 1, bool is_nano = false);
+		CComponentsTimer(const int &interval = 1, bool is_nano = false);
 
 		virtual ~CComponentsTimer();
 
@@ -113,7 +113,10 @@ class CComponentsTimer : public sigc::trackable
 		* 	startTimer()
 		* 	stopTimer()
 		*/
-		bool isRun() const {return tm_thread;};
+		bool isRun() const
+		{
+			return tm_thread;
+		};
 
 		/**set timer interval
 		* @param[in]  interval
@@ -124,14 +127,17 @@ class CComponentsTimer : public sigc::trackable
 		* @see
 		* 	tm_interval
 		*/
-		void setTimerInterval(const int& interval, bool is_nano = false);
+		void setTimerInterval(const int &interval, bool is_nano = false);
 
 		/**set thread name
 		* @param[in] thread name
 		* @return
 		* 	void
 		*/
-		void setThreadName(const std::string& n) { name = tn = n; }
+		void setThreadName(const std::string &n)
+		{
+			name = tn = n;
+		}
 
 		/**Provides a signal handler to receive any function or methode.
 		* Use this in your class where ever you need time controled actions.

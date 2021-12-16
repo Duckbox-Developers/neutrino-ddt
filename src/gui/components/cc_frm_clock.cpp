@@ -42,20 +42,20 @@
 
 using namespace std;
 
-CComponentsFrmClock::CComponentsFrmClock( 	const int& x_pos,
-						const int& y_pos,
-						Font * font,
-						const char* prformat_str,
-						const char* secformat_str,
-						bool activ,
-						const int& interval_seconds,
-						CComponentsForm* parent,
-						int shadow_mode,
-						fb_pixel_t color_frame,
-						fb_pixel_t color_body,
-						fb_pixel_t color_shadow,
-						int font_style
-					)
+CComponentsFrmClock::CComponentsFrmClock(const int &x_pos,
+	const int &y_pos,
+	Font *font,
+	const char *prformat_str,
+	const char *secformat_str,
+	bool activ,
+	const int &interval_seconds,
+	CComponentsForm *parent,
+	int shadow_mode,
+	fb_pixel_t color_frame,
+	fb_pixel_t color_body,
+	fb_pixel_t color_shadow,
+	int font_style
+)
 
 {
 	cc_item_type 	= CC_ITEMTYPE_FRM_CLOCK;
@@ -85,7 +85,7 @@ CComponentsFrmClock::CComponentsFrmClock( 	const int& x_pos,
 		initClockFont(0, g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight());
 
 	//init general clock dimensions
-	height 	= height_old= cl_font->getHeight();
+	height 	= height_old = cl_font->getHeight();
 	width 	= width_old = cl_font->getRenderWidth(cl_format_str);
 
 	//set default text background behavior
@@ -112,8 +112,10 @@ CComponentsFrmClock::CComponentsFrmClock( 	const int& x_pos,
 
 CComponentsFrmClock::~CComponentsFrmClock()
 {
-	if (cl_timer){
-		delete cl_timer; cl_timer = NULL;
+	if (cl_timer)
+	{
+		delete cl_timer;
+		cl_timer = NULL;
 	}
 }
 
@@ -127,7 +129,7 @@ void CComponentsFrmClock::initTimeString()
 {
 	struct tm t;
 	time_t ltime;
-	ltime=time(&ltime);
+	ltime = time(&ltime);
 
 	toggleFormat();
 
@@ -147,7 +149,7 @@ void CComponentsFrmClock::toggleFormat()
 }
 
 //set current time format string
-void CComponentsFrmClock::setClockFormat(const char* prformat_str, const char* secformat_str)
+void CComponentsFrmClock::setClockFormat(const char *prformat_str, const char *secformat_str)
 {
 	cl_format_str = prformat_str;
 
@@ -180,9 +182,11 @@ void CComponentsFrmClock::initCCLockItems()
 	/* create label objects and add to container, ensure that count of items = count of chars (one char = one segment)
 	 * this is required for the case, if any time string format was changed
 	*/
-	if (v_cc_items.empty() || (v_cc_items.size() != s_time.size())){
+	if (v_cc_items.empty() || (v_cc_items.size() != s_time.size()))
+	{
 		//exit on empty time string
-		if (s_time.empty()){
+		if (s_time.empty())
+		{
 			clear();
 			return;
 		}
@@ -191,18 +195,19 @@ void CComponentsFrmClock::initCCLockItems()
 		clear();
 
 		//create new empty label objects, set some general properties and add to container
-		for (size_t i = 0; i < s_time.size(); i++){
-			CComponentsLabel * lbl = new CComponentsLabel();
+		for (size_t i = 0; i < s_time.size(); i++)
+		{
+			CComponentsLabel *lbl = new CComponentsLabel();
 			addCCItem(lbl);
 
 			//background paint of item is not required
 			lbl->doPaintBg(false);
 
 			//preset corner properties of label item
-			lbl->setCorner(max(0, corner_rad-fr_thickness), corner_type);
+			lbl->setCorner(max(0, corner_rad - fr_thickness), corner_type);
 
 			//set text border to 0
-			lbl->setTextBorderWidth(0,0);
+			lbl->setTextBorderWidth(0, 0);
 		}
 	}
 
@@ -210,8 +215,8 @@ void CComponentsFrmClock::initCCLockItems()
 	 * TODO: it's not really generic at the moment
 	*/
 	int minSepWidth = 0;
-	string sep[] ={" ", ".", ":"};
-	for (size_t i = 0; i < sizeof(sep)/sizeof(sep[0]); i++)
+	string sep[] = {" ", ".", ":"};
+	for (size_t i = 0; i < sizeof(sep) / sizeof(sep[0]); i++)
 		minSepWidth = max(cl_font->getRenderWidth(sep[i]), minSepWidth);
 
 	//get minimal required dimensions for segements from current format string
@@ -235,16 +240,17 @@ void CComponentsFrmClock::initCCLockItems()
 	for (size_t i = 0; i < v_cc_items.size(); i++)
 	{
 		//v_cc_items are only available as CComponent-items here, so we must cast them before
-		CComponentsLabel *lbl = static_cast <CComponentsLabel*> (v_cc_items[i]);
+		CComponentsLabel *lbl = static_cast <CComponentsLabel *>(v_cc_items[i]);
 
 		//add rounded corners only to 1st and last segment
-		if (corner_type) {
-			if (i == 0)				
+		if (corner_type)
+		{
+			if (i == 0)
 				lbl->setCornerType(corner_type & CORNER_LEFT);// 1st label item
-			else if (i == v_cc_items.size()-1)	
+			else if (i == v_cc_items.size() - 1)
 				lbl->setCornerType(corner_type & CORNER_RIGHT);// last label item
-			else			
-				lbl->setCorner(0,CORNER_NONE);// inner items don't need round corners
+			else
+				lbl->setCorner(0, CORNER_NONE); // inner items don't need round corners
 		}
 
 		//extract timestring segment (char)
@@ -252,7 +258,7 @@ void CComponentsFrmClock::initCCLockItems()
 
 		int w_tmp = 0;
 		//get width of current segment
-		if (isdigit(stmp.at(0)) ) //check for digits, if true, we use digit width
+		if (isdigit(stmp.at(0)))  //check for digits, if true, we use digit width
 			w_tmp = cl_font->getMaxDigitWidth();
 		else //not digit found, we use render width or minimal width
 			w_tmp = max(cl_font->getRenderWidth(stmp), minSepWidth);
@@ -272,7 +278,7 @@ void CComponentsFrmClock::initCCLockItems()
 		lbl->enableTboxSaveScreen(save_txt_screen);
 #if 0
 		//use matching height for digits for better vertical centerring into form
-		CTextBox* ctb = lbl->getCTextBoxObject();
+		CTextBox *ctb = lbl->getCTextBoxObject();
 		if (ctb)
 			ctb->setFontUseDigitHeight();
 
@@ -294,15 +300,16 @@ void CComponentsFrmClock::initCCLockItems()
 	width = max(w_text_min, w_segments);
 
 	//use first item as reference and set x and y position to the 1st segement item with definied alignment
-	int x_lbl = width/2-w_segments/2;
+	int x_lbl = width / 2 - w_segments / 2;
 	v_cc_items[0]->setXPos(x_lbl);
 
-	int y_lbl = height/2-h_text_min/2;
+	int y_lbl = height / 2 - h_text_min / 2;
 	v_cc_items[0]->setYPos(y_lbl);
 
 	//set all evaluated position values to all other segement items
-	for (size_t i = 1; i < v_cc_items.size(); i++){
-		x_lbl += v_cc_items[i-1]->getWidth();
+	for (size_t i = 1; i < v_cc_items.size(); i++)
+	{
+		x_lbl += v_cc_items[i - 1]->getWidth();
 		v_cc_items[i]->setPos(x_lbl, y_lbl);
 	}
 }
@@ -311,7 +318,8 @@ void CComponentsFrmClock::initCCLockItems()
 //this member is provided for slot with timer event "OnTimer"
 void CComponentsFrmClock::ShowTime()
 {
-	if (!cl_blocked) {
+	if (!cl_blocked)
+	{
 		//paint segements, but wihtout saved backgrounds
 		paint(CC_SAVE_SCREEN_NO);
 	}
@@ -320,18 +328,21 @@ void CComponentsFrmClock::ShowTime()
 //start up ticking clock controled by timer with signal/slot, return true on succses
 bool CComponentsFrmClock::startClock()
 {
-	if (cl_interval <= 0){
+	if (cl_interval <= 0)
+	{
 		dprintf(DEBUG_NORMAL, "[CComponentsFrmClock]    [%s]  clock is set to active, but interval is initialized with value %d ...\n", __func__, cl_interval);
 		return false;
 	}
 
-	if (cl_timer == NULL){
+	if (cl_timer == NULL)
+	{
 		cl_timer = new CComponentsTimer(0);
 		cl_timer->setThreadName("frmClock");
 	}
 
-	if (cl_timer->OnTimer.empty()){
-		dprintf(DEBUG_INFO,"\033[33m[CComponentsFrmClock]\t[%s] init slot...\033[0m\n", __func__);
+	if (cl_timer->OnTimer.empty())
+	{
+		dprintf(DEBUG_INFO, "\033[33m[CComponentsFrmClock]\t[%s] init slot...\033[0m\n", __func__);
 		cl_timer->OnTimer.connect(cl_sl_show);
 		force_paint_bg = true;
 	}
@@ -340,15 +351,17 @@ bool CComponentsFrmClock::startClock()
 
 	if (cl_timer->startTimer())
 		return true;
-	
+
 	return  false;
 }
 
 //stop ticking clock and internal timer, return true on succses
 bool CComponentsFrmClock::stopClock()
 {
-	if (cl_timer){
-		if (cl_timer->stopTimer()){
+	if (cl_timer)
+	{
+		if (cl_timer->stopTimer())
+		{
 			dprintf(DEBUG_INFO, "[CComponentsFrmClock]    [%s]  stopping clock...\n", __func__);
 			clear();
 			delete cl_timer;
@@ -363,7 +376,8 @@ bool CComponentsFrmClock::stopClock()
 
 bool CComponentsFrmClock::Start()
 {
-	if (startClock()) {
+	if (startClock())
+	{
 		cl_blocked = !cc_allow_paint;
 		return true;
 	}
@@ -372,7 +386,8 @@ bool CComponentsFrmClock::Start()
 
 bool CComponentsFrmClock::Stop()
 {
-	if (stopClock()){
+	if (stopClock())
+	{
 		cl_blocked = true;
 		return true;
 	}
@@ -395,9 +410,10 @@ void CComponentsFrmClock::paint(bool do_save_bg)
 		frameBuffer->blit();
 }
 
-void CComponentsFrmClock::setClockFont(Font *font, const int& style)
+void CComponentsFrmClock::setClockFont(Font *font, const int &style)
 {
-	if (cl_font != font || cl_font_style != style){
+	if (cl_font != font || cl_font_style != style)
+	{
 		if (cl_font != font)
 			cl_font = font;
 		if (style != -1)
@@ -406,12 +422,12 @@ void CComponentsFrmClock::setClockFont(Font *font, const int& style)
 	initCCLockItems();
 }
 
-Font* CComponentsFrmClock::getClockFont()
+Font *CComponentsFrmClock::getClockFont()
 {
 	return cl_font;
 }
 
-void CComponentsFrmClock::kill(const fb_pixel_t& bg_color, bool ignore_parent)
+void CComponentsFrmClock::kill(const fb_pixel_t &bg_color, bool ignore_parent)
 {
 	Stop();
 	CComponentsForm::kill(bg_color, ignore_parent);
@@ -422,45 +438,51 @@ void CComponentsFrmClock::enableTboxSaveScreen(bool mode)
 	if (cc_txt_save_screen == mode || v_cc_items.empty())
 		return;
 	cc_txt_save_screen = mode;
-	for (size_t i = 0; i < v_cc_items.size(); i++){
-		CComponentsLabel *seg = static_cast <CComponentsLabel*>(v_cc_items[i]);
+	for (size_t i = 0; i < v_cc_items.size(); i++)
+	{
+		CComponentsLabel *seg = static_cast <CComponentsLabel *>(v_cc_items[i]);
 		seg->enableTboxSaveScreen(cc_txt_save_screen);
 	}
 }
 
-void CComponentsFrmClock::setHeight(const int& h)
+void CComponentsFrmClock::setHeight(const int &h)
 {
 	if (h == height)
 		return;
 
 	int f_height = cl_font->getHeight();
-	if (h != f_height){
+	if (h != f_height)
+	{
 		dprintf(DEBUG_DEBUG, "\033[33m[CComponentsFrmClock]\t[%s - %d], font height is different than current height [%d], using [%d]  ...\033[0m\n", __func__, __LINE__, h, f_height);
 		CComponentsItem::setHeight(f_height);
-	}else
+	}
+	else
 		CComponentsItem::setHeight(h);
 	initCCLockItems();
 }
 
-void CComponentsFrmClock::setWidth(const int& w)
+void CComponentsFrmClock::setWidth(const int &w)
 {
 	if (w == width)
 		return;
 
 	int f_width = cl_font->getRenderWidth(cl_format_str);
-	if (w != f_width){
+	if (w != f_width)
+	{
 		dprintf(DEBUG_NORMAL, "\033[33m[CComponentsFrmClock]\t[%s - %d], font width is different than current width [%d], using [%d]  ...\033[0m\n", __func__, __LINE__, w, f_width);
 		CComponentsItem::setWidth(f_width);
-	}else
+	}
+	else
 		CComponentsItem::setWidth(w);
 	initCCLockItems();
 }
 
-bool CComponentsFrmClock::enableColBodyGradient(const int& enable_mode, const fb_pixel_t& sec_color)
+bool CComponentsFrmClock::enableColBodyGradient(const int &enable_mode, const fb_pixel_t &sec_color)
 {
-	if (CCDraw::enableColBodyGradient(enable_mode, sec_color)){
+	if (CCDraw::enableColBodyGradient(enable_mode, sec_color))
+	{
 		for (size_t i = 0; i < v_cc_items.size(); i++)
-			static_cast <CComponentsLabel*>(v_cc_items[i])->getCTextBoxObject()->clearScreenBuffer();
+			static_cast <CComponentsLabel *>(v_cc_items[i])->getCTextBoxObject()->clearScreenBuffer();
 		return true;
 	}
 	return false;

@@ -37,7 +37,7 @@
 
 using namespace std;
 
-CComponentsTimer::CComponentsTimer(const int& interval, bool is_nano)
+CComponentsTimer::CComponentsTimer(const int &interval, bool is_nano)
 {
 	name			= "unnamed";
 	tm_thread 		= 0;
@@ -57,36 +57,43 @@ CComponentsTimer::~CComponentsTimer()
 
 int CComponentsTimer::getSleep(long miliseconds)
 {
-   struct timespec req, rem;
+	struct timespec req, rem;
 
-	if(miliseconds > 999){
+	if (miliseconds > 999)
+	{
 		req.tv_sec = (time_t)(miliseconds / 1000);
 		req.tv_nsec = (miliseconds - ((long)req.tv_sec * 1000)) * 1000000;
-	}else{
+	}
+	else
+	{
 		req.tv_sec = 0;
 		req.tv_nsec = miliseconds * 1000000;
 	}
 
-	return nanosleep(&req , &rem);
+	return nanosleep(&req, &rem);
 }
 
 void CComponentsTimer::runSharedTimerAction()
 {
 	//start loop
-	tn = "cc:"+name;
+	tn = "cc:" + name;
 	set_threadname(tn.c_str());
-	while(tm_enable && tm_interval > 0) {
+	while (tm_enable && tm_interval > 0)
+	{
 		tm_mutex.lock();
 		OnTimer();
-		if (!tm_enable_nano){
+		if (!tm_enable_nano)
+		{
 			sleep(tm_interval);
-		}else{
+		}
+		else
+		{
 			//behavior is different on cst hardware
 			long corr_factor = 1;
 			corr_factor = 10;
 			int res = getSleep(tm_interval * corr_factor);
 			if (res != 0)
-				dprintf(DEBUG_NORMAL,"\033[33m[CComponentsTimer] [%s - %d] ERROR: returns [%d] \033[0m\n", __func__, __LINE__, res);
+				dprintf(DEBUG_NORMAL, "\033[33m[CComponentsTimer] [%s - %d] ERROR: returns [%d] \033[0m\n", __func__, __LINE__, res);
 		}
 		tm_mutex.unlock();
 	}
@@ -96,9 +103,9 @@ void CComponentsTimer::runSharedTimerAction()
 }
 
 //thread handle
-void* CComponentsTimer::initThreadAction(void *arg)
+void *CComponentsTimer::initThreadAction(void *arg)
 {
-	CComponentsTimer *timer = static_cast<CComponentsTimer*>(arg);
+	CComponentsTimer *timer = static_cast<CComponentsTimer *>(arg);
 
 	timer->runSharedTimerAction();
 
@@ -108,19 +115,22 @@ void* CComponentsTimer::initThreadAction(void *arg)
 //start up running timer with own thread, return true on succses
 void CComponentsTimer::initThread()
 {
-	if(!tm_thread) {
-		void *ptr = static_cast<void*>(this);
+	if (!tm_thread)
+	{
+		void *ptr = static_cast<void *>(this);
 
-		pthread_setcancelstate(PTHREAD_CANCEL_ENABLE,0);
-		pthread_setcanceltype (PTHREAD_CANCEL_ASYNCHRONOUS,0);
+		pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, 0);
+		pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, 0);
 
-		int res = pthread_create (&tm_thread, NULL, initThreadAction, ptr);
+		int res = pthread_create(&tm_thread, NULL, initThreadAction, ptr);
 
-		if (res != 0){
-			dprintf(DEBUG_NORMAL,"\033[33m[CComponentsTimer] [%s - %d] ERROR! pthread_create\033[0m\n", __func__, __LINE__);
+		if (res != 0)
+		{
+			dprintf(DEBUG_NORMAL, "\033[33m[CComponentsTimer] [%s - %d] ERROR! pthread_create\033[0m\n", __func__, __LINE__);
 			return;
-		}else
-			dprintf(DEBUG_DEBUG,"\033[33m[CComponentsTimer] [%s - %d] started thread ID:%ld \033[0m\n", __func__, __LINE__, pthread_self());
+		}
+		else
+			dprintf(DEBUG_DEBUG, "\033[33m[CComponentsTimer] [%s - %d] started thread ID:%ld \033[0m\n", __func__, __LINE__, pthread_self());
 
 		if (res == 0)
 			CNeutrinoApp::getInstance()->OnBeforeRestart.connect(sl_stop_timer);
@@ -133,12 +143,13 @@ void CComponentsTimer::stopThread()
 	while (!sl_stop_timer.empty())
 		sl_stop_timer.disconnect();
 
-	while(tm_thread) {
+	while (tm_thread)
+	{
 		int thres = pthread_cancel(tm_thread);
 		if (thres != 0)
-			dprintf(DEBUG_NORMAL,"\033[33m[CComponentsTimer] [%s - %d] ERROR! pthread_cancel, error [%d] %s\033[0m\n", __func__, __LINE__, thres, strerror(thres));
+			dprintf(DEBUG_NORMAL, "\033[33m[CComponentsTimer] [%s - %d] ERROR! pthread_cancel, error [%d] %s\033[0m\n", __func__, __LINE__, thres, strerror(thres));
 
-		void* res;
+		void *res;
 		thres = pthread_join(tm_thread, &res);
 
 		if (res != PTHREAD_CANCELED)
@@ -151,7 +162,7 @@ void CComponentsTimer::stopThread()
 bool CComponentsTimer::startTimer()
 {
 	initThread();
-	if(tm_thread)
+	if (tm_thread)
 		tm_enable = true;
 
 	return tm_enable;
@@ -161,7 +172,8 @@ bool CComponentsTimer::stopTimer()
 {
 	tm_enable = false;
 	stopThread();
-	if(tm_thread == 0){
+	if (tm_thread == 0)
+	{
 		if (!OnTimer.empty())
 			OnTimer.clear();
 		return true;
@@ -170,7 +182,7 @@ bool CComponentsTimer::stopTimer()
 	return false;
 }
 
-void CComponentsTimer::setTimerInterval(const int& interval, bool is_nano)
+void CComponentsTimer::setTimerInterval(const int &interval, bool is_nano)
 {
 	if (tm_interval == interval && tm_enable_nano == is_nano)
 		return;

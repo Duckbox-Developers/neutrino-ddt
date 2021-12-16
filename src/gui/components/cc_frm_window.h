@@ -58,15 +58,15 @@ class CComponentsWindow : public CComponentsForm, CCHeaderTypes
 {
 	protected:
 		///object: header object, to get access to header properties see also getHeaderObject()
-		CComponentsHeader * ccw_head;
+		CComponentsHeader *ccw_head;
 		///object: left sidebar chain object, this is a container that contains sidebar items
-		CComponentsFrmChain * ccw_left_sidebar;
+		CComponentsFrmChain *ccw_left_sidebar;
 		///object: right sidebar chain object, this is a container that contains sidebar items
-		CComponentsFrmChain * ccw_right_sidebar;
+		CComponentsFrmChain *ccw_right_sidebar;
 		///object: body object, this is the container for all needed items, to add with addWindowItem()
-		CComponentsForm * ccw_body;
+		CComponentsForm *ccw_body;
 		///object: footer object, to get access to header properties see also getFooterObject(
-		CComponentsFooter * ccw_footer;
+		CComponentsFooter *ccw_footer;
 		///property: caption in header, see also getHeaderObject()
 		std::string ccw_caption;
 		///property: alignment mode for header caption
@@ -94,7 +94,7 @@ class CComponentsWindow : public CComponentsForm, CCHeaderTypes
 		///footer heigh, default defined by footer object itself
 		int ccw_h_footer;
 		///footer button font
-		Font*	ccw_button_font;
+		Font	*ccw_button_font;
 
 		///initialze header object
 		void initHeader();
@@ -109,14 +109,14 @@ class CComponentsWindow : public CComponentsForm, CCHeaderTypes
 		///initialze all window objects at once
 		void initCCWItems();
 		///initialize all attributes
-		void initVarWindow(	const int& x_pos, const int& y_pos, const int& w, const int& h,
-					const std::string& caption,
-					const std::string& iconname,
-					CComponentsForm *parent,
-					int shadow_mode,
-					fb_pixel_t color_frame,
-					fb_pixel_t color_body,
-					fb_pixel_t color_shadow);
+		void initVarWindow(const int &x_pos, const int &y_pos, const int &w, const int &h,
+			const std::string &caption,
+			const std::string &iconname,
+			CComponentsForm *parent,
+			int shadow_mode,
+			fb_pixel_t color_frame,
+			fb_pixel_t color_body,
+			fb_pixel_t color_shadow);
 		///initialize width and height
 		void initWindowSize();
 		///initialize position
@@ -180,14 +180,14 @@ class CComponentsWindow : public CComponentsForm, CCHeaderTypes
 		*		this inits a window with position x100 y100 on screen with 50% of screen size assigned with discret percental screen dimensions \n
 		* 		CComponentsWindow win(100, 100, CCW_PERCENT 50, CCW_PERCENT 50, "Test window");
 		*/
-		CComponentsWindow(	const int& x_pos, const int& y_pos, const int& w, const int& h,
-					const std::string& caption = "",
-					const std::string& iconname = "",
-					CComponentsForm *parent = NULL,
-					int shadow_mode = CC_SHADOW_OFF,
-					fb_pixel_t color_frame = COL_FRAME_PLUS_0,
-					fb_pixel_t color_body = COL_MENUCONTENT_PLUS_0,
-					fb_pixel_t color_shadow = COL_SHADOW_PLUS_0);
+		CComponentsWindow(const int &x_pos, const int &y_pos, const int &w, const int &h,
+			const std::string &caption = "",
+			const std::string &iconname = "",
+			CComponentsForm *parent = NULL,
+			int shadow_mode = CC_SHADOW_OFF,
+			fb_pixel_t color_frame = COL_FRAME_PLUS_0,
+			fb_pixel_t color_body = COL_MENUCONTENT_PLUS_0,
+			fb_pixel_t color_shadow = COL_SHADOW_PLUS_0);
 
 		/**
 		* advanced constructor for CComponentsWindow, provides parameters for the most required properties
@@ -195,14 +195,14 @@ class CComponentsWindow : public CComponentsForm, CCHeaderTypes
 		* 	@li 	optional: expects type neutrino_locale_t, defines title of window header
 		* @see		for other parameters take a look to CComponentsWindow base class above
 		*/
-		CComponentsWindow(	const int& x_pos, const int& y_pos, const int& w, const int& h,
-					neutrino_locale_t locale_text = NONEXISTANT_LOCALE,
-					const std::string& iconname = "",
-					CComponentsForm *parent = NULL,
-					int shadow_mode = CC_SHADOW_OFF,
-					fb_pixel_t color_frame = COL_FRAME_PLUS_0,
-					fb_pixel_t color_body = COL_MENUCONTENT_PLUS_0,
-					fb_pixel_t color_shadow = COL_SHADOW_PLUS_0);
+		CComponentsWindow(const int &x_pos, const int &y_pos, const int &w, const int &h,
+			neutrino_locale_t locale_text = NONEXISTANT_LOCALE,
+			const std::string &iconname = "",
+			CComponentsForm *parent = NULL,
+			int shadow_mode = CC_SHADOW_OFF,
+			fb_pixel_t color_frame = COL_FRAME_PLUS_0,
+			fb_pixel_t color_body = COL_MENUCONTENT_PLUS_0,
+			fb_pixel_t color_shadow = COL_SHADOW_PLUS_0);
 
 		/**
 		* Add an item to body object, also usable is addCCItem() to add items to the window object
@@ -211,7 +211,7 @@ class CComponentsWindow : public CComponentsForm, CCHeaderTypes
 		* @return	Returns item ID
 		* @see		Take a look to cc_types.h for possible types.
 		*/
-		int addWindowItem(CComponentsItem* cc_Item);
+		int addWindowItem(CComponentsItem *cc_Item);
 
 		/**
 		* enable/disable paint of footer, default true
@@ -219,7 +219,11 @@ class CComponentsWindow : public CComponentsForm, CCHeaderTypes
 		* 	@li 	expects type bool, default = true
 		* @see		ccw_show_footer, showHeader()
 		*/
-		void showFooter(bool show = true){ccw_show_footer = show; initCCWItems();}
+		void showFooter(bool show = true)
+		{
+			ccw_show_footer = show;
+			initCCWItems();
+		}
 
 		/**
 		* enable/disable paint of header, default true
@@ -227,14 +231,18 @@ class CComponentsWindow : public CComponentsForm, CCHeaderTypes
 		* 	@li 	expects type bool, default = true
 		* @see		ccw_show_header, showFooter()
 		*/
-		void showHeader(bool show = true){ccw_show_header = show; initCCWItems();}
+		void showHeader(bool show = true)
+		{
+			ccw_show_header = show;
+			initCCWItems();
+		}
 
 		/**
 		* enable/disable paint of sidebar,
 		* @param[in]	show
 		* 	@li 	optional: expects type const int&, default = enabled
 		*/
-		void enableSidebar(const int& sidbar_type = CC_WINDOW_LEFT_SIDEBAR | CC_WINDOW_RIGHT_SIDEBAR);
+		void enableSidebar(const int &sidbar_type = CC_WINDOW_LEFT_SIDEBAR | CC_WINDOW_RIGHT_SIDEBAR);
 
 		/**
 		* sets title text in header
@@ -244,7 +252,11 @@ class CComponentsWindow : public CComponentsForm, CCHeaderTypes
 		* 	@li 	optional: expects type const cc_title_alignment_t&, defines allignment of title text
 		* @see		CTextBox for alignment modes
 		*/
-		void setWindowCaption(const std::string& text, const cc_title_alignment_t& align_mode = DEFAULT_TITLE_ALIGN){ccw_caption = text; ccw_align_mode = align_mode;}
+		void setWindowCaption(const std::string &text, const cc_title_alignment_t &align_mode = DEFAULT_TITLE_ALIGN)
+		{
+			ccw_caption = text;
+			ccw_align_mode = align_mode;
+		}
 
 		/**
 		* sets title text in header
@@ -254,21 +266,27 @@ class CComponentsWindow : public CComponentsForm, CCHeaderTypes
 		* 	@li 	optional: expects type const cc_title_alignment_t&, defines allignment of title text
 		* @see		CTextBox for alignment modes
 		*/
-		void setWindowCaption(neutrino_locale_t locale_text, const cc_title_alignment_t& align_mode = DEFAULT_TITLE_ALIGN);
+		void setWindowCaption(neutrino_locale_t locale_text, const cc_title_alignment_t &align_mode = DEFAULT_TITLE_ALIGN);
 
 		/**
 		* Sets header text color
 		* @param[in]	const fb_pixel_t&
 		* 	@li 	expects type const fb_pixel_t&
 		*/
-		void setWindowHeaderTextColor(const fb_pixel_t& color){ccw_col_head_text = color;}
+		void setWindowHeaderTextColor(const fb_pixel_t &color)
+		{
+			ccw_col_head_text = color;
+		}
 
 		/**
 		* Sets header background color
 		* @param[in]	const fb_pixel_t&
 		* 	@li 	expects type const fb_pixel_t&
 		*/
-		void setWindowHeaderColor(const fb_pixel_t& color){ccw_col_head = color;}
+		void setWindowHeaderColor(const fb_pixel_t &color)
+		{
+			ccw_col_head = color;
+		}
 
 		/**
 		* sets title text alignment
@@ -276,14 +294,21 @@ class CComponentsWindow : public CComponentsForm, CCHeaderTypes
 		* 	@li 	expects type const cc_title_alignment_t&
 		* @see		CTextBox for alignment modes
 		*/
-		void setWindowCaptionAlignment(const cc_title_alignment_t& align_mode){ccw_align_mode = align_mode;};
+		void setWindowCaptionAlignment(const cc_title_alignment_t &align_mode)
+		{
+			ccw_align_mode = align_mode;
+		};
 
 		/**
 		* Sets icon name of window header.
 		* @param[in]	iconname
 		* 	@li 	expects type const std::string&
 		*/
-		void setWindowIcon(const std::string& iconname){ccw_icon_name = iconname; initHeader();};
+		void setWindowIcon(const std::string &iconname)
+		{
+			ccw_icon_name = iconname;
+			initHeader();
+		};
 
 		///set default header icon buttons, see also getHeaderObject()
 		/**
@@ -312,58 +337,86 @@ class CComponentsWindow : public CComponentsForm, CCHeaderTypes
 				CC_BTN_RECORD_STOP,
 		* @see		cc_frm_header.h for current types
 		*/
-		void setWindowHeaderButtons(const int& buttons){ccw_buttons = buttons;}
+		void setWindowHeaderButtons(const int &buttons)
+		{
+			ccw_buttons = buttons;
+		}
 
 		/**
 		* Gets a pointer to the internal header object, use this to get direct access to header properities
 		* @return	CComponentsHeader*
 		*/
-		CComponentsHeader* getHeaderObject(){return ccw_head;}
+		CComponentsHeader *getHeaderObject()
+		{
+			return ccw_head;
+		}
 
 		/**
 		* Gets a pointer to the internal body object, use this to get access to body properities
 		* @return	CComponentsForm*
 		*/
-		CComponentsForm* getBodyObject(){return ccw_body;}
+		CComponentsForm *getBodyObject()
+		{
+			return ccw_body;
+		}
 
 		/**
 		* Gets a pointer to the internal footer object, use this to get access to footer properities
 		* @return	CComponentsFooter*
 		*/
-		CComponentsFooter* getFooterObject(){return ccw_footer;}
+		CComponentsFooter *getFooterObject()
+		{
+			return ccw_footer;
+		}
 
 		/**
 		* Sets footer background color
 		* @param[in]	color
 		* 	@li 	expects type const fb_pixel_t&
 		*/
-		void setWindowFooterColor(const fb_pixel_t& color){ccw_col_footer = color;}
+		void setWindowFooterColor(const fb_pixel_t &color)
+		{
+			ccw_col_footer = color;
+		}
 
 		/**
 		* Sets font for footer buttons
 		* @param[in]	font_type
 		* 	@li 	expects type Font*
 		*/
-		void setWindowFooterFont(Font* font_type){ccw_button_font = font_type;}
+		void setWindowFooterFont(Font *font_type)
+		{
+			ccw_button_font = font_type;
+		}
 
 		/**
 		* Gets a pointer to the internal left side bar object, use this to get access to left sidebar properities
 		* @return	CComponentsFrmChain*
 		*/
-		CComponentsFrmChain* getLeftSidebarObject(){return ccw_left_sidebar;}
+		CComponentsFrmChain *getLeftSidebarObject()
+		{
+			return ccw_left_sidebar;
+		}
 
 		/**
 		* Gets a pointer to the internal right side bar object, use this to get access to right sidebar properities
 		* @return	CComponentsFrmChain*
 		*/
-		CComponentsFrmChain* getRightSidebarObject(){return ccw_right_sidebar;}
+		CComponentsFrmChain *getRightSidebarObject()
+		{
+			return ccw_right_sidebar;
+		}
 
 		/**
 		* Sets width of sidebars
 		* @param[in]	sidebar_width
 		* 	@li 	expects type const int&
 		*/
-		void setWidthSidebar(const int& sidebar_width){ccw_w_sidebar = sidebar_width; initCCWItems();}
+		void setWidthSidebar(const int &sidebar_width)
+		{
+			ccw_w_sidebar = sidebar_width;
+			initCCWItems();
+		}
 
 		/**
 		* Sets current page number
@@ -371,7 +424,7 @@ class CComponentsWindow : public CComponentsForm, CCHeaderTypes
 		* 	@li 	expects type const int&
 		* @note		This is simliar to setCurrentPage() known from basic class CComponentsForm, but here it is related only for window body object.
 		*/
-		void setCurrentPage(const uint8_t& current_page);
+		void setCurrentPage(const uint8_t &current_page);
 
 		/**
 		* Gets current page number
@@ -394,26 +447,29 @@ class CComponentsWindow : public CComponentsForm, CCHeaderTypes
 		* @param[in]	do_save_bg
 		* 	@li 	optional: expects type bool, default = CC_SAVE_SCREEN_NO (false), sets background save mode
 		*/
-		void paintPage(const uint8_t& page_number, bool do_save_bg = CC_SAVE_SCREEN_NO);
+		void paintPage(const uint8_t &page_number, bool do_save_bg = CC_SAVE_SCREEN_NO);
 
 		/**
 		* enable/disable page scroll
 		* @param[in]	mode
 		* 	@li 	optional: expects type const int&, default enabled for up/down keys, only for body!
 		*/
-		void enablePageScroll(const int& mode = PG_SCROLL_M_UP_DOWN_KEY);
+		void enablePageScroll(const int &mode = PG_SCROLL_M_UP_DOWN_KEY);
 
 		/**
 		* Sets width of body scrollbar
 		* @param[in]	crollbar_width
 		* 	@li 	expects type const int&
 		*/
-		void setScrollBarWidth(const int& scrollbar_width);
+		void setScrollBarWidth(const int &scrollbar_width);
 
 		/**
 		* Reinit position and dimensions and reinitialize mostly elemenatary properties
 		*/
-		void Refresh(){initCCWItems();};
+		void Refresh()
+		{
+			initCCWItems();
+		};
 
 		/**
 		* Paint window
@@ -428,19 +484,25 @@ class CComponentsWindow : public CComponentsForm, CCHeaderTypes
 		* 	@li 	expects type const neutrino_msg_t&
 		* @see		river/rcinput.h for possible keys
 		*/
-		virtual void addExitKey(const neutrino_msg_t& key){getBodyObject()->addExitKey(key);}
+		virtual void addExitKey(const neutrino_msg_t &key)
+		{
+			getBodyObject()->addExitKey(key);
+		}
 
 		/**
 		* Removes all current exec keys from current collection.
 		* @note 	use addExitKey() if new exec key is required
 		*/
-		virtual void removeExitKeys(){getBodyObject()->removeExitKeys();}
+		virtual void removeExitKeys()
+		{
+			getBodyObject()->removeExitKeys();
+		}
 
 		/**
 		* Sets an image for window background.
 		* @note 	The assigned image is assigned into body object! Main container, header and footer will be not touched.
 		*/
-		bool setBodyBGImage(const std::string& image_path);
+		bool setBodyBGImage(const std::string &image_path);
 };
 
 class CComponentsWindowMax : public CComponentsWindow
@@ -453,12 +515,12 @@ class CComponentsWindowMax : public CComponentsWindow
 		* 	@li 	expects type const std::string&, defines title of window header
 		* @see		for other parameters take a look to CComponentsWindow base class above
 		*/
-		CComponentsWindowMax(	const std::string& caption, const std::string& iconname = "",
-					CComponentsForm *parent = NULL,
-					int shadow_mode = CC_SHADOW_OFF,
-					fb_pixel_t color_frame = COL_FRAME_PLUS_0,
-					fb_pixel_t color_body = COL_MENUCONTENT_PLUS_0,
-					fb_pixel_t color_shadow = COL_SHADOW_PLUS_0);
+		CComponentsWindowMax(const std::string &caption, const std::string &iconname = "",
+			CComponentsForm *parent = NULL,
+			int shadow_mode = CC_SHADOW_OFF,
+			fb_pixel_t color_frame = COL_FRAME_PLUS_0,
+			fb_pixel_t color_body = COL_MENUCONTENT_PLUS_0,
+			fb_pixel_t color_shadow = COL_SHADOW_PLUS_0);
 
 		/**
 		* Simple constructor for CComponentsWindow, this shows only a centered window based up current screen settings
@@ -467,12 +529,12 @@ class CComponentsWindowMax : public CComponentsWindow
 		* 	@li 	expects type neutrino_locale_t, defines title of window header
 		* @see		for other parameters take a look to CComponentsWindow base class above
 		*/
-		CComponentsWindowMax(	neutrino_locale_t locale_caption, const std::string& iconname = "",
-					CComponentsForm *parent = NULL,
-					int shadow_mode = CC_SHADOW_OFF,
-					fb_pixel_t color_frame = COL_FRAME_PLUS_0,
-					fb_pixel_t color_body = COL_MENUCONTENT_PLUS_0,
-					fb_pixel_t color_shadow = COL_SHADOW_PLUS_0);
+		CComponentsWindowMax(neutrino_locale_t locale_caption, const std::string &iconname = "",
+			CComponentsForm *parent = NULL,
+			int shadow_mode = CC_SHADOW_OFF,
+			fb_pixel_t color_frame = COL_FRAME_PLUS_0,
+			fb_pixel_t color_body = COL_MENUCONTENT_PLUS_0,
+			fb_pixel_t color_shadow = COL_SHADOW_PLUS_0);
 };
 
 #endif

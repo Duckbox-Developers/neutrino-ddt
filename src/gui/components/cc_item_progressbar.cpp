@@ -39,19 +39,19 @@
 #define GREEN  0x00FF00
 #define YELLOW 0xFFFF00
 
-CProgressBar::CProgressBar(	const int x_pos,
-				const int y_pos,
-				const int w,
-				const int h,
-				fb_pixel_t color_frame,
-				fb_pixel_t color_body,
-				fb_pixel_t color_shadow,
-				const fb_pixel_t active_col,
-				const fb_pixel_t passive_col,
-				const int R,
-				const int G,
-				const int Y,
-				CComponentsForm *parent)
+CProgressBar::CProgressBar(const int x_pos,
+	const int y_pos,
+	const int w,
+	const int h,
+	fb_pixel_t color_frame,
+	fb_pixel_t color_body,
+	fb_pixel_t color_shadow,
+	const fb_pixel_t active_col,
+	const fb_pixel_t passive_col,
+	const int R,
+	const int G,
+	const int Y,
+	CComponentsForm *parent)
 {
 	//CComponentsItem
 	cc_item_type 	= CC_ITEMTYPE_PROGRESSBAR;
@@ -84,7 +84,7 @@ CProgressBar::CProgressBar(	const int x_pos,
 	pb_x 			= x + fr_thickness;
 	pb_y 			= y + fr_thickness;
 	pb_active_width 	= 0;
-	pb_max_width		= width - 2*fr_thickness;
+	pb_max_width		= width - 2 * fr_thickness;
 	pb_height		= 0;
 	pb_start_x_passive 	= 0;
 	pb_passive_width 	= width;
@@ -109,20 +109,20 @@ void CProgressBar::initDimensions()
 	// width for active bar with current value
 	pb_active_width = std::max(0, pb_last_width);
 	if (pb_max_value)
-		pb_active_width = (width - 2*fr_thickness) * pb_value / pb_max_value;
+		pb_active_width = (width - 2 * fr_thickness) * pb_value / pb_max_value;
 
 	// max width active/passive bar
-	pb_max_width = width - 2*fr_thickness;
+	pb_max_width = width - 2 * fr_thickness;
 
 	// max height of active/passive bar
-	pb_height = height - 2*fr_thickness;
+	pb_height = height - 2 * fr_thickness;
 
 	pb_start_x_passive = pb_x + pb_active_width;
 
 	pb_passive_width = pb_max_width - pb_active_width;
 
 	// background = frame
-	if ( col_frame == 0 )
+	if (col_frame == 0)
 		col_frame = pb_active_col;
 }
 
@@ -131,7 +131,8 @@ void CProgressBar::initDimensions()
 
 void CProgressBarCache::pbcClear()
 {
-	for (std::vector<CProgressBarCache *>::iterator it = pbCache.begin(); it != pbCache.end(); ++it) {
+	for (std::vector<CProgressBarCache *>::iterator it = pbCache.begin(); it != pbCache.end(); ++it)
+	{
 		if ((*it)->pbc_active)
 			free((*it)->pbc_active);
 		if ((*it)->pbc_passive)
@@ -151,9 +152,9 @@ CProgressBarCache *CProgressBarCache::pbcLookup(int dy, int dx, int active_col, 
 	// lookup
 	std::vector<CProgressBarCache *>::iterator it = pbCache.begin();
 	for (; it != pbCache.end() && ((*it)->pbc_height != dy || (*it)->pbc_width != dx ||
-				       (*it)->pbc_active_col != active_col || (*it)->pbc_passive_col != passive_col ||
-				       (*it)->pbc_design != design || (*it)->pbc_invert != enable_invert || (*it)->pbc_gradient != enable_gradient ||
-				       (*it)->pbc_red != R || (*it)->pbc_yellow != Y || (*it)->pbc_green != G); ++it);
+			(*it)->pbc_active_col != active_col || (*it)->pbc_passive_col != passive_col ||
+			(*it)->pbc_design != design || (*it)->pbc_invert != enable_invert || (*it)->pbc_gradient != enable_gradient ||
+			(*it)->pbc_red != R || (*it)->pbc_yellow != Y || (*it)->pbc_green != G); ++it);
 	if (it != pbCache.end())
 		return *it;
 
@@ -175,7 +176,8 @@ void CProgressBarCache::pbcPaint(int x, int y, int pbc_active_width, int pbc_pas
 		pbc_passive_width = pbc_width - pbc_active_width;
 	fb_pixel_t *ap = pbc_active;
 	fb_pixel_t *pp = pbc_passive;
-	for (int h = 0; h < pbc_height; h++) {
+	for (int h = 0; h < pbc_height; h++)
+	{
 		int w = 0;
 		for (; w < pbc_active_width; w++, p++, ap++)
 			if (*ap)
@@ -192,11 +194,13 @@ void CProgressBarCache::pbcPaint(int x, int y, int pbc_active_width, int pbc_pas
 
 void CProgressBarCache::pbcPaintBoxRel(int x, int y, int dx, int dy, fb_pixel_t *pixbuf, fb_pixel_t col) const
 {
-	if (x < 0) {
+	if (x < 0)
+	{
 		dx -= x;
 		x = 0;
 	}
-	if (y < 0) {
+	if (y < 0)
+	{
 		dy -= y;
 		y = 0;
 	}
@@ -209,7 +213,8 @@ void CProgressBarCache::pbcPaintBoxRel(int x, int y, int dx, int dy, fb_pixel_t 
 	pixbuf += pbc_width * y + x;
 	fb_pixel_t *e = pixbuf + pbc_width * (dy - 1) + dx;
 	int off = pbc_width - dx;
-	while (pixbuf < e) {
+	while (pixbuf < e)
+	{
 		fb_pixel_t *ex = pixbuf + dx;
 		while (pixbuf < ex)
 			*pixbuf++ = col;
@@ -223,18 +228,21 @@ void CProgressBarCache::pbcCreateBitmaps()
 	if (!pbc_active)
 		return;
 	pbc_passive = (fb_pixel_t *) calloc(1, pbc_width * pbc_height * sizeof(fb_pixel_t));
-	if (!pbc_passive) {
+	if (!pbc_passive)
+	{
 		free(pbc_active);
 		return;
 	}
 
 	int itemw = ITEMW, itemh = ITEMW, pointx = POINT, pointy = POINT;
-	switch (pbc_design){
+	switch (pbc_design)
+	{
 		default:
 		case CProgressBar::PB_MONO:	// monochrome
 			pbcPaintBoxRel(0, 0, pbc_width, pbc_height, pbc_active, pbc_active_col);
 			pbcPaintBoxRel(0, 0, pbc_width, pbc_height, pbc_passive, pbc_passive_col);
-			if (pbc_gradient) {
+			if (pbc_gradient)
+			{
 				pbcApplyGradient(pbc_active);
 				pbcApplyGradient(pbc_passive);
 			}
@@ -268,7 +276,8 @@ void CProgressBarCache::pbcCreateBitmaps()
 	int gn = pbc_green  * pbc_width / (100 * itemw);	/* how many POINTs green */
 
 	// fixup rounding errors
-	while ((rd + yw + gn) * itemw < pbc_width) {
+	while ((rd + yw + gn) * itemw < pbc_width)
+	{
 		if (gn)
 			gn++;
 		if (yw && ((rd + yw + gn) * itemw < pbc_width))
@@ -283,7 +292,8 @@ void CProgressBarCache::pbcCreateBitmaps()
 	uint32_t rgb, diff = 0;
 	int step, b = 0;
 
-	for (i = 0; i < rd; i++, sh_x += itemw) {
+	for (i = 0; i < rd; i++, sh_x += itemw)
+	{
 		diff = i * 255 / rd;
 		rgb = RED + (diff << 8); // adding green
 		fb_pixel_t color = make16color(rgb);
@@ -294,7 +304,8 @@ void CProgressBarCache::pbcCreateBitmaps()
 	step = yw - rd - 1;
 	if (step < 1)
 		step = 1;
-	for (; i < yw; i++, sh_x += itemw) {
+	for (; i < yw; i++, sh_x += itemw)
+	{
 		diff = b++ * 255 / step / 2;
 		rgb = YELLOW - (diff << 16); // removing red
 		fb_pixel_t color = make16color(rgb);
@@ -307,7 +318,8 @@ void CProgressBarCache::pbcCreateBitmaps()
 	step = gn - yw - 1;
 	if (step < 1)
 		step = 1;
-	for (; i < gn; i++, sh_x += itemw) {
+	for (; i < gn; i++, sh_x += itemw)
+	{
 		diff = b++ * 255 / step / 2 + off;
 		rgb = YELLOW - (diff << 16); // removing red
 		fb_pixel_t color = make16color(rgb);
@@ -315,11 +327,14 @@ void CProgressBarCache::pbcCreateBitmaps()
 		for (int j = 0; j < hcnt; j++, sh_y += itemh)
 			pbcPaintBoxRel(sh_x, sh_y, pointx, pointy, pbc_active, color);
 	}
-	if (pbc_invert) {
-		for (int l = 0; l < pbc_height; l++) {
+	if (pbc_invert)
+	{
+		for (int l = 0; l < pbc_height; l++)
+		{
 			fb_pixel_t *as = pbc_active + l * pbc_width;
 			fb_pixel_t *ae = as + pbc_width - 1;
-			for (; as < ae; as++, ae--) {
+			for (; as < ae; as++, ae--)
+			{
 				fb_pixel_t t = *as;
 				*as = *ae;
 				*ae = t;
@@ -332,7 +347,8 @@ void CProgressBarCache::pbcCreateBitmaps()
 
 	fb_pixel_t *a = pbc_active, *p = pbc_passive;
 	fb_pixel_t *end = a + pbc_width * pbc_height;
-	for (; a < end; a++, p++) {
+	for (; a < end; a++, p++)
+	{
 		fb_pixel_t q = *a;
 		unsigned int gray = ((q & 0xff) + ((q >> 8) & 0xff) + ((q >> 16) & 0xff)) / 3;
 		q >>= 24;
@@ -348,22 +364,25 @@ void CProgressBarCache::pbcCreateBitmaps()
 
 void CProgressBarCache::pbcApplyGradient(fb_pixel_t *b)
 {
-	for (int y = 0; y < pbc_height; y++) {
+	for (int y = 0; y < pbc_height; y++)
+	{
 		int _o = y * pbc_width;
 		fb_pixel_t last_old = 0;
 		fb_pixel_t last_new = 0;
-		for (int _x = pbc_width - 1; _x > -1; _x--) {
+		for (int _x = pbc_width - 1; _x > -1; _x--)
+		{
 			fb_pixel_t &v = *(b + _o + _x);
-			if (v != last_old) {
+			if (v != last_old)
+			{
 				last_old = v;
 				double s = sin((y + .5) * M_PI / pbc_height) * .8 + .2;
 				float fr = float(((last_old >> 16) & 0xff) * s + 0.5);
 				float fg = float(((last_old >>  8) & 0xff) * s + 0.5);
-				float fb = float(((last_old      ) & 0xff) * s + 0.5);
+				float fb = float(((last_old) & 0xff) * s + 0.5);
 				last_new = (last_old & 0xFF000000)
 					| ((unsigned int)fr << 16)
 					| ((unsigned int)fg <<  8)
-					| ((unsigned int)fb      );
+					| ((unsigned int)fb);
 			}
 			v = last_new;
 		}
@@ -372,7 +391,8 @@ void CProgressBarCache::pbcApplyGradient(fb_pixel_t *b)
 
 void CProgressBar::paintProgress(bool do_save_bg)
 {
-	if (*pb_design == PB_OFF) {
+	if (*pb_design == PB_OFF)
+	{
 		paintInit(false);
 		return;
 	}
@@ -396,13 +416,15 @@ void CProgressBar::paintProgress(bool do_save_bg)
 
 	//body
 	if (pb_last_width == -1 && col_body != 0) /* first paint */
-		paintInit(do_save_bg); 
+		paintInit(do_save_bg);
 
 	//progress
 	bool pb_invert = (pb_type == PB_REDRIGHT) || ((pb_type == PB_TIMESCALE) && g_settings.theme.progressbar_timescale_invert);
 
-	if (cc_allow_paint){
-		if (!is_painted || (pb_active_width != pb_last_width)) {
+	if (cc_allow_paint)
+	{
+		if (!is_painted || (pb_active_width != pb_last_width))
+		{
 			CProgressBarCache *pbc = CProgressBarCache::pbcLookup(pb_height, pb_max_width, pb_active_col, pb_passive_col, *pb_design, pb_invert, *pb_gradient, pb_red, pb_yellow, pb_green);
 			if (pbc)
 				pbc->pbcPaint(pb_x, pb_y, pb_active_width, pb_passive_width);
@@ -417,7 +439,7 @@ void CProgressBar::paintProgress(bool do_save_bg)
 
 void CProgressBar::paint(bool do_save_bg)
 {
-  	paintProgress(do_save_bg);
+	paintProgress(do_save_bg);
 }
 
 void CProgressBar::setType(pb_type_t type)

@@ -38,21 +38,21 @@ It's usable like a header but without caption, and context button icons as defau
 Additional implemented is a button container (chain) and some methods which can add
 buttons via struct, vector or text and icon parameters. Also a compatible but limited methode
 to add button labels known by older button handler, to find in gui/widget/buttons.h/cpp.
-functionality. Why limited ?: old parameter 'struct button_label' doesn't provide newer parameters. 
+functionality. Why limited ?: old parameter 'struct button_label' doesn't provide newer parameters.
 Missing parameters are filled with default values and must be assigned afterward, if required.
 */
 class CComponentsFooter : public CComponentsHeader, public CCButtonSelect
 {
 	private:
-		void initVarFooter(	const int& x_pos, const int& y_pos, const int& w, const int& h,
-					const int& buttons,
-					CComponentsForm *parent,
-					int shadow_mode,
-					fb_pixel_t color_frame,
-					fb_pixel_t color_body,
-					fb_pixel_t color_shadow,
-					int sizeMode
-			);
+		void initVarFooter(const int &x_pos, const int &y_pos, const int &w, const int &h,
+			const int &buttons,
+			CComponentsForm *parent,
+			int shadow_mode,
+			fb_pixel_t color_frame,
+			fb_pixel_t color_body,
+			fb_pixel_t color_shadow,
+			int sizeMode
+		);
 
 		///show button with background, default false
 		bool ccf_enable_button_bg;
@@ -66,55 +66,61 @@ class CComponentsFooter : public CComponentsHeader, public CCButtonSelect
 		bool btn_auto_frame_col;
 
 		///property: set font for label caption, see also setButtonFont()
-		Font* ccf_btn_font;
+		Font *ccf_btn_font;
 
 		///init default fonts for size modes
 		virtual void initDefaultFonts();
 
 	public:
 		CComponentsFooter(CComponentsForm *parent = NULL);
-		CComponentsFooter(	const int& x_pos, const int& y_pos, const int& w, const int& h = 0,
-					const int& buttons = 0,
-					CComponentsForm *parent = NULL,
-					int shadow_mode = CC_SHADOW_OFF,
-					fb_pixel_t color_frame = COL_FRAME_PLUS_0,
-					fb_pixel_t color_body = COL_MENUFOOT_PLUS_0,
-					fb_pixel_t color_shadow = COL_SHADOW_PLUS_0,
-					int sizeMode = CC_HEADER_SIZE_LARGE);
+		CComponentsFooter(const int &x_pos, const int &y_pos, const int &w, const int &h = 0,
+			const int &buttons = 0,
+			CComponentsForm *parent = NULL,
+			int shadow_mode = CC_SHADOW_OFF,
+			fb_pixel_t color_frame = COL_FRAME_PLUS_0,
+			fb_pixel_t color_body = COL_MENUFOOT_PLUS_0,
+			fb_pixel_t color_shadow = COL_SHADOW_PLUS_0,
+			int sizeMode = CC_HEADER_SIZE_LARGE);
 
 		///add button labels with string label type as content, count as size_t, chain_width as int, label width as int
-		void setButtonLabels(const struct button_label_cc * const content, const size_t& label_count, const int& chain_width = 0, const int& label_width = 0);
+		void setButtonLabels(const struct button_label_cc *const content, const size_t &label_count, const int &chain_width = 0, const int &label_width = 0);
 		///add button labels with string label type as content, parameter 1 as vector, chain_width as int, label width as int
-		void setButtonLabels(const std::vector<button_label_cc> &v_content, const int& chain_width, const int& label_width);
+		void setButtonLabels(const std::vector<button_label_cc> &v_content, const int &chain_width, const int &label_width);
 
 		///enable/disable button frame in icon color, predefined for red, green, yellow and blue
-		inline void enableButtonFrameColor(bool enable = true){btn_auto_frame_col = enable;}
+		inline void enableButtonFrameColor(bool enable = true)
+		{
+			btn_auto_frame_col = enable;
+		}
 
 		///add button labels with old label type, count as size_t, chain_width as int, label width as int
 		///NOTE: for compatibility with older button handler find in gui/widget/buttons.h, if possible, don't use this
-		void setButtonLabels(const struct button_label * const content, const size_t& label_count, const int& chain_width = 0, const int& label_width = 0);
+		void setButtonLabels(const struct button_label *const content, const size_t &label_count, const int &chain_width = 0, const int &label_width = 0);
 
 		///add single button label with string label type as content, chain_width as int, label width as int
-		void setButtonLabel(	const char *button_icon,
-					const std::string& text,
-					const int& chain_width = 0,
-					const int& label_width = 0,
-					const neutrino_msg_t& msg = CRCInput::RC_nokey,
-					const int& result_value = -1,
-					const int& alias_value = -1);
+		void setButtonLabel(const char *button_icon,
+			const std::string &text,
+			const int &chain_width = 0,
+			const int &label_width = 0,
+			const neutrino_msg_t &msg = CRCInput::RC_nokey,
+			const int &result_value = -1,
+			const int &alias_value = -1);
 		///add single button label with locale label type as content, chain_width as int, label width as int
-		void setButtonLabel(	const char *button_icon,
-					const neutrino_locale_t& locale,
-					const int& chain_width = 0,
-					const int& label_width = 0,
-					const neutrino_msg_t& msg = CRCInput::RC_nokey,
-					const int& result_value = -1,
-					const int& alias_value = -1);
-		
+		void setButtonLabel(const char *button_icon,
+			const neutrino_locale_t &locale,
+			const int &chain_width = 0,
+			const int &label_width = 0,
+			const neutrino_msg_t &msg = CRCInput::RC_nokey,
+			const int &result_value = -1,
+			const int &alias_value = -1);
+
 		///enables background of buttons, parameter bool show, default= true
 		void enableButtonBg(bool enable = true);
 		///disables background of buttons
-		void disableButtonBg(){enableButtonBg(false);}
+		void disableButtonBg()
+		{
+			enableButtonBg(false);
+		}
 
 		/*!
 		Sets a new text to an already predefined button.
@@ -127,24 +133,27 @@ class CComponentsFooter : public CComponentsHeader, public CCButtonSelect
 			setButtonText(1, "World");
 		Wrong id's will be ignored.
 		*/
-		void setButtonText(const uint& btn_id, const std::string& text);
+		void setButtonText(const uint &btn_id, const std::string &text);
 
 		///property: set font for label caption, parameter as font object, value NULL causes usage of dynamic font
-		void setButtonFont(Font* font){ccf_btn_font = font;};
+		void setButtonFont(Font *font)
+		{
+			ccf_btn_font = font;
+		};
 
 		///this is a nearly methode similar with the older button handler find in gui/widget/buttons.h, some parameters are different, but require minimalized input
 		///this member sets some basic parameters and will paint concurrently on execute, explicit call of paint() is not required
-		void paintButtons(	const int& x_pos,
-					const int& y_pos,
-					const int& w,
-					const int& h,
-					const size_t& label_count,
-					const struct button_label * const content,
-					const int& label_width = 0,
-					const int& context_buttons = 0,
-					Font* font = g_Font[SNeutrinoSettings::FONT_TYPE_BUTTON_TEXT],
-					bool do_save_bg = CC_SAVE_SCREEN_NO
-				);
+		void paintButtons(const int &x_pos,
+			const int &y_pos,
+			const int &w,
+			const int &h,
+			const size_t &label_count,
+			const struct button_label *const content,
+			const int &label_width = 0,
+			const int &context_buttons = 0,
+			Font *font = g_Font[SNeutrinoSettings::FONT_TYPE_BUTTON_TEXT],
+			bool do_save_bg = CC_SAVE_SCREEN_NO
+		);
 
 		enum
 		{
@@ -152,12 +161,19 @@ class CComponentsFooter : public CComponentsHeader, public CCButtonSelect
 			CC_FOOTER_SIZE_SMALL 	= 1
 		};
 		///set size of footer, possible values are CC_FOOTER_SIZE_LARGE, CC_FOOTER_SIZE_SMALL
-		virtual void setSizeMode(const int& size_mode){cch_size_mode = size_mode; initCCItems();}
+		virtual void setSizeMode(const int &size_mode)
+		{
+			cch_size_mode = size_mode;
+			initCCItems();
+		}
 
 		///enable and sets shadow properties for embedded buttons
-		void enableButtonShadow(int mode = CC_SHADOW_ON, const int& shadow_width = OFFSET_SHADOW/2, bool force_paint = false);
+		void enableButtonShadow(int mode = CC_SHADOW_ON, const int &shadow_width = OFFSET_SHADOW / 2, bool force_paint = false);
 		///disable shadow for embedded buttons
-		void disbaleButtonShadow(){enableButtonShadow(CC_SHADOW_OFF);}
+		void disbaleButtonShadow()
+		{
+			enableButtonShadow(CC_SHADOW_OFF);
+		}
 };
 
 

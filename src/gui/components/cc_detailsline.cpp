@@ -1,5 +1,5 @@
 /*
-	Based up Neutrino-GUI - Tuxbox-Project 
+	Based up Neutrino-GUI - Tuxbox-Project
 	Copyright (C) 2001 by Steffen Hehn 'McClean'
 
 	Classes for generic GUI-related components.
@@ -36,16 +36,16 @@
 using namespace std;
 
 //sub class CComponentsDetailsLine from CComponents
-CComponentsDetailsLine::CComponentsDetailsLine(	const int& x_pos, const int& y_pos_top,
-						const int& y_pos_down, const int& h_mark_top_, const int& h_mark_down_,
-						fb_pixel_t color_line, fb_pixel_t color_shadow)
+CComponentsDetailsLine::CComponentsDetailsLine(const int &x_pos, const int &y_pos_top,
+	const int &y_pos_down, const int &h_mark_top_, const int &h_mark_down_,
+	fb_pixel_t color_line, fb_pixel_t color_shadow)
 {
 	initVarDline(x_pos, y_pos_top, y_pos_down, h_mark_top_, h_mark_down_, color_line, color_shadow);
 }
 
-void CComponentsDetailsLine::initVarDline(	const int& x_pos, const int& y_pos_top,
-						const int& y_pos_down, const int& h_mark_top_, const int& h_mark_down_,
-						fb_pixel_t color_line, fb_pixel_t color_shadow)
+void CComponentsDetailsLine::initVarDline(const int &x_pos, const int &y_pos_top,
+	const int &y_pos_down, const int &h_mark_top_, const int &h_mark_down_,
+	fb_pixel_t color_line, fb_pixel_t color_shadow)
 {
 	//CComponents
 	x 		= x_pos;
@@ -59,8 +59,8 @@ void CComponentsDetailsLine::initVarDline(	const int& x_pos, const int& y_pos_to
 	y_down 		= y_pos_down;
 
 	// reduce two times the shadow width, to avoid shadow overlaps
-	h_mark_top 	= h_mark_top_ - 2*shadow_w;
-	h_mark_down 	= h_mark_down_ - 2*shadow_w;
+	h_mark_top 	= h_mark_top_ - 2 * shadow_w;
+	h_mark_down 	= h_mark_down_ - 2 * shadow_w;
 
 	//CComponentsDetailsLine
 	dl_w 	= CFrameBuffer::getInstance()->scale2Res(2);
@@ -96,43 +96,44 @@ void CComponentsDetailsLine::paint(bool do_save_bg)
 	if (hasChanges())
 		clearFbData();
 
-	if (v_fbdata.empty()){
+	if (v_fbdata.empty())
+	{
 
 		int sw = shadow_w;
 
-		int y_mark_top = y-h_mark_top/2;
-		int y_mark_down = y_down-h_mark_down/2;
-		int dx_c = dl_w%2; //correction for odd values
+		int y_mark_top = y - h_mark_top / 2;
+		int y_mark_down = y_down - h_mark_down / 2;
+		int dx_c = dl_w % 2; //correction for odd values
 
 		cc_fbdata_t fbdata[] =
 		{
 			/*buffered bg full width and height */
-			{true, CC_FBDATA_TYPE_BGSCREEN,	x,			y_mark_top, 		width,			y_mark_down-y_mark_top+h_mark_down+sw,	0, 0, 0, 0, NULL, NULL, NULL, false},
+			{true, CC_FBDATA_TYPE_BGSCREEN,	x,			y_mark_top, 		width,			y_mark_down - y_mark_top + h_mark_down + sw,	0, 0, 0, 0, NULL, NULL, NULL, false},
 
 			/* vertical item mark | */
-			{true, CC_FBDATA_TYPE_BOX, 	x+width-dl_w-sw, 	y_mark_top, 		dl_w, 			h_mark_top, 		col_body, 	0, 0, 0, NULL, NULL, NULL, false},
-			{true, CC_FBDATA_TYPE_BOX, 	x+width-sw,		y_mark_top+sw, 		sw, 			h_mark_top-sw, 		col_shadow, 	0, 0, 0, NULL, NULL, NULL, false},
-			{true, CC_FBDATA_TYPE_BOX, 	x+width-dl_w,		y_mark_top+h_mark_top, 	dl_w, 			sw,	 		col_shadow, 	0, 0, 0, NULL, NULL, NULL, false},
+			{true, CC_FBDATA_TYPE_BOX, 	x + width - dl_w - sw, 	y_mark_top, 		dl_w, 			h_mark_top, 		col_body, 	0, 0, 0, NULL, NULL, NULL, false},
+			{true, CC_FBDATA_TYPE_BOX, 	x + width - sw,		y_mark_top + sw, 		sw, 			h_mark_top - sw, 		col_shadow, 	0, 0, 0, NULL, NULL, NULL, false},
+			{true, CC_FBDATA_TYPE_BOX, 	x + width - dl_w,		y_mark_top + h_mark_top, 	dl_w, 			sw,	 		col_shadow, 	0, 0, 0, NULL, NULL, NULL, false},
 
 			/* horizontal item line - */
-			{true, CC_FBDATA_TYPE_BOX, 	x, 			y-dl_w/2,		width-dl_w-sw,		dl_w, 			col_body, 	0, 0, 0, NULL, NULL, NULL, false},
-			{true, CC_FBDATA_TYPE_BOX, 	x+dl_w,			y+dl_w/2+dx_c,		width-2*dl_w-sw,	sw, 			col_shadow, 	0, 0, 0, NULL, NULL, NULL, false},
+			{true, CC_FBDATA_TYPE_BOX, 	x, 			y - dl_w / 2,		width - dl_w - sw,		dl_w, 			col_body, 	0, 0, 0, NULL, NULL, NULL, false},
+			{true, CC_FBDATA_TYPE_BOX, 	x + dl_w,			y + dl_w / 2 + dx_c,		width - 2 * dl_w - sw,	sw, 			col_shadow, 	0, 0, 0, NULL, NULL, NULL, false},
 
 			/* vertical connect line [ */
-			{true, CC_FBDATA_TYPE_BOX, 	x,			y+dl_w/2+dx_c, 		dl_w, 			y_down-y-dl_w, 		col_body, 	0, 0, 0, NULL, NULL, NULL, false},
-			{true, CC_FBDATA_TYPE_BOX, 	x+dl_w,			y+dl_w/2+dx_c,		sw, 			y_down-y-dl_w,		col_shadow, 	0, 0, 0, NULL, NULL, NULL, false},
+			{true, CC_FBDATA_TYPE_BOX, 	x,			y + dl_w / 2 + dx_c, 		dl_w, 			y_down - y - dl_w, 		col_body, 	0, 0, 0, NULL, NULL, NULL, false},
+			{true, CC_FBDATA_TYPE_BOX, 	x + dl_w,			y + dl_w / 2 + dx_c,		sw, 			y_down - y - dl_w,		col_shadow, 	0, 0, 0, NULL, NULL, NULL, false},
 
 			/* horizontal info line - */
-			{true, CC_FBDATA_TYPE_BOX, 	x,			y_down-dl_w/2,		width-dl_w-sw, 		dl_w, 			col_body, 	0, 0, 0, NULL, NULL, NULL, false},
-			{true, CC_FBDATA_TYPE_BOX, 	x+sw,			y_down+dl_w/2+dx_c,	width-dl_w-2*sw,	sw, 			col_shadow, 	0, 0, 0, NULL, NULL, NULL, false},
+			{true, CC_FBDATA_TYPE_BOX, 	x,			y_down - dl_w / 2,		width - dl_w - sw, 		dl_w, 			col_body, 	0, 0, 0, NULL, NULL, NULL, false},
+			{true, CC_FBDATA_TYPE_BOX, 	x + sw,			y_down + dl_w / 2 + dx_c,	width - dl_w - 2 * sw,	sw, 			col_shadow, 	0, 0, 0, NULL, NULL, NULL, false},
 
 			/* vertical info mark | */
-			{true, CC_FBDATA_TYPE_BOX, 	x+width-dl_w-sw,	y_mark_down, 		dl_w, 			h_mark_down, 		col_body, 	0, 0, 0, NULL, NULL, NULL, false},
-			{true, CC_FBDATA_TYPE_BOX, 	x+width-sw,		y_mark_down+sw,		sw, 			h_mark_down-sw,		col_shadow, 	0, 0, 0, NULL, NULL, NULL, false},
-			{true, CC_FBDATA_TYPE_BOX, 	x+width-dl_w,		y_mark_down+h_mark_down,dl_w, 			sw,	 		col_shadow, 	0, 0, 0, NULL, NULL, NULL, false},
+			{true, CC_FBDATA_TYPE_BOX, 	x + width - dl_w - sw,	y_mark_down, 		dl_w, 			h_mark_down, 		col_body, 	0, 0, 0, NULL, NULL, NULL, false},
+			{true, CC_FBDATA_TYPE_BOX, 	x + width - sw,		y_mark_down + sw,		sw, 			h_mark_down - sw,		col_shadow, 	0, 0, 0, NULL, NULL, NULL, false},
+			{true, CC_FBDATA_TYPE_BOX, 	x + width - dl_w,		y_mark_down + h_mark_down, dl_w, 			sw,	 		col_shadow, 	0, 0, 0, NULL, NULL, NULL, false},
 		};
 
-		for(size_t i =0; i< (sizeof(fbdata) / sizeof(fbdata[0])) ;i++)
+		for (size_t i = 0; i < (sizeof(fbdata) / sizeof(fbdata[0])) ; i++)
 			v_fbdata.push_back(fbdata[i]);
 	}
 	paintFbItems(do_save_bg);
