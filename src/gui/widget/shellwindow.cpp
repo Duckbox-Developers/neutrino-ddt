@@ -56,7 +56,7 @@ CShellWindow::CShellWindow(const std::string &Command, const int Mode, int *Res,
 	setCommand(Command, Mode, Res, auto_exec);
 }
 
-void CShellWindow::setCommand(const std::string &Command, const int Mode, int* Res, bool auto_exec)
+void CShellWindow::setCommand(const std::string &Command, const int Mode, int *Res, bool auto_exec)
 {
 	command = Command;
 	mode = Mode;
@@ -69,7 +69,8 @@ static int read_line(int fd, struct pollfd *fds, char *b, size_t sz)
 {
 	int ret;
 	size_t i = 0;
-	while ((ret = read(fd, b + i, 1)) > 0) {
+	while ((ret = read(fd, b + i, 1)) > 0)
+	{
 		i++;
 		if (b[i - 1] == '\n')
 			break;
@@ -86,7 +87,8 @@ static int read_line(int fd, struct pollfd *fds, char *b, size_t sz)
 static std::string lines2txt(std::list<std::string> &lines)
 {
 	std::string txt = "";
-	for (std::list<std::string>::const_iterator it = lines.begin(), end = lines.end(); it != end; ++it) {
+	for (std::list<std::string>::const_iterator it = lines.begin(), end = lines.end(); it != end; ++it)
+	{
 		txt += *it;
 		txt += '\n';
 	}
@@ -96,10 +98,12 @@ static std::string lines2txt(std::list<std::string> &lines)
 void CShellWindow::exec()
 {
 	std::string cmd;
-	if (mode == 0){
+	if (mode == 0)
+	{
 		cmd = "PATH=/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin ; export PATH ; " + command + " 2>/dev/null >&2";
 		int r = my_system(cmd.c_str());
-		if (res) {
+		if (res)
+		{
 			if (r == -1)
 				*res = r;
 			else
@@ -107,11 +111,13 @@ void CShellWindow::exec()
 			dprintf(DEBUG_NORMAL,  "[CShellWindow] [%s - %d]  Error! system returns: %d command: %s\n", __func__, __LINE__, *res, cmd.c_str());
 		}
 	}
-	else {
+	else
+	{
 		pid_t pid = 0;
 		cmd = command + " 2>&1";
 		int f = run_pty(pid, cmd.c_str());
-		if (f < 0) {
+		if (f < 0)
+		{
 			if (res)
 				*res = -1;
 			dprintf(DEBUG_NORMAL, "[CShellWindow] [%s:%d]  Error! run_pty errno: %d command: %s\n", __func__, __LINE__, errno, cmd.c_str());
@@ -124,7 +130,8 @@ void CShellWindow::exec()
 		unsigned int lines_max = h_shell / font->getHeight();
 		std::list<std::string> lines;
 		CBox textBoxPosition(frameBuffer->getScreenX(), frameBuffer->getScreenY(), w_shell, h_shell);
-		if (textBox == NULL){
+		if (textBox == NULL)
+		{
 			textBox = new CTextBox(cmd.c_str(), font, CTextBox::BOTTOM, &textBoxPosition);
 			textBox->enableSaveScreen(false);
 		}
@@ -139,19 +146,24 @@ void CShellWindow::exec()
 		std::string txt = "";
 		std::string line = "";
 
-		do {
+		do
+		{
 			int64_t now;
 			fds.revents = 0;
 			int r = poll(&fds, 1, 300);
-			if (r > 0) {
-				if (fds.revents & POLLIN) {
+			if (r > 0)
+			{
+				if (fds.revents & POLLIN)
+				{
 					unsigned int lines_read = 0;
-					while (read_line(f, &fds, output, sizeof(output)-1)) {
+					while (read_line(f, &fds, output, sizeof(output) - 1))
+					{
 						char *outputp = output;
 						dirty = true;
 
 						for (int i = 0; output[i] && !nlseen; i++)
-							switch (output[i]) {
+							switch (output[i])
+							{
 								case '\b':
 									if (outputp > output)
 										outputp--;
@@ -177,12 +189,15 @@ void CShellWindow::exec()
 						line += std::string(output);
 						if (incomplete)
 							lines.pop_back();
-						if (nlseen) {
+						if (nlseen)
+						{
 							lines.push_back(line);
 							line.clear();
 							nlseen = false;
 							incomplete = false;
-						} else {
+						}
+						else
+						{
 							lines.push_back(line);
 							incomplete = true;
 						}
@@ -198,7 +213,8 @@ void CShellWindow::exec()
 						now = time_monotonic_ms();
 						if (lines.size() > lines_max)
 							lines.pop_front();
-						if (((lines_read >= lines_max) && (lastPaint + 100 < now)) || (lastPaint + 500 < now)) {
+						if (((lines_read >= lines_max) && (lastPaint + 100 < now)) || (lastPaint + 500 < now))
+						{
 							txt = lines2txt(lines);
 							textBox->setText(&txt, textBox->getWindowsPos().iWidth, false);
 							if (!textBox->isPainted())
@@ -209,13 +225,16 @@ void CShellWindow::exec()
 							frameBuffer->blit();
 						}
 					}
-				} else
+				}
+				else
 					ok = false;
-			} else if (r < 0)
+			}
+			else if (r < 0)
 				ok = false;
 
 			now = time_monotonic_ms();
-			if (!ok || (r < 1 && dirty && lastPaint + 500 < now)) {
+			if (!ok || (r < 1 && dirty && lastPaint + 500 < now))
+			{
 				txt = lines2txt(lines);
 				textBox->setText(&txt, textBox->getWindowsPos().iWidth, false);
 				if (!textBox->isPainted())
@@ -223,9 +242,11 @@ void CShellWindow::exec()
 				lastPaint = now;
 				dirty = false;
 			}
-		} while(ok);
+		}
+		while (ok);
 
-		if (mode & VERBOSE) {
+		if (mode & VERBOSE)
+		{
 			txt = lines2txt(lines);
 			txt += "\n...ready";
 			textBox->setText(&txt, textBox->getWindowsPos().iWidth, false);
@@ -236,9 +257,11 @@ void CShellWindow::exec()
 		errno = 0;
 		int r = waitpid(pid, &s, 0);
 
-		if (res){
+		if (res)
+		{
 			//if res value was generated inside signal, then use foreign res from signal instead own res value
-			if (OnShellOutputLoop.empty()){
+			if (OnShellOutputLoop.empty())
+			{
 				if (r == -1)
 					*res = errno;
 				else
@@ -252,27 +275,35 @@ void CShellWindow::exec()
 
 void CShellWindow::showResult()
 {
-	if (textBox){
+	if (textBox)
+	{
 		bool show_button = false;
 		bool exit = false;
 
-		if (mode & ACKNOWLEDGE){
+		if (mode & ACKNOWLEDGE)
+		{
 			show_button = true;
 		}
-		else if (mode & ACKNOWLEDGE_EVENT){
-			if (res && *res != 0){
+		else if (mode & ACKNOWLEDGE_EVENT)
+		{
+			if (res && *res != 0)
+			{
 				OnResultError(res);
 				if (OnResultError.empty())
 					DisplayErrorMessage("Error while execution of task. Please see window for details!");
 				show_button = true;
-			}else{
+			}
+			else
+			{
 				OnResultOk(res);
 				exit = true; //TODO: evaluate plausible statement
 			}
 		}
 
-		if ((mode & VERBOSE)){
-			if (show_button){
+		if ((mode & VERBOSE))
+		{
+			if (show_button)
+			{
 				int b_width = 150;
 				int b_height = 35;
 				int xpos = frameBuffer->getScreenWidth() - b_width;

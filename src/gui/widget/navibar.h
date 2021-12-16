@@ -30,7 +30,7 @@
 
 
 /**
-	CNaviBar is sub class of CComponentsFrmChain. 
+	CNaviBar is sub class of CComponentsFrmChain.
 	Shows a navigation bar with text and navigation icons.
 	You can enable/disable predefined icons and texts
 	on the left and/or right side of bar.
@@ -74,15 +74,15 @@ class CNaviBar : public CComponentsFrmChain
 		*
 		* 	@see	class CComponentsFrmChain()
 		*/
-		CNaviBar(	const int& x_pos,
-				const int& y_pos,
-				const int& dx,
-				const int& dy,
-				CComponentsForm* parent = NULL,
-				int shadow_mode = CC_SHADOW_OFF,
-				fb_pixel_t& color_frame = COL_FRAME_PLUS_0,
-				fb_pixel_t& color_body = COL_MENUFOOT_PLUS_0,
-				fb_pixel_t& color_shadow = COL_SHADOW_PLUS_0);
+		CNaviBar(const int &x_pos,
+			const int &y_pos,
+			const int &dx,
+			const int &dy,
+			CComponentsForm *parent = NULL,
+			int shadow_mode = CC_SHADOW_OFF,
+			fb_pixel_t &color_frame = COL_FRAME_PLUS_0,
+			fb_pixel_t &color_body = COL_MENUFOOT_PLUS_0,
+			fb_pixel_t &color_shadow = COL_SHADOW_PLUS_0);
 
 		//~CNaviBar(); //is inherited
 
@@ -91,26 +91,40 @@ class CNaviBar : public CComponentsFrmChain
 		* @param[in]	enable
 		* 	@li 	expects type bool, default = true
 		*/
-		void enableLeftArrow(bool enable = true){nb_lpic_enable = enable; initCCItems();}
+		void enableLeftArrow(bool enable = true)
+		{
+			nb_lpic_enable = enable;
+			initCCItems();
+		}
 
 		/**
 		* Enable or disable right icon
 		* @param[in]	enable
 		* 	@li 	expects type bool, default = true
 		*/
-		void enableRightArrow(bool enable = true){nb_rpic_enable = enable; initCCItems();}
+		void enableRightArrow(bool enable = true)
+		{
+			nb_rpic_enable = enable;
+			initCCItems();
+		}
 
 		/**
 		* disable left icon
 		* no parameter
 		*/
-		void disableLeftArrow(){enableLeftArrow(false);}
+		void disableLeftArrow()
+		{
+			enableLeftArrow(false);
+		}
 
 		/**
 		* disable right icon
 		* no parameter
 		*/
-		void disableRightArrow(){enableRightArrow(false);}
+		void disableRightArrow()
+		{
+			enableRightArrow(false);
+		}
 
 		/**
 		* Enable or disable both icons at once.
@@ -119,34 +133,54 @@ class CNaviBar : public CComponentsFrmChain
 		* @param[in]	enable_right
 		* 	@li 	expects type bool, default = true
 		*/
-		void enableArrows(bool enable_left = true, bool enable_right = true){enableLeftArrow(enable_left); enableRightArrow(enable_right);}
+		void enableArrows(bool enable_left = true, bool enable_right = true)
+		{
+			enableLeftArrow(enable_left);
+			enableRightArrow(enable_right);
+		}
 
 		/**
 		* Disable all icons.
 		* no parameter
 		*/
-		void disableArrows(){disableLeftArrow(); disableRightArrow();}
+		void disableArrows()
+		{
+			disableLeftArrow();
+			disableRightArrow();
+		}
 
 		/**
 		* Sets font type for texts.
 		* @param[in]	font
 		* 	@li 	expects type Font*
 		*/
-		void setFont(Font *font) {nb_font = font; initCCItems();}
+		void setFont(Font *font)
+		{
+			nb_font = font;
+			initCCItems();
+		}
 
 		/**
 		* Sets left text.
 		* @param[in]	text
 		* 	@li 	expects type std::string
 		*/
-		void setLeftText(const std::string& text) {nb_l_text = text; initCCItems();}
+		void setLeftText(const std::string &text)
+		{
+			nb_l_text = text;
+			initCCItems();
+		}
 
 		/**
 		* Sets right text
 		* @param[in]	text
 		* 	@li 	expects type std::string
 		*/
-		void setRightText(const std::string& text) {nb_r_text = text; initCCItems();}
+		void setRightText(const std::string &text)
+		{
+			nb_r_text = text;
+			initCCItems();
+		}
 
 		/**
 		* Sets left and right text at once.
@@ -155,7 +189,11 @@ class CNaviBar : public CComponentsFrmChain
 		* @param[in]	right
 		* 	@li 	expects type std::string
 		*/
-		void setText(const std::string& left, const std::string& right) {setLeftText(left); setRightText(right);}
+		void setText(const std::string &left, const std::string &right)
+		{
+			setLeftText(left);
+			setRightText(right);
+		}
 
 		/**
 		* Paint bar on screen.

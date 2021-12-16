@@ -59,7 +59,7 @@ class CExtendedInput : public CMenuTarget
 		int input_w; // input field width
 		int offset;
 
-		std::vector<CExtendedInput_Item*> inputFields;
+		std::vector<CExtendedInput_Item *> inputFields;
 		int selectedChar;
 
 		neutrino_locale_t name;
@@ -67,8 +67,8 @@ class CExtendedInput : public CMenuTarget
 		neutrino_locale_t hint_1;
 		neutrino_locale_t hint_2;
 
-		CChangeObserver*   observ;
-		bool* cancel;
+		CChangeObserver   *observ;
+		bool *cancel;
 
 		fb_pixel_t		*background;
 		bool			savescreen;
@@ -76,20 +76,20 @@ class CExtendedInput : public CMenuTarget
 		void restoreScreen();
 
 		virtual void paint();
-		virtual void onBeforeExec(){};
-		virtual void onAfterExec(){};
+		virtual void onBeforeExec() {};
+		virtual void onAfterExec() {};
 
 	public:
 
-		CExtendedInput(const neutrino_locale_t Name, std::string *Value, const neutrino_locale_t Hint_1 = NONEXISTANT_LOCALE, const neutrino_locale_t Hint_2 = NONEXISTANT_LOCALE, CChangeObserver* Observ = NULL, bool* cancel = NULL);
-		CExtendedInput(std::string &Name, std::string *Value, const neutrino_locale_t Hint_1 = NONEXISTANT_LOCALE, const neutrino_locale_t Hint_2 = NONEXISTANT_LOCALE, CChangeObserver* Observ = NULL, bool* cancel = NULL);
+		CExtendedInput(const neutrino_locale_t Name, std::string *Value, const neutrino_locale_t Hint_1 = NONEXISTANT_LOCALE, const neutrino_locale_t Hint_2 = NONEXISTANT_LOCALE, CChangeObserver *Observ = NULL, bool *cancel = NULL);
+		CExtendedInput(std::string &Name, std::string *Value, const neutrino_locale_t Hint_1 = NONEXISTANT_LOCALE, const neutrino_locale_t Hint_2 = NONEXISTANT_LOCALE, CChangeObserver *Observ = NULL, bool *cancel = NULL);
 		~CExtendedInput();
 
 		void hide();
-		int exec( CMenuTarget* parent, const std::string & actionKey );
+		int exec(CMenuTarget *parent, const std::string &actionKey);
 		void calculateDialog();
 
-		void addInputField( CExtendedInput_Item* );
+		void addInputField(CExtendedInput_Item *);
 
 		void enableSaveScreen(bool enable);
 };
@@ -102,16 +102,22 @@ class CExtendedInput_Item
 		int input_h; // input field height
 		int input_w; // input field width
 		int ix, iy;
-		char* data;
+		char *data;
 
 	public:
 
-		virtual void setDataPointer(char* Data){data=Data;};
-		virtual void init(int &/*x*/, int &/*y*/){};
-		virtual void paint(int /*x*/, int /*y*/, bool /*focusGained*/){};
-		virtual bool isSelectable(){return true;};
+		virtual void setDataPointer(char *Data)
+		{
+			data = Data;
+		};
+		virtual void init(int &/*x*/, int &/*y*/) {};
+		virtual void paint(int /*x*/, int /*y*/, bool /*focusGained*/) {};
+		virtual bool isSelectable()
+		{
+			return true;
+		};
 
-		virtual void keyPressed( int /*key*/ ){};
+		virtual void keyPressed(int /*key*/) {};
 		virtual ~CExtendedInput_Item() {};
 };
 
@@ -121,10 +127,25 @@ class CExtendedInput_Item_Spacer : public CExtendedInput_Item
 		int mSpacingX;
 		int mSpacingY;
 	public:
-		CExtendedInput_Item_Spacer(){mSpacingY = 0;mSpacingX = 0;};
-		CExtendedInput_Item_Spacer(int spaceX, int spaceY=0){mSpacingX=spaceX;mSpacingY=spaceY;};
-		virtual void init(int &x, int &y){x+=mSpacingX;y+=mSpacingY;};
-		virtual bool isSelectable(){return false;};
+		CExtendedInput_Item_Spacer()
+		{
+			mSpacingY = 0;
+			mSpacingX = 0;
+		};
+		CExtendedInput_Item_Spacer(int spaceX, int spaceY = 0)
+		{
+			mSpacingX = spaceX;
+			mSpacingY = spaceY;
+		};
+		virtual void init(int &x, int &y)
+		{
+			x += mSpacingX;
+			y += mSpacingY;
+		};
+		virtual bool isSelectable()
+		{
+			return false;
+		};
 };
 
 class CExtendedInput_Item_newLiner : public CExtendedInput_Item
@@ -132,10 +153,23 @@ class CExtendedInput_Item_newLiner : public CExtendedInput_Item
 	protected:
 		int mSpacingY;
 	public:
-		CExtendedInput_Item_newLiner(){mSpacingY=0;};
-		CExtendedInput_Item_newLiner(int spaceY){mSpacingY=spaceY;};
-		virtual void init(int &x, int &y){x=0;y+=mSpacingY;};
-		virtual bool isSelectable(){return false;};
+		CExtendedInput_Item_newLiner()
+		{
+			mSpacingY = 0;
+		};
+		CExtendedInput_Item_newLiner(int spaceY)
+		{
+			mSpacingY = spaceY;
+		};
+		virtual void init(int &x, int &y)
+		{
+			x = 0;
+			y += mSpacingY;
+		};
+		virtual bool isSelectable()
+		{
+			return false;
+		};
 };
 
 
@@ -145,18 +179,21 @@ class CExtendedInput_Item_Char : public CExtendedInput_Item
 		std::string allowedChars;
 		bool selectable;
 
-		bool isAllowedChar( char );
-		int getCharID( char );
+		bool isAllowedChar(char);
+		int getCharID(char);
 
 	public:
-		CExtendedInput_Item_Char(const std::string & Chars="", bool Selectable=true );
-		virtual ~CExtendedInput_Item_Char(){};
-		void setAllowedChars( const std::string & );
+		CExtendedInput_Item_Char(const std::string &Chars = "", bool Selectable = true);
+		virtual ~CExtendedInput_Item_Char() {};
+		void setAllowedChars(const std::string &);
 		virtual void init(int &x, int &y);
 		virtual void paint(int x, int y, bool focusGained);
 
-		virtual void keyPressed( int key );
-		virtual bool isSelectable(){return selectable;};
+		virtual void keyPressed(int key);
+		virtual bool isSelectable()
+		{
+			return selectable;
+		};
 };
 
 //----------------------------------------------------------------------------------------------------
@@ -168,7 +205,7 @@ class CIPInput : public CExtendedInput
 		virtual void onAfterExec();
 
 	public:
-		CIPInput(const neutrino_locale_t Name, std::string *Value, const neutrino_locale_t Hint_1 = NONEXISTANT_LOCALE, const neutrino_locale_t Hint_2 = NONEXISTANT_LOCALE, CChangeObserver* Observ = NULL);
+		CIPInput(const neutrino_locale_t Name, std::string *Value, const neutrino_locale_t Hint_1 = NONEXISTANT_LOCALE, const neutrino_locale_t Hint_2 = NONEXISTANT_LOCALE, CChangeObserver *Observ = NULL);
 };
 
 //----------------------------------------------------------------------------------------------------
@@ -176,14 +213,14 @@ class CIPInput : public CExtendedInput
 class CDateInput : public CExtendedInput
 {
 	private:
-		time_t* time;
+		time_t *time;
 
 	protected:
 		virtual void onBeforeExec();
 		virtual void onAfterExec();
 
 	public:
-		CDateInput(const neutrino_locale_t Name, time_t* Time, const neutrino_locale_t Hint_1 = NONEXISTANT_LOCALE, const neutrino_locale_t Hint_2 = NONEXISTANT_LOCALE, CChangeObserver* Observ = NULL);
+		CDateInput(const neutrino_locale_t Name, time_t *Time, const neutrino_locale_t Hint_1 = NONEXISTANT_LOCALE, const neutrino_locale_t Hint_2 = NONEXISTANT_LOCALE, CChangeObserver *Observ = NULL);
 };
 
 //----------------------------------------------------------------------------------------------------
@@ -195,7 +232,7 @@ class CMACInput : public CExtendedInput
 		virtual void onAfterExec();
 
 	public:
-		CMACInput(const neutrino_locale_t Name, std::string *Value, const neutrino_locale_t Hint_1 = NONEXISTANT_LOCALE, const neutrino_locale_t Hint_2 = NONEXISTANT_LOCALE, CChangeObserver* Observ = NULL);
+		CMACInput(const neutrino_locale_t Name, std::string *Value, const neutrino_locale_t Hint_1 = NONEXISTANT_LOCALE, const neutrino_locale_t Hint_2 = NONEXISTANT_LOCALE, CChangeObserver *Observ = NULL);
 };
 
 //----------------------------------------------------------------------------------------------------
@@ -206,7 +243,7 @@ class CTimeInput : public CExtendedInput
 		virtual void onBeforeExec();
 		virtual void onAfterExec();
 	public:
-		CTimeInput(const neutrino_locale_t Name, std::string *Value, const neutrino_locale_t Hint_1 = NONEXISTANT_LOCALE, const neutrino_locale_t Hint_2 = NONEXISTANT_LOCALE, CChangeObserver* Observ = NULL, bool* cancel=NULL);
+		CTimeInput(const neutrino_locale_t Name, std::string *Value, const neutrino_locale_t Hint_1 = NONEXISTANT_LOCALE, const neutrino_locale_t Hint_2 = NONEXISTANT_LOCALE, CChangeObserver *Observ = NULL, bool *cancel = NULL);
 };
 
 //----------------------------------------------------------------------------------------------------
@@ -215,8 +252,8 @@ class CIntInput : public CExtendedInput
 {
 #define MAX_CINTINPUT_SIZE 16
 
- 	int* myValue;
-	unsigned int m_size;
+		int *myValue;
+		unsigned int m_size;
 	protected:
 		virtual void onBeforeExec();
 		virtual void onAfterExec();
@@ -225,8 +262,11 @@ class CIntInput : public CExtendedInput
 		/**
 		 *@param Size how many digits can be entered
 		 */
-		CIntInput(const neutrino_locale_t Name, int *Value, const unsigned int Size, const neutrino_locale_t Hint_1 = NONEXISTANT_LOCALE, const neutrino_locale_t Hint_2 = NONEXISTANT_LOCALE, CChangeObserver* Observ = NULL);
-		void updateValue() { onBeforeExec(); }
+		CIntInput(const neutrino_locale_t Name, int *Value, const unsigned int Size, const neutrino_locale_t Hint_1 = NONEXISTANT_LOCALE, const neutrino_locale_t Hint_2 = NONEXISTANT_LOCALE, CChangeObserver *Observ = NULL);
+		void updateValue()
+		{
+			onBeforeExec();
+		}
 };
 
 #endif

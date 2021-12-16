@@ -38,41 +38,41 @@ using namespace sigc;
 using namespace std;
 
 CProgressWindow::CProgressWindow(CComponentsForm *parent,
-				 const int &dx,
-				 const int &dy,
-				 signal<void, size_t, size_t, string> *statusSignal,
-				 signal<void, size_t, size_t, string> *localSignal,
-				 signal<void, size_t, size_t, string> *globalSignal)
-				: CComponentsWindow(0, 0, dx, dy, string(), NEUTRINO_ICON_INFO, parent, CC_SHADOW_ON)
+	const int &dx,
+	const int &dy,
+	signal<void, size_t, size_t, string> *statusSignal,
+	signal<void, size_t, size_t, string> *localSignal,
+	signal<void, size_t, size_t, string> *globalSignal)
+	: CComponentsWindow(0, 0, dx, dy, string(), NEUTRINO_ICON_INFO, parent, CC_SHADOW_ON)
 {
 	Init(statusSignal, localSignal, globalSignal);
 }
 
 CProgressWindow::CProgressWindow(const neutrino_locale_t title,
-				 const int &dx,
-				 const int &dy,
-				 signal<void, size_t, size_t, string> *statusSignal,
-				 signal<void, size_t, size_t, string> *localSignal,
-				 signal<void, size_t, size_t, string> *globalSignal)
-				: CComponentsWindow(0, 0, dx, dy, g_Locale->getText(title), NEUTRINO_ICON_INFO, NULL, CC_SHADOW_ON)
+	const int &dx,
+	const int &dy,
+	signal<void, size_t, size_t, string> *statusSignal,
+	signal<void, size_t, size_t, string> *localSignal,
+	signal<void, size_t, size_t, string> *globalSignal)
+	: CComponentsWindow(0, 0, dx, dy, g_Locale->getText(title), NEUTRINO_ICON_INFO, NULL, CC_SHADOW_ON)
 {
 	Init(statusSignal, localSignal, globalSignal);
 }
 
 CProgressWindow::CProgressWindow(const std::string &title,
-				 const int &dx,
-				 const int &dy,
-				 signal<void, size_t, size_t, string> *statusSignal,
-				 signal<void, size_t, size_t, string> *localSignal,
-				 signal<void, size_t, size_t, string> *globalSignal)
-				: CComponentsWindow(0, 0, dx, dy, title, NEUTRINO_ICON_INFO, NULL, CC_SHADOW_ON)
+	const int &dx,
+	const int &dy,
+	signal<void, size_t, size_t, string> *statusSignal,
+	signal<void, size_t, size_t, string> *localSignal,
+	signal<void, size_t, size_t, string> *globalSignal)
+	: CComponentsWindow(0, 0, dx, dy, title, NEUTRINO_ICON_INFO, NULL, CC_SHADOW_ON)
 {
 	Init(statusSignal, localSignal, globalSignal);
 }
 
-void CProgressWindow::Init(	signal<void, size_t, size_t, string> *statusSignal,
-				signal<void, size_t, size_t, string> *localSignal,
-				signal<void, size_t, size_t, string> *globalSignal)
+void CProgressWindow::Init(signal<void, size_t, size_t, string> *statusSignal,
+	signal<void, size_t, size_t, string> *localSignal,
+	signal<void, size_t, size_t, string> *globalSignal)
 {
 	if (statusSignal)
 		*statusSignal->connect(mem_fun(*this, &CProgressWindow::showStatus));
@@ -87,7 +87,7 @@ void CProgressWindow::Init(	signal<void, size_t, size_t, string> *statusSignal,
 
 	//create status text object
 	status_txt = new CComponentsLabel();
-	status_txt->setDimensionsAll(OFFSET_INNER_MID, OFFSET_INNER_MID, width-2*OFFSET_INNER_MID, g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight());
+	status_txt->setDimensionsAll(OFFSET_INNER_MID, OFFSET_INNER_MID, width - 2 * OFFSET_INNER_MID, g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight());
 	status_txt->setColorBody(col_body);
 	status_txt->doPaintTextBoxBg(true);
 	status_txt->doPaintBg(false);
@@ -103,23 +103,24 @@ void CProgressWindow::Init(	signal<void, size_t, size_t, string> *statusSignal,
 
 	//set window height
 	h_height = ccw_head->getHeight();
-	ccw_body->setHeight(ccw_body->back()->getYPos()+ ccw_body->back()->getHeight()+ OFFSET_INNER_MID);
+	ccw_body->setHeight(ccw_body->back()->getYPos() + ccw_body->back()->getHeight() + OFFSET_INNER_MID);
 	height = max(height, ccw_body->getHeight() + h_height);
 
 	//set position on screen
 	setCenterPos();
 }
 
-CProgressBar* CProgressWindow::getProgressItem()
+CProgressBar *CProgressWindow::getProgressItem()
 {
 	CProgressBar *pBar = new CProgressBar();
 	pBar->allowPaint(false);
 	int y_tmp = 0;
-	for(size_t i = ccw_body->size()-1; i< ccw_body->size(); i++){
+	for (size_t i = ccw_body->size() - 1; i < ccw_body->size(); i++)
+	{
 		y_tmp += ccw_body->getCCItem(i)->getYPos() + ccw_body->getCCItem(i)->getHeight();
 		y_tmp += OFFSET_INNER_MID;
 	}
-	pBar->setDimensionsAll(OFFSET_INNER_MID, y_tmp, width-2*OFFSET_INNER_MID, g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight());
+	pBar->setDimensionsAll(OFFSET_INNER_MID, y_tmp, width - 2 * OFFSET_INNER_MID, g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight());
 	pBar->setColorBody(col_body);
 	pBar->setActiveColor(COL_PROGRESSBAR_ACTIVE_PLUS_0);
 	pBar->setFrameThickness(FRAME_WIDTH_MIN);
@@ -134,7 +135,8 @@ void CProgressWindow::initStatus(const unsigned int prog, const unsigned int max
 {
 	pBar->allowPaint(true);
 	pBar->setValues(prog, (int)max);
-	if (!statusText.empty() && (cur_statusText != statusText)){
+	if (!statusText.empty() && (cur_statusText != statusText))
+	{
 		showStatusMessageUTF(statusText);
 		cur_statusText = statusText;
 	}
@@ -157,7 +159,7 @@ void CProgressWindow::showGlobalStatus(const unsigned int prog, const unsigned i
 	initStatus(prog, max, statusText, global_bar);
 
 #ifdef VFD_UPDATE
-	CVFD::getInstance()->showProgressBar2(-1,NULL,global_progress);
+	CVFD::getInstance()->showProgressBar2(-1, NULL, global_progress);
 #endif // VFD_UPDATE
 }
 
@@ -175,7 +177,7 @@ void CProgressWindow::showLocalStatus(const unsigned int prog, const unsigned in
 #endif // VFD_UPDATE
 }
 
-void CProgressWindow::showStatusMessageUTF(const string & text)
+void CProgressWindow::showStatusMessageUTF(const string &text)
 {
 	string txt = text;
 	int w_txt = status_txt->getWidth();
@@ -186,7 +188,7 @@ void CProgressWindow::showStatusMessageUTF(const string & text)
 	frameBuffer->blit();
 
 #ifdef VFD_UPDATE
-	CVFD::getInstance()->showProgressBar2(-1,text.c_str()); // set local text in VFD
+	CVFD::getInstance()->showProgressBar2(-1, text.c_str()); // set local text in VFD
 #endif // VFD_UPDATE
 }
 
@@ -202,9 +204,9 @@ void CProgressWindow::hide()
 	frameBuffer->blit();
 }
 
-int CProgressWindow::exec(CMenuTarget* parent, const string & /*actionKey*/)
+int CProgressWindow::exec(CMenuTarget *parent, const string & /*actionKey*/)
 {
-	if(parent)
+	if (parent)
 	{
 		parent->hide();
 	}
@@ -225,16 +227,16 @@ void CProgressWindow::setTitle(const neutrino_locale_t title)
 	setWindowCaption(title);
 
 #ifdef VFD_UPDATE
-	CVFD::getInstance()->showProgressBar2(-1,NULL,-1,g_Locale->getText(ccw_caption)); // set global text in VFD
+	CVFD::getInstance()->showProgressBar2(-1, NULL, -1, g_Locale->getText(ccw_caption)); // set global text in VFD
 #endif // VFD_UPDATE
 }
 
-void CProgressWindow::setTitle(const string & title)
+void CProgressWindow::setTitle(const string &title)
 {
 	setWindowCaption(title);
 
 #ifdef VFD_UPDATE
-	CVFD::getInstance()->showProgressBar2(-1,NULL,-1,g_Locale->getText(ccw_caption)); // set global text in VFD
+	CVFD::getInstance()->showProgressBar2(-1, NULL, -1, g_Locale->getText(ccw_caption)); // set global text in VFD
 #endif // VFD_UPDATE
 }
 
@@ -244,7 +246,8 @@ void CProgressWindow::fitItems()
 	if (ccw_show_header)
 		return;
 
-	for(size_t i=0; i<ccw_body->size() ;i++){
+	for (size_t i = 0; i < ccw_body->size() ; i++)
+	{
 		int y_item = ccw_body->getCCItem(i)->getYPos() + h_height - OFFSET_INNER_MID;
 		ccw_body->getCCItem(i)->setYPos(y_item);
 	}

@@ -42,7 +42,7 @@
 #include "keyboard_input.h"
 #include "keyboard_keys.h"
 
-std::string UTF8ToString(const char * &text)
+std::string UTF8ToString(const char*&text)
 {
 	std::string res;
 
@@ -87,10 +87,10 @@ size_t CInputString::length()
 	return inputString.size();
 }
 
-CInputString & CInputString::operator=(const std::string &str)
+CInputString &CInputString::operator=(const std::string &str)
 {
 	clear();
-	const char * text = str.c_str();
+	const char *text = str.c_str();
 	for (unsigned i = 0; i < inputString.size() && *text; i++, text++)
 		inputString[i] = UTF8ToString(text);
 	return *this;
@@ -111,7 +111,8 @@ std::string &CInputString::at(size_t pos)
 std::string &CInputString::getValue()
 {
 	valueString.clear();
-	for (unsigned i = 0; i < inputString.size(); i++) {
+	for (unsigned i = 0; i < inputString.size(); i++)
+	{
 		if (!inputString[i].empty())
 			valueString += inputString[i];
 	}
@@ -119,12 +120,12 @@ std::string &CInputString::getValue()
 	return valueString;
 }
 
-const char* CInputString::c_str()
+const char *CInputString::c_str()
 {
 	return getValue().c_str();
 }
 
-CKeyboardInput::CKeyboardInput(const std::string &Name, std::string *Value, int Size, CChangeObserver* Observ, const char * const Icon, std::string HintText_1, std::string HintText_2)
+CKeyboardInput::CKeyboardInput(const std::string &Name, std::string *Value, int Size, CChangeObserver *Observ, const char *const Icon, std::string HintText_1, std::string HintText_2)
 {
 	title = Name;
 	valueString = Value;
@@ -145,23 +146,23 @@ CKeyboardInput::CKeyboardInput(const std::string &Name, std::string *Value, int 
 	pixBuf = NULL;
 }
 
-CKeyboardInput::CKeyboardInput(const neutrino_locale_t Name, std::string* Value, int Size, CChangeObserver* Observ, const char * const Icon, const neutrino_locale_t Hint_1, const neutrino_locale_t Hint_2)
-				:CKeyboardInput(Name == NONEXISTANT_LOCALE ? "" : g_Locale->getText(Name),
-						Value,
-						Size,
-						Observ,
-						Icon,
-						Hint_1 == NONEXISTANT_LOCALE ? "" : g_Locale->getText(Hint_1),
-						Hint_2 == NONEXISTANT_LOCALE ? "" : g_Locale->getText(Hint_2)){}
+CKeyboardInput::CKeyboardInput(const neutrino_locale_t Name, std::string *Value, int Size, CChangeObserver *Observ, const char *const Icon, const neutrino_locale_t Hint_1, const neutrino_locale_t Hint_2)
+	: CKeyboardInput(Name == NONEXISTANT_LOCALE ? "" : g_Locale->getText(Name),
+		  Value,
+		  Size,
+		  Observ,
+		  Icon,
+		  Hint_1 == NONEXISTANT_LOCALE ? "" : g_Locale->getText(Hint_1),
+		  Hint_2 == NONEXISTANT_LOCALE ? "" : g_Locale->getText(Hint_2)) {}
 
-CKeyboardInput::CKeyboardInput(const std::string &Name, std::string *Value, int Size, CChangeObserver* Observ, const char * const Icon, const neutrino_locale_t Hint_1, const neutrino_locale_t Hint_2)
-				:CKeyboardInput(Name,
-						Value,
-						Size,
-						Observ,
-						Icon,
-						Hint_1 == NONEXISTANT_LOCALE ? "" : g_Locale->getText(Hint_1),
-						Hint_2 == NONEXISTANT_LOCALE ? "" : g_Locale->getText(Hint_2)){}
+CKeyboardInput::CKeyboardInput(const std::string &Name, std::string *Value, int Size, CChangeObserver *Observ, const char *const Icon, const neutrino_locale_t Hint_1, const neutrino_locale_t Hint_2)
+	: CKeyboardInput(Name,
+		  Value,
+		  Size,
+		  Observ,
+		  Icon,
+		  Hint_1 == NONEXISTANT_LOCALE ? "" : g_Locale->getText(Hint_1),
+		  Hint_2 == NONEXISTANT_LOCALE ? "" : g_Locale->getText(Hint_2)) {}
 
 
 
@@ -185,18 +186,19 @@ void CKeyboardInput::init()
 	input_w = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth("M") + INPUT_BORDER;	// hack font width + border
 	offset  = BORDER_OFFSET;
 	fheight = paintFooter(false);
-	iwidth = inputSize*input_w + 2*offset;
+	iwidth = inputSize * input_w + 2 * offset;
 
 	key_w = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getRenderWidth("M") + 20;
 	key_h = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight() + 10;
-	kwidth = key_w*KEY_COLUMNS + (KEY_COLUMNS-1)*KEY_BORDER + 2*offset;
+	kwidth = key_w * KEY_COLUMNS + (KEY_COLUMNS - 1) * KEY_BORDER + 2 * offset;
 
 	width = std::max(iwidth, kwidth);
 	width = std::min(width, (int) frameBuffer->getScreenWidth());
 
-	if (!inputSize || (iwidth > width)) { /* auto calc inputSize */
-		inputSize = (width - 2*offset) / input_w;
-		iwidth = inputSize*input_w + 2*offset;
+	if (!inputSize || (iwidth > width))   /* auto calc inputSize */
+	{
+		inputSize = (width - 2 * offset) / input_w;
+		iwidth = inputSize * input_w + 2 * offset;
 	}
 	inputString = new CInputString(inputSize);
 
@@ -205,30 +207,30 @@ void CKeyboardInput::init()
 	{
 		int icol_w, icol_h;
 		frameBuffer->getIconSize(iconfile.c_str(), &icol_w, &icol_h);
-		hheight = std::max(hheight, icol_h + (offset/4));
-		tmp_w += icol_w + (offset/2);
+		hheight = std::max(hheight, icol_h + (offset / 4));
+		tmp_w += icol_w + (offset / 2);
 	}
 	width = std::max(width, tmp_w + offset);
 
-	bheight = input_h + (key_h+KEY_BORDER)*KEY_ROWS + 3*offset;
+	bheight = input_h + (key_h + KEY_BORDER) * KEY_ROWS + 3 * offset;
 
 	if (!hintText_1.empty())
 	{
 		const char *_hint_1 = hintText_1.c_str();
 		tmp_w = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_INFO]->getRenderWidth(_hint_1);
-		width = std::max(width, tmp_w + 2*offset);
+		width = std::max(width, tmp_w + 2 * offset);
 		bheight += iheight;
 	}
 	if (!hintText_2.empty())
 	{
 		const char *_hint_2 = hintText_2.c_str();
 		tmp_w = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_INFO]->getRenderWidth(_hint_2);
-		width = std::max(width, tmp_w + 2*offset);
+		width = std::max(width, tmp_w + 2 * offset);
 		bheight += iheight;
 	}
 	bheight += offset;
 
-	height = hheight+ bheight + fheight;
+	height = hheight + bheight + fheight;
 
 	x = getScreenStartX(width);
 	y = getScreenStartY(height);
@@ -243,8 +245,10 @@ void CKeyboardInput::setLayout()
 
 	layout = &keyboards[0];
 	keyboard = layout->keys[caps];
-	for(unsigned i = 0; i < LAYOUT_COUNT; i++) {
-		if (keyboards[i].locale == g_settings.language) {
+	for (unsigned i = 0; i < LAYOUT_COUNT; i++)
+	{
+		if (keyboards[i].locale == g_settings.language)
+		{
 			layout = &keyboards[i];
 			keyboard = layout->keys[caps];
 			return;
@@ -255,7 +259,8 @@ void CKeyboardInput::setLayout()
 void CKeyboardInput::switchLayout()
 {
 	unsigned i;
-	for (i = 0; i < LAYOUT_COUNT; i++) {
+	for (i = 0; i < LAYOUT_COUNT; i++)
+	{
 		if (layout == &keyboards[i])
 			break;
 	}
@@ -301,17 +306,23 @@ void CKeyboardInput::switchCaps()
 
 void CKeyboardInput::keyUpPressed()
 {
-	if (focus == FOCUS_KEY) {
+	if (focus == FOCUS_KEY)
+	{
 		int old_row = srow;
 		srow--;
 		paintKey(old_row, scol);
-		if (srow < 0) {
+		if (srow < 0)
+		{
 			focus = FOCUS_STRING;
 			paintChar(selected);
-		} else {
+		}
+		else
+		{
 			paintKey(srow, scol);
 		}
-	} else {
+	}
+	else
+	{
 		srow = KEY_ROWS - 1;
 		focus = FOCUS_KEY;
 		paintChar(selected);
@@ -321,17 +332,23 @@ void CKeyboardInput::keyUpPressed()
 
 void CKeyboardInput::keyDownPressed()
 {
-	if (focus == FOCUS_KEY) {
+	if (focus == FOCUS_KEY)
+	{
 		int old_row = srow;
 		srow++;
 		paintKey(old_row, scol);
-		if (srow >= KEY_ROWS) {
+		if (srow >= KEY_ROWS)
+		{
 			focus = FOCUS_STRING;
 			paintChar(selected);
-		} else {
+		}
+		else
+		{
 			paintKey(srow, scol);
 		}
-	} else {
+	}
+	else
+	{
 		srow = 0;
 		focus = FOCUS_KEY;
 		paintChar(selected);
@@ -341,14 +358,17 @@ void CKeyboardInput::keyDownPressed()
 
 void CKeyboardInput::keyLeftPressed()
 {
-	if (focus == FOCUS_KEY) {
+	if (focus == FOCUS_KEY)
+	{
 		int old_col = scol;;
 		scol--;
 		if (scol < 0)
-			scol = KEY_COLUMNS -1;
+			scol = KEY_COLUMNS - 1;
 		paintKey(srow, old_col);
 		paintKey(srow, scol);
-	} else {
+	}
+	else
+	{
 		int old = selected;
 		if (selected > 0)
 			selected--;
@@ -362,18 +382,23 @@ void CKeyboardInput::keyLeftPressed()
 
 void CKeyboardInput::keyRightPressed()
 {
-	if (focus == FOCUS_KEY) {
+	if (focus == FOCUS_KEY)
+	{
 		int old_col = scol;;
 		scol++;
 		if (scol >= KEY_COLUMNS)
 			scol = 0;
 		paintKey(srow, old_col);
 		paintKey(srow, scol);
-	} else {
+	}
+	else
+	{
 		int old = selected;
-		if (selected < (inputSize - 1)) {
+		if (selected < (inputSize - 1))
+		{
 			selected++;
-		} else
+		}
+		else
 			selected = 0;
 
 		paintChar(old);
@@ -384,9 +409,9 @@ void CKeyboardInput::keyRightPressed()
 void CKeyboardInput::deleteChar()
 {
 	int item = selected;
-	while (item < (inputSize -1))
+	while (item < (inputSize - 1))
 	{
-		inputString->at(item) = inputString->at(item+1);
+		inputString->at(item) = inputString->at(item + 1);
 		paintChar(item);
 		item++;
 	}
@@ -429,10 +454,10 @@ void CKeyboardInput::keyDigiPressed(const neutrino_msg_t key)
 
 void CKeyboardInput::insertChar()
 {
-	int item = inputSize -1;
+	int item = inputSize - 1;
 	while (item > selected)
 	{
-		inputString->at(item) = inputString->at(item-1);
+		inputString->at(item) = inputString->at(item - 1);
 		paintChar(item);
 		item--;
 	}
@@ -449,13 +474,14 @@ std::string &CKeyboardInput::getValue(void)
 void CKeyboardInput::forceSaveScreen(bool enable)
 {
 	force_saveScreen = enable;
-	if (!enable && pixBuf) {
+	if (!enable && pixBuf)
+	{
 		delete[] pixBuf;
 		pixBuf = NULL;
 	}
 }
 
-int CKeyboardInput::exec(CMenuTarget* parent, const std::string &)
+int CKeyboardInput::exec(CMenuTarget *parent, const std::string &)
 {
 	neutrino_msg_t      msg;
 	neutrino_msg_data_t data;
@@ -470,7 +496,8 @@ int CKeyboardInput::exec(CMenuTarget* parent, const std::string &)
 
 	if (pixBuf)
 		delete[] pixBuf;
-	if (!parent || force_saveScreen) {
+	if (!parent || force_saveScreen)
+	{
 		pixBuf = new fb_pixel_t[(width + OFFSET_SHADOW) * (height + OFFSET_SHADOW)];
 		if (pixBuf)
 			frameBuffer->SaveScreen(x, y, width + OFFSET_SHADOW, height + OFFSET_SHADOW, pixBuf);
@@ -481,25 +508,25 @@ int CKeyboardInput::exec(CMenuTarget* parent, const std::string &)
 
 	uint64_t timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_MENU]);
 
-	bool loop=true;
+	bool loop = true;
 	while (loop)
 	{
 		frameBuffer->blit();
 		if (changed)
 		{
 			changed = false;
-			CVFD::getInstance()->showMenuText(1, inputString->c_str() , selected+1);
+			CVFD::getInstance()->showMenuText(1, inputString->c_str(), selected + 1);
 		}
 		g_RCInput->getMsgAbsoluteTimeout(&msg, &data, &timeoutEnd, true);
 
 		if (msg <= CRCInput::RC_MaxRC)
 			timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_MENU]);
 
-		if (msg==CRCInput::RC_left)
+		if (msg == CRCInput::RC_left)
 		{
 			keyLeftPressed();
 		}
-		else if (msg==CRCInput::RC_right)
+		else if (msg == CRCInput::RC_right)
 		{
 			keyRightPressed();
 		}
@@ -511,7 +538,7 @@ int CKeyboardInput::exec(CMenuTarget* parent, const std::string &)
 		{
 			keyDownPressed();
 		}
-		else if (msg==CRCInput::RC_red)
+		else if (msg == CRCInput::RC_red)
 		{
 			loop = false;
 		}
@@ -519,7 +546,7 @@ int CKeyboardInput::exec(CMenuTarget* parent, const std::string &)
 		{
 			insertChar();
 		}
-		else if (msg==CRCInput::RC_yellow)
+		else if (msg == CRCInput::RC_yellow)
 		{
 			clearString();
 		}
@@ -547,7 +574,8 @@ int CKeyboardInput::exec(CMenuTarget* parent, const std::string &)
 		else if ((msg == CRCInput::RC_home) || (msg == CRCInput::RC_timeout))
 		{
 			if ((inputString->getValue() != oldval) &&
-					(ShowMsg(title, LOCALE_MESSAGEBOX_DISCARD, CMsgBox::mbrYes, CMsgBox::mbYes | CMsgBox::mbCancel) == CMsgBox::mbrCancel)) {
+				(ShowMsg(title, LOCALE_MESSAGEBOX_DISCARD, CMsgBox::mbrYes, CMsgBox::mbYes | CMsgBox::mbCancel) == CMsgBox::mbrCancel))
+			{
 				timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_MENU]);
 				continue;
 			}
@@ -576,7 +604,8 @@ int CKeyboardInput::exec(CMenuTarget* parent, const std::string &)
 		delete[] pixBuf;
 		pixBuf = NULL;
 		frameBuffer->blit();
-	} else
+	}
+	else
 		hide();
 
 	*valueString = inputString->getValue();
@@ -603,19 +632,20 @@ void CKeyboardInput::hide()
 
 int CKeyboardInput::paintFooter(bool show)
 {
-	button_label_ext footerButtons[] = {
-		{ NEUTRINO_ICON_BUTTON_RED     , LOCALE_STRINGINPUT_SAVE     , NULL,                  0, false },
-		{ NEUTRINO_ICON_BUTTON_GREEN   , LOCALE_STRINGINPUT_INSERT   , NULL,                  0, false },
-		{ NEUTRINO_ICON_BUTTON_YELLOW  , LOCALE_STRINGINPUT_CLEAR    , NULL,                  0, false },
-		{ NEUTRINO_ICON_BUTTON_BLUE    , LOCALE_STRINGINPUT_CAPS     , NULL,                  0, false },
+	button_label_ext footerButtons[] =
+	{
+		{ NEUTRINO_ICON_BUTTON_RED, LOCALE_STRINGINPUT_SAVE, NULL,                  0, false },
+		{ NEUTRINO_ICON_BUTTON_GREEN, LOCALE_STRINGINPUT_INSERT, NULL,                  0, false },
+		{ NEUTRINO_ICON_BUTTON_YELLOW, LOCALE_STRINGINPUT_CLEAR, NULL,                  0, false },
+		{ NEUTRINO_ICON_BUTTON_BLUE, LOCALE_STRINGINPUT_CAPS, NULL,                  0, false },
 		{ NEUTRINO_ICON_BUTTON_BACKWARD, LOCALE_STRINGINPUT_BACKSPACE, NULL,                  0, false },
-		{ NEUTRINO_ICON_BUTTON_MENU    , NONEXISTANT_LOCALE          , NULL,                  0, false },
-		{ layout->locale.c_str()       , NONEXISTANT_LOCALE          , layout->name.c_str() , 0, false }
+		{ NEUTRINO_ICON_BUTTON_MENU, NONEXISTANT_LOCALE, NULL,                  0, false },
+		{ layout->locale.c_str(), NONEXISTANT_LOCALE, layout->name.c_str(), 0, false }
 	};
 
-	int cnt = (sizeof(footerButtons)/sizeof(struct button_label_ext));
+	int cnt = (sizeof(footerButtons) / sizeof(struct button_label_ext));
 	if (show)
-		return ::paintButtons(footerButtons, cnt, x, y+ hheight+ bheight, width, fheight, width, true);
+		return ::paintButtons(footerButtons, cnt, x, y + hheight + bheight, width, fheight, width, true);
 	else
 		return ::paintButtons(footerButtons, cnt, 0, 0, 0, 0, 0, false, NULL, NULL);
 }
@@ -628,19 +658,19 @@ void CKeyboardInput::paint()
 	CComponentsHeader header(x, y, width, hheight, title, iconfile);
 	header.paint(CC_SAVE_SCREEN_NO);
 
-	key_y = y+ hheight+ offset+ input_h+ offset;
+	key_y = y + hheight + offset + input_h + offset;
 
 	if (!hintText_1.empty())
 	{
 		key_y += iheight;
 		const char *_hint_1 = hintText_1.c_str();
-		g_Font[SNeutrinoSettings::FONT_TYPE_MENU_INFO]->RenderString(x+ offset, key_y, width- 2*offset, _hint_1, COL_MENUCONTENT_TEXT);
+		g_Font[SNeutrinoSettings::FONT_TYPE_MENU_INFO]->RenderString(x + offset, key_y, width - 2 * offset, _hint_1, COL_MENUCONTENT_TEXT);
 	}
 	if (!hintText_2.empty())
 	{
 		key_y += iheight;
 		const char *_hint_2 = hintText_2.c_str();
-		g_Font[SNeutrinoSettings::FONT_TYPE_MENU_INFO]->RenderString(x+ offset, key_y, width- 2*offset, _hint_2, COL_MENUCONTENT_TEXT);
+		g_Font[SNeutrinoSettings::FONT_TYPE_MENU_INFO]->RenderString(x + offset, key_y, width - 2 * offset, _hint_2, COL_MENUCONTENT_TEXT);
 	}
 	key_y += offset;
 
@@ -658,8 +688,8 @@ void CKeyboardInput::paintChar(int pos)
 
 void CKeyboardInput::paintChar(int pos, std::string &c)
 {
-	int xpos = x + offset + (width-iwidth)/2 + pos* input_w;
-	int ypos = y+ hheight+ offset;
+	int xpos = x + offset + (width - iwidth) / 2 + pos * input_w;
+	int ypos = y + hheight + offset;
 
 	fb_pixel_t color;
 	fb_pixel_t bgcolor;
@@ -670,13 +700,14 @@ void CKeyboardInput::paintChar(int pos, std::string &c)
 	frameBuffer->paintBoxFrame(xpos, ypos, input_w, input_h, 1, COL_MENUCONTENT_PLUS_2);
 
 	int ch_w = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth(c);
-	int ch_x = xpos + std::max(input_w/2 - ch_w/2, 0);
-	g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(ch_x, ypos+ input_h, ch_w, c, color);
+	int ch_x = xpos + std::max(input_w / 2 - ch_w / 2, 0);
+	g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(ch_x, ypos + input_h, ch_w, c, color);
 }
 
 void CKeyboardInput::paintKeyboard()
 {
-	for (int i = 0; i < KEY_ROWS; i++) {
+	for (int i = 0; i < KEY_ROWS; i++)
+	{
 		for (int j = 0; j < KEY_COLUMNS; j++)
 			paintKey(i, j);
 	}
@@ -684,10 +715,10 @@ void CKeyboardInput::paintKeyboard()
 
 void CKeyboardInput::paintKey(int row, int column)
 {
-	int xpos = x + offset + (width-kwidth)/2 + (key_w + KEY_BORDER)*column;
+	int xpos = x + offset + (width - kwidth) / 2 + (key_w + KEY_BORDER) * column;
 	//int ypos = y + offset*2 + hheight + input_h + (key_h + KEY_BORDER)*row;
 	//key_y = y+ hheight+ offset+ input_h+ offset;
-	int ypos = key_y + (key_h + KEY_BORDER)*row;
+	int ypos = key_y + (key_h + KEY_BORDER) * row;
 
 	int i_selected = (focus == FOCUS_KEY && row == srow && column == scol);
 
@@ -706,7 +737,7 @@ void CKeyboardInput::paintKey(int row, int column)
 	std::string &s = keyboard[row][column];
 	int ch_w = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getRenderWidth(s);
 	int ch_h = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
-	int ch_x = xpos + key_w/2 - ch_w/2;
-	int ch_y = ypos + key_h/2 + ch_h/2;
+	int ch_x = xpos + key_w / 2 - ch_w / 2;
+	int ch_y = ypos + key_h / 2 + ch_h / 2;
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(ch_x, ch_y, ch_w, s, color);
 }

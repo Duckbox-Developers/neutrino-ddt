@@ -36,9 +36,9 @@
 
 struct keyboard_layout
 {
-        std::string name;
-        std::string locale;
-        std::string (*keys)[KEY_ROWS][KEY_COLUMNS];
+	std::string name;
+	std::string locale;
+	std::string(*keys)[KEY_ROWS][KEY_COLUMNS];
 };
 
 class CFrameBuffer;
@@ -55,8 +55,8 @@ class CInputString
 		void clear();
 		std::string &at(size_t pos);
 		void assign(size_t n, char c);
-		const char* c_str();
-		CInputString & operator=(const std::string &str);
+		const char *c_str();
+		CInputString &operator=(const std::string &str);
 		std::string &getValue();
 };
 
@@ -83,15 +83,16 @@ class CKeyboardInput : public CMenuTarget,  public sigc::trackable
 		int key_h;   // keyboard key height
 		int kwidth;  // keyboard width
 		int srow, scol;
-		enum {
+		enum
+		{
 			FOCUS_KEY,
 			FOCUS_STRING
 		};
 		int focus;
 		int caps;
 		struct keyboard_layout *layout;
-		std::string (*keyboard)[KEY_COLUMNS];
-		CInputString * inputString;
+		std::string(*keyboard)[KEY_COLUMNS];
+		CInputString *inputString;
 
 		std::string  title;
 		neutrino_locale_t hint_1, hint_2;
@@ -100,7 +101,7 @@ class CKeyboardInput : public CMenuTarget,  public sigc::trackable
 		int          inputSize;
 		int          selected;
 		bool	     changed;
-		CChangeObserver * observ;
+		CChangeObserver *observ;
 		bool force_saveScreen;
 		fb_pixel_t *pixBuf;
 
@@ -129,13 +130,13 @@ class CKeyboardInput : public CMenuTarget,  public sigc::trackable
 		void setLayout();
 
 	public:
-		CKeyboardInput(const neutrino_locale_t Name, std::string* Value, int Size = 0, CChangeObserver* Observ = NULL, const char * const Icon = NULL, const neutrino_locale_t Hint_1 = NONEXISTANT_LOCALE, const neutrino_locale_t Hint_2 = NONEXISTANT_LOCALE);
-		CKeyboardInput(const std::string      &Name, std::string* Value, int Size = 0, CChangeObserver* Observ = NULL, const char * const Icon = NULL, const neutrino_locale_t Hint_1 = NONEXISTANT_LOCALE, const neutrino_locale_t Hint_2 = NONEXISTANT_LOCALE);
-		CKeyboardInput(const std::string      &Name, std::string* Value, int Size = 0, CChangeObserver* Observ = NULL, const char * const Icon = NULL, std::string HintText_1 = "", std::string HintText_2 = "");
+		CKeyboardInput(const neutrino_locale_t Name, std::string *Value, int Size = 0, CChangeObserver *Observ = NULL, const char *const Icon = NULL, const neutrino_locale_t Hint_1 = NONEXISTANT_LOCALE, const neutrino_locale_t Hint_2 = NONEXISTANT_LOCALE);
+		CKeyboardInput(const std::string      &Name, std::string *Value, int Size = 0, CChangeObserver *Observ = NULL, const char *const Icon = NULL, const neutrino_locale_t Hint_1 = NONEXISTANT_LOCALE, const neutrino_locale_t Hint_2 = NONEXISTANT_LOCALE);
+		CKeyboardInput(const std::string      &Name, std::string *Value, int Size = 0, CChangeObserver *Observ = NULL, const char *const Icon = NULL, std::string HintText_1 = "", std::string HintText_2 = "");
 		~CKeyboardInput();
 
 		void hide();
-		int exec( CMenuTarget* parent, const std::string & actionKey );
+		int exec(CMenuTarget *parent, const std::string &actionKey);
 		virtual std::string &getValue(void);
 
 		void forceSaveScreen(bool enable);

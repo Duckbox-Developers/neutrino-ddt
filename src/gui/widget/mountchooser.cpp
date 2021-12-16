@@ -41,33 +41,33 @@
 #include <driver/fontrenderer.h>
 #include <driver/rcinput.h>
 
-CMountChooser::CMountChooser(const neutrino_locale_t Name, const std::string & Icon, int * chosenIndex, char * chosenLocalDir, const char * const selectedLocalDir, const int mwidth)
+CMountChooser::CMountChooser(const neutrino_locale_t Name, const std::string &Icon, int *chosenIndex, char *chosenLocalDir, const char *const selectedLocalDir, const int mwidth)
 	: CMenuWidget(Name, Icon, mwidth), index(chosenIndex), localDir(chosenLocalDir)
 {
 	char indexStr[2];
-	for(int i=0 ; i < NETWORK_NFS_NR_OF_ENTRIES ; i++)
+	for (int i = 0 ; i < NETWORK_NFS_NR_OF_ENTRIES ; i++)
 	{
 		if (!g_settings.network_nfs[i].local_dir.empty() &&
-		    (g_settings.network_nfs[i].mount_options1.find("rw") != std::string::npos ||
-		     g_settings.network_nfs[i].mount_options2.find("rw") != std::string::npos))
+			(g_settings.network_nfs[i].mount_options1.find("rw") != std::string::npos ||
+				g_settings.network_nfs[i].mount_options2.find("rw") != std::string::npos))
 		{
 			std::string s = g_settings.network_nfs[i].local_dir + " (" + g_settings.network_nfs[i].ip + ":" + g_settings.network_nfs[i].dir + ")";
-			snprintf(indexStr,sizeof(indexStr),"%d",i);
-			addItem(new CMenuForwarder(s.c_str(),true,NULL,this,(std::string("MID:") + std::string(indexStr)).c_str()),
+			snprintf(indexStr, sizeof(indexStr), "%d", i);
+			addItem(new CMenuForwarder(s.c_str(), true, NULL, this, (std::string("MID:") + std::string(indexStr)).c_str()),
 				selectedLocalDir == g_settings.network_nfs[i].local_dir);
 		}
-	}	
+	}
 }
 
 
-int CMountChooser::exec(CMenuTarget* parent, const std::string & actionKey)
+int CMountChooser::exec(CMenuTarget *parent, const std::string &actionKey)
 {
 
-	const char * key = actionKey.c_str();
-	if (strncmp(key, "MID:",4) == 0)
+	const char *key = actionKey.c_str();
+	if (strncmp(key, "MID:", 4) == 0)
 	{
 		int mount_id = -1;
-		sscanf(&key[4],"%d",&mount_id);
+		sscanf(&key[4], "%d", &mount_id);
 		if ((mount_id > -1) && (mount_id < NETWORK_NFS_NR_OF_ENTRIES))
 		{
 			if (index)
@@ -78,7 +78,8 @@ int CMountChooser::exec(CMenuTarget* parent, const std::string & actionKey)
 		}
 		hide();
 		return menu_return::RETURN_EXIT;
-	} else 
+	}
+	else
 	{
 		return CMenuWidget::exec(parent, actionKey);
 	}

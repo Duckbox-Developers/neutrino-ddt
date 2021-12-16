@@ -65,9 +65,9 @@ typedef struct
 	int rowWidth[LF_MAX_ROWS];
 	std::vector<std::string> Icon;
 	std::vector<bool> marked;
-}LF_LINES;
+} LF_LINES;
 
-class CListFrame  
+class CListFrame
 {
 	private:
 		/* Functions */
@@ -83,7 +83,7 @@ class CListFrame
 		int  paintListIcon(int x, int y, int line);
 
 		/* Variables */
-		LF_LINES* m_pLines;
+		LF_LINES *m_pLines;
 
 		CBox m_cFrame;
 		CBox m_cFrameTitleRel;
@@ -107,28 +107,28 @@ class CListFrame
 		int m_nBgRadius;
 
 		bool m_showSelection;
-		
-		Font* m_pcFontTitle;
+
+		Font *m_pcFontTitle;
 		std::string m_textTitle;
 		int m_nFontTitleHeight;
-		
-		Font* m_pcFontList;
+
+		Font *m_pcFontList;
 		int m_nFontListHeight;
-		
-		Font* m_pcFontHeaderList;
+
+		Font *m_pcFontHeaderList;
 		int m_nFontHeaderListHeight;
 
-		CFrameBuffer * frameBuffer;
+		CFrameBuffer *frameBuffer;
 	public:
 		/* Constructor */
 		CListFrame();
-		CListFrame(	LF_LINES* lines);
-		CListFrame(	LF_LINES* lines, 
-					Font* font_text,
-					const int mode, 
-					const CBox* position,
-					const char* textTitle = NULL,
-					Font* font_title = NULL);
+		CListFrame(LF_LINES *lines);
+		CListFrame(LF_LINES *lines,
+			Font *font_text,
+			const int mode,
+			const CBox *position,
+			const char *textTitle = NULL,
+			Font *font_title = NULL);
 
 		virtual ~CListFrame();
 
@@ -136,47 +136,79 @@ class CListFrame
 		void    refresh(void);
 		void    refreshLine(int line);
 		void    scrollPageDown(const int pages);
-		void    scrollPageUp(const int pages);				
+		void    scrollPageUp(const int pages);
 		void 	scrollLineDown(const int lines);
 		void 	scrollLineUp(const int lines);
-		bool	setLines(LF_LINES* lines);
-		bool	setTitle(char* title);
+		bool	setLines(LF_LINES *lines);
+		bool	setTitle(char *title);
 		bool    setSelectedLine(int selection);
 		void	setSelectedMarked(bool enable);
 		void	setBackGroundRadius(const int radius)
-			{
-				m_nBgRadius = radius;
-				initFramesRel();
-			};
+		{
+			m_nBgRadius = radius;
+			initFramesRel();
+		};
 		void	clearMarked()
-			{
-				if (m_pLines)
-					for (unsigned i = 0; i < m_pLines->marked.size(); i++)
-						m_pLines->marked[i] = false;
-			}
+		{
+			if (m_pLines)
+				for (unsigned i = 0; i < m_pLines->marked.size(); i++)
+					m_pLines->marked[i] = false;
+		}
 		void	hide(void);
 		void	paint(void);
 
-inline	CBox	getWindowsPos(void)			{return(m_cFrame);};
-inline  int     getSelectedLine(void)		{return(m_nSelectedLine);};
-inline  int     getSelectedLineRel(void)	{return(m_nSelectedLine - m_nLinesPerPage*m_nCurrentPage);};
-inline  int     getTitleHeight(void)		{return(m_cFrameTitleRel.iHeight);};
-inline  int     getHeaderListHeight(void)	{return(m_cFrameHeaderListRel.iHeight);};
-inline  int     getLines(void)				{return(m_nNrOfLines);};
-inline  int     getPages(void)				{return(m_nNrOfPages);};
-inline  void    showSelection(bool show)	{m_showSelection = show;refreshLine(m_nSelectedLine);};
-inline	void	movePosition(int x, int y){m_cFrame.iX = x; m_cFrame.iY = y;};
-inline	int		getLineHeight()				{return m_nFontListHeight;}
+		inline	CBox	getWindowsPos(void)
+		{
+			return (m_cFrame);
+		};
+		inline  int     getSelectedLine(void)
+		{
+			return (m_nSelectedLine);
+		};
+		inline  int     getSelectedLineRel(void)
+		{
+			return (m_nSelectedLine - m_nLinesPerPage * m_nCurrentPage);
+		};
+		inline  int     getTitleHeight(void)
+		{
+			return (m_cFrameTitleRel.iHeight);
+		};
+		inline  int     getHeaderListHeight(void)
+		{
+			return (m_cFrameHeaderListRel.iHeight);
+		};
+		inline  int     getLines(void)
+		{
+			return (m_nNrOfLines);
+		};
+		inline  int     getPages(void)
+		{
+			return (m_nNrOfPages);
+		};
+		inline  void    showSelection(bool show)
+		{
+			m_showSelection = show;
+			refreshLine(m_nSelectedLine);
+		};
+		inline	void	movePosition(int x, int y)
+		{
+			m_cFrame.iX = x;
+			m_cFrame.iY = y;
+		};
+		inline	int		getLineHeight()
+		{
+			return m_nFontListHeight;
+		}
 
 		/* Variables */
-	typedef enum mode_
-	{
-		AUTO_WIDTH	= 0x01,
-		AUTO_HIGH	= 0x02,
-		SCROLL		= 0x04,
-		TITLE  		= 0x08,
-		HEADER_LINE = 0x80
-	}mode;
+		typedef enum mode_
+		{
+			AUTO_WIDTH	= 0x01,
+			AUTO_HIGH	= 0x02,
+			SCROLL		= 0x04,
+			TITLE  		= 0x08,
+			HEADER_LINE = 0x80
+		} mode;
 };
 
 #endif /*LISTFRAME_H_*/

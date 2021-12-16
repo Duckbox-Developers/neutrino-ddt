@@ -39,7 +39,7 @@ class CShellWindow : public sigc::trackable
 	private:
 		int mode;
 		std::string command;
-		int* res;
+		int *res;
 		CFrameBuffer *frameBuffer;
 		CTextBox *textBox;
 		void showResult();
@@ -54,11 +54,17 @@ class CShellWindow : public sigc::trackable
 			ACKNOWLEDGE 		= 4, // show result button inside window after execution, no message box NOTE: only in VERBOSE mode
 			ACKNOWLEDGE_EVENT	= 8  // same like ACKNOWLEDGE but shows a default error message box or a slot handled action instead default error message box
 		};
-		CShellWindow(const std::string &Command, const int Mode = 0, int* Res = NULL, bool auto_exec = true);
+		CShellWindow(const std::string &Command, const int Mode = 0, int *Res = NULL, bool auto_exec = true);
 		~CShellWindow();
-		void setCommand(const std::string &Command, const int Mode = 0, int* Res = NULL, bool auto_exec = true);
-		std::string getCommand(){return command;}
-		int getMode(){return mode;}
+		void setCommand(const std::string &Command, const int Mode = 0, int *Res = NULL, bool auto_exec = true);
+		std::string getCommand()
+		{
+			return command;
+		}
+		int getMode()
+		{
+			return mode;
+		}
 
 		void exec();
 
@@ -86,7 +92,7 @@ class CShellWindow : public sigc::trackable
 			shell.exec();
 		...other code...
 		*/
-		sigc::signal<void, std::string*, int*, bool*> OnShellOutputLoop;
+		sigc::signal<void, std::string *, int *, bool *> OnShellOutputLoop;
 
 		/*!
 		signal/event handler runs after task is finished.
@@ -113,11 +119,11 @@ class CShellWindow : public sigc::trackable
 			//now exec...
 			shell.exec();
 		...other code...
-		
+
 		Use of OnResultOk is similar with OnResultError.
 		*/
-		sigc::signal<void, int*> OnResultError;
-		sigc::signal<void, int*> OnResultOk;
+		sigc::signal<void, int *> OnResultError;
+		sigc::signal<void, int *> OnResultOk;
 };
 
 #endif
