@@ -178,12 +178,12 @@ struct SNeutrinoTheme
 
 struct timer_remotebox_item
 {
-		unsigned int port;
-		std::string user;
-		std::string pass;
-		std::string rbname;
-		std::string rbaddress;
-		bool online;
+	unsigned int port;
+	std::string user;
+	std::string pass;
+	std::string rbname;
+	std::string rbaddress;
+	bool online;
 };
 
 struct SNeutrinoSettings
@@ -482,7 +482,8 @@ struct SNeutrinoSettings
 
 	//network
 #define NETWORK_NFS_NR_OF_ENTRIES 8
-	struct {
+	struct
+	{
 		std::string ip;
 		std::string mac;
 		std::string local_dir;
@@ -745,7 +746,8 @@ struct SNeutrinoSettings
 
 
 	// Font sizes
-	enum FONT_TYPES {
+	enum FONT_TYPES
+	{
 		FONT_TYPE_MENU = 0,
 		FONT_TYPE_MENU_TITLE,
 		FONT_TYPE_MENU_INFO,
@@ -780,7 +782,8 @@ struct SNeutrinoSettings
 		FONT_TYPE_COUNT
 	};
 
-	enum FONT_TYPES_FIXED {
+	enum FONT_TYPES_FIXED
+	{
 		FONT_TYPE_FIXED_30_BOLD = 0,
 		FONT_TYPE_FIXED_30_REGULAR,
 		FONT_TYPE_FIXED_30_ITALIC,
@@ -833,20 +836,21 @@ struct SNeutrinoSettings
 #endif
 
 	// lcdd
-	enum LCD_SETTINGS {
+	enum LCD_SETTINGS
+	{
 		LCD_BRIGHTNESS         = 0,
-		LCD_STANDBY_BRIGHTNESS ,
-		LCD_CONTRAST           ,
-		LCD_POWER              ,
-		LCD_INVERSE            ,
-		LCD_SHOW_VOLUME        ,
-		LCD_AUTODIMM           ,
+		LCD_STANDBY_BRIGHTNESS,
+		LCD_CONTRAST,
+		LCD_POWER,
+		LCD_INVERSE,
+		LCD_SHOW_VOLUME,
+		LCD_AUTODIMM,
 		LCD_DEEPSTANDBY_BRIGHTNESS,
 #if USE_STB_HAL
-		LCD_EPGMODE            ,
+		LCD_EPGMODE,
 #endif
 #if HAVE_SPARK_HARDWARE
-		LCD_DISPLAYMODE        ,
+		LCD_DISPLAYMODE,
 		LCD_STANDBY_DISPLAYMODE,
 #endif
 		LCD_SETTING_COUNT
@@ -982,7 +986,8 @@ struct SNeutrinoSettings
 		ITEM_MAX // MUST be always the last in the list
 	} USER_ITEM;
 
-	typedef struct {
+	typedef struct
+	{
 		unsigned int key;
 		std::string items;
 		std::string title;
@@ -997,7 +1002,7 @@ struct SNeutrinoSettings
 		INFOBAR_PROGRESSBAR_ARRANGEMENT_BELOW_CH_NAME = 1,
 		INFOBAR_PROGRESSBAR_ARRANGEMENT_BELOW_CH_NAME_SMALL = 2,
 		INFOBAR_PROGRESSBAR_ARRANGEMENT_BETWEEN_EVENTS = 3
-	}INFOBAR_PROGRESSBAR_ARRANGEMENT_TYPES;
+	} INFOBAR_PROGRESSBAR_ARRANGEMENT_TYPES;
 
 	enum WIZARD_MODES
 	{
@@ -1145,8 +1150,8 @@ class CScanSettings
 
 		CScanSettings();
 
-		bool loadSettings(const char * const fileName);
-		bool saveSettings(const char * const fileName);
+		bool loadSettings(const char *const fileName);
+		bool saveSettings(const char *const fileName);
 };
 
 #endif

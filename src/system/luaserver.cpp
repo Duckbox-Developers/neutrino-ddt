@@ -21,18 +21,18 @@
 #if 0
 For testing try:
 
-cat <<EOT > /lib/tuxbox/luaplugins/test.lua
+	cat << EOT > / lib / tuxbox / luaplugins / test.lua
 #!/bin/luaclient
 
-for i,v in ipairs(arg) do
-	print(tostring(i) .. "\t" .. tostring(v))
-end
-return "ok"
-EOT
+		for i, v in ipairs(arg) do
+				print(tostring(i) .. "\t" .. tostring(v))
+				end
+				return "ok"
+					EOT
 
-chmod +x /lib/tuxbox/luaplugins/test.lua
+					chmod + x / lib / tuxbox / luaplugins / test.lua
 
-/lib/tuxbox/luaplugins/test.lua a b c d
+					/ lib / tuxbox / luaplugins / test.lua a b c d
 #endif
 
 #include <config.h>
@@ -54,7 +54,7 @@ chmod +x /lib/tuxbox/luaplugins/test.lua
 
 #include "luaserver.h"
 
-static CLuaServer *instance = NULL;
+					static CLuaServer * instance = NULL;
 static pthread_mutex_t mutex;
 
 CLuaServer *CLuaServer::getInstance()
@@ -67,7 +67,8 @@ CLuaServer *CLuaServer::getInstance()
 void CLuaServer::destroyInstance()
 {
 	Lock();
-	if (instance) {
+	if (instance)
+	{
 		delete instance;
 		instance = NULL;
 	}
@@ -87,7 +88,7 @@ CLuaServer::CLuaServer()
 
 	sem_init(&may_run, 0, 0);
 
-	pthread_create (&thr, NULL, luaserver_main_thread, (void *) NULL);
+	pthread_create(&thr, NULL, luaserver_main_thread, (void *) NULL);
 }
 
 CLuaServer::~CLuaServer()
@@ -107,7 +108,8 @@ void CLuaServer::UnBlock()
 bool CLuaServer::Block(const neutrino_msg_t msg, const neutrino_msg_data_t data)
 {
 	sem_wait(&may_run);
-	if (did_run) {
+	if (did_run)
+	{
 		if (msg != CRCInput::RC_timeout)
 			g_RCInput->postMsg(msg, data);
 		did_run = false;
@@ -126,13 +128,15 @@ class luaserver_data
 		std::vector<std::string> argv;
 		std::string script;
 
-		luaserver_data(int _fd, std::string &_script) {
+		luaserver_data(int _fd, std::string &_script)
+		{
 			fd = dup(_fd);
 			fcntl(fd, F_SETFD, FD_CLOEXEC);
 			script = _script;
 			died = false;
 		}
-		~luaserver_data(void) {
+		~luaserver_data(void)
+		{
 			close(fd);
 		}
 };
@@ -147,7 +151,8 @@ void CLuaServer::UnLock(void)
 	pthread_mutex_unlock(&mutex);
 }
 
-void *CLuaServer::luaclient_watchdog(void *arg) {
+void *CLuaServer::luaclient_watchdog(void *arg)
+{
 	set_threadname(__func__);
 	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
 
@@ -162,10 +167,12 @@ void *CLuaServer::luaclient_watchdog(void *arg) {
 	pthread_exit(NULL);
 }
 
-void *CLuaServer::luaserver_thread(void *arg) {
+void *CLuaServer::luaserver_thread(void *arg)
+{
 	set_threadname(__func__);
 	Lock();
-	if (instance) {
+	if (instance)
+	{
 		instance->count++;
 		instance->did_run = true;
 	}
@@ -174,17 +181,18 @@ void *CLuaServer::luaserver_thread(void *arg) {
 	luaserver_data *lsd = (class luaserver_data *)arg;
 
 	pthread_t wdthr;
-	pthread_create (&wdthr, NULL, luaclient_watchdog, (void *) lsd);
+	pthread_create(&wdthr, NULL, luaclient_watchdog, (void *) lsd);
 
 	CLuaInstance *lua = new CLuaInstance();
-	lsd->lua = *&lua;
+	lsd->lua = * &lua;
 	std::string result_code;
 	std::string result_string;
 	std::string error_string;
 	lua->runScript(lsd->script.c_str(), &lsd->argv, &result_code, &result_string, &error_string);
 	pthread_cancel(wdthr);
 	pthread_join(wdthr, NULL);
-	if (!lsd->died) {
+	if (!lsd->died)
+	{
 		size_t result_code_len = result_code.length() + 1;
 		size_t result_string_len = result_string.length() + 1;
 		size_t error_string_len = error_string.length() + 1;
@@ -206,7 +214,8 @@ void *CLuaServer::luaserver_thread(void *arg) {
 	delete lsd;
 
 	Lock();
-	if (instance) {
+	if (instance)
+	{
 		instance->count--;
 		if (!instance->count)
 			sem_post(&instance->may_run);
@@ -219,28 +228,33 @@ bool CLuaServer::luaserver_parse_command(CBasicMessage::Header &rmsg __attribute
 {
 	size_t size;
 
-	if (!CBasicServer::receive_data(connfd, &size, sizeof(size))) {
+	if (!CBasicServer::receive_data(connfd, &size, sizeof(size)))
+	{
 		fprintf(stderr, "%s %s %d: receive_data failed\n", __file__, __func__, __LINE__);
 		return true;
 	}
 	char data[size];
-	if (!CBasicServer::receive_data(connfd, data, size)) {
+	if (!CBasicServer::receive_data(connfd, data, size))
+	{
 		fprintf(stderr, "%s %s %d: receive_data failed\n", __file__, __func__, __LINE__);
 		return true;
 	}
-	if (data[size - 1]) {
+	if (data[size - 1])
+	{
 		fprintf(stderr, "%s %s %d: unterminated string\n", __file__, __func__, __LINE__);
 		return true;
 	}
 	std::string luascript;
 	if (data[0] == '/')
 		luascript = data;
-	else {
+	else
+	{
 		luascript = PLUGINDIR "/";
 		luascript += data;
 		luascript += ".lua";
 	}
-	if (access(luascript, R_OK)) {
+	if (access(luascript, R_OK))
+	{
 		fprintf(stderr, "%s %s %d: %s not found\n", __file__, __func__, __LINE__, luascript.c_str());
 		const char *result_code = "-1";
 		const char *result_string = "";
@@ -265,7 +279,8 @@ bool CLuaServer::luaserver_parse_command(CBasicMessage::Header &rmsg __attribute
 	}
 	luaserver_data *lsd = new luaserver_data(connfd, luascript);
 	char *datap = data;
-	while (size > 0) {
+	while (size > 0)
+	{
 		lsd->argv.push_back(std::string(datap));
 		size_t len = strlen(datap) + 1;
 		datap += len;
@@ -278,18 +293,20 @@ bool CLuaServer::luaserver_parse_command(CBasicMessage::Header &rmsg __attribute
 	UnLock();
 
 	pthread_t thr;
-	pthread_create (&thr, NULL, luaserver_thread, (void *) lsd);
+	pthread_create(&thr, NULL, luaserver_thread, (void *) lsd);
 	pthread_detach(thr);
 
 	return true;
 }
 
-void *CLuaServer::luaserver_main_thread(void *) {
+void *CLuaServer::luaserver_main_thread(void *)
+{
 	set_threadname(__func__);
 	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
 
 	CBasicServer server;
-	if (!server.prepare(LUACLIENT_UDS_NAME)) {
+	if (!server.prepare(LUACLIENT_UDS_NAME))
+	{
 		fprintf(stderr, "%s %s %d: prepare failed\n", __file__, __func__, __LINE__);
 		pthread_exit(NULL);
 	}

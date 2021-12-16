@@ -43,11 +43,11 @@ CNetworkConfig::CNetworkConfig()
 	wireless = false;
 }
 
-CNetworkConfig* CNetworkConfig::getInstance()
+CNetworkConfig *CNetworkConfig::getInstance()
 {
-	static CNetworkConfig* network_config = NULL;
+	static CNetworkConfig *network_config = NULL;
 
-	if(!network_config)
+	if (!network_config)
 	{
 		network_config = new CNetworkConfig();
 		printf("[network config] Instance created\n");
@@ -83,7 +83,8 @@ void CNetworkConfig::init_vars(void)
 
 	/* FIXME its enough to read IP for dhcp only ?
 	 * static config should not be different from settings in etc/network/interfaces */
-	if(!inet_static) {
+	if (!inet_static)
+	{
 		netGetIP(ifname, ip, mask, _broadcast);
 		netmask = mask;
 		broadcast = _broadcast;
@@ -93,19 +94,19 @@ void CNetworkConfig::init_vars(void)
 	netGetMacAddr(ifname, addr);
 
 	std::stringstream mac_tmp;
-	for(int i=0;i<6;++i)
-		mac_tmp<<std::hex<<std::setfill('0')<<std::setw(2)<<(int)addr[i]<<':';
+	for (int i = 0; i < 6; ++i)
+		mac_tmp << std::hex << std::setfill('0') << std::setw(2) << (int)addr[i] << ':';
 
-	mac_addr = mac_tmp.str().substr(0,17);
+	mac_addr = mac_tmp.str().substr(0, 17);
 
 	key = "";
 	ssid = "";
 	wireless = 0;
 	std::string tmp = "/sys/class/net/" + ifname + "/wireless";
 
-	if(access(tmp, R_OK) == 0)
+	if (access(tmp, R_OK) == 0)
 		wireless = 1;
-	if(wireless)
+	if (wireless)
 		readWpaConfig();
 
 	printf("CNetworkConfig: %s loaded, wireless %s\n", ifname.c_str(), wireless ? "yes" : "no");
@@ -128,53 +129,55 @@ void CNetworkConfig::copy_to_orig(void)
 bool CNetworkConfig::modified_from_orig(void)
 {
 #ifdef DEBUG
-		if(orig_automatic_start != automatic_start)
-			printf("CNetworkConfig::modified_from_orig: automatic_start changed\n");
-		if(orig_address         != address        )
-			printf("CNetworkConfig::modified_from_orig: address changed\n");
-		if(orig_netmask         != netmask        )
-			printf("CNetworkConfig::modified_from_orig: netmask changed\n");
-		if(orig_broadcast       != broadcast      )
-			printf("CNetworkConfig::modified_from_orig: broadcast changed\n");
-		if(orig_gateway         != gateway        )
-			printf("CNetworkConfig::modified_from_orig: gateway changed\n");
-		if(orig_hostname        != hostname       )
-			printf("CNetworkConfig::modified_from_orig: hostname changed\n");
-		if(orig_inet_static     != inet_static    )
-			printf("CNetworkConfig::modified_from_orig: inet_static changed\n");
-		if(orig_ifname	      != ifname)
-			printf("CNetworkConfig::modified_from_orig: ifname changed\n");
+	if (orig_automatic_start != automatic_start)
+		printf("CNetworkConfig::modified_from_orig: automatic_start changed\n");
+	if (orig_address         != address)
+		printf("CNetworkConfig::modified_from_orig: address changed\n");
+	if (orig_netmask         != netmask)
+		printf("CNetworkConfig::modified_from_orig: netmask changed\n");
+	if (orig_broadcast       != broadcast)
+		printf("CNetworkConfig::modified_from_orig: broadcast changed\n");
+	if (orig_gateway         != gateway)
+		printf("CNetworkConfig::modified_from_orig: gateway changed\n");
+	if (orig_hostname        != hostname)
+		printf("CNetworkConfig::modified_from_orig: hostname changed\n");
+	if (orig_inet_static     != inet_static)
+		printf("CNetworkConfig::modified_from_orig: inet_static changed\n");
+	if (orig_ifname	      != ifname)
+		printf("CNetworkConfig::modified_from_orig: ifname changed\n");
 #endif
-	if(wireless) {
-		if((ssid != orig_ssid) || (key != orig_key))
+	if (wireless)
+	{
+		if ((ssid != orig_ssid) || (key != orig_key))
 			return 1;
 	}
-	/* check for following changes with dhcp enabled trigger apply question on menu quit, 
+	/* check for following changes with dhcp enabled trigger apply question on menu quit,
 	 * even if apply already done */
-	if (inet_static) {
-		if ((orig_address         != address        ) ||
-		    (orig_netmask         != netmask        ) ||
-		    (orig_broadcast       != broadcast      ) ||
-		    (orig_gateway         != gateway        ))
+	if (inet_static)
+	{
+		if ((orig_address         != address) ||
+			(orig_netmask         != netmask) ||
+			(orig_broadcast       != broadcast) ||
+			(orig_gateway         != gateway))
 			return 1;
 	}
 	return (
-		(orig_automatic_start != automatic_start) ||
-		(orig_hostname        != hostname       ) ||
-		(orig_inet_static     != inet_static    ) ||
-		(orig_ifname	      != ifname)
+			(orig_automatic_start != automatic_start) ||
+			(orig_hostname        != hostname) ||
+			(orig_inet_static     != inet_static) ||
+			(orig_ifname	      != ifname)
 		);
 
 #if 0
 	return (
-		(orig_automatic_start != automatic_start) ||
-		(orig_address         != address        ) ||
-		(orig_netmask         != netmask        ) ||
-		(orig_broadcast       != broadcast      ) ||
-		(orig_gateway         != gateway        ) ||
-		(orig_hostname        != hostname       ) ||
-		(orig_inet_static     != inet_static    ) ||
-		(orig_ifname	      != ifname)
+			(orig_automatic_start != automatic_start) ||
+			(orig_address         != address) ||
+			(orig_netmask         != netmask) ||
+			(orig_broadcast       != broadcast) ||
+			(orig_gateway         != gateway) ||
+			(orig_hostname        != hostname) ||
+			(orig_inet_static     != inet_static) ||
+			(orig_ifname	      != ifname)
 		);
 #endif
 }
@@ -186,7 +189,7 @@ void CNetworkConfig::commitConfig(void)
 #ifdef DEBUG
 		printf("CNetworkConfig::commitConfig: modified, saving (wireless %d, ssid %s key %s)...\n", wireless, ssid.c_str(), key.c_str());
 #endif
-		if(orig_hostname != hostname)
+		if (orig_hostname != hostname)
 			netSetHostname(hostname);
 
 		if (inet_static)
@@ -199,7 +202,7 @@ void CNetworkConfig::commitConfig(void)
 			addLoopbackDevice("lo", true);
 			setDhcpAttributes(ifname, automatic_start, wireless);
 		}
-		if(wireless && ((key != orig_key) || (ssid != orig_ssid)))
+		if (wireless && ((key != orig_key) || (ssid != orig_ssid)))
 			saveWpaConfig();
 
 		copy_to_orig();
@@ -220,7 +223,8 @@ void CNetworkConfig::startNetwork(void)
 #endif
 	my_system(3, "/bin/sh", "-c", cmd.c_str());
 
-	if (!inet_static) {
+	if (!inet_static)
+	{
 		init_vars();
 	}
 	//mysystem((char *) "ifup",  (char *) "-v",  (char *) "eth0");
@@ -243,31 +247,34 @@ void CNetworkConfig::readWpaConfig()
 
 	ssid = "";
 	key = "";
-	if(!in.is_open()) {
+	if (!in.is_open())
+	{
 		perror("/etc/wpa_supplicant.conf read error");
 		return;
 	}
-	while(getline(in, s)) {
-		if(s[0] == '#')
+	while (getline(in, s))
+	{
+		if (s[0] == '#')
 			continue;
 		std::string::size_type i = s.find('=');
-		if (i != std::string::npos) {
+		if (i != std::string::npos)
+		{
 			std::string n = s.substr(0, i);
 			std::string val = s.substr(i + 1, s.length() - (i + 1));
 
-			while((i = n.find(' ')) != std::string::npos)
+			while ((i = n.find(' ')) != std::string::npos)
 				n.erase(i, 1);
-			while((i = n.find('\t')) != std::string::npos)
+			while ((i = n.find('\t')) != std::string::npos)
 				n.erase(i, 1);
 
-			if((i = val.find('"')) != std::string::npos)
+			if ((i = val.find('"')) != std::string::npos)
 				val.erase(i, 1);
-			if((i = val.rfind('"')) != std::string::npos)
+			if ((i = val.rfind('"')) != std::string::npos)
 				val.erase(i, 1);
 
-			if(n == "ssid")
+			if (n == "ssid")
 				ssid = val;
-			else if(n == "psk")
+			else if (n == "psk")
 				key = val;
 		}
 	}
@@ -282,7 +289,8 @@ void CNetworkConfig::saveWpaConfig()
 	printf("CNetworkConfig::saveWpaConfig\n");
 #endif
 	std::ofstream out("/etc/wpa_supplicant.conf");
-	if(!out.is_open()) {
+	if (!out.is_open())
+	{
 		perror("/etc/wpa_supplicant.conf write error");
 		return;
 	}
@@ -290,13 +298,16 @@ void CNetworkConfig::saveWpaConfig()
 	out << "ctrl_interface=/var/run/wpa_supplicant\n";
 	out << "network={\n";
 	out << "	ssid=\"" + ssid + "\"\n";
-	if (!key.empty()) {
+	if (!key.empty())
+	{
 		out << "	psk=\"" + key + "\"\n";;
 		out << "	proto=WPA WPA2\n";
 		out << "	key_mgmt=WPA-PSK\n";
 		out << "	pairwise=CCMP TKIP\n";
 		out << "	group=CCMP TKIP\n";
-	} else {
+	}
+	else
+	{
 		out << "	key_mgmt=NONE\n";
 	}
 	out << "}\n";

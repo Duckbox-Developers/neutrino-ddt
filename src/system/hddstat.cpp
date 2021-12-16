@@ -65,7 +65,8 @@ void *cHddStat::Run(void *arg)
 	clock_gettime(CLOCK_REALTIME, &ts);
 	long long oldperc = -2;
 	caller->once = g_settings.hdd_statfs_mode != SNeutrinoSettings::HDD_STATFS_OFF;
-	while (caller->running) {
+	while (caller->running)
+	{
 		std::string _dir;
 		pthread_mutex_lock(&caller->mutex);
 		_dir = caller->dir;
@@ -73,17 +74,20 @@ void *cHddStat::Run(void *arg)
 		long long perc = -1;
 
 		if (caller->once || (g_settings.hdd_statfs_mode == SNeutrinoSettings::HDD_STATFS_ALWAYS)
-		  || (g_settings.hdd_statfs_mode == SNeutrinoSettings::HDD_STATFS_RECORDING && (CRecordManager::getInstance()->RecordingStatus()))) {
+			|| (g_settings.hdd_statfs_mode == SNeutrinoSettings::HDD_STATFS_RECORDING && (CRecordManager::getInstance()->RecordingStatus())))
+		{
 			caller->once = false;
 			struct statfs st;
 			if (statfs(_dir.c_str(), &st) || !st.f_blocks)
 				perc = -1;
 			else
 				perc = 100 * (long long)(st.f_blocks - st.f_bfree) / (long long) st.f_blocks;
-		} else
+		}
+		else
 			perc = oldperc;
 
-		if (oldperc != perc) {
+		if (oldperc != perc)
+		{
 			oldperc = perc;
 			caller->percent = (int) perc;
 			//CVFD::getInstance()->setHddUsage(perc);
@@ -108,7 +112,8 @@ cHddStat::cHddStat(void)
 
 cHddStat::~cHddStat(void)
 {
-	if (running) {
+	if (running)
+	{
 		running = false;
 		sem_post(&sem);
 		pthread_join(thr, NULL);

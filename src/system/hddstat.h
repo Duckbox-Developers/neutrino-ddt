@@ -35,7 +35,7 @@ class cHddStat
 	private:
 		pthread_t thr;
 		std::string dir;
-		static void* Run(void *);
+		static void *Run(void *);
 		cHddStat();
 	public:
 		unsigned int period;
@@ -48,8 +48,14 @@ class cHddStat
 		~cHddStat(void);
 		static cHddStat *getInstance(void);
 		void setDir(std::string &_dir);
-		void setPeriod(unsigned int _period) { period = _period; }
-		int getPercent(void) { return percent; }
+		void setPeriod(unsigned int _period)
+		{
+			period = _period;
+		}
+		int getPercent(void)
+		{
+			return percent;
+		}
 		void statOnce(void);
 };
 #endif

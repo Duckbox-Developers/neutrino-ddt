@@ -36,7 +36,7 @@ class cSysLoad
 	private:
 		pthread_t thr;
 		cSysLoad();
-		static void* Run(void *);
+		static void *Run(void *);
 	public:
 		int *data;
 		size_t data_avail;

@@ -48,7 +48,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-static const char * iso639filename = "/usr/share/iso-codes/iso-639.tab";
+static const char *iso639filename = "/usr/share/iso-codes/iso-639.tab";
 //static const char * iso639filename = "/share/iso-codes/iso-639.tab";
 
 #define DEFAULT_LOCALE "english"
@@ -68,7 +68,8 @@ void initialize_iso639_map(void)
 		{
 			getline(in, v);
 			iso639[s] = v;
-			if (s != t) {
+			if (s != t)
+			{
 				iso639[t] = v;
 			}
 			iso639rev[v] = s;
@@ -78,7 +79,7 @@ void initialize_iso639_map(void)
 		std::cout << "Loading " << iso639filename << " failed." << std::endl;
 }
 
-const char * getISO639Description(const char * const iso)
+const char *getISO639Description(const char *const iso)
 {
 	std::map<std::string, std::string>::const_iterator it = iso639.find(std::string(iso));
 	if (it == iso639.end())
@@ -89,8 +90,8 @@ const char * getISO639Description(const char * const iso)
 
 CLocaleManager::CLocaleManager()
 {
-	localeData = new char * [sizeof(locale_real_names)/sizeof(const char *)];
-	defaultData = new char * [sizeof(locale_real_names)/sizeof(const char *)];
+	localeData = new char *[sizeof(locale_real_names) / sizeof(const char *)];
+	defaultData = new char *[sizeof(locale_real_names) / sizeof(const char *)];
 	memcpy(localeData, locale_real_names, sizeof(locale_real_names));
 	memcpy(defaultData, locale_real_names, sizeof(locale_real_names));
 	defaultDataMem = localeDataMem = NULL;
@@ -109,17 +110,19 @@ CLocaleManager::~CLocaleManager()
 		::free(defaultDataMem);
 }
 
-const char * path[2] = { LOCALEDIR_VAR, LOCALEDIR };
+const char *path[2] = { LOCALEDIR_VAR, LOCALEDIR };
 
-CLocaleManager::loadLocale_ret_t CLocaleManager::loadLocale(const char * const locale, bool asdefault)
+CLocaleManager::loadLocale_ret_t CLocaleManager::loadLocale(const char *const locale, bool asdefault)
 {
-	FILE * fd = NULL;
-	char ** loadData = asdefault ? defaultData : localeData;
+	FILE *fd = NULL;
+	char **loadData = asdefault ? defaultData : localeData;
 
 	char **mem = asdefault ? &defaultDataMem : &localeDataMem;
 
-	if(!asdefault && !strcmp(locale, DEFAULT_LOCALE)) {
-		if (*mem) {
+	if (!asdefault && !strcmp(locale, DEFAULT_LOCALE))
+	{
+		if (*mem)
+		{
 			free(*mem);
 			*mem = NULL;
 		}
@@ -147,8 +150,9 @@ CLocaleManager::loadLocale_ret_t CLocaleManager::loadLocale(const char * const l
 		return NO_SUCH_LOCALE;
 	}
 
-	if (*mem) {
-		free (*mem);
+	if (*mem)
+	{
+		free(*mem);
 		*mem = NULL;
 	}
 
@@ -162,17 +166,17 @@ CLocaleManager::loadLocale_ret_t CLocaleManager::loadLocale(const char * const l
 	}
 	char *memp = *mem;
 
-	char *buf=NULL;
+	char *buf = NULL;
 	size_t len = 0;
 
-	while(!feof(fd))
+	while (!feof(fd))
 	{
-		if(getline(&buf, &len, fd)!=-1)
+		if (getline(&buf, &len, fd) != -1)
 		{
-			char * val    = NULL;
-			char * tmpptr = buf;
+			char *val    = NULL;
+			char *tmpptr = buf;
 
-			for(; (*tmpptr!=10) && (*tmpptr!=13);tmpptr++)
+			for (; (*tmpptr != 10) && (*tmpptr != 13); tmpptr++)
 			{
 				if ((*tmpptr == ' ') && (val == NULL))
 				{
@@ -191,19 +195,20 @@ CLocaleManager::loadLocale_ret_t CLocaleManager::loadLocale(const char * const l
 			do
 			{
 				pos = text.find("\\n");
-				if ( pos!=-1 )
+				if (pos != -1)
 				{
 					text.replace(pos, 2, "\n", 1);
 				}
-			} while ( ( pos != -1 ) );
+			}
+			while ((pos != -1));
 
 			unsigned int i;
-			for(i = 1; i < sizeof(locale_real_names)/sizeof(const char *); i++)
+			for (i = 1; i < sizeof(locale_real_names) / sizeof(const char *); i++)
 			{
 //printf("[%s] [%s]\n", buf,locale_real_names[i]);
-				if(!strcmp(buf,locale_real_names[i]))
+				if (!strcmp(buf, locale_real_names[i]))
 				{
-					if(loadData[i] == locale_real_names[i])
+					if (loadData[i] == locale_real_names[i])
 					{
 						loadData[i] = memp;
 						size_t l = text.length() + 1;
@@ -216,37 +221,40 @@ CLocaleManager::loadLocale_ret_t CLocaleManager::loadLocale(const char * const l
 				}
 			}
 //			printf("i=%d\n", i);
-			if(i == sizeof(locale_real_names)/sizeof(const char *))
+			if (i == sizeof(locale_real_names) / sizeof(const char *))
 				printf("[%s.locale] superfluous entry: %s\n", locale, buf);
 		}
 	}
 	fclose(fd);
-	if(buf)
+	if (buf)
 		free(buf);
-	if(memp - *mem > 0){
+	if (memp - *mem > 0)
+	{
 		char *_mem = (char *) realloc(*mem, memp - *mem);
-		if (_mem) {
-			if (_mem != *mem) {
+		if (_mem)
+		{
+			if (_mem != *mem)
+			{
 				// most likely doesn't happen
-				for(unsigned int i = 1; i < sizeof(locale_real_names)/sizeof(const char *); i++)
+				for (unsigned int i = 1; i < sizeof(locale_real_names) / sizeof(const char *); i++)
 					if (loadData[i] != locale_real_names[i])
 						loadData[i] -= *mem - _mem;
 				*mem = _mem;
 			}
 		}
 	}
-	for (unsigned j = 1; j < (sizeof(locale_real_names)/sizeof(const char *)); j++)
+	for (unsigned j = 1; j < (sizeof(locale_real_names) / sizeof(const char *)); j++)
 		if (loadData[j] == locale_real_names[j])
 		{
 			printf("[%s.locale] missing entry: %s\n", locale, locale_real_names[j]);
-			if(!asdefault)
+			if (!asdefault)
 				loadData[j] = defaultData[j];
 		}
 
 	return UNICODE_FONT;
 }
 
-const char * CLocaleManager::getText(const neutrino_locale_t keyName) const
+const char *CLocaleManager::getText(const neutrino_locale_t keyName) const
 {
 	return localeData[keyName];
 }
@@ -279,27 +287,27 @@ static const neutrino_locale_t locale_month[12] =
 };
 
 
-neutrino_locale_t CLocaleManager::getMonth(const struct tm * struct_tm_p)
+neutrino_locale_t CLocaleManager::getMonth(const struct tm *struct_tm_p)
 {
 	return locale_month[struct_tm_p->tm_mon];
 }
 
 neutrino_locale_t CLocaleManager::getMonth(const int mon)
 {
-	if(mon > -1 && mon < 12)
+	if (mon > -1 && mon < 12)
 		return locale_month[mon];
 	else
 		return LOCALE_MESSAGEBOX_ERROR;
 }
 
-neutrino_locale_t CLocaleManager::getWeekday(const struct tm * struct_tm_p)
+neutrino_locale_t CLocaleManager::getWeekday(const struct tm *struct_tm_p)
 {
 	return locale_weekday[struct_tm_p->tm_wday];
 }
 
 neutrino_locale_t CLocaleManager::getWeekday(const int wday)
 {
-	if(wday > -1 && wday < 7)
+	if (wday > -1 && wday < 7)
 		return locale_weekday[wday];
 	else
 		return LOCALE_MESSAGEBOX_ERROR;

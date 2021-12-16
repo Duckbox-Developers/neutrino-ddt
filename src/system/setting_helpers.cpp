@@ -75,8 +75,8 @@
 #include <zapit/satconfig.h>
 #include <zapit/zapit.h>
 
-extern CPlugins       * g_Plugins;    /* neutrino.cpp */
-extern CRemoteControl * g_RemoteControl; /* neutrino.cpp */
+extern CPlugins        *g_Plugins;    /* neutrino.cpp */
+extern CRemoteControl *g_RemoteControl;  /* neutrino.cpp */
 extern cVideo *videoDecoder;
 extern cAudio *audioDecoder;
 
@@ -84,7 +84,7 @@ extern cDemux *videoDemux;
 extern cDemux *audioDemux;
 extern cDemux *pcrDemux;
 
-extern "C" int pinghost( const char *hostname );
+extern "C" int pinghost(const char *hostname);
 
 COnOffNotifier::COnOffNotifier(int OffValue)
 {
@@ -93,22 +93,22 @@ COnOffNotifier::COnOffNotifier(int OffValue)
 
 bool COnOffNotifier::changeNotify(const neutrino_locale_t, void *Data)
 {
-	bool active = (*(int*)(Data) != offValue);
+	bool active = (*(int *)(Data) != offValue);
 
-	for (std::vector<CMenuItem*>::iterator it = toDisable.begin(); it != toDisable.end(); it++)
+	for (std::vector<CMenuItem *>::iterator it = toDisable.begin(); it != toDisable.end(); it++)
 		(*it)->setActive(active);
 
 	return false;
 }
 
-void COnOffNotifier::addItem(CMenuItem* menuItem)
+void COnOffNotifier::addItem(CMenuItem *menuItem)
 {
 	toDisable.push_back(menuItem);
 }
 
 bool CSectionsdConfigNotifier::changeNotify(const neutrino_locale_t locale, void *data)
 {
-	char *str = (char*) data;
+	char *str = (char *) data;
 	if (locale == LOCALE_MISCSETTINGS_EPG_CACHE)
 		g_settings.epg_cache = atoi(str);
 	else if (locale == LOCALE_MISCSETTINGS_EPG_EXTENDEDCACHE)
@@ -122,11 +122,11 @@ bool CSectionsdConfigNotifier::changeNotify(const neutrino_locale_t locale, void
 	return false;
 }
 
-bool CTouchFileNotifier::changeNotify(const neutrino_locale_t, void * data)
+bool CTouchFileNotifier::changeNotify(const neutrino_locale_t, void *data)
 {
 	if ((*(int *)data) != 0)
 	{
-		FILE * fd = fopen(filename, "w");
+		FILE *fd = fopen(filename, "w");
 		if (fd)
 			fclose(fd);
 		else
@@ -143,151 +143,151 @@ void CColorSetupNotifier::setPalette()
 	SNeutrinoTheme &t = g_settings.theme;
 	//setting colors-..
 	frameBuffer->paletteGenFade(COL_MENUHEAD,
-	                              convertSetupColor2RGB(t.menu_Head_red, t.menu_Head_green, t.menu_Head_blue),
-	                              convertSetupColor2RGB(t.menu_Head_Text_red, t.menu_Head_Text_green, t.menu_Head_Text_blue),
-	                              8, convertSetupAlpha2Alpha( t.menu_Head_alpha ) );
+		convertSetupColor2RGB(t.menu_Head_red, t.menu_Head_green, t.menu_Head_blue),
+		convertSetupColor2RGB(t.menu_Head_Text_red, t.menu_Head_Text_green, t.menu_Head_Text_blue),
+		8, convertSetupAlpha2Alpha(t.menu_Head_alpha));
 
 	frameBuffer->paletteGenFade(COL_MENUCONTENT,
-	                              convertSetupColor2RGB(t.menu_Content_red, t.menu_Content_green, t.menu_Content_blue),
-	                              convertSetupColor2RGB(t.menu_Content_Text_red, t.menu_Content_Text_green, t.menu_Content_Text_blue),
-	                              8, convertSetupAlpha2Alpha(t.menu_Content_alpha) );
+		convertSetupColor2RGB(t.menu_Content_red, t.menu_Content_green, t.menu_Content_blue),
+		convertSetupColor2RGB(t.menu_Content_Text_red, t.menu_Content_Text_green, t.menu_Content_Text_blue),
+		8, convertSetupAlpha2Alpha(t.menu_Content_alpha));
 
 
 	frameBuffer->paletteGenFade(COL_MENUCONTENTDARK,
-	                              convertSetupColor2RGB(int(t.menu_Content_red*0.6), int(t.menu_Content_green*0.6), int(t.menu_Content_blue*0.6)),
-	                              convertSetupColor2RGB(t.menu_Content_Text_red, t.menu_Content_Text_green, t.menu_Content_Text_blue),
-	                              8, convertSetupAlpha2Alpha(t.menu_Content_alpha) );
+		convertSetupColor2RGB(int(t.menu_Content_red * 0.6), int(t.menu_Content_green * 0.6), int(t.menu_Content_blue * 0.6)),
+		convertSetupColor2RGB(t.menu_Content_Text_red, t.menu_Content_Text_green, t.menu_Content_Text_blue),
+		8, convertSetupAlpha2Alpha(t.menu_Content_alpha));
 
 	frameBuffer->paletteGenFade(COL_MENUCONTENTSELECTED,
-	                              convertSetupColor2RGB(t.menu_Content_Selected_red, t.menu_Content_Selected_green, t.menu_Content_Selected_blue),
-	                              convertSetupColor2RGB(t.menu_Content_Selected_Text_red, t.menu_Content_Selected_Text_green, t.menu_Content_Selected_Text_blue),
-	                              8, convertSetupAlpha2Alpha(t.menu_Content_Selected_alpha) );
+		convertSetupColor2RGB(t.menu_Content_Selected_red, t.menu_Content_Selected_green, t.menu_Content_Selected_blue),
+		convertSetupColor2RGB(t.menu_Content_Selected_Text_red, t.menu_Content_Selected_Text_green, t.menu_Content_Selected_Text_blue),
+		8, convertSetupAlpha2Alpha(t.menu_Content_Selected_alpha));
 
 	frameBuffer->paletteGenFade(COL_MENUCONTENTINACTIVE,
-	                              convertSetupColor2RGB(t.menu_Content_inactive_red, t.menu_Content_inactive_green, t.menu_Content_inactive_blue),
-	                              convertSetupColor2RGB(t.menu_Content_inactive_Text_red, t.menu_Content_inactive_Text_green, t.menu_Content_inactive_Text_blue),
-	                              8, convertSetupAlpha2Alpha(t.menu_Content_inactive_alpha) );
+		convertSetupColor2RGB(t.menu_Content_inactive_red, t.menu_Content_inactive_green, t.menu_Content_inactive_blue),
+		convertSetupColor2RGB(t.menu_Content_inactive_Text_red, t.menu_Content_inactive_Text_green, t.menu_Content_inactive_Text_blue),
+		8, convertSetupAlpha2Alpha(t.menu_Content_inactive_alpha));
 
 	frameBuffer->paletteGenFade(COL_MENUFOOT,
-	                              convertSetupColor2RGB(t.menu_Foot_red, t.menu_Foot_green, t.menu_Foot_blue),
-	                              convertSetupColor2RGB(t.menu_Foot_Text_red, t.menu_Foot_Text_green, t.menu_Foot_Text_blue),
-	                              8, convertSetupAlpha2Alpha( t.menu_Foot_alpha ) );
+		convertSetupColor2RGB(t.menu_Foot_red, t.menu_Foot_green, t.menu_Foot_blue),
+		convertSetupColor2RGB(t.menu_Foot_Text_red, t.menu_Foot_Text_green, t.menu_Foot_Text_blue),
+		8, convertSetupAlpha2Alpha(t.menu_Foot_alpha));
 
 	frameBuffer->paletteGenFade(COL_INFOBAR,
-	                              convertSetupColor2RGB(t.infobar_red, t.infobar_green, t.infobar_blue),
-	                              convertSetupColor2RGB(t.infobar_Text_red, t.infobar_Text_green, t.infobar_Text_blue),
-	                              8, convertSetupAlpha2Alpha(t.infobar_alpha) );
+		convertSetupColor2RGB(t.infobar_red, t.infobar_green, t.infobar_blue),
+		convertSetupColor2RGB(t.infobar_Text_red, t.infobar_Text_green, t.infobar_Text_blue),
+		8, convertSetupAlpha2Alpha(t.infobar_alpha));
 
 	frameBuffer->paletteGenFade(COL_SHADOW,
-	                              convertSetupColor2RGB(int(t.shadow_red), int(t.shadow_green), int(t.shadow_blue)),
-	                              convertSetupColor2RGB(t.shadow_red, t.shadow_green, t.shadow_blue),
-	                              8, convertSetupAlpha2Alpha(t.shadow_alpha) );
+		convertSetupColor2RGB(int(t.shadow_red), int(t.shadow_green), int(t.shadow_blue)),
+		convertSetupColor2RGB(t.shadow_red, t.shadow_green, t.shadow_blue),
+		8, convertSetupAlpha2Alpha(t.shadow_alpha));
 
 	frameBuffer->paletteGenFade(COL_INFOBAR_CASYSTEM,
-	                              convertSetupColor2RGB(t.infobar_casystem_red, t.infobar_casystem_green, t.infobar_casystem_blue),
-	                              convertSetupColor2RGB(t.infobar_Text_red, t.infobar_Text_green, t.infobar_Text_blue),
-	                              8, convertSetupAlpha2Alpha(t.infobar_casystem_alpha) );
+		convertSetupColor2RGB(t.infobar_casystem_red, t.infobar_casystem_green, t.infobar_casystem_blue),
+		convertSetupColor2RGB(t.infobar_Text_red, t.infobar_Text_green, t.infobar_Text_blue),
+		8, convertSetupAlpha2Alpha(t.infobar_casystem_alpha));
 
 	frameBuffer->paletteGenFade(COL_COLORED_EVENTS_INFOBAR,
-	                              convertSetupColor2RGB(t.infobar_red, t.infobar_green, t.infobar_blue),
-	                              convertSetupColor2RGB(t.colored_events_red, t.colored_events_green, t.colored_events_blue),
-	                              8, convertSetupAlpha2Alpha(t.infobar_alpha) );
+		convertSetupColor2RGB(t.infobar_red, t.infobar_green, t.infobar_blue),
+		convertSetupColor2RGB(t.colored_events_red, t.colored_events_green, t.colored_events_blue),
+		8, convertSetupAlpha2Alpha(t.infobar_alpha));
 
 	frameBuffer->paletteGenFade(COL_COLORED_EVENTS_CHANNELLIST,
-	                              convertSetupColor2RGB(int(t.menu_Content_red*0.6), int(t.menu_Content_green*0.6), int(t.menu_Content_blue*0.6)),
-	                              convertSetupColor2RGB(t.colored_events_red, t.colored_events_green, t.colored_events_blue),
-	                              8, convertSetupAlpha2Alpha(t.infobar_alpha) );
+		convertSetupColor2RGB(int(t.menu_Content_red * 0.6), int(t.menu_Content_green * 0.6), int(t.menu_Content_blue * 0.6)),
+		convertSetupColor2RGB(t.colored_events_red, t.colored_events_green, t.colored_events_blue),
+		8, convertSetupAlpha2Alpha(t.infobar_alpha));
 	//NI
 	frameBuffer->paletteGenFade(COL_PROGRESSBAR,
-					convertSetupColor2RGB(t.progressbar_passive_red, t.progressbar_passive_green, t.progressbar_passive_blue),
-					convertSetupColor2RGB(t.progressbar_active_red, t.progressbar_active_green, t.progressbar_active_blue),
-					8, convertSetupAlpha2Alpha(t.menu_Content_alpha));
+		convertSetupColor2RGB(t.progressbar_passive_red, t.progressbar_passive_green, t.progressbar_passive_blue),
+		convertSetupColor2RGB(t.progressbar_active_red, t.progressbar_active_green, t.progressbar_active_blue),
+		8, convertSetupAlpha2Alpha(t.menu_Content_alpha));
 
 	// ##### TEXT COLORS #####
 	// COL_COLORED_EVENTS_TEXT
 	frameBuffer->paletteSetColor(COL_NEUTRINO_TEXT + 0,
-	                              convertSetupColor2RGB(t.colored_events_red, t.colored_events_green, t.colored_events_blue),
-	                              convertSetupAlpha2Alpha(t.menu_Content_alpha));
+		convertSetupColor2RGB(t.colored_events_red, t.colored_events_green, t.colored_events_blue),
+		convertSetupAlpha2Alpha(t.menu_Content_alpha));
 
 	// COL_INFOBAR_TEXT
 	frameBuffer->paletteSetColor(COL_NEUTRINO_TEXT + 1,
-	                              convertSetupColor2RGB(t.infobar_Text_red, t.infobar_Text_green, t.infobar_Text_blue),
-	                              convertSetupAlpha2Alpha(t.infobar_alpha));
+		convertSetupColor2RGB(t.infobar_Text_red, t.infobar_Text_green, t.infobar_Text_blue),
+		convertSetupAlpha2Alpha(t.infobar_alpha));
 
 	// COL_MENUFOOT_TEXT
 	frameBuffer->paletteSetColor(COL_NEUTRINO_TEXT + 2,
-	                              convertSetupColor2RGB(t.menu_Foot_Text_red, t.menu_Foot_Text_green, t.menu_Foot_Text_blue),
-	                              convertSetupAlpha2Alpha(t.menu_Foot_alpha));
+		convertSetupColor2RGB(t.menu_Foot_Text_red, t.menu_Foot_Text_green, t.menu_Foot_Text_blue),
+		convertSetupAlpha2Alpha(t.menu_Foot_alpha));
 
 	// COL_MENUHEAD_TEXT
 	frameBuffer->paletteSetColor(COL_NEUTRINO_TEXT + 3,
-	                              convertSetupColor2RGB(t.menu_Head_Text_red, t.menu_Head_Text_green, t.menu_Head_Text_blue),
-	                              convertSetupAlpha2Alpha(t.menu_Head_alpha));
+		convertSetupColor2RGB(t.menu_Head_Text_red, t.menu_Head_Text_green, t.menu_Head_Text_blue),
+		convertSetupAlpha2Alpha(t.menu_Head_alpha));
 
 	// COL_MENUCONTENT_TEXT
 	frameBuffer->paletteSetColor(COL_NEUTRINO_TEXT + 4,
-	                              convertSetupColor2RGB(t.menu_Content_Text_red, t.menu_Content_Text_green, t.menu_Content_Text_blue),
-	                              convertSetupAlpha2Alpha(t.menu_Content_alpha));
+		convertSetupColor2RGB(t.menu_Content_Text_red, t.menu_Content_Text_green, t.menu_Content_Text_blue),
+		convertSetupAlpha2Alpha(t.menu_Content_alpha));
 
 	// COL_MENUCONTENT_TEXT_PLUS_1
 	frameBuffer->paletteSetColor(COL_NEUTRINO_TEXT + 5,
-	                              changeBrightnessRGBRel(convertSetupColor2RGB(t.menu_Content_Text_red, t.menu_Content_Text_green, t.menu_Content_Text_blue), -16),
-	                              convertSetupAlpha2Alpha(t.menu_Content_alpha));
+		changeBrightnessRGBRel(convertSetupColor2RGB(t.menu_Content_Text_red, t.menu_Content_Text_green, t.menu_Content_Text_blue), -16),
+		convertSetupAlpha2Alpha(t.menu_Content_alpha));
 
 	// COL_MENUCONTENT_TEXT_PLUS_2
 	frameBuffer->paletteSetColor(COL_NEUTRINO_TEXT + 6,
-	                              changeBrightnessRGBRel(convertSetupColor2RGB(t.menu_Content_Text_red, t.menu_Content_Text_green, t.menu_Content_Text_blue), -32),
-	                              convertSetupAlpha2Alpha(t.menu_Content_alpha));
+		changeBrightnessRGBRel(convertSetupColor2RGB(t.menu_Content_Text_red, t.menu_Content_Text_green, t.menu_Content_Text_blue), -32),
+		convertSetupAlpha2Alpha(t.menu_Content_alpha));
 
 	// COL_MENUCONTENT_TEXT_PLUS_3
 	frameBuffer->paletteSetColor(COL_NEUTRINO_TEXT + 7,
-	                              changeBrightnessRGBRel(convertSetupColor2RGB(t.menu_Content_Text_red, t.menu_Content_Text_green, t.menu_Content_Text_blue), -48),
-	                              convertSetupAlpha2Alpha(t.menu_Content_alpha));
+		changeBrightnessRGBRel(convertSetupColor2RGB(t.menu_Content_Text_red, t.menu_Content_Text_green, t.menu_Content_Text_blue), -48),
+		convertSetupAlpha2Alpha(t.menu_Content_alpha));
 
 	// COL_MENUCONTENTDARK_TEXT
 	frameBuffer->paletteSetColor(COL_NEUTRINO_TEXT + 8,
-	                              convertSetupColor2RGB(t.menu_Content_Text_red, t.menu_Content_Text_green, t.menu_Content_Text_blue),
-	                              convertSetupAlpha2Alpha(t.menu_Content_alpha));
+		convertSetupColor2RGB(t.menu_Content_Text_red, t.menu_Content_Text_green, t.menu_Content_Text_blue),
+		convertSetupAlpha2Alpha(t.menu_Content_alpha));
 
 	// COL_MENUCONTENTDARK_TEXT_PLUS_1
 	frameBuffer->paletteSetColor(COL_NEUTRINO_TEXT + 9,
-	                              changeBrightnessRGBRel(convertSetupColor2RGB(t.menu_Content_Text_red, t.menu_Content_Text_green, t.menu_Content_Text_blue), -52),
-	                              convertSetupAlpha2Alpha(t.menu_Content_alpha));
+		changeBrightnessRGBRel(convertSetupColor2RGB(t.menu_Content_Text_red, t.menu_Content_Text_green, t.menu_Content_Text_blue), -52),
+		convertSetupAlpha2Alpha(t.menu_Content_alpha));
 
 	// COL_MENUCONTENTDARK_TEXT_PLUS_2
 	frameBuffer->paletteSetColor(COL_NEUTRINO_TEXT + 10,
-	                              changeBrightnessRGBRel(convertSetupColor2RGB(t.menu_Content_Text_red, t.menu_Content_Text_green, t.menu_Content_Text_blue), -60),
-	                              convertSetupAlpha2Alpha(t.menu_Content_alpha));
+		changeBrightnessRGBRel(convertSetupColor2RGB(t.menu_Content_Text_red, t.menu_Content_Text_green, t.menu_Content_Text_blue), -60),
+		convertSetupAlpha2Alpha(t.menu_Content_alpha));
 
 	// COL_MENUCONTENTSELECTED_TEXT
 	frameBuffer->paletteSetColor(COL_NEUTRINO_TEXT + 11,
-	                              convertSetupColor2RGB(t.menu_Content_Selected_Text_red, t.menu_Content_Selected_Text_green, t.menu_Content_Selected_Text_blue),
-	                              convertSetupAlpha2Alpha(t.menu_Content_Selected_alpha));
+		convertSetupColor2RGB(t.menu_Content_Selected_Text_red, t.menu_Content_Selected_Text_green, t.menu_Content_Selected_Text_blue),
+		convertSetupAlpha2Alpha(t.menu_Content_Selected_alpha));
 
 	// COL_MENUCONTENTSELECTED_TEXT_PLUS_1
 	frameBuffer->paletteSetColor(COL_NEUTRINO_TEXT + 12,
-	                              changeBrightnessRGBRel(convertSetupColor2RGB(t.menu_Content_Selected_Text_red, t.menu_Content_Selected_Text_green, t.menu_Content_Selected_Text_blue), -16),
-	                              convertSetupAlpha2Alpha(t.menu_Content_Selected_alpha));
+		changeBrightnessRGBRel(convertSetupColor2RGB(t.menu_Content_Selected_Text_red, t.menu_Content_Selected_Text_green, t.menu_Content_Selected_Text_blue), -16),
+		convertSetupAlpha2Alpha(t.menu_Content_Selected_alpha));
 
 	// COL_MENUCONTENTSELECTED_TEXT_PLUS_2
 	frameBuffer->paletteSetColor(COL_NEUTRINO_TEXT + 13,
-	                              changeBrightnessRGBRel(convertSetupColor2RGB(t.menu_Content_Selected_Text_red, t.menu_Content_Selected_Text_green, t.menu_Content_Selected_Text_blue), -32),
-	                              convertSetupAlpha2Alpha(t.menu_Content_Selected_alpha));
+		changeBrightnessRGBRel(convertSetupColor2RGB(t.menu_Content_Selected_Text_red, t.menu_Content_Selected_Text_green, t.menu_Content_Selected_Text_blue), -32),
+		convertSetupAlpha2Alpha(t.menu_Content_Selected_alpha));
 
 	// COL_MENUCONTENTINACTIVE_TEXT
 	frameBuffer->paletteSetColor(COL_NEUTRINO_TEXT + 14,
-	                              convertSetupColor2RGB(t.menu_Content_inactive_Text_red, t.menu_Content_inactive_Text_green, t.menu_Content_inactive_Text_blue),
-	                              convertSetupAlpha2Alpha(t.menu_Content_inactive_alpha));
+		convertSetupColor2RGB(t.menu_Content_inactive_Text_red, t.menu_Content_inactive_Text_green, t.menu_Content_inactive_Text_blue),
+		convertSetupAlpha2Alpha(t.menu_Content_inactive_alpha));
 
 	// COL_INFOCLOCK_TEXT
 	frameBuffer->paletteSetColor(COL_NEUTRINO_TEXT + 15,
-	                              convertSetupColor2RGB(t.clock_Digit_red, t.clock_Digit_green, t.clock_Digit_blue),
-	                              convertSetupAlpha2Alpha(t.clock_Digit_alpha));
+		convertSetupColor2RGB(t.clock_Digit_red, t.clock_Digit_green, t.clock_Digit_blue),
+		convertSetupAlpha2Alpha(t.clock_Digit_alpha));
 	//NI
 	// COL_PROGRESSBAR_ACTIVE
 	frameBuffer->paletteSetColor(COL_NEUTRINO_TEXT + 16,
-	                              convertSetupColor2RGB(t.progressbar_active_red, t.progressbar_active_green, t.progressbar_active_blue),
-	                              convertSetupAlpha2Alpha(t.menu_Content_alpha));
+		convertSetupColor2RGB(t.progressbar_active_red, t.progressbar_active_green, t.progressbar_active_blue),
+		convertSetupAlpha2Alpha(t.menu_Content_alpha));
 
 	frameBuffer->paletteSet();
 }
@@ -306,34 +306,53 @@ bool CAudioSetupNotifier::changeNotify(const neutrino_locale_t OptionName, void 
 {
 	//printf("notify: %d\n", OptionName);
 
-	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_ANALOG_MODE)) {
+	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_ANALOG_MODE))
+	{
 		g_Zapit->setAudioMode(g_settings.audio_AnalogMode);
-	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_ANALOG_OUT)) {
+	}
+	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_ANALOG_OUT))
+	{
 		audioDecoder->EnableAnalogOut(g_settings.analog_out ? true : false);
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
-	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_AC3)) {
+	}
+	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_AC3))
+	{
 		audioDecoder->SetHdmiDD(g_settings.ac3_pass ? true : false);
-	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_DTS)) {
+	}
+	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_DTS))
+	{
 		audioDecoder->SetSpdifDD(g_settings.dts_pass ? true : false);
 #else
-	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_HDMI_DD)) {
+	}
+	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_HDMI_DD))
+	{
 		audioDecoder->SetHdmiDD((HDMI_ENCODED_MODE) g_settings.hdmi_dd);
-	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_SPDIF_DD)) {
+	}
+	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_SPDIF_DD))
+	{
 		audioDecoder->SetSpdifDD(g_settings.spdif_dd ? true : false);
 #endif
-	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_AVSYNC)) {
+	}
+	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_AVSYNC))
+	{
 		videoDecoder->SetSyncMode((AVSYNC_TYPE)g_settings.avsync);
 		audioDecoder->SetSyncMode((AVSYNC_TYPE)g_settings.avsync);
 		videoDemux->SetSyncMode((AVSYNC_TYPE)g_settings.avsync);
 		audioDemux->SetSyncMode((AVSYNC_TYPE)g_settings.avsync);
 		pcrDemux->SetSyncMode((AVSYNC_TYPE)g_settings.avsync);
 #if HAVE_SH4_HARDWARE
-	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_MIXER_VOLUME_ANALOG)) {
-			audioDecoder->setMixerVolume("Analog", (long)(*((int *)(data))));
-	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_MIXER_VOLUME_HDMI)) {
-			audioDecoder->setMixerVolume("HDMI", (long)(*((int *)(data))));
-	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_MIXER_VOLUME_SPDIF)) {
-			audioDecoder->setMixerVolume("SPDIF", (long)(*((int *)(data))));
+	}
+	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_MIXER_VOLUME_ANALOG))
+	{
+		audioDecoder->setMixerVolume("Analog", (long)(*((int *)(data))));
+	}
+	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_MIXER_VOLUME_HDMI))
+	{
+		audioDecoder->setMixerVolume("HDMI", (long)(*((int *)(data))));
+	}
+	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_MIXER_VOLUME_SPDIF))
+	{
+		audioDecoder->setMixerVolume("SPDIF", (long)(*((int *)(data))));
 #endif
 	}
 
@@ -354,32 +373,37 @@ bool CFontSizeNotifier::changeNotify(const neutrino_locale_t, void *)
 	return true;
 }
 
-int CSubtitleChangeExec::exec(CMenuTarget* /*parent*/, const std::string & actionKey)
+int CSubtitleChangeExec::exec(CMenuTarget * /*parent*/, const std::string &actionKey)
 {
-printf("CSubtitleChangeExec::exec: action %s\n", actionKey.c_str());
+	printf("CSubtitleChangeExec::exec: action %s\n", actionKey.c_str());
 
 	CMoviePlayerGui *mp = &CMoviePlayerGui::getInstance();
 	bool is_mp = mp->Playing();
 
-	if(actionKey == "off") {
+	if (actionKey == "off")
+	{
 		tuxtx_stop_subtitle();
 		if (!is_mp && dvbsub_getpid() > 0)
 			dvbsub_stop();
-		if (is_mp && playback) {
+		if (is_mp && playback)
+		{
 			playback->SetSubtitlePid(0);
 			playback->SetTeletextPid(0);
 			mp->setCurrentTTXSub("");
 		}
 		return menu_return::RETURN_EXIT;
 	}
-	if(!strncmp(actionKey.c_str(), "DVB", 3)) {
-		char const * pidptr = strchr(actionKey.c_str(), ':');
-		int pid = atoi(pidptr+1);
+	if (!strncmp(actionKey.c_str(), "DVB", 3))
+	{
+		char const *pidptr = strchr(actionKey.c_str(), ':');
+		int pid = atoi(pidptr + 1);
 		tuxtx_stop_subtitle();
 		dvbsub_pause();
 		dvbsub_start(pid);
-	} else if (!strncmp(actionKey.c_str(), "TTX", 3)) {
-		char const * ptr = strchr(actionKey.c_str(), ':');
+	}
+	else if (!strncmp(actionKey.c_str(), "TTX", 3))
+	{
+		char const *ptr = strchr(actionKey.c_str(), ':');
 		ptr++;
 		int pid = atoi(ptr);
 		ptr = strchr(ptr, ':');
@@ -387,11 +411,12 @@ printf("CSubtitleChangeExec::exec: action %s\n", actionKey.c_str());
 		int page = strtol(ptr, NULL, 16);
 		ptr = strchr(ptr, ':');
 		ptr++;
-printf("CSubtitleChangeExec::exec: TTX, pid %x page %x lang %s\n", pid, page, ptr);
+		printf("CSubtitleChangeExec::exec: TTX, pid %x page %x lang %s\n", pid, page, ptr);
 		tuxtx_stop_subtitle();
 		tuxtx_set_pid(pid, page, ptr);
 		dvbsub_stop();
-		if (is_mp) {
+		if (is_mp)
+		{
 			playback->SetSubtitlePid(0);
 			playback->SetTeletextPid(pid);
 			tuxtx_set_pid(pid, page, ptr);
@@ -401,27 +426,31 @@ printf("CSubtitleChangeExec::exec: TTX, pid %x page %x lang %s\n", pid, page, pt
 			tuxtx_main(pid, page, 0);
 #endif
 			mp->setCurrentTTXSub(actionKey.c_str());
-		} else {
+		}
+		else
+		{
 			tuxtx_set_pid(pid, page, ptr);
 			tuxtx_main(pid, page);
 		}
-	} else if (is_mp && !strncmp(actionKey.c_str(), "SUB", 3)) {
+	}
+	else if (is_mp && !strncmp(actionKey.c_str(), "SUB", 3))
+	{
 		tuxtx_stop_subtitle();
 		dvbsub_stop();
 		playback->SetSubtitlePid(0);
 		playback->SetTeletextPid(0);
 		mp->setCurrentTTXSub("");
-		char const * pidptr = strchr(actionKey.c_str(), ':');
-		int pid = atoi(pidptr+1);
+		char const *pidptr = strchr(actionKey.c_str(), ':');
+		int pid = atoi(pidptr + 1);
 		playback->SetSubtitlePid(pid);
 	}
-        return menu_return::RETURN_EXIT;
+	return menu_return::RETURN_EXIT;
 }
 
-int CNVODChangeExec::exec(CMenuTarget* parent, const std::string & actionKey)
+int CNVODChangeExec::exec(CMenuTarget *parent, const std::string &actionKey)
 {
 	//    printf("CNVODChangeExec exec: %s\n", actionKey.c_str());
-	unsigned sel= atoi(actionKey.c_str());
+	unsigned sel = atoi(actionKey.c_str());
 	g_RemoteControl->setSubChannel(sel);
 
 	parent->hide();
@@ -429,7 +458,7 @@ int CNVODChangeExec::exec(CMenuTarget* parent, const std::string & actionKey)
 	return menu_return::RETURN_EXIT;
 }
 
-int CMoviePluginChangeExec::exec(CMenuTarget* parent, const std::string & actionKey)
+int CMoviePluginChangeExec::exec(CMenuTarget *parent, const std::string &actionKey)
 {
 	if (parent)
 		parent->hide();
@@ -448,7 +477,7 @@ int CMoviePluginChangeExec::exec(CMenuTarget* parent, const std::string & action
 	return menu_return::RETURN_EXIT;
 }
 
-long CNetAdapter::mac_addr_sys ( u_char *addr) //only for function getMacAddr()
+long CNetAdapter::mac_addr_sys(u_char *addr)   //only for function getMacAddr()
 {
 	struct ifreq ifr;
 	struct ifreq *IFR;
@@ -457,7 +486,7 @@ long CNetAdapter::mac_addr_sys ( u_char *addr) //only for function getMacAddr()
 	int s, i;
 	int ok = 0;
 	s = socket(AF_INET, SOCK_DGRAM, 0);
-	if (s==-1)
+	if (s == -1)
 	{
 		return -1;
 	}
@@ -471,7 +500,7 @@ long CNetAdapter::mac_addr_sys ( u_char *addr) //only for function getMacAddr()
 		strcpy(ifr.ifr_name, IFR->ifr_name);
 		if (ioctl(s, SIOCGIFFLAGS, &ifr) == 0)
 		{
-			if (! (ifr.ifr_flags & IFF_LOOPBACK))
+			if (!(ifr.ifr_flags & IFF_LOOPBACK))
 			{
 				if (ioctl(s, SIOCGIFHWADDR, &ifr) == 0)
 				{
@@ -497,13 +526,13 @@ std::string CNetAdapter::getMacAddr(void)
 {
 	long stat;
 	u_char addr[6];
-	stat = mac_addr_sys( addr);
+	stat = mac_addr_sys(addr);
 	if (0 == stat)
 	{
 		std::stringstream mac_tmp;
-		for(int i=0;i<6;++i)
-		mac_tmp<<std::hex<<std::setfill('0')<<std::setw(2)<<(int)addr[i]<<':';
-		return mac_tmp.str().substr(0,17);
+		for (int i = 0; i < 6; ++i)
+			mac_tmp << std::hex << std::setfill('0') << std::setw(2) << (int)addr[i] << ':';
+		return mac_tmp.str().substr(0, 17);
 	}
 	else
 	{
@@ -512,36 +541,41 @@ std::string CNetAdapter::getMacAddr(void)
 	}
 }
 
-bool CTZChangeNotifier::changeNotify(const neutrino_locale_t, void * Data)
+bool CTZChangeNotifier::changeNotify(const neutrino_locale_t, void *Data)
 {
 	bool found = false;
 	std::string name, zone;
 	printf("CTZChangeNotifier::changeNotify: %s\n", (char *) Data);
 
-        xmlDocPtr parser = parseXmlFile("/etc/timezone.xml");
-        if (parser != NULL) {
-                xmlNodePtr search = xmlDocGetRootElement(parser);
+	xmlDocPtr parser = parseXmlFile("/etc/timezone.xml");
+	if (parser != NULL)
+	{
+		xmlNodePtr search = xmlDocGetRootElement(parser);
 		search = xmlChildrenNode(search);
-                while (search) {
-                        if (!strcmp(xmlGetName(search), "zone")) {
+		while (search)
+		{
+			if (!strcmp(xmlGetName(search), "zone"))
+			{
 				const char *nptr = xmlGetAttribute(search, "name");
-				if(nptr)
+				if (nptr)
 					name = nptr;
 
-				if(g_settings.timezone == name) {
+				if (g_settings.timezone == name)
+				{
 					const char *zptr = xmlGetAttribute(search, "zone");
-					if(zptr)
+					if (zptr)
 						zone = zptr;
 					if (!access("/usr/share/zoneinfo/" + zone, R_OK))
 						found = true;
 					break;
 				}
-                        }
-                        search = xmlNextNode(search);
-                }
-                xmlFreeDoc(parser);
-        }
-	if(found) {
+			}
+			search = xmlNextNode(search);
+		}
+		xmlFreeDoc(parser);
+	}
+	if (found)
+	{
 		printf("Timezone: %s -> %s\n", name.c_str(), zone.c_str());
 		std::string cmd = "/usr/share/zoneinfo/" + zone;
 		printf("symlink %s to /etc/localtime\n", cmd.c_str());
@@ -551,7 +585,8 @@ bool CTZChangeNotifier::changeNotify(const neutrino_locale_t, void * Data)
 			perror("symlink failed");
 		/* for yocto tzdata compatibility */
 		FILE *f = fopen("/etc/timezone", "w");
-		if (f) {
+		if (f)
+		{
 			fprintf(f, "%s\n", zone.c_str());
 			fclose(f);
 		}
@@ -567,7 +602,7 @@ bool CTZChangeNotifier::changeNotify(const neutrino_locale_t, void * Data)
 
 extern Zapit_config zapitCfg;
 
-int CDataResetNotifier::exec(CMenuTarget* /*parent*/, const std::string& actionKey)
+int CDataResetNotifier::exec(CMenuTarget * /*parent*/, const std::string &actionKey)
 {
 	bool delete_all = (actionKey == "all");
 	bool delete_chan = (actionKey == "channels") || delete_all;
@@ -577,21 +612,24 @@ int CDataResetNotifier::exec(CMenuTarget* /*parent*/, const std::string& actionK
 	int ret = menu_return::RETURN_REPAINT;
 
 	/* no need to confirm if we only remove deleted channels */
-	if (!delete_removed) {
+	if (!delete_removed)
+	{
 		int result = ShowMsg(msg, g_Locale->getText(LOCALE_RESET_CONFIRM), CMsgBox::mbrNo, CMsgBox::mbYes | CMsgBox::mbNo);
 		if (result != CMsgBox::mbrYes)
 			return true;
 	}
 
-	if(delete_all) {
+	if (delete_all)
+	{
 		my_system(3, "/bin/sh", "-c", "rm -f " CONFIGDIR "/zapit/*.conf");
 		CServiceManager::getInstance()->SatelliteList().clear();
 		CZapit::getInstance()->LoadSettings();
 		CZapit::getInstance()->GetConfig(zapitCfg);
-		g_RCInput->postMsg( NeutrinoMessages::REBOOT, 0);
+		g_RCInput->postMsg(NeutrinoMessages::REBOOT, 0);
 		ret = menu_return::RETURN_EXIT_ALL;
 	}
-	if(delete_set) {
+	if (delete_set)
+	{
 		unlink(NEUTRINO_SETTINGS_FILE);
 		//unlink(NEUTRINO_SCAN_SETTINGS_FILE);
 		CNeutrinoApp::getInstance()->loadSetup(NEUTRINO_SETTINGS_FILE);
@@ -602,11 +640,13 @@ int CDataResetNotifier::exec(CMenuTarget* /*parent*/, const std::string& actionK
 		CVFD::getInstance()->setlcdparameter();
 		CFrameBuffer::getInstance()->Clear();
 	}
-	if(delete_chan) {
+	if (delete_chan)
+	{
 		my_system(3, "/bin/sh", "-c", "rm -f " CONFIGDIR "/zapit/*.xml");
 		g_Zapit->reinitChannels();
 	}
-	if (delete_removed) {
+	if (delete_removed)
+	{
 		CHintBox chb(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_SERVICEMENU_RELOAD_HINT));
 		chb.paint();
 		CServiceManager::getInstance()->SaveServices(true, false, true);
@@ -625,11 +665,13 @@ void CFanControlNotifier::setSpeed(unsigned int speed)
 	printf("FAN Speed %d\n", speed);
 #if defined (BOXMODEL_IPBOX9900) || defined (BOXMODEL_IPBOX99)
 	cfd = open("/proc/stb/misc/fan", O_WRONLY);
-	if(cfd < 0) {
+	if (cfd < 0)
+	{
 		perror("Cannot open /proc/stb/misc/fan");
 #else
 	cfd = open("/proc/stb/fan/fan_ctrl", O_WRONLY);
-	if(cfd < 0) {
+	if (cfd < 0)
+	{
 		perror("Cannot open /proc/stb/fan/fan_ctrl");
 #endif
 		return;
@@ -639,58 +681,59 @@ void CFanControlNotifier::setSpeed(unsigned int speed)
 
 #if defined (BOXMODEL_IPBOX9900) || defined (BOXMODEL_IPBOX99)
 	{
-	case 0:
-		write(cfd,"0",1);
-		break;
-	case 1:
-		write(cfd,"1",1);
-		break;
+		case 0:
+			write(cfd, "0", 1);
+			break;
+		case 1:
+			write(cfd, "1", 1);
+			break;
 	}
 #else
 	{
-	case 1:
-		write(cfd,"115",3);
-		break;
-	case 2:
-		write(cfd,"130",3);
-		break;
-	case 3:
-		write(cfd,"145",3);
-		break;
-	case 4:
-		write(cfd,"160",3);
-		break;
-	case 5:
-		write(cfd,"170",3);
+		case 1:
+			write(cfd, "115", 3);
+			break;
+		case 2:
+			write(cfd, "130", 3);
+			break;
+		case 3:
+			write(cfd, "145", 3);
+			break;
+		case 4:
+			write(cfd, "160", 3);
+			break;
+		case 5:
+			write(cfd, "170", 3);
 	}
 #endif
 	close(cfd);
 }
 #else
-void CFanControlNotifier::setSpeed(unsigned int __attribute__ ((unused)) speed)
+void CFanControlNotifier::setSpeed(unsigned int __attribute__((unused)) speed)
 {
 #if defined (BOXMODEL_DM8000)
 	int cfd;
 	cfd = open("/proc/stb/fp/fan_vlt", O_WRONLY);
-	if(cfd < 0) {
+	if (cfd < 0)
+	{
 		perror("Cannot open /proc/stb/fp/fan_vlt");
 		return;
 	}
 	switch (speed)
 	{
-	case 0:
-		write(cfd,"00000000", 8);
-		break;
-	case 1:
-		write(cfd,"FFFFFFFF", 8);
-		break;
+		case 0:
+			write(cfd, "00000000", 8);
+			break;
+		case 1:
+			write(cfd, "FFFFFFFF", 8);
+			break;
 	}
 	close(cfd);
 #endif
 }
 #endif
 
-bool CFanControlNotifier::changeNotify(const neutrino_locale_t, void * data)
+bool CFanControlNotifier::changeNotify(const neutrino_locale_t, void *data)
 {
 	unsigned int speed = * (int *) data;
 	setSpeed(speed);

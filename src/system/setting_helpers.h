@@ -46,16 +46,25 @@
 class CGenericMenuActivate
 {
 	private:
-		std::vector<CMenuItem*> items;
+		std::vector<CMenuItem *> items;
 	public:
 		CGenericMenuActivate()		{};
-		~CGenericMenuActivate()		{ items.clear(); };
+		~CGenericMenuActivate()
+		{
+			items.clear();
+		};
 
-		void Add(CMenuItem* item)	{ items.push_back(item); }
-		void Clear()			{ items.clear(); }
+		void Add(CMenuItem *item)
+		{
+			items.push_back(item);
+		}
+		void Clear()
+		{
+			items.clear();
+		}
 		void Activate(bool enable)
 		{
-			for(std::vector<CMenuItem*>::iterator it = items.begin(); it != items.end(); ++it)
+			for (std::vector<CMenuItem *>::iterator it = items.begin(); it != items.end(); ++it)
 				(*it)->setActive(enable);
 		}
 };
@@ -64,27 +73,30 @@ class COnOffNotifier : public CChangeObserver
 {
 	private:
 		int offValue;
-		std::vector<CMenuItem*> toDisable;
+		std::vector<CMenuItem *> toDisable;
 
 	public:
 		COnOffNotifier(int OffValue = 0);
 		bool changeNotify(const neutrino_locale_t, void *Data);
 
-		void addItem(CMenuItem* menuItem);
+		void addItem(CMenuItem *menuItem);
 };
 
 class CSectionsdConfigNotifier : public CChangeObserver
 {
 	public:
-		bool changeNotify(const neutrino_locale_t, void * );
+		bool changeNotify(const neutrino_locale_t, void *);
 };
 
 class CTouchFileNotifier : public CChangeObserver
 {
-	const char * filename;
+		const char *filename;
 	public:
-		inline CTouchFileNotifier(const char * _filename) { filename = _filename; };
-		bool changeNotify(const neutrino_locale_t, void * data);
+		inline CTouchFileNotifier(const char *_filename)
+		{
+			filename = _filename;
+		};
+		bool changeNotify(const neutrino_locale_t, void *data);
 };
 
 class CColorSetupNotifier : public CChangeObserver
@@ -111,45 +123,54 @@ class CSubtitleChangeExec : public CMenuTarget
 	private:
 		cPlayback *playback;
 	public:
-		CSubtitleChangeExec(cPlayback *p = NULL) { playback = p; }
-		int exec(CMenuTarget* parent, const std::string & actionKey);
+		CSubtitleChangeExec(cPlayback *p = NULL)
+		{
+			playback = p;
+		}
+		int exec(CMenuTarget *parent, const std::string &actionKey);
 };
 
 class CNVODChangeExec : public CMenuTarget
 {
 	public:
-		int exec(CMenuTarget* parent, const std::string & actionKey);
+		int exec(CMenuTarget *parent, const std::string &actionKey);
 };
 
 class CMoviePluginChangeExec : public CMenuTarget
 {
 	public:
-		int exec(CMenuTarget* parent, const std::string & actionKey);
+		int exec(CMenuTarget *parent, const std::string &actionKey);
 };
 
 class CTZChangeNotifier : public CChangeObserver
 {
 	public:
-		bool changeNotify(const neutrino_locale_t, void * data);
+		bool changeNotify(const neutrino_locale_t, void *data);
 };
 
 class CDataResetNotifier : public CMenuTarget
 {
 	public:
-		int exec(CMenuTarget* parent, const std::string& actionKey);
+		int exec(CMenuTarget *parent, const std::string &actionKey);
 };
 
 #if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99
 class CFanControlNotifier : public CChangeObserver
 {
 	public:
-		bool changeNotify(const neutrino_locale_t, void * data);
+		bool changeNotify(const neutrino_locale_t, void *data);
 		static void setSpeed(unsigned int speed);
 };
 #endif
 
 //do we need a class?
-inline int check_shoutcast_dev_id() { return ((g_settings.shoutcast_dev_id != "XXXXXXXXXXXXXXXX") && !g_settings.shoutcast_dev_id.empty()); }
-inline int check_tmdb_api_key() { return ((g_settings.tmdb_api_key != "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX") && !g_settings.tmdb_api_key.empty()); }
+inline int check_shoutcast_dev_id()
+{
+	return ((g_settings.shoutcast_dev_id != "XXXXXXXXXXXXXXXX") && !g_settings.shoutcast_dev_id.empty());
+}
+inline int check_tmdb_api_key()
+{
+	return ((g_settings.tmdb_api_key != "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX") && !g_settings.tmdb_api_key.empty());
+}
 
 #endif

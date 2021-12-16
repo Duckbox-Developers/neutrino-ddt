@@ -37,61 +37,62 @@ CHTTPTool::CHTTPTool()
 	userAgent = "neutrino/httpdownloader";
 }
 
-void CHTTPTool::setStatusViewer( CProgressWindow* statusview )
+void CHTTPTool::setStatusViewer(CProgressWindow *statusview)
 {
 	statusViewer = statusview;
 }
 
 size_t CHTTPTool::CurlWriteToString(void *ptr, size_t size, size_t nmemb, void *data)
 {
-	if (size * nmemb > 0) {
-		std::string* pStr = (std::string*) data;
-		pStr->append((char*) ptr, nmemb);
+	if (size * nmemb > 0)
+	{
+		std::string *pStr = (std::string *) data;
+		pStr->append((char *) ptr, nmemb);
 	}
-	return size*nmemb;
+	return size * nmemb;
 }
 
-int CHTTPTool::show_progress( void *clientp, double dltotal, double dlnow, double /*ultotal*/, double /*ulnow*/ )
+int CHTTPTool::show_progress(void *clientp, double dltotal, double dlnow, double /*ultotal*/, double /*ulnow*/)
 {
-	CHTTPTool* hTool = ((CHTTPTool*)clientp);
-	if(hTool->statusViewer)
+	CHTTPTool *hTool = ((CHTTPTool *)clientp);
+	if (hTool->statusViewer)
 	{
-		int progress = int( dlnow*100.0/dltotal);
+		int progress = int(dlnow * 100.0 / dltotal);
 		hTool->statusViewer->showLocalStatus(progress);
-		if(hTool->iGlobalProgressEnd!=-1)
+		if (hTool->iGlobalProgressEnd != -1)
 		{
-			int globalProg = hTool->iGlobalProgressBegin + int((hTool->iGlobalProgressEnd-hTool->iGlobalProgressBegin) * progress/100. );
+			int globalProg = hTool->iGlobalProgressBegin + int((hTool->iGlobalProgressEnd - hTool->iGlobalProgressBegin) * progress / 100.);
 			hTool->statusViewer->showGlobalStatus(globalProg);
 		}
 	}
 	return 0;
 }
 //#define DEBUG
-bool CHTTPTool::downloadFile(const std::string & URL, const char * const downloadTarget, int globalProgressEnd, int connecttimeout/*=10000*/, int timeout/*=1800*/)
+bool CHTTPTool::downloadFile(const std::string &URL, const char *const downloadTarget, int globalProgressEnd, int connecttimeout/*=10000*/, int timeout/*=1800*/)
 {
 	CURL *curl;
 	CURLcode res;
 	FILE *headerfile;
 #ifdef DEBUG
-printf("open file %s\n", downloadTarget);
+	printf("open file %s\n", downloadTarget);
 #endif
 	headerfile = fopen(downloadTarget, "w");
 	if (!headerfile)
 		return false;
 #ifdef DEBUG
-printf("open file ok\n");
-printf("url is %s\n", URL.c_str());
+	printf("open file ok\n");
+	printf("url is %s\n", URL.c_str());
 #endif
 	res = (CURLcode) 1;
 	curl = curl_easy_init();
-	if(curl)
+	if (curl)
 	{
 		iGlobalProgressEnd = globalProgressEnd;
-		if(statusViewer)
+		if (statusViewer)
 		{
 			iGlobalProgressBegin = statusViewer->getGlobalStatus();
 		}
-		curl_easy_setopt(curl, CURLOPT_URL, URL.c_str() );
+		curl_easy_setopt(curl, CURLOPT_URL, URL.c_str());
 		curl_easy_setopt(curl, CURLOPT_FILE, headerfile);
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
 		curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, show_progress);
@@ -107,13 +108,15 @@ printf("url is %s\n", URL.c_str());
 		curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
 #endif
 
-		if (!g_settings.softupdate_proxyserver.empty()) {//use proxyserver
+		if (!g_settings.softupdate_proxyserver.empty())  //use proxyserver
+		{
 #ifdef DEBUG
-printf("use proxyserver : %s\n", g_settings.softupdate_proxyserver.c_str());
+			printf("use proxyserver : %s\n", g_settings.softupdate_proxyserver.c_str());
 #endif
 			curl_easy_setopt(curl, CURLOPT_PROXY, g_settings.softupdate_proxyserver.c_str());
 
-			if (!g_settings.softupdate_proxyusername.empty()) {//use auth
+			if (!g_settings.softupdate_proxyusername.empty())  //use auth
+			{
 				//printf("use proxyauth\n");
 				std::string tmp = g_settings.softupdate_proxyusername;
 				tmp += ":";
@@ -122,13 +125,13 @@ printf("use proxyserver : %s\n", g_settings.softupdate_proxyserver.c_str());
 			}
 		}
 #ifdef DEBUG
-printf("going to download\n");
+		printf("going to download\n");
 #endif
 		res = curl_easy_perform(curl);
 		curl_easy_cleanup(curl);
 	}
 #ifdef DEBUG
-printf("download code %d\n", res);
+	printf("download code %d\n", res);
 #endif
 	if (headerfile)
 	{
@@ -136,29 +139,29 @@ printf("download code %d\n", res);
 		fclose(headerfile);
 	}
 
-	return res==CURLE_OK;
+	return res == CURLE_OK;
 }
 
-std::string CHTTPTool::downloadString(const std::string & URL, int globalProgressEnd, int connecttimeout/*=10000*/, int timeout/*=1800*/)
+std::string CHTTPTool::downloadString(const std::string &URL, int globalProgressEnd, int connecttimeout/*=10000*/, int timeout/*=1800*/)
 {
 	CURL *curl;
 	CURLcode res;
 	std::string retString = "";
 #ifdef DEBUG
-printf("url is %s\n", URL.c_str());
+	printf("url is %s\n", URL.c_str());
 #endif
 	res = (CURLcode) 1;
 	curl = curl_easy_init();
-	if(curl)
+	if (curl)
 	{
 		iGlobalProgressEnd = globalProgressEnd;
-		if(statusViewer)
+		if (statusViewer)
 		{
 			iGlobalProgressBegin = statusViewer->getGlobalStatus();
 		}
-		curl_easy_setopt(curl, CURLOPT_URL, URL.c_str() );
+		curl_easy_setopt(curl, CURLOPT_URL, URL.c_str());
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &CHTTPTool::CurlWriteToString);
-		curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)&retString);
+		curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&retString);
 		curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, show_progress);
 		curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, this);
 		curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0);
@@ -172,13 +175,15 @@ printf("url is %s\n", URL.c_str());
 		curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
 #endif
 
-		if (!g_settings.softupdate_proxyserver.empty()) {//use proxyserver
+		if (!g_settings.softupdate_proxyserver.empty())  //use proxyserver
+		{
 #ifdef DEBUG
-printf("use proxyserver : %s\n", g_settings.softupdate_proxyserver.c_str());
+			printf("use proxyserver : %s\n", g_settings.softupdate_proxyserver.c_str());
 #endif
 			curl_easy_setopt(curl, CURLOPT_PROXY, g_settings.softupdate_proxyserver.c_str());
 
-			if (!g_settings.softupdate_proxyusername.empty()) {//use auth
+			if (!g_settings.softupdate_proxyusername.empty())  //use auth
+			{
 				//printf("use proxyauth\n");
 				std::string tmp = g_settings.softupdate_proxyusername;
 				tmp += ":";
@@ -187,13 +192,13 @@ printf("use proxyserver : %s\n", g_settings.softupdate_proxyserver.c_str());
 			}
 		}
 #ifdef DEBUG
-printf("going to download\n");
+		printf("going to download\n");
 #endif
 		res = curl_easy_perform(curl);
 		curl_easy_cleanup(curl);
 	}
 #ifdef DEBUG
-printf("download code %d\n", res);
+	printf("download code %d\n", res);
 #endif
-	return (res==CURLE_OK) ? retString : "";
+	return (res == CURLE_OK) ? retString : "";
 }
