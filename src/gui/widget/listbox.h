@@ -34,7 +34,7 @@ class CFrameBuffer;
 class CListBox : public CMenuTarget, public CListHelpers
 {
 	protected:
-		CFrameBuffer*	frameBuffer;
+		CFrameBuffer	*frameBuffer;
 		bool            modified;
 		std::string	caption;
 		int		width;
@@ -65,12 +65,12 @@ class CListBox : public CMenuTarget, public CListHelpers
 		//------hier Methoden überschreiben-------
 
 		//------Fernbedienungsevents--------------
-		virtual void onRedKeyPressed(){};
-		virtual void onGreenKeyPressed(){};
-		virtual void onYellowKeyPressed(){};
-		virtual void onBlueKeyPressed(){};
-		virtual void onOkKeyPressed(){};
-		virtual void onOtherKeyPressed( int /*key*/ ){};
+		virtual void onRedKeyPressed() {};
+		virtual void onGreenKeyPressed() {};
+		virtual void onYellowKeyPressed() {};
+		virtual void onBlueKeyPressed() {};
+		virtual void onOkKeyPressed() {};
+		virtual void onOtherKeyPressed(int /*key*/) {};
 
 		//------gibt die Anzahl der Listenitems---
 		virtual unsigned int getItemCount();
@@ -84,8 +84,8 @@ class CListBox : public CMenuTarget, public CListHelpers
 		void setModified(void);
 
 	public:
-		CListBox(const char * const Caption);
-		virtual int exec(CMenuTarget* parent, const std::string & actionKey);
+		CListBox(const char *const Caption);
+		virtual int exec(CMenuTarget *parent, const std::string &actionKey);
 };
 
 

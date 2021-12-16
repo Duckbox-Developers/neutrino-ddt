@@ -32,7 +32,8 @@ static int upDownKey(int size, neutrino_msg_t msg, int lines, int sel)
 	if (size <= 0) /* list.empty() or similar... */
 		return -1;
 
-	if (msg >= CRCInput::RC_MaxRC) {
+	if (msg >= CRCInput::RC_MaxRC)
+	{
 		printf("CListHelpers:%s: invalid key? 0x%lx\n", __func__, msg);
 		return -1;
 	}
@@ -45,19 +46,22 @@ static int upDownKey(int size, neutrino_msg_t msg, int lines, int sel)
 		step = -1;
 	else if (msg == CRCInput::RC_down)
 		step = 1;
-	else {
+	else
+	{
 		printf("CListHelpers:%s: invalid key? 0x%lx\n", __func__, msg);
 		return -1;
 	}
 	// printf("CListHelpers:%s: key 0x%04lx lines %d size %d sel %d\n", __func__, msg, lines, size, sel);
 	int new_sel = sel + step;
-	if (new_sel < 0) {
+	if (new_sel < 0)
+	{
 		if (sel != 0 && step != 1)
 			new_sel = 0;
 		else
 			new_sel = size - 1;
 	}
-	else if (new_sel > size - 1) {
+	else if (new_sel > size - 1)
+	{
 		if (sel != size - 1)
 			new_sel = size - 1;
 		else
@@ -79,9 +83,9 @@ template <typename T> int CListHelpers::_UpDownKey(T list, neutrino_msg_t msg, i
 /* all used versions need to be prototyped here, to avoid linker errors */
 /* helper macro for the prototypes */
 #define updown_t(x) template int CListHelpers::_UpDownKey<x >(x, neutrino_msg_t, int, int, _id<x >)
-updown_t(std::vector<CBouquet*>);
-updown_t(std::vector<CZapitBouquet*>);
-updown_t(std::vector<CZapitChannel*>);
+updown_t(std::vector<CBouquet *>);
+updown_t(std::vector<CZapitBouquet *>);
+updown_t(std::vector<CZapitChannel *>);
 updown_t(std::vector<CChannelEvent>);
 updown_t(std::vector<CUPnPDevice>);
 updown_t(std::vector<CTimerd::responseGetTimer>);

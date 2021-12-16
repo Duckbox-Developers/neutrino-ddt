@@ -96,7 +96,7 @@ class CMsgBox : public CHintBox
 		};
 
 	private:
-		void init(const int& Height = -1, const int& ShowButtons = -1, const msg_result_t& Default_result = mbrNone);
+		void init(const int &Height = -1, const int &ShowButtons = -1, const msg_result_t &Default_result = mbrNone);
 		void refreshFoot(void);
 		int		mb_show_button;
 
@@ -112,7 +112,7 @@ class CMsgBox : public CHintBox
 		///alternate button text
 		std::string btn_text_ok, btn_text_yes, btn_text_no, btn_text_cancel, btn_text_back;
 		///assigned button captions
-		std::string BTN_TEXT(const int& showed_button);
+		std::string BTN_TEXT(const int &showed_button);
 
 		///enables/disable button background
 		bool btn_enable_bg;
@@ -163,15 +163,15 @@ class CMsgBox : public CHintBox
 		*
 		* 	@see	class CHintBox()
 		*/
-		CMsgBox(const char* Text,
-			const char* Title = NULL,
-			const char* Icon = DEFAULT_HEADER_ICON,
-			const char* Picon = NULL,
-			const int& Width = MSGBOX_MIN_WIDTH,
-			const int& Height = MSGBOX_MIN_HEIGHT,
-			const int& ShowButtons = mbCancel,
-			const msg_result_t& Default_result = mbrNone,
-			const int& Text_mode = DEFAULT_MSGBOX_TEXT_MODE);
+		CMsgBox(const char *Text,
+			const char *Title = NULL,
+			const char *Icon = DEFAULT_HEADER_ICON,
+			const char *Picon = NULL,
+			const int &Width = MSGBOX_MIN_WIDTH,
+			const int &Height = MSGBOX_MIN_HEIGHT,
+			const int &ShowButtons = mbCancel,
+			const msg_result_t &Default_result = mbrNone,
+			const int &Text_mode = DEFAULT_MSGBOX_TEXT_MODE);
 
 		/**CMsgBox Constructor
 		* @param[in]	Text
@@ -217,17 +217,17 @@ class CMsgBox : public CHintBox
 		*
 		* 	@see	class CHintBox()
 		*/
-		CMsgBox(const char* Text,
+		CMsgBox(const char *Text,
 			const neutrino_locale_t locale_Title = NONEXISTANT_LOCALE,
-			const char* Icon = DEFAULT_HEADER_ICON,
-			const char* Picon = NULL,
-			const int& Width = MSGBOX_MIN_WIDTH,
-			const int& Height = MSGBOX_MIN_HEIGHT,
-			const int& ShowButtons = mbCancel,
-			const msg_result_t& Default_result = mbrNone,
-			const int& Text_mode = DEFAULT_MSGBOX_TEXT_MODE);
+			const char *Icon = DEFAULT_HEADER_ICON,
+			const char *Picon = NULL,
+			const int &Width = MSGBOX_MIN_WIDTH,
+			const int &Height = MSGBOX_MIN_HEIGHT,
+			const int &ShowButtons = mbCancel,
+			const msg_result_t &Default_result = mbrNone,
+			const int &Text_mode = DEFAULT_MSGBOX_TEXT_MODE);
 
-		virtual ~CMsgBox(){};
+		virtual ~CMsgBox() {};
 		/**
 		* exec caller
 		* @return	int
@@ -239,19 +239,28 @@ class CMsgBox : public CHintBox
 		* @return	result as int
 		*/
 
-		msg_result_t	getResult(){return result;}
+		msg_result_t	getResult()
+		{
+			return result;
+		}
 		/**
 		* returns current default result as msg_result_t, independently from current selected button result
 		* @return	result as int
 		*/
 
-		msg_result_t	getDefaultResult(){return default_result;}
+		msg_result_t	getDefaultResult()
+		{
+			return default_result;
+		}
 		/**
 		* sets current default result as msg_result_t, independently from current selected button result
 		* @param[in]	Default_result
 		* 	@li 	expects type msg_result_t
 		*/
-		void	setDefaultResult(const msg_result_t& Default_result){default_result = Default_result;}
+		void	setDefaultResult(const msg_result_t &Default_result)
+		{
+			default_result = Default_result;
+		}
 
 		/**
 		* Sets the displayed buttons.
@@ -272,14 +281,21 @@ class CMsgBox : public CHintBox
 		* 		mbAll		= 0x200,
 		* 		NOTE: allign parameters are currently not supported, these values are existing for compatibility only!
 		*/
-		void	setShowedButtons(const int& ShowButtons){mb_show_button = ShowButtons; initButtons();}
+		void	setShowedButtons(const int &ShowButtons)
+		{
+			mb_show_button = ShowButtons;
+			initButtons();
+		}
 
 		/**
 		* define timeout, timeout is enabled if parmeter 1 > -1, otherwise it will be disabled,
 		* @param[in]	Timeout
 		* 	@li 	expects type int
 		*/
-		void 	setTimeOut(const int& Timeout){timeout = Timeout;};
+		void 	setTimeOut(const int &Timeout)
+		{
+			timeout = Timeout;
+		};
 
 		/**
 		* enable/disable defined timeout, otherwise it will be ignored
@@ -298,7 +314,7 @@ class CMsgBox : public CHintBox
 		* @param[in]	text
 		* 	@li 	expects type std::string, sets the new text for button
 		*/
-		void setButtonText(const int& showed_button, const std::string& text);
+		void setButtonText(const int &showed_button, const std::string &text);
 
 		/**
 		* enables background of buttons
@@ -310,103 +326,106 @@ class CMsgBox : public CHintBox
 		/**
 		* disables background of buttons
 		*/
-		void disableButtonBg(){enableButtonBg(false);}
+		void disableButtonBg()
+		{
+			enableButtonBg(false);
+		}
 
 // 		bool	setText(const std::string* newText);
 };
 
-int ShowMsg2UTF(	const neutrino_locale_t Title,
-						const char * const Text, 
-						const CMsgBox::msg_result_t Default,
-						const uint32_t ShowButtons, 
-						const char * const Icon = NULL, 
-						const int Width = MSGBOX_MIN_WIDTH,
-						const int Timeout = NO_TIMEOUT,
-						bool returnDefaultOnTimeout = false,
-						const int& Text_mode = DEFAULT_MSGBOX_TEXT_MODE,
-						fb_pixel_t color_frame = HINTBOX_DEFAULT_FRAME_COLOR); // UTF-8
+int ShowMsg2UTF(const neutrino_locale_t Title,
+	const char *const Text,
+	const CMsgBox::msg_result_t Default,
+	const uint32_t ShowButtons,
+	const char *const Icon = NULL,
+	const int Width = MSGBOX_MIN_WIDTH,
+	const int Timeout = NO_TIMEOUT,
+	bool returnDefaultOnTimeout = false,
+	const int &Text_mode = DEFAULT_MSGBOX_TEXT_MODE,
+	fb_pixel_t color_frame = HINTBOX_DEFAULT_FRAME_COLOR); // UTF-8
 
-int ShowMsg2UTF(	const char * const Title,
-						const char * const Text, 
-						const CMsgBox::msg_result_t Default,
-						const uint32_t ShowButtons, 
-						const char * const Icon = NULL, 
-						const int Width = MSGBOX_MIN_WIDTH,
-						const int Timeout = NO_TIMEOUT,
-						bool returnDefaultOnTimeout = false,
-						const int& Text_mode = DEFAULT_MSGBOX_TEXT_MODE,
-						fb_pixel_t color_frame = HINTBOX_DEFAULT_FRAME_COLOR); // UTF-8
+int ShowMsg2UTF(const char *const Title,
+	const char *const Text,
+	const CMsgBox::msg_result_t Default,
+	const uint32_t ShowButtons,
+	const char *const Icon = NULL,
+	const int Width = MSGBOX_MIN_WIDTH,
+	const int Timeout = NO_TIMEOUT,
+	bool returnDefaultOnTimeout = false,
+	const int &Text_mode = DEFAULT_MSGBOX_TEXT_MODE,
+	fb_pixel_t color_frame = HINTBOX_DEFAULT_FRAME_COLOR); // UTF-8
 
-int ShowMsg(	const neutrino_locale_t Title,
-						const char * const Text,
-						const CMsgBox::msg_result_t Default,
-						const uint32_t ShowButtons,
-						const char * const Icon = NULL,
-						const int Width = MSGBOX_MIN_WIDTH,
-						const int Timeout = NO_TIMEOUT,
-						bool returnDefaultOnTimeout = false,
-						const int& Text_mode = DEFAULT_MSGBOX_TEXT_MODE,
-						fb_pixel_t color_frame = HINTBOX_DEFAULT_FRAME_COLOR); // UTF-8
+int ShowMsg(const neutrino_locale_t Title,
+	const char *const Text,
+	const CMsgBox::msg_result_t Default,
+	const uint32_t ShowButtons,
+	const char *const Icon = NULL,
+	const int Width = MSGBOX_MIN_WIDTH,
+	const int Timeout = NO_TIMEOUT,
+	bool returnDefaultOnTimeout = false,
+	const int &Text_mode = DEFAULT_MSGBOX_TEXT_MODE,
+	fb_pixel_t color_frame = HINTBOX_DEFAULT_FRAME_COLOR); // UTF-8
 
-int ShowMsg(	const char * const Title,
-						const char * const Text,
-						const CMsgBox::msg_result_t Default,
-						const uint32_t ShowButtons,
-						const char * const Icon = NULL,
-						const int Width = MSGBOX_MIN_WIDTH,
-						const int Timeout = NO_TIMEOUT,
-						bool returnDefaultOnTimeout = false,
-						const int& Text_mode = DEFAULT_MSGBOX_TEXT_MODE,
-						fb_pixel_t color_frame = HINTBOX_DEFAULT_FRAME_COLOR); // UTF-8
+int ShowMsg(const char *const Title,
+	const char *const Text,
+	const CMsgBox::msg_result_t Default,
+	const uint32_t ShowButtons,
+	const char *const Icon = NULL,
+	const int Width = MSGBOX_MIN_WIDTH,
+	const int Timeout = NO_TIMEOUT,
+	bool returnDefaultOnTimeout = false,
+	const int &Text_mode = DEFAULT_MSGBOX_TEXT_MODE,
+	fb_pixel_t color_frame = HINTBOX_DEFAULT_FRAME_COLOR); // UTF-8
 
-int ShowMsg(	const neutrino_locale_t Title,
-						const std::string & Text,
-						const CMsgBox::msg_result_t Default,
-						const uint32_t ShowButtons,
-						const char * const Icon = NULL,
-						const int Width = MSGBOX_MIN_WIDTH,
-						const int Timeout = NO_TIMEOUT,
-						bool returnDefaultOnTimeout = false,
-						const int& Text_mode = DEFAULT_MSGBOX_TEXT_MODE,
-						fb_pixel_t color_frame = HINTBOX_DEFAULT_FRAME_COLOR); // UTF-8
+int ShowMsg(const neutrino_locale_t Title,
+	const std::string &Text,
+	const CMsgBox::msg_result_t Default,
+	const uint32_t ShowButtons,
+	const char *const Icon = NULL,
+	const int Width = MSGBOX_MIN_WIDTH,
+	const int Timeout = NO_TIMEOUT,
+	bool returnDefaultOnTimeout = false,
+	const int &Text_mode = DEFAULT_MSGBOX_TEXT_MODE,
+	fb_pixel_t color_frame = HINTBOX_DEFAULT_FRAME_COLOR); // UTF-8
 
-int ShowMsg(	const neutrino_locale_t Title,
-						const neutrino_locale_t Text,
-						const CMsgBox::msg_result_t Default,
-						const uint32_t ShowButtons,
-						const char * const Icon = NULL,
-						const int Width = MSGBOX_MIN_WIDTH,
-						const int Timeout = NO_TIMEOUT,
-						bool returnDefaultOnTimeout = false,
-						const int& Text_mode = DEFAULT_MSGBOX_TEXT_MODE,
-						fb_pixel_t color_frame = HINTBOX_DEFAULT_FRAME_COLOR); // UTF-8
+int ShowMsg(const neutrino_locale_t Title,
+	const neutrino_locale_t Text,
+	const CMsgBox::msg_result_t Default,
+	const uint32_t ShowButtons,
+	const char *const Icon = NULL,
+	const int Width = MSGBOX_MIN_WIDTH,
+	const int Timeout = NO_TIMEOUT,
+	bool returnDefaultOnTimeout = false,
+	const int &Text_mode = DEFAULT_MSGBOX_TEXT_MODE,
+	fb_pixel_t color_frame = HINTBOX_DEFAULT_FRAME_COLOR); // UTF-8
 
-int ShowMsg(	const std::string & Title,
-						const std::string & Text,
-						const CMsgBox::msg_result_t Default,
-						const uint32_t ShowButtons,
-						const char * const Icon = NULL,
-						const int Width = MSGBOX_MIN_WIDTH,
-						const int Timeout = NO_TIMEOUT,
-						bool returnDefaultOnTimeout = false,
-						const int& Text_mode = DEFAULT_MSGBOX_TEXT_MODE,
-						fb_pixel_t color_frame = HINTBOX_DEFAULT_FRAME_COLOR); // UTF-8
+int ShowMsg(const std::string &Title,
+	const std::string &Text,
+	const CMsgBox::msg_result_t Default,
+	const uint32_t ShowButtons,
+	const char *const Icon = NULL,
+	const int Width = MSGBOX_MIN_WIDTH,
+	const int Timeout = NO_TIMEOUT,
+	bool returnDefaultOnTimeout = false,
+	const int &Text_mode = DEFAULT_MSGBOX_TEXT_MODE,
+	fb_pixel_t color_frame = HINTBOX_DEFAULT_FRAME_COLOR); // UTF-8
 
-int ShowMsg(	const std::string & Title,
-						const neutrino_locale_t Text,
-						const CMsgBox::msg_result_t Default,
-						const uint32_t ShowButtons,
-						const char * const Icon = NULL,
-						const int Width = MSGBOX_MIN_WIDTH,
-						const int Timeout = NO_TIMEOUT,
-						bool returnDefaultOnTimeout = false,
-						const int& Text_mode = DEFAULT_MSGBOX_TEXT_MODE,
-						fb_pixel_t color_frame = HINTBOX_DEFAULT_FRAME_COLOR); // UTF-8
+int ShowMsg(const std::string &Title,
+	const neutrino_locale_t Text,
+	const CMsgBox::msg_result_t Default,
+	const uint32_t ShowButtons,
+	const char *const Icon = NULL,
+	const int Width = MSGBOX_MIN_WIDTH,
+	const int Timeout = NO_TIMEOUT,
+	bool returnDefaultOnTimeout = false,
+	const int &Text_mode = DEFAULT_MSGBOX_TEXT_MODE,
+	fb_pixel_t color_frame = HINTBOX_DEFAULT_FRAME_COLOR); // UTF-8
 
-void DisplayErrorMessage(const char * const ErrorMsg, const int& Timeout = NO_TIMEOUT, const int& Text_mode = DEFAULT_MSGBOX_TEXT_MODE); // UTF-8
-void DisplayErrorMessage(const char * const ErrorMsg, const neutrino_locale_t& caption, const int& Timeout = NO_TIMEOUT, const int& Text_mode = DEFAULT_MSGBOX_TEXT_MODE); // UTF-8
-void DisplayErrorMessage(const char * const ErrorMsg, const std::string& caption, const int& Timeout = NO_TIMEOUT, const int& Text_mode = DEFAULT_MSGBOX_TEXT_MODE); // UTF-8
-void DisplayInfoMessage(const char * const InfoMsg, const int& Timeout = DEFAULT_TIMEOUT, const int& Text_mode = DEFAULT_MSGBOX_TEXT_MODE, fb_pixel_t color_frame = COL_DARK_GRAY); // UTF-8
-void DisplayInfoMessage(const char * const InfoMsg, const neutrino_locale_t& caption, const int& Timeout = DEFAULT_TIMEOUT, const int& Text_mode = DEFAULT_MSGBOX_TEXT_MODE, fb_pixel_t color_frame = COL_DARK_GRAY); // UTF-8
-void DisplayInfoMessage(const char * const InfoMsg, const std::string& caption, const int& Timeout = DEFAULT_TIMEOUT, const int& Text_mode = DEFAULT_MSGBOX_TEXT_MODE, fb_pixel_t color_frame = COL_DARK_GRAY); // UTF-8
+void DisplayErrorMessage(const char *const ErrorMsg, const int &Timeout = NO_TIMEOUT, const int &Text_mode = DEFAULT_MSGBOX_TEXT_MODE);  // UTF-8
+void DisplayErrorMessage(const char *const ErrorMsg, const neutrino_locale_t &caption, const int &Timeout = NO_TIMEOUT, const int &Text_mode = DEFAULT_MSGBOX_TEXT_MODE);  // UTF-8
+void DisplayErrorMessage(const char *const ErrorMsg, const std::string &caption, const int &Timeout = NO_TIMEOUT, const int &Text_mode = DEFAULT_MSGBOX_TEXT_MODE);  // UTF-8
+void DisplayInfoMessage(const char *const InfoMsg, const int &Timeout = DEFAULT_TIMEOUT, const int &Text_mode = DEFAULT_MSGBOX_TEXT_MODE, fb_pixel_t color_frame = COL_DARK_GRAY);  // UTF-8
+void DisplayInfoMessage(const char *const InfoMsg, const neutrino_locale_t &caption, const int &Timeout = DEFAULT_TIMEOUT, const int &Text_mode = DEFAULT_MSGBOX_TEXT_MODE, fb_pixel_t color_frame = COL_DARK_GRAY);  // UTF-8
+void DisplayInfoMessage(const char *const InfoMsg, const std::string &caption, const int &Timeout = DEFAULT_TIMEOUT, const int &Text_mode = DEFAULT_MSGBOX_TEXT_MODE, fb_pixel_t color_frame = COL_DARK_GRAY);  // UTF-8
 #endif

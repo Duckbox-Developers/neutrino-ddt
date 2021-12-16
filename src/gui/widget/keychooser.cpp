@@ -30,7 +30,7 @@
 
 #include <gui/widget/hintbox.h>
 
-CKeyChooser::CKeyChooser(unsigned int * const Key, const neutrino_locale_t title, const std::string & Icon) : CMenuWidget(title, Icon)
+CKeyChooser::CKeyChooser(unsigned int *const Key, const neutrino_locale_t title, const std::string &Icon) : CMenuWidget(title, Icon)
 {
 	key = Key;
 	keyName = CRCInput::getKeyName(*key);
@@ -57,7 +57,7 @@ void CKeyChooser::reinitName()
 	keyName = CRCInput::getKeyName(*key);
 }
 
-int CKeyChooserItem::exec(CMenuTarget* parent, const std::string &)
+int CKeyChooserItem::exec(CMenuTarget *parent, const std::string &)
 {
 	neutrino_msg_t      msg;
 	neutrino_msg_data_t data;
@@ -83,13 +83,13 @@ int CKeyChooserItem::exec(CMenuTarget* parent, const std::string &)
 
 	timeoutEnd = CRCInput::calcTimeoutEnd(timeout);
 
-	get_Message:
+get_Message:
 	hintbox.enableTimeOutBar();
-	g_RCInput->getMsgAbsoluteTimeout( &msg, &data, &timeoutEnd );
+	g_RCInput->getMsgAbsoluteTimeout(&msg, &data, &timeoutEnd);
 
 	if (msg != CRCInput::RC_timeout)
 	{
-		if ((msg >0 ) && (msg <= CRCInput::RC_MaxRC))
+		if ((msg > 0) && (msg <= CRCInput::RC_MaxRC))
 			*key = msg;
 		else if (CNeutrinoApp::getInstance()->handleMsg(msg, data) & messages_return::cancel_all)
 			res = menu_return::RETURN_EXIT_ALL;
@@ -103,7 +103,7 @@ int CKeyChooserItem::exec(CMenuTarget* parent, const std::string &)
 	return res;
 }
 
-int CKeyRemoverItem::exec(CMenuTarget* /*parent*/, const std::string &)
+int CKeyRemoverItem::exec(CMenuTarget * /*parent*/, const std::string &)
 {
 	*key = (unsigned int)CRCInput::RC_nokey;
 	return menu_return::RETURN_REPAINT;

@@ -1,6 +1,6 @@
 /*
 	Based up Neutrino-GUI - Tuxbox-Project
- 
+
 	Copyright (C) 2001 Steffen Hehn 'McClean'
 
 	License: GPL
@@ -28,7 +28,8 @@
 
 #include <string>
 
-enum {
+enum
+{
 	VALUE_R = 0, // red
 	VALUE_G = 1, // green
 	VALUE_B = 2, // blue
@@ -61,21 +62,21 @@ class CColorChooser : public CMenuTarget
 
 		int chooser_gradient;
 
-		unsigned char * value[VALUES];
+		unsigned char *value[VALUES];
 
 		neutrino_locale_t name;
 
-		CChangeObserver* observer;
+		CChangeObserver *observer;
 
 		void paint();
 		void setColor();
-		void paintSlider(int x, int y, unsigned char *spos, const neutrino_locale_t text, const char * const iconname, const bool selected);
+		void paintSlider(int x, int y, unsigned char *spos, const neutrino_locale_t text, const char *const iconname, const bool selected);
 
 	public:
-		CColorChooser(const neutrino_locale_t Name, unsigned char *R, unsigned char *G, unsigned char *B, unsigned char* A, CChangeObserver* Observer = NULL);
+		CColorChooser(const neutrino_locale_t Name, unsigned char *R, unsigned char *G, unsigned char *B, unsigned char *A, CChangeObserver *Observer = NULL);
 
 		void hide();
-		int exec(CMenuTarget* parent, const std::string & actionKey);
+		int exec(CMenuTarget *parent, const std::string &actionKey);
 		fb_pixel_t getColor(void);
 		enum
 		{
@@ -83,7 +84,10 @@ class CColorChooser : public CMenuTarget
 			gradient_head_body,
 			gradient_head_text
 		};
-		void setGradient(int gradient = gradient_none) { chooser_gradient = gradient; };
+		void setGradient(int gradient = gradient_none)
+		{
+			chooser_gradient = gradient;
+		};
 };
 
 #endif

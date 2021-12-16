@@ -33,15 +33,18 @@ class CFrameBuffer;
 class CKeyChooser : public CMenuWidget
 {
 	private:
-		unsigned int *		key;
+		unsigned int 		*key;
 		std::string		keyName;
 
 	public:
-		CKeyChooser(unsigned int * const Key, const neutrino_locale_t title, const std::string & Icon = "");
+		CKeyChooser(unsigned int *const Key, const neutrino_locale_t title, const std::string &Icon = "");
 		~CKeyChooser();
 		void reinitName();
 		void paint();
-		const std::string & getKeyName(){return keyName;};
+		const std::string &getKeyName()
+		{
+			return keyName;
+		};
 };
 
 class CKeyChooserItem : public CMenuTarget
@@ -57,7 +60,7 @@ class CKeyChooserItem : public CMenuTarget
 			name = Name;
 		}
 
-		int exec(CMenuTarget* parent, const std::string & /*actionKey*/);
+		int exec(CMenuTarget *parent, const std::string & /*actionKey*/);
 };
 
 class CKeyRemoverItem : public CMenuTarget
@@ -71,7 +74,7 @@ class CKeyRemoverItem : public CMenuTarget
 			key = Key;
 		};
 
-		int exec(CMenuTarget* parent, const std::string & /*actionKey*/);
+		int exec(CMenuTarget *parent, const std::string & /*actionKey*/);
 };
 
 #endif

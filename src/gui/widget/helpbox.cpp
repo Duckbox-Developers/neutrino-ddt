@@ -33,16 +33,16 @@
 
 using namespace std;
 
-Helpbox::Helpbox(	const string& Title,
-			const string& Default_Text,
-			const int& text_mode,
-			const int& line_height,
-			Font* default_font_text,
-			const char* Icon):
-			CComponentsWindowMax(	Title,
-						Icon,
-						NULL,
-						CC_SHADOW_ON)
+Helpbox::Helpbox(const string &Title,
+	const string &Default_Text,
+	const int &text_mode,
+	const int &line_height,
+	Font *default_font_text,
+	const char *Icon):
+	CComponentsWindowMax(Title,
+		Icon,
+		NULL,
+		CC_SHADOW_ON)
 {
 	page = 0;
 	hbox_y = 0;
@@ -60,16 +60,17 @@ Helpbox::Helpbox(	const string& Title,
 	CNeutrinoApp::getInstance()->allowChannelList(false);
 }
 
-void Helpbox::addLine(const std::string& icon, const std::string& text, const int& text_mode, const int& line_height, const int& line_indent, Font* font_text)
+void Helpbox::addLine(const std::string &icon, const std::string &text, const int &text_mode, const int &line_height, const int &line_indent, Font *font_text)
 {
 	CComponentsItem *pre_item = !ccw_body->empty() ? ccw_body->back() : NULL; //get the last current item
 
-	if (pre_item){
+	if (pre_item)
+	{
 		if (pre_item->getPageNumber() == page)
 			hbox_y = pre_item->getYPos() + pre_item->getHeight();
 	}
 
-	Font* font = hbox_font;
+	Font *font = hbox_font;
 	if (font_text)
 		font = font_text;
 
@@ -78,34 +79,37 @@ void Helpbox::addLine(const std::string& icon, const std::string& text, const in
 	CComponentsFrmChain *line = new CComponentsFrmChain(line_indent, hbox_y, 0, h_line);
 
 	int w_body = ccw_body->getWidth();
-	line->setWidth(w_body - 2*line_indent);
+	line->setWidth(w_body - 2 * line_indent);
 	line->setXPos(line_indent);
 	line->setColorBody(ccw_body->getColorBody());
 
 	CComponentsPicture *picon = NULL;
 	int w_picon = 0;
 	int h_picon = 0;
-	if (!icon.empty()){
-		picon = new CComponentsPicture (0, 0, icon);
+	if (!icon.empty())
+	{
+		picon = new CComponentsPicture(0, 0, icon);
 		w_picon = picon->getWidth();
 		h_picon = picon->getHeight();
-		picon->setYPos(line->getHeight()/2 - h_picon/2);
+		picon->setYPos(line->getHeight() / 2 - h_picon / 2);
 		picon->SetTransparent(CFrameBuffer::TM_BLACK);
 		line->addCCItem(picon);
 	}
 
 	int txt_height = 0;
-	if (!text.empty()){
+	if (!text.empty())
+	{
 		int x_text = w_picon + (picon ? OFFSET_INNER_MID : 0);
-		CComponentsText * txt = new CComponentsText(x_text, 0, line->getWidth()-x_text, 0, text, text_mode, font);
-		if(txt){
+		CComponentsText *txt = new CComponentsText(x_text, 0, line->getWidth() - x_text, 0, text, text_mode, font);
+		if (txt)
+		{
 			txt->doPaintBg(false);
 			txt->forceTextPaint();
 #if 0 //"contrast agent", if you want to see where the text items are drawn.
-		txt->setColorBody(COL_RED);
+			txt->setColorBody(COL_RED);
 #endif
 			int lines = txt->getCTextBoxObject()->getLines();
-			txt_height = std::max(font ? lines*font->getHeight() : 0, h_line);
+			txt_height = std::max(font ? lines * font->getHeight() : 0, h_line);
 			txt->setHeight(txt_height);
 
 			line->addCCItem(txt);
@@ -125,11 +129,12 @@ void Helpbox::addLine(const std::string& icon, const std::string& text, const in
 	addWindowItem(line);
 }
 
-void Helpbox::addSeparatorLine(const int& line_height, const int& line_indent)
+void Helpbox::addSeparatorLine(const int &line_height, const int &line_indent)
 {
 	CComponentsItem *pre_item = !ccw_body->empty() ? ccw_body->back() : NULL; //get the last current item
 
-	if (pre_item){
+	if (pre_item)
+	{
 		if (pre_item->getPageNumber() == page)
 			hbox_y = pre_item->getYPos() + pre_item->getHeight();
 	}
@@ -138,12 +143,12 @@ void Helpbox::addSeparatorLine(const int& line_height, const int& line_indent)
 	line->setPageNumber(page);
 
 	int w_body = ccw_body->getWidth();
-	line->setWidth(w_body - 2*line_indent);
+	line->setWidth(w_body - 2 * line_indent);
 	line->setXPos(line_indent);
 	line->setColorBody(ccw_body->getColorBody());
 
-	CComponentsShapeSquare *sepline = new CComponentsShapeSquare (0, 0, line->getWidth(), 2);
-	sepline->setYPos(line->getHeight()/2 - sepline->getHeight()/2);
+	CComponentsShapeSquare *sepline = new CComponentsShapeSquare(0, 0, line->getWidth(), 2);
+	sepline->setYPos(line->getHeight() / 2 - sepline->getHeight() / 2);
 	sepline->setColorBody(COL_MENUCONTENTINACTIVE_TEXT);
 	if (g_settings.theme.menu_Separator_gradient_enable)
 	{
@@ -156,11 +161,12 @@ void Helpbox::addSeparatorLine(const int& line_height, const int& line_indent)
 	addWindowItem(line);
 }
 
-void Helpbox::addSeparator(const int& line_height)
+void Helpbox::addSeparator(const int &line_height)
 {
 	CComponentsItem *pre_item = !ccw_body->empty() ? ccw_body->back() : NULL; //get the last current item
 
-	if (pre_item){
+	if (pre_item)
+	{
 		if (pre_item->getPageNumber() == page)
 			hbox_y = pre_item->getYPos() + pre_item->getHeight();
 	}
@@ -175,17 +181,17 @@ void Helpbox::addSeparator(const int& line_height)
 	addWindowItem(line);
 }
 
-void Helpbox::addLine(const char *icon, const char *text, const int& text_mode, const int& line_height, const int& line_indent, Font* font_text)
+void Helpbox::addLine(const char *icon, const char *text, const int &text_mode, const int &line_height, const int &line_indent, Font *font_text)
 {
 	addLine(icon, std::string(text), text_mode, line_height, line_indent, font_text);
 }
 
-void Helpbox::addLine(const char *text, const int& text_mode, const int& line_height, const int& line_indent, Font* font_text)
+void Helpbox::addLine(const char *text, const int &text_mode, const int &line_height, const int &line_indent, Font *font_text)
 {
 	addLine("", std::string(text), text_mode, line_height, line_indent, font_text);
 }
 
-void Helpbox::addLine(const std::string& text, const int& text_mode, const int& line_height, const int& line_indent, Font* font_text)
+void Helpbox::addLine(const std::string &text, const int &text_mode, const int &line_height, const int &line_indent, Font *font_text)
 {
 	addLine("", text, text_mode, line_height, line_indent, font_text);
 }
@@ -197,7 +203,7 @@ void Helpbox::addPagebreak(void)
 	hbox_y = 1;
 }
 
-int Helpbox::getLineHeight(int line_height, Font* font_text, bool separator)
+int Helpbox::getLineHeight(int line_height, Font *font_text, bool separator)
 {
 	if (font_text == NULL)
 		return 0; // should not happen
@@ -205,7 +211,7 @@ int Helpbox::getLineHeight(int line_height, Font* font_text, bool separator)
 	int h = max(line_height, font_text->getHeight());
 
 	if (separator)
-		return h/2; // separators uses half height
+		return h / 2; // separators uses half height
 
 	return h;
 }
