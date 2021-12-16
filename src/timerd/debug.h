@@ -31,7 +31,7 @@ extern int timerd_debug;
 #define dprintf(fmt, args...) \
 	do { \
 		if(timerd_debug) \
-			printf( "[timerd] " fmt, ## args); \
+			printf("[timerd] " fmt, ## args); \
 	} while(0)
 #define dperror(str) {perror("[timerd] " str);}
 
