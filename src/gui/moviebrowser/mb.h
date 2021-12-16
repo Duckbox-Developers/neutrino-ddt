@@ -130,29 +130,32 @@ class CYTCacheSelectorTarget : public CMenuTarget
 {
 	private:
 		class CMovieBrowser *movieBrowser;
-        public:
-		CYTCacheSelectorTarget(CMovieBrowser *mb) { movieBrowser = mb; };
-		int exec(CMenuTarget* parent, const std::string & actionKey);
+	public:
+		CYTCacheSelectorTarget(CMovieBrowser *mb)
+		{
+			movieBrowser = mb;
+		};
+		int exec(CMenuTarget *parent, const std::string &actionKey);
 };
 
 // Priorities for Developmemt: P1: critical feature, P2: important feature, P3: for next release, P4: looks nice, lets see
 class CMovieBrowser : public CMenuTarget, public CProgressSignals
 {
-	friend class CYTCacheSelectorTarget;
+		friend class CYTCacheSelectorTarget;
 
 	public: // Variables /////////////////////////////////////////////////
 		int Multi_Select;    // for FileBrowser compatibility, not used in MovieBrowser
 		int Dirs_Selectable; // for FileBrowser compatibility, not used in MovieBrowser
 
 	private: // Variables
-		CFrameBuffer * framebuffer;
+		CFrameBuffer *framebuffer;
 
-		CListFrame* m_pcBrowser;
-		CListFrame* m_pcLastPlay;
-		CListFrame* m_pcLastRecord;
-		CTextBox* m_pcInfo1; // bottom box
-		CTextBox* m_pcInfo2; // right box
-		CListFrame* m_pcFilter;
+		CListFrame *m_pcBrowser;
+		CListFrame *m_pcLastPlay;
+		CListFrame *m_pcLastRecord;
+		CTextBox *m_pcInfo1; // bottom box
+		CTextBox *m_pcInfo2; // right box
+		CListFrame *m_pcFilter;
 
 		CBox m_cBoxFrame;
 		CBox m_cBoxFrameLastPlayList;
@@ -176,11 +179,11 @@ class CMovieBrowser : public CMenuTarget, public CProgressSignals
 		LF_LINES m_FilterLines;
 
 		std::vector<MI_MOVIE_INFO> m_vMovieInfo;
-		std::vector<MI_MOVIE_INFO*> m_vHandleBrowserList;
-		std::vector<MI_MOVIE_INFO*> m_vHandleRecordList;
-		std::vector<MI_MOVIE_INFO*> m_vHandlePlayList;
+		std::vector<MI_MOVIE_INFO *> m_vHandleBrowserList;
+		std::vector<MI_MOVIE_INFO *> m_vHandleRecordList;
+		std::vector<MI_MOVIE_INFO *> m_vHandlePlayList;
 		std::vector<std::string> m_dirNames;
-		std::vector<MI_MOVIE_INFO*> m_vHandleSerienames;
+		std::vector<MI_MOVIE_INFO *> m_vHandleSerienames;
 
 		unsigned int m_currentBrowserSelection;
 		unsigned int m_currentRecordSelection;
@@ -199,7 +202,7 @@ class CMovieBrowser : public CMenuTarget, public CProgressSignals
 		bool m_doRefresh;
 		bool m_doLoadMovies;
 
-		MI_MOVIE_INFO* m_movieSelectionHandler;
+		MI_MOVIE_INFO *m_movieSelectionHandler;
 		int m_currentStartPos;
 		std::string m_selectedDir;
 		MB_FOCUS m_windowFocus;
@@ -207,8 +210,8 @@ class CMovieBrowser : public CMenuTarget, public CProgressSignals
 		bool m_file_info_stale; // if this bit is set, MovieBrowser shall reload all movie infos from HD
 		bool m_seriename_stale;
 
-		Font* m_pcFontFoot;
-		Font* m_pcFontTitle;
+		Font *m_pcFontFoot;
+		Font *m_pcFontTitle;
 		std::string m_textTitle;
 
 		MB_PARENTAL_LOCK m_parentalLock;
@@ -255,22 +258,39 @@ class CMovieBrowser : public CMenuTarget, public CProgressSignals
 	public:  // Functions //////////////////////////////////////////////////////////7
 		CMovieBrowser(); //P1
 		~CMovieBrowser(); //P1
-		int exec(const char* path); //P1
-		int exec(CMenuTarget* parent, const std::string & actionKey);
+		int exec(const char *path); //P1
+		int exec(CMenuTarget *parent, const std::string &actionKey);
 		std::string getCurrentDir(void); //P1 for FileBrowser compatibility
-		CFile* getSelectedFile(void); //P1 for FileBrowser compatibility
+		CFile *getSelectedFile(void); //P1 for FileBrowser compatibility
 		bool getSelectedFiles(CFileList &flist, P_MI_MOVIE_LIST &mlist); //P1 for FileBrowser compatibility
-		MI_MOVIE_BOOKMARKS* getCurrentMovieBookmark(void){if(m_movieSelectionHandler == NULL) return NULL; return(&(m_movieSelectionHandler->bookmarks));};
-		int getCurrentStartPos(void){return(m_currentStartPos);}; //P1 return start position in [s]
-		MI_MOVIE_INFO* getCurrentMovieInfo(void){return(m_movieSelectionHandler);}; //P1 return start position in [s]
+		MI_MOVIE_BOOKMARKS *getCurrentMovieBookmark(void)
+		{
+			if (m_movieSelectionHandler == NULL) return NULL;
+			return (&(m_movieSelectionHandler->bookmarks));
+		};
+		int getCurrentStartPos(void)
+		{
+			return (m_currentStartPos);
+		}; //P1 return start position in [s]
+		MI_MOVIE_INFO *getCurrentMovieInfo(void)
+		{
+			return (m_movieSelectionHandler);
+		}; //P1 return start position in [s]
 		void fileInfoStale(void); // call this function to force the Moviebrowser to reload all movie information from HD
 
-		bool readDir(const std::string & dirname, CFileList* flist);
+		bool readDir(const std::string &dirname, CFileList *flist);
 
-		bool delFile(CFile& file);
-		int  getMenuRet() { return menu_ret; }
-		int  getMode() { return show_mode; }
-		void setMode(int mode) {
+		bool delFile(CFile &file);
+		int  getMenuRet()
+		{
+			return menu_ret;
+		}
+		int  getMode()
+		{
+			return show_mode;
+		}
+		void setMode(int mode)
+		{
 			if (show_mode != mode)
 				m_file_info_stale = true;
 			show_mode = mode;
@@ -324,44 +344,44 @@ class CMovieBrowser : public CMenuTarget, public CProgressSignals
 		bool onDelete(bool cursor_only = false);
 		std::string formatDeleteMsg(MI_MOVIE_INFO *movieinfo, int msgFont, const int boxWidth = 450);
 		bool onDeleteFile(MI_MOVIE_INFO *movieinfo, bool skipAsk = false);  // P4
-		bool onSortMovieInfoHandleList(std::vector<MI_MOVIE_INFO*>& pv_handle_list, MB_INFO_ITEM sort_type, MB_DIRECTION direction);
+		bool onSortMovieInfoHandleList(std::vector<MI_MOVIE_INFO *> &pv_handle_list, MB_INFO_ITEM sort_type, MB_DIRECTION direction);
 
 		///// parse Storage Directories /////////////
-		bool addDir(std::string& dirname, int* used);
+		bool addDir(std::string &dirname, int *used);
 		void updateDir(void);
 		void loadAllTsFileNamesFromStorage(void); // P1
-		bool loadTsFileNamesFromDir(const std::string & dirname); // P1
+		bool loadTsFileNamesFromDir(const std::string &dirname);  // P1
 		void getStorageInfo(void); // P3
 
 		///// Menu ////////////////////////////////////
 		bool showMenu(bool calledExternally = false);
-		int showMovieInfoMenu(MI_MOVIE_INFO* movie_info); // P2
+		int showMovieInfoMenu(MI_MOVIE_INFO *movie_info); // P2
 		int showMovieCutMenu(); // P2
 		int  showStartPosSelectionMenu(void); // P2
 
 		///// settings ///////////////////////////////////
-		bool loadSettings(MB_SETTINGS* settings); // P2
-		bool saveSettings(MB_SETTINGS* settings); // P2
-		void defaultSettings(MB_SETTINGS* settings);
+		bool loadSettings(MB_SETTINGS *settings); // P2
+		bool saveSettings(MB_SETTINGS *settings); // P2
+		void defaultSettings(MB_SETTINGS *settings);
 
 		///// EPG_DATA /XML ///////////////////////////////
 		void loadMovies(bool doRefresh = true);
 		void loadAllMovieInfo(void); // P1
-		void saveMovieInfo(std::string* filename, MI_MOVIE_INFO* movie_info); // P2
+		void saveMovieInfo(std::string *filename, MI_MOVIE_INFO *movie_info); // P2
 
 		// misc
 		void showHelp(void);
-		bool isFiltered(MI_MOVIE_INFO& movie_info);
-		bool isParentalLock(MI_MOVIE_INFO& movie_info);
+		bool isFiltered(MI_MOVIE_INFO &movie_info);
+		bool isParentalLock(MI_MOVIE_INFO &movie_info);
 		std::string replaceInGUI(std::string text);
-		bool getMovieInfoItem(MI_MOVIE_INFO& movie_info, MB_INFO_ITEM item, std::string* item_string);
+		bool getMovieInfoItem(MI_MOVIE_INFO &movie_info, MB_INFO_ITEM item, std::string *item_string);
 		void updateMovieSelection(void);
 		void updateInfoSelection(void);
 		void updateFilterSelection(void);
 		void updateSerienames(void);
 		void autoFindSerie(void);
 
-		void info_hdd_level(bool paint_hdd=false);
+		void info_hdd_level(bool paint_hdd = false);
 
 		neutrino_locale_t getFeedLocale(void);
 		void clearListLines();
@@ -369,7 +389,7 @@ class CMovieBrowser : public CMenuTarget, public CProgressSignals
 		bool supportedExtension(CFile &file);
 		bool addFile(CFile &file, int dirItNr);
 
-		void changeBrowserHeight(CMenuForwarder* fw1, CMenuForwarder* fw2);
+		void changeBrowserHeight(CMenuForwarder *fw1, CMenuForwarder *fw2);
 };
 
 // I tried a lot to use the menu.cpp as ListBox selection, and I got three solution which are all garbage.
@@ -380,8 +400,15 @@ class CSelectedMenu : public CMenuTarget
 {
 	public:
 		bool selected;
-		CSelectedMenu(void){selected = false;};
-		inline	int exec(CMenuTarget* /*parent*/, const std::string & /*actionKey*/){selected = true; return menu_return::RETURN_EXIT;};
+		CSelectedMenu(void)
+		{
+			selected = false;
+		};
+		inline	int exec(CMenuTarget * /*parent*/, const std::string & /*actionKey*/)
+		{
+			selected = true;
+			return menu_return::RETURN_EXIT;
+		};
 };
 
 // This Class creates a menue item, which writes its caption to an given string (or an given int value to an given variable).
@@ -391,44 +418,56 @@ class CSelectedMenu : public CMenuTarget
 class CMenuSelector : public CMenuItem
 {
 	private:
-		const char * optionName;
-		char * optionValue;
-		std::string* optionValueString;
+		const char *optionName;
+		char *optionValue;
+		std::string *optionValueString;
 		int  returnIntValue;
-		int* returnInt;
+		int *returnInt;
 		int height;
 		char buffer[BUFFER_MAX];
 	public:
-		CMenuSelector(const char * OptionName, const bool Active = true, char * OptionValue = NULL, int* ReturnInt = NULL,int ReturnIntValue = 0);
-		CMenuSelector(const char * OptionName, const bool Active , std::string & OptionValue, int* ReturnInt = NULL,int ReturnIntValue = 0);
-		int exec(CMenuTarget* parent);
+		CMenuSelector(const char *OptionName, const bool Active = true, char *OptionValue = NULL, int *ReturnInt = NULL, int ReturnIntValue = 0);
+		CMenuSelector(const char *OptionName, const bool Active, std::string &OptionValue, int *ReturnInt = NULL, int ReturnIntValue = 0);
+		int exec(CMenuTarget *parent);
 		int paint(bool selected);
-		int getHeight(void) const{return height;};
-		bool isSelectable(void) const {	return active;}
+		int getHeight(void) const
+		{
+			return height;
+		};
+		bool isSelectable(void) const
+		{
+			return active;
+		}
 };
 
 // CLass to get the menu line selected by the user. There might be better ways to do so.
 class CMenuWidgetSelection : public CMenuWidget
 {
 	public:
-		CMenuWidgetSelection(const neutrino_locale_t Name, const std::string & Icon = "", const int mwidth = 30) : CMenuWidget(Name, Icon, mwidth){;};
-		int getSelectedLine(void){return no_action ? -1 : selected;};
+		CMenuWidgetSelection(const neutrino_locale_t Name, const std::string &Icon = "", const int mwidth = 30) : CMenuWidget(Name, Icon, mwidth) {;};
+		int getSelectedLine(void)
+		{
+			return no_action ? -1 : selected;
+		};
 };
 
 class CFileChooser : public CMenuWidget
 {
 	private:
-		std::string* dirPath;
+		std::string *dirPath;
 
 	public:
-		CFileChooser(std::string* path){dirPath= path;};
-		int exec(CMenuTarget* parent, const std::string & actionKey);
+		CFileChooser(std::string *path)
+		{
+			dirPath = path;
+		};
+		int exec(CMenuTarget *parent, const std::string &actionKey);
 };
 
 class CDirMenu : public CMenuWidget
 {
 	private:
-		std::vector<MB_DIR>* dirList;
+		std::vector<MB_DIR> *dirList;
 		DIR_STATE dirState[MB_MAX_DIRS];
 		std::string dirOptionText[MB_MAX_DIRS];
 		int dirNfsMountNr[MB_MAX_DIRS];
@@ -437,10 +476,13 @@ class CDirMenu : public CMenuWidget
 		void updateDirState(void);
 
 	public:
-		CDirMenu(std::vector<MB_DIR>* dir_list);
-		int exec(CMenuTarget* parent, const std::string & actionKey);
+		CDirMenu(std::vector<MB_DIR> *dir_list);
+		int exec(CMenuTarget *parent, const std::string &actionKey);
 		int show(void);
-		bool isChanged(){return changed;};
+		bool isChanged()
+		{
+			return changed;
+		};
 };
 
 #endif /*MOVIEBROWSER_H_*/

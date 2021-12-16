@@ -46,8 +46,8 @@ class CMovieHelp
 	private:
 
 	public:
-		CMovieHelp(){};
-		~CMovieHelp(){};
+		CMovieHelp() {};
+		~CMovieHelp() {};
 
 		void exec()
 		{
