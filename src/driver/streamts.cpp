@@ -405,7 +405,7 @@ CFrontend *CStreamManager::FindFrontend(CZapitChannel *channel)
 	return frontend;
 }
 
-bool CStreamManager::Parse(int fd, stream_pids_t &pids, t_channel_id &chid, CFrontend*&frontend)
+bool CStreamManager::Parse(int fd, stream_pids_t &pids, t_channel_id &chid, CFrontend *&frontend)
 {
 	char cbuf[512];
 	char *bp;
