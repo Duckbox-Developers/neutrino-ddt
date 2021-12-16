@@ -32,7 +32,6 @@ ASOURCES = cdrdec.cpp \
 	oggdec.cpp \
 	tag.c \
 	wavdec.cpp
-#	vis.cpp
 endif
 
 libneutrino_driver_audiodec_a_SOURCES = \
