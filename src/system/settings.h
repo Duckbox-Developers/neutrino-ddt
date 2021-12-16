@@ -728,15 +728,12 @@ struct SNeutrinoSettings
 	int screen_height;
 
 	//Software-update
+	int softupdate_autocheck;
 	int softupdate_mode;
-	std::string softupdate_url_file;
+	std::string softupdate_proxypassword;
 	std::string softupdate_proxyserver;
 	std::string softupdate_proxyusername;
-	std::string softupdate_proxypassword;
-	int softupdate_autocheck;
-	int softupdate_name_mode_apply;
-	int softupdate_name_mode_backup;
-
+	std::string softupdate_url_file;
 	std::string	backup_dir;
 	std::string	update_dir;
 	std::string	update_dir_opkg;

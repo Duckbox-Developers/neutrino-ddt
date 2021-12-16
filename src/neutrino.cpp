@@ -395,8 +395,6 @@ int CNeutrinoApp::loadSetup(const char * fname)
 #endif
 	g_settings.show_menu_hints_line = configfile.getBool("show_menu_hints_line", false);
 
-	g_settings.softupdate_autocheck = configfile.getBool("softupdate_autocheck" , false);
-
 	// video
 	int vid_Mode_default = VIDEO_STD_720P50;
 	if (getenv("NEUTRINO_DEFAULT_SCART") != NULL)
@@ -924,14 +922,12 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.audiochannel_up_down_enable = configfile.getBool("audiochannel_up_down_enable", false);
 
 	//Software-update
+	g_settings.softupdate_autocheck = configfile.getBool("softupdate_autocheck" , false);
 	g_settings.softupdate_mode = configfile.getInt32( "softupdate_mode", 1 );
-	g_settings.softupdate_name_mode_apply = 0;
-	g_settings.softupdate_name_mode_backup = 0; /* unused, but still initialize it */
-
-	g_settings.softupdate_url_file      = configfile.getString("softupdate_url_file", "/var/etc/update.urls");
+	g_settings.softupdate_proxypassword = configfile.getString("softupdate_proxypassword", "" );
 	g_settings.softupdate_proxyserver   = configfile.getString("softupdate_proxyserver", "" );
 	g_settings.softupdate_proxyusername = configfile.getString("softupdate_proxyusername", "" );
-	g_settings.softupdate_proxypassword = configfile.getString("softupdate_proxypassword", "" );
+	g_settings.softupdate_url_file      = configfile.getString("softupdate_url_file", "/var/etc/update.urls");
 	//
 	if (g_settings.softupdate_proxyserver.empty())
 		unsetenv("http_proxy");
@@ -1637,20 +1633,16 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32("screen_preset"      , g_settings.screen_preset);
 
 	//Software-update
-	configfile.setInt32 ("softupdate_mode"          , g_settings.softupdate_mode          );
-	configfile.setString("softupdate_url_file"      , g_settings.softupdate_url_file      );
-	configfile.setInt32 ("softupdate_name_mode_apply", g_settings.softupdate_name_mode_apply);
-	configfile.setInt32 ("softupdate_name_mode_backup", g_settings.softupdate_name_mode_backup);
-	configfile.setBool("softupdate_autocheck", g_settings.softupdate_autocheck);
+	configfile.setBool	("softupdate_autocheck"		,g_settings.softupdate_autocheck	);
+	configfile.setInt32	("softupdate_mode"		,g_settings.softupdate_mode		);
+	configfile.setString	("softupdate_proxypassword"	,g_settings.softupdate_proxypassword	);
+	configfile.setString	("softupdate_proxyserver"	,g_settings.softupdate_proxyserver	);
+	configfile.setString	("softupdate_proxyusername"	,g_settings.softupdate_proxyusername	);
+	configfile.setString	("softupdate_url_file" 		,g_settings.softupdate_url_file		);
 
-	configfile.setString("softupdate_proxyserver"   , g_settings.softupdate_proxyserver   );
-	configfile.setString("softupdate_proxyusername" , g_settings.softupdate_proxyusername );
-	configfile.setString("softupdate_proxypassword" , g_settings.softupdate_proxypassword );
-
-	configfile.setString("backup_dir", g_settings.backup_dir);
-
-	configfile.setString("update_dir", g_settings.update_dir);
-	configfile.setString("update_dir_opkg", g_settings.update_dir_opkg);
+	configfile.setString	("backup_dir"		,g_settings.backup_dir		);
+	configfile.setString	("update_dir"		,g_settings.update_dir		);
+	configfile.setString	("update_dir_opkg"	,g_settings.update_dir_opkg	);
 
 	configfile.setString("font_file", g_settings.font_file);
 	configfile.setString("ttx_font_file", g_settings.ttx_font_file);
