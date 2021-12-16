@@ -51,16 +51,17 @@ void SIsectionEIT::parse(void)
 {
 	const EventList &elist = *getEvents();
 
-	if(elist.empty())
+	if (elist.empty())
 		return;
 
-        t_service_id		sid = getTableIdExtension();
-        t_original_network_id	onid = getOriginalNetworkId();
-        t_transport_stream_id	tsid = getTransportStreamId();
+	t_service_id		sid = getTableIdExtension();
+	t_original_network_id	onid = getOriginalNetworkId();
+	t_transport_stream_id	tsid = getTransportStreamId();
 	unsigned char		tid = getTableId();
 	unsigned char		version = getVersionNumber();
 
-	for (EventConstIterator eit = elist.begin(); eit != elist.end(); ++eit) {
+	for (EventConstIterator eit = elist.begin(); eit != elist.end(); ++eit)
+	{
 		Event &event = (**eit);
 
 		SIevent e(onid, tsid, sid, event.getEventId());
@@ -84,11 +85,12 @@ void SIsectionEIT::parse(void)
 	if (!buffer || parsed)
 		return;
 
-	struct SI_section_header *siheader = (SI_section_header*) buffer;
+	struct SI_section_header *siheader = (SI_section_header *) buffer;
 	unsigned short bufferLength = siheader->section_length_hi << 8 | siheader->section_length_lo;
 
-	if (bufferLength < sizeof(SI_section_EIT_header) + sizeof(struct eit_event)) {
-		bufferLength=0;
+	if (bufferLength < sizeof(SI_section_EIT_header) + sizeof(struct eit_event))
+	{
+		bufferLength = 0;
 		return;
 	}
 
@@ -97,7 +99,8 @@ void SIsectionEIT::parse(void)
 	actPos = buffer + sizeof(SI_section_EIT_header);
 	bufEnd = buffer + bufferLength;
 
-	while (actPos < bufEnd - sizeof(struct eit_event)) {
+	while (actPos < bufEnd - sizeof(struct eit_event))
+	{
 		evt = (struct eit_event *) actPos;
 		SIevent e(evt);
 		e.service_id = service_id();
@@ -119,13 +122,14 @@ void SIsectionSDT::parse(void)
 {
 	const ServiceDescriptionList &slist = *getDescriptions();
 
-	if(slist.empty())
+	if (slist.empty())
 		return;
 
 	t_transport_stream_id transport_stream_id = getTransportStreamId();
 	t_original_network_id original_network_id = getOriginalNetworkId();
-	for (ServiceDescriptionConstIterator sit = slist.begin(); sit != slist.end(); ++sit) {
-		ServiceDescription * service = *sit;
+	for (ServiceDescriptionConstIterator sit = slist.begin(); sit != slist.end(); ++sit)
+	{
+		ServiceDescription *service = *sit;
 
 		SIservice s(service->getServiceId(), original_network_id, transport_stream_id);
 
@@ -135,25 +139,28 @@ void SIsectionSDT::parse(void)
 		s.flags.free_CA_mode = service->getFreeCaMode();
 
 		DescriptorConstIterator dit;
-		for (dit = service->getDescriptors()->begin(); dit != service->getDescriptors()->end(); ++dit) {
-			switch ((*dit)->getTag()) {
+		for (dit = service->getDescriptors()->begin(); dit != service->getDescriptors()->end(); ++dit)
+		{
+			switch ((*dit)->getTag())
+			{
 				case SERVICE_DESCRIPTOR:
-					{
-						ServiceDescriptor * d = (ServiceDescriptor *) *dit;
-						s.serviceTyp = d->getServiceType();
-					}
-					break;
+				{
+					ServiceDescriptor *d = (ServiceDescriptor *) *dit;
+					s.serviceTyp = d->getServiceType();
+				}
+				break;
 				case NVOD_REFERENCE_DESCRIPTOR:
+				{
+					NvodReferenceDescriptor *d = (NvodReferenceDescriptor *) *dit;
+					NvodReferenceConstIterator it;
+					const NvodReferenceList *nlist = d->getNvodReferences();
+					for (it = nlist->begin(); it != nlist->end(); ++it)
 					{
-						NvodReferenceDescriptor * d = (NvodReferenceDescriptor *) *dit;
-						NvodReferenceConstIterator it;
-						const NvodReferenceList* nlist = d->getNvodReferences();
-						for (it = nlist->begin(); it != nlist->end(); ++it) { 
-							SInvodReference nvod((*it)->getTransportStreamId(), (*it)->getOriginalNetworkId(), (*it)->getServiceId());
-							s.nvods.insert(nvod);
-						}
+						SInvodReference nvod((*it)->getTransportStreamId(), (*it)->getOriginalNetworkId(), (*it)->getServiceId());
+						s.nvods.insert(nvod);
 					}
-					break;
+				}
+				break;
 				default:
 					break;
 			}
@@ -165,13 +172,14 @@ void SIsectionSDT::parse(void)
 
 void SIsectionTIME::parse(uint8_t *buf)
 {
-	if(buf[0] != 0x70 && buf[0] != 0x73)
+	if (buf[0] != 0x70 && buf[0] != 0x73)
 		return;
 
 	bool TDT = (buf[0] == 0x70);
-	if(TDT) {
+	if (TDT)
+	{
 		TimeAndDateSection tdt(buf);
-		if(tdt.getSectionLength() < 5)
+		if (tdt.getSectionLength() < 5)
 			return;
 		dvbtime = parseDVBtime(tdt.getUtcTimeMjd(), tdt.getUtcTimeBcd());
 		char *ct = ctime(&dvbtime);
@@ -180,31 +188,38 @@ void SIsectionTIME::parse(uint8_t *buf)
 		/* ...and debug_colored adds another \n... */
 		debug_colored(DEBUG_ERROR, "SIsectionTIME::parse: TDT time: %s", ct);
 		parsed = true;
-	} else {
+	}
+	else
+	{
 		TimeOffsetSection tot(buf);
 		dvbtime = parseDVBtime(tot.getUtcTimeMjd(), tot.getUtcTimeBcd());
 		char *ct = ctime(&dvbtime);
 		ct[strlen(ct) - 1] = 0;
 		debug_colored(DEBUG_ERROR, "SIsectionTIME::parse: TOT time: %s", ct);
 		const DescriptorList &dlist = *tot.getDescriptors();
-		for (DescriptorConstIterator dit = dlist.begin(); dit != dlist.end(); ++dit) {
+		for (DescriptorConstIterator dit = dlist.begin(); dit != dlist.end(); ++dit)
+		{
 			uint8_t dtype = (*dit)->getTag();
-			if(dtype == LOCAL_TIME_OFFSET_DESCRIPTOR) {
+			if (dtype == LOCAL_TIME_OFFSET_DESCRIPTOR)
+			{
 				/* TOT without descriptors seems to be not better than a plain TDT, such TOT's are */
 				/* found on transponders which also have wrong time in TDT etc, so don't trust it. */
 				parsed = true;
 #ifdef DEBUG_TOT
-				const LocalTimeOffsetDescriptor * d = (LocalTimeOffsetDescriptor*) *dit;
-				const LocalTimeOffsetList * oflist = d->getLocalTimeOffsets();
-				for (LocalTimeOffsetConstIterator it = oflist->begin(); it != oflist->end(); ++it) {
-					const LocalTimeOffset * of = (LocalTimeOffset *) *it;
+				const LocalTimeOffsetDescriptor *d = (LocalTimeOffsetDescriptor *) *dit;
+				const LocalTimeOffsetList *oflist = d->getLocalTimeOffsets();
+				for (LocalTimeOffsetConstIterator it = oflist->begin(); it != oflist->end(); ++it)
+				{
+					const LocalTimeOffset *of = (LocalTimeOffset *) *it;
 					time_t change_time = parseDVBtime(of->getTimeOfChangeMjd(), of->getTimeOfChangeBcd(), false);
 					debug(DEBUG_ERROR, "TOT: cc=%s reg_id=%d pol=%d offs=%04x new=%04x when=%s",
-							of->getCountryCode().c_str(), of->getCountryRegionId(), of->getLocalTimeOffsetPolarity(),
-							of->getLocalTimeOffset(), of->getNextTimeOffset(), ctime(&change_time));
+						of->getCountryCode().c_str(), of->getCountryRegionId(), of->getLocalTimeOffsetPolarity(),
+						of->getLocalTimeOffset(), of->getNextTimeOffset(), ctime(&change_time));
 				}
 #endif
-			} else {
+			}
+			else
+			{
 				debug(DEBUG_ERROR, "SIsectionTIME::parse: unhandled descriptor %02x", dtype);
 			}
 		}

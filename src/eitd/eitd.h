@@ -44,8 +44,8 @@
 typedef boost::shared_ptr<class SIevent> SIeventPtr;
 typedef boost::shared_ptr<class SIservice> SIservicePtr;
 #else
-typedef SIevent * SIeventPtr;
-typedef SIservice * SIservicePtr;
+typedef SIevent *SIeventPtr;
+typedef SIservice *SIservicePtr;
 #endif
 
 /* period to restart EIT reading */
@@ -69,7 +69,7 @@ struct OrderServiceUniqueKeyFirstStartTimeEventUniqueKey
 	{
 		return
 			(p1->get_channel_id() == p2->get_channel_id()) ?
-			(p1->times.begin()->startzeit == p2->times.begin()->startzeit ? p1->eventID < p2->eventID : p1->times.begin()->startzeit < p2->times.begin()->startzeit )
+			(p1->times.begin()->startzeit == p2->times.begin()->startzeit ? p1->eventID < p2->eventID : p1->times.begin()->startzeit < p2->times.begin()->startzeit)
 			:
 			(p1->get_channel_id() < p2->get_channel_id());
 	}
@@ -83,7 +83,7 @@ struct OrderFirstEndTimeServiceIDEventUniqueKey
 			p1->times.begin()->startzeit + (long)p1->times.begin()->dauer == p2->times.begin()->startzeit + (long)p2->times.begin()->dauer ?
 			(p1->service_id == p2->service_id ? p1->uniqueKey() > p2->uniqueKey() : p1->service_id < p2->service_id)
 			:
-			( p1->times.begin()->startzeit + (long)p1->times.begin()->dauer < p2->times.begin()->startzeit + (long)p2->times.begin()->dauer ) ;
+			(p1->times.begin()->startzeit + (long)p1->times.begin()->dauer < p2->times.begin()->startzeit + (long)p2->times.begin()->dauer) ;
 	}
 };
 
@@ -124,9 +124,15 @@ class CSectionThread : public OpenThreads::Thread, public DMX
 		virtual void addFilters() {};
 
 		/* check if thread should go sleep */
-		virtual bool shouldSleep() { return false; };
+		virtual bool shouldSleep()
+		{
+			return false;
+		};
 		/* check if thread should continue to sleep after wakeup or timeout */
-		virtual bool checkSleep() { return false; };
+		virtual bool checkSleep()
+		{
+			return false;
+		};
 
 		/* called before sleep loop */
 		virtual void beforeSleep() {};
@@ -139,7 +145,7 @@ class CSectionThread : public OpenThreads::Thread, public DMX
 		virtual void afterWait() {};
 
 		/* process section after getSection */
-		virtual void processSection() {}; 
+		virtual void processSection() {};
 		/* cleanup before exit */
 		virtual void cleanup() {};
 
@@ -174,7 +180,7 @@ class CSectionThread : public OpenThreads::Thread, public DMX
 
 		bool Start()
 		{
-			if(running)
+			if (running)
 				return false;
 			running = true;
 			return (OpenThreads::Thread::start() == 0);
@@ -237,7 +243,7 @@ class CFreeSatThread : public CEventsThread
 		/* overloaded hooks */
 		void addFilters();
 	public:
-		CFreeSatThread(); 
+		CFreeSatThread();
 };
 
 class CCNThread : public CEventsThread
@@ -249,13 +255,13 @@ class CCNThread : public CEventsThread
 		void beforeSleep();
 		void beforeWait();
 		void afterWait();
-		void processSection(); 
+		void processSection();
 		void cleanup();
 
 		/* CN-specific */
 		OpenThreads::Mutex update_mutex;
 		bool	updating;
-		cDemux * eitDmx;
+		cDemux *eitDmx;
 		int eit_retry;
 
 		void sendCNEvent();

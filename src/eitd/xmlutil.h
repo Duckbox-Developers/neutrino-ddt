@@ -34,8 +34,8 @@
 #include <zapit/client/zapittools.h>
 #include <zapit/types.h>
 
-void *insertEventsfromFile(void * data);
-void *insertEventsfromXMLTV(void * data);
+void *insertEventsfromFile(void *data);
+void *insertEventsfromXMLTV(void *data);
 bool readEventsFromFile(std::string &epgname, int &ev_count);
 bool readEventsFromXMLTV(std::string &epgname, int &ev_count);
 bool readEventsFromDir(std::string &epgdir, int &ev_count);
