@@ -21,7 +21,7 @@
 #define _LUAVIDEO_H
 
 #if LUA_COMPAT_5_2
-void lua_rawsetp (lua_State *L, int i, const void *p);
+void lua_rawsetp(lua_State *L, int i, const void *p);
 #endif
 
 class CLuaVideo
@@ -29,7 +29,11 @@ class CLuaVideo
 	public:
 		bool singlePlay;
 		std::string infoFunc;
-		CLuaVideo() { singlePlay=false; infoFunc=""; };
+		CLuaVideo()
+		{
+			singlePlay = false;
+			infoFunc = "";
+		};
 		~CLuaVideo() {};
 };
 
@@ -38,7 +42,7 @@ class CLuaInstVideo
 	public:
 		CLuaInstVideo() {};
 		~CLuaInstVideo() {};
-		static CLuaInstVideo* getInstance();
+		static CLuaInstVideo *getInstance();
 		static void LuaVideoRegister(lua_State *L);
 		static int channelRezap(lua_State *L);
 		static bool execLuaInfoFunc(lua_State *L, int xres, int yres, int aspectRatio, int framerate);

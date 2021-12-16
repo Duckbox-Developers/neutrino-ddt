@@ -29,24 +29,25 @@
 #include "luainstance.h"
 #include "lua_progresswindow.h"
 
-CLuaInstProgressWindow* CLuaInstProgressWindow::getInstance()
+CLuaInstProgressWindow *CLuaInstProgressWindow::getInstance()
 {
-	static CLuaInstProgressWindow* LuaInstProgressWindow = NULL;
+	static CLuaInstProgressWindow *LuaInstProgressWindow = NULL;
 
-	if(!LuaInstProgressWindow)
-		      LuaInstProgressWindow = new CLuaInstProgressWindow();
+	if (!LuaInstProgressWindow)
+		LuaInstProgressWindow = new CLuaInstProgressWindow();
 	return LuaInstProgressWindow;
 }
 
 void CLuaInstProgressWindow::ProgressWindowRegister(lua_State *L)
 {
-	luaL_Reg meth[] = {
+	luaL_Reg meth[] =
+	{
 		{ "new",             CLuaInstProgressWindow::CProgressWindowNew },
 		{ "paint",           CLuaInstProgressWindow::CProgressWindowPaint },
 		{ "hide",            CLuaInstProgressWindow::CProgressWindowHide },
 		{ "showStatus",      CLuaInstProgressWindow::CProgressWindowShowLocalStatus},
 		{ "showLocalStatus", CLuaInstProgressWindow::CProgressWindowShowLocalStatus},
-		{ "showGlobalStatus",CLuaInstProgressWindow::CProgressWindowShowGlobalStatus },
+		{ "showGlobalStatus", CLuaInstProgressWindow::CProgressWindowShowGlobalStatus },
 		{ "setTitle",        CLuaInstProgressWindow::CProgressWindowSetTitle},
 		{ "__gc",            CLuaInstProgressWindow::CProgressWindowDelete },
 		{ NULL,              NULL }
@@ -62,7 +63,7 @@ void CLuaInstProgressWindow::ProgressWindowRegister(lua_State *L)
 
 int CLuaInstProgressWindow::CProgressWindowNew(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 
 	std::string name = "";
 	tableLookup(L, "name", name) || tableLookup(L, "title", name) || tableLookup(L, "caption", name);
@@ -90,12 +91,13 @@ CLuaCProgressWindow *CLuaInstProgressWindow::CProgressWindowCheck(lua_State *L, 
 
 int CLuaInstProgressWindow::CProgressWindowPaint(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 	CLuaCProgressWindow *D = CProgressWindowCheck(L, 1);
 	if (!D) return 0;
 
 	bool do_save_bg = true;
-	if (!tableLookup(L, "do_save_bg", do_save_bg)) {
+	if (!tableLookup(L, "do_save_bg", do_save_bg))
+	{
 		std::string tmp = "true";
 		if (tableLookup(L, "do_save_bg", tmp))
 			paramBoolDeprecated(L, tmp.c_str());
@@ -107,7 +109,7 @@ int CLuaInstProgressWindow::CProgressWindowPaint(lua_State *L)
 
 int CLuaInstProgressWindow::CProgressWindowHide(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 	CLuaCProgressWindow *D = CProgressWindowCheck(L, 1);
 	if (!D) return 0;
 
@@ -122,7 +124,7 @@ int CLuaInstProgressWindow::CProgressWindowHide(lua_State *L)
 
 int CLuaInstProgressWindow::CProgressWindowSetTitle(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 	CLuaCProgressWindow *D = CProgressWindowCheck(L, 1);
 	if (!D) return 0;
 
@@ -135,7 +137,7 @@ int CLuaInstProgressWindow::CProgressWindowSetTitle(lua_State *L)
 
 int CLuaInstProgressWindow::CProgressWindowShowStatusInternal(lua_State *L, bool local)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 	CLuaCProgressWindow *D = CProgressWindowCheck(L, 1);
 	if (!D) return 0;
 

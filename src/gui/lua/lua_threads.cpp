@@ -34,20 +34,20 @@
 #include "lua_threads.h"
 
 #define assert(x) do {	\
-	if (x) \
-		fprintf(stderr, "CLLThread:%s:%d assert(%s) failed\n", __func__, __LINE__, #x); \
-} while (0)
+		if (x) \
+			fprintf(stderr, "CLLThread:%s:%d assert(%s) failed\n", __func__, __LINE__, #x); \
+	} while (0)
 
-int __strerror_r(int err, char* buf, size_t len)
+int __strerror_r(int err, char *buf, size_t len)
 {
 	memset(buf, '\0', len);
-	snprintf(buf, len-1, "%s", strerror(err));
+	snprintf(buf, len - 1, "%s", strerror(err));
 	return 0;
 }
 
-CLLThread* CLLThread::getInstance()
+CLLThread *CLLThread::getInstance()
 {
-	static CLLThread* llthreadInst = NULL;
+	static CLLThread *llthreadInst = NULL;
 
 	if (!llthreadInst)
 		llthreadInst = new CLLThread();
@@ -58,7 +58,8 @@ void CLLThread::llthread_log(lua_State *L, const char *hdr, const char *msg)
 {
 	int top = lua_gettop(L);
 	lua_rawgetp(L, LUA_REGISTRYINDEX, LLTHREAD_LOGGER_HOLDER);
-	if (lua_isnil(L, -1)) {
+	if (lua_isnil(L, -1))
+	{
 		lua_pop(L, 1);
 		fputs(hdr,  stderr);
 		fputs(msg,  stderr);
@@ -80,12 +81,13 @@ int CLLThread::fail(lua_State *L, const char *msg)
 	return 2;
 }
 
-int CLLThread::traceback (lua_State *L)
+int CLLThread::traceback(lua_State *L)
 {
 	const char *msg = lua_tostring(L, 1);
 	if (msg)
 		luaL_traceback(L, L, msg, 1);
-	else if (!lua_isnoneornil(L, 1)) {  /* is there an error object? */
+	else if (!lua_isnoneornil(L, 1))    /* is there an error object? */
+	{
 		if (!luaL_callmeta(L, 1, "__tostring"))  /* try its 'tostring' metamethod */
 			lua_pushliteral(L, "(no error message)");
 	}
@@ -123,7 +125,8 @@ llthread_t *CLLThread::llthread_new()
 
 	_this->flags  = FLAG_NONE;
 	_this->child  = llthread_child_new();
-	if (!_this->child) {
+	if (!_this->child)
+	{
 		FREE_STRUCT(_this);
 		return NULL;
 	}
@@ -145,14 +148,16 @@ void CLLThread::llthread_validate(llthread_t *_this)
 	/* describe valid state of llthread_t object
 	 * from after create and before destroy
 	 */
-	if (!IS(_this, STARTED)) {
+	if (!IS(_this, STARTED))
+	{
 		assert(!IS(_this, DETACHED));
 		assert(!IS(_this, JOINED));
 		assert(!IS(_this, JOINABLE));
 		return;
 	}
 
-	if (IS(_this, DETACHED)) {
+	if (IS(_this, DETACHED))
+	{
 		if (!IS(_this, JOINABLE)) assert(_this->child == NULL);
 		else assert(_this->child != NULL);
 	}
@@ -165,12 +170,17 @@ llthread_t *CLLThread::llthread_create(lua_State *L, const char *code, size_t co
 
 	/* load Lua code into child state. */
 	int rc = luaL_loadbuffer(child->L, code, code_len, code);
-	if (rc != 0) {
+	if (rc != 0)
+	{
 		/* copy error message to parent state. */
-		size_t len; const char *str = lua_tolstring(child->L, -1, &len);
-		if (str != NULL) {
+		size_t len;
+		const char *str = lua_tolstring(child->L, -1, &len);
+		if (str != NULL)
+		{
 			lua_pushlstring(L, str, len);
-		} else {
+		}
+		else
+		{
 			/* non-string error message. */
 			lua_pushfstring(L, "luaL_loadbuffer() failed to load Lua code: rc=%d", rc);
 		}
@@ -188,7 +198,7 @@ llthread_t *CLLThread::llthread_create(lua_State *L, const char *code, size_t co
 	return _this;
 }
 
-llthread_t *CLLThread::l_llthread_at (lua_State *L, int i)
+llthread_t *CLLThread::l_llthread_at(lua_State *L, int i)
 {
 	llthread_t **_this = (llthread_t **) luaL_checkudata(L, i, LLTHREAD_TAG);
 	return *_this;
@@ -202,7 +212,8 @@ void CLLThread::llthread_child_destroy(llthread_child_t *_this)
 
 void CLLThread::llthread_cleanup_child(llthread_t *_this)
 {
-	if (_this->child) {
+	if (_this->child)
+	{
 		llthread_child_destroy(_this->child);
 		_this->child = NULL;
 	}
@@ -225,7 +236,7 @@ int CLLThread::llthread_detach(llthread_t *_this)
 	return rc;
 }
 
-void* CLLThread::llthread_child_thread_run(void *arg)
+void *CLLThread::llthread_child_thread_run(void *arg)
 {
 	llthread_child_t *_this = (llthread_child_t *)arg;
 	lua_State *L = _this->L;
@@ -238,11 +249,13 @@ void* CLLThread::llthread_child_thread_run(void *arg)
 	_this->status = lua_pcall(L, nargs, LUA_MULTRET, 1);
 
 	/* alwasy print errors here, helps with debugging bad code. */
-	if (_this->status != 0) {
+	if (_this->status != 0)
+	{
 		llthread_log(L, "Error from thread: ", lua_tostring(L, -1));
 	}
 
-	if (IS(_this, DETACHED) || !IS(_this, JOINABLE)) {
+	if (IS(_this, DETACHED) || !IS(_this, JOINABLE))
+	{
 		/* thread is detached, so it must clean-up the child state. */
 		llthread_child_destroy(_this);
 		_this = NULL;
@@ -263,11 +276,13 @@ int CLLThread::llthread_start(llthread_t *_this, int start_detached, int joinabl
 
 	rc = pthread_create(&(_this->thread), NULL, llthread_child_thread_run, child);
 
-	if (rc == 0) {
+	if (rc == 0)
+	{
 		SET(_this, STARTED);
 		if (joinable) SET(_this, JOINABLE);
 		if (start_detached) SET(_this, DETACHED);
-		if ((start_detached)&&(!joinable)) {
+		if ((start_detached) && (!joinable))
+		{
 			rc = llthread_detach(_this);
 		}
 	}
@@ -281,15 +296,20 @@ int CLLThread::llthread_cancel(llthread_t *_this)
 {
 	llthread_validate(_this);
 
-	if (IS(_this, JOINED)) {
+	if (IS(_this, JOINED))
+	{
 		return JOIN_OK;
-	} else {
+	}
+	else
+	{
 		int rc = pthread_cancel(_this->thread);
-		if (rc == 0) {
+		if (rc == 0)
+		{
 			return JOIN_ETIMEDOUT;
 		}
 
-		if (rc != ESRCH) {
+		if (rc != ESRCH)
+		{
 			/*@fixme what else it can be ?*/
 			return rc;
 		}
@@ -302,17 +322,23 @@ int CLLThread::llthread_join(llthread_t *_this, join_timeout_t timeout)
 {
 	llthread_validate(_this);
 
-	if (IS(_this, JOINED)) {
+	if (IS(_this, JOINED))
+	{
 		return JOIN_OK;
-	} else {
+	}
+	else
+	{
 		int rc;
-		if (timeout == 0) {
+		if (timeout == 0)
+		{
 			rc = pthread_kill(_this->thread, 0);
-			if (rc == 0) { /* still alive */
+			if (rc == 0)   /* still alive */
+			{
 				return JOIN_ETIMEDOUT;
 			}
 
-			if (rc != ESRCH) {
+			if (rc != ESRCH)
+			{
 				/*@fixme what else it can be ?*/
 				return rc;
 			}
@@ -324,7 +350,8 @@ int CLLThread::llthread_join(llthread_t *_this, join_timeout_t timeout)
 
 		/* then join the thread. */
 		rc = pthread_join(_this->thread, NULL);
-		if ((rc == 0) || (rc == ESRCH)) {
+		if ((rc == 0) || (rc == ESRCH))
+		{
 			SET(_this, JOINED);
 			rc = JOIN_OK;
 		}
@@ -337,25 +364,31 @@ int CLLThread::llthread_join(llthread_t *_this, join_timeout_t timeout)
 
 void CLLThread::llthread_destroy(llthread_t *_this)
 {
-	do {
+	do
+	{
 		/* thread not started */
-		if (!IS(_this, STARTED)) {
+		if (!IS(_this, STARTED))
+		{
 			llthread_cleanup_child(_this);
 			break;
 		}
 
 		/* DETACHED */
-		if (IS(_this, DETACHED)) {
-			if (IS(_this, JOINABLE)) {
+		if (IS(_this, DETACHED))
+		{
+			if (IS(_this, JOINABLE))
+			{
 				llthread_detach(_this);
 			}
 			break;
 		}
 
 		/* ATTACHED */
-		if (!IS(_this, JOINED)) {
+		if (!IS(_this, JOINED))
+		{
 			llthread_join(_this, INFINITE_JOIN_TIMEOUT);
-			if (!IS(_this, JOINED)) {
+			if (!IS(_this, JOINED))
+			{
 				/* @todo use current lua state to logging */
 				/*
 				 * char buf[ERROR_LEN];
@@ -364,11 +397,13 @@ void CLLThread::llthread_destroy(llthread_t *_this)
 				 */
 			}
 		}
-		if (IS(_this, JOINABLE)) {
+		if (IS(_this, JOINABLE))
+		{
 			llthread_cleanup_child(_this);
 		}
 
-	} while (0);
+	}
+	while (0);
 
 	FREE_STRUCT(_this);
 }
@@ -377,15 +412,20 @@ int CLLThread::llthread_alive(llthread_t *_this)
 {
 	llthread_validate(_this);
 
-	if (IS(_this, JOINED)) {
+	if (IS(_this, JOINED))
+	{
 		return JOIN_OK;
-	} else {
+	}
+	else
+	{
 		int rc = pthread_kill(_this->thread, 0);
-		if (rc == 0) { /* still alive */
+		if (rc == 0)   /* still alive */
+		{
 			return JOIN_ETIMEDOUT;
 		}
 
-		if (rc != ESRCH) {
+		if (rc != ESRCH)
+		{
 			/*@fixme what else it can be ?*/
 			return rc;
 		}

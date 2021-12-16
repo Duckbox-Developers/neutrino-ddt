@@ -25,8 +25,14 @@ class CLuaCCWindow
 {
 	public:
 		CComponentsWindow *w;
-		CLuaCCWindow() { w = NULL; }
-		~CLuaCCWindow() { delete w; }
+		CLuaCCWindow()
+		{
+			w = NULL;
+		}
+		~CLuaCCWindow()
+		{
+			delete w;
+		}
 };
 
 class CLuaInstCCWindow : CCHeaderTypes
@@ -34,7 +40,7 @@ class CLuaInstCCWindow : CCHeaderTypes
 	public:
 		CLuaInstCCWindow() {};
 		~CLuaInstCCWindow() {};
-		static CLuaInstCCWindow* getInstance();
+		static CLuaInstCCWindow *getInstance();
 		static void CCWindowRegister(lua_State *L);
 
 	private:

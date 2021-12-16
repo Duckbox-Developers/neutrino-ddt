@@ -34,7 +34,7 @@ class CLuaInstStringInput
 	public:
 		CLuaInstStringInput() {};
 		~CLuaInstStringInput() {};
-		static CLuaInstStringInput* getInstance();
+		static CLuaInstStringInput *getInstance();
 		static void StringInputRegister(lua_State *L);
 
 	private:

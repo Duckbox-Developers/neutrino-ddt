@@ -36,7 +36,7 @@ class CLuaInstHintbox
 	public:
 		CLuaInstHintbox() {};
 		~CLuaInstHintbox() {};
-		static CLuaInstHintbox* getInstance();
+		static CLuaInstHintbox *getInstance();
 		static void HintboxRegister(lua_State *L);
 
 	private:

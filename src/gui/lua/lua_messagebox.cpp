@@ -34,18 +34,19 @@
 #include "luainstance.h"
 #include "lua_messagebox.h"
 
-CLuaInstMessagebox* CLuaInstMessagebox::getInstance()
+CLuaInstMessagebox *CLuaInstMessagebox::getInstance()
 {
-	static CLuaInstMessagebox* LuaInstMessagebox = NULL;
+	static CLuaInstMessagebox *LuaInstMessagebox = NULL;
 
-	if(!LuaInstMessagebox)
+	if (!LuaInstMessagebox)
 		LuaInstMessagebox = new CLuaInstMessagebox();
 	return LuaInstMessagebox;
 }
 
 void CLuaInstMessagebox::MessageboxRegister(lua_State *L)
 {
-	luaL_Reg meth[] = {
+	luaL_Reg meth[] =
+	{
 		{ "exec", CLuaInstMessagebox::MessageboxExec },
 		{ NULL, NULL }
 	};
@@ -61,7 +62,7 @@ void CLuaInstMessagebox::MessageboxRegister(lua_State *L)
 //	default = "yes", buttons = { "yes", "no", "cancel", "all", "back", "ok" }, align="center1|center2|left|right" }
 int CLuaInstMessagebox::MessageboxExec(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 
 	std::string name, text, icon = std::string(NEUTRINO_ICON_INFO), txtMode = "";
 	tableLookup(L, "name", name) || tableLookup(L, "title", name) || tableLookup(L, "caption", name);
@@ -74,8 +75,10 @@ int CLuaInstMessagebox::MessageboxExec(lua_State *L)
 	tableLookup(L, "text_mode", txtMode);
 
 	std::string tmp;
-	if (tableLookup(L, "align", tmp)) {
-		table_key mb[] = {
+	if (tableLookup(L, "align", tmp))
+	{
+		table_key mb[] =
+		{
 			{ "center1",	CMsgBox::mbBtnAlignCenter1 },
 			{ "center2",	CMsgBox::mbBtnAlignCenter2 },
 			{ "left",	CMsgBox::mbBtnAlignLeft },
@@ -83,7 +86,8 @@ int CLuaInstMessagebox::MessageboxExec(lua_State *L)
 			{ NULL,		0 }
 		};
 		for (int i = 0; mb[i].name; i++)
-			if (!strcmp(mb[i].name, tmp.c_str())) {
+			if (!strcmp(mb[i].name, tmp.c_str()))
+			{
 				show_buttons |= mb[i].code;
 				break;
 			}
@@ -91,10 +95,12 @@ int CLuaInstMessagebox::MessageboxExec(lua_State *L)
 
 	lua_pushstring(L, "buttons");
 	lua_gettable(L, -2);
-	for (lua_pushnil(L); lua_next(L, -2); lua_pop(L, 2)) {
+	for (lua_pushnil(L); lua_next(L, -2); lua_pop(L, 2))
+	{
 		lua_pushvalue(L, -2);
 		const char *val = lua_tostring(L, -2);
-		table_key mb[] = {
+		table_key mb[] =
+		{
 			{ "yes",	CMsgBox::mbYes },
 			{ "no",		CMsgBox::mbNo },
 			{ "cancel",	CMsgBox::mbCancel },
@@ -104,7 +110,8 @@ int CLuaInstMessagebox::MessageboxExec(lua_State *L)
 			{ NULL,		0 }
 		};
 		for (int i = 0; mb[i].name; i++)
-			if (!strcmp(mb[i].name, val)) {
+			if (!strcmp(mb[i].name, val))
+			{
 				show_buttons |= mb[i].code;
 				break;
 			}
@@ -113,7 +120,8 @@ int CLuaInstMessagebox::MessageboxExec(lua_State *L)
 	if ((show_buttons & 0xFF) == 0)
 		show_buttons |= CMsgBox::mbAll;
 
-	table_key mbr[] = {
+	table_key mbr[] =
+	{
 		{ "yes",	CMsgBox::mbrYes },
 		{ "no",		CMsgBox::mbrNo },
 		{ "cancel",	CMsgBox::mbrCancel },
@@ -121,16 +129,20 @@ int CLuaInstMessagebox::MessageboxExec(lua_State *L)
 		{ "ok",		CMsgBox::mbrOk },
 		{ NULL,		0 }
 	};
-	if (tableLookup(L, "default", tmp)) {
+	if (tableLookup(L, "default", tmp))
+	{
 		for (int i = 0; mbr[i].name; i++)
-			if (!strcmp(mbr[i].name, tmp.c_str())) {
+			if (!strcmp(mbr[i].name, tmp.c_str()))
+			{
 				default_button = mbr[i].code;
 				break;
 			}
 	}
 
-	if (!txtMode.empty()) {
-		table_key txt_align[] = {
+	if (!txtMode.empty())
+	{
+		table_key txt_align[] =
+		{
 			{ "ALIGN_AUTO_WIDTH",		CTextBox::AUTO_WIDTH },
 			{ "ALIGN_AUTO_HIGH",		CTextBox::AUTO_HIGH },
 			{ "ALIGN_SCROLL",		CTextBox::SCROLL },
@@ -142,8 +154,10 @@ int CLuaInstMessagebox::MessageboxExec(lua_State *L)
 			{ "DECODE_HTML",		0 },
 			{ NULL,				0 }
 		};
-		for (int i = 0; txt_align[i].name; i++) {
-			if (txtMode.find(txt_align[i].name) != std::string::npos){
+		for (int i = 0; txt_align[i].name; i++)
+		{
+			if (txtMode.find(txt_align[i].name) != std::string::npos)
+			{
 				text_mode |= txt_align[i].code;
 			}
 		}
@@ -157,7 +171,8 @@ int CLuaInstMessagebox::MessageboxExec(lua_State *L)
 
 	tmp = "cancel";
 	for (int i = 0; mbr[i].name; i++)
-		if (res == mbr[i].code) {
+		if (res == mbr[i].code)
+		{
 			tmp = mbr[i].name;
 			break;
 		}

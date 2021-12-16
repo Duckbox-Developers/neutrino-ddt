@@ -29,8 +29,17 @@ class CLuaCCText
 		CComponentsText *ct;
 		CComponentsForm *parent;
 		int mode, font_text;
-		CLuaCCText() { ct = NULL; parent = NULL; mode = 0; font_text = 0;}
-		~CLuaCCText() { if (parent == NULL) delete ct; }
+		CLuaCCText()
+		{
+			ct = NULL;
+			parent = NULL;
+			mode = 0;
+			font_text = 0;
+		}
+		~CLuaCCText()
+		{
+			if (parent == NULL) delete ct;
+		}
 };
 
 class CLuaInstCCText
@@ -38,7 +47,7 @@ class CLuaInstCCText
 	public:
 		CLuaInstCCText() {};
 		~CLuaInstCCText() {};
-		static CLuaInstCCText* getInstance();
+		static CLuaInstCCText *getInstance();
 		static void CCTextRegister(lua_State *L);
 
 	private:

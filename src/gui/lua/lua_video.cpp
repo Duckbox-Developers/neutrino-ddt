@@ -35,20 +35,20 @@
 #include "luainstance.h"
 #include "lua_video.h"
 
-extern cVideo * videoDecoder;
+extern cVideo *videoDecoder;
 
-CLuaInstVideo* CLuaInstVideo::getInstance()
+CLuaInstVideo *CLuaInstVideo::getInstance()
 {
-	static CLuaInstVideo* LuaInstVideo = NULL;
+	static CLuaInstVideo *LuaInstVideo = NULL;
 
-	if(!LuaInstVideo)
+	if (!LuaInstVideo)
 		LuaInstVideo = new CLuaInstVideo();
 	return LuaInstVideo;
 }
 
 CLuaVideo *CLuaInstVideo::VideoCheckData(lua_State *L, int n)
 {
-	void* ret = luaL_testudata(L, n, LUA_VIDEO_CLASSNAME);
+	void *ret = luaL_testudata(L, n, LUA_VIDEO_CLASSNAME);
 	if (ret == NULL)
 		return NULL;
 	else
@@ -57,7 +57,8 @@ CLuaVideo *CLuaInstVideo::VideoCheckData(lua_State *L, int n)
 
 void CLuaInstVideo::LuaVideoRegister(lua_State *L)
 {
-	luaL_Reg meth[] = {
+	luaL_Reg meth[] =
+	{
 		{ "new",                    CLuaInstVideo::VideoNew },
 		{ "setBlank",               CLuaInstVideo::setBlank },
 		{ "ShowPicture",            CLuaInstVideo::ShowPicture },
@@ -93,7 +94,8 @@ int CLuaInstVideo::setBlank(lua_State *L)
 {
 	/* workaround for deprecated functions */
 	CLuaVideo *D;
-	if (luaL_testudata(L, 1, LUA_CLASSNAME) == NULL) {
+	if (luaL_testudata(L, 1, LUA_CLASSNAME) == NULL)
+	{
 		D = VideoCheckData(L, 1);
 		if (!D) return 0;
 	}
@@ -111,7 +113,8 @@ int CLuaInstVideo::ShowPicture(lua_State *L)
 {
 	/* workaround for deprecated functions */
 	CLuaVideo *D;
-	if (luaL_testudata(L, 1, LUA_CLASSNAME) == NULL) {
+	if (luaL_testudata(L, 1, LUA_CLASSNAME) == NULL)
+	{
 		D = VideoCheckData(L, 1);
 		if (!D) return 0;
 	}
@@ -126,7 +129,8 @@ int CLuaInstVideo::StopPicture(lua_State *L)
 {
 	/* workaround for deprecated functions */
 	CLuaVideo *D;
-	if (luaL_testudata(L, 1, LUA_CLASSNAME) == NULL) {
+	if (luaL_testudata(L, 1, LUA_CLASSNAME) == NULL)
+	{
 		D = VideoCheckData(L, 1);
 		if (!D) return 0;
 	}
@@ -140,7 +144,8 @@ int CLuaInstVideo::PlayFile(lua_State *L)
 {
 	/* workaround for deprecated functions */
 	CLuaVideo *D = NULL;
-	if (luaL_testudata(L, 1, LUA_CLASSNAME) == NULL) {
+	if (luaL_testudata(L, 1, LUA_CLASSNAME) == NULL)
+	{
 		D = VideoCheckData(L, 1);
 		if (!D) return 0;
 	}
@@ -149,26 +154,31 @@ int CLuaInstVideo::PlayFile(lua_State *L)
 	LUA_DEBUG("CLuaInstVideo::%s %d\n", __func__, lua_gettop(L));
 	int numargs = lua_gettop(L);
 
-	if (numargs < 3) {
+	if (numargs < 3)
+	{
 		printf("CLuaInstVideo::%s: not enough arguments (%d, expected 3)\n", __func__, numargs);
 		return 0;
 	}
 	const char *errmsg = "is not a string.";
-	if(!lua_isstring(L,2)){
+	if (!lua_isstring(L, 2))
+	{
 		printf("CLuaInstVideo::%s: argument 1 %s\n", __func__, errmsg);
-			return 0;
+		return 0;
 	}
-	if(!lua_isstring(L,3)){
+	if (!lua_isstring(L, 3))
+	{
 		printf("CLuaInstVideo::%s: argument 2 %s\n", __func__, errmsg);
-			return 0;
+		return 0;
 	}
-	if(numargs > 3 && !lua_isstring(L,4)){
+	if (numargs > 3 && !lua_isstring(L, 4))
+	{
 		printf("CLuaInstVideo::%s: argument 3 %s\n", __func__, errmsg);
-			return 0;
+		return 0;
 	}
-	if(numargs > 4 && !lua_isstring(L,5)){
+	if (numargs > 4 && !lua_isstring(L, 5))
+	{
 		printf("CLuaInstVideo::%s: argument 4 %s\n", __func__, errmsg);
-			return 0;
+		return 0;
 	}
 
 	bool sp = false;
@@ -200,7 +210,7 @@ int CLuaInstVideo::PlayFile(lua_State *L)
 	std::string sf2(fname2);
 	if (D != NULL && !D->infoFunc.empty())
 		CMoviePlayerGui::getInstance().setLuaInfoFunc(L, true);
-	CMoviePlayerGui::getInstance().SetFile(st, sf, si1, si2,sf2);
+	CMoviePlayerGui::getInstance().SetFile(st, sf, si1, si2, sf2);
 	CMoviePlayerGui::getInstance().exec(NULL, "http_lua");
 	CMoviePlayerGui::getInstance().setLuaInfoFunc(L, false);
 	if (D != NULL && !D->infoFunc.empty())
@@ -216,8 +226,9 @@ int CLuaInstVideo::setInfoFunc(lua_State *L)
 	if (!D) return 0;
 
 	int numargs = lua_gettop(L);
-	if (numargs < 2) {
-		printf("CLuaInstVideo::%s: not enough arguments (%d, expected 1)\n", __func__, numargs-1);
+	if (numargs < 2)
+	{
+		printf("CLuaInstVideo::%s: not enough arguments (%d, expected 1)\n", __func__, numargs - 1);
 		return 0;
 	}
 
@@ -236,15 +247,16 @@ bool CLuaInstVideo::execLuaInfoFunc(lua_State *L, int xres, int yres, int aspect
 	lua_pushinteger(L, (lua_Integer)aspectRatio);
 	lua_pushinteger(L, (lua_Integer)framerate);
 	int status = lua_pcall(L, 4, 0, 0);
-	if (status) {
+	if (status)
+	{
 		char msg[1024];
 		lua_Debug ar;
 		lua_getstack(L, 1, &ar);
 		lua_getinfo(L, "Sl", &ar);
 		memset(msg, '\0', sizeof(msg));
-		bool isString = lua_isstring(L,-1);
+		bool isString = lua_isstring(L, -1);
 		const char *null = "NULL";
-		snprintf(msg, sizeof(msg)-1, "[%s:%d] error running function '%s': %s", ar.short_src, ar.currentline, D->infoFunc.c_str(), isString ? lua_tostring(L, -1):null);
+		snprintf(msg, sizeof(msg) - 1, "[%s:%d] error running function '%s': %s", ar.short_src, ar.currentline, D->infoFunc.c_str(), isString ? lua_tostring(L, -1) : null);
 		fprintf(stderr, "[CLuaInstVideo::%s:%d] %s\n", __func__, __LINE__, msg);
 		DisplayErrorMessage(msg);
 		return false;
@@ -256,7 +268,8 @@ int CLuaInstVideo::zapitStopPlayBack(lua_State *L)
 {
 	/* workaround for deprecated functions */
 	CLuaVideo *D;
-	if (luaL_testudata(L, 1, LUA_CLASSNAME) == NULL) {
+	if (luaL_testudata(L, 1, LUA_CLASSNAME) == NULL)
+	{
 		D = VideoCheckData(L, 1);
 		if (!D) return 0;
 	}
@@ -266,7 +279,8 @@ int CLuaInstVideo::zapitStopPlayBack(lua_State *L)
 	int numargs = lua_gettop(L);
 	if (numargs > 1)
 		stop = _luaL_checkbool(L, 2);
-	if (stop) {
+	if (stop)
+	{
 		CMoviePlayerGui::getInstance().stopPlayBack();
 		g_Zapit->stopPlayBack();
 	}
@@ -279,7 +293,8 @@ int CLuaInstVideo::channelRezap(lua_State *L)
 {
 	/* workaround for deprecated functions */
 	CLuaVideo *D;
-	if (luaL_testudata(L, 1, LUA_CLASSNAME) == NULL) {
+	if (luaL_testudata(L, 1, LUA_CLASSNAME) == NULL)
+	{
 		D = VideoCheckData(L, 1);
 		if (!D) return 0;
 	}
@@ -295,21 +310,24 @@ int CLuaInstVideo::createChannelIDfromUrl(lua_State *L)
 {
 	/* workaround for deprecated functions */
 	CLuaVideo *D;
-	if (luaL_testudata(L, 1, LUA_CLASSNAME) == NULL) {
+	if (luaL_testudata(L, 1, LUA_CLASSNAME) == NULL)
+	{
 		D = VideoCheckData(L, 1);
 		if (!D) return 0;
 	}
 	/* CLuaVideo *D = VideoCheckData(L, 1);
 	if (!D) return 0; */
 	int numargs = lua_gettop(L);
-	if (numargs < 2) {
+	if (numargs < 2)
+	{
 		printf("CLuaInstVideo::%s: no arguments\n", __func__);
 		lua_pushnil(L);
 		return 1;
 	}
 
 	const char *url = luaL_checkstring(L, 2);
-	if (strlen(url) < 1 ) {
+	if (strlen(url) < 1)
+	{
 		lua_pushnil(L);
 		return 1;
 	}

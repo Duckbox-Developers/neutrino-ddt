@@ -33,18 +33,19 @@
 #include "luainstance.h"
 #include "lua_hintbox.h"
 
-CLuaInstHintbox* CLuaInstHintbox::getInstance()
+CLuaInstHintbox *CLuaInstHintbox::getInstance()
 {
-	static CLuaInstHintbox* LuaInstHintbox = NULL;
+	static CLuaInstHintbox *LuaInstHintbox = NULL;
 
-	if(!LuaInstHintbox)
+	if (!LuaInstHintbox)
 		LuaInstHintbox = new CLuaInstHintbox();
 	return LuaInstHintbox;
 }
 
 void CLuaInstHintbox::HintboxRegister(lua_State *L)
 {
-	luaL_Reg meth[] = {
+	luaL_Reg meth[] =
+	{
 		{ "new", CLuaInstHintbox::HintboxNew },
 		{ "exec", CLuaInstHintbox::HintboxExec },
 		{ "paint", CLuaInstHintbox::HintboxPaint },
@@ -80,7 +81,7 @@ CLuaHintbox::~CLuaHintbox()
 
 int CLuaInstHintbox::HintboxNew(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 
 	std::string name, text, icon = std::string(NEUTRINO_ICON_INFO);
 	tableLookup(L, "name", name) || tableLookup(L, "title", name) || tableLookup(L, "caption", name);
@@ -134,7 +135,7 @@ int CLuaInstHintbox::HintboxExec(lua_State *L)
 	// copied from gui/widget/hintbox.cpp
 	neutrino_msg_t msg;
 	neutrino_msg_data_t data;
-	if ( timeout == -1 )
+	if (timeout == -1)
 		timeout = 5; /// default timeout 5 sec
 	//timeout = g_settings.timing[SNeutrinoSettings::TIMING_INFOBAR];
 
@@ -142,28 +143,39 @@ int CLuaInstHintbox::HintboxExec(lua_State *L)
 
 	int res = messages_return::none;
 
-	while ( ! ( res & ( messages_return::cancel_info | messages_return::cancel_all ) ) ) {
-		g_RCInput->getMsgAbsoluteTimeout( &msg, &data, &timeoutEnd );
+	while (!(res & (messages_return::cancel_info | messages_return::cancel_all)))
+	{
+		g_RCInput->getMsgAbsoluteTimeout(&msg, &data, &timeoutEnd);
 
 		if ((msg == CRCInput::RC_timeout) || (msg == CRCInput::RC_ok))
 			res = messages_return::cancel_info;
 		else if (msg == CRCInput::RC_home)
 			res = messages_return::cancel_all;
-		else if (/*(D->b->has_scrollbar()) &&*/ ((msg == CRCInput::RC_up) || (msg == CRCInput::RC_down))) {
+		else if (/*(D->b->has_scrollbar()) &&*/ ((msg == CRCInput::RC_up) || (msg == CRCInput::RC_down)))
+		{
 			if (msg == CRCInput::RC_up)
 				D->b->scroll_up();
 			else
 				D->b->scroll_down();
-		} else if (CNeutrinoApp::getInstance()->listModeKey(msg)) {
+		}
+		else if (CNeutrinoApp::getInstance()->listModeKey(msg))
+		{
 			// do nothing
-		} else if (msg == CRCInput::RC_mode) {
+		}
+		else if (msg == CRCInput::RC_mode)
+		{
 			break;
-		} else if ((msg == CRCInput::RC_next) || (msg == CRCInput::RC_prev)) {
+		}
+		else if ((msg == CRCInput::RC_next) || (msg == CRCInput::RC_prev))
+		{
 			res = messages_return::cancel_all;
 			g_RCInput->postMsg(msg, data);
-		} else {
+		}
+		else
+		{
 			res = CNeutrinoApp::getInstance()->handleMsg(msg, data);
-			if (res & messages_return::unhandled) {
+			if (res & messages_return::unhandled)
+			{
 
 				// leave here and handle above...
 				g_RCInput->postMsg(msg, data);

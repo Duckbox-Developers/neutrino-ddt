@@ -22,8 +22,14 @@ class CLuaCProgressWindow
 {
 	public:
 		CProgressWindow *w;
-		CLuaCProgressWindow() { w = NULL; }
-		~CLuaCProgressWindow() { delete w; }
+		CLuaCProgressWindow()
+		{
+			w = NULL;
+		}
+		~CLuaCProgressWindow()
+		{
+			delete w;
+		}
 };
 
 class CLuaInstProgressWindow
@@ -31,7 +37,7 @@ class CLuaInstProgressWindow
 	public:
 		CLuaInstProgressWindow() {};
 		~CLuaInstProgressWindow() {};
-		static CLuaInstProgressWindow* getInstance();
+		static CLuaInstProgressWindow *getInstance();
 		static void ProgressWindowRegister(lua_State *L);
 
 	private:

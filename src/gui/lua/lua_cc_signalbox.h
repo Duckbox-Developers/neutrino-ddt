@@ -26,8 +26,15 @@ class CLuaCCSignalBox
 	public:
 		CSignalBox *s;
 		CComponentsForm *parent;
-		CLuaCCSignalBox() { s = NULL; parent = NULL;}
-		~CLuaCCSignalBox() { if (parent == NULL) delete s; }
+		CLuaCCSignalBox()
+		{
+			s = NULL;
+			parent = NULL;
+		}
+		~CLuaCCSignalBox()
+		{
+			if (parent == NULL) delete s;
+		}
 };
 
 class CLuaInstCCSignalbox
@@ -35,7 +42,7 @@ class CLuaInstCCSignalbox
 	public:
 		CLuaInstCCSignalbox() {};
 		~CLuaInstCCSignalbox() {};
-		static CLuaInstCCSignalbox* getInstance();
+		static CLuaInstCCSignalbox *getInstance();
 		static void CCSignalBoxRegister(lua_State *L);
 
 	private:

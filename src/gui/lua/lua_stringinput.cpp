@@ -32,9 +32,9 @@
 #include "luainstance.h"
 #include "lua_stringinput.h"
 
-CLuaInstStringInput* CLuaInstStringInput::getInstance()
+CLuaInstStringInput *CLuaInstStringInput::getInstance()
 {
-	static CLuaInstStringInput* LuaInstStringInput = NULL;
+	static CLuaInstStringInput *LuaInstStringInput = NULL;
 
 	if (!LuaInstStringInput)
 		LuaInstStringInput = new CLuaInstStringInput();
@@ -43,7 +43,8 @@ CLuaInstStringInput* CLuaInstStringInput::getInstance()
 
 void CLuaInstStringInput::StringInputRegister(lua_State *L)
 {
-	luaL_Reg meth[] = {
+	luaL_Reg meth[] =
+	{
 		{ "exec", CLuaInstStringInput::StringInputExec },
 		{ NULL, NULL }
 	};
@@ -66,7 +67,7 @@ void CLuaInstStringInput::StringInputRegister(lua_State *L)
 */
 int CLuaInstStringInput::StringInputExec(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 
 	std::string name;
 	tableLookup(L, "name", name) || tableLookup(L, "title", name) || tableLookup(L, "caption", name);
@@ -99,13 +100,13 @@ int CLuaInstStringInput::StringInputExec(lua_State *L)
 	CStringInput *i;
 	if (pin)
 		i = new CPINInput(name, &value, size,
-				     NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, valid_chars.c_str(), NULL);
+			NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, valid_chars.c_str(), NULL);
 	else if (sms)
 		i = new CStringInputSMS(name, &value, size,
-				     NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, valid_chars.c_str(), NULL, icon.c_str());
+			NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, valid_chars.c_str(), NULL, icon.c_str());
 	else
 		i = new CStringInput(name, &value, size,
-				     NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, valid_chars.c_str(), NULL, icon.c_str());
+			NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, valid_chars.c_str(), NULL, icon.c_str());
 	i->exec(NULL, "");
 	delete i;
 

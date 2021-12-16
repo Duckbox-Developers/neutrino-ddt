@@ -35,11 +35,11 @@
 #include "lua_cc_window.h"
 #include "lua_cc_picture.h"
 
-CLuaInstCCPicture* CLuaInstCCPicture::getInstance()
+CLuaInstCCPicture *CLuaInstCCPicture::getInstance()
 {
-	static CLuaInstCCPicture* LuaInstCCPicture = NULL;
+	static CLuaInstCCPicture *LuaInstCCPicture = NULL;
 
-	if(!LuaInstCCPicture)
+	if (!LuaInstCCPicture)
 		LuaInstCCPicture = new CLuaInstCCPicture();
 	return LuaInstCCPicture;
 }
@@ -51,7 +51,8 @@ CLuaCCPicture *CLuaInstCCPicture::CCPictureCheck(lua_State *L, int n)
 
 void CLuaInstCCPicture::CCPictureRegister(lua_State *L)
 {
-	luaL_Reg meth[] = {
+	luaL_Reg meth[] =
+	{
 		{ "new",          CLuaInstCCPicture::CCPictureNew },
 		{ "paint",        CLuaInstCCPicture::CCPicturePaint },
 		{ "hide",         CLuaInstCCPicture::CCPictureHide },
@@ -72,10 +73,10 @@ void CLuaInstCCPicture::CCPictureRegister(lua_State *L)
 
 int CLuaInstCCPicture::CCPictureNew(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 
-	CLuaCCWindow* parent = NULL;
-	lua_Integer x=10, y=10, dx=100, dy=100;
+	CLuaCCWindow *parent = NULL;
+	lua_Integer x = 10, y = 10, dx = 100, dy = 100;
 	std::string image_name        = "";
 	lua_Integer alignment         = 0;
 	lua_Unsigned color_frame      = (lua_Unsigned)COL_FRAME_PLUS_0;
@@ -88,7 +89,7 @@ int CLuaInstCCPicture::CCPictureNew(lua_State *L)
 	*/
 	lua_Integer transparency     = CFrameBuffer::TM_NONE;
 
-	tableLookup(L, "parent",    (void**)&parent);
+	tableLookup(L, "parent", (void **)&parent);
 	tableLookup(L, "x",         x);
 	tableLookup(L, "y",         y);
 	tableLookup(L, "dx",        dx);
@@ -99,7 +100,8 @@ int CLuaInstCCPicture::CCPictureNew(lua_State *L)
 		dprintf(DEBUG_NORMAL, "[CLuaInstance][%s - %d] invalid argument: 'alignment' has no effect!\n", __func__, __LINE__);
 
 	bool has_shadow = false;
-	if (!tableLookup(L, "has_shadow", has_shadow)) {
+	if (!tableLookup(L, "has_shadow", has_shadow))
+	{
 		std::string tmp1 = "false";
 		if (tableLookup(L, "has_shadow", tmp1))
 			paramBoolDeprecated(L, tmp1.c_str());
@@ -114,7 +116,7 @@ int CLuaInstCCPicture::CCPictureNew(lua_State *L)
 	color_background = checkMagicMask(color_background);
 	color_shadow     = checkMagicMask(color_shadow);
 
-	CComponentsForm* pw = (parent && parent->w) ? parent->w->getBodyObject() : NULL;
+	CComponentsForm *pw = (parent && parent->w) ? parent->w->getBodyObject() : NULL;
 
 	CLuaCCPicture **udata = (CLuaCCPicture **) lua_newuserdata(L, sizeof(CLuaCCPicture *));
 	*udata = new CLuaCCPicture();
@@ -150,12 +152,13 @@ int CLuaInstCCPicture::CCPictureGetWidth(lua_State *L)
 
 int CLuaInstCCPicture::CCPicturePaint(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 	CLuaCCPicture *D = CCPictureCheck(L, 1);
 	if (!D) return 0;
 
 	bool do_save_bg = true;
-	if (!tableLookup(L, "do_save_bg", do_save_bg)) {
+	if (!tableLookup(L, "do_save_bg", do_save_bg))
+	{
 		std::string tmp = "true";
 		if (tableLookup(L, "do_save_bg", tmp))
 			paramBoolDeprecated(L, tmp.c_str());
@@ -167,7 +170,7 @@ int CLuaInstCCPicture::CCPicturePaint(lua_State *L)
 
 int CLuaInstCCPicture::CCPictureHide(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 	CLuaCCPicture *D = CCPictureCheck(L, 1);
 	if (!D) return 0;
 
@@ -176,17 +179,19 @@ int CLuaInstCCPicture::CCPictureHide(lua_State *L)
 	if ((tableLookup(L, "no_restore", tmp1)) || (tableLookup(L, "no_restore", tmp2)))
 		obsoleteHideParameter(L);
 
-	if (D->parent) {
+	if (D->parent)
+	{
 		D->cp->setPicture("");
 		D->cp->paint();
-	} else
+	}
+	else
 		D->cp->hide();
 	return 0;
 }
 
 int CLuaInstCCPicture::CCPictureSetPicture(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 	CLuaCCPicture *D = CCPictureCheck(L, 1);
 	if (!D) return 0;
 
@@ -199,14 +204,14 @@ int CLuaInstCCPicture::CCPictureSetPicture(lua_State *L)
 
 int CLuaInstCCPicture::CCPictureSetCenterPos(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 	CLuaCCPicture *D = CCPictureCheck(L, 1);
 	if (!D) return 0;
 	lua_Integer  tmp_along_mode, along_mode = CC_ALONG_X | CC_ALONG_Y;
 	tableLookup(L, "along_mode", tmp_along_mode);
 
 	if (tmp_along_mode & CC_ALONG_X || tmp_along_mode & CC_ALONG_Y)
-		along_mode=tmp_along_mode;
+		along_mode = tmp_along_mode;
 
 	D->cp->setCenterPos(along_mode);
 	return 0;

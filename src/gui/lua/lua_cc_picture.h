@@ -27,8 +27,15 @@ class CLuaCCPicture
 	public:
 		CComponentsPicture *cp;
 		CComponentsForm *parent;
-		CLuaCCPicture() { cp = NULL; parent = NULL; }
-		~CLuaCCPicture() { if (parent == NULL) delete cp; }
+		CLuaCCPicture()
+		{
+			cp = NULL;
+			parent = NULL;
+		}
+		~CLuaCCPicture()
+		{
+			if (parent == NULL) delete cp;
+		}
 };
 
 class CLuaInstCCPicture
@@ -36,7 +43,7 @@ class CLuaInstCCPicture
 	public:
 		CLuaInstCCPicture() {};
 		~CLuaInstCCPicture() {};
-		static CLuaInstCCPicture* getInstance();
+		static CLuaInstCCPicture *getInstance();
 		static void CCPictureRegister(lua_State *L);
 
 	private:

@@ -30,11 +30,11 @@
 #include "luainstance.h"
 #include "lua_configfile.h"
 
-CLuaInstConfigFile* CLuaInstConfigFile::getInstance()
+CLuaInstConfigFile *CLuaInstConfigFile::getInstance()
 {
-	static CLuaInstConfigFile* LuaInstConfigFile = NULL;
+	static CLuaInstConfigFile *LuaInstConfigFile = NULL;
 
-	if(!LuaInstConfigFile)
+	if (!LuaInstConfigFile)
 		LuaInstConfigFile = new CLuaInstConfigFile();
 	return LuaInstConfigFile;
 }
@@ -46,7 +46,8 @@ CLuaConfigFile *CLuaInstConfigFile::LuaConfigFileCheck(lua_State *L, int n)
 
 void CLuaInstConfigFile::LuaConfigFileRegister(lua_State *L)
 {
-	luaL_Reg meth[] = {
+	luaL_Reg meth[] =
+	{
 		{ "new",        CLuaInstConfigFile::LuaConfigFileNew },
 		{ "loadConfig", CLuaInstConfigFile::LuaConfigFileLoadConfig },
 		{ "saveConfig", CLuaInstConfigFile::LuaConfigFileSaveConfig },

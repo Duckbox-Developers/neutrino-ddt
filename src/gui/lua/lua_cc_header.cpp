@@ -32,11 +32,11 @@
 #include "lua_cc_header.h"
 
 
-CLuaInstCCHeader* CLuaInstCCHeader::getInstance()
+CLuaInstCCHeader *CLuaInstCCHeader::getInstance()
 {
-	static CLuaInstCCHeader* LuaInstCCHeader = NULL;
+	static CLuaInstCCHeader *LuaInstCCHeader = NULL;
 
-	if(!LuaInstCCHeader)
+	if (!LuaInstCCHeader)
 		LuaInstCCHeader = new CLuaInstCCHeader();
 	return LuaInstCCHeader;
 }
@@ -48,7 +48,8 @@ CLuaCCHeader *CLuaInstCCHeader::CCHeaderCheck(lua_State *L, int n)
 
 void CLuaInstCCHeader::CCHeaderRegister(lua_State *L)
 {
-	luaL_Reg meth[] = {
+	luaL_Reg meth[] =
+	{
 		{ "new",     CLuaInstCCHeader::CCHeaderNew },
 		{ "paint",   CLuaInstCCHeader::CCHeaderPaint },
 		{ "hide",    CLuaInstCCHeader::CCHeaderHide },
@@ -66,10 +67,10 @@ void CLuaInstCCHeader::CCHeaderRegister(lua_State *L)
 
 int CLuaInstCCHeader::CCHeaderNew(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 
-	CLuaCCWindow* parent = NULL;
-	lua_Integer x=10, y=10, dx=100, dy=100;
+	CLuaCCWindow *parent = NULL;
+	lua_Integer x = 10, y = 10, dx = 100, dy = 100;
 	lua_Integer buttons = 0;
 	lua_Integer shadow_mode = CC_SHADOW_OFF;
 
@@ -78,7 +79,7 @@ int CLuaInstCCHeader::CCHeaderNew(lua_State *L)
 	lua_Unsigned color_body   = (lua_Unsigned)COL_MENUCONTENT_PLUS_0;
 	lua_Unsigned color_shadow = (lua_Unsigned)COL_SHADOW_PLUS_0;
 
-	tableLookup(L, "parent",       (void**)&parent);
+	tableLookup(L, "parent", (void **)&parent);
 	tableLookup(L, "x",            x);
 	tableLookup(L, "y",            y);
 	tableLookup(L, "dx",           dx);
@@ -87,20 +88,20 @@ int CLuaInstCCHeader::CCHeaderNew(lua_State *L)
 	tableLookup(L, "icon",         icon);
 	tableLookup(L, "shadow_mode",  shadow_mode);
 	tableLookup(L, "color_frame",  color_frame);
-	tableLookup(L, "color_body" ,  color_body);
+	tableLookup(L, "color_body",  color_body);
 	tableLookup(L, "color_shadow", color_shadow);
 
 	color_frame  = checkMagicMask(color_frame);
 	color_body   = checkMagicMask(color_body);
 	color_shadow = checkMagicMask(color_shadow);
 
-	CComponentsForm* pw = (parent && parent->w) ? parent->w->getBodyObject() : NULL;
+	CComponentsForm *pw = (parent && parent->w) ? parent->w->getBodyObject() : NULL;
 	CLuaCCHeader **udata = (CLuaCCHeader **) lua_newuserdata(L, sizeof(CLuaCCHeader *));
 	*udata = new CLuaCCHeader();
-	(*udata)->ch = new CComponentsHeader((const int&)x, (const int&)y, (const int&)dx, (const int&)dy,
-					     caption, (std::string)"", (const int&)buttons,
-					     (CComponentsForm*)parent, (int)shadow_mode,
-					     (fb_pixel_t)color_frame, (fb_pixel_t)color_body, (fb_pixel_t)color_shadow);
+	(*udata)->ch = new CComponentsHeader((const int &)x, (const int &)y, (const int &)dx, (const int &)dy,
+		caption, (std::string)"", (const int &)buttons,
+		(CComponentsForm *)parent, (int)shadow_mode,
+		(fb_pixel_t)color_frame, (fb_pixel_t)color_body, (fb_pixel_t)color_shadow);
 	(*udata)->parent = pw;
 	luaL_getmetatable(L, LUA_HEADER_CLASSNAME);
 	lua_setmetatable(L, -2);
@@ -109,7 +110,7 @@ int CLuaInstCCHeader::CCHeaderNew(lua_State *L)
 
 int CLuaInstCCHeader::CCHeaderPaint(lua_State *L)
 {
-	lua_assert(lua_istable(L,1));
+	lua_assert(lua_istable(L, 1));
 	CLuaCCHeader *D = CCHeaderCheck(L, 1);
 	if (!D) return 0;
 

@@ -31,13 +31,14 @@ class CLuaMisc
 class CLuaInstMisc
 {
 	public:
-		enum {
+		enum
+		{
 			POSTMSG_STANDBY_ON = 1
 		};
 
 		CLuaInstMisc() {};
 		~CLuaInstMisc() {};
-		static CLuaInstMisc* getInstance();
+		static CLuaInstMisc *getInstance();
 		static void LuaMiscRegister(lua_State *L);
 
 		/* deprecated functions */

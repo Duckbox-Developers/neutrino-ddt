@@ -26,8 +26,14 @@ class CLuaConfigFile
 {
 	public:
 		CConfigFile *c;
-		CLuaConfigFile() { c = NULL; }
-		~CLuaConfigFile() { delete c; }
+		CLuaConfigFile()
+		{
+			c = NULL;
+		}
+		~CLuaConfigFile()
+		{
+			delete c;
+		}
 };
 
 class CLuaInstConfigFile
@@ -35,7 +41,7 @@ class CLuaInstConfigFile
 	public:
 		CLuaInstConfigFile() {};
 		~CLuaInstConfigFile() {};
-		static CLuaInstConfigFile* getInstance();
+		static CLuaInstConfigFile *getInstance();
 		static void LuaConfigFileRegister(lua_State *L);
 
 	private:
