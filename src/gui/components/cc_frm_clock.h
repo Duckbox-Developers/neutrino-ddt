@@ -36,7 +36,7 @@
 #include "cc_frm.h"
 #include "cc_text_screen.h"
 #include "cc_timer.h"
-//! Sub class of CComponents. Show clock with digits on screen. 
+//! Sub class of CComponents. Show clock with digits on screen.
 /*!
 Usable as simple fixed display or as ticking clock.
 */
@@ -79,7 +79,7 @@ class CComponentsFrmClock : public CComponentsForm, public CCTextScreen
 		///secondary time format for blink
 		std::string cl_blink_str;
 
-		///initialize clock contents  
+		///initialize clock contents
 		void initCCLockItems();
 		///initialize timestring, called in initCCLockItems()
 		virtual void initTimeString();
@@ -95,19 +95,19 @@ class CComponentsFrmClock : public CComponentsForm, public CCTextScreen
 
 	public:
 
-		CComponentsFrmClock( 	const int& x_pos = 1, const int& y_pos = 1,
-					Font * font = NULL,
-					const char* format_str = "%H:%M",
-					const char* secformat_str = NULL,
-					bool activ=false,
-					const int& interval_seconds = 1,
-					CComponentsForm *parent = NULL,
-					int shadow_mode = CC_SHADOW_OFF,
-					fb_pixel_t color_frame = COL_FRAME_PLUS_0,
-					fb_pixel_t color_body = COL_MENUCONTENT_PLUS_0,
-					fb_pixel_t color_shadow = COL_SHADOW_PLUS_0,
-					int font_style = CNeutrinoFonts::FONT_STYLE_BOLD
-				);
+		CComponentsFrmClock(const int &x_pos = 1, const int &y_pos = 1,
+			Font *font = NULL,
+			const char *format_str = "%H:%M",
+			const char *secformat_str = NULL,
+			bool activ = false,
+			const int &interval_seconds = 1,
+			CComponentsForm *parent = NULL,
+			int shadow_mode = CC_SHADOW_OFF,
+			fb_pixel_t color_frame = COL_FRAME_PLUS_0,
+			fb_pixel_t color_body = COL_MENUCONTENT_PLUS_0,
+			fb_pixel_t color_shadow = COL_SHADOW_PLUS_0,
+			int font_style = CNeutrinoFonts::FONT_STYLE_BOLD
+		);
 		virtual ~CComponentsFrmClock();
 
 		/*! Sets font type for clock segments.
@@ -120,55 +120,89 @@ class CComponentsFrmClock : public CComponentsForm, public CCTextScreen
 		 * - FONT_STYLE_ITALIC
 		 * (see /.src/driver/neutrinofonts.h)
 		*/
-		void setClockFont(Font * font, const int& style = -1);
+		void setClockFont(Font *font, const int &style = -1);
 
 		///return pointer of font object
-		Font* getClockFont();
+		Font *getClockFont();
 
 		///set text color
-		void setTextColor(fb_pixel_t color_text){ cl_col_text = color_text;}
+		void setTextColor(fb_pixel_t color_text)
+		{
+			cl_col_text = color_text;
+		}
 
 		///set height of clock on screen
-		void setHeight(const int& h);
+		void setHeight(const int &h);
 		///set width of clock on screen
-		void setWidth(const int& w);
+		void setWidth(const int &w);
 
 		///use string expession: "%H:%M" = 12:22, "%H:%M:%S" = 12:22:12
 		///set current time format string, 1st parameter set the default format, 2nd parameter sets an alternatively format for use as blink effect
-		void setClockFormat(const char* prformat_str, const char* secformat_str = NULL);
+		void setClockFormat(const char *prformat_str, const char *secformat_str = NULL);
 		///get current time format string,
-		std::string getClockFormat(){return cl_format;}
+		std::string getClockFormat()
+		{
+			return cl_format;
+		}
 
 		///start and paint ticking clock
 		bool Start();
 		///same like Start() but for usage as simple call without return value
-		void unblock(){Start();}
+		void unblock()
+		{
+			Start();
+		}
 		///stop ticking clock, but don't hide, use kill() or hide() to remove from screen
 		bool Stop();
 		///same like Stop() but for usage as simple call without return value
-		void block(){Stop();}
+		void block()
+		{
+			Stop();
+		}
 		///return true on blocked status, blocked means clock can be initalized but would be not paint, to unblock use unblock()
-		bool isBlocked(void) {return cl_blocked;}
+		bool isBlocked(void)
+		{
+			return cl_blocked;
+		}
 
 		///returns true, if clock is running
-		bool isRun() const {return cl_timer ? cl_timer->isRun() : false;}
+		bool isRun() const
+		{
+			return cl_timer ? cl_timer->isRun() : false;
+		}
 		///set refresh interval in seconds, default value=1 (=1 sec)
-		void setClockInterval(const int& seconds){cl_interval = seconds;}
+		void setClockInterval(const int &seconds)
+		{
+			cl_interval = seconds;
+		}
 
 		///show clock on screen
 		void paint(bool do_save_bg = CC_SAVE_SCREEN_YES);
 		///hide clock on screen
-		void hide(){Stop(); CComponentsForm::hide();}
+		void hide()
+		{
+			Stop();
+			CComponentsForm::hide();
+		}
 		///does the same like kill() from base class, but stopping clock before kill
-		void kill(const fb_pixel_t& bg_color = COL_BACKGROUND_PLUS_0, bool ignore_parent = false);
+		void kill(const fb_pixel_t &bg_color = COL_BACKGROUND_PLUS_0, bool ignore_parent = false);
 
 		///reinitialize clock contents
-		void refresh() { initCCLockItems(); }
+		void refresh()
+		{
+			initCCLockItems();
+		}
 
 		///enables force to repaint of all segments on each interval, Note: repaint of all segemts is default enabled.
-		void enableForceSegmentPaint(bool enable = true){cl_force_repaint = enable;}
+		void enableForceSegmentPaint(bool enable = true)
+		{
+			cl_force_repaint = enable;
+		}
 		///disables repaint of all segments on each interval, repaint happens only on changed segment value
-		void disableForceSegmentPaint(){enableForceSegmentPaint(false);}
+		void disableForceSegmentPaint()
+		{
+			enableForceSegmentPaint(false);
+		}
 
 		/**Member to modify background behavior of embeded segment objects
 		* @param[in]  mode
@@ -183,10 +217,13 @@ class CComponentsFrmClock : public CComponentsForm, public CCTextScreen
 		void enableTboxSaveScreen(bool mode);
 
 		///set color gradient on/off, returns true if gradient mode was changed
-		bool enableColBodyGradient(const int& enable_mode, const fb_pixel_t& sec_color = 255 /*=COL_BACKGROUND*/);
+		bool enableColBodyGradient(const int &enable_mode, const fb_pixel_t &sec_color = 255 /*=COL_BACKGROUND*/);
 
 		///enable/disable automatic blitting
-		void setBlit(bool _may_blit = true) { may_blit = _may_blit; }
+		void setBlit(bool _may_blit = true)
+		{
+			may_blit = _may_blit;
+		}
 };
 
 #endif

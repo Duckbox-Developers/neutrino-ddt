@@ -29,15 +29,15 @@ using namespace std;
 
 //-------------------------------------------------------------------------------------------------------
 //sub class CComponentsSlider
-CComponentsSlider::CComponentsSlider(	const int& x_pos, const int& y_pos, const int& w, const int& h,
-					const int& current_value,
-					const int& min_value,
-					const int& max_value,
-					CComponentsForm *parent,
-					int shadow_mode,
-					fb_pixel_t& color_frame,
-					fb_pixel_t& color_body,
-					fb_pixel_t& color_shadow)
+CComponentsSlider::CComponentsSlider(const int &x_pos, const int &y_pos, const int &w, const int &h,
+	const int &current_value,
+	const int &min_value,
+	const int &max_value,
+	CComponentsForm *parent,
+	int shadow_mode,
+	fb_pixel_t &color_frame,
+	fb_pixel_t &color_body,
+	fb_pixel_t &color_shadow)
 {
 	cc_item_type 	= CC_ITEMTYPE_SLIDER;
 	corner_rad	= 0;
@@ -60,14 +60,14 @@ CComponentsSlider::CComponentsSlider(	const int& x_pos, const int& y_pos, const 
 	csl_slider_obj	= NULL;
 
 	csl_body_icon	= NEUTRINO_ICON_SLIDER_BODY;
-	csl_slider_icon	 =NEUTRINO_ICON_SLIDER_INACTIVE;
+	csl_slider_icon	 = NEUTRINO_ICON_SLIDER_INACTIVE;
 
 	initCCSlItems();
 	initParent(parent);
 }
 
 //set current value
-void CComponentsSlider::setValuePos(const int& current_value)
+void CComponentsSlider::setValuePos(const int &current_value)
 {
 	csl_current_value = current_value;
 	if (csl_slider_obj->isPicPainted())
@@ -76,7 +76,7 @@ void CComponentsSlider::setValuePos(const int& current_value)
 }
 
 //set current scale values
-void CComponentsSlider::setValueScale(const int& min_value, const int& max_value)
+void CComponentsSlider::setValueScale(const int &min_value, const int &max_value)
 {
 	csl_min_value = min_value;
 	csl_max_value = max_value;
@@ -86,9 +86,11 @@ void CComponentsSlider::setValueScale(const int& min_value, const int& max_value
 //init slider body object and add to container
 void CComponentsSlider::initCCSlBody()
 {
-	if (!csl_body_icon.empty()){
-		if (csl_body_obj == NULL){
-			csl_body_obj = new CComponentsPicture(0, 0, width-2*fr_thickness, 16, csl_body_icon);
+	if (!csl_body_icon.empty())
+	{
+		if (csl_body_obj == NULL)
+		{
+			csl_body_obj = new CComponentsPicture(0, 0, width - 2 * fr_thickness, 16, csl_body_icon);
 			csl_body_obj->setColorBody(this->col_body); //FIXME: Background handling during current instance of slider object
 			csl_body_obj->doPaintBg(true);
 			addCCItem(csl_body_obj);
@@ -96,7 +98,8 @@ void CComponentsSlider::initCCSlBody()
 		else
 			csl_body_obj->setPicture(csl_body_icon);
 	}
-	else{
+	else
+	{
 		printf("[CComponentsSlider]    [%s]  missing or undefinied slider body icon  %s\n", __func__, csl_body_icon.c_str());
 		return;
 	}
@@ -106,10 +109,11 @@ void CComponentsSlider::initCCSlBody()
 	int icon_h = csl_body_obj->getHeight();
 
 	//position of icon default centered
-	int icon_x = width/2-icon_w/2;
-	int icon_y = height/2-icon_h/2;
+	int icon_x = width / 2 - icon_w / 2;
+	int icon_y = height / 2 - icon_h / 2;
 
-	if (csl_body_obj){
+	if (csl_body_obj)
+	{
 		csl_body_obj->setDimensionsAll(icon_x, icon_y, icon_w, icon_h);
 	}
 }
@@ -117,8 +121,10 @@ void CComponentsSlider::initCCSlBody()
 //init slider caption object and add to container
 void CComponentsSlider::initCCSlSlider()
 {
-	if (!csl_slider_icon.empty()){
-		if (csl_slider_obj == NULL){
+	if (!csl_slider_icon.empty())
+	{
+		if (csl_slider_obj == NULL)
+		{
 			csl_slider_obj = new CComponentsPicture(0, 0, csl_slider_icon);
 			csl_slider_obj->setColorBody(this->col_body); //FIXME: Background handling during current instance of slider object
 			csl_slider_obj->doPaintBg(true);
@@ -127,7 +133,8 @@ void CComponentsSlider::initCCSlSlider()
 		else
 			csl_slider_obj->setPicture(csl_slider_icon);
 	}
-	else{
+	else
+	{
 		printf("[CComponentsSlider]    [%s]  missing or undefinied slider icon  %s\n", __func__, csl_slider_icon.c_str());
 		return;
 	}
@@ -137,8 +144,8 @@ void CComponentsSlider::initCCSlSlider()
 	int slider_h = csl_slider_obj->getHeight();
 
 	//position of slider icon
-	int slider_x = csl_body_obj->getXPos() + (csl_body_obj->getWidth()-slider_w) * (abs(csl_min_value) + csl_current_value) / (abs(csl_min_value) + abs(csl_max_value));
-	int slider_y = height/2-slider_h/2;
+	int slider_x = csl_body_obj->getXPos() + (csl_body_obj->getWidth() - slider_w) * (abs(csl_min_value) + csl_current_value) / (abs(csl_min_value) + abs(csl_max_value));
+	int slider_y = height / 2 - slider_h / 2;
 
 	if (csl_slider_obj)
 		csl_slider_obj->setDimensionsAll(slider_x, slider_y, slider_w, slider_h);
@@ -160,7 +167,7 @@ void CComponentsSlider::setSliderIcon(const std::string &icon_name)
 // {
 // 	//prepare items before paint
 // 	initCCSlItems();
-// 
+//
 // 	//paint form contents
 // 	paintForm(do_save_bg);
 // }

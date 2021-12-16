@@ -47,14 +47,14 @@ class CComponentsFrmChain : public CComponentsForm
 {
 	private:
 		///init all required variables
-		void initVarChain(	const int& x_pos, const int& y_pos, const int& w, const int& h,
-					const std::vector<CComponentsItem*> *v_items,
-					int direction,
-					CComponentsForm* parent,
-					int shadow_mode,
-					fb_pixel_t& color_frame,
-					fb_pixel_t& color_body,
-					fb_pixel_t& color_shadow);
+		void initVarChain(const int &x_pos, const int &y_pos, const int &w, const int &h,
+			const std::vector<CComponentsItem *> *v_items,
+			int direction,
+			CComponentsForm *parent,
+			int shadow_mode,
+			fb_pixel_t &color_frame,
+			fb_pixel_t &color_body,
+			fb_pixel_t &color_shadow);
 
 
 
@@ -68,20 +68,23 @@ class CComponentsFrmChain : public CComponentsForm
 		void initChainItems();
 
 	public:
-		CComponentsFrmChain(	const int& x_pos = 1, const int& y_pos = 1, const int& w = 720, const int& h = 32,
-					const std::vector<CComponentsItem*> *v_items = NULL,
-					int direction = CC_DIR_X,
-					CComponentsForm* parent = NULL,
-					int shadow_mode = CC_SHADOW_OFF,
-					fb_pixel_t& color_frame = COL_FRAME_PLUS_0,
-					fb_pixel_t& color_body = COL_MENUHEAD_PLUS_0,
-					fb_pixel_t& color_shadow = COL_SHADOW_PLUS_0);
+		CComponentsFrmChain(const int &x_pos = 1, const int &y_pos = 1, const int &w = 720, const int &h = 32,
+			const std::vector<CComponentsItem *> *v_items = NULL,
+			int direction = CC_DIR_X,
+			CComponentsForm *parent = NULL,
+			int shadow_mode = CC_SHADOW_OFF,
+			fb_pixel_t &color_frame = COL_FRAME_PLUS_0,
+			fb_pixel_t &color_body = COL_MENUHEAD_PLUS_0,
+			fb_pixel_t &color_shadow = COL_SHADOW_PLUS_0);
 // 		~CComponentsFrmChain(); //inherited from CComponentsForm
 
 		///defines mode for arrangement direction of items, see also chn_direction
 		virtual void setDirection(int direction);
 		///gets the mode of arrangment direction
-		virtual int getDirection(){return chn_direction;}
+		virtual int getDirection()
+		{
+			return chn_direction;
+		}
 
 		/**Members to set border offsets
 		* @param[in] 	offset
@@ -89,12 +92,24 @@ class CComponentsFrmChain : public CComponentsForm
 		* @return
 		*	void
 		*/
-		void setLeftOffset(const int& offset){chn_l_offset = offset;}
-		void setRightOffset(const int& offset){chn_r_offset = offset;}
-		void setTopOffset(const int& offset){chn_t_offset = offset;}
-		void setBottomOffset(const int& offset){chn_b_offset = offset;}
+		void setLeftOffset(const int &offset)
+		{
+			chn_l_offset = offset;
+		}
+		void setRightOffset(const int &offset)
+		{
+			chn_r_offset = offset;
+		}
+		void setTopOffset(const int &offset)
+		{
+			chn_t_offset = offset;
+		}
+		void setBottomOffset(const int &offset)
+		{
+			chn_b_offset = offset;
+		}
 
-		void setBorderOffsets(const int& left_offset, const int& right_offset, const int& top_offset, const int& bottom_offset)
+		void setBorderOffsets(const int &left_offset, const int &right_offset, const int &top_offset, const int &bottom_offset)
 		{
 			setLeftOffset(left_offset);
 			setRightOffset(right_offset);

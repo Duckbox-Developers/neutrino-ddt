@@ -1,5 +1,5 @@
 /*
-	Based up Neutrino-GUI - Tuxbox-Project 
+	Based up Neutrino-GUI - Tuxbox-Project
 	Copyright (C) 2001 by Steffen Hehn 'McClean'
 
 	Classes for generic GUI-related components.
@@ -48,7 +48,7 @@ class CComponentsInfoBox : public CComponentsText
 		int x_offset;
 
 		///object: picture object
-		CComponentsPicture * pic;
+		CComponentsPicture *pic;
 		///property: path or default name of displayed image
 		std::string pic_default_name;
 
@@ -61,32 +61,38 @@ class CComponentsInfoBox : public CComponentsText
 
 	public:
 		///object: internal used CTextBox object
-		CComponentsText * cctext;
+		CComponentsText *cctext;
 
-		CComponentsInfoBox(	const int& x_pos = 0,
-					const int& y_pos = 0,
-					const int& w = 800,
-					const int& h = 600,
-					std::string info_text = "",
-					const int mode = CTextBox::AUTO_WIDTH,
-					Font* font_text = NULL,
-					CComponentsForm *parent = NULL,
-					int shadow_mode = CC_SHADOW_OFF,
-					fb_pixel_t color_text = COL_MENUCONTENT_TEXT,
-					fb_pixel_t color_frame = COL_FRAME_PLUS_0,
-					fb_pixel_t color_body = COL_MENUCONTENT_PLUS_0,
-					fb_pixel_t color_shadow = COL_SHADOW_PLUS_0);
+		CComponentsInfoBox(const int &x_pos = 0,
+			const int &y_pos = 0,
+			const int &w = 800,
+			const int &h = 600,
+			std::string info_text = "",
+			const int mode = CTextBox::AUTO_WIDTH,
+			Font *font_text = NULL,
+			CComponentsForm *parent = NULL,
+			int shadow_mode = CC_SHADOW_OFF,
+			fb_pixel_t color_text = COL_MENUCONTENT_TEXT,
+			fb_pixel_t color_frame = COL_FRAME_PLUS_0,
+			fb_pixel_t color_body = COL_MENUCONTENT_PLUS_0,
+			fb_pixel_t color_shadow = COL_SHADOW_PLUS_0);
 
 		~CComponentsInfoBox();
 
 		///set property: space around fram and beetween picture and textbox
-		void setSpaceOffset(const int offset){x_offset = offset;};
+		void setSpaceOffset(const int offset)
+		{
+			x_offset = offset;
+		};
 		///set property: path or name of displayed image, parameter as string
-		void setPicture(const std::string& picture_name, const int& dx = -1, const int& dy = -1);
+		void setPicture(const std::string &picture_name, const int &dx = -1, const int &dy = -1);
 		///set property: path or name of displayed image, parameter as const char*
-		void setPicture(const char* picture_name, const int& dx = -1, const int& dy = -1);
+		void setPicture(const char *picture_name, const int &dx = -1, const int &dy = -1);
 		///retur internal picture object
-		CComponentsPicture * getPictureObject(){return pic;}
+		CComponentsPicture *getPictureObject()
+		{
+			return pic;
+		}
 		///paint item
 		void paint(bool do_save_bg = CC_SAVE_SCREEN_YES);
 		sigc::signal<void> OnAfterPaintInfo;

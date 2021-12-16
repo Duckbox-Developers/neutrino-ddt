@@ -1,5 +1,5 @@
 /*
-	Based up Neutrino-GUI - Tuxbox-Project 
+	Based up Neutrino-GUI - Tuxbox-Project
 	Copyright (C) 2001 by Steffen Hehn 'McClean'
 
 	Classes for generic GUI-related components.

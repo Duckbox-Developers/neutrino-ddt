@@ -1,5 +1,5 @@
 /*
-	Based up Neutrino-GUI - Tuxbox-Project 
+	Based up Neutrino-GUI - Tuxbox-Project
 	Copyright (C) 2001 by Steffen Hehn 'McClean'
 
 	Classes for generic GUI-related components.
@@ -35,19 +35,19 @@
 using namespace std;
 
 //sub class CComponentsInfoBox from CComponentsItem
-CComponentsInfoBox::CComponentsInfoBox(	const int& x_pos,
-					const int& y_pos,
-					const int& w,
-					const int& h,
-					std::string info_text,
-					const int mode,
-					Font* font_text,
-					CComponentsForm *parent,
-					int shadow_mode,
-					fb_pixel_t color_text,
-					fb_pixel_t color_frame,
-					fb_pixel_t color_body,
-					fb_pixel_t color_shadow)
+CComponentsInfoBox::CComponentsInfoBox(const int &x_pos,
+	const int &y_pos,
+	const int &w,
+	const int &h,
+	std::string info_text,
+	const int mode,
+	Font *font_text,
+	CComponentsForm *parent,
+	int shadow_mode,
+	fb_pixel_t color_text,
+	fb_pixel_t color_frame,
+	fb_pixel_t color_body,
+	fb_pixel_t color_shadow)
 {
 	cc_item_type = CC_ITEMTYPE_TEXT_INFOBOX;
 
@@ -82,10 +82,11 @@ CComponentsInfoBox::~CComponentsInfoBox()
 	delete cctext;
 }
 
-void CComponentsInfoBox::setPicture(const std::string& picture_name, const int& dx, const int& dy)
+void CComponentsInfoBox::setPicture(const std::string &picture_name, const int &dx, const int &dy)
 {
 	pic_name = picture_name;
-	if (!pic_name.empty()){
+	if (!pic_name.empty())
+	{
 		frameBuffer->getIconSize(pic_name.c_str(), &pic_width, &pic_height);
 		if (dx > -1)
 			pic_width = dx;
@@ -95,7 +96,7 @@ void CComponentsInfoBox::setPicture(const std::string& picture_name, const int& 
 	}
 }
 
-void CComponentsInfoBox::setPicture(const char* picture_name, const int& dx, const int& dy)
+void CComponentsInfoBox::setPicture(const char *picture_name, const int &dx, const int &dy)
 {
 	string s_tmp = "";
 	if (picture_name)
@@ -106,7 +107,8 @@ void CComponentsInfoBox::setPicture(const char* picture_name, const int& dx, con
 void CComponentsInfoBox::paintPicture()
 {
 	//ensure empty pic object
-	if (pic){
+	if (pic)
+	{
 		delete pic;
 		pic = NULL;
 	}
@@ -121,7 +123,7 @@ void CComponentsInfoBox::paintPicture()
 
 	//init pic object and set icon paint position
 	string image = frameBuffer->getIconPath(pic_name);
-	pic = new CComponentsPicture(x_pic+x_offset, y_pic, pic_width, min(pic_height, height-2*fr_thickness), image); //NOTE: icons do not scale!
+	pic = new CComponentsPicture(x_pic + x_offset, y_pic, pic_width, min(pic_height, height - 2 * fr_thickness), image); //NOTE: icons do not scale!
 
 	pic->setColorBody(col_body);
 
@@ -130,11 +132,11 @@ void CComponentsInfoBox::paintPicture()
 		pic->doPaintBg(false);
 
 	//fit icon into frame
-	pic->setYPos(y_pic+(height-2*fr_thickness)/2-pic->getHeight()/2);
+	pic->setYPos(y_pic + (height - 2 * fr_thickness) / 2 - pic->getHeight() / 2);
 
 	//paint, but set visibility mode
 	pic->allowPaint(cc_allow_paint);
-	pic->paint(CC_SAVE_SCREEN_NO);	
+	pic->paint(CC_SAVE_SCREEN_NO);
 }
 
 void CComponentsInfoBox::paint(bool do_save_bg)
@@ -153,8 +155,9 @@ void CComponentsInfoBox::paint(bool do_save_bg)
 		pic_w = pic->getWidth() + x_offset;
 
 	//set text properties and paint text lines
- 	if (!ct_text.empty()){
- 		if (cctext)
+	if (!ct_text.empty())
+	{
+		if (cctext)
 			delete cctext;
 		cctext = NULL;
 	}
@@ -170,8 +173,8 @@ void CComponentsInfoBox::paint(bool do_save_bg)
 
 	//calculate vars for x-position and dimensions
 	int tx = x_offset + x_text + pic_w;
-	int tw = width - 2*x_offset - pic_w - 2*fr_thickness;
-	int th = height-2*fr_thickness;
+	int tw = width - 2 * x_offset - pic_w - 2 * fr_thickness;
+	int th = height - 2 * fr_thickness;
 	cctext->setDimensionsAll(tx, y_text, tw, th);
 
 	//paint, but set visibility mode

@@ -1,5 +1,5 @@
 /*
-	Based up Neutrino-GUI - Tuxbox-Project 
+	Based up Neutrino-GUI - Tuxbox-Project
 	Copyright (C) 2001 by Steffen Hehn 'McClean'
 
 	Classes for generic GUI-related components.
@@ -70,7 +70,7 @@ typedef enum
 	CC_ITEMTYPE_FRM_SIGNALBAR,
 
 	CC_ITEMTYPES
-}CC_ITEMTYPES_T;
+} CC_ITEMTYPES_T;
 
 //required typedefs
 typedef struct cc_fbdata_t
@@ -85,9 +85,9 @@ typedef struct cc_fbdata_t
 	int r;
 	int rtype;
 	int frame_thickness;
-	fb_pixel_t* pixbuf;
+	fb_pixel_t *pixbuf;
 	gradientData_t *gradient_data;
-	void * data;
+	void *data;
 	bool is_painted;
 } cc_fbdata_struct_t;
 
@@ -101,7 +101,7 @@ typedef enum
 	CC_FBDATA_TYPE_BACKGROUND 	= 16,
 
 	CC_FBDATA_TYPES			= CC_FBDATA_TYPE_BOX | CC_FBDATA_TYPE_SHADOW_BOX | CC_FBDATA_TYPE_FRAME
-}FBDATA_TYPES;
+} FBDATA_TYPES;
 
 //fb color gradient types
 typedef enum
@@ -115,7 +115,7 @@ typedef enum
 	CC_COLGRAD_COL_DARK_LIGHT_DARK,	//gradient from color B to A to B
 
 	CC_COLGRAD_TYPES
-}COLOR_GRADIENT_TYPES;
+} COLOR_GRADIENT_TYPES;
 
 typedef struct cc_screen_data_t
 {
@@ -123,14 +123,14 @@ typedef struct cc_screen_data_t
 	int y;
 	int dx;
 	int dy;
-	fb_pixel_t* pixbuf;
+	fb_pixel_t *pixbuf;
 } cc_screen_data_struct_t;
 
 //combination of rc messages with related icon
 typedef struct msg_list_t
 {
 	neutrino_msg_t 	directKey;
-	const char* 	icon;
+	const char 	*icon;
 } msg_list_struct_t;
 
 //align types
@@ -160,30 +160,30 @@ typedef struct cc_element_data_t
 	int		y;
 	int		width;
 	int		height;
-	void*		handler1;
-	void*		handler2;
-}cc_element_data_struct_t;
+	void		*handler1;
+	void		*handler2;
+} cc_element_data_struct_t;
 
 //text label types
 typedef struct cc_locale_ext_txt_t
 {
 	neutrino_locale_t label_text;
 	neutrino_locale_t text;
-	Font* font;
+	Font *font;
 } cc_locale_ext_txt_struct_t;
 
 typedef struct cc_string_ext_txt_t
 {
 	std::string label_text;
 	std::string text;
-	Font* font;
+	Font *font;
 } cc_string_ext_txt_struct_t;
 
 
 //for 'button_label' type with string
 typedef struct button_label_cc
 {
-	const char *			button;
+	const char 			*button;
 	std::string 			text;
 	neutrino_locale_t 		locale;
 	std::vector<neutrino_msg_t>	directKeys;
@@ -194,11 +194,11 @@ typedef struct button_label_cc
 	uint32_t			order_id;
 	//defaults
 	button_label_cc(): 	button(NULL),
-				text(std::string()),
-				locale(NONEXISTANT_LOCALE),
-				directKeys(0, CRCInput::RC_nokey),
-				order_id(0){}
-	bool operator< (const button_label_cc& i) const
+		text(std::string()),
+		locale(NONEXISTANT_LOCALE),
+		directKeys(0, CRCInput::RC_nokey),
+		order_id(0) {}
+	bool operator< (const button_label_cc &i) const
 	{
 		return this->order_id < i.order_id ;
 	}

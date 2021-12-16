@@ -48,7 +48,7 @@ class CComponentsExtTextForm : public CComponentsForm, public CCTextScreen
 		///property: width of text, see also setLabelWidthPercent()
 		int ccx_text_width;
 		///property: font type of both items (label and text), see also setLabelAndText()
-		Font* ccx_font;
+		Font *ccx_font;
 		///centered y position of label and text
 		int y_text;
 
@@ -66,66 +66,72 @@ class CComponentsExtTextForm : public CComponentsForm, public CCTextScreen
 
 	protected:
 		///initialize basic variables
-		void initVarExtTextForm(const int& x_pos, const int& y_pos, const int& w, const int& h,
-					const std::string& label_text, const std::string& text,
-					Font* font_text,
-					CComponentsForm* parent,
-					int shadow_mode,
-					fb_pixel_t label_color,
-					fb_pixel_t text_color,
-					fb_pixel_t color_frame,
-					fb_pixel_t color_body,
-					fb_pixel_t color_shadow);
+		void initVarExtTextForm(const int &x_pos, const int &y_pos, const int &w, const int &h,
+			const std::string &label_text, const std::string &text,
+			Font *font_text,
+			CComponentsForm *parent,
+			int shadow_mode,
+			fb_pixel_t label_color,
+			fb_pixel_t text_color,
+			fb_pixel_t color_frame,
+			fb_pixel_t color_body,
+			fb_pixel_t color_shadow);
 
 	public:
 		///advanced constructor for CComponentsExtTextForm, provides parameters for the most required properties, and caption as string
-		CComponentsExtTextForm(CComponentsForm* parent = NULL);
+		CComponentsExtTextForm(CComponentsForm *parent = NULL);
 
-		CComponentsExtTextForm(	const int& x_pos, const int& y_pos, const int& w, const int& h,
-					const std::string& label_text = "", const std::string& text = "",
-					Font* font_text = NULL,
-					CComponentsForm *parent = NULL,
-					int shadow_mode = CC_SHADOW_OFF,
-					fb_pixel_t label_color = COL_MENUCONTENTINACTIVE_TEXT,
-					fb_pixel_t text_color = COL_MENUCONTENT_TEXT,
-					fb_pixel_t color_frame = COL_FRAME_PLUS_0,
-					fb_pixel_t color_body = COL_MENUCONTENT_PLUS_0,
-					fb_pixel_t color_shadow = COL_SHADOW_PLUS_0);
+		CComponentsExtTextForm(const int &x_pos, const int &y_pos, const int &w, const int &h,
+			const std::string &label_text = "", const std::string &text = "",
+			Font *font_text = NULL,
+			CComponentsForm *parent = NULL,
+			int shadow_mode = CC_SHADOW_OFF,
+			fb_pixel_t label_color = COL_MENUCONTENTINACTIVE_TEXT,
+			fb_pixel_t text_color = COL_MENUCONTENT_TEXT,
+			fb_pixel_t color_frame = COL_FRAME_PLUS_0,
+			fb_pixel_t color_body = COL_MENUCONTENT_PLUS_0,
+			fb_pixel_t color_shadow = COL_SHADOW_PLUS_0);
 
-		CComponentsExtTextForm(	const int& x_pos, const int& y_pos, const int& w, const int& h,
-					neutrino_locale_t l_text = NONEXISTANT_LOCALE, const std::string& text = "",
-					Font* font_text = NULL,
-					CComponentsForm *parent = NULL,
-					int shadow_mode = CC_SHADOW_OFF,
-					fb_pixel_t label_color = COL_MENUCONTENTINACTIVE_TEXT,
-					fb_pixel_t text_color = COL_MENUCONTENT_TEXT,
-					fb_pixel_t color_frame = COL_FRAME_PLUS_0,
-					fb_pixel_t color_body = COL_MENUCONTENT_PLUS_0,
-					fb_pixel_t color_shadow = COL_SHADOW_PLUS_0);
+		CComponentsExtTextForm(const int &x_pos, const int &y_pos, const int &w, const int &h,
+			neutrino_locale_t l_text = NONEXISTANT_LOCALE, const std::string &text = "",
+			Font *font_text = NULL,
+			CComponentsForm *parent = NULL,
+			int shadow_mode = CC_SHADOW_OFF,
+			fb_pixel_t label_color = COL_MENUCONTENTINACTIVE_TEXT,
+			fb_pixel_t text_color = COL_MENUCONTENT_TEXT,
+			fb_pixel_t color_frame = COL_FRAME_PLUS_0,
+			fb_pixel_t color_body = COL_MENUCONTENT_PLUS_0,
+			fb_pixel_t color_shadow = COL_SHADOW_PLUS_0);
 // 		~CComponentsExtTextForm(); //inherited from CComponentsForm
 
 		///assigns texts for label and text, parameter as string, parameter Font is optional for required font type, default font is dependently from defined item height
-		void setLabelAndText(const std::string& label_text, const std::string& text,  Font* font_text = NULL);
+		void setLabelAndText(const std::string &label_text, const std::string &text,  Font *font_text = NULL);
 		///assigns texts for label and text, parameter as neutrino_locale_t, parameter Font is optional for required font type, default font is dependently from defined item height
-		void setLabelAndText(const neutrino_locale_t& locale_label_text, const neutrino_locale_t& locale_text,  Font* font_text = NULL);
+		void setLabelAndText(const neutrino_locale_t &locale_label_text, const neutrino_locale_t &locale_text,  Font *font_text = NULL);
 		///assigns text Font type
-		void setLabelAndTextFont(Font* font);
+		void setLabelAndTextFont(Font *font);
 
 		///assigns texts for label and text, parameter as struct (cc_locale_ext_txt_t), parameters provide the same properties like setLabelAndText()
-		void setLabelAndTexts(const cc_locale_ext_txt_t& texts);
+		void setLabelAndTexts(const cc_locale_ext_txt_t &texts);
 		///assigns texts for label and text, parameter as struct (cc_string_ext_txt_t), parameters provide the same properties like setLabelAndText()
-		void setLabelAndTexts(const cc_string_ext_txt_t& locale_texts);
+		void setLabelAndTexts(const cc_string_ext_txt_t &locale_texts);
 
 		///assigns colors for text for label text, parameter as fb_pixel_t
-		void setLabelAndTextColor(const fb_pixel_t label_color , const fb_pixel_t text_color);
+		void setLabelAndTextColor(const fb_pixel_t label_color, const fb_pixel_t text_color);
 
 		///assigns width of label and text related to width, parameter as uint8_t in percent of width, fits text automatically into the available remaining size of item
-		void setLabelWidthPercent(const uint8_t& percent_val);
+		void setLabelWidthPercent(const uint8_t &percent_val);
 
 		///returns a pointer to the internal label object, use this to get access to its most properties
-		CComponentsLabel*getLabelObject(){return ccx_label_obj;};
+		CComponentsLabel *getLabelObject()
+		{
+			return ccx_label_obj;
+		};
 		///returns a pointer to the internal text object, use this to get access to its most properties
-		CComponentsText*getTextObject(){return ccx_text_obj;};
+		CComponentsText *getTextObject()
+		{
+			return ccx_text_obj;
+		};
 
 		/**Member to modify background behavior of embeded label and text objects
 		* @param[in]  mode
@@ -137,19 +143,23 @@ class CComponentsExtTextForm : public CComponentsForm, public CCTextScreen
 		* 	CTextBox::enableSaveScreen()
 		* 	disableTboxSaveScreen()
 		*/
-		void enableTboxSaveScreen(bool mode){
+		void enableTboxSaveScreen(bool mode)
+		{
 			if (cc_txt_save_screen == mode)
 				return;
 			cc_txt_save_screen = mode;
-			for(size_t i=0; i<v_cc_items.size(); i++)
-				static_cast<CComponentsText*>(v_cc_items[i])->enableTboxSaveScreen(cc_txt_save_screen);
+			for (size_t i = 0; i < v_cc_items.size(); i++)
+				static_cast<CComponentsText *>(v_cc_items[i])->enableTboxSaveScreen(cc_txt_save_screen);
 		};
 
 		///sets the text modes (mainly text alignment) to the label and text object, see /gui/widget/textbox.h for possible modes
-		void setTextModes(const int& label_mode, const int& text_mode);
+		void setTextModes(const int &label_mode, const int &text_mode);
 
 		///return current font
-		Font* getFont(){return ccx_font;}
+		Font *getFont()
+		{
+			return ccx_font;
+		}
 
 		///paint this item/form
 		void paint(bool do_save_bg = CC_SAVE_SCREEN_YES);

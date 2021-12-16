@@ -1,5 +1,5 @@
 /*
-	Based up Neutrino-GUI - Tuxbox-Project 
+	Based up Neutrino-GUI - Tuxbox-Project
 	Copyright (C) 2001 by Steffen Hehn 'McClean'
 
 	Classes for generic GUI-related components.
@@ -44,15 +44,16 @@ class CCHeaderTypes
 			CC_LOGO_RIGHT 	= 0x01,
 			CC_LOGO_LEFT 	= 0x02,
 			CC_LOGO_CENTER  = 0x04
-		}cc_logo_alignment_t;
+		} cc_logo_alignment_t;
 
 		///title position options
 		typedef enum
-		{	/*for compatibilty use CTextBox enums values*/
+		{
+			/*for compatibilty use CTextBox enums values*/
 			CC_TITLE_LEFT 	= 0x400,
-			CC_TITLE_CENTER	= 0x40 ,
+			CC_TITLE_CENTER	= 0x40,
 			CC_TITLE_RIGHT	= 0x80
-		}cc_title_alignment_t;
+		} cc_title_alignment_t;
 
 	protected:
 		///required logo data type
@@ -76,29 +77,29 @@ class CComponentsHeader : public CComponentsForm, public CCTextScreen, CCHeaderT
 {
 	private:
 		///member: init genaral variables, parameters for mostly used properties
-		void initVarHeader(	const int& x_pos, const int& y_pos, const int& w, const int& h,
-					const std::string& caption,
-					const std::string& icon_name,
-					const int& buttons,
-					CComponentsForm *parent,
-					int shadow_mode,
-					fb_pixel_t color_frame,
-					fb_pixel_t color_body,
-					fb_pixel_t color_shadow,
-					int sizeMode
-				);
+		void initVarHeader(const int &x_pos, const int &y_pos, const int &w, const int &h,
+			const std::string &caption,
+			const std::string &icon_name,
+			const int &buttons,
+			CComponentsForm *parent,
+			int shadow_mode,
+			fb_pixel_t color_frame,
+			fb_pixel_t color_body,
+			fb_pixel_t color_shadow,
+			int sizeMode
+		);
 
 	protected:
 		///object: icon object, see also setIcon()
-		CComponentsPicture * cch_icon_obj;
+		CComponentsPicture *cch_icon_obj;
 		///object: caption object, see also setCaption()
-		CComponentsText * cch_text_obj;
+		CComponentsText *cch_text_obj;
 		///object: context button object, see also addContextButton(), removeContextButtons()
-		CComponentsIconForm * cch_btn_obj;
+		CComponentsIconForm *cch_btn_obj;
 		///object: clock object
-		CComponentsFrmClock * cch_cl_obj;
+		CComponentsFrmClock *cch_cl_obj;
 		///object: logo object
-		CComponentsChannelLogoScalable * cch_logo_obj;
+		CComponentsChannelLogoScalable *cch_logo_obj;
 
 		///attributes for logos
 		cch_logo_t cch_logo;
@@ -110,7 +111,7 @@ class CComponentsHeader : public CComponentsForm, public CCTextScreen, CCHeaderT
 		///property: caption text color, see also setCaptionColor()
 		fb_pixel_t cch_col_text;
 		///property: caption font, see also setCaptionFont()
-		Font* cch_font, *l_font, *s_font;
+		Font *cch_font, *l_font, *s_font;
 		///reset font
 		void resetFont();
 
@@ -137,9 +138,9 @@ class CComponentsHeader : public CComponentsForm, public CCTextScreen, CCHeaderT
 		///property: enable/disable of clock, see also enableClock()
 		bool cch_cl_enable;
 		///property: clock format
-		const char* cch_cl_format;
+		const char *cch_cl_format;
 		///property: secondary clock format
-		const char* cch_cl_sec_format;
+		const char *cch_cl_sec_format;
 		///property: enable running clock
 		bool cch_cl_enable_run;
 
@@ -179,51 +180,54 @@ class CComponentsHeader : public CComponentsForm, public CCTextScreen, CCHeaderT
 
 		CComponentsHeader(CComponentsForm *parent = NULL);
 
-		CComponentsHeader(	const int& x_pos, const int& y_pos, const int& w, const int& h = 0,
-					int sizeMode = CC_HEADER_SIZE_LARGE,
-					const std::string& caption = std::string(),
-					CComponentsForm *parent = NULL
-				);
+		CComponentsHeader(const int &x_pos, const int &y_pos, const int &w, const int &h = 0,
+			int sizeMode = CC_HEADER_SIZE_LARGE,
+			const std::string &caption = std::string(),
+			CComponentsForm *parent = NULL
+		);
 
-		CComponentsHeader(	const int& x_pos, const int& y_pos, const int& w, const int& h = 0,
-					int sizeMode = CC_HEADER_SIZE_LARGE,
-					neutrino_locale_t caption_locale = NONEXISTANT_LOCALE,
-					CComponentsForm *parent = NULL
-				);
+		CComponentsHeader(const int &x_pos, const int &y_pos, const int &w, const int &h = 0,
+			int sizeMode = CC_HEADER_SIZE_LARGE,
+			neutrino_locale_t caption_locale = NONEXISTANT_LOCALE,
+			CComponentsForm *parent = NULL
+		);
 
-		CComponentsHeader(	const int& x_pos, const int& y_pos, const int& w, const int& h = 0,
-					const std::string& caption = std::string(),
-					const std::string& icon_name = std::string(),
-					const int& buttons = 0,
-					CComponentsForm *parent = NULL,
-					int shadow_mode = CC_SHADOW_OFF,
-					fb_pixel_t color_frame = COL_FRAME_PLUS_0,
-					fb_pixel_t color_body = COL_MENUHEAD_PLUS_0,
-					fb_pixel_t color_shadow = COL_SHADOW_PLUS_0,
-					int sizeMode = CC_HEADER_SIZE_LARGE
-				);
+		CComponentsHeader(const int &x_pos, const int &y_pos, const int &w, const int &h = 0,
+			const std::string &caption = std::string(),
+			const std::string &icon_name = std::string(),
+			const int &buttons = 0,
+			CComponentsForm *parent = NULL,
+			int shadow_mode = CC_SHADOW_OFF,
+			fb_pixel_t color_frame = COL_FRAME_PLUS_0,
+			fb_pixel_t color_body = COL_MENUHEAD_PLUS_0,
+			fb_pixel_t color_shadow = COL_SHADOW_PLUS_0,
+			int sizeMode = CC_HEADER_SIZE_LARGE
+		);
 
-		CComponentsHeader(	const int& x_pos, const int& y_pos, const int& w, const int& h = 0,
-					neutrino_locale_t caption_locale = NONEXISTANT_LOCALE,
-					const std::string& icon_name = std::string(),
-					const int& buttons = 0,
-					CComponentsForm *parent = NULL,
-					int shadow_mode = CC_SHADOW_OFF,
-					fb_pixel_t color_frame = COL_FRAME_PLUS_0,
-					fb_pixel_t color_body = COL_MENUHEAD_PLUS_0,
-					fb_pixel_t color_shadow = COL_SHADOW_PLUS_0,
-					int sizeMode = CC_HEADER_SIZE_LARGE
-				);
+		CComponentsHeader(const int &x_pos, const int &y_pos, const int &w, const int &h = 0,
+			neutrino_locale_t caption_locale = NONEXISTANT_LOCALE,
+			const std::string &icon_name = std::string(),
+			const int &buttons = 0,
+			CComponentsForm *parent = NULL,
+			int shadow_mode = CC_SHADOW_OFF,
+			fb_pixel_t color_frame = COL_FRAME_PLUS_0,
+			fb_pixel_t color_body = COL_MENUHEAD_PLUS_0,
+			fb_pixel_t color_shadow = COL_SHADOW_PLUS_0,
+			int sizeMode = CC_HEADER_SIZE_LARGE
+		);
 
 		virtual ~CComponentsHeader();
 
-		///set caption text, parameters: string, int align_mode (default left) 
-		void setCaption(const std::string& caption, const cc_title_alignment_t& align_mode = DEFAULT_TITLE_ALIGN, const fb_pixel_t& text_color = COL_MENUHEAD_TEXT);
+		///set caption text, parameters: string, int align_mode (default left)
+		void setCaption(const std::string &caption, const cc_title_alignment_t &align_mode = DEFAULT_TITLE_ALIGN, const fb_pixel_t &text_color = COL_MENUHEAD_TEXT);
 		///set caption text, parameters: loacle, int align_mode (default left)
-		void setCaption(neutrino_locale_t caption_locale, const cc_title_alignment_t& align_mode = DEFAULT_TITLE_ALIGN, const fb_pixel_t& text_color = COL_MENUHEAD_TEXT);
+		void setCaption(neutrino_locale_t caption_locale, const cc_title_alignment_t &align_mode = DEFAULT_TITLE_ALIGN, const fb_pixel_t &text_color = COL_MENUHEAD_TEXT);
 
 		///set alignment of caption within header, possible paramters are CComponentsHeader::CC_TITLE_LEFT, CComponentsHeader::CC_TITLE_RIGHT, CComponentsHeader::CC_TITLE_CENTER
-		void setCaptionAlignment(const cc_title_alignment_t& align_mode){cch_caption_align = align_mode;}
+		void setCaptionAlignment(const cc_title_alignment_t &align_mode)
+		{
+			cch_caption_align = align_mode;
+		}
 
 		/**Set text font for title.
 		 * Internal default font is g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE] and
@@ -237,39 +241,63 @@ class CComponentsHeader : public CComponentsForm, public CCTextScreen, CCHeaderT
 		 * 			setCaptionAlignment(),
 		 * 			setCaption()
 		*/
-		void setCaptionFont(Font* font);
+		void setCaptionFont(Font *font);
 		///returns font object of title caption
-		Font* getCaptionFont(){return cch_font;}
+		Font *getCaptionFont()
+		{
+			return cch_font;
+		}
 		///set text color for caption
-		void setCaptionColor(fb_pixel_t text_color){cch_col_text = text_color;}
+		void setCaptionColor(fb_pixel_t text_color)
+		{
+			cch_col_text = text_color;
+		}
 
 		///set offset between items
-		void setOffset(const int offset){cch_offset = offset;};
+		void setOffset(const int offset)
+		{
+			cch_offset = offset;
+		};
 		///set name of icon
-		void setIcon(const char* icon_name);
+		void setIcon(const char *icon_name);
 		///set name of icon
-		void setIcon(const std::string& icon_name);
+		void setIcon(const std::string &icon_name);
 
 		///context buttons are to find on the right part of header
 		///add a single context button icon to the header object, arg as string, icon will just add, existing icons are preserved
-		void addContextButton(const std::string& button_name);
+		void addContextButton(const std::string &button_name);
 		///add a group of context button icons to the header object, arg as string vector, icons will just add, existing icons are preserved
-		void addContextButton(const std::vector<std::string>& v_button_names);
+		void addContextButton(const std::vector<std::string> &v_button_names);
 		///add a single context button icon or combined button icons to the header object, possible types are for example: CC_BTN_HELP, CC_BTN_INFO, CC_BTN_MENU, CC_BTN_EXIT
 		///icons will just add, existing  icons are preserved
-		void addContextButton(const int& buttons);
+		void addContextButton(const int &buttons);
 		///remove context buttons from context button object
 		void removeContextButtons();
 		///sets a single context button icon to the header object, arg as string, existing buttons are removed
-		void setContextButton(const std::string& button_name){removeContextButtons(); addContextButton(button_name);};
+		void setContextButton(const std::string &button_name)
+		{
+			removeContextButtons();
+			addContextButton(button_name);
+		};
 		///sets a group of context button icons to the header object, arg as string vector, existing buttons are removed
-		void setContextButton(const std::vector<std::string>& v_button_names){removeContextButtons(); addContextButton(v_button_names);};
+		void setContextButton(const std::vector<std::string> &v_button_names)
+		{
+			removeContextButtons();
+			addContextButton(v_button_names);
+		};
 		///sets a single context button icon or combined button icons to the header object, possible types are for example: CC_BTN_HELP, CC_BTN_INFO, CC_BTN_MENU, CC_BTN_EXIT
 		///existing buttons are removed
-		void setContextButton(const int& buttons){removeContextButtons(); addContextButton(buttons);};
+		void setContextButton(const int &buttons)
+		{
+			removeContextButtons();
+			addContextButton(buttons);
+		};
 
 		///gets the embedded context button object, so it's possible to get access directly to its methods and properties
-		CComponentsIconForm* getContextBtnObject() { return cch_btn_obj;};
+		CComponentsIconForm *getContextBtnObject()
+		{
+			return cch_btn_obj;
+		};
 
 		enum
 		{
@@ -295,12 +323,18 @@ class CComponentsHeader : public CComponentsForm, public CCTextScreen, CCHeaderT
 		};
 
 		///set offset between icons within context button object
-		void setButtonsSpace(const int buttons_space){cch_buttons_space = buttons_space;}
+		void setButtonsSpace(const int buttons_space)
+		{
+			cch_buttons_space = buttons_space;
+		}
 
 		///init all items within header object
 		void initCCItems();
 		///returns the text object
-		CComponentsText* getTextObject(){return cch_text_obj;}
+		CComponentsText *getTextObject()
+		{
+			return cch_text_obj;
+		}
 
 		/**Member to modify background behavior of embeded title
 		* @param[in]  mode
@@ -320,10 +354,13 @@ class CComponentsHeader : public CComponentsForm, public CCTextScreen, CCHeaderT
 		}
 
 		///returns the clock object
-		CComponentsFrmClock* getClockObject(){return cch_cl_obj;}
+		CComponentsFrmClock *getClockObject()
+		{
+			return cch_cl_obj;
+		}
 
 		///enable display of clock, parameter bool enable, const char* format, bool run
-		void enableClock(bool enable = true, const char* format = "%H:%M", const char* sec_format_str = NULL, bool run = false);
+		void enableClock(bool enable = true, const char *format = "%H:%M", const char *sec_format_str = NULL, bool run = false);
 		///disable clock, without parameter
 		void disableClock();
 
@@ -331,12 +368,16 @@ class CComponentsHeader : public CComponentsForm, public CCTextScreen, CCHeaderT
 		void paint(bool do_save_bg = CC_SAVE_SCREEN_YES);
 
 		///hides item, arg: no_restore see hideCCItem()
-		void hide(){disableClock(); CComponentsForm::hide();}
+		void hide()
+		{
+			disableClock();
+			CComponentsForm::hide();
+		}
 		///erase current screen without restore of background, it's similar to paintBackgroundBoxRel() from CFrameBuffer
-		void kill(const fb_pixel_t& bg_color = COL_BACKGROUND_PLUS_0, const int& corner_radius = -1, const int& fblayer_type = ~CC_FBDATA_TYPES, bool disable_clock = true);
+		void kill(const fb_pixel_t &bg_color = COL_BACKGROUND_PLUS_0, const int &corner_radius = -1, const int &fblayer_type = ~CC_FBDATA_TYPES, bool disable_clock = true);
 
 		///set color gradient on/off, returns true if gradient mode was changed
-		bool enableColBodyGradient(const int& enable_mode, const fb_pixel_t& sec_color = 255 /*=COL_BACKGROUND*/, const int& direction = -1);
+		bool enableColBodyGradient(const int &enable_mode, const fb_pixel_t &sec_color = 255 /*=COL_BACKGROUND*/, const int &direction = -1);
 
 		/**Methode to set channel logo into header body via id and/or channel name
 		* @param[in]  	channelId
@@ -353,15 +394,22 @@ class CComponentsHeader : public CComponentsForm, public CCTextScreen, CCHeaderT
 		* 		@li optional logo height, default = -1 (auto)
 		* @note 	In auto mode, logo use full height minus inner offset but not larger than original logo height.
 		*/
-		void setChannelLogo(	const uint64_t& channelId,
-					const std::string& channelName,
-					cc_logo_alignment_t alignment = DEFAULT_LOGO_ALIGN,
-					const int& dy = -1)
-					{cch_logo.Id = channelId; cch_logo.Name = channelName, cch_logo.Align = alignment, cch_logo.dy_max = dy; initCCItems();}
+		void setChannelLogo(const uint64_t &channelId,
+			const std::string &channelName,
+			cc_logo_alignment_t alignment = DEFAULT_LOGO_ALIGN,
+			const int &dy = -1)
+		{
+			cch_logo.Id = channelId;
+			cch_logo.Name = channelName, cch_logo.Align = alignment, cch_logo.dy_max = dy;
+			initCCItems();
+		}
 		/**Methode to get channel logo object for direct access to its properties and methodes
 		* @return  	CComponentsChannelLogoScalable*
 		*/
-		CComponentsChannelLogoScalable* getChannelLogoObject(){return cch_logo_obj;}
+		CComponentsChannelLogoScalable *getChannelLogoObject()
+		{
+			return cch_logo_obj;
+		}
 };
 
 #endif

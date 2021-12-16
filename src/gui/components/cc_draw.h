@@ -42,13 +42,13 @@ class CCDraw : public COSDFader, public CComponentsSignals
 {
 	protected:
 		///pixel buffer handling, returns pixel buffer depends of given parameters
-		fb_pixel_t* getScreen(int ax, int ay, int dx, int dy);
+		fb_pixel_t *getScreen(int ax, int ay, int dx, int dy);
 		///returns screen data as screen_data_t
-		cc_screen_data_t getScreenData(const int& ax, const int& ay, const int& dx, const int& dy);
+		cc_screen_data_t getScreenData(const int &ax, const int &ay, const int &dx, const int &dy);
 		cc_screen_data_t cc_scrdata;
 
 		///object: framebuffer object, usable in all sub classes
-		CFrameBuffer * frameBuffer;
+		CFrameBuffer *frameBuffer;
 
 		///internal draw timer, used for effects
 		CComponentsTimer *cc_draw_timer;
@@ -81,7 +81,7 @@ class CCDraw : public COSDFader, public CComponentsSignals
 		///property: background image, see also setBodyBGImage()
 		std::string cc_body_image, cc_body_image_old;
 
-		 ///property: frame thickness, see also setFrameThickness()
+		///property: frame thickness, see also setFrameThickness()
 		int fr_thickness, fr_thickness_old;
 
 		///property: has corners with definied type, types are defined in /driver/frambuffer.h, without effect, if corner_radius=0
@@ -107,7 +107,7 @@ class CCDraw : public COSDFader, public CComponentsSignals
 
 		///paint caching for body and shadow, default init value = true, see also enablePaintCache() NOTE: has no effect if paint_bg = false
 		bool cc_paint_cache;
-		
+
 		///enable/disable background buffer, default init value = false, see also enableSaveBg()
 		bool cc_save_bg;
 
@@ -146,10 +146,10 @@ class CCDraw : public COSDFader, public CComponentsSignals
 		fb_pixel_t cc_body_gradient_2nd_col, cc_body_gradient_2nd_col_old;
 
 		///check current fbdtata position and dimensions, parameter fbdata is an element of v_fbdata, returns false on error
-		bool CheckFbData(const cc_fbdata_t& fbdata, const char* func, const int line);
+		bool CheckFbData(const cc_fbdata_t &fbdata, const char *func, const int line);
 
 		///sub: get gradient data evaluted with current parameters
-		gradientData_t* getGradientData();
+		gradientData_t *getGradientData();
 
 		bool cc_gradient_bg_cleanup;
 
@@ -176,116 +176,211 @@ class CCDraw : public COSDFader, public CComponentsSignals
 		void clearFbData();
 
 		///set screen x-position, parameter as int
-		virtual void setXPos(const int& xpos);
+		virtual void setXPos(const int &xpos);
 		///set screen y-position, parameter as int
-		virtual void setYPos(const int& ypos);
+		virtual void setYPos(const int &ypos);
 		///set x and y position at once
 		///Note: position of bound components (items) means position related within parent form, not for screen!
 		///to set the real screen position, look at setRealPos()
-		virtual void setPos(const int& xpos, const int& ypos){setXPos(xpos); setYPos(ypos);}
+		virtual void setPos(const int &xpos, const int &ypos)
+		{
+			setXPos(xpos);
+			setYPos(ypos);
+		}
 
 		///set height of component on screen
-		virtual void setHeight(const int& h);
+		virtual void setHeight(const int &h);
 		///set width of component on screen
-		virtual void setWidth(const int& w);
+		virtual void setWidth(const int &w);
 		///set all positions and dimensions of component at once
-		void setDimensionsAll(const int& xpos, const int& ypos, const int& w, const int& h){setPos(xpos, ypos); setWidth(w); setHeight(h);}
+		void setDimensionsAll(const int &xpos, const int &ypos, const int &w, const int &h)
+		{
+			setPos(xpos, ypos);
+			setWidth(w);
+			setHeight(h);
+		}
 
 		///return screen x-position of component
 		///Note: position of bound components (items) means position related within parent form, not for screen!
 		///to get the real screen position, use getRealXPos(), to find in CComponentsItem sub classes
-		int getXPos(){return x;};
+		int getXPos()
+		{
+			return x;
+		};
 		///return screen y-position of component
 		///Note: position of bound components (items) means position related within parent form, not for screen!
 		///to get the real screen position, use getRealYPos(), to find in CComponentsItem sub classes
-		int getYPos(){return y;}
+		int getYPos()
+		{
+			return y;
+		}
 		///return height of component
-		int getHeight(){return height;}
+		int getHeight()
+		{
+			return height;
+		}
 		///return width of component
-		int getWidth(){return width;}
+		int getWidth()
+		{
+			return width;
+		}
 
 		///return/set (pass through) width and height of component
-		void getSize(int* w, int* h){*w=width; *h=height;}
+		void getSize(int *w, int *h)
+		{
+			*w = width;
+			*h = height;
+		}
 		///return/set (pass through) position and dimensions of component at once
-		void getDimensions(int* xpos, int* ypos, int* w, int* h){*xpos=x; *ypos=y; *w=width; *h=height;}
+		void getDimensions(int *xpos, int *ypos, int *w, int *h)
+		{
+			*xpos = x;
+			*ypos = y;
+			*w = width;
+			*h = height;
+		}
 
 		///set frame thickness
-		void setFrameThickness(const int& thickness);
+		void setFrameThickness(const int &thickness);
 		///return of frame thickness
-		int getFrameThickness(){return fr_thickness;}
+		int getFrameThickness()
+		{
+			return fr_thickness;
+		}
 		///set frame color
-		void setColorFrame(fb_pixel_t color){col_frame = color;}
+		void setColorFrame(fb_pixel_t color)
+		{
+			col_frame = color;
+		}
 
-		void set2ndColor(fb_pixel_t col_2nd){cc_body_gradient_2nd_col = col_2nd;}
+		void set2ndColor(fb_pixel_t col_2nd)
+		{
+			cc_body_gradient_2nd_col = col_2nd;
+		}
 
 		///get frame color
-		fb_pixel_t getColorFrame(){return col_frame;}
+		fb_pixel_t getColorFrame()
+		{
+			return col_frame;
+		}
 		///get body color
-		fb_pixel_t getColorBody(){return col_body;}
+		fb_pixel_t getColorBody()
+		{
+			return col_body;
+		}
 		///get shadow color
-		fb_pixel_t getColorShadow(){return col_shadow;}
+		fb_pixel_t getColorShadow()
+		{
+			return col_shadow;
+		}
 
 		///set body color
-		void setColorBody(fb_pixel_t color){col_body = color;}
+		void setColorBody(fb_pixel_t color)
+		{
+			col_body = color;
+		}
 		///set shadow color
-		void setColorShadow(fb_pixel_t color){col_shadow = color;}
+		void setColorShadow(fb_pixel_t color)
+		{
+			col_shadow = color;
+		}
 		///set all basic framebuffer element colors at once
 		///Note: Possible color values are defined in "gui/color.h" and "gui/color_custom.h"
-		void setColorAll(fb_pixel_t color_frame, fb_pixel_t color_body, fb_pixel_t color_shadow){col_frame = color_frame; col_body = color_body; col_shadow = color_shadow;};
+		void setColorAll(fb_pixel_t color_frame, fb_pixel_t color_body, fb_pixel_t color_shadow)
+		{
+			col_frame = color_frame;
+			col_body = color_body;
+			col_shadow = color_shadow;
+		};
 
 		///set corner types
 		///Possible corner types are defined in CFrameBuffer (see: driver/framebuffer.h)
 		///Note: default values are given from settings and corner radius sizes are predefined in /system/settings.h
-		virtual void setCornerType(const int& type);
+		virtual void setCornerType(const int &type);
 		///set corner radius and type
-		virtual void setCorner(const int& radius, const int& type = CORNER_ALL);
+		virtual void setCorner(const int &radius, const int &type = CORNER_ALL);
 		///get corner types
-		int getCornerType(){return corner_type;};
+		int getCornerType()
+		{
+			return corner_type;
+		};
 		///get corner radius
-		int getCornerRadius(){return corner_rad;};
+		int getCornerRadius()
+		{
+			return corner_rad;
+		};
 
 		///switch shadow on/off
-		void setShadowWidth(const int& shadow_width){if (shadow_w != shadow_width) shadow_w = shadow_width;}
+		void setShadowWidth(const int &shadow_width)
+		{
+			if (shadow_w != shadow_width) shadow_w = shadow_width;
+		}
 		/**1st parameter requires defines CC_SHADOW_ON (default), CC_SHADOW_OFF, CC_SHADOW_BOTTOM or CC_SHADOW_RIGHT, see also cc_types.h
 		 * 2nd parameter defines shadow width, default = defined by system
 		 * 3rd parameter forces paint of shadow layer, default = false, Note: default shadow will paint only on first paint, use 3rd parameter=true ignores this
 		*/
-		void enableShadow(int mode = CC_SHADOW_ON, const int& shadow_width = -1, bool force_paint = false);
+		void enableShadow(int mode = CC_SHADOW_ON, const int &shadow_width = -1, bool force_paint = false);
 		///switch shadow off
-		void disableShadow(){enableShadow(CC_SHADOW_OFF);}
+		void disableShadow()
+		{
+			enableShadow(CC_SHADOW_OFF);
+		}
 		///return current schadow width
-		int getShadowWidth(){return shadow_w;}
+		int getShadowWidth()
+		{
+			return shadow_w;
+		}
 
 		///paint caching for body and shadow, see also cc_paint_cache NOTE: has no effect if paint_bg = false
 		void enablePaintCache(bool enable = true);
 		///disable paint caching for body and shadow
-		void disablePaintCache(){enablePaintCache(false);}
+		void disablePaintCache()
+		{
+			enablePaintCache(false);
+		}
 
 		///returns paint mode, true=item was painted
 		bool isPainted();
 		///allows paint of elementary item parts (shadow, frame and body), similar as background, set it usually to false, if item used in a form, returns true, if mode has changed, also cleans screnn buffer
 		bool doPaintBg(bool do_paint);
 		///allows paint frame around body, default true , NOTE: ignored if frame width = 0
-		void enableFrame(bool enable = true, const int& frame_width = -1){cc_enable_frame = enable; setFrameThickness(frame_width == -1 ? fr_thickness : frame_width);}
+		void enableFrame(bool enable = true, const int &frame_width = -1)
+		{
+			cc_enable_frame = enable;
+			setFrameThickness(frame_width == -1 ? fr_thickness : frame_width);
+		}
 		///disallow paint frame around body
-		void disableFrame(){enableFrame(false);}
+		void disableFrame()
+		{
+			enableFrame(false);
+		}
 		///enable/disable background buffering, default action = enable, see also cc_save_bg
 		void enableSaveBg(bool save_bg = true);
 		///disable background buffering, does the same like enableSaveBg(false), NOTE: cleans existant pixbuffer content!
-		void disableSaveBg(){enableSaveBg(false);}
+		void disableSaveBg()
+		{
+			enableSaveBg(false);
+		}
 		///returns background buffering mode. Mode is assigned with paint() or enableSaveBg()/disableSaveBg())
-		bool SaveBg(){return cc_save_bg;}
+		bool SaveBg()
+		{
+			return cc_save_bg;
+		}
 
 		///allow/disalows paint of item and its contents, but initialize of other properties are not touched
 		///this can be understood as a counterpart to isPainted(), but before paint and value of is_painted is modified temporarily till next paint of item //TODO: is this sufficiently?
-		void allowPaint(bool allow) {
+		void allowPaint(bool allow)
+		{
 			if (allow != cc_allow_paint)
 				cc_allow_paint = allow;
 			if (cc_allow_paint)
 				is_painted = false;
 		}
 		///returns visibility mode
-		bool paintAllowed(){return cc_allow_paint;};
+		bool paintAllowed()
+		{
+			return cc_allow_paint;
+		};
 
 		/**Overrides internal firstpaint and is_painted modes to provoke full repaint of item.
 		 * This should help to paint items if they already painted and have existing instances and repaint is required but the internal
@@ -295,28 +390,46 @@ class CCDraw : public COSDFader, public CComponentsSignals
 		 * 			will be reset after callt paint() method
 		 * @see		allowPaint(), isPainted(), firstpaint, is_painted
 		*/
-		void forceRePaint(){firstPaint = true; is_painted = false;};
+		void forceRePaint()
+		{
+			firstPaint = true;
+			is_painted = false;
+		};
 
 		///set color gradient on/off, returns true if gradient mode was changed
-		bool enableColBodyGradient(const int& enable_mode, const fb_pixel_t& sec_color = 255 /*=COL_BACKGROUND*/, const int& direction = 1 /*CFrameBuffer::gradientVertical*/);
+		bool enableColBodyGradient(const int &enable_mode, const fb_pixel_t &sec_color = 255 /*=COL_BACKGROUND*/, const int &direction = 1 /*CFrameBuffer::gradientVertical*/);
 		///disable color gradient, returns true if gradient mode was changed
-		bool disableColBodyGradient(){return enableColBodyGradient(CC_COLGRAD_OFF);}
+		bool disableColBodyGradient()
+		{
+			return enableColBodyGradient(CC_COLGRAD_OFF);
+		}
 		///set color gradient properties, possible parameter values for mode and intensity to find in CColorGradient, in driver/framebuffer.h>
-		void setColBodyGradient(const int& mode, const int& direction  = 1 /*CFrameBuffer::gradientVertical*/, const fb_pixel_t& sec_color = 255 /*=COL_BACKGROUND*/, const int& intensity = CColorGradient::normal, uint8_t v_min=0x40, uint8_t v_max=0xE0, uint8_t s=0xC0)
-						{	cc_body_gradient_intensity=intensity;
-							cc_body_gradient_intensity_v_min=v_min;
-							cc_body_gradient_intensity_v_max=v_max;
-							cc_body_gradient_saturation=s;
-							enableColBodyGradient(mode, sec_color, direction);}
+		void setColBodyGradient(const int &mode, const int &direction  = 1 /*CFrameBuffer::gradientVertical*/, const fb_pixel_t &sec_color = 255 /*=COL_BACKGROUND*/, const int &intensity = CColorGradient::normal, uint8_t v_min = 0x40, uint8_t v_max = 0xE0, uint8_t s = 0xC0)
+		{
+			cc_body_gradient_intensity = intensity;
+			cc_body_gradient_intensity_v_min = v_min;
+			cc_body_gradient_intensity_v_max = v_max;
+			cc_body_gradient_saturation = s;
+			enableColBodyGradient(mode, sec_color, direction);
+		}
 		///gets current color gradient mode
-		int getColBodyGradientMode(){return cc_body_gradient_enable;}
+		int getColBodyGradientMode()
+		{
+			return cc_body_gradient_enable;
+		}
 
 		///abstract: paint item, arg: do_save_bg see paintInit() above
 		virtual void paint(bool do_save_bg = CC_SAVE_SCREEN_YES) = 0;
 		///paint item, same like paint(CC_SAVE_SCREEN_NO) but without any argument
-		void paint0(){paint(CC_SAVE_SCREEN_NO);}
+		void paint0()
+		{
+			paint(CC_SAVE_SCREEN_NO);
+		}
 		///paint item, same like paint(CC_SAVE_SCREEN_YES) but without any argument
-		void paint1(){paint(CC_SAVE_SCREEN_YES);}
+		void paint1()
+		{
+			paint(CC_SAVE_SCREEN_YES);
+		}
 
 		/**paint item with blink effect
 		 * This should work with all cc item types.
@@ -327,7 +440,7 @@ class CCDraw : public COSDFader, public CComponentsSignals
 		 * 				of this methode.
 		 * @see				overloaded version of paintBlink()
 		*/
-		bool paintBlink(CComponentsTimer* Timer);
+		bool paintBlink(CComponentsTimer *Timer);
 
 		/**paint item with blink effect
 		 * This should work with all cc item types.
@@ -346,7 +459,7 @@ class CCDraw : public COSDFader, public CComponentsSignals
 		 * 				and it's possible you must remove from screen before e.g.:
 		 * 					item->kill();
 		*/
-		bool paintBlink(const int& interval = 1, bool is_nano = false);
+		bool paintBlink(const int &interval = 1, bool is_nano = false);
 
 		/**Cancel blink effect
 		 *
@@ -395,7 +508,7 @@ class CCDraw : public COSDFader, public CComponentsSignals
 		 *	Shadow paint must be reworked, because dimensions of shadow containes not the real defined size. Parts of item are killed too.
 		 *
 		*/
-		void kill(const fb_pixel_t& bg_color = COL_BACKGROUND_PLUS_0, const int& corner_radius = -1, const int& fblayer_type = ~CC_FBDATA_TYPES);
+		void kill(const fb_pixel_t &bg_color = COL_BACKGROUND_PLUS_0, const int &corner_radius = -1, const int &fblayer_type = ~CC_FBDATA_TYPES);
 
 		/**Erase shadow around rendered item.
 		 * This is similar with the kill() member, but shadow will be handled only.
@@ -408,10 +521,16 @@ class CCDraw : public COSDFader, public CComponentsSignals
 		 * @see
 		 * 	kill()
 		*/
-		void killShadow(const fb_pixel_t& bg_color = COL_BACKGROUND_PLUS_0, const int& corner_radius = -1);
+		void killShadow(const fb_pixel_t &bg_color = COL_BACKGROUND_PLUS_0, const int &corner_radius = -1);
 
-		void enableGradientBgCleanUp(bool enable = true) { cc_gradient_bg_cleanup = enable; }
-		void disableGradientBgCleanUp(){ enableGradientBgCleanUp(false); }
+		void enableGradientBgCleanUp(bool enable = true)
+		{
+			cc_gradient_bg_cleanup = enable;
+		}
+		void disableGradientBgCleanUp()
+		{
+			enableGradientBgCleanUp(false);
+		}
 
 		/**Sets an image path for body background, returns true if new image was applied.
 		 *
@@ -423,7 +542,7 @@ class CCDraw : public COSDFader, public CComponentsSignals
 		 * 	cc_body_image
 		 * 	setBodyBGImageName()
 		*/
-		bool setBodyBGImage(const std::string& image_path);
+		bool setBodyBGImage(const std::string &image_path);
 
 		/**Sets an image name for body background, returns true if new image was applied.
 		 *
@@ -435,7 +554,7 @@ class CCDraw : public COSDFader, public CComponentsSignals
 		 * 	cc_body_image
 		 * 	setBodyBGImage()
 		*/
-		bool setBodyBGImageName(const std::string& image_name);
+		bool setBodyBGImageName(const std::string &image_name);
 };
 
 #endif

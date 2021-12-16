@@ -39,10 +39,10 @@ class CCButtonSelect
 		CCButtonSelect();
 
 		///returns selected button object, return value as pointer to object, NULL means nothing is selected
-		CComponentsButton* getSelectedButtonObject();
-		
+		CComponentsButton *getSelectedButtonObject();
+
 		///returns pointer to internal button container
-		CComponentsFrmChain* getButtonChainObject();
+		CComponentsFrmChain *getButtonChainObject();
 
 		///returns id of select button, return value as int, -1 = nothing is selected
 		int getSelectedButton();
@@ -68,14 +68,14 @@ class CCButtonSelect
 		* 	@li 	optional: expects type int, default = 1
 		*/
 		void setSelectedButton(size_t item_id,
-					const fb_pixel_t& fr_col 	= COL_MENUCONTENTSELECTED_PLUS_2,
-					const fb_pixel_t& sel_fr_col 	= COL_MENUCONTENTSELECTED_PLUS_0,
-					const fb_pixel_t& bg_col 	= COL_MENUCONTENT_PLUS_0,
-					const fb_pixel_t& sel_bg_col 	= COL_MENUCONTENTSELECTED_PLUS_0,
-					const fb_pixel_t& text_col 	= COL_MENUCONTENT_TEXT,
-					const fb_pixel_t& sel_text_col 	= COL_MENUCONTENTSELECTED_TEXT,
-					const int& frame_width 		= 1,
-					const int& sel_frame_width 	= 1);
+			const fb_pixel_t &fr_col 	= COL_MENUCONTENTSELECTED_PLUS_2,
+			const fb_pixel_t &sel_fr_col 	= COL_MENUCONTENTSELECTED_PLUS_0,
+			const fb_pixel_t &bg_col 	= COL_MENUCONTENT_PLUS_0,
+			const fb_pixel_t &sel_bg_col 	= COL_MENUCONTENTSELECTED_PLUS_0,
+			const fb_pixel_t &text_col 	= COL_MENUCONTENT_TEXT,
+			const fb_pixel_t &sel_text_col 	= COL_MENUCONTENTSELECTED_TEXT,
+			const int &frame_width 		= 1,
+			const int &sel_frame_width 	= 1);
 };
 
 #endif //__CC_BTN_SEL_H__

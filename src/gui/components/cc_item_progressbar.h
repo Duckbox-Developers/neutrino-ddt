@@ -61,16 +61,16 @@ class CProgressBarCache
 	public:
 		void pbcPaint(int x, int y, int pbc_active_width, int pbc_passive_width) const;
 		static void pbcClear();
-		static CProgressBarCache *pbcLookup(	int dy,
-							int dx,
-							int active_col,
-							int passive_col,
-							int design,
-							bool enable_invert,
-							bool enable_gradient,
-							int R,
-							int G,
-							int Y);
+		static CProgressBarCache *pbcLookup(int dy,
+			int dx,
+			int active_col,
+			int passive_col,
+			int design,
+			bool enable_invert,
+			bool enable_gradient,
+			int R,
+			int G,
+			int Y);
 	private:
 		// keys to lookup:
 		int pbc_height, pbc_width;
@@ -81,35 +81,38 @@ class CProgressBarCache
 		int yoff;
 
 		fb_pixel_t *pbc_active, *pbc_passive;
- ;
+		;
 
-		static inline unsigned int make16color(__u32 rgb){return 0xFF000000 | rgb;};
+		static inline unsigned int make16color(__u32 rgb)
+		{
+			return 0xFF000000 | rgb;
+		};
 
 		void pbcPaintBoxRel(int x, int y, int dx, int dy, fb_pixel_t *pixbuf, fb_pixel_t col) const;
 		void pbcApplyGradient(fb_pixel_t *pixbuf);
 		void pbcCreateBitmaps();
 
-		CProgressBarCache(	int dy,
-					int dx,
-					int active_col,
-					int passive_col,
-					int design,
-					bool enable_invert,
-					bool enable_gradient,
-					int R,
-					int G,
-					int Y)
-						: pbc_height(dy),
-						pbc_width(dx),
-						pbc_active_col(active_col),
-						pbc_passive_col(passive_col),
-						pbc_design(design),
-						pbc_invert(enable_invert),
-						pbc_gradient(enable_gradient),
-						pbc_red(R),
-						pbc_green(G),
-						pbc_yellow(Y),
-						yoff(0)
+		CProgressBarCache(int dy,
+			int dx,
+			int active_col,
+			int passive_col,
+			int design,
+			bool enable_invert,
+			bool enable_gradient,
+			int R,
+			int G,
+			int Y)
+			: pbc_height(dy),
+			  pbc_width(dx),
+			  pbc_active_col(active_col),
+			  pbc_passive_col(passive_col),
+			  pbc_design(design),
+			  pbc_invert(enable_invert),
+			  pbc_gradient(enable_gradient),
+			  pbc_red(R),
+			  pbc_green(G),
+			  pbc_yellow(Y),
+			  yoff(0)
 		{
 			if (pbCache.size() > 10)
 				pbcClear();
@@ -159,48 +162,88 @@ class CProgressBar : public CComponentsItem
 		///R, G, Y: percentage of the bar where red/green/yellow is used, only used for colored designs
 		///active_col, passive_col: sets colors for displayed values, activ_col means the the displayed progress
 		///color_frame, color_body, color_shadow: colores of progressbar for frame, body and shadow, Note: color of frame is ineffective on fr_thickness = 0
-		CProgressBar(	const int x_pos = 0,
-				const int y_pos = 0,
-				const int w = -1,
-				const int h = -1,
-				fb_pixel_t color_frame = 0,
-				fb_pixel_t color_body = COL_MENUCONTENT_PLUS_0,
-				fb_pixel_t color_shadow = COL_SHADOW_PLUS_0,
-				const fb_pixel_t active_col = COL_PROGRESSBAR_ACTIVE_PLUS_0,
-				const fb_pixel_t passive_col = COL_PROGRESSBAR_PASSIVE_PLUS_0,
-				const int R = 40,
-				const int G = 100,
-				const int Y = 70,
-				CComponentsForm *parent = NULL);
+		CProgressBar(const int x_pos = 0,
+			const int y_pos = 0,
+			const int w = -1,
+			const int h = -1,
+			fb_pixel_t color_frame = 0,
+			fb_pixel_t color_body = COL_MENUCONTENT_PLUS_0,
+			fb_pixel_t color_shadow = COL_SHADOW_PLUS_0,
+			const fb_pixel_t active_col = COL_PROGRESSBAR_ACTIVE_PLUS_0,
+			const fb_pixel_t passive_col = COL_PROGRESSBAR_PASSIVE_PLUS_0,
+			const int R = 40,
+			const int G = 100,
+			const int Y = 70,
+			CComponentsForm *parent = NULL);
 
 
 		///set up to display available values
-		void setValue(const int val){ pb_value = val;}
+		void setValue(const int val)
+		{
+			pb_value = val;
+		}
 		//return current value
-		int getValue(void) { return pb_value; }
-		void setMaxValue(const int max_val){pb_max_value = max_val;}
+		int getValue(void)
+		{
+			return pb_value;
+		}
+		void setMaxValue(const int max_val)
+		{
+			pb_max_value = max_val;
+		}
 		///set up booth values to display at once
-		void setValues(const int val, const int max_val){pb_value = val; pb_max_value = max_val;}
+		void setValues(const int val, const int max_val)
+		{
+			pb_value = val;
+			pb_max_value = max_val;
+		}
 
 		///setters for status colors
-		void setActiveColor(fb_pixel_t active_color) {pb_active_col = active_color;}
-		void setPassiveColor(fb_pixel_t passive_color) {pb_passive_col = passive_color;}
+		void setActiveColor(fb_pixel_t active_color)
+		{
+			pb_active_col = active_color;
+		}
+		void setPassiveColor(fb_pixel_t passive_color)
+		{
+			pb_passive_col = passive_color;
+		}
 		///set up booth status colors at once
-		void setStatusColors(fb_pixel_t active_color, fb_pixel_t passive_color) {pb_passive_col = passive_color; pb_active_col = active_color;}
+		void setStatusColors(fb_pixel_t active_color, fb_pixel_t passive_color)
+		{
+			pb_passive_col = passive_color;
+			pb_active_col = active_color;
+		}
 
 		///r, g, b: percentage of the bar where red/green/yellow is used, only used for colored designs
-		void setRgb(const int r, const int g, const int b){pb_red =  r; pb_green = g; pb_yellow = b;}
+		void setRgb(const int r, const int g, const int b)
+		{
+			pb_red =  r;
+			pb_green = g;
+			pb_yellow = b;
+		}
 
 		///x, y, width, height, value, max_value: set most wanted parameters at once
 		void setProgress(const int x_pos, const int y_pos,
-					const int w, const int h,
-					const int val, const int max_val){x=x_pos; y=y_pos; width=w; height=h; pb_value=val; pb_max_value=max_val;}
+			const int w, const int h,
+			const int val, const int max_val)
+		{
+			x = x_pos;
+			y = y_pos;
+			width = w;
+			height = h;
+			pb_value = val;
+			pb_max_value = max_val;
+		}
 
 		///force update on next paint
-		void reset() { pb_last_width = -1; }
+		void reset()
+		{
+			pb_last_width = -1;
+		}
 		void paint(bool do_save_bg = CC_SAVE_SCREEN_NO);
 
-		enum pb_color_t {
+		enum pb_color_t
+		{
 			PB_OFF = -2,	/* -2 */
 			PB_MONO,	/* -1 */
 			PB_MATRIX,	/*  0 */
@@ -209,7 +252,8 @@ class CProgressBar : public CComponentsItem
 			PB_COLOR	/*  3 */
 		};
 
-		enum pb_type_t {
+		enum pb_type_t
+		{
 			PB_REDLEFT = 0,
 			PB_REDRIGHT,
 			PB_TIMESCALE
@@ -218,10 +262,16 @@ class CProgressBar : public CComponentsItem
 		void setType(pb_type_t type);
 
 		//set design (overides g_settings.theme.progressbar_design)
-		void setDesign(int &design) { pb_design = &design; }
+		void setDesign(int &design)
+		{
+			pb_design = &design;
+		}
 
 		//set gradient (overides g_settings.theme.progressbar_gradient)
-		void setGradient(int &gradient) { pb_gradient = &gradient; }
+		void setGradient(int &gradient)
+		{
+			pb_gradient = &gradient;
+		}
 };
 
 #endif /* __CC_PROGRESSBAR_H__ */

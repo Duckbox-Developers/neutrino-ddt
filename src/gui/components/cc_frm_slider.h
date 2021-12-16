@@ -44,7 +44,7 @@ class CComponentsSlider : public CComponentsForm
 
 		///property: current value that should be displayed by slider button, see also setValuePos()
 		int csl_current_value;
-		
+
 		///property: minimal scale value, see also setValueScale()
 		int csl_min_value;
 		///property: maximal scale value, see also setValueScale()
@@ -61,19 +61,19 @@ class CComponentsSlider : public CComponentsForm
 		void initCCSlItems();
 
 	public:
-		CComponentsSlider(	const int& x_pos = 0, const int& y_pos = 0, const int& w = 120+16, const int& h = 32,
-					const int& current_value = 0,
-					const int& min_value = 0,
-					const int& max_value = 100,
-					CComponentsForm *parent = NULL,
-					int shadow_mode = CC_SHADOW_OFF,
-					fb_pixel_t& color_frame = COL_FRAME_PLUS_0,
-					fb_pixel_t& color_body = COL_MENUHEAD_PLUS_0,
-					fb_pixel_t& color_shadow = COL_SHADOW_PLUS_0);
+		CComponentsSlider(const int &x_pos = 0, const int &y_pos = 0, const int &w = 120 + 16, const int &h = 32,
+			const int &current_value = 0,
+			const int &min_value = 0,
+			const int &max_value = 100,
+			CComponentsForm *parent = NULL,
+			int shadow_mode = CC_SHADOW_OFF,
+			fb_pixel_t &color_frame = COL_FRAME_PLUS_0,
+			fb_pixel_t &color_body = COL_MENUHEAD_PLUS_0,
+			fb_pixel_t &color_shadow = COL_SHADOW_PLUS_0);
 // 		~CComponentsSlider(); //inherited from CComponentsForm
-		
-		void setValuePos(const int& current_value);
-		void setValueScale(const int& min_value, const int& max_value);
+
+		void setValuePos(const int &current_value);
+		void setValueScale(const int &min_value, const int &max_value);
 		void setSliderIcon(const std::string &icon_name);
 
 // 		void paint(bool do_save_bg = CC_SAVE_SCREEN_YES);

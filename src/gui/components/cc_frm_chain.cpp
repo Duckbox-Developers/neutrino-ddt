@@ -48,27 +48,27 @@ using namespace std;
 
 //-------------------------------------------------------------------------------------------------------
 //sub class CComponentsFrmChain
-CComponentsFrmChain::CComponentsFrmChain(	const int& x_pos, const int& y_pos, const int& w, const int& h,
-						const std::vector<CComponentsItem*> *v_items,
-						int direction,
-						CComponentsForm* parent,
-						int shadow_mode,
-						fb_pixel_t& color_frame,
-						fb_pixel_t& color_body,
-						fb_pixel_t& color_shadow)
+CComponentsFrmChain::CComponentsFrmChain(const int &x_pos, const int &y_pos, const int &w, const int &h,
+	const std::vector<CComponentsItem *> *v_items,
+	int direction,
+	CComponentsForm *parent,
+	int shadow_mode,
+	fb_pixel_t &color_frame,
+	fb_pixel_t &color_body,
+	fb_pixel_t &color_shadow)
 {
 	initVarChain(x_pos, y_pos, w, h, v_items, direction, parent, shadow_mode, color_frame, color_body, color_shadow);
 }
 
 
-void CComponentsFrmChain::initVarChain(	const int& x_pos, const int& y_pos, const int& w, const int& h,
-					const std::vector<CComponentsItem*> *v_items,
-					int direction,
-					CComponentsForm* parent,
-					int shadow_mode,
-					fb_pixel_t& color_frame,
-					fb_pixel_t& color_body,
-					fb_pixel_t& color_shadow)
+void CComponentsFrmChain::initVarChain(const int &x_pos, const int &y_pos, const int &w, const int &h,
+	const std::vector<CComponentsItem *> *v_items,
+	int direction,
+	CComponentsForm *parent,
+	int shadow_mode,
+	fb_pixel_t &color_frame,
+	fb_pixel_t &color_body,
+	fb_pixel_t &color_shadow)
 {
 	cc_item_type 	= CC_ITEMTYPE_FRM_CHAIN;
 	corner_rad	= 0;
@@ -113,14 +113,17 @@ void CComponentsFrmChain::initChainItems()
 	size_t i_count = v_cc_items.size();
 
 
-	for (size_t i= 0; i< i_count; i++){
+	for (size_t i = 0; i < i_count; i++)
+	{
 // 		x_item = v_cc_items[i]->getXPos();
 // 		y_item = v_cc_items[i]->getYPos();
 		w_item = v_cc_items[i]->getWidth();
 		h_item = v_cc_items[i]->getHeight();
 
-		if (chn_direction & CC_DIR_X){
-			if (i == 0){
+		if (chn_direction & CC_DIR_X)
+		{
+			if (i == 0)
+			{
 				v_cc_items[i]->setXPos(chn_l_offset);
 				w_tmp += chn_l_offset;
 				w_tmp += w_item;
@@ -128,8 +131,10 @@ void CComponentsFrmChain::initChainItems()
 					w_tmp += chn_r_offset;
 			}
 
-			if (i_count > 1){
-				if (i == i_count-1){
+			if (i_count > 1)
+			{
+				if (i == i_count - 1)
+				{
 					w_tmp += w_item;
 					w_tmp += append_x_offset;
 					v_cc_items[i]->setXPos(w_tmp - v_cc_items[i]->getWidth());
@@ -137,15 +142,18 @@ void CComponentsFrmChain::initChainItems()
 				}
 			}
 
-			if (i != 0 && i != i_count-1){
+			if (i != 0 && i != i_count - 1)
+			{
 				w_tmp += w_item;
 				w_tmp += append_x_offset;
 				v_cc_items[i]->setXPos(w_tmp - v_cc_items[i]->getWidth());
 			}
 		}
 
-		if (chn_direction & CC_DIR_Y){
-			if (i == 0){
+		if (chn_direction & CC_DIR_Y)
+		{
+			if (i == 0)
+			{
 				v_cc_items[i]->setYPos(chn_t_offset);
 				h_tmp += chn_t_offset;
 				h_tmp += h_item;
@@ -153,8 +161,10 @@ void CComponentsFrmChain::initChainItems()
 					h_tmp += chn_b_offset;
 			}
 
-			if (i_count > 1){
-				if (i == i_count-1){
+			if (i_count > 1)
+			{
+				if (i == i_count - 1)
+				{
 					h_tmp += h_item;
 					h_tmp += append_y_offset;
 					v_cc_items[i]->setYPos(h_tmp - v_cc_items[i]->getHeight());
@@ -162,14 +172,15 @@ void CComponentsFrmChain::initChainItems()
 				}
 			}
 
-			if (i != 0 && i != i_count-1){
+			if (i != 0 && i != i_count - 1)
+			{
 				h_tmp += h_item;
 				h_tmp += append_y_offset;
 				v_cc_items[i]->setYPos(h_tmp - v_cc_items[i]->getHeight());
 			}
 		}
 	}
-	width 	= max (w_tmp, width);
-	height 	= max (h_tmp, height);
+	width 	= max(w_tmp, width);
+	height 	= max(h_tmp, height);
 }
 

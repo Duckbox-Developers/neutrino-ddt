@@ -37,7 +37,10 @@ class CCTextScreen
 		bool cc_txt_save_screen;
 
 	public:
-		CCTextScreen(){cc_txt_save_screen = false;}
+		CCTextScreen()
+		{
+			cc_txt_save_screen = false;
+		}
 
 		/**Abstract member to modify background behavior of embeded textbox object
 		* @param[in]  mode
@@ -55,7 +58,10 @@ class CCTextScreen
 		* @see
 		* 	disableTboxSaveScreen()
 		*/
-		virtual void disableTboxSaveScreen(){enableTboxSaveScreen(false);}
+		virtual void disableTboxSaveScreen()
+		{
+			enableTboxSaveScreen(false);
+		}
 };
 
 #endif

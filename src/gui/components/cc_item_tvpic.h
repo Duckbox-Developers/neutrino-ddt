@@ -1,5 +1,5 @@
 /*
-	Based up Neutrino-GUI - Tuxbox-Project 
+	Based up Neutrino-GUI - Tuxbox-Project
 	Copyright (C) 2001 by Steffen Hehn 'McClean'
 
 	Classes for generic GUI-related components.
@@ -51,18 +51,27 @@ class CComponentsPIP : public CComponentsItem
 		std::string pic_name;
 	public:
 		///constructor: initialize of position like all other items with x and y values, but dimensions in percent
-		CComponentsPIP(	const int x_pos = 0, const int y_pos = 0, const int percent = 30,
-				CComponentsForm *parent = NULL,
-				int shadow_mode = CC_SHADOW_OFF,
-				fb_pixel_t color_frame = COL_SHADOW_PLUS_0, fb_pixel_t color_body = COL_BACKGROUND_PLUS_0, fb_pixel_t color_shadow = COL_SHADOW_PLUS_0);
+		CComponentsPIP(const int x_pos = 0, const int y_pos = 0, const int percent = 30,
+			CComponentsForm *parent = NULL,
+			int shadow_mode = CC_SHADOW_OFF,
+			fb_pixel_t color_frame = COL_SHADOW_PLUS_0, fb_pixel_t color_body = COL_BACKGROUND_PLUS_0, fb_pixel_t color_shadow = COL_SHADOW_PLUS_0);
 		~CComponentsPIP();
 
 		///set property: width of tv box in pixel
-		void setScreenWidth(int screen_width){screen_w = screen_width;};
+		void setScreenWidth(int screen_width)
+		{
+			screen_w = screen_width;
+		};
 		///set property: height of tv box in pixel
-		void setScreenHeight(int screen_heigth){screen_h = screen_heigth;};
+		void setScreenHeight(int screen_heigth)
+		{
+			screen_h = screen_heigth;
+		};
 		///property: path to image that displayed, if no tv-mode is active
-		void setPicture(const std::string& image){pic_name = image;};
+		void setPicture(const std::string &image)
+		{
+			pic_name = image;
+		};
 
 		///show tv box
 		void paint(bool do_save_bg = CC_SAVE_SCREEN_YES);
