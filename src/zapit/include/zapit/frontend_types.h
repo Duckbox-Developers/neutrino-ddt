@@ -69,7 +69,7 @@
 #if ((DVB_API_VERSION > 5) || (DVB_API_VERSION == 5 && DVB_API_VERSION_MINOR > 6))
 #define _HAVE_DVB57 1
 #else
-#if HAVE_SH4_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_MIPS_HARDWARE
 #ifdef WARN_DVBAPI
 #warning DVB_API < 5.7 -- no DVB-T2/DTMB support.
 #endif
