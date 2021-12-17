@@ -34,7 +34,6 @@
 
 #include <gui/dboxinfo.h>
 
-
 #include <global.h>
 #include <neutrino.h>
 
@@ -54,6 +53,10 @@
 #include <map>
 #include <iostream>
 #include <fstream>
+
+#if defined (BOXMODEL_VUPLUS_ARM)
+#include <system/proc_tools.h>
+#endif
 
 CComponentsInfoBox * cc_fe;
 
@@ -253,6 +256,9 @@ void CDBoxInfoWidget::paint()
 	height += mheight;	// time
 	height += mheight;	// uptime
 	height += mheight;	// load
+#if defined (BOXMODEL_VUPLUS_ARM)
+	height += mheight;	// temp
+#endif
 	int cpuload_y1 = height;
 	height += mheight/2;	// space
 
@@ -431,6 +437,10 @@ void CDBoxInfoWidget::paint()
 	str_boot_title += ": ";
 	std::string str_up_title(g_Locale->getText(LOCALE_EXTRA_DBOXINFO_UPTIME));
 	str_up_title += ": ";
+#if defined (BOXMODEL_VUPLUS_ARM)
+	std::string str_cputemp_title("CPU"/*g_Locale->getText(LOCALE_EXTRA_DBOXINFO_CPUTEMP)*/);
+	str_cputemp_title += ": ";
+#endif
 
 	int time_title_width = std::max(fm->getRenderWidth(str_now_title, true), fm->getRenderWidth(str_boot_title));
 	time_title_width = std::max(time_title_width, fm->getRenderWidth(str_up_title));
@@ -491,6 +501,20 @@ void CDBoxInfoWidget::paint()
 		fm->RenderString(x + offsetw - time_width_total - 10 + time_title_width, ypos + mheight, time_width, ubuf, COL_MENUCONTENT_TEXT);
 	}
 	ypos += mheight;
+
+#if defined (BOXMODEL_VUPLUS_ARM)
+	// paint cpu temp
+	char proc_cputemp[8];
+	proc_get("/sys/class/thermal/thermal_zone0/temp", proc_cputemp, sizeof(proc_cputemp));
+	if (atoi(proc_cputemp) > 0)
+	{
+		char cpu_temp[16] = { 0 };
+		sprintf(cpu_temp, "%d °C", atoi(proc_cputemp) / 1000);
+		fm->RenderString(x + offsetw - time_width_total - 10, ypos + mheight, time_title_width, str_cputemp_title, COL_MENUCONTENTINACTIVE_TEXT);
+		fm->RenderString(x + offsetw - time_width_total - 10 + time_title_width, ypos + mheight, time_width, cpu_temp, COL_MENUCONTENT_TEXT);
+	}
+	ypos += mheight;
+#endif
 
 	int ypos_mem = ypos;
 	int pbw_fix = 0;
