@@ -1067,7 +1067,6 @@ menu.hint_avinputmode Use AV input of your receiver
 menu.hint_avinputmode_pip Use AV input of your receiver in PiP mode
 menu.hint_back Return to previous menu\nPress menu key to close all menus
 menu.hint_back_brief Return to previous menu
-menu.hint_backlight Configure buttons backlight
 menu.hint_backup Backup configs and channels to selected dir
 menu.hint_bedit Edit favorites and bouquets
 menu.hint_buildinfo Information about compilers, compiler flags, kernel
