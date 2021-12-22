@@ -48,7 +48,6 @@ class CScreenShot
 		bool extra_osd;
 		bool get_osd;
 		bool get_video;
-		bool scale_to_video;
 #if !HAVE_SH4_HARDWARE
 		FILE *fd;
 		pthread_t  scs_thread;
@@ -86,10 +85,6 @@ class CScreenShot
 		void EnableOSD(bool enable)
 		{
 			get_osd = enable;
-		}
-		void ScaleToVideo(bool enable)
-		{
-			scale_to_video = enable;
 		}
 		bool Start(const std::string custom_cmd = "");
 		bool StartSync();

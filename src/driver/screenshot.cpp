@@ -71,13 +71,8 @@ CScreenShot::CScreenShot(const std::string &fname, screenshot_format_t fmt)
 #endif
 	xres = 0;
 	yres = 0;
-	get_video = g_settings.screenshot_mode & 1;
-	get_osd = g_settings.screenshot_mode & 2;
-#if HAVE_GENERIC_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
-	scale_to_video = (g_settings.screenshot_mode == 3);
-#else
-	scale_to_video = (g_settings.screenshot_mode == 3) & (g_settings.screenshot_res & 1);
-#endif
+	get_video = g_settings.screenshot_mode == 0;
+	get_osd = g_settings.screenshot_mode == 1;
 }
 
 CScreenShot::~CScreenShot()
@@ -102,7 +97,7 @@ bool CScreenShot::GetData()
 
 #if !HAVE_GENERIC_HARDWARE
 	// to enable after libcs/drivers update
-	res = videoDecoder->GetScreenImage(pixel_data, xres, yres, get_video, get_osd, scale_to_video);
+	res = videoDecoder->GetScreenImage(pixel_data, xres, yres, get_video, get_osd);
 #endif
 
 	pthread_mutex_unlock(&getData_mutex);
@@ -190,8 +185,8 @@ bool CScreenShot::Start(const std::string __attribute__((unused)) custom_cmd)
 		default:
 			;
 	}
-	if (!scale_to_video)
-		cmd += " -d";
+
+	cmd += " -d";
 
 	if (xres)
 	{
