@@ -60,7 +60,7 @@ CScreenShot::CScreenShot(const std::string &fname, screenshot_format_t fmt)
 	format = fmt;
 	filename = fname;
 	pixel_data = NULL;
-#if !HAVE_SH4_HARDWARE
+#if !HAVE_SH4_HARDWARE && !HAVE_ARM_HARDWWARE && !HAVE_MIPS_HARDWARE
 	fd = NULL;
 	xres = 0;
 	yres = 0;
@@ -71,13 +71,13 @@ CScreenShot::CScreenShot(const std::string &fname, screenshot_format_t fmt)
 #endif
 	xres = 0;
 	yres = 0;
-	get_video = g_settings.screenshot_mode == 0;
-	get_osd = g_settings.screenshot_mode == 1;
+//	get_osd = g_settings.screenshot_mode == 0;
+//	get_video = g_settings.screenshot_mode = 1;
 }
 
 CScreenShot::~CScreenShot()
 {
-#if !HAVE_SH4_HARDWARE
+#if !HAVE_SH4_HARDWARE && !HAVE_ARM_HARDWARE && !HAVE_MIPS_HARDWARE
 	pthread_mutex_destroy(&thread_mutex);
 	pthread_mutex_destroy(&getData_mutex);
 #endif
@@ -130,7 +130,7 @@ bool CScreenShot::startThread()
 }
 #endif
 
-#if !HAVE_SH4_HARDWARE
+#if !HAVE_SH4_HARDWARE && !HAVE_ARM_HARDWARE && !HAVE_MIPS_HARDWARE
 void *CScreenShot::initThread(void *arg)
 {
 	CScreenShot *scs = static_cast<CScreenShot *>(arg);
@@ -168,22 +168,26 @@ void CScreenShot::cleanupThread(void *arg)
 /* start ::run in new thread to save file in selected format */
 bool CScreenShot::Start(const std::string __attribute__((unused)) custom_cmd)
 {
-#if HAVE_SH4_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	std::string cmd = "/bin/grab ";
-	if (get_osd && !get_video)
+
+	if (g_settings.screenshot_mode == 0)
 		cmd += "-o ";
-	else if (!get_osd && get_video)
+	if (g_settings.screenshot_mode == 1)
 		cmd += "-v ";
+	if (g_settings.screenshot_mode == 2)
+		cmd += "";
+
+
 	switch (format)
 	{
+		default:
 		case FORMAT_PNG:
 			cmd += "-p ";
 			break;
 		case FORMAT_JPG:
 			cmd += "-j 100";
 			break;
-		default:
-			;
 	}
 
 	cmd += " -d";
@@ -234,10 +238,10 @@ bool CScreenShot::SaveFile()
 
 	switch (format)
 	{
+		default:
 		case FORMAT_PNG:
 			ret = SavePng();
 			break;
-		default:
 			printf("CScreenShot::SaveFile unsupported format %d, using jpeg\n", format);
 		/* fall through */
 		case FORMAT_JPG:
