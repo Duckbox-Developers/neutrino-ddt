@@ -181,12 +181,12 @@ bool CScreenShot::Start(const std::string __attribute__((unused)) custom_cmd)
 
 	switch (format)
 	{
+		case FORMAT_JPG:
+			cmd += "-j 100";
+			break;
 		default:
 		case FORMAT_PNG:
 			cmd += "-p ";
-			break;
-		case FORMAT_JPG:
-			cmd += "-j 100";
 			break;
 	}
 
@@ -238,17 +238,15 @@ bool CScreenShot::SaveFile()
 
 	switch (format)
 	{
-		default:
-		case FORMAT_PNG:
-			ret = SavePng();
-			break;
-			printf("CScreenShot::SaveFile unsupported format %d, using jpeg\n", format);
-		/* fall through */
 		case FORMAT_JPG:
 			ret = SaveJpg();
 			break;
 		case FORMAT_BMP:
 			ret = SaveBmp();
+			break;
+		default:
+		case FORMAT_PNG:
+			ret = SavePng();
 			break;
 	}
 
@@ -507,17 +505,15 @@ void CScreenShot::MakeFileName(const t_channel_id channel_id)
 
 	switch (format)
 	{
-		case FORMAT_PNG:
-			strcat(fname, ".png");
-			break;
-		default:
-			printf("CScreenShot::MakeFileName unsupported format %d, using jpeg\n", format);
-		/* fall through */
 		case FORMAT_JPG:
 			strcat(fname, ".jpg");
 			break;
 		case FORMAT_BMP:
 			strcat(fname, ".bmp");
+			break;
+		default:
+		case FORMAT_PNG:
+			strcat(fname, ".png");
 			break;
 	}
 	printf("CScreenShot::MakeFileName: [%s]\n", fname);
