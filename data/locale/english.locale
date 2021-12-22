@@ -3,7 +3,6 @@ AUDIOSelectMenue.volume Audio selection and volume adjustment
 EPGMenu.epgplus EPG-Timelines (EPG-Plus)
 EPGMenu.eventinfo Details current program
 EPGMenu.eventlist Eventlist current programm
-EPGMenu.head EPG - Program information
 EPGMenu.streaminfo Technical informations
 EPGPlus.actions Actions
 EPGPlus.bybouquet_mode by bouquet
@@ -205,7 +204,6 @@ bookmarkmanager.select select
 bouqueteditor.add Add
 bouqueteditor.bouquetname Name of bouquets
 bouqueteditor.delete Delete
-bouqueteditor.delete_question Delete channel from bouquet?
 bouqueteditor.discardingchanges Discarding changes. Please be patient.
 bouqueteditor.hide Hide
 bouqueteditor.lock Lock
@@ -276,7 +274,6 @@ channellist.numeric_adjust Numeric Zap Adjust
 channellist.primetime Primetime
 channellist.provs Providers
 channellist.recordable_channels Recordable channels
-channellist.recording_not_possible Recording not possible!
 channellist.remember Last used
 channellist.reset_all Reset 'new' flag for all channels
 channellist.reset_flags Reset 'new' channel flag
@@ -664,9 +661,6 @@ flashupdate.install_image Flash downloaded image?
 flashupdate.install_package Install downloadad pack?
 flashupdate.md5check checking image
 flashupdate.md5sumerror image has errors
-flashupdate.mkfs_create_image Create backup
-flashupdate.mkfs_preparing_files Preparing files and directories
-flashupdate.mkfs_using_sumtool Using sumtool
 flashupdate.msgbox Found the following new file:\nDate: %s, %s\nBaseImage: %s\nType: %s\n\nDo you want to download and install this version now?
 flashupdate.mtdselector Partition-Selector
 flashupdate.new_found New image found !
@@ -706,14 +700,6 @@ flashupdate.type_settings Settings
 flashupdate.type_text Text
 flashupdate.type_unknown Unknown
 flashupdate.type_update Update
-flashupdate.update_with_settings_del_skipped Folder [%s] can not be deleted. Entry is skipped.
-flashupdate.update_with_settings_error Flash Error!\n \nNew Image only has %ld KB (out of %ld KB) left. Not\nenough space to complete this operation.\n \nCanceling operation!
-flashupdate.update_with_settings_processed Image is being processed ...
-flashupdate.update_with_settings_skipped Folder [%s] can not be saved. Entry is skipped.
-flashupdate.update_with_settings_warning Flash Warning!\n \nNew Image only has %ld KB (out of %ld KB) left. Probably not\nenough space to complete this operation ...\n \nDo you really want to proceed?
-flashupdate.updatemode Updatemode
-flashupdate.updatemode_internet internet
-flashupdate.updatemode_manual from local update directory
 flashupdate.url_file config file
 flashupdate.versioncheck checking version
 flashupdate.writeflash Write whole image
@@ -990,7 +976,6 @@ mainmenu.games Games
 mainmenu.head Main Menu
 mainmenu.lua Lua Plugins
 mainmenu.media Media
-mainmenu.mediaplayer Mediaplayer
 mainmenu.movieplayer Movieplayer
 mainmenu.pausesectionsd Read EPG
 mainmenu.pictureviewer Picture viewer
@@ -1006,7 +991,6 @@ mainmenu.service Service
 mainmenu.settings Settings
 mainmenu.shutdown Shutdown (deep standby)
 mainmenu.sleeptimer SleepTimer
-mainmenu.standby Standby
 mainmenu.tools Tools
 mainmenu.tvmode TV-Mode
 mainmenu.tvradio_switch TV-Radio Switch
@@ -1091,7 +1075,6 @@ menu.hint_channellist_show_channelnumber Show channel number in channel list
 menu.hint_channellist_show_empty_favs Show or hide empty bouquets in favorites
 menu.hint_channellist_show_infobox Show or hide bottom infobox of channellist
 menu.hint_channellogos_setup Configure global channelogos options
-menu.hint_channels Open channel list
 menu.hint_ci Conditional access menu\nto setup your CI CAM or embeded Conax card
 menu.hint_clock_background Show clock with theme's background color
 menu.hint_clock_mode Switch clock on or off
@@ -1332,7 +1315,6 @@ menu.hint_osd_timing After this time the OSD will be faded out
 menu.hint_other_fonts Change other font sizes
 menu.hint_parentallock_changepin Change PIN code
 menu.hint_parentallock_lockage Select age allowed to watch
-menu.hint_parentallock_menu Lock menus with pin code
 menu.hint_parentallock_prompt Configure when system will ask you\nfor PIN code
 menu.hint_personalize Enable, disable or Protect menu items\nConfigure color-buttons user menus
 menu.hint_pictureviewer_defdir Default picture viewer directory
@@ -1514,7 +1496,6 @@ menu.hint_softupdate_expert Separate partitions from the flash. Read and write t
 menu.hint_softupdate_expert_read Separate partitions (U-Boot, Splash, Kernel, SystemFS) from the flash read
 menu.hint_softupdate_expert_write Separate partitions (Splash, Kernel, SystemFS) write to the flash
 menu.hint_softupdate_settings The local update directory and the configuration file to set
-menu.hint_standby Put receiver to sleep mode
 menu.hint_start_tostandby Enter standby mode after boot
 menu.hint_streaminfo Current channel info: pids, signal and noise ratio\nBitrate graphs
 menu.hint_subchannel_pos Select subchannels menu position
@@ -2036,7 +2017,6 @@ parentallock.lockage16 from 16 years up
 parentallock.lockage18 from 18 years up
 parentallock.lockedchannel Locked sender
 parentallock.lockedprogram Locked program (from %d years up)
-parentallock.menu Menu Security
 parentallock.never never
 parentallock.onsignal on broadcasted lock
 parentallock.parentallock Parental lock
@@ -2310,7 +2290,6 @@ screensaver.timeout Change interval
 screensetup.lowerright green = setup lower right
 screensetup.remove remove mask
 screensetup.upperleft red = setup upper left
-screenshot.backbuffer Secondary buffer (back buffer)
 screenshot.count Screenshot count
 screenshot.cover Create Moviecover for Moviebrowser
 screenshot.defdir Destination directory
@@ -2323,8 +2302,6 @@ screenshot.plane.osd OSD only
 screenshot.plane.video Video only
 screenshot.planes Screenshot mode
 screenshot.please_wait Creating video screenshot, please wait ...
-screenshot.please_wait_cover Creating video cover, please wait ...
-screenshot.png_compression PNG compression level
 screenshot.res Resolution
 screenshot.tv Video
 servicemenu.getplugins Reload plugins
@@ -2373,18 +2350,15 @@ sleeptimerbox.title2 Inactivity shutdown timer
 streaminfo.aratio Aspect ratio
 streaminfo.aratio_unknown unknown
 streaminfo.audiotype Audiotype
-streaminfo.audiotype_unknown unknown
 streaminfo.average_bitrate Average
 streaminfo.bitrate Bitrate
 streaminfo.casystems CA ID(s)
 streaminfo.framerate Framerate
 streaminfo.framerate_unknown unknown
 streaminfo.head Technical informations
-streaminfo.not_available not available
 streaminfo.osd_resolution OSD resolution
 streaminfo.resolution Resolution
 streaminfo.signal Tuner
-streaminfo.videosystem Videosystem
 streaming.busy One or several recording processes are active.\nIf you encounter this message and no recording is active, please restart GUI.
 streaming.dir_not_writable The recording directory is not writable.\nRecording will not work.
 streaming.overflow Record buffer overflow, consider to stop some records
