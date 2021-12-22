@@ -1491,7 +1491,6 @@ menu.hint_screenshot_planes Select what the screenshot should cover.
 menu.hint_screenshot_res Screenshot size: current channel's video size\nor OSD size (1280x720)
 menu.hint_screenshot_scale For video+OSD screenshots, scale to video size
 menu.hint_screenshot_setup Configure screenshots options
-menu.hint_screenshot_video Include live video in screenshot
 menu.hint_scripts Run scripts
 menu.hint_selected_back Change selected item background color
 menu.hint_selected_text Change selected item text color
@@ -2330,7 +2329,6 @@ screenshot.png_compression PNG compression level
 screenshot.res Resolution
 screenshot.scale Scale
 screenshot.tv Video
-screenshot.video Video in the background
 servicemenu.getplugins Reload plugins
 servicemenu.getplugins_hint Reloading plugins,\nplease be patient.
 servicemenu.head Service

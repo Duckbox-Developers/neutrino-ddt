@@ -1736,10 +1736,6 @@ void COsdSetup::showOsdScreenShotSetup(CMenuWidget *menu_screenshot)
 		screenshot_res = g_settings.screenshot_res;
 	else
 		screenshot_res = g_settings.screenshot_mode;
-#else
-	mc = new CMenuOptionChooser(LOCALE_SCREENSHOT_VIDEO, &g_settings.screenshot_video, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
-	mc->setHint("", LOCALE_MENU_HINT_SCREENSHOT_VIDEO);
-	menu_screenshot->addItem(mc);
 #endif
 
 #if HAVE_SH4_HARDWARE

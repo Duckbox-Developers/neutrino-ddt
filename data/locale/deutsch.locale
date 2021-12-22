@@ -1491,7 +1491,6 @@ menu.hint_screenshot_planes Wählen Sie den Inhalt des Screenshots.
 menu.hint_screenshot_res Screenshot Größe: aktuelle TV-Auflösung oder OSD-Auflösung (1280x720)
 menu.hint_screenshot_scale Skalierung auf TV-Auflösung, wenn OSD aktiviert ist
 menu.hint_screenshot_setup Konfigurieren Sie die Optionen zum Erstellen von Screenshots
-menu.hint_screenshot_video Diese Funktion übernimmt das TV-Bild als Hintergrund in den Screenshot
 menu.hint_scripts Shell-Skripte ausführen
 menu.hint_selected_back Ändern Sie die Hintergrundfarbe für ausgewählte Fensterinhalte
 menu.hint_selected_text Ändern Sie die Textfarbe für ausgewählte Fensterinhalte
@@ -2330,7 +2329,6 @@ screenshot.png_compression PNG-Komprimierungsstärke
 screenshot.res Auflösung
 screenshot.scale Skalierung
 screenshot.tv Video
-screenshot.video Video im Hintergrund
 servicemenu.getplugins Plugins neu laden
 servicemenu.getplugins_hint Plugins werden neu geladen,\nbitte warten ...
 servicemenu.head Service

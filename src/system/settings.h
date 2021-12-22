@@ -615,7 +615,6 @@ struct SNeutrinoSettings
 	int screenshot_png_compression;
 	int screenshot_backbuffer;
 #else
-	int screenshot_video;
 	int screenshot_scale;
 #endif
 	int auto_cover;

@@ -854,7 +854,6 @@ if (g_info.hw_caps->can_shutdown)
 	g_settings.screenshot_res = configfile.getInt32( "screenshot_res",  2 /* = osd resolution */);
 #else
 	g_settings.screenshot_mode = configfile.getInt32( "screenshot_mode",  0);
-	g_settings.screenshot_video = configfile.getInt32( "screenshot_video",  1);
 	g_settings.screenshot_scale = configfile.getInt32( "screenshot_scale",  0);
 #endif
 	g_settings.auto_cover = configfile.getInt32( "auto_cover",  0);
@@ -1584,7 +1583,6 @@ void CNeutrinoApp::saveSetup(const char * fname)
 #if HAVE_SH4_HARDWARE
 	configfile.setInt32( "screenshot_res", g_settings.screenshot_res );
 #else
-	configfile.setInt32( "screenshot_video", g_settings.screenshot_video );
 	configfile.setInt32( "screenshot_scale", g_settings.screenshot_scale );
 #endif
 	configfile.setInt32( "auto_cover", g_settings.auto_cover );
