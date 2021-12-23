@@ -192,13 +192,6 @@ bool CScreenShot::Start(const std::string __attribute__((unused)) custom_cmd)
 
 	cmd += " -d";
 
-	if (xres)
-	{
-		char tmp[10];
-		snprintf(tmp, sizeof(tmp), "%d", xres);
-		cmd += "-w " + std::string(tmp);
-	}
-
 	if (!custom_cmd.empty())
 		cmd = "/bin/grab " + custom_cmd;
 
