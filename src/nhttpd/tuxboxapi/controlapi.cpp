@@ -2182,7 +2182,7 @@ void CControlAPI::ScreenshotCGI(CyhookHandler *hh)
 		return;
 	}
 #endif
-	CScreenShot *screenshot = new CScreenShot("/tmp/" + filename + ".bmp", CScreenShot::FORMAT_BMP);
+	CScreenShot *screenshot = new CScreenShot("/tmp/" + filename + ".png", CScreenShot::FORMAT_PNG);
 	if (screenshot)
 	{
 		screenshot->EnableOSD(enableOSD);

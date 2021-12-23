@@ -60,7 +60,7 @@ CScreenShot::CScreenShot(const std::string &fname, screenshot_format_t fmt)
 	format = fmt;
 	filename = fname;
 	pixel_data = NULL;
-#if !HAVE_SH4_HARDWARE
+#if !HAVE_SH4_HARDWARE && !HAVE_ARM_HARDWWARE && !HAVE_MIPS_HARDWARE
 	fd = NULL;
 	xres = 0;
 	yres = 0;
@@ -71,18 +71,13 @@ CScreenShot::CScreenShot(const std::string &fname, screenshot_format_t fmt)
 #endif
 	xres = 0;
 	yres = 0;
-	get_video = g_settings.screenshot_mode & 1;
-	get_osd = g_settings.screenshot_mode & 2;
-#if HAVE_GENERIC_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
-	scale_to_video = (g_settings.screenshot_mode == 3);
-#else
-	scale_to_video = (g_settings.screenshot_mode == 3) & (g_settings.screenshot_res & 1);
-#endif
+//	get_osd = g_settings.screenshot_mode == 0;
+//	get_video = g_settings.screenshot_mode = 1;
 }
 
 CScreenShot::~CScreenShot()
 {
-#if !HAVE_SH4_HARDWARE
+#if !HAVE_SH4_HARDWARE && !HAVE_ARM_HARDWARE && !HAVE_MIPS_HARDWARE
 	pthread_mutex_destroy(&thread_mutex);
 	pthread_mutex_destroy(&getData_mutex);
 #endif
@@ -102,7 +97,7 @@ bool CScreenShot::GetData()
 
 #if !HAVE_GENERIC_HARDWARE
 	// to enable after libcs/drivers update
-	res = videoDecoder->GetScreenImage(pixel_data, xres, yres, get_video, get_osd, scale_to_video);
+	res = videoDecoder->GetScreenImage(pixel_data, xres, yres /*, get_video, get_osd*/);
 #endif
 
 	pthread_mutex_unlock(&getData_mutex);
@@ -135,7 +130,7 @@ bool CScreenShot::startThread()
 }
 #endif
 
-#if !HAVE_SH4_HARDWARE
+#if !HAVE_SH4_HARDWARE && !HAVE_ARM_HARDWARE && !HAVE_MIPS_HARDWARE
 void *CScreenShot::initThread(void *arg)
 {
 	CScreenShot *scs = static_cast<CScreenShot *>(arg);
@@ -173,25 +168,29 @@ void CScreenShot::cleanupThread(void *arg)
 /* start ::run in new thread to save file in selected format */
 bool CScreenShot::Start(const std::string __attribute__((unused)) custom_cmd)
 {
-#if HAVE_SH4_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	std::string cmd = "/bin/grab ";
-	if (get_osd && !get_video)
+
+	if (g_settings.screenshot_mode == 0)
 		cmd += "-o ";
-	else if (!get_osd && get_video)
+	if (g_settings.screenshot_mode == 1)
 		cmd += "-v ";
+	if (g_settings.screenshot_mode == 2)
+		cmd += "";
+
+
 	switch (format)
 	{
-		case FORMAT_PNG:
-			cmd += "-p ";
-			break;
 		case FORMAT_JPG:
 			cmd += "-j 100";
 			break;
 		default:
-			;
+		case FORMAT_PNG:
+			cmd += "-p ";
+			break;
 	}
-	if (!scale_to_video)
-		cmd += " -d";
+
+	cmd += " -d";
 
 	if (xres)
 	{
@@ -239,17 +238,12 @@ bool CScreenShot::SaveFile()
 
 	switch (format)
 	{
-		case FORMAT_PNG:
-			ret = SavePng();
-			break;
-		default:
-			printf("CScreenShot::SaveFile unsupported format %d, using jpeg\n", format);
-		/* fall through */
 		case FORMAT_JPG:
 			ret = SaveJpg();
 			break;
-		case FORMAT_BMP:
-			ret = SaveBmp();
+		default:
+		case FORMAT_PNG:
+			ret = SavePng();
 			break;
 	}
 
@@ -413,51 +407,6 @@ bool CScreenShot::SaveJpg()
 	TIMER_STOP(("[CScreenShot::SaveJpg] " + filename).c_str());
 	return true;
 }
-
-/* save screenshot in bmp format, return true if success, or false */
-bool CScreenShot::SaveBmp()
-{
-	TIMER_START();
-	if (!OpenFile())
-		return false;
-
-	unsigned char hdr[14 + 40];
-	unsigned int i = 0;
-#define PUT32(x) hdr[i++] = ((x)&0xFF); hdr[i++] = (((x)>>8)&0xFF); hdr[i++] = (((x)>>16)&0xFF); hdr[i++] = (((x)>>24)&0xFF);
-#define PUT16(x) hdr[i++] = ((x)&0xFF); hdr[i++] = (((x)>>8)&0xFF);
-#define PUT8(x) hdr[i++] = ((x)&0xFF);
-	PUT8('B');
-	PUT8('M');
-	PUT32((((xres * yres) * 3 + 3) & ~ 3) + 14 + 40);
-	PUT16(0);
-	PUT16(0);
-	PUT32(14 + 40);
-	PUT32(40);
-	PUT32(xres);
-	PUT32(yres);
-	PUT16(1);
-	PUT16(4 * 8); // bits
-	PUT32(0);
-	PUT32(0);
-	PUT32(0);
-	PUT32(0);
-	PUT32(0);
-	PUT32(0);
-#undef PUT32
-#undef PUT16
-#undef PUT8
-	fwrite(hdr, 1, i, fd);
-
-	int y;
-	for (y = yres - 1; y >= 0 ; y -= 1)
-	{
-		fwrite(pixel_data + (y * xres * 4), xres * 4, 1, fd);
-	}
-	fclose(fd);
-	TIMER_STOP(("[CScreenShot::SaveBmp] " + filename).c_str());
-	return true;
-
-}
 #endif
 
 /*
@@ -508,17 +457,12 @@ void CScreenShot::MakeFileName(const t_channel_id channel_id)
 
 	switch (format)
 	{
-		case FORMAT_PNG:
-			strcat(fname, ".png");
-			break;
-		default:
-			printf("CScreenShot::MakeFileName unsupported format %d, using jpeg\n", format);
-		/* fall through */
 		case FORMAT_JPG:
 			strcat(fname, ".jpg");
 			break;
-		case FORMAT_BMP:
-			strcat(fname, ".bmp");
+		default:
+		case FORMAT_PNG:
+			strcat(fname, ".png");
 			break;
 	}
 	printf("CScreenShot::MakeFileName: [%s]\n", fname);

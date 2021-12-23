@@ -1495,12 +1495,10 @@ bool CFrameBuffer::OSDShot(const std::string &name)
 	unsigned int yres = DEFAULT_YRES;
 	fb_pixel_t *b = (fb_pixel_t *) accel->lbb;
 
-	if (!g_settings.screenshot_backbuffer)
-	{
-		xres = accel->s.xres;
-		yres = accel->s.yres;
-		b = (fb_pixel_t *) lfb;
-	}
+	xres = accel->s.xres;
+	yres = accel->s.yres;
+	b = (fb_pixel_t *) lfb;
+
 
 	png_bytep row_pointers[yres];
 	png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,
@@ -1512,7 +1510,6 @@ bool CFrameBuffer::OSDShot(const std::string &name)
 	for (unsigned int y = 0; y < yres; y++)
 		row_pointers[y] = (png_bytep)(b + y * xres);
 
-	png_set_compression_level(png_ptr, g_settings.screenshot_png_compression);
 	png_set_bgr(png_ptr);
 	png_set_filter(png_ptr, 0, PNG_FILTER_NONE);
 	png_set_IHDR(png_ptr, info_ptr, xres, yres, 8, PNG_COLOR_TYPE_RGBA,

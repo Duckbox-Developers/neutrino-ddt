@@ -3,7 +3,6 @@ AUDIOSelectMenue.volume Tonspur und Lautstärkeanpassung
 EPGMenu.epgplus Vorschau-Übersicht
 EPGMenu.eventinfo Info zur Sendung
 EPGMenu.eventlist Vorschau aktuelles Programm
-EPGMenu.head EPG - Programminformation
 EPGMenu.streaminfo Technische Informationen
 EPGPlus.actions Aktionen
 EPGPlus.bybouquet_mode bouquetweise
@@ -205,7 +204,6 @@ bookmarkmanager.select Auswählen
 bouqueteditor.add Hinzufügen
 bouqueteditor.bouquetname Name des Bouquets
 bouqueteditor.delete Löschen
-bouqueteditor.delete_question Soll der Kanal aus diesem Bouquet gelöscht werden?
 bouqueteditor.discardingchanges Änderungen werden verworfen. Bitte warten ...
 bouqueteditor.hide Verstecken
 bouqueteditor.lock Sperren
@@ -276,7 +274,6 @@ channellist.numeric_adjust Bei numerischem Zap Kanalliste nachführen
 channellist.primetime Primetime
 channellist.provs Anbieter
 channellist.recordable_channels Aufnehmbare Sender
-channellist.recording_not_possible Aufnahme nicht möglich!
 channellist.remember Zuletzt verwendete
 channellist.reset_all Entferne Markierung "Neu" für alle Kanäle
 channellist.reset_flags Entferne Kanal-Markierung "Neu"
@@ -664,9 +661,6 @@ flashupdate.install_image Heruntergeladenes Image installieren?
 flashupdate.install_package Heruntergeladenes Paket installieren?
 flashupdate.md5check Imageprüfung
 flashupdate.md5sumerror Das Image ist fehlerhaft
-flashupdate.mkfs_create_image Backup erstellen
-flashupdate.mkfs_preparing_files Dateien und Verzeichnisse vorbereiten
-flashupdate.mkfs_using_sumtool Benutze Sumtool
 flashupdate.msgbox Es wurde folgende neue Datei gefunden:\nDatum: %s, %s\nBasisImage: %s\nTyp: %s\n\nWollen Sie diese Version jetzt herunterladen und installieren?
 flashupdate.mtdselector Partitions-Auswahl
 flashupdate.new_found Updates verfügbar!
@@ -706,14 +700,6 @@ flashupdate.type_settings Einstellungen
 flashupdate.type_text Text
 flashupdate.type_unknown Unbekannt
 flashupdate.type_update Aktualisierung
-flashupdate.update_with_settings_del_skipped Ordner [%s] kann nicht gelöscht werden. Eintrag wird übersprungen.
-flashupdate.update_with_settings_error Error Flashspeicher!\n \nIm neuen Image sind nur noch %ld KB (von %ld KB) frei,\ndas ist zu wenig, um einen sicheren Betrieb zu gewährleisten.\n \nDer Vorgang wird abgebrochen!
-flashupdate.update_with_settings_processed Image wird bearbeitet ...
-flashupdate.update_with_settings_skipped Ordner [%s] kann nicht gesichert werden. Eintrag wird übersprungen.
-flashupdate.update_with_settings_warning Warnung Flashspeicher!\n \nIm neuen Image sind nur noch %ld KB (von %ld KB) frei,\ndas ist möglicherweise zu wenig, um einen sicheren Betrieb zu gewährleisten.\n \nSoll der Vorgang trotzdem fortgesetzt werden?
-flashupdate.updatemode Updatemodus
-flashupdate.updatemode_internet Internet
-flashupdate.updatemode_manual von lokalem Update-Verzeichnis
 flashupdate.url_file Internet Konfigurations-Datei
 flashupdate.versioncheck Versionsüberprüfung
 flashupdate.writeflash ganzes Flashimage einspielen
@@ -990,7 +976,6 @@ mainmenu.games Spiele
 mainmenu.head Hauptmenü
 mainmenu.lua Lua-Plugins
 mainmenu.media Multimedia
-mainmenu.mediaplayer Mediaplayer
 mainmenu.movieplayer Movieplayer
 mainmenu.pausesectionsd EPG auslesen
 mainmenu.pictureviewer Bildbetrachter
@@ -1006,7 +991,6 @@ mainmenu.service Service
 mainmenu.settings Einstellungen
 mainmenu.shutdown Ausschalten
 mainmenu.sleeptimer SleepTimer
-mainmenu.standby Standby
 mainmenu.tools Werkzeuge
 mainmenu.tvmode TV-Modus
 mainmenu.tvradio_switch TV-Radio Umschaltung
@@ -1091,7 +1075,6 @@ menu.hint_channellist_show_channelnumber Zeigt Kanalnummer in der Kanalliste.
 menu.hint_channellist_show_empty_favs Zeigt oder versteckt leere Bouquets in den Favoriten
 menu.hint_channellist_show_infobox Zeigt oder versteckt das untere Sendungsfenster
 menu.hint_channellogos_setup Wählen Sie die globalen Optionen für die Senderlogos aus
-menu.hint_channels Kanalliste öffnen
 menu.hint_ci Conditional-Access-Menü zum Einrichten Ihres CI-Moduls oder der eingebetteten Conax-Karte
 menu.hint_clock_background Lassen Sie die Uhr mit Hintergrund anzeigen
 menu.hint_clock_mode Schalten Sie die Uhr ein oder aus
@@ -1332,7 +1315,6 @@ menu.hint_osd_timing Einblendzeit, die das OSD auf dem TV angezeigt wird
 menu.hint_other_fonts Ändern Sie andere Schriftgrößen
 menu.hint_parentallock_changepin Geben Sie den 4-stelligen PIN-Code ein, der dann ggf. abgefragt wird
 menu.hint_parentallock_lockage Legen Sie fest, bei welcher Altersklasse die Abfrage der PIN erfolgt
-menu.hint_parentallock_menu Menüs mit PIN Code sichern
 menu.hint_parentallock_prompt Legen Sie fest, wann die Eingabe einer PIN erfolgen soll
 menu.hint_personalize Personalisieren Sie ihre Menüs und konfigurieren Sie ihre Benutzermenüs
 menu.hint_pictureviewer_defdir Wählen Sie das Startverzeichnis für den Bildbetrachter
@@ -1488,10 +1470,7 @@ menu.hint_screenshot_cover Während der Wiedergabe von Aufnahmen kann ein Screen
 menu.hint_screenshot_dir Wählen Sie das Verzeichnis zum Speichern der Screenshots
 menu.hint_screenshot_format Wählen Sie das Dateiformat zum Speichern der Screenshots
 menu.hint_screenshot_planes Wählen Sie den Inhalt des Screenshots.
-menu.hint_screenshot_res Screenshot Größe: aktuelle TV-Auflösung oder OSD-Auflösung (1280x720)
-menu.hint_screenshot_scale Skalierung auf TV-Auflösung, wenn OSD aktiviert ist
 menu.hint_screenshot_setup Konfigurieren Sie die Optionen zum Erstellen von Screenshots
-menu.hint_screenshot_video Diese Funktion übernimmt das TV-Bild als Hintergrund in den Screenshot
 menu.hint_scripts Shell-Skripte ausführen
 menu.hint_selected_back Ändern Sie die Hintergrundfarbe für ausgewählte Fensterinhalte
 menu.hint_selected_text Ändern Sie die Textfarbe für ausgewählte Fensterinhalte
@@ -1516,7 +1495,6 @@ menu.hint_softupdate_expert Einzelne Partitionen aus dem Flash lesen bzw. in den
 menu.hint_softupdate_expert_read Einzelne Partitionen (U-Boot, Splash, Kernel, SystemFS) aus dem Flash lesen
 menu.hint_softupdate_expert_write Einzelne Partitionen (Splash, Kernel, SystemFS) in den Flash schreiben
 menu.hint_softupdate_settings Das lokale Update-Verzeichnis und die Konfigurationsdatei festlegen
-menu.hint_standby Receiver in den Standby Modus versetzen
 menu.hint_start_tostandby Aktiviert den Standby-Modus direkt nach dem Starten der Box
 menu.hint_streaminfo Aktuelle Sender-Informationen über PIDs, SNR-Verhältnis, Bitrate usw.
 menu.hint_subchannel_pos Wählen Sie die Anzeigeposition der Unterkanäle aus
@@ -2069,7 +2047,6 @@ parentallock.lockage16 ab 16 Jahren sperren
 parentallock.lockage18 ab 18 Jahren sperren
 parentallock.lockedchannel Vorgesperrter Sender
 parentallock.lockedprogram Gesperrtes Programm (FSK ab %d)
-parentallock.menu Sicherheits Menü
 parentallock.never Nie
 parentallock.onsignal Bei gesendeter Vorsperre
 parentallock.parentallock Jugendschutz
@@ -2343,25 +2320,17 @@ screensaver.timeout Wechselintervall
 screensetup.lowerright grün = Bildrand unten, rechts
 screensetup.remove Maske entfernen
 screensetup.upperleft rot = Bildrand oben, links
-screenshot.backbuffer Sekundärer Buffer (Back Buffer)
 screenshot.count Anzahl
 screenshot.cover Erzeuge Filmcover für Moviebrowser
 screenshot.defdir Ziel-Verzeichnis
 screenshot.format Format
 screenshot.info Screenshot Taste ist nicht belegt
 screenshot.menu Screenshot
-screenshot.osd OSD
 screenshot.plane.all OSD und Video
 screenshot.plane.osd nur OSD
 screenshot.plane.video nur Video
 screenshot.planes Screenshot-Art
 screenshot.please_wait Erzeuge Video-Screenshot, bitte warten ...
-screenshot.please_wait_cover Erzeuge Video-Cover, bitte warten ...
-screenshot.png_compression PNG-Komprimierungsstärke
-screenshot.res Auflösung
-screenshot.scale Skalierung
-screenshot.tv Video
-screenshot.video Video im Hintergrund
 servicemenu.getplugins Plugins neu laden
 servicemenu.getplugins_hint Plugins werden neu geladen,\nbitte warten ...
 servicemenu.head Service
@@ -2408,18 +2377,15 @@ sleeptimerbox.title2 Inaktivitätstimer
 streaminfo.aratio Verhältnis
 streaminfo.aratio_unknown unbekannt
 streaminfo.audiotype Audiotyp
-streaminfo.audiotype_unknown unbekannt
 streaminfo.average_bitrate Durchschnitt
 streaminfo.bitrate Bitrate
 streaminfo.casystems CA ID(s)
 streaminfo.framerate Bildrate
 streaminfo.framerate_unknown unbekannt
 streaminfo.head Technische Informationen
-streaminfo.not_available nicht verfügbar
 streaminfo.osd_resolution OSD-Auflösung
 streaminfo.resolution Auflösung
 streaminfo.signal Tuner
-streaminfo.videosystem Videosystem
 streaming.busy Einer oder mehrere Aufnahmeprozesse sind aktiv.\nSollte die Aufnahme eigentlich beendet sein,\nschafft ein Neustart der GUI Abhilfe.
 streaming.dir_not_writable Das Aufnahmeverzeichnis ist nicht beschreibbar.\nAufnahmen sind daher nicht möglich.
 streaming.overflow Aufnahme-Puffer Überlauf! Bitte ggf. einige Aufnahmen beenden.

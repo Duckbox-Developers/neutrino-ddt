@@ -35,8 +35,7 @@ class CScreenShot
 		typedef enum
 		{
 			FORMAT_PNG,
-			FORMAT_JPG,
-			FORMAT_BMP
+			FORMAT_JPG
 		} screenshot_format_t;
 
 	private:
@@ -48,7 +47,6 @@ class CScreenShot
 		bool extra_osd;
 		bool get_osd;
 		bool get_video;
-		bool scale_to_video;
 #if !HAVE_SH4_HARDWARE
 		FILE *fd;
 		pthread_t  scs_thread;
@@ -61,7 +59,6 @@ class CScreenShot
 
 		bool SavePng();
 		bool SaveJpg();
-		bool SaveBmp();
 
 		bool startThread();
 		static void *initThread(void *arg);
@@ -86,10 +83,6 @@ class CScreenShot
 		void EnableOSD(bool enable)
 		{
 			get_osd = enable;
-		}
-		void ScaleToVideo(bool enable)
-		{
-			scale_to_video = enable;
 		}
 		bool Start(const std::string custom_cmd = "");
 		bool StartSync();
