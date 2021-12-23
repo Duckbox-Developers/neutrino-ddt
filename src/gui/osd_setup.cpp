@@ -1670,9 +1670,8 @@ int COsdSetup::showContextChanlistMenu(CChannelList *parent_channellist)
 #define SCREENSHOT_FMT_OPTION_COUNT 3
 const CMenuOptionChooser::keyval_ext SCREENSHOT_FMT_OPTIONS[SCREENSHOT_FMT_OPTION_COUNT] =
 {
-	{ CScreenShot::FORMAT_PNG,   NONEXISTANT_LOCALE, "PNG"  },
-	{ CScreenShot::FORMAT_JPG,   NONEXISTANT_LOCALE, "JPEG" },
-	{ CScreenShot::FORMAT_BMP,   NONEXISTANT_LOCALE, "BMP" }
+	{ CScreenShot::FORMAT_PNG,   NONEXISTANT_LOCALE, "PNG"  }, //0
+	{ CScreenShot::FORMAT_JPG,   NONEXISTANT_LOCALE, "JPEG" }  //1
 };
 
 #define SCREENSHOT_PLANE_OPTION_COUNT 3

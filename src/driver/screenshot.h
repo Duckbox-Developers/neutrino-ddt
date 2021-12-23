@@ -35,8 +35,7 @@ class CScreenShot
 		typedef enum
 		{
 			FORMAT_PNG,
-			FORMAT_JPG,
-			FORMAT_BMP
+			FORMAT_JPG
 		} screenshot_format_t;
 
 	private:
@@ -60,7 +59,6 @@ class CScreenShot
 
 		bool SavePng();
 		bool SaveJpg();
-		bool SaveBmp();
 
 		bool startThread();
 		static void *initThread(void *arg);

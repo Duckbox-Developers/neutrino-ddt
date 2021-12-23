@@ -97,7 +97,7 @@ bool CScreenShot::GetData()
 
 #if !HAVE_GENERIC_HARDWARE
 	// to enable after libcs/drivers update
-	res = videoDecoder->GetScreenImage(pixel_data, xres, yres, get_video, get_osd);
+	res = videoDecoder->GetScreenImage(pixel_data, xres, yres /*, get_video, get_osd*/);
 #endif
 
 	pthread_mutex_unlock(&getData_mutex);
@@ -240,9 +240,6 @@ bool CScreenShot::SaveFile()
 	{
 		case FORMAT_JPG:
 			ret = SaveJpg();
-			break;
-		case FORMAT_BMP:
-			ret = SaveBmp();
 			break;
 		default:
 		case FORMAT_PNG:
@@ -411,52 +408,6 @@ bool CScreenShot::SaveJpg()
 	return true;
 }
 
-/* save screenshot in bmp format, return true if success, or false */
-bool CScreenShot::SaveBmp()
-{
-	TIMER_START();
-	if (!OpenFile())
-		return false;
-
-	unsigned char hdr[14 + 40];
-	unsigned int i = 0;
-#define PUT32(x) hdr[i++] = ((x)&0xFF); hdr[i++] = (((x)>>8)&0xFF); hdr[i++] = (((x)>>16)&0xFF); hdr[i++] = (((x)>>24)&0xFF);
-#define PUT16(x) hdr[i++] = ((x)&0xFF); hdr[i++] = (((x)>>8)&0xFF);
-#define PUT8(x) hdr[i++] = ((x)&0xFF);
-	PUT8('B');
-	PUT8('M');
-	PUT32((((xres * yres) * 3 + 3) & ~ 3) + 14 + 40);
-	PUT16(0);
-	PUT16(0);
-	PUT32(14 + 40);
-	PUT32(40);
-	PUT32(xres);
-	PUT32(yres);
-	PUT16(1);
-	PUT16(4 * 8); // bits
-	PUT32(0);
-	PUT32(0);
-	PUT32(0);
-	PUT32(0);
-	PUT32(0);
-	PUT32(0);
-#undef PUT32
-#undef PUT16
-#undef PUT8
-	fwrite(hdr, 1, i, fd);
-
-	int y;
-	for (y = yres - 1; y >= 0 ; y -= 1)
-	{
-		fwrite(pixel_data + (y * xres * 4), xres * 4, 1, fd);
-	}
-	fclose(fd);
-	TIMER_STOP(("[CScreenShot::SaveBmp] " + filename).c_str());
-	return true;
-
-}
-#endif
-
 /*
  * create filename member from channel name and its current EPG data,
  * with added date and time including msecs and suffix for selected format
@@ -507,9 +458,6 @@ void CScreenShot::MakeFileName(const t_channel_id channel_id)
 	{
 		case FORMAT_JPG:
 			strcat(fname, ".jpg");
-			break;
-		case FORMAT_BMP:
-			strcat(fname, ".bmp");
 			break;
 		default:
 		case FORMAT_PNG:
