@@ -1538,37 +1538,6 @@ bool COsdSetup::changeNotify(const neutrino_locale_t OptionName, void * data)
 		uint32_t osd_mode = (uint32_t)*(int*)data;
 		COsdHelpers::getInstance()->g_settings_osd_resolution_save = osd_mode;
 		COsdHelpers::getInstance()->changeOsdResolution(osd_mode);
-#if 0
-		if (frameBuffer->fullHdAvailable()) {
-			if (frameBuffer->osd_resolutions.empty())
-				return true;
-
-			size_t index = (size_t)*(int*)data;
-			size_t resCount = frameBuffer->osd_resolutions.size();
-			if (index >= resCount)
-				index = 0;
-
-			uint32_t resW = frameBuffer->osd_resolutions[index].xRes;
-			uint32_t resH = frameBuffer->osd_resolutions[index].yRes;
-			uint32_t bpp  = frameBuffer->osd_resolutions[index].bpp;
-			int switchFB = frameBuffer->setMode(resW, resH, bpp);
-
-			if (switchFB == 0) {
-//printf("\n>>>>>[%s:%d] New res: %dx%dx%d\n \n", __func__, __LINE__, resW, resH, bpp);
-				osd_menu->hide();
-				frameBuffer->Clear();
-				CNeutrinoApp::getInstance()->setScreenSettings();
-				CNeutrinoApp::getInstance()->SetupFonts(CNeutrinoFonts::FONTSETUP_NEUTRINO_FONT);
-				CVolumeHelper::getInstance()->refresh();
-				CInfoClock::getInstance()->ClearDisplay();
-				FileTimeOSD->Init();
-				if (CNeutrinoApp::getInstance()->channelList)
-					CNeutrinoApp::getInstance()->channelList->ResetModules();
-				if (g_InfoViewer)
-					g_InfoViewer->ResetModules();
-			}
-		}
-#endif
 		return true;
 	}
 #endif
@@ -1599,7 +1568,6 @@ bool COsdSetup::changeNotify(const neutrino_locale_t OptionName, void * data)
 	}
 	return false;
 }
-
 
 void COsdSetup::resetRadioText()
 {
