@@ -1470,7 +1470,6 @@ menu.hint_screenshot_cover ON: When playing record, overwrite single\nscreenshot
 menu.hint_screenshot_dir Select directory to save screenshots
 menu.hint_screenshot_format File format to save screenshot
 menu.hint_screenshot_planes Select what the screenshot should cover.
-menu.hint_screenshot_res Screenshot size: current channel's video size\nor OSD size (1280x720)
 menu.hint_screenshot_setup Configure screenshots options
 menu.hint_scripts Run scripts
 menu.hint_selected_back Change selected item background color
@@ -2296,14 +2295,11 @@ screenshot.defdir Destination directory
 screenshot.format Format
 screenshot.info Screenshot key is unused
 screenshot.menu Screenshot
-screenshot.osd OSD
 screenshot.plane.all OSD and Video
 screenshot.plane.osd OSD only
 screenshot.plane.video Video only
 screenshot.planes Screenshot mode
 screenshot.please_wait Creating video screenshot, please wait ...
-screenshot.res Resolution
-screenshot.tv Video
 servicemenu.getplugins Reload plugins
 servicemenu.getplugins_hint Reloading plugins,\nplease be patient.
 servicemenu.head Service

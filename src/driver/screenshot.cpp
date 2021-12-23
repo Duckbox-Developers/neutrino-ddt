@@ -407,6 +407,7 @@ bool CScreenShot::SaveJpg()
 	TIMER_STOP(("[CScreenShot::SaveJpg] " + filename).c_str());
 	return true;
 }
+#endif
 
 /*
  * create filename member from channel name and its current EPG data,
