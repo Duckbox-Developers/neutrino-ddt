@@ -943,7 +943,7 @@ struct SNeutrinoSettings
 		ITEM_NONE = 0,
 		ITEM_BAR = 1,
 		ITEM_EPG_LIST = 2,
-		ITEM_EPG_SUPER = 3,
+		ITEM_EPG_PLUS = 3,
 		ITEM_EPG_INFO = 4,
 		ITEM_EPG_MISC = 5,
 		ITEM_AUDIO_SELECT = 6,
