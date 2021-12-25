@@ -1469,7 +1469,7 @@ menu.hint_screenshot_count When no GUI on screen, you can save 1-5\nscreenshot s
 menu.hint_screenshot_cover ON: When playing record, overwrite single\nscreenshot to show inside MovieBrowser
 menu.hint_screenshot_dir Select directory to save screenshots
 menu.hint_screenshot_format File format to save screenshot
-menu.hint_screenshot_planes Select what the screenshot should cover.
+menu.hint_screenshot_plans Select what the screenshot should cover.
 menu.hint_screenshot_setup Configure screenshots options
 menu.hint_scripts Run scripts
 menu.hint_selected_back Change selected item background color
@@ -2295,10 +2295,10 @@ screenshot.defdir Destination directory
 screenshot.format Format
 screenshot.info Screenshot key is unused
 screenshot.menu Screenshot
-screenshot.plane.all OSD and Video
-screenshot.plane.osd OSD only
-screenshot.plane.video Video only
-screenshot.planes Screenshot mode
+screenshot.plans.all OSD and Video
+screenshot.plans.osd OSD
+screenshot.plans.video Video
+screenshot.plans Screenshot mode
 screenshot.please_wait Creating video screenshot, please wait ...
 servicemenu.getplugins Reload plugins
 servicemenu.getplugins_hint Reloading plugins,\nplease be patient.

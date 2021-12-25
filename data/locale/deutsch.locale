@@ -1469,7 +1469,7 @@ menu.hint_screenshot_count Wählen Sie, wie viele Screenshots erstellt werden so
 menu.hint_screenshot_cover Während der Wiedergabe von Aufnahmen kann ein Screenshot für die Vorschau im Moviebrowser erstellt werden
 menu.hint_screenshot_dir Wählen Sie das Verzeichnis zum Speichern der Screenshots
 menu.hint_screenshot_format Wählen Sie das Dateiformat zum Speichern der Screenshots
-menu.hint_screenshot_planes Wählen Sie den Inhalt des Screenshots.
+menu.hint_screenshot_plans Wählen Sie den Inhalt des Screenshots.
 menu.hint_screenshot_setup Konfigurieren Sie die Optionen zum Erstellen von Screenshots
 menu.hint_scripts Shell-Skripte ausführen
 menu.hint_selected_back Ändern Sie die Hintergrundfarbe für ausgewählte Fensterinhalte
@@ -2295,10 +2295,10 @@ screenshot.defdir Ziel-Verzeichnis
 screenshot.format Format
 screenshot.info Screenshot Taste ist nicht belegt
 screenshot.menu Screenshot
-screenshot.plane.all OSD und Video
-screenshot.plane.osd nur OSD
-screenshot.plane.video nur Video
-screenshot.planes Screenshot-Art
+screenshot.plans.all OSD und Video
+screenshot.plans.osd OSD
+screenshot.plans.video Video
+screenshot.plans Screenshot-Art
 screenshot.please_wait Erzeuge Video-Screenshot, bitte warten ...
 servicemenu.getplugins Plugins neu laden
 servicemenu.getplugins_hint Plugins werden neu geladen,\nbitte warten ...

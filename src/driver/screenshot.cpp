@@ -71,8 +71,8 @@ CScreenShot::CScreenShot(const std::string &fname, screenshot_format_t fmt)
 #endif
 	xres = 0;
 	yres = 0;
-//	get_osd = g_settings.screenshot_mode == 0;
-//	get_video = g_settings.screenshot_mode = 1;
+//	get_osd = g_settings.screenshot_plans == 0;
+//	get_video = g_settings.screenshot_plans = 1;
 }
 
 CScreenShot::~CScreenShot()
@@ -171,11 +171,11 @@ bool CScreenShot::Start(const std::string __attribute__((unused)) custom_cmd)
 #if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	std::string cmd = "/bin/grab ";
 
-	if (g_settings.screenshot_mode == 0)
+	if (g_settings.screenshot_plans == 0)
 		cmd += "-o ";
-	if (g_settings.screenshot_mode == 1)
+	if (g_settings.screenshot_plans == 1)
 		cmd += "-v ";
-	if (g_settings.screenshot_mode == 2)
+	if (g_settings.screenshot_plans == 2)
 		cmd += "";
 
 

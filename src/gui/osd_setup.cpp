@@ -1633,12 +1633,12 @@ const CMenuOptionChooser::keyval_ext SCREENSHOT_FMT_OPTIONS[SCREENSHOT_FMT_OPTIO
 	{ CScreenShot::FORMAT_JPG,   NONEXISTANT_LOCALE, "JPEG" }  //1
 };
 
-#define SCREENSHOT_PLANE_OPTION_COUNT 3
-const CMenuOptionChooser::keyval SCREENSHOT_PLANE_OPTIONS[SCREENSHOT_PLANE_OPTION_COUNT] =
+#define SCREENSHOT_PLANS_OPTION_COUNT 3
+const CMenuOptionChooser::keyval SCREENSHOT_PLANS_OPTIONS[SCREENSHOT_PLANS_OPTION_COUNT] =
 {
-	{ 0, LOCALE_SCREENSHOT_PLANE_OSD },
-	{ 1, LOCALE_SCREENSHOT_PLANE_VIDEO },
-	{ 2, LOCALE_SCREENSHOT_PLANE_ALL }
+	{ 0, LOCALE_SCREENSHOT_PLANS_OSD },
+	{ 1, LOCALE_SCREENSHOT_PLANS_VIDEO },
+	{ 2, LOCALE_SCREENSHOT_PLANS_ALL }
 };
 
 void COsdSetup::showOsdScreenShotSetup(CMenuWidget *menu_screenshot)
@@ -1659,8 +1659,8 @@ void COsdSetup::showOsdScreenShotSetup(CMenuWidget *menu_screenshot)
 	mc->setHint("", LOCALE_MENU_HINT_SCREENSHOT_FORMAT);
 	menu_screenshot->addItem(mc);
 
-	mc = new CMenuOptionChooser(LOCALE_SCREENSHOT_PLANES, &g_settings.screenshot_mode, SCREENSHOT_PLANE_OPTIONS, SCREENSHOT_PLANE_OPTION_COUNT, true, this);
-	mc->setHint("", LOCALE_MENU_HINT_SCREENSHOT_PLANES);
+	mc = new CMenuOptionChooser(LOCALE_SCREENSHOT_PLANS, &g_settings.screenshot_plans, SCREENSHOT_PLANS_OPTIONS, SCREENSHOT_PLANS_OPTION_COUNT, true, this);
+	mc->setHint("", LOCALE_MENU_HINT_SCREENSHOT_PLANS);
 	menu_screenshot->addItem(mc);
 
 	mc = new CMenuOptionChooser(LOCALE_SCREENSHOT_COVER, &g_settings.screenshot_cover, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);

@@ -609,7 +609,7 @@ struct SNeutrinoSettings
 	int screenshot_count;
 	int screenshot_format;
 	int screenshot_cover;
-	int screenshot_mode;
+	int screenshot_plans;
 	int auto_cover;
 	std::string screenshot_dir;
 

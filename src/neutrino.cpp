@@ -845,7 +845,7 @@ if (g_info.hw_caps->can_shutdown)
 	g_settings.screenshot_count = configfile.getInt32( "screenshot_count",  1);
 	g_settings.screenshot_format = configfile.getInt32( "screenshot_format",  0);
 	g_settings.screenshot_cover = configfile.getInt32( "screenshot_cover",  0);
-	g_settings.screenshot_mode = configfile.getInt32( "screenshot_mode",  1);
+	g_settings.screenshot_plans = configfile.getInt32( "screenshot_plans",  1);
 	g_settings.auto_cover = configfile.getInt32( "auto_cover",  0);
 
 	g_settings.screenshot_dir = configfile.getString( "screenshot_dir", "/media/sda1/movie" );
@@ -1565,7 +1565,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32( "screenshot_count", g_settings.screenshot_count );
 	configfile.setInt32( "screenshot_format", g_settings.screenshot_format );
 	configfile.setInt32( "screenshot_cover", g_settings.screenshot_cover );
-	configfile.setInt32( "screenshot_mode", g_settings.screenshot_mode );
+	configfile.setInt32( "screenshot_plans", g_settings.screenshot_plans );
 	configfile.setInt32( "auto_cover", g_settings.auto_cover );
 
 	configfile.setString( "screenshot_dir", g_settings.screenshot_dir);
@@ -2938,7 +2938,7 @@ void CNeutrinoApp::RealRun()
 #if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 					CVFD::getInstance()->ShowText("SCREENSHOT");
 					CHintBox *hintbox = NULL;
-					if (g_settings.screenshot_mode == 1)
+					if (g_settings.screenshot_plans == 1)
 						hintbox = new CHintBox(LOCALE_SCREENSHOT_MENU, g_Locale->getText(LOCALE_SCREENSHOT_PLEASE_WAIT), 450, NEUTRINO_ICON_MOVIEPLAYER);
 					if (hintbox)
 						hintbox->paint();
