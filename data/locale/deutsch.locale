@@ -1192,7 +1192,6 @@ menu.hint_key_mpbookmark Weisen Sie eine Taste zu, um Merker in ihren Aufnahmen 
 menu.hint_key_mpforward Weisen Sie eine Taste zum Vorspulen in ihren Aufnahmen zu
 menu.hint_key_mppause Weisen Sie eine Taste zum Pausieren der Wiedergabe zu
 menu.hint_key_mpplay Weisen Sie eine Taste zu, um die Wiedergabe zu starten
-menu.hint_key_mpplugin Weisen Sie eine Taste zu, um ein Plugin zu starten, wenn ihre Wiedergabe läuft
 menu.hint_key_mprewind Weisen Sie eine Taste zum Zurückspulen in ihren Aufnahmen zu
 menu.hint_key_mpstop Weisen Sie eine Taste zum Beenden der Wiedergabe zu
 menu.hint_key_mpsubtitle Weisen Sie eine Taste für die Untertitel-Auswahl zu
@@ -1264,7 +1263,6 @@ menu.hint_movie Wiedergabe von Filmen
 menu.hint_moviebrowser_fonts Ändern Sie die Schriftgrößen im Moviebrowser (Meine Aufnahmen)
 menu.hint_moviebrowser_setup Auswahl- und Anzeigeoptionen einstellen.
 menu.hint_movieplayer_display_playtime Zeigt während der Wiedergabe die Spielzeit anstatt des Fimtitels im VFD
-menu.hint_movieplayer_plugin Wählen Sie ein Plugin, das mit einer Schnellstart-Taste im Movieplayer-Modus gestartet wird
 menu.hint_net_broadcast Ändern Sie die Broadcast-Adresse.\nWenn Sie unsicher sind, verwenden Sie zuletzt .255
 menu.hint_net_dhcp Verwenden Sie einen DHCP-Server für die automatische Vergabe einer IP-Adresse im Netzwerk
 menu.hint_net_djmount Mountet UPnP-Geräte als Dateisystem unter /media/00upnp
@@ -1893,7 +1891,6 @@ movieplayer.help_button_forward Schneller Vorlauf
 movieplayer.help_button_menu Hauptmenü öffnen
 movieplayer.help_button_pause Pause / Weiter
 movieplayer.help_button_stop Stopp
-movieplayer.plugin Movieplayer-Plugin
 movieplayer.starting Wiedergabe starten ...
 movieplayer.tsplayback Abspielen
 mpkey.audio Tonspuren
@@ -1904,7 +1901,6 @@ mpkey.next3dmode Nächster 3D-Modus
 mpkey.next_repeat_mode Nächster Wiederholungs-Modus
 mpkey.pause Pause
 mpkey.play Play
-mpkey.plugin Movieplayer-Plugin
 mpkey.rewind Rücklauf
 mpkey.stop Stopp
 mpkey.subtitle Untertitel
@@ -2097,7 +2093,6 @@ ping.unreachable ist nicht erreichbar (unerreichbar)
 pinprotection.head PIN-Abfrage
 pinprotection.wrongcode Geben Sie den Code nocheinmal ein!
 plugins.hdd_dir Externes Plugin-Verzeichnis
-plugins.no_plugin Kein Plugin
 plugins.result Pluginausgabe
 plugintype.disabled Deaktiviert
 plugintype.game Spiel

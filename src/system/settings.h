@@ -538,12 +538,11 @@ struct SNeutrinoSettings
 	int timeshift_hours;
 
 	int filesystem_is_utf8;
-	// default plugin for ts-movieplayer (red button)
-	std::string movieplayer_plugin;
-	std::string plugin_hdd_dir;
 
 	int default_logo;
 	std::string logo_hdd_dir;
+
+	std::string plugin_hdd_dir;
 
 	std::string plugins_disabled;
 	std::string plugins_game;
@@ -595,7 +594,6 @@ struct SNeutrinoSettings
 	int mpkey_audio;
 	int mpkey_time;
 	int mpkey_bookmark;
-	int mpkey_plugin;
 	int mpkey_next3dmode;
 	int mpkey_goto;
 	int mpkey_subtitle;

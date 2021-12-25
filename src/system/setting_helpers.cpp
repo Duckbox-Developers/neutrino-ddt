@@ -458,25 +458,6 @@ int CNVODChangeExec::exec(CMenuTarget *parent, const std::string &actionKey)
 	return menu_return::RETURN_EXIT;
 }
 
-int CMoviePluginChangeExec::exec(CMenuTarget *parent, const std::string &actionKey)
-{
-	if (parent)
-		parent->hide();
-
-	if (actionKey == "---")
-	{
-		g_settings.movieplayer_plugin = actionKey;
-	}
-	else
-	{
-		int sel = atoi(actionKey.c_str());
-		if (sel >= 0)
-			g_settings.movieplayer_plugin = g_Plugins->getName(sel);
-	}
-
-	return menu_return::RETURN_EXIT;
-}
-
 long CNetAdapter::mac_addr_sys(u_char *addr)   //only for function getMacAddr()
 {
 	struct ifreq ifr;

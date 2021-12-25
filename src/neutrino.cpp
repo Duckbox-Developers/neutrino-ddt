@@ -771,8 +771,6 @@ if (g_info.hw_caps->can_shutdown)
 	g_settings.recording_startstop_msg	   = configfile.getBool("recording_startstop_msg"     , true);
 	g_settings.recording_already_found_check   = configfile.getBool("recording_already_found_check", false);
 
-	// default plugin for movieplayer
-	g_settings.movieplayer_plugin = configfile.getString( "movieplayer_plugin", "---" );
 	g_settings.plugin_hdd_dir = configfile.getString( "plugin_hdd_dir", "/media/sda1/plugins" );
 
 	g_settings.plugins_disabled = configfile.getString( "plugins_disabled", "" );
@@ -1513,8 +1511,6 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setBool  ("recording_startstop_msg"             , g_settings.recording_startstop_msg       );
 	configfile.setBool  ("recording_already_found_check"      , g_settings.recording_already_found_check  );
 
-	// default plugin for movieplayer
-	configfile.setString ( "movieplayer_plugin", g_settings.movieplayer_plugin );
 	configfile.setString ( "plugin_hdd_dir", g_settings.plugin_hdd_dir );
 
 	configfile.setString ( "plugins_disabled", g_settings.plugins_disabled );
@@ -5174,7 +5170,6 @@ void CNeutrinoApp::loadKeys(const char * fname)
 	g_settings.mpkey_time = tconfig->getInt32( "mpkey.time", CRCInput::RC_timeshift );
 	g_settings.mpkey_bookmark = tconfig->getInt32( "mpkey.bookmark", CRCInput::RC_yellow );
 	g_settings.mpkey_next3dmode = tconfig->getInt32( "mpkey.next3dmode", CRCInput::RC_nokey );
-	g_settings.mpkey_plugin = tconfig->getInt32( "mpkey.plugin", (unsigned int)CRCInput::RC_nokey );
 	g_settings.mpkey_subtitle = tconfig->getInt32( "mpkey.subtitle", CRCInput::RC_sub );
 
 	g_settings.mpkey_goto = tconfig->getInt32( "mpkey.goto", CRCInput::RC_nokey );
@@ -5258,7 +5253,6 @@ void CNeutrinoApp::saveKeys(const char * fname)
 	tconfig->setInt32( "mpkey.audio", g_settings.mpkey_audio );
 	tconfig->setInt32( "mpkey.time", g_settings.mpkey_time );
 	tconfig->setInt32( "mpkey.bookmark", g_settings.mpkey_bookmark );
-	tconfig->setInt32( "mpkey.plugin", g_settings.mpkey_plugin );
 	tconfig->setInt32( "mpkey.next3dmode", g_settings.mpkey_next3dmode );
 	tconfig->setInt32( "mpkey.subtitle", g_settings.mpkey_subtitle );
 

@@ -228,7 +228,6 @@ const key_settings_struct_t key_settings[CKeybindSetup::KEYBINDS_COUNT] =
 	{LOCALE_MPKEY_GOTO,			&g_settings.mpkey_goto,	 		NONEXISTANT_LOCALE},
 	{LOCALE_MPKEY_NEXT3DMODE,		&g_settings.mpkey_next3dmode,		NONEXISTANT_LOCALE},
 	{LOCALE_MPKEY_NEXT_REPEAT_MODE,		&g_settings.mpkey_next_repeat_mode,	NONEXISTANT_LOCALE},
-	{LOCALE_MPKEY_PLUGIN,			&g_settings.mpkey_plugin,		LOCALE_MENU_HINT_KEY_MPPLUGIN },
 	{LOCALE_EXTRA_KEY_TIMESHIFT,		&g_settings.key_timeshift,  		LOCALE_MENU_HINT_KEY_TIMESHIFT },
 	{LOCALE_EXTRA_KEY_UNLOCK,		&g_settings.key_unlock,			LOCALE_MENU_HINT_KEY_UNLOCK},
 	{LOCALE_EXTRA_KEY_HELP,			&g_settings.key_help,			NONEXISTANT_LOCALE},
@@ -511,7 +510,7 @@ void CKeybindSetup::showKeyBindMovieplayerSetup(CMenuWidget *bindSettings_mplaye
 {
 	bindSettings_mplayer->addIntroItems(LOCALE_MAINMENU_MOVIEPLAYER);
 
-	for (int i = MPKEY_PLAY; i <= MPKEY_PLUGIN; i++)
+	for (int i = MPKEY_PLAY; i <= MPKEY_NEXT_REPEAT_MODE; i++)
 	{
 		CMenuForwarder *mf = new CMenuForwarder(key_settings[i].keydescription, true, keychooser[i]->getKeyName(), keychooser[i]);
 		mf->setHint("", key_settings[i].hint);
@@ -578,15 +577,12 @@ bool CKeybindSetup::changeNotify(const neutrino_locale_t OptionName, void * /* d
 const char *CKeybindSetup::getMoviePlayerButtonName(const neutrino_msg_t key, bool &active, bool return_title)
 {
 	active = false;
-	for (unsigned int i = MPKEY_PLAY; i <= MPKEY_PLUGIN; i++)
+	for (unsigned int i = MPKEY_PLAY; i <= MPKEY_NEXT_REPEAT_MODE; i++)
 	{
 		if ((uint32_t)*key_settings[i].keyvalue_p == (unsigned int)key)
 		{
 			active = true;
-			if (!return_title && (key_settings[i].keydescription == LOCALE_MPKEY_PLUGIN))
-				return g_settings.movieplayer_plugin.c_str();
-			else
-				return g_Locale->getText(key_settings[i].keydescription);
+			return g_Locale->getText(key_settings[i].keydescription);
 		}
 	}
 	return "";
