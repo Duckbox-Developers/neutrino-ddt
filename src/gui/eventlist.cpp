@@ -488,27 +488,6 @@ int CEventList::exec(const t_channel_id channel_id, const std::string& channelna
 				continue;
 			}
 			std::string recDir = g_settings.network_nfs_recordingdir;
-			if (g_settings.recording_choose_direct_rec_dir)
-			{
-				int id = -1;
-				CMountChooser recDirs(LOCALE_TIMERLIST_RECORDING_DIR,NEUTRINO_ICON_SETTINGS,&id,NULL,g_settings.network_nfs_recordingdir.c_str());
-				if (recDirs.hasItem())
-				{
-					hide();
-					recDirs.exec(NULL,"");
-					paint(evtlist[selected].channelID);
-					timeoutEnd = CRCInput::calcTimeoutEnd(timeout);
-				}
-				else
-				{
-					printf("[CEventList] no network devices available\n");
-				}
-
-				if (id != -1)
-					recDir = g_settings.network_nfs[id].local_dir;
-				else
-					recDir = "";
-			}
 			bool doRecord = true;
 			if (g_settings.recording_already_found_check)
 			{
