@@ -224,7 +224,7 @@ bool CUserMenu::showUserMenu(neutrino_msg_t msg)
 			// FIXME menu_item->setHint("", NONEXISTANT_LOCALE);
 			break;
 		}
-		case SNeutrinoSettings::ITEM_EPG_SUPER:
+		case SNeutrinoSettings::ITEM_EPG_PLUS:
 		{
 			keyhelper.get(&key,&icon,CRCInput::RC_green);
 			menu_item = new CMenuDForwarder(LOCALE_EPGMENU_EPGPLUS, !_mode_ts, NULL, new CEPGplusHandler,  "-1", key, icon);

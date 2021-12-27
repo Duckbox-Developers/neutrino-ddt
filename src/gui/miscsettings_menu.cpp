@@ -111,27 +111,6 @@ int CMiscMenue::exec(CMenuTarget* parent, const std::string &actionKey)
 
 		return menu_return::RETURN_REPAINT;
 	}
-	else if(actionKey == "movieplayer_plugin")
-	{
-		CMenuWidget MoviePluginSelector(LOCALE_MOVIEPLAYER_PLUGIN, NEUTRINO_ICON_FEATURES);
-		MoviePluginSelector.addItem(GenericMenuSeparator);
-		MoviePluginSelector.addItem(new CMenuForwarder(LOCALE_PLUGINS_NO_PLUGIN, true, NULL, new CMoviePluginChangeExec(), "---", CRCInput::RC_red));
-		MoviePluginSelector.addItem(GenericMenuSeparatorLine);
-		char id[5];
-		int enabled_count = 0;
-		for(unsigned int count=0;count < (unsigned int) g_Plugins->getNumberOfPlugins();count++)
-		{
-			if (!g_Plugins->isHidden(count))
-			{
-				sprintf(id, "%d", count);
-				enabled_count++;
-				MoviePluginSelector.addItem(new CMenuForwarder(g_Plugins->getName(count), true, NULL, new CMoviePluginChangeExec(), id, CRCInput::convertDigitToKey(count)));
-			}
-		}
-
-		MoviePluginSelector.exec(NULL, "");
-		return menu_return::RETURN_REPAINT;
-	}
 	else if(actionKey == "info")
 	{
 		unsigned num = CEitManager::getInstance()->getEventsCount();
@@ -368,10 +347,6 @@ void CMiscMenue::showMiscSettingsMenuGeneral(CMenuWidget *ms_general)
 
 	CMenuForwarder * mf = new CMenuForwarder(LOCALE_PLUGINS_HDD_DIR, true, g_settings.plugin_hdd_dir, this, "plugin_dir");
 	mf->setHint("", LOCALE_MENU_HINT_PLUGINS_HDD_DIR);
-	ms_general->addItem(mf);
-
-	mf = new CMenuForwarder(LOCALE_MPKEY_PLUGIN, true, g_settings.movieplayer_plugin, this, "movieplayer_plugin");
-	mf->setHint("", LOCALE_MENU_HINT_MOVIEPLAYER_PLUGIN);
 	ms_general->addItem(mf);
 
 	//set debug level

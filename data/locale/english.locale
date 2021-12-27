@@ -1192,7 +1192,6 @@ menu.hint_key_mpbookmark Assign button to create bookmark\nwhile playing record
 menu.hint_key_mpforward Assign button to fast forward record playback
 menu.hint_key_mppause Assign button to pause record/file playback
 menu.hint_key_mpplay Assign button to resume record/file playback
-menu.hint_key_mpplugin Assign button to start selected plugin\nwhile playing record/file
 menu.hint_key_mprewind Assign button to rewind record playback
 menu.hint_key_mpstop Assign button to stop record/file playback
 menu.hint_key_mpsubtitle Assign button to show subtitle selection
@@ -1264,7 +1263,6 @@ menu.hint_movie Play movies
 menu.hint_moviebrowser_fonts Change moviebrowser (My recordings) font sizes
 menu.hint_moviebrowser_setup Set selection and display options.
 menu.hint_movieplayer_display_playtime While playback show playtime instead of movietitle on VFD/LCD
-menu.hint_movieplayer_plugin Choose a plugin that's executed with the one touch key in movieplayer mode
 menu.hint_net_broadcast Enter broadcast address\nif unsure, use IP address with last .255
 menu.hint_net_dhcp Use DHCP server to auto-configure
 menu.hint_net_djmount Mount UPnP devices as filesystem\nunder /media/00upnp
@@ -1469,7 +1467,7 @@ menu.hint_screenshot_count When no GUI on screen, you can save 1-5\nscreenshot s
 menu.hint_screenshot_cover ON: When playing record, overwrite single\nscreenshot to show inside MovieBrowser
 menu.hint_screenshot_dir Select directory to save screenshots
 menu.hint_screenshot_format File format to save screenshot
-menu.hint_screenshot_planes Select what the screenshot should cover.
+menu.hint_screenshot_plans Select what the screenshot should cover.
 menu.hint_screenshot_setup Configure screenshots options
 menu.hint_scripts Run scripts
 menu.hint_selected_back Change selected item background color
@@ -1923,7 +1921,6 @@ movieplayer.help_button_forward Fast forward
 movieplayer.help_button_menu Open main menu
 movieplayer.help_button_pause Pause / Continue
 movieplayer.help_button_stop Stop
-movieplayer.plugin Movieplayer plugin
 movieplayer.starting Starting playback ...
 movieplayer.tsplayback Play
 movieplayer.ytplayback YouTube videoplayer
@@ -1935,7 +1932,6 @@ mpkey.next3dmode next 3D mode
 mpkey.next_repeat_mode Next repeat mode
 mpkey.pause Pause
 mpkey.play Play
-mpkey.plugin Movieplayer plugin
 mpkey.rewind Rewind
 mpkey.stop Stop
 mpkey.subtitle Subtitles
@@ -2128,7 +2124,6 @@ ping.unreachable is unreachable
 pinprotection.head Enter PIN code
 pinprotection.wrongcode PIN-Code was wrong! Try again.
 plugins.hdd_dir Plugin external directory.
-plugins.no_plugin No plugin
 plugins.result plugin output
 plugintype.disabled Disabled
 plugintype.game Game
@@ -2326,10 +2321,10 @@ screenshot.defdir Destination directory
 screenshot.format Format
 screenshot.info Screenshot key is unused
 screenshot.menu Screenshot
-screenshot.plane.all OSD and Video
-screenshot.plane.osd OSD only
-screenshot.plane.video Video only
-screenshot.planes Screenshot mode
+screenshot.plans.all OSD and Video
+screenshot.plans.osd OSD
+screenshot.plans.video Video
+screenshot.plans Screenshot mode
 screenshot.please_wait Creating video screenshot, please wait ...
 servicemenu.getplugins Reload plugins
 servicemenu.getplugins_hint Reloading plugins,\nplease be patient.

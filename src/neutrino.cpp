@@ -772,8 +772,6 @@ if (g_info.hw_caps->can_shutdown)
 	g_settings.recording_startstop_msg	   = configfile.getBool("recording_startstop_msg"     , true);
 	g_settings.recording_already_found_check   = configfile.getBool("recording_already_found_check", false);
 
-	// default plugin for movieplayer
-	g_settings.movieplayer_plugin = configfile.getString( "movieplayer_plugin", "---" );
 	g_settings.plugin_hdd_dir = configfile.getString( "plugin_hdd_dir", "/media/sda1/plugins" );
 
 	g_settings.plugins_disabled = configfile.getString( "plugins_disabled", "" );
@@ -846,7 +844,7 @@ if (g_info.hw_caps->can_shutdown)
 	g_settings.screenshot_count = configfile.getInt32( "screenshot_count",  1);
 	g_settings.screenshot_format = configfile.getInt32( "screenshot_format",  0);
 	g_settings.screenshot_cover = configfile.getInt32( "screenshot_cover",  0);
-	g_settings.screenshot_mode = configfile.getInt32( "screenshot_mode",  1);
+	g_settings.screenshot_plans = configfile.getInt32( "screenshot_plans",  1);
 	g_settings.auto_cover = configfile.getInt32( "auto_cover",  0);
 
 	g_settings.screenshot_dir = configfile.getString( "screenshot_dir", "/media/sda1/movie" );
@@ -1521,8 +1519,6 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setBool  ("recording_startstop_msg"             , g_settings.recording_startstop_msg       );
 	configfile.setBool  ("recording_already_found_check"      , g_settings.recording_already_found_check  );
 
-	// default plugin for movieplayer
-	configfile.setString ( "movieplayer_plugin", g_settings.movieplayer_plugin );
 	configfile.setString ( "plugin_hdd_dir", g_settings.plugin_hdd_dir );
 
 	configfile.setString ( "plugins_disabled", g_settings.plugins_disabled );
@@ -1573,7 +1569,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32( "screenshot_count", g_settings.screenshot_count );
 	configfile.setInt32( "screenshot_format", g_settings.screenshot_format );
 	configfile.setInt32( "screenshot_cover", g_settings.screenshot_cover );
-	configfile.setInt32( "screenshot_mode", g_settings.screenshot_mode );
+	configfile.setInt32( "screenshot_plans", g_settings.screenshot_plans );
 	configfile.setInt32( "auto_cover", g_settings.auto_cover );
 
 	configfile.setString( "screenshot_dir", g_settings.screenshot_dir);
@@ -2950,7 +2946,7 @@ void CNeutrinoApp::RealRun()
 #if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 					CVFD::getInstance()->ShowText("SCREENSHOT");
 					CHintBox *hintbox = NULL;
-					if (g_settings.screenshot_mode == 1)
+					if (g_settings.screenshot_plans == 1)
 						hintbox = new CHintBox(LOCALE_SCREENSHOT_MENU, g_Locale->getText(LOCALE_SCREENSHOT_PLEASE_WAIT), 450, NEUTRINO_ICON_MOVIEPLAYER);
 					if (hintbox)
 						hintbox->paint();
@@ -5186,7 +5182,6 @@ void CNeutrinoApp::loadKeys(const char * fname)
 	g_settings.mpkey_time = tconfig->getInt32( "mpkey.time", CRCInput::RC_timeshift );
 	g_settings.mpkey_bookmark = tconfig->getInt32( "mpkey.bookmark", CRCInput::RC_yellow );
 	g_settings.mpkey_next3dmode = tconfig->getInt32( "mpkey.next3dmode", CRCInput::RC_nokey );
-	g_settings.mpkey_plugin = tconfig->getInt32( "mpkey.plugin", (unsigned int)CRCInput::RC_nokey );
 	g_settings.mpkey_subtitle = tconfig->getInt32( "mpkey.subtitle", CRCInput::RC_sub );
 
 	g_settings.mpkey_goto = tconfig->getInt32( "mpkey.goto", CRCInput::RC_nokey );
@@ -5270,7 +5265,6 @@ void CNeutrinoApp::saveKeys(const char * fname)
 	tconfig->setInt32( "mpkey.audio", g_settings.mpkey_audio );
 	tconfig->setInt32( "mpkey.time", g_settings.mpkey_time );
 	tconfig->setInt32( "mpkey.bookmark", g_settings.mpkey_bookmark );
-	tconfig->setInt32( "mpkey.plugin", g_settings.mpkey_plugin );
 	tconfig->setInt32( "mpkey.next3dmode", g_settings.mpkey_next3dmode );
 	tconfig->setInt32( "mpkey.subtitle", g_settings.mpkey_subtitle );
 

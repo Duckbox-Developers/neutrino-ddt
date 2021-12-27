@@ -136,12 +136,6 @@ class CNVODChangeExec : public CMenuTarget
 		int exec(CMenuTarget *parent, const std::string &actionKey);
 };
 
-class CMoviePluginChangeExec : public CMenuTarget
-{
-	public:
-		int exec(CMenuTarget *parent, const std::string &actionKey);
-};
-
 class CTZChangeNotifier : public CChangeObserver
 {
 	public:
