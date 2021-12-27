@@ -2710,7 +2710,7 @@ bool CMovieBrowser::onSortMovieInfoHandleList(std::vector<MI_MOVIE_INFO *> &hand
 void CMovieBrowser::updateDir(void)
 {
 	m_dir.clear();
-#if 0
+#if 0 // segfault
 	// check if there is a movie dir and if we should use it
 	if (g_settings.network_nfs_moviedir[0] != 0)
 	{
@@ -3371,11 +3371,11 @@ bool CMovieBrowser::showMenu(bool calledExternally)
 	optionsMenuDir.addIntroItems(LOCALE_MOVIEBROWSER_MENU_DIRECTORIES_HEAD);
 	optionsMenuDir.addItem(new CMenuOptionChooser(LOCALE_MOVIEBROWSER_USE_REC_DIR, (int *)(&m_settings.storageDirRecUsed), MESSAGEBOX_YES_NO_OPTIONS, MESSAGEBOX_YES_NO_OPTIONS_COUNT, true));
 	optionsMenuDir.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_DIR, false, g_settings.network_nfs_recordingdir));
-
+#if 0 // see "void CMovieBrowser::updateDir(void)"
 	optionsMenuDir.addItem(new CMenuOptionChooser(LOCALE_MOVIEBROWSER_USE_MOVIE_DIR, (int *)(&m_settings.storageDirMovieUsed), MESSAGEBOX_YES_NO_OPTIONS, MESSAGEBOX_YES_NO_OPTIONS_COUNT, true));
 	optionsMenuDir.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_DIR, false, g_settings.network_nfs_moviedir));
 	optionsMenuDir.addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_MOVIEBROWSER_DIRECTORIES_ADDITIONAL));
-
+#endif
 	COnOffNotifier *notifier[MB_MAX_DIRS];
 	for (i = 0; i < MB_MAX_DIRS ; i++)
 	{
