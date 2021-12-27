@@ -1039,45 +1039,6 @@ int CEpgData::show(const t_channel_id channel_id, uint64_t a_id, time_t* a_start
 						bool doRecord = true;
 						time_t epg_start_time = epgData.epg_times.startzeit;
 						recDir = g_settings.network_nfs_recordingdir;
-						if (g_settings.recording_choose_direct_rec_dir == 2) {
-							CFileBrowser b;
-							b.Dir_Mode=true;
-							hide();
-							if (b.exec(g_settings.network_nfs_recordingdir.c_str())) {
-								recDir = b.getSelectedFile()->Name;
-							} else
-								doRecord = false;
-							if (!bigFonts && g_settings.bigFonts) {
-								g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO1]->setSize((int)(g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO1]->getSize() * BIGFONT_FACTOR));
-								g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->setSize((int)(g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->getSize() * BIGFONT_FACTOR));
-							}
-							bigFonts = g_settings.bigFonts;
-							show(channel_id,epgData.eventID,&epg_start_time,false);
-							showPos=0;
-						}
-						else if (g_settings.recording_choose_direct_rec_dir == 1)
-						{
-							int lid = -1;
-							CMountChooser recDirs(LOCALE_TIMERLIST_RECORDING_DIR,NEUTRINO_ICON_SETTINGS,&lid,NULL,g_settings.network_nfs_recordingdir.c_str());
-							if (recDirs.hasItem())
-							{
-								hide();
-								recDirs.exec(NULL,"");
-								if (!bigFonts && g_settings.bigFonts) {
-									g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO1]->setSize((int)(g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO1]->getSize() * BIGFONT_FACTOR));
-									g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->setSize((int)(g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->getSize() * BIGFONT_FACTOR));
-								}
-								bigFonts = g_settings.bigFonts;
-								show(channel_id,epgData.eventID,&epg_start_time,false);
-								showPos=0;
-								timeoutEnd = CRCInput::calcTimeoutEnd(timeout);
-							} else
-							{
-								printf("no network devices available\n");
-							}
-							if (lid != -1)
-								recDir = g_settings.network_nfs[lid].local_dir;
-						}
 						if (doRecord && g_settings.recording_already_found_check)
 						{
 							CHintBox loadBox(LOCALE_RECORDING_ALREADY_FOUND_CHECK, LOCALE_MOVIEBROWSER_SCAN_FOR_MOVIES);

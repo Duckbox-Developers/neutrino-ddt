@@ -128,7 +128,6 @@ enum MN_WIDGET_ID
 	
 	//media menu
 	MN_WIDGET_ID_MEDIA,
-	MN_WIDGET_ID_MEDIA_MOVIEPLAYER,
 	
 	//parentallock setup
 	MN_WIDGET_ID_PLOCKSETUP,

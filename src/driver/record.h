@@ -262,43 +262,5 @@ class CRecordManager : public CMenuTarget /*, public CChangeObserver*/
 		void StartTimeshift();
 		int GetRecordMode(const t_channel_id channel_id = 0);
 		CRecordInstance *getRecordInstance(std::string file);
-		// old code
-#if 0
-		bool MountDirectory(const char *recordingDir);
-		bool ChooseRecDir(std::string &dir);
-		int recordingstatus;
-		bool doGuiRecord();
-		bool changeNotify(const neutrino_locale_t OptionName, void * /*data*/);
-#endif
 };
-
-#if 0
-class CStreamRec : public CRecordInstance, OpenThreads::Thread
-{
-	private:
-		AVFormatContext *ifcx;
-		AVFormatContext *ofcx;
-		AVBitStreamFilterContext *bsfc;
-		bool stopped;
-		bool interrupt;
-		time_t time_started;
-		int  stream_index;
-
-		void GetPids(CZapitChannel *channel);
-		void FillMovieInfo(CZapitChannel *channel, APIDList &apid_list);
-		bool Start();
-
-		void Close();
-		bool Open(CZapitChannel *channel);
-		void run();
-		void WriteHeader(uint32_t duration);
-	public:
-		CStreamRec(const CTimerd::RecordingInfo *const eventinfo, std::string &dir, bool timeshift = false, bool stream_vtxt_pid = false, bool stream_pmt_pid = false, bool stream_subtitle_pids = false);
-		~CStreamRec();
-		record_error_msg_t Record();
-		bool Stop(bool remove_event = true);
-		static int Interrupt(void *data);
-};
-#endif
-
 #endif
