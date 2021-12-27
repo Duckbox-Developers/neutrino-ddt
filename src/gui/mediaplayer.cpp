@@ -167,10 +167,6 @@ int CMediaPlayerMenu::initMenuMedia(CMenuWidget *m, CPersonalizeGui *p)
 #endif
 
 	personalize->addSeparator(*multimedia_menu, LOCALE_MAINMENU_MOVIEPLAYER, true);
-//	//init movieplayer submenu
-//	CMenuWidget *movieplayer_menu = new CMenuWidget(LOCALE_MAINMENU_MOVIEPLAYER, NEUTRINO_ICON_MULTIMEDIA, width, MN_WIDGET_ID_MEDIA_MOVIEPLAYER);
-//	personalize->addWidget(movieplayer_menu);
-//	personalize->addIntroItems(movieplayer_menu);
 
 	//moviebrowser
 	CMenuForwarder *fw_mbrowser = new CMenuForwarder(LOCALE_MOVIEBROWSER_HEAD, true, NULL, this, "moviebrowser", CRCInput::RC_0);
@@ -186,11 +182,6 @@ int CMediaPlayerMenu::initMenuMedia(CMenuWidget *m, CPersonalizeGui *p)
 	CMenuForwarder *fw_fileplay_audio = new CMenuForwarder(LOCALE_MOVIEPLAYER_FILEPLAYBACK_AUDIO, true, NULL, &CMoviePlayerGui::getInstance(), "fileplayback_audio", CRCInput::RC_2);
 	fw_fileplay_audio->setHint(NEUTRINO_ICON_HINT_FILEPLAY, LOCALE_MENU_HINT_FILEPLAY);
 	personalize->addItem(multimedia_menu, fw_fileplay_audio, &g_settings.personalize[SNeutrinoSettings::P_MPLAYER_FILEPLAY_AUDIO]);
-
-//	//add movieplayer submenu
-//	CMenuForwarder *fw_mp = new CMenuForwarder(LOCALE_MAINMENU_MOVIEPLAYER, enabled, NULL, movieplayer_menu, NULL, CRCInput::RC_yellow);
-//	fw_mp->setHint(NEUTRINO_ICON_HINT_MOVIE, LOCALE_MENU_HINT_MOVIE);
-//	personalize->addItem(multimedia_menu, fw_mp, &g_settings.personalize[SNeutrinoSettings::P_MEDIA_MPLAYER], false, CPersonalizeGui::PERSONALIZE_SHOW_AS_ACCESS_OPTION);
 
 #ifdef ENABLE_GUI_MOUNT
 	if (g_settings.personalize[SNeutrinoSettings::P_MPLAYER_GUI_MOUNT])
