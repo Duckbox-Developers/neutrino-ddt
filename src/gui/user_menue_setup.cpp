@@ -165,6 +165,7 @@ int CUserMenuSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 	if (actionKey == ">a") {
 		int selected = ums->getSelected();
 		CMenuOptionStringChooser *c = new CMenuOptionStringChooser(std::string(""), NULL, true, NULL, CRCInput::RC_nokey, NULL, true);
+		c->setTitle(LOCALE_USERMENU_ITEMS);
 		c->setOptions(options);
 		std::string n(g_Locale->getText(LOCALE_USERMENU_ITEM_NONE));
 		c->setOptionValue(n);
