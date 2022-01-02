@@ -216,13 +216,7 @@ void CRCInput::open(bool recheck)
 	{
 		id.path = "/dev/input/" + std::string(dentry->d_name);
 
-		if (dentry->d_type == DT_LNK &&
-			id.path == "/dev/input/nevis_ir")
-		{
-			if (readLink(id.path) != "/dev/cs_ir")
-				continue;
-		}
-		else if (dentry->d_type != DT_CHR)
+		if (dentry->d_type != DT_CHR)
 		{
 			d_printf("[rcinput:%s] skipping '%s'\n", __func__, dentry->d_name);
 			continue;

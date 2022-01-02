@@ -47,12 +47,6 @@ class CFbAccel
 		CFrameBuffer *fb;
 		fb_pixel_t lastcol;
 		OpenThreads::Mutex mutex;
-#ifdef USE_NEVIS_GXA
-		int		  devmem_fd;	/* to access the GXA register we use /dev/mem */
-		unsigned int	  smem_start;	/* as aquired from the fbdev, the framebuffers physical start address */
-		volatile uint8_t *gxa_base;	/* base address for the GXA's register access */
-		void add_gxa_sync_marker(void);
-#endif /* USE_NEVIS_GXA */
 		void setColor(fb_pixel_t col);
 		void run(void);
 	public:
@@ -70,9 +64,7 @@ class CFbAccel
 		void mark(int x, int y, int dx, int dy);
 		void blit();
 		void update();
-#ifdef USE_NEVIS_GXA
-		void setupGXA(void);
-#endif
+
 		int sX, sY, eX, eY;
 		int startX, startY, endX, endY;
 		t_fb_var_screeninfo s;

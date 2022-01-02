@@ -408,7 +408,7 @@ int CFrameBuffer::setMode(unsigned int /*nxRes*/, unsigned int /*nyRes*/, unsign
 	xRes = screeninfo.xres;
 	yRes = screeninfo.yres;
 	bpp  = screeninfo.bits_per_pixel;
-	printf("FB: %dx%dx%d line length %d. %s nevis GXA accelerator.\n", xRes, yRes, bpp, stride,
+	printf("FB: %dx%dx%d line length %d. %s accelerator.\n", xRes, yRes, bpp, stride,
 		"Not using"
 	);
 	accel->update(); /* just in case we need to update stuff */
