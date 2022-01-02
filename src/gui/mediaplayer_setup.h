@@ -43,7 +43,7 @@ class CMediaPlayerSetup : public CMenuTarget
 		int width, selected;
 
 		int showMediaPlayerSetup();
-
+		void showFileBrowserSetup(CMenuWidget *mp_fbrowser);
 
 	public:	
 		CMediaPlayerSetup();
