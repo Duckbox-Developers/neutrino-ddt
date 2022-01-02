@@ -52,7 +52,6 @@ class CTimerEvent
 		time_t                     stopTime;      // 0 = one time shot
 		time_t                     announceTime;  // when should event be announced (0=none)
 
-//	CTimerEvent();
 		CTimerEvent(CTimerd::CTimerEventTypes evtype, int mon = 0, int day = 0, int hour = 0, int min = 0, CTimerd::CTimerEventRepeat evrepeat = CTimerd::TIMERREPEAT_ONCE, uint32_t repeatcount = 1);
 		CTimerEvent(CTimerd::CTimerEventTypes evtype, time_t announcetime, time_t alarmtime, time_t stoptime, CTimerd::CTimerEventRepeat evrepeat = CTimerd::TIMERREPEAT_ONCE, uint32_t repeatcount = 1);
 		CTimerEvent(CTimerd::CTimerEventTypes evtype, CConfigFile *config, int iId);
@@ -178,27 +177,6 @@ class CTimerEvent_Zapto : public CTimerEvent_Record
 		virtual void getEpgId();
 };
 
-#if 0
-class CTimerEvent_NextProgram : public CTimerEvent
-{
-	public:
-		CTimerd::EventInfo eventInfo;
-
-		CTimerEvent_NextProgram(time_t announceTime, time_t alarmTime, time_t stopTime,
-			t_channel_id channel_id,
-			t_event_id epg_id = 0,
-			time_t epg_starttime = 0,
-			CTimerd::CTimerEventRepeat evrepeat = CTimerd::TIMERREPEAT_ONCE,
-			uint32_t repeatcount = 1);
-		CTimerEvent_NextProgram(CConfigFile *config, int iId);
-		virtual ~CTimerEvent_NextProgram() {};
-		virtual void fireEvent();
-		virtual void announceEvent();
-		virtual void saveToConfig(CConfigFile *config);
-		virtual void Reschedule();
-};
-#endif
-
 class CTimerEvent_Remind : public CTimerEvent
 {
 	public:
@@ -265,7 +243,6 @@ class CTimerManager
 		int unlockEvents();
 		bool listEvents(CTimerEventMap &Events);
 		CTimerd::CTimerEventTypes *getEventType(int eventID);
-//	int modifyEvent(int eventID, time_t announceTime, time_t alarmTime, time_t stopTime, uint32_t repeatcount, CTimerd::CTimerEventRepeat evrepeat = CTimerd::TIMERREPEAT_ONCE);
 		int modifyEvent(int eventID, time_t announceTime, time_t alarmTime, time_t stopTime, uint32_t repeatcount, CTimerd::CTimerEventRepeat evrepeat, CTimerd::responseGetTimer &data);
 		int modifyEvent(int eventID, unsigned char apids);
 		int rescheduleEvent(int eventID, time_t announceTime, time_t alarmTime, time_t stopTime);

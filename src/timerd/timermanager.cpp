@@ -298,11 +298,6 @@ int CTimerManager::unlockEvents()
 
 bool CTimerManager::listEvents(CTimerEventMap &Events)
 {
-	/* events is passed as reference and thus its address is never NULL
-		if(!&Events)
-			return false;
-	 */
-
 	Events.clear();
 	for (CTimerEventMap::iterator pos = events.begin(); pos != events.end(); ++pos)
 	{
@@ -348,7 +343,6 @@ int CTimerManager::modifyEvent(int peventID, time_t announceTime, time_t alarmTi
 		switch (event->eventType)
 		{
 			case CTimerd::TIMER_SHUTDOWN:
-			//case CTimerd::TIMER_NEXTPROGRAM:
 			case CTimerd::TIMER_STANDBY:
 			case CTimerd::TIMER_REMIND:
 			case CTimerd::TIMER_SLEEPTIMER:
@@ -511,30 +505,6 @@ void CTimerManager::loadEventsFromConfig()
 					}
 					break;
 				}
-#if 0
-				case CTimerd::TIMER_NEXTPROGRAM :
-				{
-					CTimerEvent_NextProgram *event =
-						new CTimerEvent_NextProgram(&config, savedIDs[i]);
-					if ((event->alarmTime >= now) || (event->stopTime > now))
-					{
-						addEvent(event, false);
-					}
-					else if (event->eventRepeat != CTimerd::TIMERREPEAT_ONCE)
-					{
-						// old periodic timers need to be rescheduled
-						event->eventState = CTimerd::TIMERSTATE_HASFINISHED;
-						addEvent(event, false);
-					}
-					else
-					{
-						dprintf("next program timer (%d) too old %d/%d\n", i,
-							(int)now, (int) event->alarmTime);
-						delete event;
-					}
-					break;
-				}
-#endif
 				case CTimerd::TIMER_ZAPTO :
 				{
 					CTimerEvent_Zapto *event =
@@ -698,7 +668,6 @@ void CTimerManager::loadRecordingSafety()
 void CTimerManager::setWakeupTime()
 {
 	time_t nextAnnounceTime = 0;
-	//bool status=false;
 	timer_is_rec = false;
 
 	if (pthread_mutex_trylock(&tm_eventsMutex) == EBUSY)
@@ -1469,88 +1438,6 @@ void CTimerEvent_Zapto::getEpgId()
 			epgTitle = epgdata.title;
 	}
 }
-
-#if 0
-//=============================================================
-// NextProgram Event
-//=============================================================
-CTimerEvent_NextProgram::CTimerEvent_NextProgram(time_t announce_Time, time_t alarm_Time, time_t stop_Time,
-	t_channel_id channel_id,
-	t_event_id epg_id,
-	time_t epg_starttime, CTimerd::CTimerEventRepeat evrepeat,
-	uint32_t repeatcount) :
-	CTimerEvent(CTimerd::TIMER_NEXTPROGRAM, announce_Time, alarm_Time, stop_Time, evrepeat, repeatcount)
-{
-	eventInfo.epg_id = epg_id;
-	eventInfo.epg_starttime = epg_starttime;
-	eventInfo.channel_id = channel_id;
-}
-//------------------------------------------------------------
-CTimerEvent_NextProgram::CTimerEvent_NextProgram(CConfigFile *config, int iId):
-	CTimerEvent(CTimerd::TIMER_NEXTPROGRAM, config, iId)
-{
-	std::stringstream ostr;
-	ostr << iId;
-	std::string id = ostr.str();
-	eventInfo.epg_id = config->getInt64("EVENT_INFO_EPG_ID_" + id);
-	dprintf("read EVENT_INFO_EPG_ID_%s %ld\n", id.c_str(), (long)eventInfo.epg_id);
-
-	eventInfo.epg_starttime = config->getInt64("EVENT_INFO_EPG_STARTTIME_" + id);
-	dprintf("read EVENT_INFO_EPG_STARTTIME_%s %ld\n", id.c_str(), (long)eventInfo.epg_starttime);
-
-	eventInfo.channel_id = config->getInt64("EVENT_INFO_CHANNEL_ID_" + id);
-	dprintf("read EVENT_INFO_CHANNEL_ID_%s %ld\n", id.c_str(), (long)eventInfo.channel_id);
-
-	eventInfo.apids = config->getInt32("EVENT_INFO_APIDS_" + id);
-
-	dprintf("read EVENT_INFO_APIDS_%s 0x%X (%p)\n", id.c_str(), eventInfo.apids, &eventInfo.apids);
-}
-//------------------------------------------------------------
-
-void CTimerEvent_NextProgram::announceEvent()
-{
-	CTimerManager::getInstance()->getEventServer()->sendEvent(CTimerdClient::EVT_ANNOUNCE_NEXTPROGRAM,
-		CEventServer::INITID_TIMERD,
-		&eventInfo,
-		sizeof(eventInfo));
-}
-//------------------------------------------------------------
-void CTimerEvent_NextProgram::fireEvent()
-{
-	CTimerManager::getInstance()->getEventServer()->sendEvent(CTimerdClient::EVT_NEXTPROGRAM,
-		CEventServer::INITID_TIMERD,
-		&eventInfo,
-		sizeof(eventInfo));
-}
-
-//------------------------------------------------------------
-void CTimerEvent_NextProgram::saveToConfig(CConfigFile *config)
-{
-	CTimerEvent::saveToConfig(config);
-	std::stringstream ostr;
-	ostr << eventID;
-	std::string id = ostr.str();
-	config->setInt64("EVENT_INFO_EPG_ID_" + id, eventInfo.epg_id);
-	dprintf("set EVENT_INFO_EPG_ID_%s to %ld\n", id.c_str(), (long)eventInfo.epg_id);
-
-	config->setInt64("EVENT_INFO_EPG_STARTTIME_" + id, eventInfo.epg_starttime);
-	dprintf("set EVENT_INFO_EPG_STARTTIME_%s to %ld\n", id.c_str(), (long)eventInfo.epg_starttime);
-
-	config->setInt64("EVENT_INFO_CHANNEL_ID_" + id, eventInfo.channel_id);
-	dprintf("set EVENT_INFO_CHANNEL_ID_%s to %ld\n", id.c_str(), (long)eventInfo.channel_id);
-
-	config->setInt32("EVENT_INFO_APIDS_" + id, eventInfo.apids);
-	dprintf("set EVENT_INFO_APIDS_%s to 0x%X (%p)\n", id.c_str(), eventInfo.apids, &eventInfo.apids);
-}
-//------------------------------------------------------------
-void CTimerEvent_NextProgram::Reschedule()
-{
-	// clear eogId on reschedule
-	eventInfo.epg_id = 0;
-	eventInfo.epg_starttime = 0;
-	CTimerEvent::Reschedule();
-}
-#endif
 
 //=============================================================
 // Remind Event
