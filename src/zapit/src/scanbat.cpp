@@ -219,21 +219,18 @@ bool CBat::Parse()
 		for(it = blist.begin(); it != blist.end(); ++it) {
 			BouquetAssociation * b = *it;
 			dlist = b->getDescriptors();
-#if 1
 			printf("BAT: bouquet_id %04x tsid %04x onid %04x %d descriptors\n", bouquet_id, b->getTransportStreamId(),
 					b->getOriginalNetworkId(), (int)dlist->size());
-#endif
+
 			for (dit = dlist->begin(); dit != dlist->end(); ++dit) {
 				Descriptor * d = *dit;
 				switch(d->getTag()) {
 					case SERVICE_LIST_DESCRIPTOR:
 						ParseServiceList((ServiceListDescriptor *) d, b);
 						break;
-#if 1
 					case LOGICAL_CHANNEL_DESCRIPTOR:
 						ParseLogicalChannels((LogicalChannelDescriptor *) d, b);
 						break;
-#endif
 					case PRIVATE_DATA_SPECIFIER_DESCRIPTOR:
 						{
 							PrivateDataSpecifierDescriptor * pd = (PrivateDataSpecifierDescriptor *)d;
@@ -287,11 +284,9 @@ bool CBat::ParseServiceList(ServiceListDescriptor * sd, BouquetAssociation * b)
 	ServiceListItemConstIterator it;
 	for (it = slist->begin(); it != slist->end(); ++it) {
 		ServiceListItem * s = *it;
-#if 1
 		t_channel_id channel_id = CZapitChannel::makeChannelId(0 /*satellitePosition*/,
 				0 /*freq_id*/, b->getTransportStreamId(), b->getOriginalNetworkId(), s->getServiceId());
 		CServiceScan::getInstance()->AddServiceType(channel_id, s->getServiceType());
-#endif
 #ifdef DEBUG_BAT
 		printf("BAT: service tsid %04x onid %04x sid %04x type %02x\n",
 				b->getTransportStreamId(), b->getOriginalNetworkId(), s->getServiceId(), s->getServiceType());

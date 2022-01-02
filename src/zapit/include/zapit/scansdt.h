@@ -65,5 +65,4 @@ class CSdt
 		~CSdt();
 		bool Parse(t_transport_stream_id &tsid, t_original_network_id &onid);
 };
-
 #endif

@@ -161,5 +161,4 @@ class CServiceScan : public OpenThreads::Thread
 		bool ScanFast(int num, bool reload = true);
 #endif
 };
-
 #endif /* __scan_h__ */

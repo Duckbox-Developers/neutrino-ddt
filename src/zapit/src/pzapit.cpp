@@ -385,18 +385,6 @@ int main (int argc, char** argv)
 	/* create zapit client */
 	CZapitClient zapit;
 
-#if 0
-	TP_params TP;
-	TP.TP_id = 12345;
-	TP.polarization = 1;
-	TP.feparams.Frequency = 11727000;
-	TP.feparams.u.qpsk.SymbolRate = 27500000;
-	TP.feparams.u.qpsk.FEC_inner = (CodeRate) 3;
-
-	zapit.scan_TP(TP);
-	exit(0);
-#endif
-
 	/* send diseqc 1.2 motor command */
 	if (sendMotorCommand)
 	{
@@ -535,7 +523,6 @@ int main (int argc, char** argv)
 		std::vector<CZapitClient::responseGetSatelliteList>::const_iterator rI;
 		for ( ii = 0, rI = satelliteList.begin(); rI != satelliteList.end(); ii++, rI++)
 			printf("%" PRId64 " : %s %d\n", ii, rI->satName, rI->satPosition);
-		//std::cout << (1 << ii) << ": " << rI->satName << std::endl;
 
 		return 0;
 	}
@@ -586,17 +573,13 @@ int main (int argc, char** argv)
 
 	if (set_pal)
 	{
-		//zapit.stopPlayBack();
 		zapit.setVideoSystem(2);
-		//zapit.startPlayBack();
 		return 0;
 	}
 
 	if (set_hd)
 	{
-		//zapit.stopPlayBack();
 		zapit.setVideoSystem(set_hd);
-		//zapit.startPlayBack();
 		return 0;
 	}
 
@@ -691,7 +674,6 @@ int main (int argc, char** argv)
 			{
 				std::vector<CZapitClient::responseGetBouquetChannels>::const_iterator ch_resp;
 				for (ch_resp = channels.begin(), channel = 1; ch_resp != channels.end(); ch_resp++, ++channel)
-					//std::cout << channel << ": " << ch_resp->name << ": " << ch_resp->channel_id<< std::endl;
 					printf("%3u: %s (%04x)\n", channel, ch_resp->name, (short) (ch_resp->channel_id &0xFFFF));
 				return 0;
 			}

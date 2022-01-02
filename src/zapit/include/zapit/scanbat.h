@@ -61,5 +61,4 @@ class CBat : public OpenThreads::Thread
 		channel_number_map_t & getLogicalMap() { return logical_map; }
 		bouquet_map_t & getBouquets() { return bouquet_map; }
 };
-
 #endif
