@@ -166,9 +166,10 @@ class CServiceManager
 		}
 		satellite_map_t & SatelliteList() { return satellitePositions; }
 		xmlDocPtr ScanXml();
-
+#if 0
 		bool LoadProviderMap();
 		bool ReplaceProviderName(std::string &name, t_transport_stream_id tsid, t_original_network_id onid);
+#endif
 		int  GetFreeNumber(bool radio);
 		int  GetMaxNumber(bool radio);
 		void FreeNumber(int number, bool radio);

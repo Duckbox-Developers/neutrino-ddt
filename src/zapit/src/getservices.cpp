@@ -929,8 +929,9 @@ bool CServiceManager::LoadServices(bool only_current)
 		FindTransponder(xmlChildrenNode(xmlDocGetRootElement(parser)));
 		xmlFreeDoc(parser);
 	}
-
+#if 0
 	LoadProviderMap();
+#endif
 	printf("[zapit] %d services loaded (%d)...\n", service_count, (int)allchans.size());
 	TIMER_STOP("[zapit] service loading took");
 
@@ -1255,7 +1256,7 @@ bool CServiceManager::SaveCurrentServices(transponder_id_t tpid)
 
 	return updated;
 }
-
+#if 0
 #define PROVIDER_MAP_XML CONFIGDIR "/providermap.xml"
 bool CServiceManager::LoadProviderMap()
 {
@@ -1328,7 +1329,7 @@ bool CServiceManager::ReplaceProviderName(std::string &name, t_transport_stream_
 	}
 	return false;
 }
-
+#endif
 int CServiceManager::GetMaxNumber(bool radio)
 {
 	service_number_map_t * channel_numbers = radio ? &radio_numbers : &tv_numbers;
