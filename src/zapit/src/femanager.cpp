@@ -277,14 +277,6 @@ bool CFEManager::loadSettings()
 		}
 
 		if (fe->hasCable()) {
-#if 0
-			if (fcable) {
-				fcable = false;
-				def_mode = def_mode0;
-			}
-			if (def_mode > CFrontend::FE_MODE_INDEPENDENT)
-				def_mode = CFrontend::FE_MODE_INDEPENDENT;
-#endif
 			def_mode = CFrontend::FE_MODE_INDEPENDENT;
 		}
 
@@ -388,7 +380,6 @@ void CFEManager::saveSettings(bool write)
 	}
 	if (write && configfile.getModifiedFlag()) {
 		config_exist = configfile.saveConfig(FECONFIGFILE);
-		//configfile.setModifiedFlag(false);
 	}
 }
 
@@ -472,7 +463,6 @@ void CFEManager::linkFrontends(bool init)
 			INFO("Frontend #%d: is LOOP, master %d", fe->fenumber, fe->getMaster());
 			if (init)
 				fe->setMasterSlave(true);
-			//fe->slave = true;
 		} else if (femode == CFrontend::FE_MODE_LINK_TWIN) {
 			INFO("Frontend #%d: is TWIN, master %d", fe->fenumber, fe->getMaster());
 		} else if (femode == CFrontend::FE_MODE_INDEPENDENT) {

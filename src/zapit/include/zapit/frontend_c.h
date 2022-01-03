@@ -61,24 +61,6 @@
 
 #define MAX_DELSYS 	8
 
-#if 0
-static inline fe_modulation_t dvbs_get_modulation(fe_code_rate_t fec)
-{
-	if((fec < FEC_S2_QPSK_1_2) || (fec < FEC_S2_8PSK_1_2))
-		return QPSK;
-	else 
-		return PSK_8;
-}
-
-static inline fe_delivery_system_t dvbs_get_delsys(fe_code_rate_t fec)
-{
-	if(fec < FEC_S2_QPSK_1_2)
-		return SYS_DVBS;
-	else
-		return SYS_DVBS2;
-}
-#endif
-
 static inline fe_rolloff_t dvbs_get_rolloff(fe_delivery_system_t delsys)
 {
 	if(delsys == SYS_DVBS2)
@@ -244,7 +226,6 @@ class CFrontend
 		void				sendMotorCommand(uint8_t cmdtype, uint8_t address, uint8_t command, uint8_t num_parameters, uint8_t parameter1, uint8_t parameter2, int repeat = 0);
 		void				gotoXX(t_satellite_position pos);
 		bool				tuneChannel(CZapitChannel *channel, bool nvod);
-		bool				retuneChannel(void);
 
 		t_channel_id			getChannelID(void) { return channel_id; }
 		void				setChannelID(t_channel_id ID) { channel_id = ID; }

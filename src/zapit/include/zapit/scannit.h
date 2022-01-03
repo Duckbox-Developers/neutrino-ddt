@@ -72,5 +72,4 @@ class CNit : public OpenThreads::Thread
 		std::string GetNetworkName() { return networkName; }
 		t_satellite_position getOrbitalPosition() { return orbitalPosition; }
 };
-
 #endif

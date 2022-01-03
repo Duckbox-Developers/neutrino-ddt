@@ -149,7 +149,6 @@ bool CCam::sendCaPmt(uint64_t tpid, uint8_t *rawpmt, int rawlen, uint8_t type, u
 			rawpmt ? cabuf : NULL, rawpmt ? calen : 0, rawpmt, rawpmt ? rawlen : 0, (CA_SLOT_TYPE) type, scrambled, camap, mode, enable);
 }
 
-
 int CCam::makeMask(int demux, bool add)
 {
 	int mask = 0;
@@ -379,11 +378,6 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 				continue;
 			if(!channel->scrambled)
 				continue;
-
-#if 0
-			if (it == channel_map.end())
-				list |= CCam::CAPMT_LAST; // FIRST->ONLY or MORE->LAST
-#endif
 
 			cam->makeCaPmt(channel, false, list, caids);
 			int len;

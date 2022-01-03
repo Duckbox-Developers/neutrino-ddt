@@ -148,5 +148,4 @@ namespace ZapitTools {
 			}
 		} while (*p_act);
 	}
-
 }

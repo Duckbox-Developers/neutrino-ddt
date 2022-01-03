@@ -75,10 +75,6 @@ class CZapitBouquet
 
 	void moveService (const unsigned int oldPosition, const unsigned int newPosition, const unsigned char serviceType);
 
-#if 0
-	size_t recModeRadioSize(const transponder_id_t transponder_id);
-	size_t recModeTVSize   (const transponder_id_t transponder_id);
-#endif
 	CZapitChannel* getChannelByChannelID(const t_channel_id channel_id, const unsigned char serviceType = ST_RESERVED);
 	void sortBouquet(void);
 	void sortBouquetByNumber(void);
@@ -131,7 +127,6 @@ class CBouquetManager
 				ChannelIterator operator ++(int);
 				CZapitChannel* operator *();
 				ChannelIterator FindChannelNr(const unsigned int channel);
-				//int getLowestChannelNumberWithChannelID(const t_channel_id channel_id);
 				int getNrofFirstChannelofBouquet(const unsigned int bouquet_nr);
 				bool EndOfChannels() { return (c == -2); };
 		};
@@ -167,7 +162,7 @@ class CBouquetManager
 		void loadLogos();
 		void loadWebchannels(int mode);
 		std::string ReadMarkerValue(std::string strLine, const char* strMarkerName);
-		//bouquet writeChannelsNames selection options
+
 		enum{
 			BWN_NEVER,
 			BWN_UBOUQUETS,
@@ -198,5 +193,4 @@ struct CmpBouquetByChName: public std::binary_function <const CZapitBouquet * co
 			//return strcasecmp(c1->Name.c_str(), c2->Name.c_str());
 		};
 };
-
 #endif /* __bouquets_h__ */

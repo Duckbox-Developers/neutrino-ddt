@@ -127,12 +127,6 @@ int CMiscMenue::exec(CMenuTarget* parent, const std::string &actionKey)
 	{
 		return showMiscSettingsMenuChanlist();
 	}
-	else if(actionKey == "filebrowserdir")
-	{
-		const char *action_str = "filebrowserdir";
-		chooserDir(g_settings.network_nfs_moviedir, true, action_str);
-		return menu_return::RETURN_REPAINT;
-	}
 	else if(actionKey == "onlineservices")
 	{
 		return showMiscSettingsMenuOnlineServices();
@@ -169,13 +163,6 @@ int CMiscMenue::exec(CMenuTarget* parent, const std::string &actionKey)
 
 	return showMiscSettingsMenu();
 }
-
-#define MISCSETTINGS_FILESYSTEM_IS_UTF8_OPTION_COUNT 2
-const CMenuOptionChooser::keyval MISCSETTINGS_FILESYSTEM_IS_UTF8_OPTIONS[MISCSETTINGS_FILESYSTEM_IS_UTF8_OPTION_COUNT] =
-{
-	{ 0, LOCALE_FILESYSTEM_IS_UTF8_OPTION_ISO8859_1 },
-	{ 1, LOCALE_FILESYSTEM_IS_UTF8_OPTION_UTF8      }
-};
 
 #define CHANNELLIST_NEW_ZAP_MODE_OPTION_COUNT 3
 const CMenuOptionChooser::keyval CHANNELLIST_NEW_ZAP_MODE_OPTIONS[CHANNELLIST_NEW_ZAP_MODE_OPTION_COUNT] =
@@ -245,13 +232,6 @@ int CMiscMenue::showMiscSettingsMenu()
 	showMiscSettingsMenuEpg(&misc_menue_epg);
 	mf = new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_HEAD, true, NULL, &misc_menue_epg, NULL, CRCInput::RC_yellow);
 	mf->setHint("", LOCALE_MENU_HINT_MISC_EPG);
-	misc_menue.addItem(mf);
-
-	//filebrowser settings
-	CMenuWidget misc_menue_fbrowser(LOCALE_MISCSETTINGS_HEAD, NEUTRINO_ICON_SETTINGS, width, MN_WIDGET_ID_MISCSETUP_FILEBROWSER);
-	showMiscSettingsMenuFBrowser(&misc_menue_fbrowser);
-	mf = new CMenuForwarder(LOCALE_FILEBROWSER_HEAD, true, NULL, &misc_menue_fbrowser, NULL, CRCInput::RC_blue);
-	mf->setHint("", LOCALE_MENU_HINT_MISC_FILEBROWSER);
 	misc_menue.addItem(mf);
 
 	misc_menue.addItem(GenericMenuSeparatorLine);
@@ -484,29 +464,6 @@ void CMiscMenue::showMiscSettingsMenuEpg(CMenuWidget *ms_epg)
 	ms_epg->addItem(GenericMenuSeparatorLine);
 	ms_epg->addItem(mc3);
 	ms_epg->addItem(epg_scan);
-}
-
-//filebrowser settings
-void CMiscMenue::showMiscSettingsMenuFBrowser(CMenuWidget *ms_fbrowser)
-{
-	ms_fbrowser->addIntroItems(LOCALE_FILEBROWSER_HEAD);
-
-	CMenuOptionChooser * mc;
-	mc = new CMenuOptionChooser(LOCALE_FILESYSTEM_IS_UTF8            , &g_settings.filesystem_is_utf8            , MISCSETTINGS_FILESYSTEM_IS_UTF8_OPTIONS, MISCSETTINGS_FILESYSTEM_IS_UTF8_OPTION_COUNT, true );
-	mc->setHint("", LOCALE_MENU_HINT_FILESYSTEM_IS_UTF8);
-	ms_fbrowser->addItem(mc);
-
-	mc = new CMenuOptionChooser(LOCALE_FILEBROWSER_SHOWRIGHTS        , &g_settings.filebrowser_showrights        , MESSAGEBOX_NO_YES_OPTIONS              , MESSAGEBOX_NO_YES_OPTION_COUNT              , true );
-	mc->setHint("", LOCALE_MENU_HINT_FILEBROWSER_SHOWRIGHTS);
-	ms_fbrowser->addItem(mc);
-	mc = new CMenuOptionChooser(LOCALE_FILEBROWSER_DENYDIRECTORYLEAVE, &g_settings.filebrowser_denydirectoryleave, MESSAGEBOX_NO_YES_OPTIONS              , MESSAGEBOX_NO_YES_OPTION_COUNT              , true );
-	mc->setHint("", LOCALE_MENU_HINT_FILEBROWSER_DENYDIRECTORYLEAVE);
-	ms_fbrowser->addItem(mc);
-
-	CMenuForwarder* fileDir = new CMenuForwarder(LOCALE_FILEBROWSER_START_DIR, true, g_settings.network_nfs_moviedir, this, "filebrowserdir");
-	fileDir->setHint("", LOCALE_MENU_HINT_FILEBROWSER_STARTDIR);
-	ms_fbrowser->addItem(fileDir);
-
 }
 
 //channellist

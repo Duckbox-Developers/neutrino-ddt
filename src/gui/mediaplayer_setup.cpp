@@ -40,15 +40,15 @@
 #include <neutrino.h>
 #include <mymenu.h>
 
-#include <gui/widget/icons.h>
-#include <gui/widget/stringinput.h>
-
 #include <gui/audioplayer_setup.h>
+#include <gui/filebrowser.h>
+#include <gui/moviebrowser/mb.h>
 #include <gui/pictureviewer_setup.h>
 #include <gui/webradio_setup.h>
 #include <gui/webtv_setup.h>
+#include <gui/widget/icons.h>
+#include <gui/widget/stringinput.h>
 #include <gui/xmltv_setup.h>
-#include <gui/moviebrowser/mb.h>
 
 #include <driver/screen_max.h>
 
@@ -64,7 +64,14 @@ CMediaPlayerSetup::~CMediaPlayerSetup()
 {
 }
 
-int CMediaPlayerSetup::exec(CMenuTarget* parent, const std::string & /*actionKey*/)
+#define MEDIA_FILESYSTEM_IS_UTF8_OPTION_COUNT 2
+const CMenuOptionChooser::keyval MEDIA_FILESYSTEM_IS_UTF8_OPTIONS[MEDIA_FILESYSTEM_IS_UTF8_OPTION_COUNT] =
+{
+	{ 0, LOCALE_FILESYSTEM_IS_UTF8_OPTION_ISO8859_1 },
+	{ 1, LOCALE_FILESYSTEM_IS_UTF8_OPTION_UTF8      }
+};
+
+int CMediaPlayerSetup::exec(CMenuTarget* parent, const std::string & actionKey)
 {
 	dprintf(DEBUG_DEBUG, "init mediaplayer setup menu\n");
 	int   res = menu_return::RETURN_REPAINT;
@@ -72,6 +79,12 @@ int CMediaPlayerSetup::exec(CMenuTarget* parent, const std::string & /*actionKey
 	if (parent)
 		parent->hide();
 
+	if(actionKey == "filebrowserdir")
+	{
+		const char *action_str = "filebrowserdir";
+		chooserDir(g_settings.network_nfs_moviedir, true, action_str);
+		return menu_return::RETURN_REPAINT;
+	}
 
 	res = showMediaPlayerSetup();
 	
@@ -117,6 +130,21 @@ int CMediaPlayerSetup::showMediaPlayerSetup()
 	mf->setHint(NEUTRINO_ICON_HINT_PICVIEW, LOCALE_MENU_HINT_PICTUREVIEWER_SETUP);
 	mediaSetup->addItem(mf);
 
+	mediaSetup->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_MOVIEPLAYER_FILEPLAYBACK_VIDEO));
+
+	CMenuForwarder* fileDir = new CMenuForwarder(LOCALE_FILEBROWSER_START_DIR, true, g_settings.network_nfs_moviedir, this, "filebrowserdir", CRCInput::convertDigitToKey(shortcut++));
+	fileDir->setHint("", LOCALE_MENU_HINT_FILEBROWSER_STARTDIR);
+	mediaSetup->addItem(fileDir);
+
+	mediaSetup->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_FILEBROWSER_HEAD));
+
+	//filebrowser settings
+	CMenuWidget menue_fbrowser(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_SETTINGS, width);
+	showFileBrowserSetup(&menue_fbrowser);
+	mf = new CMenuForwarder(LOCALE_FILEBROWSER_HEAD, true, NULL, &menue_fbrowser, NULL, CRCInput::convertDigitToKey(shortcut++));
+	mf->setHint("", LOCALE_MENU_HINT_MISC_FILEBROWSER);
+	mediaSetup->addItem(mf);
+
 	mediaSetup->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_MAINMENU_MOVIEPLAYER));
 
 	CMovieBrowser msetup;
@@ -139,4 +167,28 @@ int CMediaPlayerSetup::showMediaPlayerSetup()
 	selected = mediaSetup->getSelected();
 	delete mediaSetup;
 	return res;
+}
+
+//filebrowser settings
+void CMediaPlayerSetup::showFileBrowserSetup(CMenuWidget *mp_fbrowser)
+{
+	mp_fbrowser->addIntroItems(LOCALE_FILEBROWSER_HEAD);
+
+	CMenuOptionChooser * mc;
+	mc = new CMenuOptionChooser(LOCALE_FILESYSTEM_IS_UTF8            , &g_settings.filesystem_is_utf8            , MEDIA_FILESYSTEM_IS_UTF8_OPTIONS, MEDIA_FILESYSTEM_IS_UTF8_OPTION_COUNT, true );
+	mc->setHint("", LOCALE_MENU_HINT_FILESYSTEM_IS_UTF8);
+	mp_fbrowser->addItem(mc);
+
+	mc = new CMenuOptionChooser(LOCALE_FILEBROWSER_SHOWRIGHTS        , &g_settings.filebrowser_showrights        , MESSAGEBOX_NO_YES_OPTIONS              , MESSAGEBOX_NO_YES_OPTION_COUNT              , true );
+	mc->setHint("", LOCALE_MENU_HINT_FILEBROWSER_SHOWRIGHTS);
+	mp_fbrowser->addItem(mc);
+
+	mc = new CMenuOptionChooser(LOCALE_FILEBROWSER_DENYDIRECTORYLEAVE, &g_settings.filebrowser_denydirectoryleave, MESSAGEBOX_NO_YES_OPTIONS              , MESSAGEBOX_NO_YES_OPTION_COUNT              , true );
+	mc->setHint("", LOCALE_MENU_HINT_FILEBROWSER_DENYDIRECTORYLEAVE);
+	mp_fbrowser->addItem(mc);
+#if 0
+	CMenuForwarder* fileDir = new CMenuForwarder(LOCALE_FILEBROWSER_START_DIR, true, g_settings.network_nfs_moviedir, this, "filebrowserdir");
+	fileDir->setHint("", LOCALE_MENU_HINT_FILEBROWSER_STARTDIR);
+	mp_fbrowser->addItem(fileDir);
+#endif
 }

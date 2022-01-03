@@ -215,29 +215,6 @@ bool CZapitBouquet::getChannels(ZapitChannelList &list, bool tv, int flags)
 	}
 	return (!list.empty());
 }
-#if 0
-size_t CZapitBouquet::recModeRadioSize(const transponder_id_t transponder_id)
-{
-	size_t size = 0;
-
-	for (size_t i = 0; i < radioChannels.size(); i++)
-		if (transponder_id == radioChannels[i]->getTransponderId())
-			size++;
-
-	return size;
-}
-
-size_t CZapitBouquet::recModeTVSize(const transponder_id_t transponder_id)
-{
-	size_t size = 0;
-
-	for (size_t i = 0; i < tvChannels.size(); i++)
-		if (transponder_id == tvChannels[i]->getTransponderId())
-			size++;
-
-	return size;
-}
-#endif
 
 CBouquetManager::~CBouquetManager()
 {
@@ -604,12 +581,6 @@ void CBouquetManager::makeRemainingChannelsBouquet(void)
 
 void CBouquetManager::renumServices()
 {
-#if 0
-	if(remainChannels)
-		deleteBouquet(remainChannels);
-
-	remainChannels = NULL;
-#endif
 	if(remainChannels) {
 		remainChannels->tvChannels.clear();
 		remainChannels->radioChannels.clear();
@@ -694,22 +665,6 @@ void CBouquetManager::setBouquetLock(CZapitBouquet* bouquet, bool state)
 
 }
 
-#if 0
-int str_compare_withoutspace(char const *s1, char const *s2)
-{
-	int cmp_result = 0;
-	while(isspace(*s1)) ++s1;
-	while(isspace(*s2)) ++s2;
-
-	while(!cmp_result && *s1++ && *s2++){
-		while(isspace(*s1)) ++s1;
-		while(isspace(*s2)) ++s2;
-		cmp_result = tolower(*s1) - tolower(*s2);
-	}
-	return cmp_result;
-}
-#endif
-
 // -- Find Bouquet-Name, if BQ exists   (2002-04-02 rasc)
 // -- Return: Bouqet-ID (found: 0..n)  or -1 (Bouquet does not exist)
 int CBouquetManager::existsBouquet(char const * const name, bool ignore_user)
@@ -719,45 +674,6 @@ int CBouquetManager::existsBouquet(char const * const name, bool ignore_user)
 		{
 			return (int)i;
 		}
-#if 0
-		else if (strcasecmp(Bouquets[i]->Name.c_str(), name)==0)
-		{
-			int lower1 = 0, lower2 =  0;
-			int upper1 = 0 ,upper2 = 0;
-			std::string str2 = name;
-			size_t  pos=0;
-			size_t pos2 = Bouquets[i]->Name.find("] ");
-			if(pos != std::string::npos){
-				pos += pos2;
-			}
-
-			while (Bouquets[i]->Name[pos]){
-				if(islower(Bouquets[i]->Name[pos])){
-					++lower1;
-				}
-				if(isupper(Bouquets[i]->Name[pos])){
-					++upper1;
-				}
-				if(islower(str2[pos])){
-					++lower2;
-				}
-				if(isupper(str2[pos])){
-					++upper2;
-				}
-				pos++;
-			}
-			if ( ( upper2 && (lower1 < lower2)) || (lower2==0 && upper1==0 && upper2==lower1) ){
-				Bouquets[i]->Name = str2;
-			}
-			return (int)i;
-		}else if(!(str_compare_withoutspace(Bouquets[i]->Name.c_str(), name)) )
-		{
-			if(strlen(name) > Bouquets[i]->Name.length()){
-				Bouquets[i]->Name = name;
-			}
-			return (int)i;
-		}
-#endif
 	}
 	return -1;
 }
@@ -1297,20 +1213,6 @@ CBouquetManager::ChannelIterator CBouquetManager::ChannelIterator::FindChannelNr
  end:
 	return (*this);
 }
-
-#if 0
-int CBouquetManager::ChannelIterator::getLowestChannelNumberWithChannelID(const t_channel_id channel_id)
-{
-	int i = 0;
-
-	for (b = 0; b < Owner->Bouquets.size(); b++)
-		for (c = 0; (unsigned int) c < getBouquet()->size(); c++, i++)
-			if ((**this)->getChannelID() == channel_id)
-			    return (**this)->number -1;
-			    //return i;
-	return -1; // not found
-}
-#endif
 
 int CBouquetManager::ChannelIterator::getNrofFirstChannelofBouquet(const unsigned int bouquet_nr)
 {

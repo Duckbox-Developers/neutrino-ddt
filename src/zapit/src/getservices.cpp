@@ -125,15 +125,6 @@ bool CServiceManager::AddNVODChannel(CZapitChannel * &channel)
 void CServiceManager::ResetChannelNumbers(bool bouquets, bool numbers)
 {
 	for (channel_map_iterator_t it = allchans.begin(); it != allchans.end(); ++it) {
-#if 0 /* force to get free numbers if there are any */
-		if(have_numbers) {
-			if(!it->second.number) {
-				it->second.number = GetFreeNumber(it->second.getServiceType() == ST_DIGITAL_RADIO_SOUND_SERVICE);
-			}
-		} else {
-			it->second.number = 0;
-		}
-#endif
 		if(!keep_numbers || numbers)
 			it->second.number = 0;
 		if(bouquets)
@@ -587,11 +578,6 @@ void CServiceManager::FindTransponder(xmlNodePtr search)
 			search = xmlNextNode(search);
 			continue;
 		}
-#if 0
-		//t_satellite_position satellitePosition = xmlGetSignedNumericAttribute(search, "position", 10);
-		const char * name = xmlGetAttribute(search, "name");
-		t_satellite_position satellitePosition = GetSatellitePosition(name);
-#endif
 		INFO("going to parse dvb-%c provider %s", xmlGetName(search)[0], xmlGetAttribute(search, "name"));
 		ParseTransponders(xmlChildrenNode(search), satellitePosition, delsys);
 		newfound++;
@@ -716,10 +702,7 @@ void CServiceManager::ParseSatTransponders(delivery_system_t delsys, xmlNodePtr 
 
 			int xml_fec = xmlGetNumericAttribute(tps, "fec_inner", 0);
 			xml_fec = CFrontend::getCodeRate(xml_fec, feparams.delsys);
-#if 0
-			if(modulation == 2 && ((fe_code_rate_t) xml_fec != FEC_AUTO))
-				xml_fec += 9;
-#endif
+
 			feparams.fec_inner = (fe_code_rate_t) xml_fec;
 			feparams.frequency = (int) 1000 * (int) round ((double) feparams.frequency / (double) 1000);
 
@@ -929,8 +912,6 @@ bool CServiceManager::LoadServices(bool only_current)
 		FindTransponder(xmlChildrenNode(xmlDocGetRootElement(parser)));
 		xmlFreeDoc(parser);
 	}
-
-	LoadProviderMap();
 	printf("[zapit] %d services loaded (%d)...\n", service_count, (int)allchans.size());
 	TIMER_STOP("[zapit] service loading took");
 
@@ -942,20 +923,6 @@ bool CServiceManager::LoadServices(bool only_current)
 	/* reset flag after loading services.xml */
 	services_changed = false;
 do_current:
-#if 0
-	DBG("Loading current..\n");
-	if (CZapit::getInstance()->GetScanSDT() && (parser = parseXmlFile(CURRENTSERVICES_XML))) {
-		newfound = 0;
-		printf("[getservices] " CURRENTSERVICES_XML "  found.\n");
-		FindTransponder(xmlChildrenNode(xmlDocGetRootElement(parser)));
-		xmlFreeDoc(parser);
-		unlink(CURRENTSERVICES_XML);
-		if(newfound) {
-			//SaveServices(true);
-			services_changed = true;
-		}
-	}
-#endif
 	if(!only_current) {
 		parser = parseXmlFile(MYSERVICES_XML);
 		if (parser != NULL) {
@@ -1254,79 +1221,6 @@ bool CServiceManager::SaveCurrentServices(transponder_id_t tpid)
 	rename(CURRENTSERVICES_TMP, CURRENTSERVICES_XML);
 
 	return updated;
-}
-
-#define PROVIDER_MAP_XML CONFIGDIR "/providermap.xml"
-bool CServiceManager::LoadProviderMap()
-{
-	xmlDocPtr parser;
-
-	replace_map.clear();
-	parser = parseXmlFile(PROVIDER_MAP_XML);
-	if (parser != NULL) {
-		xmlNodePtr node = xmlDocGetRootElement(parser);
-		node = xmlChildrenNode(node);
-		while ((node = xmlGetNextOccurence(node, "TS")) != NULL) {
-			provider_replace replace;
-			replace.transport_stream_id = xmlGetNumericAttribute(node, "id", 16);
-			replace.original_network_id = xmlGetNumericAttribute(node, "on", 16);
-			replace.frequency = xmlGetNumericAttribute(node, "frq", 0);
-
-			const char * name = xmlGetAttribute(node, "name");
-			const char * newname = xmlGetAttribute(node, "newname");
-			if(name)
-				replace.name = name;
-			if(newname)
-				replace.newname = newname;
-
-			DBG("prov map: tsid %04x onid %04x freq %d name [%s] to [%s]\n",
-					replace.transport_stream_id, replace.original_network_id,
-					replace.frequency, replace.name.c_str(), replace.newname.c_str());
-			replace_map.push_back(replace);
-			node = xmlNextNode(node);
-		}
-		xmlFreeDoc(parser);
-		return true;
-	}
-	return false;
-}
-
-bool CServiceManager::ReplaceProviderName(std::string &name, t_transport_stream_id tsid, t_original_network_id onid)
-{
-	std::string newname;
-
-	prov_replace_map_iterator_t it;
-	for (it = replace_map.begin(); it != replace_map.end(); ++it) {
-		provider_replace replace = *it;
-		/* if replace map has tsid and onid */
-		if(replace.transport_stream_id && replace.original_network_id) {
-			/* compare tsid/onid */
-			if(replace.transport_stream_id == tsid && replace.original_network_id == onid) {
-				/* if new name present, old name should be present */
-				if(!replace.newname.empty()) {
-					if (name == replace.name)
-						newname = replace.newname;
-				} else {
-					newname = replace.name;
-				}
-			}
-		} else {
-			/* no tsid/onid, only names. if new name present, old name should be present */
-			if(!replace.newname.empty()) {
-				if(name == replace.name)
-					newname = replace.newname;
-			}
-			/* no tsid/onid, no newname, only name. compare name without case */
-			else if(!strcasecmp(replace.name.c_str(), name.c_str()))
-				newname = replace.name;
-		}
-		if(!newname.empty()) {
-			DBG("ReplaceProviderName: old [%s] new [%s]\n", name.c_str(), newname.c_str());
-			name = newname;
-			return true;
-		}
-	}
-	return false;
 }
 
 int CServiceManager::GetMaxNumber(bool radio)

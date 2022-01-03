@@ -43,7 +43,6 @@ int timerd_debug = 0;
 
 bool timerd_parse_command(CBasicMessage::Header &rmsg, int connfd)
 {
-//	CTimerEvent_NextProgram::EventMap::iterator it = NULL;
 	CTimerEventMap events;
 	CTimerdMsg::commandModifyTimer msgModifyTimer;
 	CTimerdMsg::responseGetSleeptimer rspGetSleeptimer;
@@ -99,15 +98,6 @@ bool timerd_parse_command(CBasicMessage::Header &rmsg, int connfd)
 
 					if (event->eventType == CTimerd::TIMER_STANDBY)
 						resp.standby_on = static_cast<CTimerEvent_Standby *>(event)->standby_on;
-#if 0
-					else if (event->eventType == CTimerd::TIMER_NEXTPROGRAM)
-					{
-						resp.epg_id = static_cast<CTimerEvent_NextProgram *>(event)->eventInfo.epg_id;
-						resp.epg_starttime = static_cast<CTimerEvent_NextProgram *>(event)->eventInfo.epg_starttime;
-						resp.channel_id = static_cast<CTimerEvent_NextProgram *>(event)->eventInfo.channel_id;
-						resp.apids = static_cast<CTimerEvent_Record *>(event)->eventInfo.apids;
-					}
-#endif
 					else if (event->eventType == CTimerd::TIMER_RECORD)
 					{
 						CTimerEvent_Record *ev = static_cast<CTimerEvent_Record *>(event);
@@ -168,15 +158,6 @@ bool timerd_parse_command(CBasicMessage::Header &rmsg, int connfd)
 
 					if (event->eventType == CTimerd::TIMER_STANDBY)
 						lresp.standby_on = static_cast<CTimerEvent_Standby *>(event)->standby_on;
-#if 0
-					else if (event->eventType == CTimerd::TIMER_NEXTPROGRAM)
-					{
-						lresp.epg_id = static_cast<CTimerEvent_NextProgram *>(event)->eventInfo.epg_id;
-						lresp.epg_starttime = static_cast<CTimerEvent_NextProgram *>(event)->eventInfo.epg_starttime;
-						lresp.channel_id = static_cast<CTimerEvent_NextProgram *>(event)->eventInfo.channel_id;
-						lresp.apids = static_cast<CTimerEvent_Record *>(event)->eventInfo.apids;
-					}
-#endif
 					else if (event->eventType == CTimerd::TIMER_RECORD)
 					{
 						CTimerEvent_Record *ev = static_cast<CTimerEvent_Record *>(event);
@@ -231,7 +212,6 @@ bool timerd_parse_command(CBasicMessage::Header &rmsg, int connfd)
 				switch (*type)
 				{
 					case CTimerd::TIMER_SHUTDOWN:
-					//case CTimerd::TIMER_NEXTPROGRAM:
 					case CTimerd::TIMER_ZAPTO:
 					case CTimerd::TIMER_STANDBY:
 					case CTimerd::TIMER_REMIND:
@@ -361,37 +341,6 @@ bool timerd_parse_command(CBasicMessage::Header &rmsg, int connfd)
 						rspAddTimer.eventID = CTimerManager::getInstance()->addEvent(event);
 					}
 					break;
-
-#if 0
-				case CTimerd::TIMER_NEXTPROGRAM :
-//					CTimerd::EventInfo evInfo;
-					CBasicServer::receive_data(connfd, &evInfo, sizeof(CTimerd::TransferEventInfo));
-					/*
-										it = CTimerEvent_NextProgram::events.find(evInfo.uniqueKey);
-										if (it == CTimerEvent_NextProgram::events.end())
-										{
-											event = new CTimerEvent_NextProgram(
-												msgAddTimer.announceTime,
-												msgAddTimer.alarmTime,
-												msgAddTimer.stopTime,
-												msgAddTimer.eventRepeat);
-											static_cast<CTimerEvent_NextProgram*>(event)->eventInfo = evInfo;
-											CTimerEvent_NextProgram::events.insert(make_pair(static_cast<CTimerEvent_NextProgram*>(event)->eventInfo.uniqueKey, static_cast<CTimerEvent_NextProgram*>(event)));
-											rspAddTimer.eventID = CTimerManager::getInstance()->addEvent(event);
-										}
-										else
-										{
-											event = it->second;
-											static_cast<CTimerEvent_NextProgram*>(event)->eventInfo = evInfo;
-											event->alarmtime.tm_mon  = msgAddTimer.month;
-											event->alarmtime.tm_mday = msgAddTimer.day;
-											event->alarmtime.tm_hour = msgAddTimer.hour;
-											event->alarmtime.tm_min  = msgAddTimer.min;
-											rspAddTimer.eventID = event->eventID;
-										}
-					*/
-					break;
-#endif
 				case CTimerd::TIMER_REMIND :
 					CTimerdMsg::commandRemind remind;
 					CBasicServer::receive_data(connfd, &remind, sizeof(CTimerdMsg::commandRemind));

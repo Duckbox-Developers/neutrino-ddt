@@ -121,35 +121,6 @@ CZapitClient::CCurrentServiceInfo CZapitClient::getCurrentServiceInfo()
 	return response;
 }
 
-#if 0
-void CZapitClient::getLastChannel(t_channel_id &channel_id, int &mode)
-{
-	OpenThreads::ScopedLock<OpenThreads::Mutex> lock(mutex);
-	send(CZapitMessages::CMD_GET_LAST_CHANNEL);
-
-	CZapitClient::responseGetLastChannel response;
-	CBasicClient::receive_data((char* )&response, sizeof(response));
-	channel_id = response.channel_id;
-	mode = response.mode;
-
-	close_connection();
-}
-#endif
-
-#if 0
-int32_t CZapitClient::getCurrentSatellitePosition(void)
-{
-	OpenThreads::ScopedLock<OpenThreads::Mutex> lock(mutex);
-	send(CZapitMessages::CMD_GET_CURRENT_SATELLITE_POSITION);
-
-	int32_t response;
-	CBasicClient::receive_data((char *)&response, sizeof(response));
-
-	close_connection();
-	return response;
-}
-#endif
-
 void CZapitClient::setAudioChannel(const unsigned int channel)
 {
 	CZapitMessages::commandSetAudioChannel msg;
@@ -459,21 +430,6 @@ bool CZapitClient::getBouquetChannels(const unsigned int bouquet, BouquetChannel
 	return return_value;
 }
 
-#if 0
-bool CZapitClient::getBouquetNChannels(const unsigned int bouquet, BouquetNChannelList& channels, channelsMode mode, const bool /*utf_encoded*/)
-{
-	bool                                      return_value;
-	CZapitMessages::commandGetBouquetChannels msg;
-
-	msg.bouquet = bouquet;
-	msg.mode = mode;
-
-	return_value = (send(CZapitMessages::CMD_GET_BOUQUET_NCHANNELS, (char*)&msg, sizeof(msg))) ? receive_nchannel_list(channels) : false;
-
-	close_connection();
-	return return_value;
-}
-#endif
 /* gets all channels */
 bool CZapitClient::getChannels( BouquetChannelList& channels, channelsMode mode, channelsOrder order, const bool utf_encoded)
 {
@@ -491,10 +447,6 @@ bool CZapitClient::getChannels( BouquetChannelList& channels, channelsMode mode,
 	return return_value;
 }
 
-
-
-/* request information about a particular channel_id */
-
 /* channel name */
 std::string CZapitClient::getChannelName(const t_channel_id channel_id)
 {
@@ -506,22 +458,6 @@ std::string CZapitClient::getChannelName(const t_channel_id channel_id)
 	close_connection();
 	return std::string(response.name);
 }
-
-#if 0
-/* is channel a TV channel ? */
-bool CZapitClient::isChannelTVChannel(const t_channel_id channel_id)
-{
-	OpenThreads::ScopedLock<OpenThreads::Mutex> lock(mutex);
-	send(CZapitMessages::CMD_IS_TV_CHANNEL, (char *) & channel_id, sizeof(channel_id));
-
-	CZapitMessages::responseGeneralTrueFalse response;
-	CBasicClient::receive_data((char* )&response, sizeof(response));
-	close_connection();
-	return response.status;
-}
-#endif
-
-
 
 /* restore bouquets so as if they were just loaded */
 void CZapitClient::restoreBouquets()
@@ -550,10 +486,6 @@ void CZapitClient::reloadCurrentServices()
 {
 	OpenThreads::ScopedLock<OpenThreads::Mutex> lock(mutex);
 	send(CZapitMessages::CMD_RELOAD_CURRENTSERVICES);
-#if 0
-	CZapitMessages::responseCmd response;
-	CBasicClient::receive_data((char* )&response, sizeof(response), true);
-#endif
 	close_connection();
 }
 
@@ -624,18 +556,6 @@ void CZapitClient::lockRc(const bool b)
 	close_connection();
 }
 
-#if 0
-bool CZapitClient::get_current_TP(transponder* TP)
-{
-	TP_params TP_temp;
-	OpenThreads::ScopedLock<OpenThreads::Mutex> lock(mutex);
-	send(CZapitMessages::CMD_GET_CURRENT_TP);
-	bool reply = CBasicClient::receive_data((char*)&TP_temp, sizeof(TP_temp));
-	memmove(TP, &TP_temp, sizeof(TP_temp));
-	close_connection();
-	return reply;
-}
-#endif
 /* sends diseqc 1.2 motor command */
 void CZapitClient::sendMotorCommand(uint8_t cmdtype, uint8_t address, uint8_t cmd, uint8_t num_parameters, uint8_t param1, uint8_t param2)
 {
@@ -654,7 +574,6 @@ void CZapitClient::sendMotorCommand(uint8_t cmdtype, uint8_t address, uint8_t cm
 
 	close_connection();
 }
-
 
 /***********************************************/
 /*                                             */
@@ -679,21 +598,7 @@ bool CZapitClient::stopScan()
         close_connection();
         return reply;
 }
-#if 0
-bool CZapitClient::setConfig(Zapit_config Cfg)
-{
-        //bool reply = send(CZapitMessages::CMD_LOADCONFIG);
-	bool reply = send(CZapitMessages::CMD_SETCONFIG, (char*)&Cfg, sizeof(Cfg));
-        close_connection();
-        return reply;
-}
-void CZapitClient::getConfig (Zapit_config * Cfg)
-{
-	send(CZapitMessages::CMD_GETCONFIG);
-	CBasicClient::receive_data((char *) Cfg, sizeof(Zapit_config));
-	close_connection();
-}
-#endif
+
 bool CZapitClient::Rezap()
 {
 	OpenThreads::ScopedLock<OpenThreads::Mutex> lock(mutex);
@@ -773,21 +678,6 @@ void CZapitClient::setScanSatelliteList( ScanSatelliteList& satelliteList )
 	close_connection();
 }
 
-#if 0
-/* tell zapit stored satellite positions in diseqc 1.2 motor */
-void CZapitClient::setScanMotorPosList( ScanMotorPosList& motorPosList )
-{
-	OpenThreads::ScopedLock<OpenThreads::Mutex> lock(mutex);
-	send(CZapitMessages::CMD_SCANSETSCANMOTORPOSLIST);
-
-	for (uint32_t i = 0; i < motorPosList.size(); i++)
-	{
-		send_data((char*)&motorPosList[i], sizeof(motorPosList[i]));
-	}
-	close_connection();
-}
-#endif
-
 /* set diseqcType*/
 void CZapitClient::setDiseqcType(const diseqc_t diseqc)
 {
@@ -811,35 +701,6 @@ void CZapitClient::setScanBouquetMode(const bouquetMode mode)
 	send(CZapitMessages::CMD_SCANSETBOUQUETMODE, (const char *) & mode, sizeof(mode));
 	close_connection();
 }
-
-#if 0
-/* set Scan-TYpe for channelsearch */
-void CZapitClient::setScanType(const scanType mode)
-{
-	OpenThreads::ScopedLock<OpenThreads::Mutex> lock(mutex);
-	send(CZapitMessages::CMD_SCANSETTYPE, (const char *) & mode, sizeof(mode));
-  	close_connection();
-}
-#endif
-#if 0
-//
-// -- query Frontend Signal parameters
-//
-void CZapitClient::getFESignal (struct responseFESignal &f)
-{
-	struct responseFESignal rsignal;
-
-	OpenThreads::ScopedLock<OpenThreads::Mutex> lock(mutex);
-	send(CZapitMessages::CMD_GET_FE_SIGNAL);
-	CBasicClient::receive_data((char *) &rsignal, sizeof(rsignal));
-
-	f.sig = rsignal.sig;
-	f.snr = rsignal.snr;
-	f.ber = rsignal.ber;
-
-	close_connection();
-}
-#endif
 
 /***********************************************/
 /*                                             */
@@ -918,46 +779,6 @@ signed int CZapitClient::existsBouquet(const char * const name)
 	close_connection();
 	return response.number;
 }
-
-#if 0
-// -- check if Channel already is in Bouquet
-// -- Return: true/false
-/* bouquets are numbered starting at 0 */
-bool CZapitClient::existsChannelInBouquet(const unsigned int bouquet, const t_channel_id channel_id)
-{
-	CZapitMessages::commandExistsChannelInBouquet msg;
-	CZapitMessages::responseGeneralTrueFalse response;
-
-	msg.bouquet    = bouquet;
-	msg.channel_id = channel_id;
-
-	OpenThreads::ScopedLock<OpenThreads::Mutex> lock(mutex);
-	send(CZapitMessages::CMD_BQ_EXISTS_CHANNEL_IN_BOUQUET, (char*)&msg, sizeof(msg));
-
-	CBasicClient::receive_data((char* )&response, sizeof(response));
-	close_connection();
-	return (unsigned int) response.status;
-}
-#endif
-
-#if 0
-/* moves a channel of a bouquet from one position to another, channel lists begin at position=1*/
-/* bouquets are numbered starting at 0 */
-void CZapitClient::moveChannel( unsigned int bouquet, unsigned int oldPos, unsigned int newPos, channelsMode mode)
-{
-	CZapitMessages::commandMoveChannel msg;
-
-	msg.bouquet = bouquet;
-	msg.oldPos  = oldPos - 1;
-	msg.newPos  = newPos - 1;
-	msg.mode    = mode;
-
-	OpenThreads::ScopedLock<OpenThreads::Mutex> lock(mutex);
-	send(CZapitMessages::CMD_BQ_MOVE_CHANNEL, (char*)&msg, sizeof(msg));
-
-	close_connection();
-}
-#endif
 
 /* adds a channel at the end of then channel list to specified bouquet */
 /* same channels can be in more than one bouquet */
@@ -1140,15 +961,7 @@ bool CZapitClient::isPlayBackActive()
 	close_connection();
 	return response.activated;
 }
-#if 0
-void CZapitClient::setDisplayFormat(const video_display_format_t format)
-{
-	CZapitMessages::commandInt msg;
-	msg.val = format;
-	send(CZapitMessages::CMD_SET_DISPLAY_FORMAT, (char*)&msg, sizeof(msg));
-	close_connection();
-}
-#endif
+
 void CZapitClient::setAudioMode(const int mode)
 {
 	CZapitMessages::commandInt msg;
@@ -1159,17 +972,6 @@ void CZapitClient::setAudioMode(const int mode)
 	close_connection();
 }
 
-#if 0
-void CZapitClient::getAudioMode(int * mode)
-{
-        CZapitMessages::commandInt msg;
-	OpenThreads::ScopedLock<OpenThreads::Mutex> lock(mutex);
-        send(CZapitMessages::CMD_GET_AUDIO_MODE, 0, 0);
-        CBasicClient::receive_data((char* )&msg, sizeof(msg));
-        * mode = msg.val;
-        close_connection();
-}
-#endif
 void CZapitClient::setRecordMode(const bool activate)
 {
 	CZapitMessages::commandSetRecordMode msg;

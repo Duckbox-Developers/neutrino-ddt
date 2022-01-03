@@ -216,13 +216,6 @@ bool CNit::Parse()
 					{
 #ifdef DEBUG_NIT_UNUSED
 						printf("NIT: descriptor %02x len %d: ", d->getTag(), d->getLength());
-#if 0
-						uint8_t len = 2+d->getLength();
-						uint8_t buf[len];
-						d->writeToBuffer(buf);
-						for(uint8_t i = 0; i < len; i++)
-							printf("%02x ", buf[i]);
-#endif
 						printf("\n");
 #endif
 					}
@@ -260,17 +253,15 @@ bool CNit::Parse()
 					case SERVICE_LIST_DESCRIPTOR:
 						ParseServiceList((ServiceListDescriptor *) d, tsinfo);
 						break;
-
-                                        case PRIVATE_DATA_SPECIFIER_DESCRIPTOR:
-                                                {
-                                                        PrivateDataSpecifierDescriptor * pd = (PrivateDataSpecifierDescriptor *)d;
-                                                        pdsd = pd->getPrivateDataSpecifier();
+					case PRIVATE_DATA_SPECIFIER_DESCRIPTOR:
+						{
+							PrivateDataSpecifierDescriptor * pd = (PrivateDataSpecifierDescriptor *)d;
+							pdsd = pd->getPrivateDataSpecifier();
 #ifdef DEBUG_NIT
-                                                        printf("NIT: private data specifier %08x\n", pdsd);
+							printf("NIT: private data specifier %08x\n", pdsd);
 #endif
-                                                }
-                                                break;
-
+						}
+						break;
 					case LOGICAL_CHANNEL_DESCRIPTOR:
 						if(pdsd == 0x00000028)
 							ParseLogicalChannels((LogicalChannelDescriptor *) d, tsinfo);

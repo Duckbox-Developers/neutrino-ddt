@@ -65,7 +65,6 @@ class CMiscMenue : public CMenuTarget, CChangeObserver
 		int showMiscSettingsMenu();
 		void showMiscSettingsMenuGeneral(CMenuWidget *ms_general);
 		void showMiscSettingsMenuEpg(CMenuWidget *ms_epg);
-		void showMiscSettingsMenuFBrowser(CMenuWidget *ms_fbrowser);
 		int showMiscSettingsMenuEnergy();
 		int showMiscSettingsMenuChanlist();
 		int showMiscSettingsMenuOnlineServices();

@@ -360,7 +360,7 @@ _repeat:
 	if((flags & SCAN_NIT) && AddFromNit())
 		goto _repeat;
 
-	if ((flags & SCAN_LOGICAL_NUMBERS /*(SCAN_NIT|SCAN_LOGICAL_NUMBERS)*/) && !nit_logical_map.empty()) {
+	if ((flags & SCAN_LOGICAL_NUMBERS) && !nit_logical_map.empty()) {
 		std::string pname = networkName;
 		INFO("network [%s] %d logical channels (%d hd)\n", pname.c_str(), (int)nit_logical_map.size(), (int)nit_hd_logical_map.size());
 		g_bouquetManager->loadBouquets(true);
@@ -374,7 +374,6 @@ _repeat:
 
 		if (flags & SCAN_LOGICAL_HD) {
 			for(channel_number_map_t::iterator cit = nit_hd_logical_map.begin(); cit != nit_hd_logical_map.end(); ++cit) {
-				//nit_logical_map.erase(cit->first);
 				CZapitChannel * channel = CServiceManager::getInstance()->FindChannel48(cit->first);
 				if (channel) {
 					channel->number = cit->second;
@@ -409,7 +408,6 @@ _repeat:
 				}
 			}
 		}
-#if 1
 		for(bouquet_map_t::iterator it = bouquet_map.begin(); it != bouquet_map.end(); ++it) {
 			CZapitBouquet* bouquet;
 			std::string pname = it->first;
@@ -422,18 +420,12 @@ _repeat:
 
 			for(std::set<t_channel_id>::iterator cit = it->second.begin(); cit != it->second.end(); ++cit) {
 				CZapitChannel * channel = CServiceManager::getInstance()->FindChannel48(*cit);
-				//if (channel->getAudioPid() == 0) && (channel->getVideoPid() == 0)
 				if(channel && !bouquet->getChannelByChannelID(channel->getChannelID())) {
 					bouquet->addService(channel);
 				}
-#if 0
-				else
-					printf("CServiceScan::ReadNitSdt: channel id %016llx not found\n", *cit);
-#endif
 			}
 			if(have_lcn)
 				bouquet->sortBouquetByNumber();
-#endif
 		}
 	}
 #endif
@@ -531,13 +523,6 @@ void CServiceScan::CheckSatelliteChannels(t_satellite_position satellitePosition
 
 void CServiceScan::SaveServices()
 {
-#if 0 // old
-	CServiceManager::getInstance()->SaveServices(true);
-	printf("[scan] save services done\n"); fflush(stdout);
-	g_bouquetManager->saveBouquets();
-	g_bouquetManager->loadBouquets();
-	printf("[scan] save bouquets done\n");
-#endif
 #ifdef USE_BAT
 	if(flags & SCAN_BAT) {
 		g_bouquetManager->saveUBouquets();
@@ -597,10 +582,6 @@ bool CServiceScan::ScanProviders()
 	} else {
 		Cleanup(false);
 		frontend->setTsidOnid(0);
-#if 0
-		t_channel_id live_channel_id = CZapit::getInstance()->GetCurrentChannelID();
-		CZapit::getInstance()->ZapIt(live_channel_id, false);
-#endif
 	}
 
 	return (found_channels != 0);
@@ -647,11 +628,8 @@ bool CServiceScan::ScanTransponder()
 	ReadNitSdt(satellitePosition);
 	FixServiceTypes();
 	CServiceManager::getInstance()->UpdateSatTransponders(satellitePosition);
-#if 0
-	if (found_channels)
-		ReplaceTransponderParams(freq, satellitePosition, &TP->feparams);
-#endif
 	printf("[scan] found %d transponders (%d failed) and %d channels\n", found_transponders, failed_transponders, found_channels);
+
 	if(abort_scan)
 		found_channels = 0;
 
@@ -664,10 +642,6 @@ bool CServiceScan::ScanTransponder()
 	} else {
 		Cleanup(false);
 		frontend->setTsidOnid(0);
-#if 0
-		t_channel_id live_channel_id = CZapit::getInstance()->GetCurrentChannelID();
-		CZapit::getInstance()->ZapIt(live_channel_id, false);
-#endif
 	}
 
 	return (found_channels != 0);
@@ -676,10 +650,6 @@ bool CServiceScan::ScanTransponder()
 void CServiceScan::SendTransponderInfo(transponder &t)
 {
 	CZapit::getInstance()->SendEvent(CZapitClient::EVT_SCAN_REPORT_NUM_SCANNED_TRANSPONDERS, &processed_transponders, sizeof(processed_transponders));
-#if 0
-	CZapit::getInstance()->SendEvent(CZapitClient::EVT_SCAN_PROVIDER, (void *) " ", 2);
-	CZapit::getInstance()->SendEvent(CZapitClient::EVT_SCAN_SERVICENAME, (void *) " ", 2);
-#endif
 	CZapit::getInstance()->SendEvent(CZapitClient::EVT_SCAN_REPORT_FREQUENCYP, &t.feparams, sizeof(FrontendParameters));
 }
 
