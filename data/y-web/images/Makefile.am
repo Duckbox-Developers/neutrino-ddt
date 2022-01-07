@@ -41,7 +41,6 @@ install_DATA =	accept.png \
 		smallwait.gif \
 		snapshot.png \
 		stop.png \
-		stream.png \
 		streaminfo.png \
 		time_add.png \
 		time_down.png \
