@@ -2428,7 +2428,6 @@ timerlist.standby.on Enter standby
 timerlist.stoptime Stop time
 timerlist.type Timer type
 timerlist.type.execplugin Execute plugin
-timerlist.type.nextprogram Next program
 timerlist.type.record Record
 timerlist.type.remind Reminder
 timerlist.type.remotebox Remote-Record

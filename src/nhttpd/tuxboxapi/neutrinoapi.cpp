@@ -232,42 +232,6 @@ t_channel_id CNeutrinoAPI::ChannelNameToChannelId(std::string search_channel_nam
 //-------------------------------------------------------------------------
 // Get functions
 //-------------------------------------------------------------------------
-#if 0 /* unused funktion*/
-bool CNeutrinoAPI::GetStreamInfo(int bitInfo[10])
-{
-	char /* *key,*/ *tmpptr, buf[100];
-	long value;
-	int pos = 0;
-
-	memset(bitInfo, 0, sizeof(int[10]));
-
-	FILE *fd = fopen("/proc/bus/bitstream", "rt");
-
-	if (fd == NULL)
-	{
-		dprintf("error while opening proc-bitstream\n");
-		return false;
-	}
-
-	fgets(buf, 35, fd); //dummy
-	while (!feof(fd))
-	{
-		if (fgets(buf, 35, fd) != NULL)
-		{
-			buf[strlen(buf) - 1] = 0;
-			tmpptr = buf;
-			//key=strsep(&tmpptr,":");
-			value = strtoul(tmpptr, NULL, 0);
-			bitInfo[pos] = value;
-			pos++;
-		}
-	}
-	fclose(fd);
-
-	return true;
-}
-#endif
-//-------------------------------------------------------------------------
 
 bool CNeutrinoAPI::GetChannelEvents(void)
 {
@@ -311,36 +275,6 @@ std::string CNeutrinoAPI::GetServiceName(t_channel_id channel_id)
 }
 
 //-------------------------------------------------------------------------
-#if 0 //never used
-CZapitClient::BouquetChannelList *CNeutrinoAPI::GetBouquet(unsigned int, int)
-{
-	//FIXME
-	printf("CNeutrinoAPI::GetChannelList still used !\n");
-	return NULL;
-}
-
-//-------------------------------------------------------------------------
-
-CZapitClient::BouquetChannelList *CNeutrinoAPI::GetChannelList(int)
-{
-//FIXME
-	printf("CNeutrinoAPI::GetChannelList still used !\n");
-	return NULL;
-}
-
-//-------------------------------------------------------------------------
-void CNeutrinoAPI::UpdateBouquet(unsigned int)
-{
-	//FIXME
-}
-
-//-------------------------------------------------------------------------
-void CNeutrinoAPI::UpdateChannelList(void)
-{
-	//FIXME
-}
-#endif
-//-------------------------------------------------------------------------
 
 std::string CNeutrinoAPI::timerEventType2Str(CTimerd::CTimerEventTypes type)
 {
@@ -350,11 +284,6 @@ std::string CNeutrinoAPI::timerEventType2Str(CTimerd::CTimerEventTypes type)
 		case CTimerd::TIMER_SHUTDOWN:
 			result = "{=L:timerlist.type.shutdown=}";
 			break;
-#if 0
-		case CTimerd::TIMER_NEXTPROGRAM:
-			result = "{=L:timerlist.type.nextprogram=}";
-			break;
-#endif
 		case CTimerd::TIMER_ZAPTO:
 			result = "{=L:timerlist.type.zapto=}";
 			break;

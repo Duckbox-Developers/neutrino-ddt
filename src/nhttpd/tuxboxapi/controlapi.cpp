@@ -420,24 +420,12 @@ void CControlAPI::SetModeCGI(CyhookHandler *hh)
 		}
 		else if (hh->ParamList["record"] == "start")	// start record mode
 		{
-#if 0
-			if (hh->ParamList["stopplayback"] == "true")
-				NeutrinoAPI->Zapit->stopPlayBack();
-			NeutrinoAPI->Sectionsd->setPauseScanning(true);
-			NeutrinoAPI->Zapit->setRecordMode(true);
-#endif
 			CTimerd::RecordingInfo recinfo;
 			recinfo.eventID = 0;
 			NeutrinoAPI->EventServer->sendEvent(NeutrinoMessages::RECORD_START, CEventServer::INITID_HTTPD, (void *)&recinfo, sizeof(CTimerd::RecordingInfo));
 		}
 		else if (hh->ParamList["record"] == "stop")	// stop record mode
 		{
-#if 0
-			NeutrinoAPI->Zapit->setRecordMode(false);
-			NeutrinoAPI->Sectionsd->setPauseScanning(false);
-			if (!NeutrinoAPI->Zapit->isPlayBackActive())
-				NeutrinoAPI->Zapit->startPlayBack();
-#endif
 			CTimerd::RecordingInfo recinfo;
 			recinfo.eventID = 0; // FIXME must present
 			NeutrinoAPI->EventServer->sendEvent(NeutrinoMessages::RECORD_STOP, CEventServer::INITID_HTTPD, (void *)&recinfo, sizeof(CTimerd::RecordingInfo));
@@ -928,40 +916,7 @@ void CControlAPI::RCEmCGI(CyhookHandler *hh)
 		hh->SendError();
 		return;
 	}
-#if 0
-	unsigned int repeat = 1;
-	unsigned int delay = 250;
-	if (!hh->ParamList["delay"].empty())
-		delay = atoi(hh->ParamList["delay"].c_str());
-	if (!hh->ParamList["duration"].empty())
-		repeat = atoi(hh->ParamList["duration"].c_str()) * 1000 / delay;
-	if (!hh->ParamList["repeat"].empty())
-		repeat = atoi(hh->ParamList["repeat"].c_str());
-#endif
-#if 0
-	int evd = open(EVENTDEV, O_RDWR);
-	if (evd < 0)
-	{
-		perror("opening " EVENTDEV " failed");
-		hh->SendError();
-		return;
-	}
-	if (rc_send(evd, sendcode, KEY_PRESSED) < 0)
-	{
-		perror("writing 'KEY_PRESSED' event failed");
-		hh->SendError();
-		close(evd);
-		return;
-	}
-	if (rc_send(evd, sendcode, KEY_RELEASED) < 0)
-	{
-		perror("writing 'KEY_RELEASED' event failed");
-		hh->SendError();
-		close(evd);
-		return;
-	}
-	close(evd);
-#endif
+
 	/* 0 == KEY_PRESSED in rcinput.cpp */
 	g_RCInput->postMsg((neutrino_msg_t) sendcode, 0);
 	hh->SendOk();
@@ -2189,15 +2144,10 @@ void CControlAPI::ScreenshotCGI(CyhookHandler *hh)
 		screenshot->Start();
 		hh->SendOk();
 #else
-#if 0
-		screenshot->Start();
-		hh->SendOk(); // FIXME what if screenshot->Start() failed?
-#else
 		if (screenshot->StartSync())
 			hh->SendOk();
 		else
 			hh->SendError();
-#endif
 #endif
 		delete screenshot;
 	}
@@ -2748,15 +2698,6 @@ void CControlAPI::SendTimers(CyhookHandler *hh)
 		// timer specific data
 		switch (timer->eventType)
 		{
-#if 0
-			case CTimerd::TIMER_NEXTPROGRAM :
-			{
-				timer_item += hh->outPair("channel_id", string_printf(PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS, timer->channel_id), true);
-				timer_item += hh->outPair("channel_name", channel_name, true);
-				timer_item += hh->outPair("title", title, false);
-			}
-			break;
-#endif
 
 			case CTimerd::TIMER_ZAPTO :
 			{
@@ -3545,73 +3486,7 @@ void CControlAPI::xmltvlistCGI(CyhookHandler *hh)
 	hh->SendOk();
 }
 //-------------------------------------------------------------------------
-#if 0
-// audio_no : (optional) audio channel
-// host : (optional) ip of dbox
-void CControlAPI::build_live_url(CyhookHandler *hh)
-{
-	std::string xpids;
-	int mode = NeutrinoAPI->Zapit->getMode();
 
-	if (mode == CZapitClient::MODE_TV)
-	{
-		CZapitClient::responseGetPIDs pids;
-		int apid = 0, apid_no = 0, apid_idx = 0;
-		pids.PIDs.vpid = 0;
-
-		if (!hh->ParamList["audio_no"].empty())
-			apid_no = atoi(hh->ParamList["audio_no"].c_str());
-		NeutrinoAPI->Zapit->getPIDS(pids);
-
-		if (apid_no < (int)pids.APIDs.size())
-			apid_idx = apid_no;
-		if (!pids.APIDs.empty())
-			apid = pids.APIDs[apid_idx].pid;
-		xpids = string_printf("0x%04x,0x%04x,0x%04x", pids.PIDs.pmtpid, pids.PIDs.vpid, apid);
-		if (pids.PIDs.pcrpid != pids.PIDs.vpid)
-			xpids += string_printf(",0x%04x", pids.PIDs.pcrpid);
-	}
-	else if (mode == CZapitClient::MODE_RADIO)
-	{
-		CZapitClient::responseGetPIDs pids;
-		int apid = 0;
-
-		NeutrinoAPI->Zapit->getPIDS(pids);
-		if (!pids.APIDs.empty())
-			apid = pids.APIDs[0].pid;
-
-		//xpids = string_printf("0x%04x",apid);
-		xpids = string_printf("0x%04x,0x%04x", pids.PIDs.pmtpid, apid);
-	}
-	else
-		hh->SendError();
-	// build url
-	std::string url = "";
-	if (!hh->ParamList["host"].empty())
-		url = "http://" + hh->ParamList["host"];
-	else
-		url = "http://" + hh->HeaderList["Host"];
-	/* strip off optional custom port */
-	if (url.rfind(":") != 4)
-		url = url.substr(0, url.rfind(":"));
-
-	//url += (mode == CZapitClient::MODE_TV) ? ":31339/0," : ":31338/";
-	url += ":31339/0,";
-	url += xpids;
-
-	// response url
-	if (!hh->ParamList["vlc_link"].empty())
-	{
-		write_to_file("/tmp/vlc.m3u", url);
-		hh->SendRedirect("/tmp/vlc.m3u");
-	}
-	else
-	{
-		hh->SetHeader(HTTP_OK, "text/html; charset=UTF-8");
-		hh->Write(url);
-	}
-}
-#else
 void CControlAPI::build_live_url(CyhookHandler *hh)
 {
 	int mode = NeutrinoAPI->Zapit->getMode();
@@ -3654,7 +3529,7 @@ void CControlAPI::build_live_url(CyhookHandler *hh)
 	else
 		hh->SendError();
 }
-#endif
+
 //-------------------------------------------------------------------------
 void CControlAPI::build_playlist(CyhookHandler *hh)
 {

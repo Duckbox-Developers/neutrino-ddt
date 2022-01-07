@@ -2428,7 +2428,6 @@ timerlist.standby.on In Standby gehen
 timerlist.stoptime Stoppzeit
 timerlist.type Timertyp
 timerlist.type.execplugin Plugin ausführen
-timerlist.type.nextprogram Nächstes Programm
 timerlist.type.record Aufnahme
 timerlist.type.remind Erinnerung
 timerlist.type.remotebox Remote-Aufnahme

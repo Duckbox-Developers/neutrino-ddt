@@ -1054,14 +1054,6 @@ int CTimerList::show()
 		{
 			update = true;
 		}
-#if 0
-		else if (msg==CRCInput::RC_blue || CRCInput::isNumeric(msg))
-		{
-			//pushback key if...
-			g_RCInput->postMsg( msg, data );
-			loop=false;
-		}
-#endif
 		else if ( msg == CRCInput::RC_help || msg == CRCInput::RC_info)
 		{
 			CTimerd::responseGetTimer* timer=&timerlist[selected];
@@ -1481,8 +1473,6 @@ const char * CTimerList::convertTimerType2String(const CTimerd::CTimerEventTypes
 	{
 	case CTimerd::TIMER_SHUTDOWN    :
 		return g_Locale->getText(LOCALE_TIMERLIST_TYPE_SHUTDOWN   );
-//	case CTimerd::TIMER_NEXTPROGRAM :
-//		return g_Locale->getText(LOCALE_TIMERLIST_TYPE_NEXTPROGRAM);
 	case CTimerd::TIMER_ZAPTO       :
 		return g_Locale->getText(LOCALE_TIMERLIST_TYPE_ZAPTO      );
 	case CTimerd::TIMER_STANDBY     :
@@ -1587,9 +1577,6 @@ const CMenuOptionChooser::keyval TIMERLIST_STANDBY_OPTIONS[TIMERLIST_STANDBY_OPT
 #endif
 const CMenuOptionChooser::keyval TIMERLIST_TYPE_OPTIONS[TIMERLIST_TYPE_OPTION_COUNT] =
 {
-#if 0
-	{ CTimerd::TIMER_NEXTPROGRAM,	LOCALE_TIMERLIST_TYPE_NEXTPROGRAM },
-#endif
 	{ CTimerd::TIMER_RECORD,	LOCALE_TIMERLIST_TYPE_RECORD },
 	{ CTimerd::TIMER_ZAPTO,		LOCALE_TIMERLIST_TYPE_ZAPTO },
 	{ CTimerd::TIMER_STANDBY,	LOCALE_TIMERLIST_TYPE_STANDBY },

@@ -57,13 +57,6 @@ class CNeutrinoAPI
 
 		// get functions to collect data
 		bool GetChannelEvents(void);
-#if 0 /* unused funktion*/
-		bool GetStreamInfo(int bitinfo[10]);
-		CZapitClient::BouquetChannelList *GetBouquet(unsigned int BouquetNr, int Mode);
-		CZapitClient::BouquetChannelList *GetChannelList(int Mode);
-		void UpdateBouquet(unsigned int BouquetNr);
-		void UpdateChannelList(void);
-#endif
 		std::string GetServiceName(t_channel_id channel_id);
 
 		// support functions
