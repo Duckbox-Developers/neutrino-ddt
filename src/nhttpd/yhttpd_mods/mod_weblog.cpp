@@ -142,26 +142,6 @@ bool CmWebLog::printf(const char *fmt, ...)
 //-----------------------------------------------------------------------------
 void CmWebLog::AddLogEntry_CLF(CyhookHandler *hh)
 {
-#if 0
-//never used
-	std::string cs_method;
-	switch (hh->Method)
-	{
-		case M_GET:
-			cs_method = "GET";
-			break;
-		case M_POST:
-			cs_method = "POST";
-			break;
-		case M_HEAD:
-			cs_method = "HEAD";
-			break;
-
-		default:
-			cs_method = "unknown";
-			break;
-	}
-#endif
 	std::string c_ip = 			hh->UrlData["clientaddr"].c_str();
 	std::string request_startline = 	hh->UrlData["startline"].c_str();
 	int s_status = hh->httpStatus;

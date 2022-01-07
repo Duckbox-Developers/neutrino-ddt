@@ -310,21 +310,7 @@ int CySocket::Send(char const *buffer, unsigned int length)
 		BytesSend += len;
 	return len;
 }
-#if 0 //never used
-//-----------------------------------------------------------------------------
-// Check if Socket was closed by client
-//-----------------------------------------------------------------------------
-bool CySocket::CheckSocketOpen()
-{
-	char buffer[32] = { 0 };
 
-#ifdef CONFIG_SYSTEM_CYGWIN
-	return !(recv(sock, buffer, sizeof(buffer), MSG_PEEK | MSG_NOSIGNAL) == 0);
-#else
-	return !(recv(sock, buffer, sizeof(buffer), MSG_PEEK | MSG_DONTWAIT) == 0);
-#endif
-}
-#endif
 //=============================================================================
 // Aggregated Send- and Receive- Operations
 //=============================================================================

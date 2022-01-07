@@ -344,10 +344,7 @@ std::string CNeutrinoYParser::func_get_bouquets_with_epg(CyhookHandler *hh, std:
 	if (BouquetNr > 0)
 	{
 		BouquetNr--;
-#if 0
-		channels = mode == CZapitClient::MODE_RADIO ? g_bouquetManager->Bouquets[BouquetNr]->radioChannels : g_bouquetManager->Bouquets[BouquetNr]->tvChannels;
-		num = 1 + (mode == CZapitClient::MODE_RADIO ? g_bouquetManager->radioChannelsBegin().getNrofFirstChannelofBouquet(BouquetNr) : g_bouquetManager->tvChannelsBegin().getNrofFirstChannelofBouquet(BouquetNr)) ;
-#endif
+
 		if (mode == CZapitClient::MODE_RADIO)
 			g_bouquetManager->Bouquets[BouquetNr]->getRadioChannels(channels);
 		else
@@ -488,13 +485,6 @@ std::string CNeutrinoYParser::func_get_bouquets_with_epg(CyhookHandler *hh, std:
 					, channel->getChannelID() & 0xFFFFFFFFFFFFULL
 				);
 		}
-
-		yresult += string_printf("<a href=\"javascript:do_stream('" PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS "','%s')\">"
-				"<img src=\"/images/stream.png\" alt=\"Stream\" title=\"Stream\" />"
-				"</a>\n"
-				, channel->getChannelID()
-				, channel->getName().c_str()
-			);
 
 		yresult += string_printf("\n&nbsp;&nbsp;<a href=\"/control/build_playlist?id=" PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS "\"><img src=\"/images/vlc.png\" alt=\"VLC-Link\" style=\"border: 0px\" /></a>", channel->getChannelID());
 

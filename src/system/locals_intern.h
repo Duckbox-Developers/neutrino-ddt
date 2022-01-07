@@ -2486,7 +2486,6 @@ const char *locale_real_names[] =
 	"timerlist.stoptime",
 	"timerlist.type",
 	"timerlist.type.execplugin",
-	"timerlist.type.nextprogram",
 	"timerlist.type.record",
 	"timerlist.type.remind",
 	"timerlist.type.remotebox",
