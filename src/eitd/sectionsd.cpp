@@ -1616,8 +1616,8 @@ void CTimeThread::run()
 				if (first_time)
 					sleep_time = 5;
 			}
-			/* in case of wrong TDT date, dont send time is set, 1609455600 - 01.01.2021 00:00:00 */
-			if (time_ntp || (dvb_time > (time_t) 1609455600))
+			/* in case of wrong TDT date, dont send time is set, 1640991600 - 01.01.2022 00:00:00 */
+			if (time_ntp || (dvb_time > (time_t) 1640991600))
 			{
 				sendTimeEvent(time_ntp, dvb_time);
 				debug(DEBUG_ERROR, "%s: Time set via %s, going to sleep for %d seconds.", name.c_str(),
