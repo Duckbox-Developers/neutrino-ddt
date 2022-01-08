@@ -108,9 +108,7 @@ CRemoteControl::CRemoteControl()
 	selected_subchannel = -1;
 	needs_nvods = 	false;
 	director_mode = 0;
-//	current_programm_timer = 0;
 	is_video_started = true;
-	//next_EPGid = 	0;
 	are_subchannels = false;
 	has_unresolved_ctags = false;
 }
@@ -184,7 +182,6 @@ int CRemoteControl::handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t data
 				current_channel_id = new_id;
 
 				current_EPGid = 0;
-				//next_EPGid = 0;
 
 				memset(&current_PIDs.PIDs, 0, sizeof(current_PIDs.PIDs));
 
@@ -274,15 +271,7 @@ int CRemoteControl::handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t data
 	{
 		if ((*(t_channel_id *)data) != current_channel_id)
 			return messages_return::handled;
-#if 0
-		const CSectionsdClient::CurrentNextInfo info_CN = g_InfoViewer->getCurrentNextInfo();
-		if ((info_CN.next_uniqueKey >> 16) == (current_channel_id & 0xFFFFFFFFFFFFULL))
-		{
-			// next-EPG for current channel arrived. no current-EPG?!
-			if (info_CN.next_uniqueKey != next_EPGid)
-				next_EPGid = info_CN.next_uniqueKey;
-		}
-#endif
+
 		if (!is_video_started)
 			g_RCInput->postMsg(NeutrinoMessages::EVT_PROGRAMLOCKSTATUS, 0x100, false);
 		return messages_return::handled;
@@ -304,8 +293,8 @@ int CRemoteControl::handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t data
 		{
 			CVFD::getInstance()->showServicename(current_channel_name, current_channel_num); // UTF-8
 			g_Zapit->getPIDS(current_PIDs);
+
 			//tuxtxt
-#if 1
 			tuxtxt_stop();
 			if (g_settings.cacheTXT)
 			{
@@ -313,7 +302,7 @@ int CRemoteControl::handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t data
 				if (current_PIDs.PIDs.vtxtpid != 0)
 					tuxtxt_start(current_PIDs.PIDs.vtxtpid);
 			}
-#endif
+
 			char *p = new char[sizeof(t_channel_id)];
 			memcpy(p, &current_channel_id, sizeof(t_channel_id));
 			g_RCInput->postMsg(NeutrinoMessages::EVT_ZAP_GOTPIDS, (neutrino_msg_data_t)p, false);
@@ -347,18 +336,6 @@ int CRemoteControl::handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t data
 		}
 		return messages_return::handled;
 	}
-#if 0
-	else if ((msg == NeutrinoMessages::EVT_TIMER) && (data == current_programm_timer))
-	{
-		//printf("new program !\n");
-
-		t_channel_id *p = new t_channel_id;
-		*p = current_channel_id;
-		g_RCInput->postMsg(NeutrinoMessages::EVT_NEXTPROGRAM, (const neutrino_msg_data_t)p, false); // data is pointer to allocated memory
-
-		return messages_return::handled;
-	}
-#endif
 	else if (msg == NeutrinoMessages::EVT_TUNE_COMPLETE)
 	{
 		t_channel_id chid = *(t_channel_id *)data;
@@ -367,8 +344,6 @@ int CRemoteControl::handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t data
 			g_Sectionsd->setServiceChanged(chid, false);
 		return messages_return::handled;
 	}
-	//else if (msg == NeutrinoMessages::EVT_ZAP_FAILED || msg == NeutrinoMessages::EVT_ZAP_SUB_FAILED)
-	//return messages_return::handled;
 	else
 		return messages_return::unhandled;
 }
@@ -705,7 +680,6 @@ const std::string &CRemoteControl::setSubChannel(const int numSub, const bool fo
 
 const std::string &CRemoteControl::subChannelUp(void)
 {
-	//return setSubChannel((subChannels.empty()) ? -1 : (int)((selected_subchannel + 1) % subChannels.size()));
 	// if there are any NVOD/subchannels switch these else switch audio channel (if any)
 	if (!subChannels.empty() || !g_settings.audiochannel_up_down_enable)
 	{
@@ -723,7 +697,6 @@ const std::string &CRemoteControl::subChannelUp(void)
 
 const std::string &CRemoteControl::subChannelDown(void)
 {
-	//return setSubChannel((selected_subchannel <= 0) ? (subChannels.size() - 1) : (selected_subchannel - 1));
 	// if there are any NVOD/subchannels switch these else switch audio channel (if any)
 	if (!subChannels.empty() || !g_settings.audiochannel_up_down_enable)
 	{
@@ -752,7 +725,6 @@ void CRemoteControl::zapTo_ChannelID(const t_channel_id channel_id, const std::s
 
 	current_sub_channel_id = 0;
 	current_EPGid = 0;
-	//next_EPGid = 0;
 
 	memset(&current_PIDs.PIDs, 0, sizeof(current_PIDs.PIDs));
 
@@ -774,7 +746,6 @@ void CRemoteControl::zapTo_ChannelID(const t_channel_id channel_id, const std::s
 			CRecordManager::getInstance()->StopAutoRecord();
 
 		g_RCInput->killTimer(scrambled_timer);
-		//dvbsub_pause(true);
 		CZapit::getInstance()->Abort();
 		if (!IS_WEBCHAN(channel_id))
 			g_Sectionsd->setServiceStopped();
@@ -782,7 +753,6 @@ void CRemoteControl::zapTo_ChannelID(const t_channel_id channel_id, const std::s
 		g_Zapit->zapTo_serviceID_NOWAIT(channel_id);
 
 		zap_completion_timeout = now + ZAP_GUARD_TIME;
-//		g_RCInput->killTimer(current_programm_timer);
 	}
 	current_channel_id = channel_id;
 	current_channel_name = channame;
@@ -794,7 +764,6 @@ void CRemoteControl::startvideo()
 	if (!is_video_started)
 	{
 		is_video_started = true;
-		//g_Zapit->startPlayBack();
 		g_Zapit->unlockPlayBack(true); /* TODO: check if sendpmt=false is correct in stopvideo() */
 	}
 }
