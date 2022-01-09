@@ -354,22 +354,12 @@ bool readEventsFromFile(std::string &epgname, int &ev_count)
 			node = xmlChildrenNode(event);
 			while ((node = xmlGetNextOccurence(node, "item")))
 			{
-#ifdef USE_ITEM_DESCRIPTION
-				const char *s = xmlGetAttribute(node, "string");
-				if (s)
-					e.item = s;
-#endif
 				node = xmlNextNode(node);
 			}
 
 			node = xmlChildrenNode(event);
 			while ((node = xmlGetNextOccurence(node, "item_description")))
 			{
-#ifdef USE_ITEM_DESCRIPTION
-				const char *s = xmlGetAttribute(node, "string");
-				if (s)
-					e.itemDescription = s;
-#endif
 				node = xmlNextNode(node);
 			}
 			node = xmlChildrenNode(event);
@@ -442,15 +432,8 @@ bool readEventsFromFile(std::string &epgname, int &ev_count)
 
 			if (!contentClassification.empty())
 			{
-#ifdef FULL_CONTENT_CLASSIFICATION
-				ssize_t off = e.classifications.reserve(2 * contentClassification.size());
-				if (off > -1)
-					for (unsigned i = 0; i < contentClassification.size(); i++)
-						off = e.classifications.set(off, contentClassification.at(i), userClassification.at(i));
-#else
 				e.classifications.content = contentClassification.at(0);
 				e.classifications.user = userClassification.at(0);
-#endif
 			}
 			addEvent(e, 0);
 			ev_count++;

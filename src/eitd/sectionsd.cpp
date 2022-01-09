@@ -401,11 +401,7 @@ static bool deleteEvent(const t_event_id uniqueKey)
 	if ((already_exists) && (SIlanguage::getMode() == CSectionsdClient::LANGUAGE_MODE_OFF))
 	{
 		si->second->classifications = evt.classifications;
-#ifdef USE_ITEM_DESCRIPTION
-		si->second->itemDescription = evt.itemDescription;
-		si->second->item = evt.item;
-#endif
-		//si->second->vps = evt.vps;
+
 		if ((!evt.getExtendedText().empty()) && !evt.times.empty() &&
 			(evt.times.begin()->startzeit < zeit + secondsExtendedTextCache))
 			si->second->setExtendedText(0 /*"OFF"*/, evt.getExtendedText());
@@ -2812,8 +2808,6 @@ bool CEitManager::getEPGidShort(t_event_id epg_id, CShortEPGData *epgdata)
 	return ret;
 }
 
-/*was getEPGid commandEPGepg_id(int connfd, char *data, const unsigned dataLength) */
-/* TODO item / itemDescription */
 bool CEitManager::getEPGid(const t_event_id epg_id, const time_t startzeit, CEPGData *epgdata)
 {
 	bool ret = false;
@@ -2844,16 +2838,10 @@ bool CEitManager::getEPGid(const t_event_id epg_id, const time_t startzeit, CEPG
 			epgdata->title = evt.getName();
 			epgdata->info1 = evt.getText();
 			epgdata->info2 = evt.getExtendedText();
-			/* FIXME debug(DEBUG_NORMAL, "itemDescription: %s", evt.itemDescription.c_str()); */
-#ifdef FULL_CONTENT_CLASSIFICATION
-			evt.classifications.get(epgdata->contentClassification, epgdata->userClassification);
-#else
 			epgdata->contentClassification = evt.classifications.content;
 			epgdata->userClassification = evt.classifications.user;
-#endif
 			epgdata->fsk = evt.getFSK();
 			epgdata->table_id = evt.table_id;
-
 			epgdata->epg_times.startzeit = t->startzeit;
 			epgdata->epg_times.dauer = t->dauer;
 
@@ -2918,17 +2906,10 @@ bool CEitManager::getActualEPGServiceKey(const t_channel_id channel_id, CEPGData
 		epgdata->title = evt.getName();
 		epgdata->info1 = evt.getText();
 		epgdata->info2 = evt.getExtendedText();
-		/* FIXME debug(DEBUG_NORMAL, "itemDescription: %s", evt.itemDescription.c_str());*/
-#ifdef FULL_CONTENT_CLASSIFICATION
-		evt.classifications.get(epgdata->contentClassification, epgdata->userClassification);
-#else
 		epgdata->contentClassification = evt.classifications.content;
 		epgdata->userClassification = evt.classifications.user;
-#endif
-
 		epgdata->fsk = evt.getFSK();
 		epgdata->table_id = evt.table_id;
-
 		epgdata->epg_times.startzeit = zeit.startzeit;
 		epgdata->epg_times.dauer = zeit.dauer;
 

@@ -240,13 +240,8 @@ class CEPGData
 		std::vector<std::string>		items;
 		char                            fsk;
 		unsigned char                   table_id;
-#ifdef FULL_CONTENT_CLASSIFICATION
-		std::string                     contentClassification;
-		std::string                     userClassification;
-#else
 		unsigned char contentClassification;
 		unsigned char userClassification;
-#endif
 
 		CEPGData()
 		{

@@ -245,16 +245,7 @@ void SIevent::parse(Event &event)
 				std::string lang = d->getIso639LanguageCode();
 				std::transform(lang.begin(), lang.end(), lang.begin(), tolower);
 				int table = getCountryCodeDefaultMapping(lang);
-#ifdef USE_ITEM_DESCRIPTION
-				const ExtendedEventList *itemlist = d->getItems();
-				for (ExtendedEventConstIterator it = itemlist->begin(); it != itemlist->end(); ++it)
-				{
-					itemDescription.append(stringDVBUTF8((*it)->getItemDescription(), table, tsidonid));
-					itemDescription.append("\n");
-					item.append(stringDVBUTF8((*it)->getItem(), table, tsidonid));
-					item.append("\n");
-				}
-#endif
+
 				appendExtendedText(getLangIndex(lang), stringDVBUTF8(d->getText(), table, tsidonid), (appendcheck > countExtandetText), (countExtandetText == 1));
 				countExtandetText--;
 				break;
@@ -265,17 +256,9 @@ void SIevent::parse(Event &event)
 				const ContentClassificationList *clist = d->getClassifications();
 				if (clist->size())
 				{
-#ifdef FULL_CONTENT_CLASSIFICATION
-					ssize_t off = classifications.reserve(clist->size() * 2);
-					for (ContentClassificationConstIterator cit = clist->begin(); cit != clist->end(); ++cit)
-						off = classifications.set(off,
-								(*cit)->getContentNibbleLevel1() << 4 | (*cit)->getContentNibbleLevel2(),
-								(*cit)->getUserNibble1() << 4 | (*cit)->getUserNibble2());
-#else
 					ContentClassificationConstIterator cit = clist->begin();
 					classifications.content = (*cit)->getContentNibbleLevel1() << 4 | (*cit)->getContentNibbleLevel2();
 					classifications.user = (*cit)->getUserNibble1() << 4 | (*cit)->getUserNibble2();
-#endif
 				}
 				break;
 			}
@@ -407,21 +390,6 @@ void SIevent::parseExtendedEventDescriptor(const uint8_t *buf, unsigned maxlen)
 	unsigned char *items = (unsigned char *)(buf + sizeof(struct descr_extended_event_header));
 	while (items < (unsigned char *)(buf + sizeof(struct descr_extended_event_header) + evt->length_of_items))
 	{
-#ifdef USE_ITEM_DESCRIPTION
-		if (*items)
-		{
-			itemDescription.append(convertDVBUTF8((const char *)(items + 1), min(maxlen - (items + 1 - buf), *items), table, tsidonid));
-			itemDescription.append("\n");
-		}
-#endif
-		items += 1 + *items;
-#ifdef USE_ITEM_DESCRIPTION
-		if (*items)
-		{
-			item.append(convertDVBUTF8((const char *)(items + 1), min(maxlen - (items + 1 - buf), *items), table, tsidonid));
-			item.append("\n");
-		}
-#endif
 		items += 1 + *items;
 	}
 	if (*items)
@@ -435,21 +403,16 @@ void SIevent::parseContentDescriptor(const uint8_t *buf, unsigned maxlen)
 		return;
 	if (!cont->descriptor_length)
 		return;
-#ifdef FULL_CONTENT_CLASSIFICATION
-	ssize_t off = classifications.reserve(cont->descriptor_length);
-	classifications.set(off, buf + sizeof(struct descr_generic_header), cont->descriptor_length);
-#else
+
 	classifications.content = buf[sizeof(struct descr_generic_header)];
 	if (cont->descriptor_length > 1)
 		classifications.user = buf[sizeof(struct descr_generic_header) + 1];
-#endif
 }
 
 void SIevent::parseComponentDescriptor(const uint8_t *buf, unsigned maxlen)
 {
 	if (maxlen >= sizeof(struct descr_component_header))
 		components.push_back(SIcomponent((const struct descr_component_header *)buf));
-	//components.insert(SIcomponent((const struct descr_component_header *)buf));
 }
 
 void SIevent::parseParentalRatingDescriptor(const uint8_t *buf, unsigned maxlen)
@@ -460,7 +423,6 @@ void SIevent::parseParentalRatingDescriptor(const uint8_t *buf, unsigned maxlen)
 	const uint8_t *s = buf + sizeof(struct descr_generic_header);
 	while (s < buf + sizeof(struct descr_generic_header) + cont->descriptor_length - 4)
 	{
-		//ratings.insert(SIparentalRating(std::string((const char *)s, 3), *(s+3)));
 		ratings.push_back(SIparentalRating(std::string((const char *)s, 3), *(s + 3)));
 		s += 4;
 	}
@@ -680,20 +642,6 @@ int SIevent::saveXML2(FILE *file) const
 			fprintf(file, "\"/>\n");
 		}
 	}
-#ifdef USE_ITEM_DESCRIPTION
-	if (!item.empty())
-	{
-		fprintf(file, "\t\t\t<item string=\"");
-		saveStringToXMLfile(file, item.c_str());
-		fprintf(file, "\"/>\n");
-	}
-	if (!itemDescription.empty())
-	{
-		fprintf(file, "\t\t\t<item_description string=\"");
-		saveStringToXMLfile(file, itemDescription.c_str());
-		fprintf(file, "\"/>\n");
-	}
-#endif
 	for (std::list<SILangData>::const_iterator i = langData.begin(); i != langData.end(); ++i)
 	{
 		if (!i->text[SILangData::langExtendedText].empty())
@@ -704,19 +652,9 @@ int SIevent::saveXML2(FILE *file) const
 		}
 	}
 	for_each(times.begin(), times.end(), saveSItimeXML(file));
-#ifdef FULL_CONTENT_CLASSIFICATION
-	std::string contentClassification, userClassification;
-	classifications.get(contentClassification, userClassification);
-	for (unsigned i = 0; i < contentClassification.length(); i++)
-	{
-		/* focus: i think no sense to save 'unknown' */
-		if (contentClassification[i] || userClassification[i])
-			fprintf(file, "\t\t\t<content class=\"%02x\" user=\"%02x\"/>\n", contentClassification[i], userClassification[i]);
-	}
-#else
+
 	if (classifications.content || classifications.user)
 		fprintf(file, "\t\t\t<content class=\"%02x\" user=\"%02x\"/>\n", classifications.content, classifications.user);
-#endif
 
 	for_each(components.begin(), components.end(), saveSIcomponentXML(file));
 	for_each(ratings.begin(), ratings.end(), saveSIparentalRatingXML(file));
@@ -733,12 +671,7 @@ void SIevent::dump(void) const
 	if (service_id)
 		printf("Service-ID: %hu\n", service_id);
 	printf("Event-ID: %hu\n", eventID);
-#ifdef USE_ITEM_DESCRIPTION
-	if (!item.empty())
-		printf("Item: %s\n", item.c_str());
-	if (!itemDescription.empty())
-		printf("Item-Description: %s\n", itemDescription.c_str());
-#endif
+
 	for (std::list<SILangData>::const_iterator it = langData.begin(); it != langData.end(); ++it)
 	{
 		printf("Name (%s): %s\n",	   langIndex[it->lang].c_str(), it->text[SILangData::langName].c_str());
@@ -746,30 +679,11 @@ void SIevent::dump(void) const
 		printf("Extended-Text (%s): %s\n", langIndex[it->lang].c_str(), it->text[SILangData::langExtendedText].c_str());
 	}
 
-#ifdef FULL_CONTENT_CLASSIFICATION
-	std::string contentClassification, userClassification;
-	classifications.get(contentClassification, userClassification);
-	if (!contentClassification.empty())
-	{
-		printf("Content classification:");
-		for (unsigned i = 0; i < contentClassification.length(); i++)
-			printf(" 0x%02hhx", contentClassification[i]);
-		printf("\n");
-	}
-	if (!userClassification.empty())
-	{
-		printf("User classification:");
-		for (unsigned i = 0; i < userClassification.length(); i++)
-			printf(" 0x%02hhx", userClassification[i]);
-		printf("\n");
-	}
-#else
 	if (classifications.content || classifications.user)
 	{
 		printf("Content classification: 0x%02hhx\n", classifications.content);
 		printf("User classification: 0x%02hhx\n", classifications.user);
 	}
-#endif
 
 	for_each(times.begin(), times.end(), printSItime());
 	for_each(components.begin(), components.end(), printSIcomponent());
