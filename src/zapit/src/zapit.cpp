@@ -84,7 +84,6 @@ int sig_delay = 2; // seconds between signal check
 /* the bouquet manager */
 CBouquetManager *g_bouquetManager = NULL;
 
-//int cam_ci = 2; //  CA_INIT_SC 0 or CA_INIT_CI 1 or CA_INIT_BOTH 2
 cCA *ca = NULL;
 extern cDemux *pmtDemux;
 extern cVideo *videoDecoder;
@@ -190,7 +189,6 @@ void CZapit::SaveSettings(bool write)
 		configfile.setInt32("rezapTimeout", config.rezapTimeout);
 		configfile.setBool("scanPids", config.scanPids);
 		configfile.setInt32("scanSDT", config.scanSDT);
-		configfile.setInt32("cam_ci", config.cam_ci);
 
 		/* FIXME FE global */
 		configfile.setInt32("noSameFE", config.noSameFE);
@@ -324,7 +322,6 @@ void CZapit::LoadSettings()
 	config.makeRemainingChannelsBouquet	= 1;
 	config.scanPids				= configfile.getBool("scanPids", 0);
 	config.scanSDT				= configfile.getInt32("scanSDT", 0);
-	config.cam_ci				= configfile.getInt32("cam_ci", 2);
 	config.rezapTimeout			= configfile.getInt32("rezapTimeout", 1);
 
 	config.feTimeout			= configfile.getInt32("feTimeout", 40);
@@ -2321,22 +2318,6 @@ bool CZapit::Start(Z_start_arg *ZapStart_arg)
 		live_channel_id = (currentMode & RADIO_MODE) ? ZapStart_arg->startchannelradio_id : ZapStart_arg->startchanneltv_id ;
 		lastChannelRadio = ZapStart_arg->startchannelradio_id;
 		lastChannelTV    = ZapStart_arg->startchanneltv_id;
-	}
-
-	/* CA_INIT_CI or CA_INIT_SC or CA_INIT_BOTH */
-	switch(config.cam_ci){
-	  case 2:
-		ca->SetInitMask(CA_INIT_BOTH);
-	    break;
-	  case 1:
-		ca->SetInitMask(CA_INIT_CI);
-	    break;
-	  case 0:
-		ca->SetInitMask(CA_INIT_SC);
-	    break;
-	  default:
-		ca->SetInitMask(CA_INIT_BOTH);
-	  break;
 	}
 
 	// set ci clock to ZapStart_arg->ci_clock
