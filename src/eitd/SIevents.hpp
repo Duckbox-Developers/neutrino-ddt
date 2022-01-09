@@ -90,13 +90,6 @@ struct descr_linkage_header {
 
 struct descr_pdc_header {
 	unsigned descriptor_tag                 : 8;
-#if 0
-	// unused
-	unsigned descriptor_length              : 8;
-	unsigned pil0                           : 8;
-	unsigned pil1                           : 8;
-	unsigned pil2                           : 8;
-#endif
 } __attribute__ ((packed)) ;
 
 class SIlinkage {
@@ -177,7 +170,7 @@ struct saveSIlinkageXML : public std::unary_function<class SIlinkage, void>
 	void operator() (const SIlinkage &l) { l.saveXML(f);}
 };
 
-class SIcomponent 
+class SIcomponent
 {
 	public:
 		unsigned int component;
@@ -189,7 +182,7 @@ class SIcomponent
 			component = 0;
 			streamContent=0;
 			componentType=0;
-			componentTag=0;      
+			componentTag=0;
 		}
 		SIcomponent(const struct descr_component_header *comp) {
 			component = 0;
@@ -253,7 +246,7 @@ struct saveSIcomponentXML : public std::unary_function<class SIcomponent, void>
 	void operator() (const SIcomponent &c) { c.saveXML(f);}
 };
 
-class SIparentalRating 
+class SIparentalRating
 {
 	public:
 		unsigned int countryCode;
@@ -582,57 +575,5 @@ struct saveSIeventXML : public std::unary_function<SIevent, void>
 	saveSIeventXML(FILE *fi) { f=fi;}
 	void operator() (const SIevent &e) { e.saveXML(f);}
 };
-
-#if 0
-// Fuer for_each
-struct saveSIeventXMLwithServiceName : public std::unary_function<SIevent, void>
-{
-  FILE *f;
-  const SIservices *s;
-  saveSIeventXMLwithServiceName(FILE *fi, const SIservices &svs) {f=fi; s=&svs;}
-  void operator() (const SIevent &e) {
-    SIservices::iterator k=s->find(SIservice(e.service_id, e.original_network_id, e.transport_stream_id));
-    if(k!=s->end()) {
-      if(k->serviceName.length())
-      e.saveXML(f, k->serviceName.c_str());
-    }
-    else
-      e.saveXML(f);
-  }
-};
-#endif
-
-#if 0
-// Fuer for_each
-struct printSIeventWithService : public std::unary_function<SIevent, void>
-{
-  printSIeventWithService(const SIservices &svs) { s=&svs;}
-  void operator() (const SIevent &e) {
-    SIservices::iterator k=s->find(SIservice(e.service_id, e.original_network_id, e.transport_stream_id));
-    if(k!=s->end()) {
-      char servicename[50];
-      strncpy(servicename, k->serviceName.c_str(), sizeof(servicename)-1);
-      servicename[sizeof(servicename)-1]=0;
-      removeControlCodes(servicename);
-      printf("Service-Name: %s\n", servicename);
-//      printf("Provider-Name: %s\n", k->providerName.c_str());
-    }
-    e.dump();
-//    e.dumpSmall();
-    printf("\n");
-  }
-  const SIservices *s;
-};
-
-class SIevents : public std::set <SIevent, std::less<SIevent> >
-{
-  public:
-    // Entfernt anhand der Services alle time shifted events (Service-Typ 0)
-    // und sortiert deren Zeiten in die Events mit dem Text ein.
-    void mergeAndRemoveTimeShiftedEvents(const SIservices &);
-    // Loescht alte Events (aufgrund aktueller Zeit - seconds und Zeit im Event)
-    void removeOldEvents(long seconds);
-};
-#endif
 
 #endif // SIEVENTS_HPP

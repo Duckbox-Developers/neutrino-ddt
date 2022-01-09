@@ -40,10 +40,6 @@ int readEncodingFile()
 			else if ((sscanf(line, "0x%x 0x%x ISO%d", &tsid, &onid, &encoding) == 3 && encoding == 6937)
 				|| (sscanf(line, "%d %d ISO%d", &tsid, &onid, &encoding) == 3 && encoding == 6937))
 				TransponderDefaultMapping[(tsid << 16) | onid] = 64;
-#if 0 // FIXME crash at stop if compiled with -g -ggb3 ???
-			else if (sscanf(line, "%s ISO%d", countrycode, &encoding) == 2 && encoding == 6937)
-				CountryCodeDefaultMapping[countrycode] = 64;
-#endif
 			else if ((sscanf(line, "0x%x 0x%x", &tsid, &onid) == 2)
 				|| (sscanf(line, "%d %d", &tsid, &onid) == 2))
 				TransponderUseTwoCharMapping.insert((tsid << 16) | onid);
@@ -780,99 +776,7 @@ std::string convertDVBUTF8(const char *data, int len, int table, int tsidonid)
 	}
 	return std::string((char *)res, t);
 }
-#if 0
-eString convertUTF8DVB(const eString &string, int table)
-{
-	unsigned long *coding_table = 0;
 
-	int len = string.length(), t = 0;
-
-	unsigned char buf[len];
-
-	for (int i = 0; i < len; i++)
-	{
-		unsigned char c1 = string[i];
-		unsigned int c;
-		if (c1 < 0x80)
-			c = c1;
-		else
-		{
-			i++;
-			unsigned char c2 = string[i];
-			c = ((c1 & 0x3F) << 6) + (c2 & 0x3F);
-			if (table == 0 || table == 1 || c1 < 0xA0)
-				;
-			else
-			{
-				if (!coding_table)
-				{
-					switch (table)
-					{
-						case 2:
-							coding_table = c88592;
-							break;
-						case 3:
-							coding_table = c88593;
-							break;
-						case 4:
-							coding_table = c88594;
-							break;
-						case 5:
-							coding_table = c88595;
-							break;
-						case 6:
-							coding_table = c88596;
-							break;
-						case 7:
-							coding_table = c88597;
-							break;
-						case 8:
-							coding_table = c88598;
-							break;
-						case 9:
-							coding_table = c88599;
-							break;
-						case 10:
-							coding_table = c885910;
-							break;
-						case 11:
-							coding_table = c885911;
-							break;
-						/*				case 12:   // reserved.. for indian use
-												coding_table = c885912;
-												break;*/
-						case 13:
-							coding_table = c885913;
-							break;
-						case 14:
-							coding_table = c885914;
-							break;
-						case 15:
-							coding_table = c885915;
-							break;
-						case 16:
-							coding_table = c885916;
-							break;
-						default:
-							//eFatal("unknown coding table %d", table);
-							break;
-					}
-				}
-				for (unsigned int j = 0; j < 96; j++)
-				{
-					if (coding_table[j] == c)
-					{
-						c = 0xA0 + j;
-						break;
-					}
-				}
-			}
-		}
-		buf[t++] = (unsigned char)c;
-	}
-	return eString((char *)buf, t);
-}
-#endif
 const std::string convertLatin1UTF8(const std::string &string)
 {
 	unsigned int t = 0, i = 0, len = string.size();

@@ -104,10 +104,6 @@ class DMX
 
 		int real_pause(void);
 		int real_unpause(void);
-#if 0
-		int request_pause(void);
-		int request_unpause(void);
-#endif
 		int change(const int new_filter_index, const t_channel_id new_current_service = 0); // locks while changing
 
 		void lock(void);

@@ -420,12 +420,8 @@ bool readEventsFromFile(std::string &epgname, int &ev_count)
 			{
 				const char *s = xmlGetAttribute(node, "country");
 				if (s)
-#if 0
-					e.ratings.insert(SIparentalRating(ZapitTools::UTF8_to_Latin1(s),
+					e.ratings.push_back(SIparentalRating(ZapitTools::UTF8_to_Latin1(s),
 							(unsigned char) xmlGetNumericAttribute(node, "rating", 10)));
-#endif
-				e.ratings.push_back(SIparentalRating(ZapitTools::UTF8_to_Latin1(s),
-						(unsigned char) xmlGetNumericAttribute(node, "rating", 10)));
 				node = xmlNextNode(node);
 			}
 

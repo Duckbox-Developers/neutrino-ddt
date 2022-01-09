@@ -319,15 +319,9 @@ void SIevent::parse(Event &event)
 				linkage_descs.insert(linkage_descs.end(), l);
 				break;
 			}
-#if 0 // TODO ? vps was never used
-			case PDC_DESCRIPTOR)
-			{
-				break;
-			}
-#endif
 			default:
-					break;
-				}
+				break;
+		}
 	}
 }
 
@@ -356,10 +350,7 @@ void SIevent::parseDescriptors(const uint8_t *des, unsigned len)
 		{
 			parseLinkageDescriptor((const uint8_t *)desc, len);
 		}
-#if 0
-		else if (desc->descriptor_tag == PDC_DESCRIPTOR)
-			parsePDCDescriptor((const char *)desc, e, len);
-#endif
+
 		if ((unsigned)(desc->descriptor_length + 2) > len)
 			break;
 		len -= desc->descriptor_length + 2;

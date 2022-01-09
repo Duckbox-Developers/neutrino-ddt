@@ -95,8 +95,8 @@ struct SI_section_header {
 	unsigned section_number                 : 8;
 	unsigned last_section_number            : 8;
 } __attribute__ ((packed)) ; // 8 bytes
-#endif 
-class SIsectionEIT 
+#endif
+class SIsectionEIT
 #ifdef USE_DVBSI_EVENTS
 	: public EventInformationSection
 #endif
@@ -107,9 +107,9 @@ protected:
 	int parsed;
 	void parse(void);
 public:
-	SIsectionEIT(uint8_t *buf) 
+	SIsectionEIT(uint8_t *buf)
 #ifdef USE_DVBSI_EVENTS
-		: EventInformationSection(buf) 
+		: EventInformationSection(buf)
 #endif
 	{
 		buffer = buf;
@@ -155,31 +155,9 @@ public:
 		parsed = 0;
 		parse();
 	}
-
-#if 0 // TODO ?
-	static void dump(const struct SI_section_SDT_header *header) {
-		if (!header)
-			return;
-		SIsection::dump1((const struct SI_section_header *)header);
-		printf("transport_stream_id: 0x%02x%02x\n", header->transport_stream_id_hi, header->transport_stream_id_lo);
-		SIsection::dump2((const struct SI_section_header *)header);
-		printf("original_network_id: 0x%02x%02x\n", header->original_network_id_hi, header->original_network_id_lo);
-	}
-
-	static void dump(const SIsectionSDT &s) {
-		dump((struct SI_section_SDT_header *)s.buffer);
-		for_each(s.svs.begin(), s.svs.end(), printSIservice());
-	}
-
-	void dump(void) const {
-		dump((struct SI_section_SDT_header *)buffer);
-		for_each(svs.begin(), svs.end(), printSIservice());
-	}
-#endif
 	const SIservices &services(void) const {
 		return svs;
 	}
-
 };
 
 class SIsectionTIME
