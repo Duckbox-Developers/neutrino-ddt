@@ -2533,10 +2533,6 @@ usermenu.title_yellow Video
 usermenus.head User menus
 video_mode_ok Is this video mode working ok ?
 videomenu.43mode 4:3 Content mode
-videomenu.analog_sd_rgb RGB (SD)
-videomenu.analog_sd_rgb_scart RGB on scart (SD)
-videomenu.analog_sd_yprpb YPbPr (SD)
-videomenu.analog_sd_yprpb_scart YPbPr on scart (SD)
 videomenu.colorformat Color space
 videomenu.colorformat.cvbs CVBS
 videomenu.colorformat.rgb RGB
@@ -2579,7 +2575,6 @@ videomenu.psi.reset Default
 videomenu.psi.saturation Saturation
 videomenu.psi.step Video slider step size
 videomenu.psi.tint Tint
-videomenu.scart Scart
 videomenu.screensetup Screen Setup
 videomenu.tv-scart Video
 videomenu.videoformat Format

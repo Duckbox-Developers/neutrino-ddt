@@ -400,11 +400,12 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	if (getenv("NEUTRINO_DEFAULT_SCART") != NULL)
 		vid_Mode_default = VIDEO_STD_PAL;
 	g_settings.video_Mode = configfile.getInt32("video_Mode", vid_Mode_default);
-	g_settings.analog_mode1 = configfile.getInt32("analog_mode1", (int)ANALOG_SD_RGB_SCART); // default RGB
 
 #if HAVE_SH4_HARDWARE
+	g_settings.analog_mode1 = configfile.getInt32("analog_mode1", (int)COLORFORMAT_RGB); // default RGB
 	g_settings.hdmi_mode = configfile.getInt32("hdmi_mode", (int)COLORFORMAT_HDMI_RGB);
 #endif
+
 	g_settings.hdmi_cec_mode = configfile.getInt32("hdmi_cec_mode", 0); // default off
 	g_settings.hdmi_cec_view_on = configfile.getInt32("hdmi_cec_view_on", 0); // default off
 	g_settings.hdmi_cec_standby = configfile.getInt32("hdmi_cec_standby", 0); // default off
@@ -414,6 +415,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.hdmi_cec_broadcast = configfile.getInt32("hdmi_cec_broadcast", 0); // default off
 	g_settings.video_mixer_color = configfile.getInt32("video_mixer_color", 0xff000000);
 #endif
+
 	g_settings.psi_contrast = configfile.getInt32("video_psi_contrast", 128);
 	g_settings.psi_saturation = configfile.getInt32("video_psi_saturation", 128);
 	g_settings.psi_brightness = configfile.getInt32("video_psi_brightness", 128);
@@ -1238,9 +1240,8 @@ void CNeutrinoApp::saveSetup(const char * fname)
 
 	//video
 	configfile.setInt32( "video_Mode", g_settings.video_Mode );
-	configfile.setInt32( "analog_mode1", g_settings.analog_mode1 );
-
 #if HAVE_SH4_HARDWARE
+	configfile.setInt32( "analog_mode1", g_settings.analog_mode1 );
 	configfile.setInt32( "hdmi_mode", g_settings.hdmi_mode );
 #endif
 	configfile.setInt32( "video_Format", g_settings.video_Format );
