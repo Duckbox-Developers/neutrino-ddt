@@ -529,11 +529,7 @@ int CEpgData::show_mp(MI_MOVIE_INFO *mi, int mp_position, int mp_duration, bool 
 	epgData.items.clear();
 	epgData.fsk = mp_movie_info->parentalLockAge;
 	epgData.table_id = mp_movie_info->epgId;
-#ifdef FULL_CONTENT_CLASSIFICATION
-	epgData.contentClassification.clear();
-#else
 	epgData.contentClassification = 0;
-#endif
 	epgData.epg_times.dauer = mp_movie_info->length * 60; // we need the seconds
 
 	extMovieInfo.clear();
@@ -817,14 +813,8 @@ int CEpgData::show(const t_channel_id channel_id, uint64_t a_id, time_t* a_start
 	}
 
 	// Show genre information
-#ifdef FULL_CONTENT_CLASSIFICATION
-	if (!epgData.contentClassification.empty())
-		processTextToArray(std::string(g_Locale->getText(LOCALE_EPGVIEWER_GENRE)) + ": " + GetGenre(epgData.contentClassification[0])); // UTF-8
-//	processTextToArray( epgData.userClassification.c_str() );
-#else
 	if (epgData.contentClassification)
 		processTextToArray(std::string(g_Locale->getText(LOCALE_EPGVIEWER_GENRE)) + ": " + GetGenre(epgData.contentClassification)); // UTF-8
-#endif
 
 	// -- display more screenings on the same channel
 	// -- 2002-05-03 rasc

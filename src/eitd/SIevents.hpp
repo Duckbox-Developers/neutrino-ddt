@@ -33,8 +33,6 @@
 #include "edvbstring.h"
 #include "SIlanguage.hpp"
 
-//#define USE_ITEM_DESCRIPTION
-
 struct eit_event {
 	unsigned event_id_hi                    : 8;
 	unsigned event_id_lo                    : 8;
@@ -90,13 +88,6 @@ struct descr_linkage_header {
 
 struct descr_pdc_header {
 	unsigned descriptor_tag                 : 8;
-#if 0
-	// unused
-	unsigned descriptor_length              : 8;
-	unsigned pil0                           : 8;
-	unsigned pil1                           : 8;
-	unsigned pil2                           : 8;
-#endif
 } __attribute__ ((packed)) ;
 
 class SIlinkage {
@@ -177,7 +168,7 @@ struct saveSIlinkageXML : public std::unary_function<class SIlinkage, void>
 	void operator() (const SIlinkage &l) { l.saveXML(f);}
 };
 
-class SIcomponent 
+class SIcomponent
 {
 	public:
 		unsigned int component;
@@ -189,7 +180,7 @@ class SIcomponent
 			component = 0;
 			streamContent=0;
 			componentType=0;
-			componentTag=0;      
+			componentTag=0;
 		}
 		SIcomponent(const struct descr_component_header *comp) {
 			component = 0;
@@ -253,7 +244,7 @@ struct saveSIcomponentXML : public std::unary_function<class SIcomponent, void>
 	void operator() (const SIcomponent &c) { c.saveXML(f);}
 };
 
-class SIparentalRating 
+class SIparentalRating
 {
 	public:
 		unsigned int countryCode;
@@ -364,7 +355,6 @@ class SIevent
 		t_original_network_id original_network_id;
 		t_transport_stream_id transport_stream_id;
 		unsigned short eventID;
-		//time_t vps;
 		unsigned char table_id;
 		unsigned char version;
 
@@ -373,124 +363,8 @@ class SIevent
 		SIlinkage_descs linkage_descs;
 		SItimes times;
 
-#ifdef USE_ITEM_DESCRIPTION
-		std::string itemDescription; // Aus dem Extended Descriptor
-		std::string item; // Aus dem Extended Descriptor
-#endif
 		struct SIeventClassifications
 		{
-#ifdef FULL_CONTENT_CLASSIFICATION
-			uint8_t *data;
-			unsigned int size;
-
-			SIeventClassifications& operator = (const SIeventClassifications& c)
-			{
-				if (this != &c) {
-					size = 0;
-					if (data) {
-						free(data);
-						data = NULL;
-					}
-					if (c.data) {
-						data = (uint8_t *) malloc(c.size);
-						if (data) {
-							memcpy(data, c.data, c.size);
-							size = c.size;
-						}
-					}
-				}
-				return *this;
-			}
-
-			SIeventClassifications(const SIeventClassifications& c)
-			{
-				if (this != &c) {
-					data = NULL;
-					*this = c;
-				}
-			}
-
-			bool operator==(const SIeventClassifications& c) const
-			{
-				if (!data && !c.data)
-					return true;
-				if (!(data && c.data))
-					return false;
-				if (size != c.size)
-					return false;
-				return !memcmp(data, c.data, size);
-			}
-
-			bool operator!=(const SIeventClassifications& c) const
-			{
-				return *this != c;
-			}
-
-			SIeventClassifications()
-			{
-				data = NULL;
-				size = 0;
-			}
-
-			~SIeventClassifications()
-			{
-				if (data)
-					free(data);
-			}
-
-			void get(std::string &contentClassifications, std::string &userClassifications) const
-			{
-				contentClassifications.clear();
-				userClassifications.clear();
-				if (size) {
-					uint8_t *d = data, *e = data + size;
-					uint8_t cc[size/2], uc[size/2];
-					for (unsigned int i = 0; d < e; i++) {
-						cc[i] = *d++;
-						uc[i] = *d++;
-					}
-					contentClassifications.assign((char *) cc, size/2);
-					userClassifications.assign((char *) uc, size/2);
-				}
-			}
-
-			ssize_t reserve(unsigned int r)
-			{
-				if (r & 1)
-					return -1;
-
-				if (size) {
-					uint8_t * _data = (uint8_t *) realloc(data, size + r);
-					if (!_data)
-						return -1;
-					data = _data;
-				} else {
-					data = (uint8_t *) malloc(r);
-					if (!data)
-						return -1;
-				}
-				size_t off = size;
-				size += r;
-				return off;
-			}
-
-			ssize_t set(ssize_t off, uint8_t content, uint8_t user)
-			{
-				if (off < 0 || off + 2 > (ssize_t) size)
-					return -1;
-				data[off++] = content;
-				data[off++] = user;
-				return off;
-			}
-
-			ssize_t set(ssize_t off, const uint8_t *_data, size_t len)
-			{
-				if (len & 1 || off < 0 || off + len > size)
-					return -1;
-				memcpy (data + off, _data, len);
-				return off + len;
-			}
-#else
 			uint8_t content;
 			uint8_t user;
 
@@ -499,7 +373,6 @@ class SIevent
 				content = 0;
 				user = 0;
 			}
-#endif
 		};
 
 		SIeventClassifications classifications;
@@ -511,7 +384,6 @@ class SIevent
 			transport_stream_id(0)
 		{
 			eventID    = 0;
-			//vps = 0;
 			table_id = 0xFF; /* 0xFF means "not set" */
 			version = 0xFF;
 			running = false;
@@ -582,57 +454,5 @@ struct saveSIeventXML : public std::unary_function<SIevent, void>
 	saveSIeventXML(FILE *fi) { f=fi;}
 	void operator() (const SIevent &e) { e.saveXML(f);}
 };
-
-#if 0
-// Fuer for_each
-struct saveSIeventXMLwithServiceName : public std::unary_function<SIevent, void>
-{
-  FILE *f;
-  const SIservices *s;
-  saveSIeventXMLwithServiceName(FILE *fi, const SIservices &svs) {f=fi; s=&svs;}
-  void operator() (const SIevent &e) {
-    SIservices::iterator k=s->find(SIservice(e.service_id, e.original_network_id, e.transport_stream_id));
-    if(k!=s->end()) {
-      if(k->serviceName.length())
-      e.saveXML(f, k->serviceName.c_str());
-    }
-    else
-      e.saveXML(f);
-  }
-};
-#endif
-
-#if 0
-// Fuer for_each
-struct printSIeventWithService : public std::unary_function<SIevent, void>
-{
-  printSIeventWithService(const SIservices &svs) { s=&svs;}
-  void operator() (const SIevent &e) {
-    SIservices::iterator k=s->find(SIservice(e.service_id, e.original_network_id, e.transport_stream_id));
-    if(k!=s->end()) {
-      char servicename[50];
-      strncpy(servicename, k->serviceName.c_str(), sizeof(servicename)-1);
-      servicename[sizeof(servicename)-1]=0;
-      removeControlCodes(servicename);
-      printf("Service-Name: %s\n", servicename);
-//      printf("Provider-Name: %s\n", k->providerName.c_str());
-    }
-    e.dump();
-//    e.dumpSmall();
-    printf("\n");
-  }
-  const SIservices *s;
-};
-
-class SIevents : public std::set <SIevent, std::less<SIevent> >
-{
-  public:
-    // Entfernt anhand der Services alle time shifted events (Service-Typ 0)
-    // und sortiert deren Zeiten in die Events mit dem Text ein.
-    void mergeAndRemoveTimeShiftedEvents(const SIservices &);
-    // Loescht alte Events (aufgrund aktueller Zeit - seconds und Zeit im Event)
-    void removeOldEvents(long seconds);
-};
-#endif
 
 #endif // SIEVENTS_HPP

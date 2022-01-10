@@ -377,20 +377,6 @@ int DMX::getSection(uint8_t *buf, const unsigned timeoutInMSeconds, int &timeout
 	uint16_t eh_tbl_extension_id = section.getTableIdExtension();
 	uint8_t version_number = section.getVersionNumber();
 
-#if 0
-	/* if we are not caching the already read sections (CN-thread), check EIT version and get out */
-	if (!cache)
-	{
-		if (table_id == 0x4e &&
-			eh_tbl_extension_id == (current_service & 0xFFFF) &&
-			version_number != eit_version)
-		{
-			debug(DEBUG_INFO, "EIT old: %d new version: %d", eit_version, version_number);
-			eit_version = version_number;
-		}
-		return rc;
-	}
-#endif
 	MyDMXOrderUniqueKey::iterator di;
 
 	uint8_t section_number = section.getSectionNumber();
@@ -587,36 +573,6 @@ int DMX::real_unpause(void)
 
 	return 0;
 }
-
-#if 0
-int DMX::request_pause(void)
-{
-	real_pause(); // unlocked
-
-	lock();
-	//debug(DEBUG_INFO, "request_pause: %d", real_pauseCounter);
-
-	real_pauseCounter++;
-
-	unlock();
-
-	return 0;
-}
-
-int DMX::request_unpause(void)
-{
-	lock();
-
-	//debug(DEBUG_INFO, "request_unpause: %d", real_pauseCounter);
-	--real_pauseCounter;
-
-	unlock();
-
-	real_unpause(); // unlocked
-
-	return 0;
-}
-#endif
 
 bool DMX::next_filter()
 {

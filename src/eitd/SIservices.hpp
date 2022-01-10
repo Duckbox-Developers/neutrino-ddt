@@ -51,30 +51,17 @@ public:
 		{
 			return uniqueKey() < ref.uniqueKey();
 		}
-#if 0
-//unused
-	void toStream(char * &p) const
-		{
-			*(t_service_id          *)p = service_id;			p += sizeof(t_service_id);
-			*(t_original_network_id *)p = original_network_id;		p += sizeof(t_original_network_id);
-			*(t_transport_stream_id *)p = transport_stream_id;		p += sizeof(t_transport_stream_id);
-		}
 
-	t_service_id getServiceID() const
-		{
-			return service_id;
-		}
-#endif
 	t_channel_id uniqueKey(void) const {
 		return CREATE_CHANNEL_ID(service_id, original_network_id, transport_stream_id); // cf. zapittypes.h
 	}
+
 	void dump(void) const
 		{
 			printf("NVOD Ref. Service-ID: %hu\n", service_id);
 			printf("NVOD Ref. Original-Network-ID: %hu\n", original_network_id);
 			printf("NVOD Ref. Transport-Stream-ID: %hu\n", transport_stream_id);
 		}
-
 };
 
 // Fuer for_each
@@ -85,7 +72,7 @@ struct printSInvodReference : public std::unary_function<class SInvodReference, 
 
 typedef std::set <SInvodReference, std::less<SInvodReference> > SInvodReferences;
 
-class SIservice 
+class SIservice
 {
 //protected:
 public:
@@ -101,10 +88,6 @@ public:
 	unsigned char serviceTyp;
 	int is_actual;
 	SInvodReferences nvods;
-#if 0 // unused
-	std::string serviceName; // Name aus dem Service-Descriptor
-	std::string providerName; // Name aus dem Service-Descriptor
-#endif
 
 	SIservice(const t_service_id _service_id, const t_original_network_id _original_network_id, const t_transport_stream_id _transport_stream_id):
 		service_id(_service_id),
@@ -116,16 +99,6 @@ public:
 		is_actual = 0;
 	}
 
-#if 0 
-// unused
-	int eitScheduleFlag(void)	{ return (int)flags.EIT_schedule_flag; }
-	int eitPresentFollowingFlag(void) { return (int)flags.EIT_present_following_flag; }
-#endif
-	int runningStatus(void)	const	{ return (int)flags.running_status; }
-#if 0 
-// unused
-	int freeCAmode(void)		{ return (int)flags.free_CA_mode; }
-#endif
 	bool operator < (const SIservice& s) const {
 		return uniqueKey() < s.uniqueKey();
 	}
@@ -139,12 +112,7 @@ public:
 		printf("Original-Network-ID: %hu\n", original_network_id);
 		printf("Service-ID: %hu\n", service_id);
 		printf("Service-Typ: %hhu\n", serviceTyp);
-#if 0 // unused
-		if(!providerName.empty())
-			printf("Provider-Name: %s\n", providerName.c_str());
-		if(!serviceName.empty())
-			printf("Service-Name: %s\n", serviceName.c_str());
-#endif
+
 		for_each(nvods.begin(), nvods.end(), printSInvodReference());
 		printf("\n");
 	}

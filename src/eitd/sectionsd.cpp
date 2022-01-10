@@ -56,6 +56,7 @@
 #include "edvbstring.h"
 #include "xmlutil.h"
 #include "debug.h"
+#include "timefix.h"
 
 #include <compatibility.h>
 
@@ -400,11 +401,7 @@ static bool deleteEvent(const t_event_id uniqueKey)
 	if ((already_exists) && (SIlanguage::getMode() == CSectionsdClient::LANGUAGE_MODE_OFF))
 	{
 		si->second->classifications = evt.classifications;
-#ifdef USE_ITEM_DESCRIPTION
-		si->second->itemDescription = evt.itemDescription;
-		si->second->item = evt.item;
-#endif
-		//si->second->vps = evt.vps;
+
 		if ((!evt.getExtendedText().empty()) && !evt.times.empty() &&
 			(evt.times.begin()->startzeit < zeit + secondsExtendedTextCache))
 			si->second->setExtendedText(0 /*"OFF"*/, evt.getExtendedText());
@@ -516,11 +513,6 @@ static bool deleteEvent(const t_event_id uniqueKey)
 			MySIeventsOrderFirstEndTimeServiceIDEventUniqueKey::iterator lastEvent =
 				mySIeventsOrderFirstEndTimeServiceIDEventUniqueKey.begin();
 
-			/* if you don't want the new "delete old events first" method but
-			 * the old-fashioned "delete future events always", invert this */
-#if 0
-			bool back = true;
-#else
 			time_t now = time(NULL);
 			bool back = false;
 			if ((*lastEvent)->times.size() == 1)
@@ -530,7 +522,7 @@ static bool deleteEvent(const t_event_id uniqueKey)
 			}
 			else
 				debug(DEBUG_NORMAL, "addevent: times.size != 1, please report");
-#endif
+
 			if (back)
 			{
 				// debug(DEBUG_ERROR, "<");
@@ -913,16 +905,6 @@ static void commandPauseScanning(int connfd, char *data, const unsigned dataLeng
 
 	if (scanning && pause)
 	{
-#if 0
-		threadCN.request_pause();
-		threadEIT.request_pause();
-#ifdef ENABLE_FREESATEPG
-		threadFSEIT.request_pause();
-#endif
-#ifdef ENABLE_SDT
-		threadSDT.request_pause();
-#endif
-#endif
 		scanning = 0;
 		writeLockMessaging();
 		messaging_zap_detected = false;
@@ -930,16 +912,6 @@ static void commandPauseScanning(int connfd, char *data, const unsigned dataLeng
 	}
 	else if (!pause && !scanning)
 	{
-#if 0
-		threadCN.request_unpause();
-		threadEIT.request_unpause();
-#ifdef ENABLE_FREESATEPG
-		threadFSEIT.request_unpause();
-#endif
-#ifdef ENABLE_SDT
-		threadSDT.request_unpause();
-#endif
-#endif
 		writeLockEvents();
 		delete myCurrentEvent;
 		myCurrentEvent = NULL;
@@ -1427,17 +1399,6 @@ CTimeThread::CTimeThread()
 
 void CTimeThread::sendTimeEvent(bool ntp, time_t tim)
 {
-#if 0
-	time_t actTime = time(NULL);
-	if (!ntp)
-	{
-		struct tm *tmTime = localtime(&actTime);
-		debug(DEBUG_ERROR, "%s: current: %02d.%02d.%04d %02d:%02d:%02d, dvb: %s", name.c_str(),
-			tmTime->tm_mday, tmTime->tm_mon + 1, tmTime->tm_year + 1900, tmTime->tm_hour, tmTime->tm_min, tmTime->tm_sec, ctime(&tim));
-		actTime = tim;
-	}
-	eventServer->sendEvent(CSectionsdClient::EVT_TIMESET, CEventServer::INITID_SECTIONSD, &actTime, sizeof(actTime));
-#endif
 	if (ntp || tim) {}
 	if (timediff)
 		eventServer->sendEvent(CSectionsdClient::EVT_TIMESET, CEventServer::INITID_SECTIONSD, &timediff, sizeof(timediff));
@@ -1472,14 +1433,7 @@ bool CTimeThread::setSystemTime(time_t tim, bool force)
 	debug(DEBUG_ERROR, "%s: timediff %" PRId64 ", current: %02d.%02d.%04d %02d:%02d:%02d, dvb: %s",
 		name.c_str(), timediff,
 		t.tm_mday, t.tm_mon + 1, t.tm_year + 1900, t.tm_hour, t.tm_min, t.tm_sec, ctime(&tim));
-#if 0
-	/* if new time less than current for less than 1 second, ignore */
-	if (timediff < 0 && timediff > (int64_t) -1000000)
-	{
-		timediff = 0;
-		return;
-	}
-#endif
+
 	if (timeset && abs(tim - tv.tv_sec) < 120)   /* abs() is int */
 	{
 		struct timeval oldd;
@@ -1616,8 +1570,8 @@ void CTimeThread::run()
 				if (first_time)
 					sleep_time = 5;
 			}
-			/* in case of wrong TDT date, dont send time is set, 1640991600 - 01.01.2022 00:00:00 */
-			if (time_ntp || (dvb_time > (time_t) 1640991600))
+			/* in case of wrong TDT date, dont send time is set, TIMEFIX is build time */
+			if (time_ntp || (dvb_time > (time_t) TIMEFIX))
 			{
 				sendTimeEvent(time_ntp, dvb_time);
 				debug(DEBUG_ERROR, "%s: Time set via %s, going to sleep for %d seconds.", name.c_str(),
@@ -1781,17 +1735,6 @@ bool CEventsThread::addEvents()
 	{
 		if (!(e->times.empty()))
 		{
-#if 0
-			if ((e->times.begin()->startzeit < zeit + secondsToCache) &&
-				((e->times.begin()->startzeit + (long)e->times.begin()->dauer) > zeit - oldEventsAre) &&
-				(e->times.begin()->dauer < 60))
-			{
-				char x_startTime[10];
-				struct tm *x_tmStartTime = localtime(&e->times.begin()->startzeit);
-				strftime(x_startTime, sizeof(x_startTime) - 1, "%H:%M", x_tmStartTime);
-				debug(DEBUG_NORMAL, "####[%s - #%d] - startzeit: %s, dauer: %d, channel_id: 0x%llX", __FUNCTION__, __LINE__, x_startTime, e->times.begin()->dauer, e->get_channel_id());
-			}
-#endif
 			if ((e->times.begin()->startzeit < zeit + secondsToCache) &&
 				((e->times.begin()->startzeit + (long)e->times.begin()->dauer) > zeit - oldEventsAre) &&
 				(e->times.begin()->dauer > 1))
@@ -2746,31 +2689,6 @@ void CEitManager::getCurrentNextServiceKey(t_channel_id uniqueServiceKey, CSecti
 					debug(DEBUG_INFO, "*nextEvt not from cur/next V2!");
 					nextEvt = findNextSIeventForServiceUniqueKey(uniqueServiceKey, zeitEvt2);
 				}
-
-				/* FIXME what this code should do ? why search channel id as event key ?? */
-#if 0
-				if (nextEvt.service_id != 0)
-				{
-					MySIeventsOrderUniqueKey::iterator eFirst = mySIeventsOrderUniqueKey.find(uniqueServiceKey);
-
-					if (eFirst != mySIeventsOrderUniqueKey.end())
-					{
-						// this is a race condition if first entry found is == mySIeventsOrderUniqueKey.begin()
-						// so perform a check
-						if (eFirst != mySIeventsOrderUniqueKey.begin())
-							--eFirst;
-
-						if (eFirst != mySIeventsOrderUniqueKey.begin())
-						{
-							time_t azeit = time(NULL);
-
-							if (!eFirst->second->times.empty() && eFirst->second->times.begin()->startzeit < azeit &&
-								eFirst->second->uniqueKey() == nextEvt.uniqueKey() - 1)
-								flag |= CSectionsdClient::epgflags::has_no_current;
-						}
-					}
-				}
-#endif
 			}
 		}
 		if (nextEvt.service_id != 0)
@@ -2890,8 +2808,6 @@ bool CEitManager::getEPGidShort(t_event_id epg_id, CShortEPGData *epgdata)
 	return ret;
 }
 
-/*was getEPGid commandEPGepg_id(int connfd, char *data, const unsigned dataLength) */
-/* TODO item / itemDescription */
 bool CEitManager::getEPGid(const t_event_id epg_id, const time_t startzeit, CEPGData *epgdata)
 {
 	bool ret = false;
@@ -2922,16 +2838,10 @@ bool CEitManager::getEPGid(const t_event_id epg_id, const time_t startzeit, CEPG
 			epgdata->title = evt.getName();
 			epgdata->info1 = evt.getText();
 			epgdata->info2 = evt.getExtendedText();
-			/* FIXME debug(DEBUG_NORMAL, "itemDescription: %s", evt.itemDescription.c_str()); */
-#ifdef FULL_CONTENT_CLASSIFICATION
-			evt.classifications.get(epgdata->contentClassification, epgdata->userClassification);
-#else
 			epgdata->contentClassification = evt.classifications.content;
 			epgdata->userClassification = evt.classifications.user;
-#endif
 			epgdata->fsk = evt.getFSK();
 			epgdata->table_id = evt.table_id;
-
 			epgdata->epg_times.startzeit = t->startzeit;
 			epgdata->epg_times.dauer = t->dauer;
 
@@ -2996,17 +2906,10 @@ bool CEitManager::getActualEPGServiceKey(const t_channel_id channel_id, CEPGData
 		epgdata->title = evt.getName();
 		epgdata->info1 = evt.getText();
 		epgdata->info2 = evt.getExtendedText();
-		/* FIXME debug(DEBUG_NORMAL, "itemDescription: %s", evt.itemDescription.c_str());*/
-#ifdef FULL_CONTENT_CLASSIFICATION
-		evt.classifications.get(epgdata->contentClassification, epgdata->userClassification);
-#else
 		epgdata->contentClassification = evt.classifications.content;
 		epgdata->userClassification = evt.classifications.user;
-#endif
-
 		epgdata->fsk = evt.getFSK();
 		epgdata->table_id = evt.table_id;
-
 		epgdata->epg_times.startzeit = zeit.startzeit;
 		epgdata->epg_times.dauer = zeit.dauer;
 
