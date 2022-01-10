@@ -127,13 +127,6 @@ const CMenuOptionChooser::keyval VIDEOMENU_43MODE_OPTIONS[] =
 };
 #define VIDEOMENU_43MODE_OPTION_COUNT (sizeof(VIDEOMENU_43MODE_OPTIONS)/sizeof(CMenuOptionChooser::keyval))
 
-#define VIDEOMENU_VIDEOSIGNAL_TD_OPTION_COUNT 2
-const CMenuOptionChooser::keyval VIDEOMENU_VIDEOSIGNAL_TD_OPTIONS[VIDEOMENU_VIDEOSIGNAL_TD_OPTION_COUNT] =
-{
-	{ ANALOG_SD_RGB_SCART,		LOCALE_VIDEOMENU_ANALOG_SD_RGB_SCART	},
-	{ ANALOG_SD_YPRPB_SCART,	LOCALE_VIDEOMENU_ANALOG_SD_YPRPB_SCART	}
-};
-
 #if HAVE_SH4_HARDWARE
 #define VIDEOMENU_COLORFORMAT_TDT_ANALOG_OPTION_COUNT 4
 const CMenuOptionChooser::keyval VIDEOMENU_COLORFORMAT_TDT_ANALOG_OPTIONS[VIDEOMENU_COLORFORMAT_TDT_ANALOG_OPTION_COUNT] =
@@ -270,23 +263,15 @@ int CVideoSettings::showVideoSetup()
 		vmode_option_count++;
 	}
 
-	//analog options
-	CMenuOptionChooser *vs_scart_ch = NULL;
-
+#if HAVE_SH4_HARDWARE
 	// Color space
 	CMenuOptionChooser *vs_colorformat_analog = NULL;
 	CMenuOptionChooser *vs_colorformat_hdmi = NULL;
 
-#if HAVE_SH4_HARDWARE
 	vs_colorformat_analog = new CMenuOptionChooser(LOCALE_VIDEOMENU_COLORFORMAT_ANALOG, &g_settings.analog_mode1, VIDEOMENU_COLORFORMAT_TDT_ANALOG_OPTIONS, VIDEOMENU_COLORFORMAT_TDT_ANALOG_OPTION_COUNT, true, this);
 	vs_colorformat_analog->setHint("", LOCALE_MENU_HINT_VIDEO_COLORFORMAT_ANALOG);
 	vs_colorformat_hdmi = new CMenuOptionChooser(LOCALE_VIDEOMENU_COLORFORMAT_HDMI, &g_settings.hdmi_mode, VIDEOMENU_COLORFORMAT_TDT_HDMI_OPTIONS, VIDEOMENU_COLORFORMAT_TDT_HDMI_OPTION_COUNT, true, this);
 	vs_colorformat_hdmi->setHint("", LOCALE_MENU_HINT_VIDEO_COLORFORMAT_HDMI);
-#else
-	if (g_info.hw_caps->has_SCART)
-	{
-		vs_scart_ch = new CMenuOptionChooser(LOCALE_VIDEOMENU_SCART, &g_settings.analog_mode1, VIDEOMENU_VIDEOSIGNAL_TD_OPTIONS, VIDEOMENU_VIDEOSIGNAL_TD_OPTION_COUNT, true, this);
-	}
 #endif
 
 	//4:3 mode
@@ -317,17 +302,7 @@ int CVideoSettings::showVideoSetup()
 	else
 	{
 		neutrino_locale_t tmp_locale = NONEXISTANT_LOCALE;
-		/* TODO: check the locale */
-		if (vs_scart_ch != NULL)
-			tmp_locale = LOCALE_VIDEOMENU_TV_SCART;
-		//---------------------------------------
 		videosetup->addIntroItems(LOCALE_MAINSETTINGS_VIDEO, tmp_locale);
-		//---------------------------------------
-		//videosetup->addItem(vs_scart_sep);	  //separator scart
-		if (vs_scart_ch != NULL)
-			videosetup->addItem(vs_scart_ch); //scart
-		//if (tmp_locale != NONEXISTANT_LOCALE)
-		//	videosetup->addItem(GenericMenuSeparatorLine);
 	}
 	//---------------------------------------
 	videosetup->addItem(vs_43mode_ch);	  //4:3 mode
@@ -452,10 +427,7 @@ void CVideoSettings::setVideoSettings()
 #if HAVE_SH4_HARDWARE
 	changeNotify(LOCALE_VIDEOMENU_COLORFORMAT_ANALOG, NULL);
 	changeNotify(LOCALE_VIDEOMENU_COLORFORMAT_HDMI, NULL);
-#else
-	changeNotify(LOCALE_VIDEOMENU_SCART, NULL);
 #endif
-
 	videoDecoder->setAspectRatio(g_settings.video_Format, g_settings.video_43mode);
 
 #ifdef ENABLE_PIP
@@ -503,12 +475,7 @@ void CVideoSettings::setupVideoSystem(bool do_ask)
 
 bool CVideoSettings::changeNotify(const neutrino_locale_t OptionName, void *)
 {
-	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_VIDEOMENU_SCART))
-	{
-		videoDecoder->SetVideoMode((analog_mode_t) g_settings.analog_mode1);
-	}
-	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_VIDEOMENU_VIDEOFORMAT) ||
-		ARE_LOCALES_EQUAL(OptionName, LOCALE_VIDEOMENU_43MODE))
+	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_VIDEOMENU_VIDEOFORMAT) || ARE_LOCALES_EQUAL(OptionName, LOCALE_VIDEOMENU_43MODE))
 	{
 		//if(g_settings.video_Format != 1 && g_settings.video_Format != 3)
 		if (g_settings.video_Format != 1 && g_settings.video_Format != 3 && g_settings.video_Format != 2)

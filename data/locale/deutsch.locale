@@ -2502,10 +2502,6 @@ usermenu.title_yellow Bildoptionen
 usermenus.head Benutzermenüs
 video_mode_ok Video-Einstellungen OK?
 videomenu.43mode 4:3 Anzeigeverhalten
-videomenu.analog_sd_rgb RGB (SD)
-videomenu.analog_sd_rgb_scart RGB -> Scart (SD)
-videomenu.analog_sd_yprpb YPbPr (SD)
-videomenu.analog_sd_yprpb_scart YPbPr -> Scart (SD)
 videomenu.colorformat Farbraum
 videomenu.colorformat.cvbs CVBS
 videomenu.colorformat.rgb RGB
@@ -2548,7 +2544,6 @@ videomenu.psi.reset Standard
 videomenu.psi.saturation Sättigung
 videomenu.psi.step Videoregler-Schrittweite
 videomenu.psi.tint Farbton
-videomenu.scart Scart
 videomenu.screensetup Bildbereich
 videomenu.tv-scart TV Scart
 videomenu.videoformat Bildschirmformat
