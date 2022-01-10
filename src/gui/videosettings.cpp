@@ -289,7 +289,7 @@ int CVideoSettings::showVideoSetup()
 	CMenuWidget videomodes(LOCALE_MAINSETTINGS_VIDEO, NEUTRINO_ICON_SETTINGS);
 
 	//video system modes submenue
-
+#if HAVE_SH4_HARDWARE
 	if (vs_colorformat_analog || vs_colorformat_hdmi)
 	{
 		videosetup->addIntroItems(LOCALE_MAINSETTINGS_VIDEO, LOCALE_VIDEOMENU_COLORFORMAT);
@@ -299,11 +299,10 @@ int CVideoSettings::showVideoSetup()
 			videosetup->addItem(vs_colorformat_hdmi);
 		videosetup->addItem(GenericMenuSeparatorLine);
 	}
-	else
-	{
-		neutrino_locale_t tmp_locale = NONEXISTANT_LOCALE;
-		videosetup->addIntroItems(LOCALE_MAINSETTINGS_VIDEO, tmp_locale);
-	}
+#else
+	neutrino_locale_t tmp_locale = NONEXISTANT_LOCALE;
+	videosetup->addIntroItems(LOCALE_MAINSETTINGS_VIDEO, tmp_locale);
+#endif
 	//---------------------------------------
 	videosetup->addItem(vs_43mode_ch);	  //4:3 mode
 	videosetup->addItem(vs_dispformat_ch);	  //display format
