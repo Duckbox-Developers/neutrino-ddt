@@ -235,7 +235,6 @@ set.rec.dont_stop=nicht anhaltent
 set.rec.stop=anhalten
 set.rec.restart=neu starten
 set.rec.zap=Umschalten bei Ank&uuml;ndigung
-set.rec.scart=Unterdr&uuml;cke Scart-Umschaltung
 set.rec.spts=Im SPTS-Modus aufnehmen
 set.rec.timer_settings=Timereinstellungen
 set.rec.start_delay=Aufnahmestart-Korrektur (Sek)

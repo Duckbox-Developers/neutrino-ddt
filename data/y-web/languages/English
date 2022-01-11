@@ -235,7 +235,6 @@ set.rec.dont_stop=dont stop
 set.rec.stop=stop
 set.rec.restart=restart
 set.rec.zap=Zap on announcement
-set.rec.scart=Prevent switching Scart
 set.rec.spts=Record in SPTS-Mode
 set.rec.timer_settings=Timer settings
 set.rec.start_delay=Record start delay (sec)

@@ -2572,7 +2572,6 @@ const char *locale_real_names[] =
 	"videomenu.psi.step",
 	"videomenu.psi.tint",
 	"videomenu.screensetup",
-	"videomenu.tv-scart",
 	"videomenu.videoformat",
 	"videomenu.videoformat_169",
 	"videomenu.videoformat_43",
