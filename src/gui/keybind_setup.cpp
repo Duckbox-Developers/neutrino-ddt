@@ -574,7 +574,7 @@ bool CKeybindSetup::changeNotify(const neutrino_locale_t OptionName, void * /* d
 	return false;
 }
 
-const char *CKeybindSetup::getMoviePlayerButtonName(const neutrino_msg_t key, bool &active, bool return_title)
+const char *CKeybindSetup::getMoviePlayerButtonName(const neutrino_msg_t key, bool &active, bool __attribute__((unused)) return_title)
 {
 	active = false;
 	for (unsigned int i = MPKEY_PLAY; i <= MPKEY_NEXT_REPEAT_MODE; i++)
