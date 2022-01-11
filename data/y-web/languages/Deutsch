@@ -101,7 +101,6 @@ bc.menue.remote=Fernbedienung
 bc.menue.glcd_screenshot_desc=GLCD Screenshot erstellen
 bc.menue.glcd_screenshot=GLCD Screenshot
 bc.menue.screenshot=Screenshot
-bc.menue.screenshot_desc=Screenshot des OSDs und/oder des TV-Bildes erstellen
 
 bc.menue.decrease_volume=Lautst&auml;rke verringern
 bc.menue.increase_volume=Lautst&auml;rke erh&ouml;hen
@@ -115,7 +114,6 @@ bc.menue.sig_display=Signal
 bc.menue.snr_display=Signal Rauschabstand
 
 ========= Boxcontrol
-bc.control.freemem=FreeMem
 bc.control.lock=sperren
 bc.control.unlock=freigeben
 bc.control.standby_mode=Standby Modus
@@ -125,7 +123,6 @@ bc.control.remote=Fernbedienung
 bc.control.playback=Abspielen
 bc.control.epg_sectiond=EPG Sectiond
 bc.control.live_lock=Live sperren
-bc.control.reboot.ask=Box wirklich neu starten?
 bc.control.reboot=Neustart
 bc.control.shutdown.ask=Box wirklich ausschalten?
 bc.control.shutdown=Ausschalten
@@ -197,7 +194,6 @@ epg.si.crypt=Crypt Systeme
 epg.si.url=Url
 
 ========Neutrino Settings
-set.reload_neutrino=Neutrino neuladen
 set.reboot_required=Neustart notwendig
 set.sync_with_neutrino_desc=Nach dem Ändern der Einstellungen über das yWeb: <br/>Wählen Sie im TV "Hauptmenü->Service->Neutrino neu starten", um die Änderungen in Neutrino zu übernehmen.<br/><br/>Nach dem Ändern der Einstellungen in Neutrino: <br/>Wählen Sie am TV "Hauptmenü->Einstellungen->Einstellungen jetzt speichern", um diese Änderungen zu übernehmen und diese Seite neu zu laden.
 set.sync_with_neutrino=Zur Synchronisation mit Neutrino
@@ -217,25 +213,8 @@ set.menue.key_settings=Tastenbelegung
 set.menue.xmltv=XMLTV
 
 ========Neutrino Settings - Recording
-set.rec.rec_dest=Aufnahmeziel
-set.rec.device=Aufnahmeger&auml;t
-set.rec.recmode=record mode
-set.rec.server=Server
-set.rec.recorder=Videorekorder
-set.rec.file=Datei
-set.rec.recserver_ip=Aufnahmeserver IP
-set.rec.recserver_port=Aufnahmeserver Port
-set.rec.recserver_wol=Aufnahmeserver WOL
-set.rec.mac_adress=MAC Adresse
 set.rec.rec_behavior=Aufnahmeverhalten
-set.rec.stop_playback=Playback anhalten
-set.rec.epg_sectionsd_desc=sectionsd: off/on/restart
-set.rec.epg_sectionsd=EPG (Sectionsd)
-set.rec.dont_stop=nicht anhaltent
-set.rec.stop=anhalten
-set.rec.restart=neu starten
 set.rec.zap=Umschalten bei Ank&uuml;ndigung
-set.rec.spts=Im SPTS-Modus aufnehmen
 set.rec.timer_settings=Timereinstellungen
 set.rec.start_delay=Aufnahmestart-Korrektur (Sek)
 set.rec.stop_delay=Aufnahmeende-Korrektur (Sek)
@@ -254,26 +233,8 @@ set.rec.timeshift.auto_delete=Automatisches L&ouml;schen
 set.rec.timeshift.tmp_timeshift=Tempor&auml;res timeshift
 
 ========Neutrino Settings - Movieplayer
-set.mp.sources=Quellen
-set.mp.streamingserver_ip=Streamingserver IP
-set.mp.streamingserver_port=Streamingserver Port
-set.mp.streamingserver=Streamingserver
-set.mp.dvd_device=DVD Laufwerk
-set.mp.vlc_dir=Verzeichnis (VLC)
-set.mp.transcoding=Transkodierung
-set.mp.video_datarate=Datenrate Video
-set.mp.transcode=Transkodieren
-set.mp.video_codec=MPEG Video Codec
-set.mp.resolution=Aufl&ouml;sung
-set.mp.audio_datarate=Datenrate Audio
-set.mp.transcode_audio=Transkodiere Audio (dvd/vcd/mpg)
-set.mp.force_ac3=Erzwinge AC3 bei avi
 set.mp.player=Player
 set.mp.start_directory=Startverzeichnis
-set.mp.only_movieplayer=Nur Movieplayer1
-set.mp.used_buffer=Verwende Buffer (WabberQueue)
-set.mp.number_buffersegments=Anzahl Buffersegmente
-set.mp.picture_in_browser=TV Bild im Browser
 
 ========Neutrino Settings - Parental
 set.parental.activate=Aktivieren
@@ -330,8 +291,6 @@ set.pv.scale.simple=einfach
 set.pv.scale.complex=aufwendig
 set.pv.slideshow_duration=Diaschau-Anzeigedauer
 set.pv.start_dir=Start-Verzeichnis
-set.pv.decoding_server_ip=Decoding-Server IP
-set.pv.decoding_server_port=Decoding-Server Port</td>
 
 ========Settings Audioplayer
 set.ap.audioplayer=Audioplayer
@@ -346,16 +305,6 @@ set.ap.screensaver=Bildschirmschoner (min, 0=aus)
 set.ap.decode_priority=Hohe Decodier-Priorit&auml;t
 set.ap.start_dir=Start-Verzeichnis
 set.ap.parse_shoutcast=Shoutcast Meta-Daten
-
-========Settings Timer
-set.timer.header=Timer Einstellungen
-set.timer.username=Benutzername
-set.timer.password=Passwort
-set.timer.klack.url_desc=("&" wird beim Speichern zu ";" konvertiert)
-set.timer.klack.url=Pers&ouml;nliche RSS TV-Planer URL
-set.timer.klack.security_code_desc=Klack Sicherheits Code
-set.timer.klack.security_code=Sicherheits Code
-set.timer.channel_name_replacelist=Sendernamen-Ersetzungsliste
 
 ============Settings XMLTV
 set.xmltv.header=XMLTV Einstellungen
@@ -384,7 +333,6 @@ tools.path=Verzeichnis
 tools.command=Kommando
 tools.cmd.enter_command=Auszuf&uuml;hrendes Kommando eingeben
 tools.cmd.execute_command=Kommando ausf&uuml;hren
-tools.boot_logo=Boot Logo
 tools.filemgr_desc=Dateien und Verzeichnisse organisieren
 tools.filemgr=Dateimanager
 
