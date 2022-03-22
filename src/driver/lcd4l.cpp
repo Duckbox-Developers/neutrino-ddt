@@ -1029,18 +1029,24 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 	int snr = 100 * (CFEManager::getInstance()->getLiveFE()->getSignalNoiseRatio() & 0xFFFF) >> 16;
 	int ber = 100 * (CFEManager::getInstance()->getLiveFE()->getBitErrorRate() & 0xFFFF) >> 16;
 
-	if (sig > 0 && sig <= 100 && snr > 0 && snr <= 100)
-	{
-		WriteFile(TUNER_SIG, to_string(sig));
-		WriteFile(TUNER_SNR, to_string(snr));
-		WriteFile(TUNER_BER, to_string(ber));
-	}
-	else
-	{
-		WriteFile(TUNER_SIG, "0");
-		WriteFile(TUNER_SNR, "0");
-		WriteFile(TUNER_BER, "0");
-	}
+	if (sig < 0)
+		sig = 0;
+	else if (sig > 100)
+		sig = 100;
+
+	if (snr < 0)
+		snr = 0;
+	else if (snr > 100)
+		snr = 100;
+
+	if (ber < 0)
+		ber = 0;
+	else if (ber > 100)
+		ber = 100;
+
+	WriteFile(TUNER_SIG, to_string(sig));
+	WriteFile(TUNER_SNR, to_string(snr));
+	WriteFile(TUNER_BER, to_string(ber));
 }
 
 /* ----------------------------------------------------------------- */
