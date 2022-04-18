@@ -13,5 +13,3 @@ libtoolize --force
 autoconf --force
 autoheader --force
 automake --add-missing --force-missing
-
-echo "#define TIMEFIX $(date +%s)" > ./src/eitd/timefix.h

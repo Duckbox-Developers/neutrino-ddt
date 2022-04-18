@@ -799,6 +799,9 @@ void COsdSetup::showOsdMenueColorSetup(CMenuWidget *menu_colors)
 			NULL, colorSetupNotifier);
 	CColorChooser* chProgressbar_active = new CColorChooser(LOCALE_COLORMENU_PROGRESSBAR_ACTIVE, &t.progressbar_active_red, &t.progressbar_active_green, &t.progressbar_active_blue,
 			NULL, colorSetupNotifier);
+	// channellist colors
+	CColorChooser* chChannellistDescTextcolor = new CColorChooser(LOCALE_COLORMENU_TEXTCOLOR, &t.channellist_Description_Text_red, &t.channellist_Description_Text_green, &t.channellist_Description_Text_blue,
+			NULL, colorSetupNotifier);
 
 	CMenuOptionChooser *oj;
 
@@ -959,6 +962,12 @@ void COsdSetup::showOsdMenueColorSetup(CMenuWidget *menu_colors)
 	menu_colors->addItem( new CMenuSeparator(CMenuSeparator::LINE));
 	mf = new CMenuDForwarder(LOCALE_MISCSETTINGS_INFOBAR_CASYSTEM_DISPLAY, g_settings.infobar_casystem_display < 2, NULL, chInfobarCASystem );
 	mf->setHint("", LOCALE_MENU_HINT_INFOBAR_CASYS_COLOR);
+	menu_colors->addItem(mf);
+
+	// channellist
+	menu_colors->addItem( new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_MAINMENU_CHANNELS));
+	mf = new CMenuDForwarder(LOCALE_COLORMENU_CHANNELLIST_DESCRIPTION_TEXT, true, NULL, chChannellistDescTextcolor );
+	mf->setHint("", LOCALE_MENU_HINT_COLOR_CHANNELLIST_DESCRIPTION_TEXT);
 	menu_colors->addItem(mf);
 
 	// colored events

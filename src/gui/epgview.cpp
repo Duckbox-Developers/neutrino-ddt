@@ -1027,7 +1027,6 @@ int CEpgData::show(const t_channel_id channel_id, uint64_t a_id, time_t* a_start
 					if (g_Timerd->isTimerdAvailable())
 					{
 						bool doRecord = true;
-						time_t epg_start_time = epgData.epg_times.startzeit;
 						recDir = g_settings.network_nfs_recordingdir;
 						if (doRecord && g_settings.recording_already_found_check)
 						{

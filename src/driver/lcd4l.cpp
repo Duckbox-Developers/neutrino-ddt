@@ -98,9 +98,13 @@ extern cVideo *videoDecoder;
 #define START			LCD_DATADIR "start"
 #define END			LCD_DATADIR "end"
 
-#define LCD_FONT			LCD_DATADIR "font"
+#define LCD_FONT		LCD_DATADIR "font"
 #define FGCOLOR			LCD_DATADIR "fgcolor"
 #define BGCOLOR			LCD_DATADIR "bgcolor"
+
+#define TUNER_SIG		LCD_DATADIR "tuner_sig"
+#define TUNER_SNR		LCD_DATADIR "tuner_snr"
+#define TUNER_BER		LCD_DATADIR "tuner_ber"
 
 #define FLAG_LCD4LINUX		"/tmp/.lcd4linux"
 #define PIDFILE			"/tmp/lcd4linux.pid"
@@ -1020,6 +1024,29 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 		WriteFile(DURATION, (std::string)Duration);
 		strcpy(m_Duration, Duration);
 	}
+
+	int sig = 100 * (CFEManager::getInstance()->getLiveFE()->getSignalStrength() & 0xFFFF) >> 16;
+	int snr = 100 * (CFEManager::getInstance()->getLiveFE()->getSignalNoiseRatio() & 0xFFFF) >> 16;
+	int ber = 100 * (CFEManager::getInstance()->getLiveFE()->getBitErrorRate() & 0xFFFF) >> 16;
+
+	if (sig < 0)
+		sig = 0;
+	else if (sig > 100)
+		sig = 100;
+
+	if (snr < 0)
+		snr = 0;
+	else if (snr > 100)
+		snr = 100;
+
+	if (ber < 0)
+		ber = 0;
+	else if (ber > 100)
+		ber = 100;
+
+	WriteFile(TUNER_SIG, to_string(sig));
+	WriteFile(TUNER_SNR, to_string(snr));
+	WriteFile(TUNER_BER, to_string(ber));
 }
 
 /* ----------------------------------------------------------------- */
