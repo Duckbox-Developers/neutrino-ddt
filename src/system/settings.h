@@ -147,6 +147,11 @@ struct SNeutrinoTheme
 	int colored_events_channellist;
 	int colored_events_infobar;
 
+	unsigned char channellist_Description_Text_alpha;
+	unsigned char channellist_Description_Text_red;
+	unsigned char channellist_Description_Text_green;
+	unsigned char channellist_Description_Text_blue;
+
 	unsigned char clock_Digit_alpha;
 	unsigned char clock_Digit_red;
 	unsigned char clock_Digit_green;
