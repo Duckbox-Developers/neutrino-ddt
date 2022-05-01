@@ -71,6 +71,9 @@ extern cAudio *audioDecoder;
 
 extern CRemoteControl *g_RemoteControl;	/* neutrino.cpp */
 
+bool vmode;
+int fypos;
+
 CStreamInfo2::CStreamInfo2() : fader(g_settings.theme.menu_Content_alpha)
 {
 	frameBuffer = CFrameBuffer::getInstance();
@@ -116,6 +119,10 @@ CStreamInfo2::CStreamInfo2() : fader(g_settings.theme.menu_Content_alpha)
 	dmxbuf = NULL;
 	probebuf = NULL;
 	probe_thread = 0;
+
+	paintCASystem(0, 0, true);
+	vmode = true;
+	fypos = -8192;
 }
 
 CStreamInfo2::~CStreamInfo2()
@@ -577,6 +584,13 @@ int CStreamInfo2::doSignalStrengthLoop()
 		else if (msg == (neutrino_msg_t) g_settings.key_screenshot)
 		{
 			CNeutrinoApp::getInstance()->handleMsg(msg, data);
+			continue;
+		}
+		else if ((msg == CRCInput::RC_info || msg == CRCInput::RC_help) && ((unsigned int) fypos + box_h2 > frameBuffer->getScreenHeight()))
+		{
+			vmode = !vmode;
+			paint(paint_mode);
+			repaint_bitrate = true;
 			continue;
 		}
 
@@ -1042,6 +1056,7 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 	r.key = r.val = "";
 	v.push_back(r);
 
+	// video
 	if (mp)
 	{
 		std::string details(" ");
@@ -1137,7 +1152,7 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 			    (u_int) (channel->getChannelID() >> 16) & 0xFFFF,
 			    (u_int) cc->getSatellitePosition());
 
-		//create E2 filename2
+			//create E2 filename2
 			snprintf(e2filename2, sizeof(e2filename2), "1_0_%X_%X_%X_%X_%X0000_0_0_0",
 			    (u_int) 1,
 			    (u_int) channel->getChannelID() & 0xFFFF,
@@ -1162,96 +1177,99 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 		v.push_back(r);
 	}
 
-	// empty line
-	r.key = r.val = "";
-	r.f   = g_FixedFont[font_info];
-	v.push_back(r);
-
-	if (!mp)
+	if (vmode)
 	{
-		// onid
-		r.key = "ONID: ";
-		i = channel->getOriginalNetworkId();
-		snprintf(buf, sizeof(buf), "0x%04X (%i)", i, i);
-		r.val = buf;
-		r.f   = g_FixedFont[font_small];
+		// empty line
+		r.key = r.val = "";
+		r.f   = g_FixedFont[font_info];
 		v.push_back(r);
 
-		// tsid
-		r.key = "TSID: ";
-		i = channel->getTransportStreamId();
-		snprintf(buf, sizeof(buf), "0x%04X (%i)", i, i);
-		r.val = buf;
-		r.f   = g_FixedFont[font_small];
-		v.push_back(r);
-
-		// sid
-		r.key = "SID: ";
-		i = channel->getServiceId();
-		snprintf(buf, sizeof(buf), "0x%04X (%i)", i, i);
-		r.val = buf;
-		r.f   = g_FixedFont[font_small];
-		v.push_back(r);
-
-		// pmtpid
-		r.key = "PMT PID: ";
-		i = channel->getPmtPid();
-		pmt_version = channel->getPmtVersion();
-		snprintf(buf, sizeof(buf), "0x%04X (%i) [0x%02X]", i, i, pmt_version);
-		r.val = buf;
-		r.f   = g_FixedFont[font_small];
-		v.push_back(r);
-
-		//vtxtpid
-		if (g_RemoteControl->current_PIDs.PIDs.vtxtpid)
+		if (!mp)
 		{
-			r.key = "VT PID: ";
-			i = g_RemoteControl->current_PIDs.PIDs.vtxtpid;
+			// onid
+			r.key = "ONID: ";
+			i = channel->getOriginalNetworkId();
+			snprintf(buf, sizeof(buf), "0x%04X (%i)", i, i);
+			r.val = buf;
+			r.f   = g_FixedFont[font_small];
+			v.push_back(r);
+
+			// tsid
+			r.key = "TSID: ";
+			i = channel->getTransportStreamId();
+			snprintf(buf, sizeof(buf), "0x%04X (%i)", i, i);
+			r.val = buf;
+			r.f   = g_FixedFont[font_small];
+			v.push_back(r);
+
+			// sid
+			r.key = "SID: ";
+			i = channel->getServiceId();
+			snprintf(buf, sizeof(buf), "0x%04X (%i)", i, i);
+			r.val = buf;
+			r.f   = g_FixedFont[font_small];
+			v.push_back(r);
+
+			// pmtpid
+			r.key = "PMT PID: ";
+			i = channel->getPmtPid();
+			pmt_version = channel->getPmtVersion();
+			snprintf(buf, sizeof(buf), "0x%04X (%i) [0x%02X]", i, i, pmt_version);
+			r.val = buf;
+			r.f   = g_FixedFont[font_small];
+			v.push_back(r);
+
+			//vtxtpid
+			if (g_RemoteControl->current_PIDs.PIDs.vtxtpid)
+			{
+				r.key = "VT PID: ";
+				i = g_RemoteControl->current_PIDs.PIDs.vtxtpid;
+				snprintf(buf, sizeof(buf), "0x%04X (%i)", i, i);
+				r.val = buf;
+				r.f   = g_FixedFont[font_small];
+				v.push_back(r);
+			}
+		}
+
+		// video pid
+		if (g_RemoteControl->current_PIDs.PIDs.vpid)
+		{
+			r.key = "Video PID: ";
+			i = g_RemoteControl->current_PIDs.PIDs.vpid;
 			snprintf(buf, sizeof(buf), "0x%04X (%i)", i, i);
 			r.val = buf;
 			r.f   = g_FixedFont[font_small];
 			v.push_back(r);
 		}
-	}
 
-	// video pid
-	if (g_RemoteControl->current_PIDs.PIDs.vpid)
-	{
-		r.key = "Video PID: ";
-		i = g_RemoteControl->current_PIDs.PIDs.vpid;
-		snprintf(buf, sizeof(buf), "0x%04X (%i)", i, i);
-		r.val = buf;
-		r.f   = g_FixedFont[font_small];
-		v.push_back(r);
-	}
-
-	// audio pid(s)
-	if (!g_RemoteControl->current_PIDs.APIDs.empty())
-	{
-		for (unsigned int li = 0; li < g_RemoteControl->current_PIDs.APIDs.size(); li++)
+		// audio pid(s)
+		if (!g_RemoteControl->current_PIDs.APIDs.empty())
 		{
-			r.key = li ? "" : "Audio PID(s): ";
-			i = g_RemoteControl->current_PIDs.APIDs[li].pid;
-			std::string strpid = to_string(i);
-			std::string details(" ");
-			for (std::vector<std::map<std::string, std::string> >::iterator it = streamdata.begin(); it != streamdata.end(); ++it)
+			for (unsigned int li = 0; li < g_RemoteControl->current_PIDs.APIDs.size(); li++)
 			{
-				if ((*it)["pid"] == strpid)
+				r.key = li ? "" : "Audio PID(s): ";
+				i = g_RemoteControl->current_PIDs.APIDs[li].pid;
+				std::string strpid = to_string(i);
+				std::string details(" ");
+				for (std::vector<std::map<std::string, std::string> >::iterator it = streamdata.begin(); it != streamdata.end(); ++it)
 				{
-					details = (*it)["language"];
-					if (details != " ")
-						details += ", ";
-					details += (*it)["codec"];
-					break;
+					if ((*it)["pid"] == strpid)
+					{
+						details = (*it)["language"];
+						if (details != " ")
+							details += ", ";
+						details += (*it)["codec"];
+						break;
+					}
 				}
+				if (details == " ")
+					details.clear();
+				snprintf(buf, sizeof(buf), "0x%04X (%i)%s", i, i, details.c_str());
+				r.val = buf;
+				r.col = (li == g_RemoteControl->current_PIDs.PIDs.selected_apid) ? COL_MENUCONTENT_TEXT : COL_MENUCONTENTINACTIVE_TEXT;
+				r.f   = g_FixedFont[font_small];
+				v.push_back(r);
 			}
-			if (details == " ")
-				details.clear();
-			snprintf(buf, sizeof(buf), "0x%04X (%i)%s", i, i, details.c_str());
-			r.val = buf;
-			r.col = (li == g_RemoteControl->current_PIDs.PIDs.selected_apid) ? COL_MENUCONTENT_TEXT : COL_MENUCONTENTINACTIVE_TEXT;
-			r.f   = g_FixedFont[font_small];
-			v.push_back(r);
 		}
 	}
 
@@ -1273,17 +1291,27 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 	if (box_h == 0)
 		box_h = ypos - ypos1;
 	yypos = ypos;
+	if (fypos == -8192)
+		fypos = yypos;
 
-	if (!mp)
+	if (!mp && ((unsigned int) ypos + box_h2 <= frameBuffer->getScreenHeight() || !vmode))
 		paintCASystem(xpos, ypos);
+
+	if ((unsigned int) ypos + box_h2 > frameBuffer->getScreenHeight()) {
+		int icon_w = 0;
+		int icon_h = 0;
+		frameBuffer->getIconSize(NEUTRINO_ICON_FILE, &icon_w, &icon_h);
+		frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_INFO, xpos, frameBuffer->getScreenHeight() - icon_h * 2);
+		g_FixedFont[font_small]->RenderString(xpos + icon_w * 2, frameBuffer->getScreenHeight() - icon_h / 1.25, box_width - spaceoffset, g_Locale->getText(LOCALE_STREAMINFO_CASYSTEMS), COL_MENUCONTENT_TEXT);
+	}
 }
 
 #define NUM_CAIDS 13
-void CStreamInfo2::paintCASystem(int xpos, int ypos)
+void CStreamInfo2::paintCASystem(int xpos, int ypos, bool fake)
 {
 	int ypos1 = ypos;
 
-	if (box_h2 > 0)
+	if (box_h2 > 0 && !fake)
 		frameBuffer->paintBoxRel(0, ypos, box_width, box_h2, COL_MENUCONTENT_PLUS_0);
 
 	std::string casys[NUM_CAIDS] = {"Irdeto:", "Betacrypt:", "Seca:", "Viaccess:", "Nagra:", "Conax: ", "Cryptoworks:", "Videoguard:", "Biss:", "DreCrypt:", "PowerVU:", "Tandberg:","Verimatrix:"};
@@ -1379,7 +1407,8 @@ void CStreamInfo2::paintCASystem(int xpos, int ypos)
 				ypos += sheight;
 				std::string casys_locale(g_Locale->getText(LOCALE_STREAMINFO_CASYSTEMS));
 				casys_locale += ":";
-				g_FixedFont[font_small]->RenderString(xpos, ypos, box_width, casys_locale, COL_MENUCONTENT_TEXT);
+				if (!fake)
+					g_FixedFont[font_small]->RenderString(xpos, ypos, box_width, casys_locale, COL_MENUCONTENT_TEXT);
 				cryptsystems = false;
 			}
 			ypos += sheight;
@@ -1397,11 +1426,13 @@ void CStreamInfo2::paintCASystem(int xpos, int ypos)
 					if (1 == sscanf(casys[ca_id].substr(last_pos, pos - last_pos).c_str(), "%X", &id) && acaid == id)
 						col = COL_MENUCONTENT_TEXT;
 				}
-				g_FixedFont[font_small]->RenderString(xpos + width_txt, ypos, box_width, casys[ca_id].substr(last_pos, pos - last_pos), col);
+				if (!fake)
+					g_FixedFont[font_small]->RenderString(xpos + width_txt, ypos, box_width, casys[ca_id].substr(last_pos, pos - last_pos), col);
 				if (index == 0)
 					width_txt = spaceoffset;
 				else
-					width_txt += g_FixedFont[font_small]->getRenderWidth(casys[ca_id].substr(last_pos, pos - last_pos)) + 10;
+					if (!fake)
+						width_txt += g_FixedFont[font_small]->getRenderWidth(casys[ca_id].substr(last_pos, pos - last_pos)) + 10;
 				index++;
 				if (index > 5)
 					break;
