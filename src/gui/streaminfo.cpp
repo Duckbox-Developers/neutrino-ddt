@@ -1297,7 +1297,7 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 	if (!mp && ((unsigned int) ypos + box_h2 <= frameBuffer->getScreenHeight() || !vmode))
 		paintCASystem(xpos, ypos);
 
-	if ((unsigned int) ypos + box_h2 > frameBuffer->getScreenHeight()) {
+	if ((unsigned int) fypos + box_h2 > frameBuffer->getScreenHeight()) {
 		int icon_w = 0;
 		int icon_h = 0;
 		frameBuffer->getIconSize(NEUTRINO_ICON_FILE, &icon_w, &icon_h);
