@@ -1300,9 +1300,14 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 	if ((unsigned int) fypos + box_h2 > frameBuffer->getScreenHeight()) {
 		int icon_w = 0;
 		int icon_h = 0;
+		char btndesc[128];
 		frameBuffer->getIconSize(NEUTRINO_ICON_FILE, &icon_w, &icon_h);
 		frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_INFO, xpos, frameBuffer->getScreenHeight() - icon_h * 2);
-		g_FixedFont[font_small]->RenderString(xpos + icon_w * 2, frameBuffer->getScreenHeight() - icon_h / 1.25, box_width - spaceoffset, g_Locale->getText(LOCALE_STREAMINFO_CASYSTEMS), COL_MENUCONTENT_TEXT);
+		if (vmode)
+			sprintf(btndesc, "%s", g_Locale->getText(LOCALE_STREAMINFO_CASYSTEMS));
+		else
+			sprintf(btndesc, "%s/%s", g_Locale->getText(LOCALE_MAINSETTINGS_VIDEO), g_Locale->getText(LOCALE_TIMERLIST_APIDS));
+		g_FixedFont[font_small]->RenderString(xpos + icon_w * 2, frameBuffer->getScreenHeight() - icon_h / 1.25, box_width - spaceoffset, btndesc, COL_MENUCONTENT_TEXT);
 	}
 }
 
