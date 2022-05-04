@@ -589,6 +589,8 @@ int CStreamInfo2::doSignalStrengthLoop()
 		else if ((msg == CRCInput::RC_info || msg == CRCInput::RC_help) && ((unsigned int) fypos + box_h2 > frameBuffer->getScreenHeight()))
 		{
 			vmode = !vmode;
+			delete signalbox;
+			signalbox = NULL;
 			paint(paint_mode);
 			repaint_bitrate = true;
 			continue;
