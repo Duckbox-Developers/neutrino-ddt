@@ -151,7 +151,6 @@ int CAudioSetup::showAudioSetup()
 
 	CMenuOptionChooser *as_oj_avsync = NULL;
 	CMenuOptionNumberChooser *as_oj_vsteps = NULL;
-	CMenuOptionNumberChooser *st = NULL;
 
 	//av synch
 	as_oj_avsync = new CMenuOptionChooser(LOCALE_AUDIOMENU_AVSYNC, &g_settings.avsync, AUDIOMENU_AVSYNC_OPTIONS, AUDIOMENU_AVSYNC_OPTION_COUNT, true, audioSetupNotifier);
@@ -197,7 +196,6 @@ int CAudioSetup::showAudioSetup()
 	audioSettings->addItem(GenericMenuSeparatorLine);
 	audioSettings->addItem(as_oj_avsync);
 	audioSettings->addItem(as_oj_vsteps);
-	audioSettings->addItem(st);
 	//---------------------------------------------------------
 
 #if 0
