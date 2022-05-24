@@ -151,6 +151,8 @@ audiomenu.volume_adjustment Channel specific volume adjustment
 audiomenu.volume_adjustment_ac3 AC3 streams
 audiomenu.volume_adjustment_clear Clear saved values
 audiomenu.volume_adjustment_pcm PCM streams
+audiomenu.volume_last_used last used
+audiomenu.volume_start Start volume
 audiomenu.volume_step Volume step
 audioplayer.add Add
 audioplayer.add_ic Icecast
@@ -1035,6 +1037,7 @@ menu.hint_audio_dd Auto-switch to DolbyDigital audio pid,\nif available
 menu.hint_audio_dts Pass DTS audio tracks unchanged
 menu.hint_audio_hdmi_dd DolbyDigital over HDMI: off - decoded\nauto  if supported by device, force
 menu.hint_audio_spdif_dd DolbyDigital over optical output
+menu.hint_audio_volstart Always set selected volume value on boot
 menu.hint_audio_volstep Volume +/- keys increase/decrease step
 menu.hint_audioplayer_defdir Default audioplayer directory
 menu.hint_audioplayer_follow Move playlist selected pointer\nto current playing song
