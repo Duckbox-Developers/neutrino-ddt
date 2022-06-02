@@ -426,9 +426,12 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	if (g_settings.video_Format > 2)
 		g_settings.video_Format = 2;
 	g_settings.video_43mode = configfile.getInt32("video_43mode", DISPLAY_AR_MODE_LETTERBOX);
+
 	g_settings.current_volume = g_settings.hdmi_cec_volume ? 100 : configfile.getInt32("current_volume", 100);
 	g_settings.current_volume_step = configfile.getInt32("current_volume_step", 2);
 	g_settings.start_volume = g_settings.hdmi_cec_volume ? 100 : configfile.getInt32("start_volume", -1);
+	if (g_settings.start_volume >= 0)
+		g_settings.current_volume = g_settings.hdmi_cec_volume ? 100 : g_settings.start_volume;
 
 #if HAVE_SH4_HARDWARE
 	g_settings.audio_mixer_volume_analog = configfile.getInt32("audio_mixer_volume_analog", 50);
