@@ -31,7 +31,6 @@
 #include <zapit/zapit.h>
 #include <zapit/getservices.h>
 #include <eitd/sectionsd.h>
-#include <cs_api.h>
 #include <system/configure_network.h>
 #include <hardware_caps.h>
 

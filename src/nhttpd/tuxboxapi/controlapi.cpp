@@ -32,7 +32,6 @@
 #include <eitd/sectionsd.h>
 #include <configfile.h>
 #include <system/configure_network.h>
-#include <cs_api.h>
 #include <global.h>
 #include <gui/plugins.h>//for relodplugins
 #include <neutrino.h>

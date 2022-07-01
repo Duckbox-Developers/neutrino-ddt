@@ -26,7 +26,6 @@
 #include <neutrino.h>
 #include "cc_draw.h"
 #include "cc_timer.h"
-#include <cs_api.h>
 #include <driver/pictureviewer/pictureviewer.h>
 #include <system/debug.h>
 extern CPictureViewer *g_PicViewer;
@@ -420,7 +419,7 @@ bool CCDraw::clearFbGradientData()
 			if (v_fbdata[i].gradient_data->boxBuf)
 			{
 				dprintf(DEBUG_INFO, "\033[33m[CCDraw]\t[%s - %d], clean up boxBuf     \t %p...\033[0m\n", __func__, __LINE__, v_fbdata[i].gradient_data->boxBuf);
-				cs_free_uncached(v_fbdata[i].gradient_data->boxBuf);
+				free(v_fbdata[i].gradient_data->boxBuf);
 				v_fbdata[i].gradient_data->boxBuf = NULL;
 			}
 			dprintf(DEBUG_INFO, "\033[33m[CCDraw]\t[%s - %d], clean up gradient data \t %p...\033[0m\n", __func__, __LINE__, v_fbdata[i].gradient_data);

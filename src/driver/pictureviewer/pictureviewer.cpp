@@ -12,7 +12,6 @@
 #include <sys/stat.h>
 #include <curl/curl.h>
 #include <errno.h>
-#include <cs_api.h>
 #include <sys/sysinfo.h>
 
 #ifdef FBV_SUPPORT_GIF
@@ -491,14 +490,14 @@ void CPictureViewer::showBusy(int sx, int sy, int width, char r, char g, char b)
 	size_t bufsize = width * width * cpp;
 	if (!checkfreemem(bufsize))
 	{
-		cs_free_uncached(fb_buffer);
+		free(fb_buffer);
 		return;
 	}
 	m_busy_buffer = (unsigned char *) malloc(bufsize);
 	if (m_busy_buffer == NULL)
 	{
 		dprintf(DEBUG_NORMAL,  "[CPictureViewer] [%s - %d] Error: malloc\n", __func__, __LINE__);
-		cs_free_uncached(fb_buffer);
+		free(fb_buffer);
 		return;
 	}
 	busy_buffer_wrk = m_busy_buffer;
@@ -518,7 +517,7 @@ void CPictureViewer::showBusy(int sx, int sy, int width, char r, char g, char b)
 	m_busy_y = sy;
 	m_busy_width = width;
 	m_busy_cpp = cpp;
-	cs_free_uncached(fb_buffer);
+	free(fb_buffer);
 	CFrameBuffer::getInstance()->blit();
 	//  dbout("Show Busy}\n");
 }
@@ -909,7 +908,7 @@ bool CPictureViewer::DisplayLogo(uint64_t channel_id, int posx, int posy, int wi
 		if (data)
 		{
 			CFrameBuffer::getInstance()->blit2FB(data, width, height, posx, posy);
-			cs_free_uncached(data);
+			free(data);
 		}
 #endif
 	}
@@ -959,7 +958,7 @@ bool CPictureViewer::DisplayImage(const std::string &name, int posx, int posy, i
 		if (data)
 		{
 			frameBuffer->blit2FB(data, width, height, posx, posy);
-			cs_free_uncached(data);
+			free(data);
 			return true;
 		}
 	}

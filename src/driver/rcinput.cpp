@@ -61,7 +61,6 @@
 #include <timerd/timermanager.h>
 #include <timerdclient/timerdclient.h>
 #include <sectionsdclient/sectionsdclient.h>
-#include <cs_api.h>
 
 #if HAVE_SH4_HARDWARE
 #include <gui/cec_setup.h>
