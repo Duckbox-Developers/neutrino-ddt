@@ -2393,8 +2393,8 @@ int CNeutrinoApp::run(int argc, char **argv)
 	CmdParser(argc, argv);
 
 TIMER_START();
-	cs_api_init();
-	cs_register_messenger(CSSendMessage);
+	hal_api_init();
+	hal_register_messenger(CSSendMessage);
 
 	g_info.hw_caps = get_hwcaps();
 
@@ -5023,7 +5023,7 @@ void stop_daemons(bool stopall, bool for_flash)
 			powerManager->Close();
 			delete powerManager;
 		}
-		cs_deregister_messenger();
+		hal_deregister_messenger();
 	}
 
 	if (for_flash) {
@@ -5040,7 +5040,7 @@ void stop_video()
 	delete videoDecoder;
 	delete videoDemux;
 	delete CFrameBuffer::getInstance();
-	cs_api_exit();
+	hal_api_exit();
 }
 
 void sighandler (int signum)
