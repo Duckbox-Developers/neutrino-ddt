@@ -2065,7 +2065,6 @@ void CNeutrinoApp::SetChannelMode(int newmode)
 /**************************************************************************************
 *          CNeutrinoApp -  run, the main runloop                                      *
 **************************************************************************************/
-extern int cnxt_debug;
 extern int sections_debug;
 extern int zapit_debug;
 
@@ -2095,9 +2094,6 @@ void CNeutrinoApp::CmdParser(int argc, char **argv)
 			dprintf(DEBUG_NORMAL, "set debuglevel: %d\n", dl);
 			setDebugLevel(dl);
 			x++;
-		}
-		else if ((!strcmp(argv[x], "-xd"))) {
-			cnxt_debug = 1;
 		}
 		else if ((!strcmp(argv[x], "-sd"))) {
 			int dl = 2;
