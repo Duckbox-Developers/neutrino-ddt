@@ -65,7 +65,6 @@
 #include <zapit/client/zapittools.h>
 #include <eitd/sectionsd.h>
 #include <timerdclient/timerdclient.h>
-#include <cs_api.h>
 
 extern "C" {
 #include <libavformat/avformat.h>

@@ -68,7 +68,6 @@
 #include <hardware/audio.h>
 #include <hardware/video.h>
 #include <hardware/dmx.h>
-#include <cs_api.h>
 #include <pwrmngr.h>
 #include <libdvbsub/dvbsub.h>
 #include <libtuxtxt/teletext.h>

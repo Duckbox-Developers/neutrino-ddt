@@ -51,7 +51,6 @@
 #include <system/debug.h>
 #include <global.h>
 #include <hardware/video.h>
-#include <cs_api.h>
 
 #ifdef ENABLE_GRAPHLCD
 #include <driver/nglcd.h>
@@ -478,10 +477,10 @@ fb_pixel_t *CFrameBuffer::paintBoxRel2Buf(const int dx, const int dy, const int 
 	fb_pixel_t *pixBuf = buf;
 	if (pixBuf == NULL)
 	{
-		pixBuf = (fb_pixel_t *) cs_malloc_uncached(w_align * dy * sizeof(fb_pixel_t));
+		pixBuf = (fb_pixel_t *) malloc(w_align * dy * sizeof(fb_pixel_t));
 		if (pixBuf == NULL)
 		{
-			dprintf(DEBUG_NORMAL, "[%s #%d] Error cs_malloc_uncached\n", __func__, __LINE__);
+			dprintf(DEBUG_NORMAL, "[%s #%d] Error malloc\n", __func__, __LINE__);
 			return NULL;
 		}
 	}
@@ -605,7 +604,7 @@ fb_pixel_t *CFrameBuffer::paintBoxRel(const int x, const int y, const int dx, co
 		return boxBuf;
 	}
 
-	cs_free_uncached(boxBuf);
+	free(boxBuf);
 
 	checkFbArea(x, y, dx, dy, false);
 	return NULL;
@@ -913,7 +912,7 @@ bool CFrameBuffer::paintIcon(const std::string &filename, const int x, const int
 
 		int dsize = width * height * sizeof(fb_pixel_t);
 
-		tmpIcon.data = (fb_pixel_t *) cs_malloc_uncached(dsize);
+		tmpIcon.data = (fb_pixel_t *) malloc(dsize);
 		data = tmpIcon.data;
 
 		unsigned char pixbuf[768];
@@ -991,7 +990,7 @@ void CFrameBuffer::clearIconCache()
 	for (it = icon_cache.begin(); it != icon_cache.end(); ++it)
 	{
 		/* printf("FB: delete cached icon %s: %x\n", it->first.c_str(), (int) it->second.data); */
-		cs_free_uncached(it->second.data);
+		free(it->second.data);
 	}
 	icon_cache.clear();
 }
@@ -1496,10 +1495,10 @@ void *CFrameBuffer::int_convertRGB2FB(unsigned char *rgbbuff, unsigned long x, u
 
 	count = x * y;
 
-	fbbuff = (unsigned int *) cs_malloc_uncached(count * sizeof(unsigned int));
+	fbbuff = (unsigned int *) malloc(count * sizeof(unsigned int));
 	if (fbbuff == NULL)
 	{
-		printf("convertRGB2FB%s: Error: cs_malloc_uncached\n", ((alpha) ? " (Alpha)" : ""));
+		printf("convertRGB2FB%s: Error: malloc\n", ((alpha) ? " (Alpha)" : ""));
 		return NULL;
 	}
 
@@ -1707,7 +1706,7 @@ void CFrameBuffer::displayRGB(unsigned char *rgbbuff, int x_size, int y_size, in
 		CFrameBuffer::getInstance()->Clear();
 
 	blit2FB(fbbuff, x_size, y_size, x_offs, y_offs, x_pan, y_pan);
-	cs_free_uncached(fbbuff);
+	free(fbbuff);
 }
 
 // ## AudioMute / Clock ######################################

@@ -61,8 +61,6 @@
 
 #include <system/set_threadname.h>
 
-#include <cs_api.h>
-
 #if (LIBAVCODEC_VERSION_MAJOR > 55)
 #define	av_free_packet av_packet_unref
 #else

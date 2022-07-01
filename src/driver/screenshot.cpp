@@ -44,7 +44,6 @@
 #include <eitd/sectionsd.h>
 
 #include <hardware/video.h>
-#include <cs_api.h>
 #include <driver/screenshot.h>
 #include <system/set_threadname.h>
 
@@ -240,7 +239,7 @@ bool CScreenShot::SaveFile()
 			break;
 	}
 
-	cs_free_uncached((void *) pixel_data);
+	free((void *) pixel_data);
 	return ret;
 }
 
