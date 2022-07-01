@@ -41,7 +41,6 @@
 #include <system/debug.h>
 #include <gui/color_custom.h>
 #include <system/helpers.h>
-#include <cs_api.h>
 
 #include <unistd.h>
 #include <sys/ioctl.h>
@@ -1050,12 +1049,8 @@ void CTestMenu::showRecords()
 /* shows entries for proxy settings */
 int CTestMenu::showTestMenu()
 {
-	unsigned int system_rev = cs_get_revision();
-	
 	//init
-	char rev[255];
-	sprintf(rev, "Test menu, System revision %d %s", system_rev, system_rev == 0 ? "WARNING - INVALID" : "");
-	CMenuWidget w_test(rev /*"Test menu"*/, NEUTRINO_ICON_INFO, width, MN_WIDGET_ID_TESTMENU);
+	CMenuWidget w_test("Test menu", NEUTRINO_ICON_INFO, width, MN_WIDGET_ID_TESTMENU);
 	w_test.addIntroItems("Subhead");
 	
 	//hardware

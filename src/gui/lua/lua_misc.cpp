@@ -31,7 +31,6 @@
 #include <driver/volume.h>
 #include <gui/audiomute.h>
 #include <gui/infoclock.h>
-#include <cs_api.h>
 #include <neutrino.h>
 
 #include "luainstance.h"
@@ -290,10 +289,8 @@ int CLuaInstMisc::GetRevision(lua_State *L)
 	}
 	/* CLuaMisc *D = MiscCheckData(L, 1);
 	if (!D) return 0; */
-	unsigned int rev = 0;
 	std::string hw   = "";
-	rev = cs_get_revision();
-	lua_pushinteger(L, rev);
+	lua_pushinteger(L, 1);
 	lua_pushstring(L, hw.c_str());
 	return 2;
 }

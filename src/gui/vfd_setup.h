@@ -49,8 +49,6 @@
 		int brightnessstandby;
 		int brightnessdeepstandby;
 
-		bool vfd_enabled;
-
 	public:
 		CVfdSetup();
 		~CVfdSetup();
