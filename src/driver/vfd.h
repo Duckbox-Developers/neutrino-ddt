@@ -43,7 +43,7 @@
 #include <pthread.h>
 #include <string>
 
-#include <vfd_frontpanel.h>
+#include "driver/vfd_frontpanel.h"
 
 class CVFD
 {
