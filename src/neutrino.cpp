@@ -2077,7 +2077,6 @@ void CNeutrinoApp::SetChannelMode(int newmode)
 /**************************************************************************************
 *          CNeutrinoApp -  run, the main runloop                                      *
 **************************************************************************************/
-extern int cnxt_debug;
 extern int sections_debug;
 extern int zapit_debug;
 
@@ -2107,9 +2106,6 @@ void CNeutrinoApp::CmdParser(int argc, char **argv)
 			dprintf(DEBUG_NORMAL, "set debuglevel: %d\n", dl);
 			setDebugLevel(dl);
 			x++;
-		}
-		else if ((!strcmp(argv[x], "-xd"))) {
-			cnxt_debug = 1;
 		}
 		else if ((!strcmp(argv[x], "-sd"))) {
 			int dl = 2;
@@ -2405,8 +2401,8 @@ int CNeutrinoApp::run(int argc, char **argv)
 	CmdParser(argc, argv);
 
 TIMER_START();
-	cs_api_init();
-	cs_register_messenger(CSSendMessage);
+	hal_api_init();
+	hal_register_messenger(CSSendMessage);
 
 	g_info.hw_caps = get_hwcaps();
 
@@ -5035,7 +5031,7 @@ void stop_daemons(bool stopall, bool for_flash)
 			powerManager->Close();
 			delete powerManager;
 		}
-		cs_deregister_messenger();
+		hal_deregister_messenger();
 	}
 
 	if (for_flash) {
@@ -5052,7 +5048,7 @@ void stop_video()
 	delete videoDecoder;
 	delete videoDemux;
 	delete CFrameBuffer::getInstance();
-	cs_api_exit();
+	hal_api_exit();
 }
 
 void sighandler (int signum)
