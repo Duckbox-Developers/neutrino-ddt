@@ -1437,7 +1437,7 @@ int CChannelList::numericZap(int key)
 			// do nothing
 		}
 		else if (CRCInput::isNumeric(msg)) {
-			if (pos == 4) {
+			if (pos == to_string((*chanlist).size()).size()) {
 				chn = 0;
 				pos = 1;
 			} else {
