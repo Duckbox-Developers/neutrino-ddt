@@ -1284,30 +1284,6 @@ int declClose(PROLOG_STATE *state,
 	}
 }
 
-#if 0
-
-static
-int ignore(PROLOG_STATE *state,
-	int tok,
-	const char *ptr,
-	const char *end,
-	const ENCODING *enc)
-{
-	(void)ptr;
-	(void)end;
-	(void)enc;
-
-	switch (tok)
-	{
-		case XML_TOK_DECL_CLOSE:
-			state->handler = internalSubset;
-			return 0;
-		default:
-			return XML_ROLE_NONE;
-	}
-}
-#endif
-
 static
 int error(PROLOG_STATE *state,
 	int tok,

@@ -212,14 +212,6 @@ inline signed short CMP3Dec::MadFixedToSShort(const mad_fixed_t Fixed, bool left
 
 	dither->random = random;
 
-	/* clip */
-#if 0
-	if (output >= MAD_F_ONE)
-		output = 32767;
-	else if (output < -MAD_F_ONE)
-		output = -32768;
-#endif
-
 	if (output > MAX)
 		output = MAX;
 	else if (output < MIN)
@@ -641,13 +633,6 @@ CBaseDec::RetCode CMP3Dec::Decoder(FILE *InputFp, const int /*OutputFd*/,
 		FrameCount++;
 		if (FrameCount == 1)
 		{
-#if 0
-			if (SetDSP(OutputFd, AFMT_S16_NE, Frame.header.samplerate, 2))
-			{
-				Status = DSPSET_ERR;
-				break;
-			}
-#endif
 			audioDecoder->PrepareClipPlay(2, Frame.header.samplerate, 16, 1);
 
 			if (!meta_data)

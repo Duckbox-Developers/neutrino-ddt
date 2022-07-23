@@ -840,25 +840,12 @@ void *tuxtxt_CacheThread(void * /*arg*/)
 						tuxtxt_cache.current_subpage[magazine] = -1;
 						continue;
 					}
-#if 0	/* ? */
-					b1 &= 3;
-#endif
+
 					b3 &= 7;
 
 					if (tuxtxt_is_dec(tuxtxt_cache.page_receiving)) /* ignore other subpage bits for hex pages */
 					{
-#if 0	/* ? */
-						if (b1 != 0 || b2 != 0)
-						{
-#if TUXTXT_DEBUG
-							printf("TuxTxt <invalid subpage data p%03x %02x %02x %02x %02x>\n", tuxtxt_cache.page_receiving, b1, b2, b3, b4);
-#endif
-							tuxtxt_cache.current_subpage[magazine] = -1;
-							continue;
-						}
-						else
-#endif
-							tuxtxt_cache.current_subpage[magazine] = b3 << 4 | b4;
+						tuxtxt_cache.current_subpage[magazine] = b3 << 4 | b4;
 					}
 					else
 						tuxtxt_cache.current_subpage[magazine] = b4; /* max 16 subpages for hex pages */
@@ -1013,7 +1000,7 @@ void *tuxtxt_CacheThread(void * /*arg*/)
 												12);
 											if (e - a1 < 11)
 												tuxtxt_cache.adip[tuxtxt_cache.flofpages[tuxtxt_cache.current_page[magazine]][l]][e - a1 + 1] = '\0';
-#if 0 //TUXTXT_DEBUG
+#if TUXTXT_DEBUG
 											printf(" %03x/%02x %d %d %d %d %03x %s\n",
 												tuxtxt_cache.current_page[magazine], tuxtxt_cache.current_subpage[magazine],
 												l, a, a1, e,
@@ -1106,7 +1093,7 @@ void *tuxtxt_CacheThread(void * /*arg*/)
 							pageinfo_thread->ext->p26[descode] = (unsigned char *) malloc(13 * 3);
 						if (pageinfo_thread->ext->p26[descode])
 							memmove(pageinfo_thread->ext->p26[descode], &vtxt_row[3], 13 * 3);
-#if 0//TUXTXT_DEBUG
+#if TUXTXT_DEBUG
 						int i, t, m;
 
 						printf("P%03x/%02x %02d/%x",
@@ -1177,7 +1164,7 @@ void *tuxtxt_CacheThread(void * /*arg*/)
 					}
 					else if (packet_number == 30)
 					{
-#if 0//TUXTXT_DEBUG
+#if TUXTXT_DEBUG
 						int i;
 
 						printf("p%03x/%02x %02d/%x ",
@@ -1199,10 +1186,6 @@ void *tuxtxt_CacheThread(void * /*arg*/)
 						tuxtxt_cache.subpage = tuxtxt_cache.current_subpage[magazine];
 				}
 			}
-#if 0
-			else
-				printf("line %d row %X %X, continue\n", line, vtx_rowbyte[0], vtx_rowbyte[1]);
-#endif
 		}
 		pthread_mutex_unlock(&tuxtxt_cache_biglock);
 	}
@@ -1243,7 +1226,7 @@ int tuxtxt_start_thread(int source)
 		tuxtxt_cache.thread_starting = 0;
 		return 0;
 	}
-#if 1//TUXTXT_DEBUG
+#if TUXTXT_DEBUG
 	printf("TuxTxt service started %x\n", tuxtxt_cache.vtxtpid);
 #endif
 	tuxtxt_cache.receiving = 1;
@@ -1259,13 +1242,6 @@ int tuxtxt_stop_thread()
 	/* stop decode-thread */
 	if (tuxtxt_cache.thread_id != 0)
 	{
-#if 0
-		if (pthread_cancel(tuxtxt_cache.thread_id) != 0)
-		{
-			perror("TuxTxt <pthread_cancel>");
-			return 0;
-		}
-#endif
 		stop_cache = 1;
 		if (pthread_join(tuxtxt_cache.thread_id, &tuxtxt_cache.thread_result) != 0)
 		{
@@ -1283,7 +1259,7 @@ int tuxtxt_stop_thread()
 #if HAVE_SH4_HARDWARE
 	clear_inject_queue();
 #endif
-#if 1//TUXTXT_DEBUG
+#if TUXTXT_DEBUG
 	printf("TuxTxt stopped service %x\n", tuxtxt_cache.vtxtpid);
 #endif
 	return 1;

@@ -154,12 +154,6 @@ int COsdHelpers::isVideoSystem1080(int res)
 		return true;
 #endif
 
-#if 0
-	/* for testing only */
-	if (res == VIDEO_STD_720P50)
-		return true;
-#endif
-
 	return false;
 }
 

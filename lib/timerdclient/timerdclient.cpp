@@ -228,24 +228,6 @@ bool CTimerdClient::rescheduleTimerEvent(int eventid, time_t announcediff, time_
 }
 //-------------------------------------------------------------------------
 
-/*
-int CTimerdClient::addTimerEvent(CTimerEventTypes evType, void* data , int min, int hour, int day, int month, CTimerd::CTimerEventRepeat evrepeat)
-{
-	time_t actTime_t;
-	time(&actTime_t);
-	struct tm* actTime = localtime(&actTime_t);
-
-	actTime->tm_min = min;
-	actTime->tm_hour = hour;
-
-	if (day > 0)
-		actTime->tm_mday = day;
-	if (month > 0)
-		actTime->tm_mon = month -1;
-
-	addTimerEvent(evType,true,data,0,mktime(actTime),0);
-}
-*/
 bool CTimerdClient::checkDouble(CTimerd::CTimerEventTypes evType, void *data, time_t announcetime, time_t alarmtime, time_t stoptime,
 	CTimerd::CTimerEventRepeat evrepeat, uint32_t repeatcount)
 {
@@ -288,6 +270,7 @@ bool CTimerdClient::checkDouble(CTimerd::CTimerEventTypes evType, void *data, ti
 	return false;//not double
 }
 //-------------------------------------------------------------------------
+
 int CTimerdClient::addTimerEvent(CTimerd::CTimerEventTypes evType, void *data, time_t announcetime, time_t alarmtime, time_t stoptime,
 	CTimerd::CTimerEventRepeat evrepeat, uint32_t repeatcount, bool forceadd)
 {
@@ -489,9 +472,8 @@ void CTimerdClient::getRecordingSafety(int &pre, int &post)
 		post = 0;
 	}
 }
-
 //-------------------------------------------------------------------------
-//void CTimerdClient::getWeekdaysFromStr(int *rep, const char* str)
+
 void CTimerdClient::getWeekdaysFromStr(CTimerd::CTimerEventRepeat *eventRepeat, std::string &str)
 {
 	if (str.length() < 7)
@@ -514,6 +496,7 @@ void CTimerdClient::getWeekdaysFromStr(CTimerd::CTimerEventRepeat *eventRepeat, 
 	*eventRepeat = (CTimerd::CTimerEventRepeat) rep;
 }
 //-------------------------------------------------------------------------
+
 void CTimerdClient::setWeekdaysToStr(CTimerd::CTimerEventRepeat rep, std::string &str)
 {
 	if (str.length() < 7)
@@ -532,6 +515,7 @@ void CTimerdClient::setWeekdaysToStr(CTimerd::CTimerEventRepeat rep, std::string
 		str = "-------";
 }
 //-------------------------------------------------------------------------
+
 void CTimerdClient::stopTimerEvent(int evId)
 {
 	CTimerdMsg::commandRemoveTimer msgRemoveTimer;
@@ -543,4 +527,3 @@ void CTimerdClient::stopTimerEvent(int evId)
 
 	close_connection();
 }
-

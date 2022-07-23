@@ -705,19 +705,12 @@ CTimeInput::CTimeInput(const neutrino_locale_t Name, std::string *Value, const n
 
 void CTimeInput::onBeforeExec()
 {
-#if 0 //--martii
-	strcpy(value, "= 00:00:00");
-#endif
 }
 
 void CTimeInput::onAfterExec()
 {
-#if 0 //--martii
-	char tmp[10 + 1];
-	strcpy(tmp, value);
-	strcpy(value + 1, tmp + 2);
-#endif
 }
+
 //-----------------------------#################################-------------------------------------------------------
 
 CIntInput::CIntInput(const neutrino_locale_t Name, int *Value, const unsigned int Size, const neutrino_locale_t Hint_1, const neutrino_locale_t Hint_2, CChangeObserver *Observ)

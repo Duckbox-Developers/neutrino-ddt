@@ -74,14 +74,6 @@ void CTimeOSD::Init()
 	timescale.setType(CProgressBar::PB_TIMESCALE);
 }
 
-#if 0 //if hide() or kill() required, it's recommended to use it separately
-CTimeOSD::~CTimeOSD()
-{
-	CComponents::kill();
-	clear();
-}
-#endif
-
 CTimeOSD* CTimeOSD::getInstance()
 {
 	static CTimeOSD* timeOSD = NULL;

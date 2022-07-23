@@ -631,14 +631,6 @@ bool CMiscMenue::changeNotify(const neutrino_locale_t OptionName, void * /*data*
 	{
 		epg_scan->setActive(g_settings.epg_scan_mode != CEpgScan::MODE_OFF /*&& g_settings.epg_save_mode == 0*/);
 	}
-#if 0
-	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_MISCSETTINGS_EPG_SAVE_MODE))
-	{
-		g_settings.epg_scan = CEpgScan::SCAN_FAV;
-		epg_scan->setActive(g_settings.epg_scan_mode != CEpgScan::MODE_OFF && g_settings.epg_save_mode == 0);
-		ret = menu_return::RETURN_REPAINT;
-	}
-#endif
 	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_TMDB_API_KEY))
 	{
 		g_settings.tmdb_enabled = check_tmdb_api_key();

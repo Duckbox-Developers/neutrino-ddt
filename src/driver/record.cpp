@@ -283,11 +283,6 @@ record_error_msg_t CRecordInstance::Start(CZapitChannel *channel)
 	}
 	psi.genpsi(fd);
 
-#if 0
-	if ((StreamPmtPid) && (allpids.PIDs.pmtpid != 0) && (numpids < REC_MAX_APIDS))
-		apids[numpids++] = allpids.PIDs.pmtpid;
-#endif
-
 	if (record == NULL)
 	{
 #if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
@@ -464,9 +459,6 @@ void CRecordInstance::GetPids(CZapitChannel *channel)
 	allpids.PIDs.pmtpid = channel->getPmtPid();
 	allpids.PIDs.selected_apid = channel->getAudioChannelIndex();
 	allpids.PIDs.pcrpid = channel->getPcrPid();
-#if 0 // not needed
-	allpids.PIDs.privatepid = channel->getPrivatePid();
-#endif
 	allpids.APIDs.clear();
 	for (uint32_t  i = 0; i < channel->getAudioChannelCount(); i++)
 	{
@@ -1230,12 +1222,6 @@ bool CRecordManager::Record(const CTimerd::RecordingInfo *const eventinfo, const
 				recmap.insert(recmap_pair_t(inst->GetRecordingId(), inst));
 				if (timeshift)
 					autoshift = true;
-#if 0
-				// mimic old behavior for start/stop menu option chooser, still actual ?
-				t_channel_id live_channel_id = CZapit::getInstance()->GetCurrentChannelID();
-				if (eventinfo->channel_id == live_channel_id)
-					recordingstatus = 1;
-#endif
 #ifdef ENABLE_GRAPHLCD
 				nGLCD::Update();
 #endif
@@ -1992,60 +1978,6 @@ CRecordInstance *CRecordManager::getRecordInstance(std::string file)
 	mutex.unlock();
 	return NULL;
 }
-
-#if 0
-/* should return true, if recordingstatus changed in this function ? */
-bool CRecordManager::doGuiRecord()
-{
-	bool refreshGui = false;
-	std::string recDir;
-
-	t_channel_id live_channel_id = CZapit::getInstance()->GetCurrentChannelID();
-	if (recordingstatus == 1)
-	{
-		bool doRecord = true;
-		printf("%s: start to dir %s\n", __FUNCTION__, recDir.c_str());
-		if (!doRecord || (Record(live_channel_id, recDir.c_str()) == false))
-		{
-			recordingstatus = 0;
-			refreshGui = true;
-		}
-	}
-	else
-	{
-		int recording_id = 0;
-		mutex.lock();
-		CRecordInstance *inst = FindInstance(live_channel_id);
-		if (inst)
-			recording_id = inst->GetRecordingId();
-		mutex.unlock();
-		if (recording_id)
-			g_Timerd->stopTimerEvent(recording_id);
-	}
-	return refreshGui;
-}
-
-bool CRecordManager::changeNotify(const neutrino_locale_t OptionName, void * /*data*/)
-{
-	bool ret = false;
-	if ((ARE_LOCALES_EQUAL(OptionName, LOCALE_MAINMENU_RECORDING_START)) || (ARE_LOCALES_EQUAL(OptionName, LOCALE_MAINMENU_RECORDING)))
-	{
-		/* called after option (recordingstatus) changed and painted
-		 * recordingstatus = 1 -> start live channe, 0 -> stop live channel record */
-		if (g_RemoteControl->is_video_started)
-		{
-			ret =  doGuiRecord();
-		}
-		else
-		{
-			if (recordingstatus)
-				ret = true;
-			recordingstatus = 0;
-		}
-	}
-	return ret;
-}
-#endif
 
 CStreamRec::CStreamRec(const CTimerd::RecordingInfo *const eventinfo, std::string &dir, bool timeshift, bool stream_vtxt_pid, bool stream_pmt_pid, bool stream_subtitle_pids)
 	: CRecordInstance(eventinfo, dir, timeshift, stream_vtxt_pid, stream_pmt_pid, stream_subtitle_pids)

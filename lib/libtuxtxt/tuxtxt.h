@@ -82,19 +82,14 @@ int tv_pip_y;
 
 #define TV43STARTX (ex)
 #define TVENDX (screen_x + screen_w) //ex
-// #define TVENDY (StartY + 25*fontheight)
-// #define TV43WIDTH  (TVENDX - TV43STARTX)
-// #define TV43HEIGHT (TV43WIDTH *9/16)
-// #define TV43STARTY (TVENDY - TV43HEIGHT)
 
-//#define TV169FULLSTARTX (sx+ 8*40) //(sx +(ex +1 - sx)/2)
 #define TV169FULLSTARTX (screen_x + screen_w / 2)
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 #define TV169FULLSTARTY (screen_h / 4)
 #else
 #define TV169FULLSTARTY sy
 #endif
-//#define TV169FULLWIDTH  (ex - sx)/2
+
 #define TV169FULLWIDTH  (screen_w / 2)
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 #define TV169FULLHEIGHT (screen_h / 2)
@@ -102,11 +97,10 @@ int tv_pip_y;
 #define TV169FULLHEIGHT (ey - sy)
 #endif
 #define TOPMENUSTARTX (TV43STARTX+2)
-//#define TOPMENUENDX TVENDX
+
 #define TOPMENUSTARTY StartY
 #define TOPMENUENDY TV43STARTY
 
-//#define TOPMENULINEWIDTH ((TOPMENUENDX-TOPMENU43STARTX+fontwidth_topmenusmall-1)/fontwidth_topmenusmall)
 #define TOPMENUINDENTBLK 0
 #define TOPMENUINDENTGRP 1
 #define TOPMENUINDENTDEF 2
@@ -208,7 +202,7 @@ const char *ObjectType[] =
 
 /* messages */
 #define ShowInfoBar     0
-//#define PageNotFound    1
+
 #define ShowServiceName 2
 #define NoServicesFound 3
 
@@ -399,136 +393,7 @@ const unsigned short int nationaltable7b[14][4] =
 	{ 0x00E4, 0x00F6, 0x00E5, 0x00FC }, /* C SV/FI/HU */
 	{ 0x015F, 0x00F6, 0x00E7, 0x00FC }, /* D    TR    */
 };
-#if 0
-// G2 Charset (0 = Latin, 1 = Cyrillic, 2 = Greek)
-const unsigned short int G2table[3][6 * 16] =
-{
-	{
-		' ', '¡', '¢', '£', '$', '¥', '#', '§', '¤', '\'', '\"', '«', 8592, 8594, 8595, 8593,
-		'°', '±', '²', '³', 'x', 'µ', '¶', '·', '÷', '\'', '\"', '»', '¼', '½', '¾', '¿',
-		' ', '`', '´', 710, 732, '¯', 728, 729, 733, 716, 730, 719, '_', 698, 718, 711,
-		'­', '¹', '®', '©', 8482, 9834, 8364, 8240, 945, ' ', ' ', ' ', 8539, 8540, 8541, 8542,
-		937, 'Æ', 272, 'ª', 294, ' ', 306, 319, 321, 'Ø', 338, 'º', 'Þ', 358, 330, 329,
-		1082, 'æ', 273, 'ð', 295, 305, 307, 320, 322, 'ø', 339, 'ß', 'þ', 359, 951, 0x7F
-	},
-	{
-		' ', '¡', '¢', '£', '$', '¥', ' ', '§', ' ', '\'', '\"', '«', 8592, 8594, 8595, 8593,
-		'°', '±', '²', '³', 'x', 'µ', '¶', '·', '÷', '\'', '\"', '»', '¼', '½', '¾', '¿',
-		' ', '`', '´', 710, 732, '¯', 728, 729, 733, 716, 730, 719, '_', 698, 718, 711,
-		'­', '¹', '®', '©', 8482, 9834, 8364, 8240, 945, 321, 322, 'ß', 8539, 8540, 8541, 8542,
-		'D', 'E', 'F', 'G', 'I', 'J', 'K', 'L', 'N', 'Q', 'R', 'S', 'U', 'V', 'W', 'Z',
-		'd', 'e', 'f', 'g', 'i', 'j', 'k', 'l', 'n', 'q', 'r', 's', 'u', 'v', 'w', 'z'
-	},
-	{
-		' ', 'a', 'b', '£', 'e', 'h', 'i', '§', ':', '\'', '\"', 'k', 8592, 8594, 8595, 8593,
-		'°', '±', '²', '³', 'x', 'm', 'n', 'p', '÷', '\'', '\"', 't', '¼', '½', '¾', 'x',
-		' ', '`', '´', 710, 732, '¯', 728, 729, 733, 716, 730, 719, '_', 698, 718, 711,
-		'?', '¹', '®', '©', 8482, 9834, 8364, 8240, 945, 906, 910, 911, 8539, 8540, 8541, 8542,
-		'C', 'D', 'F', 'G', 'J', 'L', 'Q', 'R', 'S', 'U', 'V', 'W', 'Y', 'Z', 902, 905,
-		'c', 'd', 'f', 'g', 'j', 'l', 'q', 'r', 's', 'u', 'v', 'w', 'y', 'z', 904, 0x7F
-	}
-};
-// cyrillic G0 Charset
-// TODO: different maps for serbian/russian/ukrainian
-const unsigned short int G0tablecyrillic[6 * 16] =
-{
-	' ', '!', '\"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/',
-	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?',
-	1063, 1040, 1041, 1062, 1044, 1045, 1060, 1043, 1061, 1048, 1032, 1050, 1051, 1052, 1053, 1054,
-	1055, 1036, 1056, 1057, 1058, 1059, 1042, 1027, 1033, 1034, 1047, 1035, 1046, 1026, 1064, 1119,
-	1095, 1072, 1073, 1094, 1076, 1077, 1092, 1075, 1093, 1080, 1112, 1082, 1083, 1084, 1085, 1086,
-	1087, 1116, 1088, 1089, 1090, 1091, 1074, 1107, 1113, 1114, 1079, 1115, 1078, 1106, 1096, 0x7F
-};
 
-const unsigned short int nationaltable23[14][2] =
-{
-	{ '#', '¤' }, /* 0          */
-	{ '#', 367 }, /* 1  CS/SK   */
-	{ '£', '$' }, /* 2    EN    */
-	{ '#', 'õ' }, /* 3    ET    */
-	{ 'é', 'ï' }, /* 4    FR    */
-	{ '#', '$' }, /* 5    DE    */
-	{ '£', '$' }, /* 6    IT    */
-	{ '#', '$' }, /* 7  LV/LT   */
-	{ '#', 329 }, /* 8    PL    */
-	{ 'ç', '$' }, /* 9  PT/ES   */
-	{ '#', '¤' }, /* A    RO    */
-	{ '#', 'Ë' }, /* B SR/HR/SL */
-	{ '#', '¤' }, /* C SV/FI/HU */
-	{ '£', 287 }, /* D    TR   ? */
-};
-const unsigned short int nationaltable40[14] =
-{
-	'@', /* 0          */
-	269, /* 1  CS/SK   */
-	'@', /* 2    EN    */
-	352, /* 3    ET    */
-	'à', /* 4    FR    */
-	'§', /* 5    DE    */
-	'é', /* 6    IT    */
-	352, /* 7  LV/LT   */
-	261, /* 8    PL    */
-	'¡', /* 9  PT/ES   */
-	354, /* A    RO    */
-	268, /* B SR/HR/SL */
-	'É', /* C SV/FI/HU */
-	304, /* D    TR    */
-};
-const unsigned short int nationaltable5b[14][6] =
-{
-	{ '[', '\\', ']', '^', '_', '`' }, /* 0          */
-	{ 357, 382, 'ý', 'í', 345, 'é' }, /* 1  CS/SK   */
-	{8592, '½', 8594, 8593, '#', 822 }, /* 2    EN    */
-	{ 'Ä', 'Ö', 381, 'Ü', 'Õ', 353 }, /* 3    ET    */
-	{ 'ë', 'ê', 'ù', 'î', '#', 'è' }, /* 4    FR    */
-	{ 'Ä', 'Ö', 'Ü', '^', '_', '°' }, /* 5    DE    */
-	{ '°', 'ç', 8594, 8593, '#', 'ù' }, /* 6    IT    */
-	{ 'é', 553, 381, 269, 363, 353 }, /* 7  LV/LT   */
-	{ 437, 346, 321, 263, 'ó', 281 }, /* 8    PL    */
-	{ 'á', 'é', 'í', 'ó', 'ú', '¿' }, /* 9  PT/ES   */
-	{ 'Â', 350, 461, 'Î', 305, 355 }, /* A    RO    */
-	{ 262, 381, 272, 352, 'ë', 269 }, /* B SR/HR/SL */
-	{ 'Ä', 'Ö', 'Å', 'Ü', '_', 'é' }, /* C SV/FI/HU */
-	{ 350, 'Ö', 'Ç', 'Ü', 486, 305 }, /* D    TR    */
-};
-const unsigned short int nationaltable7b[14][4] =
-{
-	{ '{', '|', '}', '~' }, /* 0          */
-	{ 'á', 283, 'ú', 353 }, /* 1  CS/SK   */
-	{ '¼', 8214, '¾', '÷' }, /* 2    EN    */
-	{ 'ä', 'ö', 382, 'ü' }, /* 3    ET    */
-	{ 'â', 'ô', 'û', 'ç' }, /* 4    FR    */
-	{ 'ä', 'ö', 'ü', 'ß' }, /* 5    DE    */
-	{ 'à', 'ò', 'è', 'ì' }, /* 6    IT    */
-	{ 261, 371, 382, 303 }, /* 7  LV/LT   */
-	{ 380, 347, 322, 378 }, /* 8    PL    */
-	{ 'ü', 'ñ', 'è', 'à' }, /* 9  PT/ES   */
-	{ 'â', 351, 462, 'î' }, /* A    RO    */
-	{ 263, 382, 273, 353 }, /* B SR/HR/SL */
-	{ 'ä', 'ö', 'å', 'ü' }, /* C SV/FI/HU */
-	{ 351, 'ö', 231, 'ü' }, /* D    TR    */
-};
-
-/* national subsets */
-const char countrystring[] =
-	"          (#$@[\\]^_`{|}~) "   /*  0 no subset specified */
-	"  CS/SK   (#$@[\\]^_`{|}~) "   /*  1 czech, slovak */
-	"    EN    (#$@[\\]^_`{|}~) "   /*  2 english */
-	"    ET    (#$@[\\]^_`{|}~) "   /*  3 estonian */
-	"    FR    (#$@[\\]^_`{|}~) "   /*  4 french */
-	"    DE    (#$@[\\]^_`{|}~) "   /*  5 german */
-	"    IT    (#$@[\\]^_`{|}~) "   /*  6 italian */
-	"  LV/LT   (#$@[\\]^_`{|}~) "   /*  7 latvian, lithuanian */
-	"    PL    (#$@[\\]^_`{|}~) "   /*  8 polish */
-	"  PT/ES   (#$@[\\]^_`{|}~) "   /*  9 portuguese, spanish */
-	"    RO    (#$@[\\]^_`{|}~) "   /* 10 romanian */
-	" SR/HR/SL (#$@[\\]^_`{|}~) "   /* 11 serbian, croatian, slovenian */
-	" SV/FI/HU (#$@[\\]^_`{|}~) "   /* 12 swedish, finnish, hungarian */
-	"    TR    (#$@[\\]^_`{|}~) "   /* 13 turkish */
-	" RU/BUL/SER/CRO/UKR (cyr) "   /* 14 cyrillic */
-	"    EK                    "   /* 15 greek */
-	;
-#endif
 const char countrystring[] =
 	"         Default          "   /*  0 no subset specified */
 	"       Czech/Slovak       "   /*  1 czech, slovak */
@@ -629,10 +494,7 @@ struct _pid_table
 } pid_table[128];
 
 unsigned char restoreaudio = 0;
-/* 0 Nokia, 1 Philips, 2 Sagem */
-/* typ_vcr/dvb: 	v1 a1 v2 a2 v3 a3 (vcr_only: fblk) */
 
-/* language dependent texts */
 #define MAXMENULANGUAGE 10 /* 0 deutsch, 1 englisch, 2 französisch, 3 niederländisch, 4 griechisch, 5 italienisch, 6 polnisch, 7 schwedisch, 8 suomi, 9 portuguesa, 10 russian */
 const int menusubset[] =   { NAT_DE, NAT_UK, NAT_FR, NAT_UK, NAT_GR, NAT_IT, NAT_PL, NAT_SW, NAT_SW,   NAT_SP,      NAT_RB};                                                //FIXME
 
@@ -1104,8 +966,6 @@ const char message_7[][39] =
 };
 const char message_8[][39] =
 {
-	/*    00000000001111111111222222222233333333334 */
-	/*    01234567890123456789012345678901234567890 */
 	{ "ã  warte auf Empfang von Seite 100  äé" },
 	{ "ã waiting for reception of page 100 äé" },
 	{ "ã attentre la réception de page 100 äé" },
@@ -1144,9 +1004,6 @@ typedef struct
 	unsigned char charset : 6; /* see enum above */
 	unsigned char doubleh : 1; /* double height */
 	unsigned char doublew : 1; /* double width */
-	/* ignore at Black Background Color Substitution */
-	/* black background set by New Background ($1d) instead of start-of-row default or Black Backgr. ($1c) */
-	/* or black background set by level 2.5 extensions */
 	unsigned char IgnoreAtBlackBgSubst: 1;
 	unsigned char concealed: 1; /* concealed information */
 	unsigned char inverted : 1; /* colors inverted */
@@ -1249,9 +1106,6 @@ tstPageAttr atrtable[] =
 unsigned char  lcd_backbuffer[120 * 64 / 8];
 unsigned char  page_char[40 * 25];
 tstPageAttr page_atrb[40 * 25];
-
-//unsigned short page_atrb[40 * 25]; /*  ?????:h:cc:bbbb:ffff -> ?=reserved, h=double height, c=charset (0:G0 / 1:G1c / 2:G1s), b=background, f=foreground */
-
 
 /* colormap */
 const unsigned short defaultcolors[] =	/* 0x0bgr */

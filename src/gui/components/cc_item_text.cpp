@@ -456,21 +456,5 @@ bool CComponentsText::clearSavedScreen()
 {
 	bool ret0 = CCDraw::clearSavedScreen();
 	bool ret1 = false;
-#if 0
-	if (ct_textbox)
-		ret1 = ct_textbox->clearScreenBuffer();
-#endif
 	return max<bool>(ret0, ret1);
 }
-#if 0
-bool CComponentsText::enableColBodyGradient(const int &enable_mode, const fb_pixel_t &sec_color)
-{
-	if (CCDraw::enableColBodyGradient(enable_mode, sec_color))
-	{
-		if (ct_textbox)
-			ct_textbox->clearScreenBuffer();
-	}
-	return false;
-}
-#endif
-

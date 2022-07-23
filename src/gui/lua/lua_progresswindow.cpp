@@ -70,15 +70,8 @@ int CLuaInstProgressWindow::CProgressWindowNew(lua_State *L)
 
 	CLuaCProgressWindow **udata = (CLuaCProgressWindow **) lua_newuserdata(L, sizeof(CLuaCProgressWindow *));
 	*udata = new CLuaCProgressWindow();
-
-#if 0
-	/* Enable when pu/fb-setmode branch is merged in master */
-	(*udata)->w = new CProgressWindow(name);
-#else
 	(*udata)->w = new CProgressWindow();
 	(*udata)->w->setTitle(name);
-#endif
-
 	luaL_getmetatable(L, "cprogresswindow");
 	lua_setmetatable(L, -2);
 	return 1;

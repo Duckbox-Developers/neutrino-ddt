@@ -39,10 +39,6 @@ void CLLThread::LuaThreadsRegister(lua_State *L)
 		{ "start",      CLLThread::l_llthread_start      },
 		{ "cancel",     CLLThread::l_llthread_cancel     },
 		{ "join",       CLLThread::l_llthread_join       },
-#if 0
-		/* Fix me */
-		{ "set_logger", CLLThread::l_llthread_set_logger },
-#endif
 		{ "started",    CLLThread::l_llthread_started    },
 		{ "detached",   CLLThread::l_llthread_detached   },
 		{ "joinable",   CLLThread::l_llthread_joinable   },

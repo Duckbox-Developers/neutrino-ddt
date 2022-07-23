@@ -199,17 +199,10 @@ void CComponentsScrollBar::initSegments()
 		if ((tmp_segments == sb_segments_count && sb_mark_id == id) || (tmp_segments != sb_segments_count && int(sb_mark_id / tmp_quot) == id))
 		{
 			item->setColorBody(sb_segment_col_sel);
-#if 0
-			item->enableColBodyGradient(CC_COLGRAD_COL_A_2_COL_B);
-			item->setColBodyGradient(CColorGradient::gradientDark2Light2Dark, CFrameBuffer::gradientHorizontal);
-#endif
 		}
 		else
 		{
 			item->setColorBody(passive_col);
-#if 0
-			item->disableColBodyGradient();
-#endif
 		}
 
 		//set different corner types for segments with possible conditions

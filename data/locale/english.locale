@@ -610,7 +610,6 @@ favorites.chalreadyinbq The current channel is already in your favorites.\n
 favorites.copy Copy bouquet to Favorites
 favorites.finalhint \nUse the bouqueteditor to modify your favorites.\n
 favorites.menueadd add channel to favorites
-favorites.nobouquets Favorites are available with activated Bouquets only.
 filebrowser.add Add
 filebrowser.delete Delete
 filebrowser.denydirectoryleave Absolute start directory
@@ -666,7 +665,6 @@ flashupdate.md5sumerror image has errors
 flashupdate.msgbox Found the following new file:\nDate: %s, %s\nBaseImage: %s\nType: %s\n\nDo you want to download and install this version now?
 flashupdate.mtdselector Partition-Selector
 flashupdate.new_found New image found !
-flashupdate.new_notfound No new images found
 flashupdate.noversion Version check is only supported via online updates.\nAre you sure that you want to continue?
 flashupdate.programmingflash programming flash
 flashupdate.proxypassword Password
@@ -984,7 +982,6 @@ mainmenu.pictureviewer Picture viewer
 mainmenu.radiomode Radio-Mode
 mainmenu.reboot Reboot
 mainmenu.recording Recording
-mainmenu.recording_start start
 mainmenu.recording_stop stop
 mainmenu.avinputmode HDMI Input (Mode)
 mainmenu.avinputmode_pip HDMI Input (PiP)
@@ -1738,7 +1735,6 @@ moviebrowser.delete_movie Delete movie
 moviebrowser.delete_screenshot Delete screenshot?
 moviebrowser.dir Path
 moviebrowser.directories Directories
-moviebrowser.directories_additional Additional directories
 moviebrowser.edit_book Change bookmark
 moviebrowser.edit_book_name_info1 Enter new bookmark name
 moviebrowser.edit_book_name_info2
@@ -1867,7 +1863,6 @@ moviebrowser.truncating Truncating movie, please wait ...
 moviebrowser.ts_only Show recordings only
 moviebrowser.update_if_dest_empty_only Copy if destination is empty only
 moviebrowser.use_dir Use directory
-moviebrowser.use_movie_dir Use movie directory
 moviebrowser.use_rec_dir Use record directory
 moviecut.cancel Cancel movie editing?
 movieplayer.bookmark Bookmarks
@@ -2239,7 +2234,6 @@ sc.init_failed Card init failed
 sc.init_ok Card init complete
 sc.inserted Card inserted in slot
 sc.removed Card removed from slot
-sc.reset Reset card
 sc.timeout Timeout waiting card menu
 sc.waiting Waing for card answer
 scants.abort_body Should the search really be aborted?
@@ -2249,10 +2243,8 @@ scants.acthybrid Hybrid:
 scants.actsatellite Satellite:
 scants.actterrestrial Terrestrial:
 scants.bouquet Bouquet
-scants.bouquet_create create new
 scants.bouquet_erase erase old
 scants.bouquet_leave leave current
-scants.bouquet_satellite Satellite-Bouquet
 scants.bouquet_update update
 scants.bouquet_writenames Write service names to bouquets
 scants.bouquet_writenames_bouquets providers

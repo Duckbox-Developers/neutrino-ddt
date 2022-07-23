@@ -273,15 +273,7 @@ int Font::setSize(int isize)
 		return 0;
 	}
 	face = size->face;
-#if 0
-//FIXME test
 
-	ascender = face->ascender;
-	descender = face->descender;
-	height = face->height;
-	lower = -descender + (-(descender >> 1)) + 1;
-	return 0;
-#endif
 	// hack begin (this is a hack to get correct font metrics, didn't find any other way which gave correct values)
 	FTC_SBit glyph;
 	int index;
@@ -656,11 +648,6 @@ void Font::RenderString(int x, int y, const int width, const char *text, const f
 			x += (kerning.x) >> 6; // kerning!
 		}
 
-#if 0
-		// width clip
-		if (x + glyph->xadvance + spread_by > left + width)
-			break;
-#endif
 		int xoff    = x + glyph->left;
 		int ap      = xoff * sizeof(fb_pixel_t) + stride * (y - glyph->top);
 		uint8_t *d = ((uint8_t *)buff) + ap;

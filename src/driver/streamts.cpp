@@ -306,10 +306,6 @@ bool CStreamManager::SetPort(int newport)
 	if (port != newport)
 	{
 		port = newport;
-#if 0
-		Stop();
-		ret = Start(newport);
-#endif
 		mutex.lock();
 		if (listenfd >= 0)
 			close(listenfd);
@@ -689,10 +685,6 @@ void CStreamManager::run()
 						perror("CStreamManager::run(): accept");
 						continue;
 					}
-#if 0
-					if (!AddClient(connfd))
-						close(connfd);
-#endif
 					g_RCInput->postMsg(NeutrinoMessages::EVT_STREAM_START, connfd);
 					poll_timeout = 1000;
 				}

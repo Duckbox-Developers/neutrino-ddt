@@ -183,17 +183,6 @@ void *CLCD::TimeThread(void *)
 		}
 		else
 			CLCD::getInstance()->showTime();
-#if 0
-		/* hack, just if we missed the blit() somewhere
-		 * this will update the framebuffer once per second */
-		if (getenv("SPARK_NOBLIT") == NULL)
-		{
-			CFrameBuffer *fb = CFrameBuffer::getInstance();
-			/* plugin start locks the framebuffer... */
-			if (!fb->Locked())
-				fb->blit();
-		}
-#endif
 	}
 	return NULL;
 }

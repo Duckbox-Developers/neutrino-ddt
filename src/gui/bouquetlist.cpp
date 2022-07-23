@@ -120,19 +120,6 @@ t_bouquet_id CBouquetList::getActiveBouquetNumber()
 	return (t_bouquet_id)selected;
 }
 
-#if 0
-void CBouquetList::adjustToChannel( int nChannelNr)
-{
-	for (uint32_t i=0; i<Bouquets.size(); i++) {
-		int nChannelPos = Bouquets[i]->channelList->hasChannel(nChannelNr);
-		if (nChannelPos > -1) {
-			selected = i;
-			Bouquets[i]->channelList->setSelected(nChannelPos);
-			return;
-		}
-	}
-}
-#endif
 bool CBouquetList::hasChannelID(t_channel_id channel_id)
 {
 	for (uint32_t i = 0; i < Bouquets.size(); i++) {
@@ -588,12 +575,7 @@ int CBouquetList::show(bool bShowChannelList)
 
 	if (save_bouquets) {
 		save_bouquets = false;
-#if 0
-		if (CNeutrinoApp::getInstance()->GetChannelMode() == LIST_MODE_FAV)
-			g_bouquetManager->saveUBouquets();
-		else
-			g_bouquetManager->saveBouquets();
-#endif
+
 		if (g_settings.epg_scan == CEpgScan::SCAN_SEL)
 			CEpgScan::getInstance()->Start();
 	}

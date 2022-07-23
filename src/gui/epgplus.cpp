@@ -479,25 +479,6 @@ void EpgPlus::ChannelEntry::paint(bool isSelected, time_t _selectedTime)
 
 	if (isSelected)
 	{
-#if 0
-		for (uint32_t i = 0; i < this->bouquetList->Bouquets.size(); ++i)
-		{
-			CBouquet *bouquet = this->bouquetList->Bouquets[i];
-			for (int j = 0; j < bouquet->channelList->getSize(); ++j)
-			{
-
-				if ((*bouquet->channelList)[j]->number == this->channel->number)
-				{
-					this->footer->setBouquetChannelName(bouquet->channelList->getName(), this->channel->getName());
-
-					bouquet = NULL;
-					break;
-				}
-			}
-			if (bouquet == NULL)
-				break;
-		}
-#endif
 		if (this->channel->pname)
 		{
 			this->footer->setBouquetChannelName(this->channel->pname, this->channel->getName());
@@ -795,10 +776,6 @@ void EpgPlus::createChannelEntries(int selectedChannelEntryIndex)
 void EpgPlus::init()
 {
 	frameBuffer = CFrameBuffer::getInstance();
-#if 0
-	currentViewMode = ViewMode_Scroll;
-	currentSwapMode = SwapMode_ByPage;
-#endif
 	usableScreenWidth = frameBuffer->getWindowWidth();
 	usableScreenHeight = frameBuffer->getWindowHeight();
 
@@ -1362,15 +1339,6 @@ int EpgPlus::exec(CChannelList * pchannelList, int selectedChannelIndex, CBouque
 		this->hide();
 
 		fader.StopFade();
-#if 0
-		for (TChannelEntries::iterator It = this->displayedChannelEntries.begin();
-				It != this->displayedChannelEntries.end();
-				It++)
-		{
-			delete *It;
-		}
-		this->displayedChannelEntries.clear();
-#endif
 	}
 	while (this->refreshAll);
 

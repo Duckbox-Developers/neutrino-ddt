@@ -302,11 +302,6 @@ int CEpgScan::handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t data)
 		scan_in_progress = true;
 		AddTransponders();
 		INFO("EVT_ZAP_COMPLETE, scan map size: %zd\n", scanmap.size());
-#if 0
-		t_channel_id chid = *(t_channel_id *)data;
-		if (IS_WEBCHAN(chid))
-			Next();
-#endif
 		return messages_return::handled;
 	}
 	else if (msg == NeutrinoMessages::EVT_EIT_COMPLETE)

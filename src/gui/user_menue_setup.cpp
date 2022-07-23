@@ -279,14 +279,6 @@ void CUserMenuSetup::checkButtonName()
 		return;
 	}
 
-#if 0
-	//if found only 1 configured item, ensure that the caption of usermenu is the same like this
-	if (used_items == 1) {
-		bool dummy;
-		g_settings.usermenu[button]->title =  CUserMenu::getUserMenuButtonName(button, dummy);
-	}
-#endif
-
 	if (button < USERMENU_ITEMS_COUNT && g_settings.usermenu[button]->title.empty())
 	{
 		std::string msg(g_Locale->getText(LOCALE_USERMENU_MSG_INFO_IS_EMPTY));

@@ -139,11 +139,6 @@ int CRecordSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 		}
 		return res;
 	}
-#if 0
-	if (CNeutrinoApp::getInstance()->recordingstatus)
-		DisplayInfoMessage(g_Locale->getText(LOCALE_RECORDINGMENU_RECORD_IS_RUNNING));
-	else
-#endif
 		res = showRecordSetup();
 
 	return res;

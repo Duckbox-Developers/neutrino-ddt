@@ -37,35 +37,6 @@ static bool DebugConverter = true;
 
 #define dbgconverter(a...) if (DebugConverter) sub_debug.print(Debug::VERBOSE, a)
 
-#if 0
-class cDvbSubtitleBitmaps : public cListObject
-{
-	private:
-		int64_t pts;
-		AVSubtitle sub;
-	public:
-		cDvbSubtitleBitmaps(int64_t Pts);
-		~cDvbSubtitleBitmaps();
-		int64_t Pts(void)
-		{
-			return pts;
-		}
-		int Timeout(void)
-		{
-			return sub.end_display_time;
-		}
-		void Draw(int &min_x, int &min_y, int &max_x, int &max_y);
-		int Count(void)
-		{
-			return sub.num_rects;
-		};
-		AVSubtitle *GetSub(void)
-		{
-			return &sub;
-		};
-};
-#endif
-
 cDvbSubtitleBitmaps::cDvbSubtitleBitmaps(int64_t pPts)
 {
 	//dbgconverter("cDvbSubtitleBitmaps::new: PTS: %lld\n", pts);

@@ -637,13 +637,6 @@ int CHDDMenuHandler::exec(CMenuTarget* parent, const std::string &actionkey)
 	}
 	else if (actionkey[0] == 'f') {
 		int ret = formatDevice(dev);
-#if 0
-		std::string devname = "/dev/" + dev + getDefaultPart(dev);
-		if (show_menu && is_mounted(devname.c_str())) {
-			devname = dev + getDefaultPart(dev);
-			setRecordPath(devname);
-		}
-#endif
 		return ret;
 	}
 	else if (actionkey[0] == 'g') {
@@ -818,17 +811,7 @@ bool CHDDMenuHandler::scanDevices()
 			fscanf(f, "%s", model);
 			fclose(f);
 		}
-#if 0
-		int removable = 0;
-		snprintf(str, sizeof(str), "/sys/block/%s/removable", namelist[i]->d_name);
-		f = fopen(str, "r");
-		if(!f) {
-			printf("Cant open %s\n", str);
-			continue;
-		}
-		fscanf(f, "%d", &removable);
-		fclose(f);
-#endif
+
 		std::string dev = std::string(namelist[i]->d_name).substr(0, 2);
 		std::string fmt = getFmtType(namelist[i]->d_name);
 		/* epmty cdrom do not appear in blkid output */
@@ -947,133 +930,6 @@ _show_menu:
 	in_menu = false;
 	return ret;
 }
-
-#if 0
-static int dev_umount(char *dev)
-{
-	char buffer[255];
-	FILE *f = fopen("/proc/mounts", "r");
-	if(f == NULL)
-		return -1;
-	while (fgets (buffer, 255, f) != NULL) {
-		char *p = buffer + strlen(dev);
-		if (strstr(buffer, dev) == buffer && *p == ' ') {
-			p++;
-			char *q = strchr(p, ' ');
-			if (q == NULL)
-				continue;
-			*q = 0x0;
-			fclose(f);
-			printf("dev_umount %s: umounting %s\n", dev, p);
-			return umount(p);
-		}
-	}
-#ifndef ASSUME_MDEV
-	/* with mdev, we hopefully don't have to umount anything here... */
-	printf("dev_umount %s: not found\n", dev);
-#endif
-	errno = ENOENT;
-	fclose(f);
-	return -1;
-}
-
-/* unmounts all partitions of a given block device, dev can be /dev/sda, sda or sda4 */
-static int umount_all(const char *dev)
-{
-	char buffer[255];
-	int i;
-	char *d = strdupa(dev);
-	char *p = d + strlen(d) - 1;
-	while (isdigit(*p))
-		p--;
-	*++p = 0x0;
-	if (strstr(d, "/dev/") == d)
-		d += strlen("/dev/");
-	printf("HDD: %s dev = '%s' d = '%s'\n", __func__, dev, d);
-	for (i = 1; i < 16; i++)
-	{
-		sprintf(buffer, "/dev/%s%d", d, i);
-		// printf("checking for '%s'\n", buffer);
-		if (access(buffer, R_OK))
-			continue;	/* device does not exist? */
-#ifdef ASSUME_MDEV
-		/* we can't use a 'remove' uevent, as that would also remove the device node
-		 * which we certainly need for formatting :-) */
-		if (! access("/etc/mdev/mdev-mount.sh", X_OK)) {
-			sprintf(buffer, "MDEV=%s%d ACTION=remove /etc/mdev/mdev-mount.sh block", d, i);
-			printf("-> running '%s'\n", buffer);
-			my_system(3, "/bin/sh", "-c", buffer);
-		}
-#endif
-		sprintf(buffer, "/dev/%s%d", d, i);
-		/* just to make sure */
-		swapoff(buffer);
-		if (dev_umount(buffer) && errno != ENOENT)
-			fprintf(stderr, "could not umount %s: %m\n", buffer);
-	}
-	return 0;
-}
-
-/* triggers a uevent for all partitions of a given blockdev, dev can be /dev/sda, sda or sda4 */
-static int mount_all(const char *dev)
-{
-	char buffer[255];
-	int i, ret = -1;
-	char *d = strdupa(dev);
-	char *p = d + strlen(d) - 1;
-	while (isdigit(*p))
-		p--;
-	if (strstr(d, "/dev/") == d)
-		d += strlen("/dev/");
-	*++p = 0x0;
-	printf("HDD: %s dev = '%s' d = '%s'\n", __func__, dev, d);
-	for (i = 1; i < 16; i++)
-	{
-#ifdef ASSUME_MDEV
-		sprintf(buffer, "/sys/block/%s/%s%d/uevent", d, d, i);
-		if (!access(buffer, W_OK)) {
-			FILE *f = fopen(buffer, "w");
-			if (!f)
-				fprintf(stderr, "HDD: %s could not open %s: %m\n", __func__, buffer);
-			else {
-				printf("-> triggering add uevent in %s\n", buffer);
-				fprintf(f, "add\n");
-				fclose(f);
-				ret = 0;
-			}
-		}
-#endif
-	}
-	return ret;
-}
-
-#ifdef ASSUME_MDEV
-static void waitfordev(const char *src, int maxwait)
-{
-	int waitcount = 0;
-	/* wait for the device to show up... */
-	while (access(src, W_OK)) {
-		if (!waitcount)
-			printf("CHDDFmtExec: waiting for %s", src);
-		else
-			printf(".");
-		fflush(stdout);
-		waitcount++;
-		if (waitcount > maxwait) {
-			fprintf(stderr, "CHDDFmtExec: device %s did not appear!\n", src);
-			break;
-		}
-		sleep(1);
-	}
-	if (waitcount && waitcount <= maxwait)
-		printf("\n");
-}
-#else
-static void waitfordev(const char *, int)
-{
-}
-#endif
-#endif
 
 void CHDDMenuHandler::showError(neutrino_locale_t err)
 {

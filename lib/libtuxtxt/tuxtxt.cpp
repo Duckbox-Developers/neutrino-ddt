@@ -251,9 +251,6 @@ void RenderClearMenuLineBB(char *p, tstPageAttr *attrcol, tstPageAttr *attr)
 
 	PosX = TOPMENUSTARTX;
 	RenderCharBB(' ', attrcol); /* indicator for navigation keys */
-#if 0
-	RenderCharBB(' ', attr); /* separator */
-#endif
 	/* the fontwidth_topmenusmall is not correctly calculated: the navigation
 	 * indicator ' ' is not considered and thus the font is slightly too wide.
 	 * Shift the topmenu to the left instead of using a smaller font, since
@@ -1118,101 +1115,6 @@ void eval_l25()
 		printf("=== %03x/%02x %d/%d===\n", tuxtxt_cache.page, tuxtxt_cache.subpage, tuxtxt_cache.astCachetable[tuxtxt_cache.page][tuxtxt_cache.subpage]->pageinfo.nationalvalid, tuxtxt_cache.astCachetable[tuxtxt_cache.page][tuxtxt_cache.subpage]->pageinfo.national);
 #endif
 
-#if 0 //TUXTXT_DEBUG     I don't think we need this any longer because this code is unreachable (HexPages are handled before eval_l25() is called)
-	if (pageinfo->function == FUNC_MOT) /* magazine organization table */
-	{
-		int i;
-		unsigned char *p = pagedata;
-
-		printf("(G)POP/(G)DRCS-associations:\n");
-		printf("  0011223344556677889900112233445566778899");
-		for (i = 0; i < 200; i++)
-		{
-			if (p[i] == 0xff)
-				break;
-			if (0 == (i % 40))
-				printf("\n%x ", i / 20);
-			putchar(number2char(p[i]));
-		}
-		putchar('\n');
-
-		p = pagedata + 18 * 40;
-		for (i = 0; i < 80; i += 10)
-		{
-			short pop = ((p[i] << 8) | (p[i + 1] << 4) | p[i + 2]) & 0x7ff;
-			unsigned char type = p[i + 5] & 0x03; /* 1st default object */
-			unsigned char triplet = 3 * ((p[i + 7] >> 1) & 0x03) + type;
-			unsigned char packet = (p[i + 7] & 0x08) >> 3;
-			unsigned char subp = p[i + 6];
-			if (pop < 0x100)
-				pop += 0x800;
-			printf("POP #%x %03x/%x p27prio:%x", i / 10, pop, p[i + 3], p[i] & 0x08);
-			printf("  DefObj S%xP%xT%x%c %c#%03d", tuxtxt_cache.subpage, packet, triplet, "LH"[p[i + 7] & 0x01],
-				"-CDP"[type], 8 * packet + 2 * (triplet - 1) / 3 + 1);
-			type = (p[i + 5] >> 2) & 0x03; /* 2nd default object */
-			triplet = 3 * ((p[i + 9] >> 1) & 0x03) + type;
-			packet = (p[i + 9] & 0x08) >> 3;
-			subp = p[i + 8];
-			printf(", S%xP%xT%x%c %c#%03d", tuxtxt_cache.subpage, packet, triplet, "LH"[p[i + 9] & 0x01],
-				"-CDP"[type], 8 * packet + 2 * (triplet - 1) / 3 + 1);
-			if ((p[i + 4] & 0x01) == 0)
-				printf("  Sidep.:%c%c BgSubst.:%x", (p[i + 4] & 0x02) ? 'L' : '-', (p[i + 4] & 0x04) ? 'R' : '-', p[i + 4] >> 3);
-			putchar('\n');
-			if ((pop & 0xff) != 0xff && tuxtxt_cache.astCachetable[pop][0])	/* link valid && linked page cached */
-			{
-				tstPageinfo *pageinfo_link = &(tuxtxt_cache.astCachetable[pop][0]->pageinfo);
-				if (!i)
-					pageinfo_link->function = FUNC_GPOP;
-				else
-					pageinfo_link->function = FUNC_POP;
-			}
-		}
-
-		p = pagedata + 20 * 40;
-		for (i = 0; i < 4 * 8; i += 4)
-		{
-			short drcs = ((p[i] << 8) | (p[i + 1] << 4) | p[i + 2]) & 0x7ff;
-			if (drcs < 0x100)
-				drcs += 0x800;
-			printf("DRCS #%x %03x/%x p27prio:%x\n", i / 4, drcs, p[i + 3], p[i] & 0x08);
-			if ((drcs & 0xff) != 0xff && tuxtxt_cache.astCachetable[drcs][0])	/* link valid && linked page cached */
-			{
-				tstPageinfo *pageinfo_link = &(tuxtxt_cache.astCachetable[drcs][0]->pageinfo);
-				if (!i)
-					pageinfo_link->function = FUNC_GDRCS;
-				else
-					pageinfo_link->function = FUNC_DRCS;
-			}
-		}
-	} /* function == FUNC_MOT  */
-
-//	else if (pageinfo->function == FUNC_GPOP || pageinfo->function == FUNC_POP) /* object definitions */
-	else if (!tuxtxt_is_dec(tuxtxt_cache.page) && pageinfo->function != FUNC_GDRCS && pageinfo->function != FUNC_DRCS) /* in case the function is not assigned properly */
-	{
-		unsigned char APx0, APy0, APx, APy;
-		int packet;
-
-		pop = gpop = tuxtxt_cache.page;
-
-		for (packet = 1; packet <= 4; packet++)
-		{
-			unsigned char *ptriplet = pagedata + 40 * (packet - 1);
-			int idata = dehamming[*ptriplet];
-			int triplet;
-
-			if (idata == 0xff || 0 == (idata & 1))	/* hamming error or no pointer data: ignore packet */
-				continue;
-			for (triplet = 1; triplet <= 12; triplet++)
-			{
-				APx0 = APy0 = APx = APy = tAPx = tAPy = 0;
-				eval_NumberedObject(tuxtxt_cache.page, tuxtxt_cache.subpage, packet, triplet, 0, &APx, &APy, &APx0, &APy0);
-				APx0 = APy0 = APx = APy = tAPx = tAPy = 0;
-				eval_NumberedObject(tuxtxt_cache.page, tuxtxt_cache.subpage, packet, triplet, 1, &APx, &APy, &APx0, &APy0);
-			} /* for triplet */
-		} /* for packet */
-	} /* function == FUNC_*POP  */
-#endif /* TUXTXT_DEBUG */
-
 	/* normal page */
 	if (tuxtxt_is_dec(tuxtxt_cache.page))
 	{
@@ -1605,12 +1507,6 @@ void tuxtx_set_pid(int pid, int page, const char *cc)
 	sub_page = page;
 
 	cfg_national_subset = GetNationalSubset(cc);
-#if 0
-	printf("TuxTxt subtitle set pid %d page %d lang %s (%d)\n", sub_pid, sub_page, cc, cfg_national_subset);
-	ttx_paused = 1;
-	if (sub_pid && sub_page)
-		tuxtx_main(sub_pid, sub_page);
-#endif
 }
 
 int tuxtx_subtitle_running(int *pid, int *page, int *running)
@@ -1689,12 +1585,7 @@ int tuxtx_main(int pid, int page, int source)
 	fix_screeninfo.line_length = var_screeninfo.xres * sizeof(fb_pixel_t);
 	/* set variable screeninfo for double buffering */
 	var_screeninfo.yoffset      = 0;
-#if 0
-	sx = x + 10;
-	sy = y + 10;
-	ex = x + w - 10;
-	ey = y + h - 10;
-#endif
+
 	screen_x = fbp->getScreenX();
 	screen_y = fbp->getScreenY();
 	screen_w = fbp->getScreenWidth();
@@ -1735,14 +1626,12 @@ int tuxtx_main(int pid, int page, int source)
 			{
 				switch (RCCode)
 				{
-//#if TUXTXT_DEBUG /* FIXME */
 					case RC_OK:
 						if (showhex)
 						{
 							dump_page(); /* hexdump of page contents to stdout for debugging */
 						}
 						continue; /* otherwise ignore key */
-//#endif /* TUXTXT_DEBUG */
 					case RC_UP:
 					case RC_DOWN:
 					case RC_0:
@@ -1897,10 +1786,9 @@ int tuxtx_main(int pid, int page, int source)
 	/* exit */
 	CleanUp();
 
-#if 1
 	if (initialized)
 		tuxtxt_close();
-#endif
+
 #if HAVE_SH4_HARDWARE
 	fbp->setBorderColor(old_border_color);
 #endif
@@ -2073,16 +1961,6 @@ int Init(int source)
 				dumpl25 = ival & 1;
 			else if (1 == sscanf(line, "UseTTF %i", &ival))
 				usettf = ival & 1;
-#if 0
-			else if (1 == sscanf(line, "StartX %i", &ival))
-				sx = ival;
-			else if (1 == sscanf(line, "EndX %i", &ival))
-				ex = ival;
-			else if (1 == sscanf(line, "StartY %i", &ival))
-				sy = ival;
-			else if (1 == sscanf(line, "EndY %i", &ival))
-				ey = ival;
-#endif
 		}
 		fclose(conf);
 	}
@@ -2116,33 +1994,6 @@ int Init(int source)
 	StartX = sx; //+ (((ex-sx) - 40*fontwidth) / 2);
 	StartY = sy + (((ey - sy) - 25 * fontheight) / 2);
 
-#if 0
-	if (usettf)
-	{
-		typettf.face_id = (FTC_FaceID) TUXTXTTTFVAR;
-		typettf.height = (FT_UShort) fontheight * TTFHeightFactor16 / 16;
-	}
-	else
-	{
-		typettf.face_id = (FTC_FaceID) TUXTXTOTBVAR;
-		typettf.width  = (FT_UShort) 23;
-		typettf.height = (FT_UShort) 23;
-	}
-
-	typettf.flags = FT_LOAD_MONOCHROME;
-
-	if ((error = FTC_Manager_LookupFace(manager, typettf.face_id, &face)))
-	{
-		typettf.face_id = (void *)(usettf ? (FTC_FaceID) TUXTXTTTF : TUXTXTOTB);
-		if ((error = FTC_Manager_LookupFace(manager, typettf.face_id, &face)))
-		{
-			printf("TuxTxt <FTC_Manager_LookupFace failed with Errorcode 0x%.2X>\n", error);
-			FTC_Manager_Done(manager);
-			FT_Done_FreeType(library);
-			return 0;
-		}
-	}
-#endif
 	if (!ft_init_done || font_file != ttx_font_file || fontheight != oldfontheight)
 	{
 		printf("TuxTxt: init fontlibrary\n");
@@ -2236,10 +2087,6 @@ int Init(int source)
 		getpidsdone = -1;						 /* don't kill thread */
 		if (GetTeletextPIDs() == 0)
 		{
-#if 0
-			FTC_Manager_Done(manager);
-			FT_Done_FreeType(library);
-#endif
 			return 0;
 		}
 
@@ -2312,11 +2159,6 @@ void CleanUp()
 	//CFrameBuffer::getInstance()->paintBackground();
 	ClearFB(transp);
 
-#if 0
-	/* close freetype */
-	FTC_Manager_Done(manager);
-	FT_Done_FreeType(library);
-#endif
 	if (hotlistchanged)
 		savehotlist();
 
@@ -2348,12 +2190,6 @@ void CleanUp()
 			fprintf(conf, "ShowLevel2p5 %d\n", showl25);
 			fprintf(conf, "DumpLevel2p5 %d\n", dumpl25);
 			fprintf(conf, "UseTTF %d\n", usettf);
-#if 0
-			fprintf(conf, "StartX %d\n", sx);
-			fprintf(conf, "EndX %d\n", ex);
-			fprintf(conf, "StartY %d\n", sy);
-			fprintf(conf, "EndY %d\n", ey);
-#endif
 			fclose(conf);
 		}
 	}
@@ -2458,7 +2294,7 @@ int GetTeletextPIDs()
 							pid_table[pids_found].national_subset = NAT_DEFAULT; /* use default charset */
 						}
 
-#if 1 // TUXTXT_DEBUG
+#if TUXTXT_DEBUG
 						printf("TuxTxt <Service #%d %04x pid %04x Country code \"%3s\" national subset %2d%s>\n",
 							pids_found,
 							pid_table[pids_found].service_id,
@@ -3552,7 +3388,7 @@ void PageInput(int Number)
 		{
 			tuxtxt_cache.subpage = subp;
 			tuxtxt_cache.pageupdate = 1;
-#if 1 //TUXTXT_DEBUG
+#if TUXTXT_DEBUG
 			printf("TuxTxt <DirectInput: %.3X-%.2X>\n", tuxtxt_cache.page, tuxtxt_cache.subpage);
 #endif
 		}
@@ -3798,10 +3634,6 @@ void CatchNextPage(int firstlineinc, int inc)
 			(catch_row == 37 || (*(p + 3) < '0' || *(p + 3) > '9')))
 		{
 			tmp_page = ((*p - '0') << 8) | ((*(p + 1) - '0') << 4) | (*(p + 2) - '0');
-
-#if 0
-			if (tmp_page != catched_page)	/* confusing to skip identical page numbers - I want to reach what I aim to */
-#endif
 			{
 				catched_page = tmp_page;
 				RenderCatchedPage();
@@ -4103,13 +3935,7 @@ void SwitchTranspMode()
 		prevscreenmode = screenmode;
 		SwitchScreenMode(0); /* turn off divided screen */
 	}
-	/* toggle mode */
-#if 0 // transparent first
-	if (transpmode == 2)
-		transpmode = 0;
-	else
-		transpmode++; /* backward to immediately switch to TV-screen */
-#endif
+
 	/* transpmode: 0 normal, 1 transparent, 2 off */
 	transpmode ++;
 	if (transpmode > 2)
@@ -4617,35 +4443,6 @@ void RenderChar(int Char, tstPageAttr *Attribute, int zoom, int yoffset)
 		PosX += curfontwidth;
 		return;
 	}
-#if 0//old
-	else if (Attribute->charset == C_G2 && Char >= 0x20 && Char <= 0x7F)
-	{
-		if (national_subset_local == NAT_GR)
-			Char = G2table[2][Char - 0x20];
-		else if (national_subset_local == NAT_RU)
-			Char = G2table[1][Char - 0x20];
-		else
-			Char = G2table[0][Char - 0x20];
-
-		if (Char == 0x7F)
-		{
-			FillRect(PosX, PosY + yoffset, curfontwidth, factor * ascender, fgcolor);
-			FillRect(PosX, PosY + yoffset + factor * ascender, curfontwidth, factor * (fontheight - ascender), bgcolor);
-			PosX += curfontwidth;
-			return;
-		}
-	}
-	else if (national_subset_local == NAT_GR && Char >= 0x40 && Char <= 0x7E)	/* remap complete areas for greek */
-		Char += 0x390 - 0x40;
-	else if (national_subset_local == NAT_GR && Char == 0x3c)
-		Char = '«';
-	else if (national_subset_local == NAT_GR && Char == 0x3e)
-		Char = '»';
-	else if (national_subset_local == NAT_GR && Char >= 0x23 && Char <= 0x24)
-		Char = nationaltable23[NAT_DE][Char - 0x23]; /* #$ as in german option */
-	else if (national_subset_local == NAT_RU && Char >= 0x40 && Char <= 0x7E) /* remap complete areas for cyrillic */
-		Char = G0tablecyrillic[Char - 0x20];
-#endif
 	else if (Attribute->charset == C_G2 && Char >= 0x20 && Char <= 0x7F)
 	{
 		if ((national_subset_local == NAT_SC) || (national_subset_local == NAT_RB) || (national_subset_local == NAT_UA))
@@ -4795,7 +4592,7 @@ void RenderChar(int Char, tstPageAttr *Attribute, int zoom, int yoffset)
 	}
 	if (Char <= 0x20)
 	{
-#if 0//TUXTXT_DEBUG
+#if TUXTXT_DEBUG
 		printf("TuxTxt found control char: %x \"%c\" \n", Char, Char);
 #endif
 		FillRect(PosX, PosY + yoffset, curfontwidth, factor * fontheight, bgcolor);
@@ -4806,7 +4603,7 @@ void RenderChar(int Char, tstPageAttr *Attribute, int zoom, int yoffset)
 
 	if (!(glyph = FT_Get_Char_Index(face, Char)))
 	{
-#if 1// TUXTXT_DEBUG
+#if TUXTXT_DEBUG
 		printf("TuxTxt <FT_Get_Char_Index for Char %d %x \"%c\" failed\n", Char, Char, Char);
 #endif
 		FillRect(PosX, PosY + yoffset, curfontwidth, factor * fontheight, bgcolor);
@@ -4833,22 +4630,11 @@ void RenderChar(int Char, tstPageAttr *Attribute, int zoom, int yoffset)
 	if (Attribute->diacrit)
 	{
 		FTC_SBit        sbit_diacrit;
-#if 0
-		if (national_subset_local == NAT_GR)
-			Char = G2table[2][0x20 + Attribute->diacrit];
-		else if (national_subset_local == NAT_RU)
-			Char = G2table[1][0x20 + Attribute->diacrit];
-		else
-			Char = G2table[0][0x20 + Attribute->diacrit];
-#endif
+
 		if ((national_subset_local == NAT_SC) || (national_subset_local == NAT_RB) || (national_subset_local == NAT_UA))
 			Char = G2table[1][0x20 + Attribute->diacrit];
 		else if (national_subset_local == NAT_GR)
 			Char = G2table[2][0x20 + Attribute->diacrit];
-#if 0
-		else if (national_subset_local == NAT_HB)
-			Char = G2table[3][0x20 + Attribute->diacrit];
-#endif
 		else if (national_subset_local == NAT_AR)
 			Char = G2table[3][0x20 + Attribute->diacrit];
 		else

@@ -37,12 +37,6 @@
 #include <OpenThreads/Mutex>
 #include <OpenThreads/Thread>
 
-#if 0
-extern "C" {
-#include <libavformat/avformat.h>
-}
-#endif
-
 #define REC_MAX_APIDS 20
 #define REC_MAX_DPIDS 20
 #define FILENAMEBUFFERSIZE 1024

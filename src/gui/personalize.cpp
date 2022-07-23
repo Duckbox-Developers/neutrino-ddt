@@ -271,13 +271,7 @@ int CPersonalizeGui::exec(CMenuTarget* parent, const string & actionKey)
 		CMenuDForwarder *fw = new CMenuDForwarder(CRCInput::getKeyName(um->key), true, um->title, cms, to_string(i).c_str());
 		cms->setCaller(fw);
 
-#if 0
-		int selected = uMenu->getSelected();
-		if (selected >= customkey_offset)
-			uMenu->insertItem(selected, fw);
-		else
-#endif
-			uMenu->addItem(fw, true);
+		uMenu->addItem(fw, true);
 		uMenu->hide();
 		return menu_return::RETURN_REPAINT;
 	}

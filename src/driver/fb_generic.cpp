@@ -1412,17 +1412,6 @@ void CFrameBuffer::SaveScreen(int x, int y, int dx, int dy, fb_pixel_t *const me
 			*(bkpos++) = *(dest++);
 		pos += swidth;
 	}
-	//RestoreScreen(x, y, dx, dy, memp); //FIXME
-#if 0
-	fb_pixel_t *fbpos = getFrameBufferPointer() + x + swidth * y;
-	fb_pixel_t *bkpos = memp;
-	for (int count = 0; count < dy; count++)
-	{
-		memmove(bkpos, fbpos, dx * sizeof(fb_pixel_t));
-		fbpos += swidth;
-		bkpos += dx;
-	}
-#endif
 	checkFbArea(x, y, dx, dy, false);
 
 }
