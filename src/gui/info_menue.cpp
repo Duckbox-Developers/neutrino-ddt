@@ -39,10 +39,6 @@
 #include <gui/dboxinfo.h>
 #include <gui/streaminfo.h>
 
-#if 0
-#include <gui/buildinfo.h>
-#endif
-
 #include <driver/screen_max.h>
 #if !HAVE_SPARK_HARDWARE
 #include "gui/cam_menu.h"
@@ -93,16 +89,7 @@ int CInfoMenu::showMenu()
 	mf = new CMenuForwarder(LOCALE_STREAMINFO_HEAD, _mode_ts || !CNeutrinoApp::getInstance()->channelList->isEmpty(), NULL, &streaminfo, NULL, CRCInput::RC_yellow);
 	mf->setHint(NEUTRINO_ICON_HINT_STREAMINFO, LOCALE_MENU_HINT_STREAMINFO);
 	info->addItem(mf);
-#if 0
-	mf = new CMenuForwarder(LOCALE_HDD_INFO_HEAD, true, NULL, &hddinfo, NULL, CRCInput::RC_blue);
-	mf->setHint(NEUTRINO_ICON_HINT_HDD_INFO, LOCALE_MENU_HINT_HDD_INFO);
-	info->addItem(mf);
 
-	CBuildInfo buildinfo;
-	mf = new CMenuForwarder(LOCALE_BUILDINFO_MENU,  true, NULL, &buildinfo, NULL, CRCInput::RC_blue);
-	mf->setHint(NEUTRINO_ICON_HINT_IMAGEINFO, LOCALE_MENU_HINT_BUILDINFO);
-	info->addItem(mf);
-#endif
 	//add PLUGIN_INTEGRATION_INFORMATION plugins
 	info->integratePlugins(PLUGIN_INTEGRATION_INFORMATION, 1);
 

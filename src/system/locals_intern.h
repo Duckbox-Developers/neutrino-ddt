@@ -1079,7 +1079,6 @@ const char *locale_real_names[] =
 	"menu.hint_back_brief",
 	"menu.hint_backup",
 	"menu.hint_bedit",
-	"menu.hint_buildinfo",
 	"menu.hint_cache_txt",
 	"menu.hint_cec_mode",
 	"menu.hint_cec_standby",
