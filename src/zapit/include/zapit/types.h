@@ -46,10 +46,7 @@ typedef uint16_t t_bouquet_id;
 
 /* unique channel identification */
 typedef uint64_t t_channel_id;
-#if 0
-#define CREATE_CHANNEL_ID(service_id,original_network_id,transport_stream_id) ((((t_channel_id)transport_stream_id) << 32) | (((t_channel_id)original_network_id) << 16) | (t_channel_id)service_id)
-#define CREATE_CHANNEL_ID64 (((uint64_t)(satellitePosition+freq*4) << 48) | ((uint64_t) transport_stream_id << 32) | ((uint64_t)original_network_id << 16) | (uint64_t)service_id)
-#else
+
 extern "C" {
 #include <libmd5sum/md5.h>
 }
@@ -84,7 +81,6 @@ static inline bool IS_WEBCHAN(t_channel_id cid)
 {
 	return (cid & 0xFFFFFFFF00000000) == 0xFFFFFFFF00000000;
 }
-#endif
 
 #ifndef PRIx64
 #define PRIx64 "llx"
@@ -98,10 +94,7 @@ static inline bool IS_WEBCHAN(t_channel_id cid)
 #define SCANF_CHANNEL_ID_TYPE "%" SCNx64
 
 typedef uint64_t transponder_id_t;
-#if 0
-#define CREATE_TRANSPONDER_ID_FROM_SATELLITEPOSITION_ORIGINALNETWORK_TRANSPORTSTREAM_ID(freq, satellitePosition,original_network_id,transport_stream_id) \
- ( ((uint64_t)freq << 48) |  ((uint64_t) ( satellitePosition >= 0 ? satellitePosition : (uint64_t)(0xF000+ abs(satellitePosition))) << 32) | ((uint64_t)transport_stream_id << 16) | (uint64_t)original_network_id)
-#endif
+
 #define CREATE_TRANSPONDER_ID64(freq, satellitePosition,original_network_id,transport_stream_id) \
  ( ((uint64_t)freq << 48) |  ((uint64_t) ( satellitePosition >= 0 ? satellitePosition : (uint64_t)(0xF000+ abs(satellitePosition))) << 32) | ((uint64_t)transport_stream_id << 16) | (uint64_t)original_network_id)
 
