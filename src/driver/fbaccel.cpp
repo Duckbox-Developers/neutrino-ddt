@@ -449,9 +449,7 @@ void CFbAccel::blit2FB(void *fbbuff, uint32_t width, uint32_t height, uint32_t x
 	blt_data.dstMemSize = fb->stride * fb->yRes + lbb_off;
 
 	OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(mutex);
-#if 0
-	ioctl(fb->fd, STMFBIO_SYNC_BLITTER);
-#endif
+
 	if (fbbuff != backbuffer)
 		memmove(backbuffer, fbbuff, mem_sz);
 	// icons are so small that they will still be in cache

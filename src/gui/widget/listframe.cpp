@@ -102,14 +102,6 @@ CListFrame::CListFrame(LF_LINES *lines, Font *font_text, const int pmode,
 
 	m_nMode	= pmode;
 
-#if 0
-	TRACE("  Mode: ");
-	if (pmode & SCROLL) TRACE("SCROLL ");
-	if (pmode & AUTO_WIDTH) TRACE("AUTO_WIDTH ");
-	if (pmode & AUTO_HIGH) TRACE("AUTO_HIGH");
-	TRACE("\r\n");
-#endif
-
 	if (font_title != NULL)
 		m_pcFontTitle = font_title;
 

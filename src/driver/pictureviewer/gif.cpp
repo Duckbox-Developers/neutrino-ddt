@@ -25,10 +25,6 @@ extern "C" {
 #define gflush return(FH_ERROR_FILE);
 #define grflush { DGIFCLOSEFILE(gft); return(FH_ERROR_FORMAT); }
 #define mgrflush { free(lb); free(slb); DGIFCLOSEFILE(gft); return(FH_ERROR_FORMAT); }
-#if 0
-#define agflush return(FH_ERROR_FORMAT);
-#define agrflush { DGifCloseFile(gft); return(FH_ERROR_FORMAT); }
-#endif
 
 int fh_gif_id(const char *name)
 {

@@ -319,27 +319,6 @@ void CTextBox::initFramesRel(void)
 	m_cFrameTextRel.iWidth	= m_cFrame.iWidth - m_cFrameScrollRel.iWidth;
 
 	m_nLinesPerPage = std::max(1, (m_cFrameTextRel.iHeight - (2 * text_Vborder_width)) / m_nFontTextHeight);
-
-#if 0
-	TRACE_1("Frames\r\n\tScren:\t%3d,%3d,%3d,%3d\r\n\tMain:\t%3d,%3d,%3d,%3d\r\n\tText:\t%3d,%3d,%3d,%3d \r\n\tScroll:\t%3d,%3d,%3d,%3d \r\n",
-		g_settings.screen_StartX,
-		g_settings.screen_StartY,
-		g_settings.screen_EndX,
-		g_settings.screen_EndY,
-		m_cFrame.iX,
-		m_cFrame.iY,
-		m_cFrame.iWidth,
-		m_cFrame.iHeight,
-		m_cFrameTextRel.iX,
-		m_cFrameTextRel.iY,
-		m_cFrameTextRel.iWidth,
-		m_cFrameTextRel.iHeight,
-		m_cFrameScrollRel.iX,
-		m_cFrameScrollRel.iY,
-		m_cFrameScrollRel.iWidth,
-		m_cFrameScrollRel.iHeight
-	);
-#endif
 }
 
 void CTextBox::refreshTextLineArray(void)
@@ -485,17 +464,6 @@ void CTextBox::refreshTextLineArray(void)
 			m_nCurrentLine = m_nCurrentPage * m_nLinesPerPage;
 		}
 	}
-
-#if 0
-	TRACE_1(" m_nNrOfPages:     %d\r\n", m_nNrOfPages);
-	TRACE_1(" m_nNrOfLines:     %d\r\n", m_nNrOfLines);
-	TRACE_1(" m_nNrOfNewLine:   %d\r\n", m_nNrOfNewLine);
-	TRACE_1(" maxTextWidth:  %d\r\n", maxTextWidth);
-	TRACE_1(" m_nLinesPerPage:  %d\r\n", m_nLinesPerPage);
-	TRACE_1(" m_nFontTextHeight:%d\r\n", m_nFontTextHeight);
-	TRACE_1(" m_nCurrentPage:   %d\r\n", m_nCurrentPage);
-	TRACE_1(" m_nCurrentLine:   %d\r\n", m_nCurrentLine);
-#endif
 }
 
 void CTextBox::refreshScroll(void)
@@ -850,20 +818,6 @@ bool CTextBox::setText(const std::string *newText, int max_width, bool force_rep
 
 void CTextBox::paint(void)
 {
-	//TRACE("[CTextBox] %s Line %d\r\n", __FUNCTION__, __LINE__);
-#if 0
-	TRACE("  Mode: ");
-	if (m_nMode & SCROLL)		TRACE("SCROLL ");
-	if (m_nMode & NO_AUTO_LINEBREAK)	TRACE("NO_AUTO_LINEBREAK ");
-	if (m_nMode & AUTO_WIDTH)	TRACE("AUTO_WIDTH ");
-	if (m_nMode & AUTO_HIGH)		TRACE("AUTO_HIGH ");
-	if (m_nMode & CENTER)		TRACE("CENTER ");
-	if (m_nMode & RIGHT)		TRACE("RIGHT ");
-	if (m_nMode & TOP)		TRACE("TOP ");
-	if (m_nMode & BOTTOM)		TRACE("BOTTOM ");
-	TRACE("\r\n");
-
-#endif
 	if (frameBuffer != NULL)
 		return;
 

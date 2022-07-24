@@ -320,18 +320,6 @@ void CBouquetManager::saveBouquets(const CZapitClient::bouquetMode bouquetMode, 
 	if (bouquetMode == CZapitClient::BM_DONTTOUCHBOUQUETS)
 		return;
 
-	if (bouquetMode == CZapitClient::BM_CREATESATELLITEBOUQUET) {
-		while (Bouquets.size() > 1) {
-			BouquetList::iterator it = Bouquets.begin() + 1;
-			Bouquets[0]->tvChannels.insert(Bouquets[0]->tvChannels.end(), (*it)->tvChannels.begin(), (*it)->tvChannels.end());
-			Bouquets[0]->radioChannels.insert(Bouquets[0]->radioChannels.end(), (*it)->radioChannels.begin(), (*it)->radioChannels.end());
-			delete (*it);
-			Bouquets.erase(it);
-		}
-		if( !Bouquets.empty() )
-			Bouquets[0]->Name = providerName;
-	}
-
 	if ((bouquetMode == CZapitClient::BM_UPDATEBOUQUETS) || (bouquetMode == CZapitClient::BM_DELETEBOUQUETS)) {
 		while (!(Bouquets.empty())) {
 			CZapitBouquet* bouquet;

@@ -103,13 +103,7 @@ CBaseDec::RetCode CWavDec::Decoder(FILE *in, int /*OutputFd*/, State *state, CAu
 			Status = DATA_ERR;
 			return Status;
 	}
-#if 0
-	if (SetDSP(OutputFd, fmt, meta_data->samplerate, mChannels))
-	{
-		Status = DSPSET_ERR;
-		return Status;
-	}
-#endif
+
 #if __BYTE_ORDER == __LITTLE_ENDIAN
 	audioDecoder->PrepareClipPlay(mChannels, meta_data->samplerate, mBitsPerSample, 1);
 #else

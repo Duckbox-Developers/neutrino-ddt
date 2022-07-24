@@ -326,19 +326,6 @@ int CBEBouquetWidget::exec(CMenuTarget *parent, const std::string & /*actionKey*
 				if (selected < Bouquets->size()) /* Bouquets->size() might be 0 */
 				{
 					std::string ChannelWidgetCaption = (*Bouquets)[selected]->bName;
-#if 0
-					if (!(*Bouquets)[selected]->tvChannels.empty())
-					{
-						ChannelWidgetCaption = ChannelWidgetCaption + " => TV";
-						if (!(*Bouquets)[selected]->radioChannels.empty())
-							ChannelWidgetCaption = ChannelWidgetCaption + " / Radio";
-					}
-					else if (!(*Bouquets)[selected]->radioChannels.empty())
-					{
-						ChannelWidgetCaption = ChannelWidgetCaption + " => Radio";
-					}
-#endif
-
 					CBEChannelWidget *channelWidget = new CBEChannelWidget(ChannelWidgetCaption, selected);
 					channelWidget->exec(this, "");
 					selected = channelWidget->getBouquet();

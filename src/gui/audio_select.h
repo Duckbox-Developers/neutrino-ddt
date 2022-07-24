@@ -57,7 +57,4 @@ class CAudioSelectMenuHandler : public CMenuTarget
 		int  doMenu();
 
 };
-
-
 #endif
-

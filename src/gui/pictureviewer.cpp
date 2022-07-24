@@ -827,17 +827,6 @@ void CPictureViewerGui::thrView()
 		m_viewer->DecodeImage(playlist[selected].Filename, true, m_unscaled);
 
 	m_viewer->ShowImage(playlist[selected].Filename, m_unscaled);
-
-#if 0
-	//Decode next
-	unsigned int next=selected+1;
-	if (next > playlist.size()-1)
-		next=0;
-	if (m_state==VIEW)
-		m_viewer->DecodeImage(playlist[next].Filename,true);
-	else
-		m_viewer->DecodeImage(playlist[next].Filename,false);
-#endif
 }
 
 void CPictureViewerGui::endView()

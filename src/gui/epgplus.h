@@ -363,23 +363,6 @@ class EpgPlus
 
 		typedef time_t DurationSetting;
 
-		/*
-		struct Settings
-		{
-			Settings(bool doInit = true);
-
-			virtual ~Settings();
-
-			FontSetting*	fontSettings;
-			SizeSetting*	sizeSettings;
-			DurationSetting	durationSetting;
-		};
-		typedef std::map<int, Font*> Fonts;
-		typedef std::map<int, int> Sizes;
-		static Font * fonts[NumberOfFontSettings];
-		static int sizes[NumberOfSizeSettings];
-		*/
-
 		friend class EpgPlus::ChannelEventEntry;
 		friend class EpgPlus::ChannelEntry;
 		friend class EpgPlus::MenuOptionChooserSwitchSwapMode;

@@ -230,8 +230,6 @@ class CComponentsText : public CCTextScreen, public CComponentsItem
 		 * Returns true if any buffer was cleane
 		*/
 		bool clearSavedScreen();
-// 		///set color gradient on/off, returns true if gradient mode was changed
-// 		 bool enableColBodyGradient(const int& enable_mode, const fb_pixel_t& sec_color = 255 /*=COL_BACKGROUND*/);
 };
 
 

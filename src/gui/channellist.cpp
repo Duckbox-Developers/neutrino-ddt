@@ -63,12 +63,8 @@
 #include <gui/widget/icons.h>
 #include <gui/movieplayer.h>
 #include <gui/infoclock.h>
-#if 0
-#include <gui/widget/messagebox.h>
-#include <gui/widget/hintbox.h>
-#else
 #include <gui/widget/msgbox.h>
-#endif
+
 #include <system/helpers.h>
 #include <system/settings.h>
 #include <system/set_threadname.h>
@@ -1175,17 +1171,6 @@ bool CChannelList::adjustToChannelID(const t_channel_id channel_id)
 
 	return false;
 }
-
-#if 0
-int CChannelList::hasChannel(int nChannelNr)
-{
-	for (uint32_t i=0; i<(*chanlist).size(); i++) {
-		if (getKey(i) == nChannelNr)
-			return(i);
-	}
-	return(-1);
-}
-#endif
 
 int CChannelList::hasChannelID(t_channel_id channel_id)
 {

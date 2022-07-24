@@ -418,23 +418,6 @@ int CAudioPlayerGui::show()
 			else
 				loop=false;
 		}
-#if 0 		//add RC_favorites for internetradio
-		else if ((msg == CRCInput::RC_favorites) && (m_inetmode))
-		{
-			if (m_key_level == 0)
-			{
-				// clear playlist and load RADIO_FAVORITES_XML_FILE
-				if (access(RADIO_FAVORITES_XML_FILE, F_OK) == 0)
-				{
-					if (!m_playlist.empty())
-						clearPlaylist();
-					scanXmlFile(RADIO_FAVORITES_XML_FILE);
-					clear_before_update = true;
-					update = true;
-				}
-			}
-		}
-#endif
 		else if (msg == CRCInput::RC_left || msg == CRCInput::RC_previoussong)
 		{
 			if (m_key_level == 1)
@@ -956,11 +939,6 @@ bool CAudioPlayerGui::clearPlaylist(void)
 	bool result = false;
 
 	CAudioPlayList::const_iterator it;
-#if 0
-	for (it = m_playlist.begin(); it!=m_playlist.end(); ++it) {
-		unlink(it->MetaData.cover.c_str());
-	}
-#endif
 
 	if (!(m_playlist.empty()))
 	{

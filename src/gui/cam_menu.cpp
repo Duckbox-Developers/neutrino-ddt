@@ -197,10 +197,6 @@ int CCAMMenuHandler::doMainMenu()
 			snprintf(tmp, sizeof(tmp), "ca_sc%d", i);
 
 			cammenu->addItem(new CMenuForwarder(name1, true, NULL, this, tmp, CRCInput::RC_1 + cnt++));
-#if 0 // FIXME not implemented yet
-			snprintf(tmp, sizeof(tmp), "ca_sc_reset%d", i);
-			cammenu->addItem(new CMenuForwarder(LOCALE_SC_RESET, true, NULL, this, tmp));
-#endif
 			memset(name1,0,sizeof(name1));
 		} else {
 			snprintf(str1, sizeof(str1), "%s %d", g_Locale->getText(LOCALE_SC_EMPTY), i);
@@ -309,10 +305,7 @@ int CCAMMenuHandler::handleCamMsg(const neutrino_msg_t msg, neutrino_msg_data_t 
 
 		printf("CCAMMenuHandler::handleCamMsg: %s\n", str);
 		ShowHint(LOCALE_MESSAGEBOX_INFO, str, 450, 3);
-#if 0
-		if (menu_slot == curslot && menu_type == SlotType)
-			return 3;
-#endif
+
 		if (in_menu)
 			msgret = messages_return::cancel_all;
 	} else if(MsgId == CA_MESSAGE_MSG_INIT_OK) {

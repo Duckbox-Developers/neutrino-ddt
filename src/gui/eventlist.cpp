@@ -69,19 +69,6 @@ extern CRemoteControl *g_RemoteControl;	/* neutrino.cpp */
 
 extern CPictureViewer * g_PicViewer;
 
-#if 0
-// sort operators
-bool sortById (const CChannelEvent& a, const CChannelEvent& b)
-{
-	return a.eventID < b.eventID ;
-}
-
-inline static bool sortbyEventid (const CChannelEvent& a, const CChannelEvent& b)
-{
-	return (a.channelID == b.channelID && a.eventID == b.eventID && a.startTime == b.startTime);
-}
-#endif
-
 inline bool sortByDescription (const CChannelEvent& a, const CChannelEvent& b)
 {
 	if(a.description == b.description)
@@ -190,16 +177,7 @@ void CEventList::readEvents(const t_channel_id channel_id)
 				{
 					CChannelEventList evtlist2; // stores the temporary eventlist of the subchannel channelid
 					t_channel_id channel_id2;
-#if 0
-					for (e=evtlist.begin(); e!=evtlist.end(); ++e )
-					{
-						if ( e->startTime > azeit ) {
-							break;
-						}
-					}
-					// next line is to have a valid e
-					if (evtlist.end() == e) --e;
-#endif
+
 					for (unsigned int i=0; i<linkedServices.size(); i++)
 					{
 						channel_id2 = CREATE_CHANNEL_ID(
@@ -214,10 +192,6 @@ void CEventList::readEvents(const t_channel_id channel_id)
 							for (unsigned int loop=0 ; loop<evtlist2.size(); loop++ )
 							{
 								// check if event is in the range of the portal parent event
-#if 0
-								if ( (evtlist2[loop].startTime >= azeit) /*&&
-								     (evtlist2[loop].startTime < e->startTime + (int)e->duration)*/ )
-#endif
 								{
 									//FIXME: bad ?evtlist2[loop].sub = true;
 									evtlist.push_back(evtlist2[loop]);
@@ -440,13 +414,6 @@ int CEventList::exec(const t_channel_id channel_id, const std::string& channelna
 				sort_mode++;
 				sort(evtlist.begin(),evtlist.end(),sortByDescription);
 			}
-#if 0
-			else if(sort_mode==1)
-			{
-				sort_mode++;
-				sort(evtlist.begin(),evtlist.end(),sortById);
-			}
-#endif
 			else
 			{
 				sort_mode=0;
@@ -1043,12 +1010,6 @@ void CEventList::paintFoot(t_channel_id channel_id)
 		buttons[btn_cnt].locale = LOCALE_EPGPLUS_HEAD;
 		btn_cnt++;
 	}
-
-#if 0
-	buttons[btn_cnt].button = NEUTRINO_ICON_BUTTON_0;
-	buttons[btn_cnt].locale = LOCALE_TIMERLIST_NAME;
-	btn_cnt++;
-#endif
 
 	CComponentsFooter footer;
 	footer.enableShadow(CC_SHADOW_ON, -1, true);

@@ -144,18 +144,7 @@ std::string CPictureViewer::DownloadImage(std::string url)
 
 bool CPictureViewer::DecodeImage(const std::string &_name, bool showBusySign, bool unscaled)
 {
-	// dbout("DecodeImage {\n");
-#if 0 // quick fix for issue #245. TODO more smart fix for this problem
-	if (name == m_NextPic_Name)
-	{
-		//      dbout("DecodeImage }\n");
-		return true;
-	}
-#endif
 	int x, y, imx, imy;
-
-	// 	int xs = CFrameBuffer::getInstance()->getScreenWidth(true);
-	// 	int ys = CFrameBuffer::getInstance()->getScreenHeight(true);
 
 	// Show red block for "next ready" in view state
 	if (showBusySign)
@@ -887,34 +876,7 @@ bool CPictureViewer::GetLogoName(const uint64_t &channel_id, const std::string &
 	return false;
 }
 #endif
-#if 0
-bool CPictureViewer::DisplayLogo(uint64_t channel_id, int posx, int posy, int width, int height)
-{
-	char fname[255];
-	bool ret = false;
 
-	sprintf(fname, "%s/%llx.jpg", g_settings.logo_hdd_dir.c_str(), channel_id & 0xFFFFFFFFFFFFULL);
-//	printf("logo file: %s\n", fname);
-	if (access(fname, F_OK))
-		sprintf(fname, "%s/%llx.gif", g_settings.logo_hdd_dir.c_str(), channel_id & 0xFFFFFFFFFFFFULL);
-
-	if (!access(fname, F_OK))
-	{
-		ret = DisplayImage(fname, posx, posy, width, height);
-#if 0
-		//ret = DisplayImage(fname, posx, posy, width, height);
-		fb_pixel_t *data = getImage(fname, width, height);
-		//fb_pixel_t * data = getIcon(fname, &width, &height);
-		if (data)
-		{
-			CFrameBuffer::getInstance()->blit2FB(data, width, height, posx, posy);
-			free(data);
-		}
-#endif
-	}
-	return ret;
-}
-#endif
 void CPictureViewer::rescaleImageDimensions(int *width, int *height, const int max_width, const int max_height, bool upscale)
 {
 	float aspect;

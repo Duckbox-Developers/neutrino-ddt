@@ -393,14 +393,6 @@ void CMotorControl::paintSeparator(int xpos, int *pypos, int pwidth, const char 
 	*pypos += th;
 	frameBuffer->paintHLineRel(xpos, pwidth - 20, *pypos - (th >> 1), COL_MENUCONTENT_PLUS_3);
 	frameBuffer->paintHLineRel(xpos, pwidth - 20, *pypos - (th >> 1) + 1, COL_MENUCONTENT_PLUS_1);
-
-#if 0
-	int stringwidth = m_font->getRenderWidth(txt);
-	int stringstartposX = 0;
-	stringstartposX = (xpos + (pwidth >> 1)) - (stringwidth >> 1);
-	frameBuffer->paintBoxRel(stringstartposX - 5, *pypos - mheight, stringwidth + 10, mheight, COL_MENUCONTENT_PLUS_0);
-	m_font->RenderString(stringstartposX, *pypos, stringwidth, txt, COL_MENUCONTENT_TEXT);
-#endif
 }
 
 void CMotorControl::paintStatus()
@@ -559,36 +551,10 @@ void CMotorControl::paintMenu()
 
 void CMotorControl::startSatFind(void)
 {
-#if 0
-	if (satfindpid != -1) {
-		kill(satfindpid, SIGKILL);
-		waitpid(satfindpid, 0, 0);
-		satfindpid = -1;
-	}
-
-	switch ((satfindpid = fork())) {
-		case -1:
-			printf("[motorcontrol] fork");
-			break;
-		case 0:
-			printf("[motorcontrol] starting satfind...\n");
-			if (execlp("/bin/satfind", "satfind", NULL) < 0)
-				printf("[motorcontrol] execlp satfind failed.\n");
-			break;
-	} /* switch */
-#endif
 }
 
 void CMotorControl::stopSatFind(void)
 {
-#if 0
-	if (satfindpid != -1) {
-		printf("[motorcontrol] killing satfind...\n");
-		kill(satfindpid, SIGKILL);
-		waitpid(satfindpid, 0, 0);
-		satfindpid = -1;
-	}
-#endif
 }
 
 void CMotorControl::showSNR ()

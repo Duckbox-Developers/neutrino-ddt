@@ -327,10 +327,6 @@ bool CFlashUpdate::selectHttpImage(void)
 	if (notify) {
 		if(newfound)
 			ShowMsg(LOCALE_MESSAGEBOX_INFO, LOCALE_FLASHUPDATE_NEW_FOUND, CMsgBox::mbrOk, CMsgBox::mbOk, NEUTRINO_ICON_INFO, MSGBOX_MIN_WIDTH, 6 );
-#if 0
-		else
-			ShowMsg(LOCALE_MESSAGEBOX_INFO, LOCALE_FLASHUPDATE_NEW_NOTFOUND, CMsgBox::mbrOk, CMsgBox::mbOk, NEUTRINO_ICON_INFO, MSGBOX_MIN_WIDTH, 6);
-#endif
 	}
 
 	menu_ret = SelectionWidget.exec(NULL, "");

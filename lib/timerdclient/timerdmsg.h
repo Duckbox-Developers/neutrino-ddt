@@ -151,5 +151,4 @@ class CTimerdMsg : public CBasicMessage
 		};
 
 };
-
 #endif /* __timerdmsg_h__ */

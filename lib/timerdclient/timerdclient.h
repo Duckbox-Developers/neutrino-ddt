@@ -162,15 +162,6 @@ class CTimerdClient: private CBasicClient
 			return addTimerEvent(CTimerd::TIMER_ZAPTO, &eventInfo, announcetime, alarmtime, stoptime);
 		};
 
-#if 0
-		int addNextProgramTimerEvent(CTimerd::EventInfo eventInfo, time_t alarmtime, time_t announcetime = 0, time_t stoptime = 0)
-		{
-			// mal auf verdacht eingebaut
-			// keine ahnung ob / was hier noch fehlt
-			return addTimerEvent(CTimerd::TIMER_NEXTPROGRAM, &eventInfo, alarmtime, announcetime, stoptime);
-		};
-#endif
-
 		// Exit timerd and programm wakeup
 		bool shutdown();
 
@@ -179,9 +170,7 @@ class CTimerdClient: private CBasicClient
 		void getRecordingSafety(int &pre, int &post);
 
 		// Convert String of O and X to repeat type and vice versa
-		//void getWeekdaysFromStr(int *rep, const char* str);
 		void getWeekdaysFromStr(CTimerd::CTimerEventRepeat *rep, std::string &str);
 		void setWeekdaysToStr(CTimerd::CTimerEventRepeat rep, std::string &str);
 };
-
 #endif

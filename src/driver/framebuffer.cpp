@@ -188,59 +188,6 @@ void CFrameBuffer::init(const char *const fbDevice)
 
 	useBackground(false);
 	m_transparent = m_transparent_default;
-#if 0
-	if ((tty = open("/dev/vc/0", O_RDWR)) < 0)
-	{
-		perror("open (tty)");
-		goto nolfb;
-	}
-
-	struct sigaction act;
-
-	memset(&act, 0, sizeof(act));
-	act.sa_handler  = switch_signal;
-	sigemptyset(&act.sa_mask);
-	sigaction(SIGUSR1, &act, NULL);
-	sigaction(SIGUSR2, &act, NULL);
-
-	struct vt_mode mode;
-
-	if (-1 == ioctl(tty, KDGETMODE, &kd_mode))
-	{
-		perror("ioctl KDGETMODE");
-		goto nolfb;
-	}
-
-	if (-1 == ioctl(tty, VT_GETMODE, &vt_mode))
-	{
-		perror("ioctl VT_GETMODE");
-		goto nolfb;
-	}
-
-	if (-1 == ioctl(tty, VT_GETMODE, &mode))
-	{
-		perror("ioctl VT_GETMODE");
-		goto nolfb;
-	}
-
-	mode.mode   = VT_PROCESS;
-	mode.waitv  = 0;
-	mode.relsig = SIGUSR1;
-	mode.acqsig = SIGUSR2;
-
-	if (-1 == ioctl(tty, VT_SETMODE, &mode))
-	{
-		perror("ioctl VT_SETMODE");
-		goto nolfb;
-	}
-
-	if (-1 == ioctl(tty, KDSETMODE, KD_GRAPHICS))
-	{
-		perror("ioctl KDSETMODE");
-		goto nolfb;
-	}
-#endif
-
 	return;
 
 nolfb:
@@ -278,13 +225,6 @@ CFrameBuffer::~CFrameBuffer()
 		q_circle = NULL;
 	}
 
-#if 0
-	if (-1 == ioctl(tty, VT_SETMODE, &vt_mode))
-		perror("ioctl VT_SETMODE");
-
-	if (available)
-		ioctl(fd, FBIOPUT_VSCREENINFO, &oldscreen);
-#endif
 	if (lfb)
 		munmap(lfb, available);
 
@@ -375,33 +315,6 @@ int CFrameBuffer::setMode(unsigned int /*nxRes*/, unsigned int /*nyRes*/, unsign
 {
 	if (!available && !active)
 		return -1;
-
-#if 0
-	screeninfo.xres_virtual = screeninfo.xres = nxRes;
-	screeninfo.yres_virtual = screeninfo.yres = nyRes;
-	screeninfo.height = 0;
-	screeninfo.width = 0;
-	screeninfo.xoffset = screeninfo.yoffset = 0;
-	screeninfo.bits_per_pixel = nbpp;
-
-	if (ioctl(fd, FBIOPUT_VSCREENINFO, &screeninfo) < 0)
-	{
-		perror("FBIOPUT_VSCREENINFO");
-	}
-
-	if (1)
-	{
-		printf("SetMode: %dbits, red %d:%d green %d:%d blue %d:%d transp %d:%d\n",
-			screeninfo.bits_per_pixel, screeninfo.red.length, screeninfo.red.offset, screeninfo.green.length, screeninfo.green.offset, screeninfo.blue.length, screeninfo.blue.offset, screeninfo.transp.length, screeninfo.transp.offset);
-	}
-	if ((screeninfo.xres != nxRes) && (screeninfo.yres != nyRes) && (screeninfo.bits_per_pixel != nbpp))
-	{
-		printf("SetMode failed: wanted: %dx%dx%d, got %dx%dx%d\n",
-			nxRes, nyRes, nbpp,
-			screeninfo.xres, screeninfo.yres, screeninfo.bits_per_pixel);
-		return -1;
-	}
-#endif
 
 	xRes = screeninfo.xres;
 	yRes = screeninfo.yres;
@@ -1399,17 +1312,6 @@ void CFrameBuffer::SaveScreen(int x, int y, int dx, int dy, fb_pixel_t *const me
 			*(bkpos++) = *(dest++);
 		pos += stride;
 	}
-	//RestoreScreen(x, y, dx, dy, memp); //FIXME
-#if 0
-	uint8_t *fbpos = ((uint8_t *)getFrameBufferPointer()) + x * sizeof(fb_pixel_t) + stride * y;
-	fb_pixel_t *bkpos = memp;
-	for (int count = 0; count < dy; count++)
-	{
-		memmove(bkpos, fbpos, dx * sizeof(fb_pixel_t));
-		fbpos += stride;
-		bkpos += dx;
-	}
-#endif
 	checkFbArea(x, y, dx, dy, false);
 
 }

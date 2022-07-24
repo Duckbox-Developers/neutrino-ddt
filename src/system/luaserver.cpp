@@ -18,23 +18,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#if 0
-For testing try:
-
-	cat << EOT > / lib / tuxbox / luaplugins / test.lua
-#!/bin/luaclient
-
-		for i, v in ipairs(arg) do
-				print(tostring(i) .. "\t" .. tostring(v))
-				end
-				return "ok"
-					EOT
-
-					chmod + x / lib / tuxbox / luaplugins / test.lua
-
-					/ lib / tuxbox / luaplugins / test.lua a b c d
-#endif
-
 #include <config.h>
 
 #include <cstdio>

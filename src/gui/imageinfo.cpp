@@ -251,12 +251,6 @@ void CImageInfo::InitMinitv()
 	//init the minitv object
 	if (cc_tv == NULL)
 		cc_tv = new CComponentsPIP (0, item_offset);
-	
-#if 0 //static assign of dimensions are distorting ratio of mini tv picture
-	//init width and height
-	cc_tv->setWidth(cc_win->getWidth()/3);
-	cc_tv->setHeight(cc_win->getHeight()/3);
-#endif
 
 	//init x pos and use as parameter for setXPos
 	int cc_tv_x = (cc_win->getWidth() - cc_tv->getWidth()) - item_offset;

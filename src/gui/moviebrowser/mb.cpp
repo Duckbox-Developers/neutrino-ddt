@@ -447,7 +447,6 @@ void CMovieBrowser::initGlobalSettings(void)
 	m_settings.parentalLockAge = MI_PARENTAL_OVER18;
 	m_settings.parentalLock = MB_PARENTAL_LOCK_OFF;
 
-	m_settings.storageDirMovieUsed = true;
 	m_settings.storageDirRecUsed = true;
 
 	m_settings.reload = true;
@@ -637,7 +636,6 @@ bool CMovieBrowser::loadSettings(MB_SETTINGS *settings)
 	settings->parentalLock = (MB_PARENTAL_LOCK)configfile.getInt32("mb_parentalLock", MB_PARENTAL_LOCK_ACTIVE);
 
 	settings->storageDirRecUsed = (bool)configfile.getInt32("mb_storageDir_rec", true);
-	settings->storageDirMovieUsed = (bool)configfile.getInt32("mb_storageDir_movie", true);
 
 	settings->reload = (bool)configfile.getInt32("mb_reload", true);
 	settings->remount = (bool)configfile.getInt32("mb_remount", false);
@@ -704,7 +702,6 @@ bool CMovieBrowser::saveSettings(MB_SETTINGS *settings)
 	configfile.setInt32("mb_filter_optionVar", settings->filter.optionVar);
 
 	configfile.setInt32("mb_storageDir_rec", settings->storageDirRecUsed);
-	configfile.setInt32("mb_storageDir_movie", settings->storageDirMovieUsed);
 
 	configfile.setInt32("mb_parentalLockAge", settings->parentalLockAge);
 	configfile.setInt32("mb_parentalLock", settings->parentalLock);
@@ -877,28 +874,23 @@ int CMovieBrowser::exec(CMenuTarget *parent, const std::string &actionKey)
 	}
 	else if (actionKey == "cut")
 	{
-#if 0
-		if ((m_movieSelectionHandler == playing_info) && (NeutrinoModes::mode_ts == CNeutrinoApp::getInstance()->getMode()))
-			ShowMsg(LOCALE_MESSAGEBOX_ERROR, "Impossible to cut playing movie.", CMsgBox::mbrCancel, CMsgBox::mbCancel, NEUTRINO_ICON_ERROR);
-		else
-#endif
-			if ((show_mode == MB_SHOW_RECORDS) && (ShowMsg(LOCALE_MESSAGEBOX_INFO, LOCALE_MOVIEBROWSER_CUT, CMsgBox::mbrNo, CMsgBox::mbYes | CMsgBox::mbNo) == CMsgBox::mbrYes))
-			{
-				CHintBox hintBox(LOCALE_MESSAGEBOX_INFO, LOCALE_MOVIEBROWSER_CUTTING);
-				hintBox.paint();
-				sleep(1); //???
-				hintBox.hide();
+		if ((show_mode == MB_SHOW_RECORDS) && (ShowMsg(LOCALE_MESSAGEBOX_INFO, LOCALE_MOVIEBROWSER_CUT, CMsgBox::mbrNo, CMsgBox::mbYes | CMsgBox::mbNo) == CMsgBox::mbrYes))
+		{
+			CHintBox hintBox(LOCALE_MESSAGEBOX_INFO, LOCALE_MOVIEBROWSER_CUTTING);
+			hintBox.paint();
+			sleep(1); //???
+			hintBox.hide();
 
-				framebuffer->paintBackground(); // clear screen
-				CMovieCut mc;
-				bool res = mc.cutMovie(m_movieSelectionHandler);
-				//g_RCInput->clearRCMsg();
-				if (!res)
-					ShowMsg(LOCALE_MESSAGEBOX_ERROR, LOCALE_MOVIEBROWSER_CUT_FAILED, CMsgBox::mbrCancel, CMsgBox::mbCancel, NEUTRINO_ICON_ERROR);
-				else
-					m_doLoadMovies = true;
-				m_doRefresh = true;
-			}
+			framebuffer->paintBackground(); // clear screen
+			CMovieCut mc;
+			bool res = mc.cutMovie(m_movieSelectionHandler);
+			//g_RCInput->clearRCMsg();
+			if (!res)
+				ShowMsg(LOCALE_MESSAGEBOX_ERROR, LOCALE_MOVIEBROWSER_CUT_FAILED, CMsgBox::mbrCancel, CMsgBox::mbCancel, NEUTRINO_ICON_ERROR);
+			else
+				m_doLoadMovies = true;
+			m_doRefresh = true;
+		}
 	}
 	else if (actionKey == "truncate")
 	{
@@ -2833,14 +2825,7 @@ bool CMovieBrowser::onSortMovieInfoHandleList(std::vector<MI_MOVIE_INFO *> &hand
 void CMovieBrowser::updateDir(void)
 {
 	m_dir.clear();
-#if 0 // segfault
-	// check if there is a movie dir and if we should use it
-	if (g_settings.network_nfs_moviedir[0] != 0)
-	{
-		std::string name = g_settings.network_nfs_moviedir;
-		addDir(name, &m_settings.storageDirMovieUsed);
-	}
-#endif
+
 	// check if there is a record dir and if we should use it
 	if (!g_settings.network_nfs_recordingdir.empty())
 	{
@@ -3499,11 +3484,7 @@ bool CMovieBrowser::showMenu(bool calledExternally)
 	optionsMenuDir.addIntroItems(LOCALE_MOVIEBROWSER_MENU_DIRECTORIES_HEAD);
 	optionsMenuDir.addItem(new CMenuOptionChooser(LOCALE_MOVIEBROWSER_USE_REC_DIR, (int *)(&m_settings.storageDirRecUsed), MESSAGEBOX_YES_NO_OPTIONS, MESSAGEBOX_YES_NO_OPTIONS_COUNT, true));
 	optionsMenuDir.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_DIR, false, g_settings.network_nfs_recordingdir));
-#if 0 // see "void CMovieBrowser::updateDir(void)"
-	optionsMenuDir.addItem(new CMenuOptionChooser(LOCALE_MOVIEBROWSER_USE_MOVIE_DIR, (int *)(&m_settings.storageDirMovieUsed), MESSAGEBOX_YES_NO_OPTIONS, MESSAGEBOX_YES_NO_OPTIONS_COUNT, true));
-	optionsMenuDir.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_DIR, false, g_settings.network_nfs_moviedir));
-	optionsMenuDir.addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_MOVIEBROWSER_DIRECTORIES_ADDITIONAL));
-#endif
+
 	COnOffNotifier *notifier[MB_MAX_DIRS];
 	for (i = 0; i < MB_MAX_DIRS ; i++)
 	{

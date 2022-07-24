@@ -279,21 +279,6 @@ int CAudioSelectMenuHandler::doMenu ()
 		}
 	}
 
-#if 0
-	AudioSelector.addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_AUDIOMENU_VOLUME_ADJUST));
-
-	/* setting volume percent to zapit with channel_id/apid = 0 means current channel and pid */
-	CVolume::getInstance()->SetCurrentChannel(0);
-	CVolume::getInstance()->SetCurrentPid(0);
-	int percent[p_count+1];//+1 avoid zero size
-	for (uint i=0; i < p_count; i++) {
-		percent[i] = CZapit::getInstance()->GetPidVolume(0, g_RemoteControl->current_PIDs.APIDs[i].pid, g_RemoteControl->current_PIDs.APIDs[i].is_ac3);
-		AudioSelector.addItem(new CMenuOptionNumberChooser(g_RemoteControl->current_PIDs.APIDs[i].desc,
-					&percent[i], i == g_RemoteControl->current_PIDs.PIDs.selected_apid,
-					0, 999, CVolume::getInstance()));
-	}
-#endif
-
 	int res = AudioSelector->exec(NULL, "");
 
 	delete AudioSelector;

@@ -170,9 +170,6 @@ void CShellWindow::exec()
 									*outputp = 0;
 									break;
 								case '\r':
-#if 0
-									outputp = output;
-#endif
 									break;
 								case '\n':
 									lines_read++;

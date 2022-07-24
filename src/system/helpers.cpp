@@ -269,30 +269,6 @@ int run_pty(pid_t &pid, const char *cmdstring)
 	return master;
 }
 
-#if 0
-int mkdirhier(const char *pathname, mode_t mode)
-{
-	int res = -1;
-	if (!pathname || !*pathname)
-		return res;
-	char path[strlen(pathname) + 1];
-	strcpy(path, pathname);
-	char *p = path;
-	while ((p = strchr(p + 1, '/')))
-	{
-		*p = 0;
-		res = mkdir(path, mode);
-		if (res < 0 && errno != EEXIST)
-			break;
-		*p = '/';
-	}
-	res = mkdir(path, mode);
-	if (errno == EEXIST)
-		res = 0;
-	return res;
-}
-# endif
-
 /* This function is a replacement which makes sure that a \0 is always added,
    cuz standard strncpy does not terminate the string if the source is exactly
    as long or longer as the specified size. This can raise security issues.
@@ -1275,28 +1251,6 @@ bool split_config_string(const std::string &str, std::map<std::string, std::stri
 	return !smap.empty();
 }
 
-#if 0
-/* align for hw blit */
-uint32_t GetWidth4FB_HW_ACC(const uint32_t _x, const uint32_t _w, const bool max)
-{
-	uint32_t ret = _w;
-	static uint32_t xRes = 0;
-	if (xRes == 0)
-		xRes = CFrameBuffer::getInstance()->getScreenWidth(true);
-	if ((_x + ret) >= xRes)
-		ret = xRes - _x - 1;
-	if (ret % 4 == 0)
-		return ret;
-
-	int add = (max) ? 3 : 0;
-	ret = ((ret + add) / 4) * 4;
-	if ((_x + ret) >= xRes)
-		ret -= 4;
-
-	return ret;
-}
-#endif
-
 std::vector<std::string> split(const std::string &s, char delim)
 {
 	std::vector<std::string> vec;
@@ -1494,39 +1448,6 @@ int getpidof(const char *process)
 
 std::string filehash(const char *file)
 {
-#if 0
-	int fd;
-	int i;
-	unsigned long size;
-	struct stat s_stat;
-	unsigned char hash[MD5_DIGEST_LENGTH];
-	void *buff;
-	std::ostringstream os;
-
-	memset(hash, 0, MD5_DIGEST_LENGTH);
-
-	fd = open(file, O_RDONLY | O_NONBLOCK);
-	if (fd > 0)
-	{
-		// Get the size of the file by its file descriptor
-		fstat(fd, &s_stat);
-		size = s_stat.st_size;
-
-		buff = mmap(0, size, PROT_READ, MAP_SHARED, fd, 0);
-		MD5((const unsigned char *)buff, size, hash);
-		munmap(buff, size);
-
-		// Print the MD5 sum as hex-digits.
-		for (i = 0; i < MD5_DIGEST_LENGTH; ++i)
-		{
-			os.width(2);
-			os.fill('0');
-			os << std::hex << static_cast<int>(hash[i]);
-		}
-		close(fd);
-	}
-	return os.str();
-#endif
 	int i;
 	unsigned char hash[MD5_DIGEST_LENGTH];
 	std::ostringstream os;

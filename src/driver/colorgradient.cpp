@@ -40,17 +40,6 @@ CColorGradient::~CColorGradient()
 {
 }
 
-#if 0
-CColorGradient *CColorGradient::getInstance()
-{
-	static CColorGradient *GradientInstance = NULL;
-	if (!GradientInstance)
-		GradientInstance = new CColorGradient();
-	return GradientInstance;
-}
-#endif
-
-
 uint8_t CColorGradient::limitChar(int c)
 {
 	uint8_t ret;

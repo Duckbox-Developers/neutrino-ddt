@@ -516,10 +516,7 @@ void CVFD::showServicename(const std::string &name, int number)  // UTF-8
 void CVFD::showTime(bool force)
 {
 	static int recstatus = 0;
-#if 0
-	if (!has_lcd)
-		return;
-#endif
+
 	if (fd >= 0 && mode == MODE_SHUTDOWN)
 	{
 		ShowIcon(FP_ICON_CAM1, false);
@@ -866,13 +863,6 @@ void CVFD::setMode(const MODES m, const char *const title)
 
 	if (mode == MODE_AUDIO)
 		ShowIcon(FP_ICON_MP3, false);
-#if 0
-	else if (mode == MODE_STANDBY)
-	{
-		ShowIcon(FP_ICON_COL1, false);
-		ShowIcon(FP_ICON_COL2, false);
-	}
-#endif
 
 	if (strlen(title))
 		ShowText(title);
@@ -890,12 +880,6 @@ void CVFD::setMode(const MODES m, const char *const title)
 				case 1:
 					showVolume(volume, false);
 					break;
-#if 0
-				case 2:
-					showVolume(volume, false);
-					showPercentOver(percentOver, false);
-					break;
-#endif
 			}
 			showServicename(servicename);
 			showclock = true;
@@ -925,10 +909,6 @@ void CVFD::setMode(const MODES m, const char *const title)
 			Clear();
 			break;
 		case MODE_STANDBY:
-#if 0
-			ShowIcon(FP_ICON_COL1, true);
-			ShowIcon(FP_ICON_COL2, true);
-#endif
 			ClearIcons();
 			ShowIcon(FP_ICON_USB, false);
 			ShowIcon(FP_ICON_HDD, false);

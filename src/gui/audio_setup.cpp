@@ -204,10 +204,6 @@ int CAudioSetup::showAudioSetup()
 	audioSettings->addItem(st);
 	//---------------------------------------------------------
 
-#if 0
-	audioSettings->addItem(mf);
-#endif
-
 #if HAVE_SH4_HARDWARE
 	CMenuOptionNumberChooser *ch;
 	audioSettings->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_AUDIOMENU_MIXER_VOLUME));

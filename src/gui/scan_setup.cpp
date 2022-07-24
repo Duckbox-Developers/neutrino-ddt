@@ -80,10 +80,8 @@ static const char * tuner_desc[24] = { "A", "B", "C", "D", "E", "F", "G", "H", "
 const CMenuOptionChooser::keyval SCANTS_BOUQUET_OPTIONS[SCANTS_BOUQUET_OPTION_COUNT] =
 {
 	{ CZapitClient::BM_DELETEBOUQUETS        , LOCALE_SCANTS_BOUQUET_ERASE     },
-	/*{ CZapitClient::BM_CREATEBOUQUETS        , LOCALE_SCANTS_BOUQUET_CREATE    },*/
 	{ CZapitClient::BM_DONTTOUCHBOUQUETS     , LOCALE_SCANTS_BOUQUET_LEAVE     },
 	{ CZapitClient::BM_UPDATEBOUQUETS        , LOCALE_SCANTS_BOUQUET_UPDATE    }
-	/*{ CZapitClient::BM_CREATESATELLITEBOUQUET, LOCALE_SCANTS_BOUQUET_SATELLITE }*/
 };
 
 #define SCANTS_ZAPIT_SCANTYPE_COUNT 4
@@ -178,19 +176,6 @@ const CMenuOptionChooser::keyval SATSETUP_SCANTP_FEC[SATSETUP_SCANTP_FEC_COUNT] 
 	{ FEC_26_45_L, LOCALE_EXTRA_FEC_26_45_L }
 #endif
 };
-
-#if 0
-#define CABLESETUP_SCANTP_FEC_COUNT	6
-const CMenuOptionChooser::keyval CABLESETUP_SCANTP_FEC[CABLESETUP_SCANTP_FEC_COUNT] =
-{
-	{ FEC_1_2, LOCALE_EXTRA_FEC_1_2   },
-	{ FEC_2_3, LOCALE_EXTRA_FEC_2_3   },
-	{ FEC_3_4, LOCALE_EXTRA_FEC_3_4   },
-	{ FEC_5_6, LOCALE_EXTRA_FEC_5_6   },
-	{ FEC_7_8, LOCALE_EXTRA_FEC_7_8   },
-	{ FEC_AUTO, LOCALE_EXTRA_FEC_AUTO }
-};
-#endif
 
 #if _HAVE_DVB57
 #define TERRSETUP_SCANTP_FEC_COUNT	9
@@ -629,14 +614,7 @@ int CScanSetup::showScanMenu()
 	settings->addItem(GenericMenuSeparatorLine);
 	//----------------------------------------------------------------------
 #endif
-	//sat/provider selector
-#if 0
-	if(CFEManager::getInstance()->haveSat() || CFEManager::getInstance()->getFrontendCount() > 1) {
-		mf = new CMenuForwarder(LOCALE_SATSETUP_FE_TUNER, allow_start, NULL, this, "setup_frontend", CRCInput::convertDigitToKey(shortcut++));
-		mf->setHint("", LOCALE_MENU_HINT_SCAN_FESETUP);
-		settings->addItem(mf);
-	}
-#endif
+
 	if (CFEManager::getInstance()->haveSat()) {
 		r_system = ALL_SAT;
 
@@ -1756,11 +1734,7 @@ void CScanSetup::addScanMenuCable(CMenuWidget *menu)
 	menu->addItem(lcnhd);
 
 	menu->addItem(GenericMenuSeparatorLine);
-#if 0
-	mf = new CMenuForwarder(LOCALE_SCANTS_TEST, allow_start, NULL, this, "test", CRCInput::RC_yellow);
-	mf->setHint("", LOCALE_MENU_HINT_SCAN_TEST);
-	menu->addItem(mf);
-#endif
+
 	mf = new CMenuForwarder(LOCALE_SCANTS_STARTNOW, allow_start, NULL, this, "cable", CRCInput::RC_blue);
 	mf->setHint("", LOCALE_MENU_HINT_SCAN_START);
 	menu->addItem(mf);

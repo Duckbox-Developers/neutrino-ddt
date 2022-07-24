@@ -124,41 +124,10 @@ static void crash_handler(int signum, siginfo_t *si, void *ctx)
 	int trace_size = 0;
 	ucontext_t *ct = (ucontext_t *) ctx;
 	if (si) {}
-#if 0
-	printf("signal %d, siginfo->si_addr is %p\n", signum, si->si_addr);
-	printf("reg[%02d]       = 0x%lx\n", 0, ct->uc_mcontext.arm_r0);
-	printf("reg[%02d]       = 0x%lx\n", 1, ct->uc_mcontext.arm_r1);
-	printf("reg[%02d]       = 0x%lx\n", 2, ct->uc_mcontext.arm_r2);
-	printf("reg[%02d]       = 0x%lx\n", 3, ct->uc_mcontext.arm_r3);
-	printf("reg[%02d]       = 0x%lx\n", 4, ct->uc_mcontext.arm_r4);
-	printf("reg[%02d]       = 0x%lx\n", 5, ct->uc_mcontext.arm_r5);
-	printf("reg[%02d]       = 0x%lx\n", 6, ct->uc_mcontext.arm_r6);
-	printf("reg[%02d]       = 0x%lx\n", 7, ct->uc_mcontext.arm_r7);
-	printf("reg[%02d]       = 0x%lx\n", 8, ct->uc_mcontext.arm_r8);
-	printf("reg[%02d]       = 0x%lx\n", 9, ct->uc_mcontext.arm_r9);
-	printf("reg[%02d]       = 0x%lx\n", 10, ct->uc_mcontext.arm_r10);
-	printf("FP       = 0x%lx\n", ct->uc_mcontext.arm_fp);
-	printf("IP       = 0x%lx\n", ct->uc_mcontext.arm_ip);
-	printf("SP       = 0x%lx\n", ct->uc_mcontext.arm_sp);
-	printf("LR       = 0x%lx\n", ct->uc_mcontext.arm_lr);
-	printf("PC       = 0x%lx\n", ct->uc_mcontext.arm_pc);
-	printf("CPSR       = 0x%lx\n", ct->uc_mcontext.arm_cpsr);
-	printf("Fault Address       = 0x%lx\n", ct->uc_mcontext.fault_address);
-	printf("Trap no       = 0x%lx\n", ct->uc_mcontext.trap_no);
-	printf("Err Code       = 0x%lx\n", ct->uc_mcontext.error_code);
-	printf("Old Mask       = 0x%lx\n", ct->uc_mcontext.oldmask);
-#endif
-
 	trace_size = backtrace(trace, 16);
 	trace[1] = (void *) ct->uc_mcontext.arm_pc;
-#if 0
-	char **messages = backtrace_symbols(trace, trace_size);
-	/* skip first stack frame (points here) */
-	printf("Execution path: (%d)\n", trace_size);
-	for (int i = 0; i < trace_size; ++i)
-		printf("[#%d] %s\n", i, messages[i]);
-#endif
 	backtrace_symbols_fd(trace, trace_size, fileno(stdout));
+
 	if (signum != SIGUSR1)
 		abort();
 }

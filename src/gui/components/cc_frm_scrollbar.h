@@ -97,7 +97,6 @@ class CComponentsScrollBar : public CComponentsFrmChain
 			fb_pixel_t color_shadow = COL_SHADOW_PLUS_0,
 			fb_pixel_t color_select = COL_SCROLLBAR_ACTIVE_PLUS_0,
 			fb_pixel_t color_passive = COL_SCROLLBAR_PASSIVE_PLUS_0);
-// 		~CComponentsScrollBar(); //inherited from CComponentsForm
 
 		/**Set current page number
 		 * @return 			void

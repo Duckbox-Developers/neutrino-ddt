@@ -36,15 +36,6 @@
 #include <linux/input.h>
 #include <error.h>
 
-#if 0
-/* if you want use HAVE_XX_HARDWARE, better include config.h :-) */
-#include "config.h"
-
-#if defined(HAVE_DBOX_HARDWARE)
-#define EVENTDEV "/dev/input/event0"
-#else
-#endif
-#else
 /* dreambox do not use a "normal" input device, so we cannot
    (ab-)use the event repeating function of it. use the neutrino socket instead. */
 #include <sys/socket.h>
@@ -69,7 +60,6 @@ enum initiators
 	INITID_NEUTRINO,
 	INITID_GENERIC_INPUT_EVENT_PROVIDER
 };
-#endif
 
 #include "rcsim.h"
 
@@ -148,13 +138,6 @@ int push(int ev, unsigned int code, unsigned int value)
 	eh.initiatorID = INITID_GENERIC_INPUT_EVENT_PROVIDER;
 	eh.eventID = 0; // data field
 	eh.dataSize = sizeof(int);
-#if 0
-	/* neutrino-hd does not yet do REPEAT or RELEASE AFAICT. */
-	if (value == KEY_AUTOREPEAT)
-		code |= 0x0400; // neutrino:CRCInput::RC_repeat
-	if (value == KEY_RELEASED)
-		code |= 0x0800; // neutrino:CRCInput::RC_release
-#endif
 
 	if (write(fd, &eh, sizeof(eh)) < 0)
 	{

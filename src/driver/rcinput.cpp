@@ -832,35 +832,6 @@ void CRCInput::getMsg_us(neutrino_msg_t *msg, neutrino_msg_data_t *data, uint64_
 				{
 					read_bytes = recv(fd_eventclient, p, emsg.dataSize, MSG_WAITALL);
 					//printf("[neutrino] eventbody read %d bytes - initiator %x\n", read_bytes, emsg.initiatorID);
-
-#if 0
-					if (emsg.initiatorID == CEventServer::INITID_CONTROLD)
-					{
-						switch (emsg.eventID)
-						{
-							case CControldClient::EVT_VOLUMECHANGED :
-								*msg = NeutrinoMessages::EVT_VOLCHANGED;
-								*data = 0;
-								break;
-							case CControldClient::EVT_MUTECHANGED :
-								*msg = NeutrinoMessages::EVT_MUTECHANGED;
-								*data = (unsigned) p;
-								dont_delete_p = true;
-								break;
-							case CControldClient::EVT_VCRCHANGED :
-								*msg = NeutrinoMessages::EVT_VCRCHANGED;
-								*data = *(int *) p;
-								break;
-							case CControldClient::EVT_MODECHANGED :
-								*msg = NeutrinoMessages::EVT_MODECHANGED;
-								*data = *(int *) p;
-								break;
-							default:
-								printf("[neutrino] event INITID_CONTROLD - unknown eventID 0x%x\n",  emsg.eventID);
-						}
-					}
-					else
-#endif
 						if (emsg.initiatorID == CEventServer::INITID_HTTPD)
 						{
 							switch (emsg.eventID)
@@ -982,14 +953,6 @@ void CRCInput::getMsg_us(neutrino_msg_t *msg, neutrino_msg_data_t *data, uint64_
 									*data         = (neutrino_msg_data_t) p;
 									dont_delete_p = true;
 									break;
-#if 0
-								case CSectionsdClient::EVT_SERVICES_UPDATE:
-									*msg          = NeutrinoMessages::EVT_SERVICES_UPD;
-									*data         = 0;
-									break;
-								case CSectionsdClient::EVT_BOUQUETS_UPDATE:
-									break;
-#endif
 								case CSectionsdClient::EVT_RELOAD_XMLTV:
 									*msg          = NeutrinoMessages::EVT_RELOAD_XMLTV;
 									*data         = 0;
@@ -1210,15 +1173,6 @@ void CRCInput::getMsg_us(neutrino_msg_t *msg, neutrino_msg_data_t *data, uint64_
 								*data = (neutrino_msg_data_t) p;
 								dont_delete_p = true;
 							}
-#if 0
-							if ((emsg.eventID == NeutrinoMessages::EVT_RECORDING_ENDED) &&
-								(read_bytes == sizeof(stream2file_status2_t)))
-							{
-								*msg  = NeutrinoMessages::EVT_RECORDING_ENDED;
-								*data = (neutrino_msg_data_t) p;
-								dont_delete_p = true;
-							}
-#endif
 						}
 						else if (emsg.initiatorID == CEventServer::INITID_GENERIC_INPUT_EVENT_PROVIDER)
 						{

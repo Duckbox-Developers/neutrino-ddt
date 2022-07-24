@@ -610,7 +610,6 @@ favorites.chalreadyinbq Der aktuelle Kanal ist bereits in Ihren Favoriten.\n
 favorites.copy Kopiere Bouquet zu Favoriten
 favorites.finalhint \nVersehentlich hinzugefügte Kanäle können mit\nder Bouquetverwaltung korrigiert werden.\n
 favorites.menueadd Kanal zu Favoriten hinzufügen
-favorites.nobouquets Favoriten sind nur mit aktivierten Bouquets möglich.
 filebrowser.add Hinzufügen
 filebrowser.delete Löschen
 filebrowser.denydirectoryleave Startverzeichnis absolut
@@ -666,7 +665,6 @@ flashupdate.md5sumerror Das Image ist fehlerhaft
 flashupdate.msgbox Es wurde folgende neue Datei gefunden:\nDatum: %s, %s\nBasisImage: %s\nTyp: %s\n\nWollen Sie diese Version jetzt herunterladen und installieren?
 flashupdate.mtdselector Partitions-Auswahl
 flashupdate.new_found Updates verfügbar!
-flashupdate.new_notfound Keine Updates verfügbar!
 flashupdate.noversion Die Versionsüberprüfung ist nur bei Online-Aktualisierungen möglich.\nTrotzdem fortfahren?
 flashupdate.programmingflash programmiere Flash
 flashupdate.proxypassword Passwort
@@ -984,7 +982,6 @@ mainmenu.pictureviewer Bildbetrachter
 mainmenu.radiomode Radio-Modus
 mainmenu.reboot Neustart
 mainmenu.recording Aufnehmen
-mainmenu.recording_start Start
 mainmenu.recording_stop Stopp
 mainmenu.avinputmode HDMI-Eingang (Modus)
 mainmenu.avinputmode_pip HDMI-Eingang (PiP)
@@ -1055,7 +1052,6 @@ menu.hint_back Zurück zum vorherigen Menü.\nDie Taste 'Menü' schließt alle M
 menu.hint_back_brief Zurück zum vorherigen Menü.
 menu.hint_backup Sichern von Konfigurationen und Kanallisten
 menu.hint_bedit Bearbeiten ihrer Favoriten und der Bouquets
-menu.hint_buildinfo Informationen über Compiler, Compilerflags, Kernel
 menu.hint_cache_txt Startet das Zwischenspeichern des Videotextes nach einem Kanalwechsel
 menu.hint_cec_mode CEC-Modus
 menu.hint_cec_standby CEC-Standby
@@ -1742,7 +1738,6 @@ moviebrowser.delete_movie Film löschen
 moviebrowser.delete_screenshot Lösche Screenshot?
 moviebrowser.dir Pfad
 moviebrowser.directories Verzeichnisse
-moviebrowser.directories_additional Zusätzliche Verzeichnisse
 moviebrowser.edit_book Markierung ändern
 moviebrowser.edit_book_name_info1 Neuer Markierungsname
 moviebrowser.edit_book_name_info2
@@ -1872,7 +1867,6 @@ moviebrowser.truncating Kürze Film, bitte warten ...
 moviebrowser.ts_only Nur Aufnahmen zeigen
 moviebrowser.update_if_dest_empty_only Übernehmen nur wenn Ziel leer
 moviebrowser.use_dir Verzeichnis verwenden
-moviebrowser.use_movie_dir Wiedergabeverzeichnis verwenden
 moviebrowser.use_rec_dir Aufnahmeverzeichnis verwenden
 moviebrowser.yt_cache Downloads
 moviebrowser.yt_cache_add Download von\n%s\nwird eingeplant.
@@ -2270,7 +2264,6 @@ sc.init_failed Karteninitialisierung fehlgeschlagen
 sc.init_ok Karteninitialisierung erfolgreich
 sc.inserted Karte in Slot eingesteckt
 sc.removed Karte aus Slot entfernt
-sc.reset Kartenreset
 sc.timeout Kartenmenü Timeout
 sc.waiting Warte auf Antwort
 scants.abort_body Scanvorgang wirklich abbrechen?
@@ -2280,10 +2273,8 @@ scants.acthybrid Hybrid:
 scants.actsatellite Satellit:
 scants.actterrestrial Terrestrisch:
 scants.bouquet Bouquets
-scants.bouquet_create neu erstellen
 scants.bouquet_erase löschen
 scants.bouquet_leave nicht ändern
-scants.bouquet_satellite Satelliten-Bouquet
 scants.bouquet_update erneuern
 scants.bouquet_writenames Originalnamen in Bouquets schreiben
 scants.bouquet_writenames_bouquets nur Anbieter

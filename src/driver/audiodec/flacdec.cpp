@@ -151,13 +151,6 @@ FLAC__StreamDecoderWriteStatus flac_write(const FLAC__StreamDecoder * /*vf*/, co
 		}
 		printf("SetDSP: mBps=%d, fmt = %d, Sample rate = %d, channels = %d\n", flacdec->mBps, fmt, flacdec->mSampleRate, flacdec->mChannels);
 		audioDecoder->PrepareClipPlay(flacdec->mChannels, flacdec->mSampleRate, flacdec->mBps, fmt == AFMT_S16_LE ? 1 : 0);
-#if 0
-		if (flacdec->SetDSP(flacdec->mOutputFd, AFMT_S16_NE, flacdec->mSampleRate, flacdec->mChannels))
-		{
-			flacdec->Status = CFlacDec::DSPSET_ERR;
-			return FLAC__STREAM_DECODER_WRITE_STATUS_ABORT;
-		}
-#endif
 	}
 
 	const unsigned bps = frame->header.bits_per_sample, channels = frame->header.channels;

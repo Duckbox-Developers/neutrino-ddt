@@ -81,7 +81,6 @@ typedef struct
 	std::string storageDir[MB_MAX_DIRS];
 	int storageDirUsed[MB_MAX_DIRS];
 	int storageDirRecUsed;
-	int storageDirMovieUsed;
 
 	int reload;
 	int remount;

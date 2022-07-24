@@ -1502,13 +1502,7 @@ bool CStreamInfo2::ts_setup()
 
 		if (g_RemoteControl->current_PIDs.PIDs.vpid)
 			pids.push_back(g_RemoteControl->current_PIDs.PIDs.vpid);
-#if 0
-		if (g_RemoteControl->current_PIDs.PIDs.vtxtpid)
-			pids.push_back(g_RemoteControl->current_PIDs.PIDs.vtxtpid);
 
-		pids.push_back(0);
-		pids.push_back(g_RemoteControl->current_PIDs.PIDs.pmtpid);
-#else
 		if (pids.empty())
 		{
 			delete dmx;
@@ -1517,7 +1511,7 @@ bool CStreamInfo2::ts_setup()
 			dmxbuf = NULL;
 			return false;
 		}
-#endif
+
 		std::vector<unsigned short>::iterator it = pids.begin();
 		dmx->pesFilter(*it);
 		++it;

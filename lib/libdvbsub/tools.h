@@ -25,17 +25,9 @@
 
 typedef unsigned char uchar;
 
-extern int SysLogLevel;
-
-#if 0
-#define esyslog(a...) void((SysLogLevel > 0) ? syslog_with_tid(LOG_ERR, a) : void())
-#define isyslog(a...) void((SysLogLevel > 1) ? syslog_with_tid(LOG_ERR, a) : void())
-#define dsyslog(a...) void((SysLogLevel > 2) ? syslog_with_tid(LOG_ERR, a) : void())
-#else
 #define esyslog	printf
 #define isyslog	printf
 #define dsyslog	printf
-#endif
 
 #define LOG_ERROR         esyslog("ERROR (%s,%d): %m", __file__, __LINE__)
 #define LOG_ERROR_STR(s)  esyslog("ERROR: %s: %m", s)

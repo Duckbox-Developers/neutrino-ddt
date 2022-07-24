@@ -161,20 +161,7 @@ magic_t known_magic[] =
 	{{0xFF, 0xFF, 0xFF, 0x00}, {'F', 'L', 'V', 0x00}, "audio/flv"}
 };
 
-#if 0
-#warning if a magic is contained in a file (for instance in .cdr) there is no way to play it correctly with neutrino
-#warning the third magic is pretty short - hence disabled by default
-/* 1111 1111 1111 1010 0000 0000 0000 0000
-   AAAA AAAA AAAB BCC
-   where A: frame sync
-   B: MPEG audio ID (11 = MPEG Version 1)
-   C: Layer description (01 = Layer III)
-   see http://mpgedit.org/mpgedit/mpeg_format/mpeghdr.htm */
-
-#define known_magic_count (sizeof(known_magic) / sizeof(magic_t))
-#else
 #define known_magic_count 2
-#endif
 
 #define is_redirect(a) ((a == 301) || (a == 302))
 
@@ -462,20 +449,6 @@ int request_file(URL *url)
 
 			/* push the created ID3 header into the stream cache */
 			push(url->stream, (char *)&id3, id3.len);
-#if 0
-			rval = parse_response(url, NULL, NULL);
-			dprintf(stderr, "server response parser: return value = %d\n", rval);
-
-			/* if the header indicated a zero length document or an */
-			/* error, then close the cache, if there is any */
-			/* 25.04.05 ChakaZulu: zero length can be a stream so let's try playing */
-			if ((slot >= 0) && (rval < 0))
-				cache[slot].closed = 1;
-
-			/* return on error */
-			if (rval < 0)
-				return rval;
-#endif
 		}
 		break;
 
@@ -706,93 +679,6 @@ int parse_response(URL *url, void * /*opt*/, CSTATE *state)
 		getHeaderStr("icy-url:", state->station_url);
 		getHeaderVal("icy-br:", state->bitrate);
 	}
-#if 0
-	ID3 *id3 = (ID3 *)opt;
-	/********************* dirty hack **********************/
-	/* we parse the stream header sent by the server and	*/
-	/* build based on this information an arteficial id3		*/
-	/* header that is pushed into the streamcache before	*/
-	/* any data from the stream is fed into the cache. This	*/
-	/* makes the stream look like an MP3 and we have the	*/
-	/* station information in the display of the player :))	*/
-
-#define SSIZE(a) (\
-	(((a) & 0x0000007f) << 0) | (((a) & 0x00003f80) << 1) | \
-	(((a) & 0x001fc000) << 2) | (((a) & 0xfe000000) << 3))
-
-#define FRAME(b,c) {\
-		strcpy(id3frame.id, (b)); \
-		strcpy(id3frame.base, (c)); \
-		id3frame.size = strlen(id3frame.base); \
-		fcnt = 11 + id3frame.size; }
-
-	if (id3)
-	{
-		int cnt = 0, fcnt = 0;
-		ID3_frame id3frame;
-		uint32_t sz;
-		char station[2048], desc[2048];
-
-		memmove(id3->magic, "ID3", 3);
-		id3->version[0] = 3;
-		id3->version[1] = 0;
-
-		ptr = strstr(header, "icy-name:");
-		if (ptr)
-		{
-			ptr = strchr(ptr, ':') + 1;
-			for (; ((*ptr == '-') || (*ptr == ' ')); ptr++) {};
-			strcpy(station, ptr);
-			*strchr(station, '\n') = 0;
-
-			ptr = strchr(station, '-');
-			if (ptr)
-			{
-				*ptr = 0;
-				for (ptr++; ((*ptr == '-') || (*ptr == ' ')); ptr++) {};
-				strcpy(desc, ptr);
-			}
-
-			FRAME("TPE1", station);
-			id3frame.size = SSIZE(id3frame.size + 1);
-			memmove(id3->base + cnt, &id3frame, fcnt);
-			cnt += fcnt;
-
-			FRAME("TALB", desc);
-			id3frame.size = SSIZE(id3frame.size + 1);
-			memmove(id3->base + cnt, &id3frame, fcnt);
-			cnt += fcnt;
-		}
-
-		ptr = strstr(header, "icy-genre:");
-		if (ptr)
-		{
-			ptr = strchr(ptr, ':') + 1;
-			for (; ((*ptr == '-') || (*ptr == ' ')); ptr++) {};
-			strcpy(str, ptr);
-			*strchr(str, '\n') = 0;
-
-			FRAME("TIT2", str);
-			id3frame.size = SSIZE(id3frame.size + 1);
-			memmove(id3->base + cnt, &id3frame, fcnt);
-			cnt += fcnt;
-		}
-
-		FRAME("COMM", "dbox streamconverter");
-		id3frame.size = SSIZE(id3frame.size + 1);
-		memmove(id3->base + cnt, &id3frame, fcnt);
-		cnt += fcnt;
-
-		sz = 14 + cnt - 10;
-
-		id3->size[0] = (sz & 0xfe000000) >> 21;
-		id3->size[1] = (sz & 0x001fc000) >> 14;
-		id3->size[2] = (sz & 0x00003f80) >> 7;
-		id3->size[3] = (sz & 0x0000007f) >> 0;
-
-		id3->len = 14 + cnt;
-	}
-#endif
 
 	return meta_interval;
 }
@@ -1973,13 +1859,6 @@ void ShoutCAST_MetaFilter(STREAM_FILTER *arg)
 	char *buf = (char *)arg->buf;
 	int meta_start;
 
-#if 0
-	dprintf(stderr, "filter : cnt      : %d\n", filterdata->cnt);
-	dprintf(stderr, "filter : len      : %d\n", filterdata->len);
-	dprintf(stderr, "filter : stored   : %d\n", filterdata->stored);
-	dprintf(stderr, "filter : cnt + len: %d\n", filterdata->cnt + len);
-	dprintf(stderr, "filter : meta_int : %d\n", filterdata->meta_int);
-#endif
 	/* not yet all meta data has been processed */
 	if (filterdata->stored < filterdata->len)
 	{

@@ -337,10 +337,6 @@ bool CUserMenu::showUserMenu(neutrino_msg_t msg)
 				continue;
 			for (unsigned int count = 0; count < number_of_plugins; count++)
 			{
-#if 0
-				bool show = g_Plugins->getType(count) == CPlugins::P_TYPE_TOOL ||
-					g_Plugins->getType(count) == CPlugins::P_TYPE_LUA;
-#endif
 				bool show = false;
 				if (g_settings.personalize[SNeutrinoSettings::P_UMENU_PLUGIN_TYPE_GAMES])
 					show = show || g_Plugins->getType(count) == CPlugins::P_TYPE_GAME;

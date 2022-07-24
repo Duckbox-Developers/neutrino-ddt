@@ -72,14 +72,6 @@ struct sectionsd
 		numberOfCommands        // <- no actual command, end of command marker
 	};
 
-#if 0
-	struct commandGetEPGid
-	{
-		uint64_t eventid;
-		time_t             starttime;
-	} __attribute__((packed)) ;
-#endif
-
 	struct commandSetServiceChanged
 	{
 		t_channel_id channel_id;
