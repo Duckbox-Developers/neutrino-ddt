@@ -41,6 +41,7 @@
 #include "ffmpegdec.h"
 
 extern "C" {
+#include <libavcodec/version.h>
 #include <libavutil/opt.h>
 #include <libavutil/samplefmt.h>
 #include <libswresample/swresample.h>
