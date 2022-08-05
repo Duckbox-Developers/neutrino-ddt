@@ -1,6 +1,6 @@
 define(ver_major, 3)
 define(ver_minor, 9)
-define(ver_micro, 0)
+define(ver_micro, 4)
 
 AC_INIT(DDT-Neutrino, ver_major.ver_minor.ver_micro)
 AM_INIT_AUTOMAKE([nostdinc foreign])

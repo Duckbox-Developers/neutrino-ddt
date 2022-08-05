@@ -38,7 +38,11 @@
 #  define UINT64_C(c)   c ## ULL
 # endif
 extern "C" {
+#include <libavcodec/version.h>
 #include <libavformat/avformat.h>
+#if LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(59,0,100)
+#include <libavcodec/avcodec.h>
+#endif
 }
 #include <OpenThreads/Thread>
 #include <OpenThreads/Condition>
