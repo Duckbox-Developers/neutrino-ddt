@@ -617,13 +617,6 @@ struct SNeutrinoSettings
 
 	int key_current_transponder;
 
-#if ENABLE_PIP
-	int key_pip_close;
-	int key_pip_close_avinput;
-	int key_pip_setup;
-	int key_pip_swap;
-#endif
-
 	int cacheTXT;
 	int minimode;
 	int mode_clock;
@@ -638,6 +631,11 @@ struct SNeutrinoSettings
 	int mode_left_right_key_tv;
 
 #if ENABLE_PIP
+	int key_pip_close;
+	int key_pip_close_avinput;
+	int key_pip_setup;
+	int key_pip_swap;
+
 	int pip_width;
 	int pip_height;
 	int pip_x;
@@ -646,11 +644,10 @@ struct SNeutrinoSettings
 	int pip_radio_height;
 	int pip_radio_x;
 	int pip_radio_y;
-#endif
-
-#if ENABLE_PIP && ENABLE_QUADPIP
+#if ENABLE_QUADPIP
 	std::string quadpip_channel_window[4];
 	t_channel_id quadpip_channel_id_window[4];
+#endif
 #endif
 
 	int bigFonts;
