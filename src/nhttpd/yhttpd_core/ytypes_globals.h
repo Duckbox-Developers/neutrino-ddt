@@ -65,7 +65,7 @@ typedef enum
 	HTTP_BAD_GATEWAY 		= 502, // not used
 	HTTP_SERVICE_UNAVAILABLE 	= 503, // not used
 	HTTP_GATEWAY_TIMEOUT 		= 504, // not used
-	HTTP_HTTP_VERSION_NOT_SUPPORTED	= 505, // not used
+	HTTP_HTTP_VERSION_NOT_SUPPORTED	= 505  // not used
 } HttpResponseType;
 
 typedef struct
@@ -116,7 +116,7 @@ static const HttpEnumString httpResponseNames[] =
 	{ HTTP_BAD_GATEWAY, 			"Bad Gateway", 			""		},
 	{ HTTP_SERVICE_UNAVAILABLE, 		"Service Unavailable", 		""		},
 	{ HTTP_GATEWAY_TIMEOUT, 		"Gateway Time-out", 		""		},
-	{ HTTP_HTTP_VERSION_NOT_SUPPORTED,	"HTTP Version not supported", 	""		},
+	{ HTTP_HTTP_VERSION_NOT_SUPPORTED,	"HTTP Version not supported", 	""		}
 };
 
 // HTTP-methods
@@ -152,8 +152,7 @@ static const TMimePair MimeFileExtensions[] =
 	{"gif",		"image/gif"},
 	{"png",		"image/png"},
 	{"txt",		"image/plain"},
-	{"css",		"text/css"},
-
+	{"css",		"text/css"}
 };
 
 #endif // __yhttpd_types_globals_h__

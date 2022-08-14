@@ -84,7 +84,7 @@ class COPKGManager : public CMenuTarget
 			OM_DOWNLOAD_ERR		= 11,
 			OM_CONFLICT_ERR		= 12,
 			OM_OUT_OF_SPACE_ERR	= 15,
-			OM_PREREM_SCRIPT_ERR	= 16,
+			OM_PREREM_SCRIPT_ERR	= 16
 		};
 		om_error_data_t *err_list;
 		void OM_ERRORS()
@@ -93,7 +93,7 @@ class COPKGManager : public CMenuTarget
 								{ "No space left on device"			, OM_OUT_OF_SPACE_ERR 		},
 								{ "The following packages conflict"		, OM_CONFLICT_ERR		},
 								{ "Only have"					, OM_OUT_OF_SPACE_ERR 		},
-								{ "prerm script for package"			, OM_PREREM_SCRIPT_ERR		},
+								{ "prerm script for package"			, OM_PREREM_SCRIPT_ERR		}
 							} ;
 			err_list = errlist;
 		};
