@@ -532,13 +532,10 @@ void CBouquetManager::renumChannels(ZapitChannelList &list, int & counter, char 
 void CBouquetManager::makeRemainingChannelsBouquet(void)
 {
 	ZapitChannelList unusedChannels;
-	//FIXME services loaded before config.
-	//bool tomake = CZapit::getInstance()->makeRemainingChannelsBouquet();
 
 	/* reset channel number and has_bouquet flag */
 	CServiceManager::getInstance()->ResetChannelNumbers();
 
-	//int i = 1, j = 1;
 	int i = CServiceManager::getInstance()->GetMaxNumber(false);
 	int j = CServiceManager::getInstance()->GetMaxNumber(true);
 	/* FIXME temp debug */

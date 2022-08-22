@@ -182,7 +182,6 @@ void CZapit::SaveSettings(bool write)
 		}
 
 		configfile.setInt32("writeChannelsNames", config.writeChannelsNames);
-		configfile.setBool("makeRemainingChannelsBouquet", config.makeRemainingChannelsBouquet);
 		configfile.setInt32("feTimeout", config.feTimeout);
 		configfile.setInt32("feRetries", config.feRetries);
 
@@ -317,9 +316,6 @@ void CZapit::LoadSettings()
 
 	config.saveLastChannel			= configfile.getBool("saveLastChannel", true);
 	config.writeChannelsNames		= configfile.getInt32("writeChannelsNames", CBouquetManager::BWN_EVER );
-	/* FIXME Channels renum should be done for all channels atm. TODO*/
-	//config.makeRemainingChannelsBouquet	= configfile.getBool("makeRemainingChannelsBouquet", 1);
-	config.makeRemainingChannelsBouquet	= 1;
 	config.scanPids				= configfile.getBool("scanPids", 0);
 	config.scanSDT				= configfile.getInt32("scanSDT", 0);
 	config.rezapTimeout			= configfile.getInt32("rezapTimeout", 1);

@@ -201,7 +201,9 @@ public:
 	void numericZap(int msg);
 	void StopSubtitles(bool enable_glcd_mirroring = true);
 	void StartSubtitles(bool show = true);
+#ifdef ENABLE_PIP
 	bool StartPip(const t_channel_id channel_id, int pip = 0);
+#endif
 	void SelectSubtitles();
 	void showInfo(void);
 	void showMainMenu(void);

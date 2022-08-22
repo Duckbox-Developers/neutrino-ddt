@@ -2340,7 +2340,7 @@ void CNeutrinoApp::InitZapitClient()
 		CZapitClient::EVT_PMT_CHANGED,
 		CZapitClient::EVT_TUNE_COMPLETE,
 		CZapitClient::EVT_BACK_ZAP_COMPLETE,
-		CZapitClient::EVT_WEBTV_ZAP_COMPLETE,
+		CZapitClient::EVT_WEBTV_ZAP_COMPLETE
 	};
 
 	for (int i = 0; i < ZAPIT_EVENT_COUNT; i++)

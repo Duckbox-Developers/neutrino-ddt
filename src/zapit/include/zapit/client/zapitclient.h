@@ -91,7 +91,7 @@ class CZapitClient:public CBasicClient
 		{
 			BM_DELETEBOUQUETS,
 			BM_DONTTOUCHBOUQUETS,
-			BM_UPDATEBOUQUETS,
+			BM_UPDATEBOUQUETS
 		};
 
 	enum scanType

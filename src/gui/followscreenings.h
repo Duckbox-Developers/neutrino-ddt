@@ -61,7 +61,7 @@ class CFollowScreenings : public CMenuTarget
 		enum
 		{
 			FOLLOWSCREENINGS_OFF	= 0,
-			FOLLOWSCREENINGS_ON	= 1,
+			FOLLOWSCREENINGS_ON	= 1
 		};
 
                 CFollowScreenings(const t_channel_id Channel_id, time_t Starttime, time_t Stoptime, const std::string &Title, uint64_t EpgID=0,
@@ -82,4 +82,3 @@ class CFollowScreenings : public CMenuTarget
 		void show();
 };
 #endif
-

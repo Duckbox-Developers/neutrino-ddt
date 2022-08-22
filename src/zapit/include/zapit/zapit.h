@@ -63,7 +63,6 @@ enum {
 
 typedef struct Zapit_config {
 	int writeChannelsNames;
-	int makeRemainingChannelsBouquet;
 	int saveLastChannel;
 	int rezapTimeout;
 	int scanPids;
@@ -241,7 +240,6 @@ class CZapit : public OpenThreads::Thread
 		/* inlines */
 		void Abort() { abort_zapit = 1; };
 		bool Recording() { return currentMode & RECORD_MODE; };
-		bool makeRemainingChannelsBouquet() { return config.makeRemainingChannelsBouquet; };
 		bool GetScanSDT() { return config.scanSDT; };
 		void SetScanSDT(int _scanSDT) { config.scanSDT = _scanSDT; };
 		bool scanPids() { return config.scanPids; };
@@ -265,8 +263,10 @@ class CZapit : public OpenThreads::Thread
 		int GetVolume() { return current_volume; };
 		int SetVolumePercent(int percent);
 		void SetVolumePercent(int default_ac3, int default_pcm);
+#ifdef ENABLE_PIP
 		bool StartPip(const t_channel_id channel_id, int pip = 0);
 		bool StopPip(int pip = 0);
+#endif
 		void Lock() { mutex.lock(); }
 		void Unlock() { mutex.unlock(); }
 		void EnablePlayback(bool enable) { playbackStopForced = !enable; }
