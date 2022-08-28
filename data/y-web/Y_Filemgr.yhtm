@@ -565,7 +565,7 @@ function ni() {
 <body onload="init()">
 <div class="work_box">
 	<div class="work_box_head"><div class="work_box_head_h2">
-	{=var-set:help_url=Help-Extensions-filemgr=}{=var-set:menu=File Manager (1.0.0)=}{=include-block:Y_Blocks.txt;work_menu=}</div></div>
+	{=var-set:menu=File Manager (1.0.0)=}{=include-block:Y_Blocks.txt;work_menu=}</div></div>
 	<div class="work_box_body">
 		
 	<table class="mform" width="100%" border="0">

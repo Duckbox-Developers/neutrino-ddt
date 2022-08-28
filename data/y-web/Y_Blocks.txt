@@ -4,7 +4,7 @@ start-block~timer
 <body>
 <div class="work_box">
 	<div class="work_box_head"><div class="work_box_head_h2">
-	{=var-set:help_url=Neutrino:yWeb:Live_Timer#Timer=}{=var-set:menu=Timer=}{=include-block:Y_Blocks.txt;work_menu=}</div></div>
+	{=var-set:menu=Timer=}{=include-block:Y_Blocks.txt;work_menu=}</div></div>
 	<div class="work_box_body">
 	<iframe src="/fb/timer.dbox2" scrolling="auto" marginheight="1" marginwidth="1" frameborder="0" name="bouquets" style="height : 600px;width:90%;"></iframe>
 
@@ -145,12 +145,6 @@ start-block~snip_show_wait
 </div>
 end-block~snip_show_wait
 
-# ------- Wiki Help display
-#<img src="/images/help.gif" align="bottom" />
-start-block~wiki_help
-<a href="https://wiki.tuxbox-neutrino.org/wiki/{=var-get:help_url=}" target="_blank" title="get help from https://wiki.tuxbox-neutrino.org">?</a>
-end-block~wiki_help
-
 # ------- work menu
 start-block~work_menu
 <div class="work_box_help">{=include-block:Y_Blocks.txt;wiki_help=}</div><div style="margin-right:4em;">{=var-get:menu=}</div>
@@ -252,7 +246,7 @@ function do_submit()
 {=var-set:wait_text={=L:save_values=}=}{=include-block:Y_Blocks.txt;snip_wait=}
 <div class="work_box">
 	<div class="work_box_head"><div class="work_box_head_h2">
-	{=var-set:help_url=NeutrinoHD:Inbetriebnahme#Inbetriebnahme=}{=var-set:menu={=L:start.head=}Start Wizard=}{=include-block:Y_Blocks.txt;work_menu=}</div></div>
+	{=var-set:menu=Start Wizard=}{=include-block:Y_Blocks.txt;work_menu=}</div></div>
 	<div class="work_box_body">
 	<form name="f" class="y_form" action="/y/cgi">
 		<table border="0" width="100%">

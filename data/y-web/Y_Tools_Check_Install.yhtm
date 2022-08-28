@@ -106,7 +106,7 @@ function do_check(){
 <div class="work_box">
 	<div class="work_box_head">
 		<div class="work_box_head_h2">
-		{=var-set:help_url=Help-Tools-Check_Install=}{=var-set:menu={=L:tools.check_install=}=}{=include-block:Y_Blocks.txt;work_menu=}</div></div>
+		{=var-set:menu={=L:tools.check_install=}=}{=include-block:Y_Blocks.txt;work_menu=}</div></div>
 	<div class="work_box_body">
 		<br />
 		<div id="statusline"><img border="0" src="/images/wait.gif" width="20" height="20" alt="wait"/>
