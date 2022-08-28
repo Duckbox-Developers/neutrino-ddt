@@ -19,7 +19,6 @@ install_DATA =	accept.png \
 		ftype_folder.gif \
 		ftype_link.gif \
 		fullscreen.png \
-		help.gif \
 		hidden.png \
 		info.png \
 		inlink.gif \
