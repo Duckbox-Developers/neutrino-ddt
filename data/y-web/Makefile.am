@@ -77,4 +77,5 @@ install-data-hook:
 			-e 's|%(PLUGINDIR)|$(PLUGINDIR)|g' \
 			-e 's|%(PRIVATE_HTTPDDIR)|$(PRIVATE_HTTPDDIR)|g' \
 			-e 's|%(PUBLIC_HTTPDDIR)|$(PUBLIC_HTTPDDIR)|g' \
+			-e 's|%(HOSTED_HTTPDDIR)|$(HOSTED_HTTPDDIR)|g' \
 	;
