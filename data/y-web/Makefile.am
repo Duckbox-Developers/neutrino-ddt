@@ -2,9 +2,7 @@ SUBDIRS = images scripts languages styles
 
 installdir = $(PRIVATE_HTTPDDIR)
 
-install_DATA =	channels.js \
-		channels.txt \
-		favicon.ico \
+install_DATA =	favicon.ico \
 		index.html \
 		prototype.js \
 		robots.txt \
@@ -77,4 +75,5 @@ install-data-hook:
 			-e 's|%(PLUGINDIR)|$(PLUGINDIR)|g' \
 			-e 's|%(PRIVATE_HTTPDDIR)|$(PRIVATE_HTTPDDIR)|g' \
 			-e 's|%(PUBLIC_HTTPDDIR)|$(PUBLIC_HTTPDDIR)|g' \
+			-e 's|%(HOSTED_HTTPDDIR)|$(HOSTED_HTTPDDIR)|g' \
 	;
