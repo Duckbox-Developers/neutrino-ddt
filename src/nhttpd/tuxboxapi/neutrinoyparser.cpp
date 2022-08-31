@@ -903,7 +903,6 @@ std::string  CNeutrinoYParser::func_get_current_stream_info(CyhookHandler *hh, s
 	hh->ParamList["ServiceName"] = NeutrinoAPI->GetServiceName(CZapit::getInstance()->GetCurrentChannelID());
 	hh->ParamList["Url"] = CZapit::getInstance()->GetCurrentChannel()->getUrl().c_str();
 	hh->ParamList["VideoFormat"] = NeutrinoAPI->getVideoResolutionAsString();
-//	hh->ParamList["BitRate"] = NeutrinoAPI->getVideoFramerateAsString();
 	hh->ParamList["AspectRatio"] = NeutrinoAPI->getVideoAspectRatioAsString();
 	hh->ParamList["FPS"] = NeutrinoAPI->getVideoFramerateAsString();
 	hh->ParamList["AudioType"] = NeutrinoAPI->getAudioInfoAsString();
