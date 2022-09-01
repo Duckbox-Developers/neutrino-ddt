@@ -291,12 +291,6 @@ std::string CyParser::cgi_file_parsing(CyhookHandler *hh,
 	std::string htmlfullfilename, yresult, html_template;
 
 	bool isHosted = false;
-#ifdef Y_CONFIG_USE_HOSTEDWEB
-	// for hosted webs: search in hosted_directory only
-	std::string _hosted = hh->WebserverConfigList["WebsiteMain.hosted_directory"];
-	if ((hh->UrlData["path"]).compare(0, _hosted.length(), hh->WebserverConfigList["WebsiteMain.hosted_directory"]) == 0) // hosted Web ?
-		isHosted = true;
-#endif //Y_CONFIG_USE_HOSTEDWEB
 
 	char cwd[255];
 	getcwd(cwd, 254);
@@ -519,7 +513,6 @@ std::string CyParser::YWeb_cgi_cmd(CyhookHandler *hh, std::string ycmd)
 			else if (ycmd_name.compare("LOGODIR_VAR"))	yresult = LOGODIR_VAR;
 			else if (ycmd_name.compare("PRIVATE_HTTPDDIR"))	yresult = PRIVATE_HTTPDDIR;
 			else if (ycmd_name.compare("PUBLIC_HTTPDDIR"))	yresult = PUBLIC_HTTPDDIR;
-			else if (ycmd_name.compare("HOSTED_HTTPDDIR"))	yresult = HOSTED_HTTPDDIR;
 			else						yresult = "";
 		}
 		else if (ycmd_type == "ini-get")

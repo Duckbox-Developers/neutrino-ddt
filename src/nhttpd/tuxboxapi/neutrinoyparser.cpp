@@ -84,13 +84,11 @@ THandleStatus CNeutrinoYParser::Hook_SendResponse(CyhookHandler *hh)
 //-----------------------------------------------------------------------------
 THandleStatus CNeutrinoYParser::Hook_ReadConfig(CConfigFile *Config, CStringList &ConfigList)
 {
-//	ConfigList["ExtrasDocumentRoot"]= Config->getString("ExtrasDocRoot", EXTRASDOCUMENTROOT);
-//	ConfigList["ExtrasDocumentURL"]	= Config->getString("ExtrasDocURL", EXTRASDOCUMENTURL);
 	ConfigList["TUXBOX_LOGOS_URL"] = Config->getString("Tuxbox.LogosURL", TUXBOX_LOGOS_URL);
 
 	if (Config->getInt32("configfile.version") < 3)
 	{
-		Config->setString("Tuxbox.LogosURL", Config->getString("ExtrasDocURL", EXTRASDOCUMENTURL) + "/logos");
+		Config->setString("Tuxbox.LogosURL", "/logos");
 		Config->setInt32("configfile.version", CONF_VERSION);
 		Config->saveConfig(HTTPD_CONFIGFILE);
 	}

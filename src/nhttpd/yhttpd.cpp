@@ -373,8 +373,6 @@ void Cyhttpd::ReadConfig(void)
 			Config->setInt32("configfile.version", CONF_VERSION);
 			Config->setString("Language.selected", HTTPD_DEFAULT_LANGUAGE);
 			Config->setString("Language.directory", HTTPD_LANGUAGEDIR);
-			if (Config->getString("WebsiteMain.hosted_directory", "").empty())
-				Config->setString("WebsiteMain.hosted_directory", HOSTEDDOCUMENTROOT);
 			Config->saveConfig(HTTPD_CONFIGFILE);
 		}
 	}
@@ -397,7 +395,6 @@ void Cyhttpd::ReadConfig(void)
 	// MainSite
 	ConfigList["WebsiteMain.directory"] = Config->getString("WebsiteMain.directory", PRIVATEDOCUMENTROOT);
 	ConfigList["WebsiteMain.override_directory"] = Config->getString("WebsiteMain.override_directory", PUBLICDOCUMENTROOT);
-	ConfigList["WebsiteMain.hosted_directory"] = Config->getString("WebsiteMain.hosted_directory", HOSTEDDOCUMENTROOT);
 
 	ConfigList["Tuxbox.DisplayLogos"] = Config->getString("Tuxbox.DisplayLogos", "true");
 	// Check location of logos
@@ -413,13 +410,6 @@ void Cyhttpd::ReadConfig(void)
 			Config->setString("Tuxbox.LogosURL", ConfigList["WebsiteMain.directory"] + "/logos");
 			have_config = false; //save config
 		}
-#ifdef Y_CONFIG_USE_HOSTEDWEB
-		else if (access(ConfigList["WebsiteMain.hosted_directory"] + "/logos", R_OK) == 0)
-		{
-			Config->setString("Tuxbox.LogosURL", ConfigList["WebsiteMain.hosted_directory"] + "/logos");
-			have_config = false; //save config
-		}
-#endif //Y_CONFIG_USE_HOSTEDWEB
 	}
 	ConfigList["Tuxbox.LogosURL"] = Config->getString("Tuxbox.LogosURL", "");
 
