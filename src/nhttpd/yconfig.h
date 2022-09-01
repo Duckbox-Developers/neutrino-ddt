@@ -52,7 +52,6 @@
 #define Y_CONFIG_FEATURE_CHECK_PORT_AUTORITY y		// System: Port < 1024 need Admin-Privileges-Check
 #define Y_CONFIG_HAVE_SENDFILE y			// System: Have *IX SendFile
 #define Y_CONFIG_FEATURE_UPLOAD y			// Add Feature: File Upload POST Command
-#define Y_CONFIG_USE_HOSTEDWEB y			// Add Feature: Use HOSTED Web
 #define Y_CONFIG_FEATURE_SHOW_SERVER_CONFIG y		// Add Feature (in yParser): add /y/server-config
 //#define Y_CONFIG_USE_OPEN_SSL y			// Add Feature: use openSSL
 //#define Y_CONFIG_FEATURE_KEEP_ALIVE y			// Add Feature: Keep-alive //FIXME: does not work correctly now
@@ -113,7 +112,6 @@
 #define PRIVATEDOCUMENTROOT		PRIVATE_HTTPDDIR
 #define PUBLICDOCUMENTROOT		PUBLIC_HTTPDDIR
 
-#define ZAPITXMLPATH			CONFIGDIR"/zapit"
 #define TUXBOX_LOGOS_URL		LOGODIR
 
 #define SSL_PEMFILE			HTTPD_CONFIGDIR "/server.pem"
