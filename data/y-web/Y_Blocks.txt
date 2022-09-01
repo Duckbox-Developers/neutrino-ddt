@@ -146,7 +146,7 @@ end-block~snip_show_wait
 
 # ------- work menu
 start-block~work_menu
-<div class="work_box_help">{=include-block:Y_Blocks.txt;wiki_help=}</div><div style="margin-right:4em;">{=var-get:menu=}</div>
+<div class="work_box_help"></div><div style="margin-right:4em;">{=var-get:menu=}</div>
 end-block~work_menu
 
 
