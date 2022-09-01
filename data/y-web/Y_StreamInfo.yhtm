@@ -30,33 +30,27 @@
 			<td>&nbsp;</td>
 			<td class="set"> <div align="left">{=Url=}</div></td>
 		</tr>
-		<tr> 
+		<tr>
 			<td class="set"><b>{=L:epg.si.resolution=}:</b></td>
 			<td width="30">&nbsp;</td>
-		<td class="set">{=VideoFormat=}</td>
+			<td class="set">{=VideoFormat=}</td>
 		</tr>
-		<tr> 
+		<tr>
 			<td class="set"><b>{=L:epg.si.ratio=}:</b></td>
 			<td>&nbsp;</td>
 			<td class="set"> <div align="left">{=AspectRatio=}</div></td>
 		</tr>
-<!-- 	<tr> 
-		<td class="set"><b>Bitrate:</b></td>
-		<td>&nbsp;</td>
-		<td class="set"> <div align="left">{=BitRate=} bit/sec</div></td>
-		</tr>
--->
-		<tr> 
+		<tr>
 			<td class="set"><b>{=L:epg.si.fps=}:</b></td>
 			<td>&nbsp;</td>
 			<td class="set"> <div align="left">{=FPS=}</div></td>
 		</tr>
-		<tr> 
+		<tr>
 			<td class="set"><b>{=L:epg.si.audiotype=}:</b></td>
 			<td>&nbsp;</td>
 			<td class="set"> <div align="left">{=AudioType=}</div></td>
 		</tr>
-		<tr> 
+		<tr>
 			<td class="set"><b>{=L:epg.si.frequence=}:</b></td>
 			<td>&nbsp;</td>
 			<td class="set"> <div align="left">{=tsfrequency=} ({=polarisation=})</div></td>
@@ -64,22 +58,22 @@
 		<tr>
 			<td class="set" colspan="3">&nbsp;</td>
 		</tr>
-		<tr> 
+		<tr>
 			<td class="set"><b>{=L:epg.si.onid=}:</b></td>
 			<td>&nbsp;</td>
 			<td class="set"> <div align="left">{=onid=}</div></td>
 		</tr>
-		<tr> 
+		<tr>
 			<td class="set"><b>{=L:epg.si.sid=}:</b></td>
 			<td>&nbsp;</td>
 			<td class="set"> <div align="left">{=sid=}</div></td>
 		</tr>
-		<tr> 
+		<tr>
 			<td class="set"><b>{=L:epg.si.tsid=}:</b></td>
 			<td>&nbsp;</td>
 			<td class="set"> <div align="left">{=tsid=}</div></td>
 		</tr>
-		<tr> 
+		<tr>
 			<td class="set"><b>{=L:epg.si.vpid=}:</b></td>
 			<td>&nbsp;</td>
 			<td class="set"> <div align="left">{=vpid=}</div></td>
@@ -94,12 +88,12 @@
 			<td>&nbsp;</td>
 			<td class="set"> <div align="left">{=pmtpid=}</div></td>
 		</tr>
-		<tr> 
+		<tr>
 			<td class="set"><b>{=L:epg.si.apid=}:</b></td>
 			<td>&nbsp;</td>
 			<td class="set"> <div align="left">{=apid=}</div></td>
 		</tr>
-		<tr> 
+		<tr>
 			<td class="set"><b>{=L:epg.si.vtxtpid=}:</b></td>
 			<td>&nbsp;</td>
 			<td class="set"> <div align="left">{=vtxtpid=}</div></td>
@@ -107,7 +101,7 @@
 		<tr>
 			<td class="set" colspan="3">&nbsp;</td>
 		</tr>
-		<tr> 
+		<tr>
 			<td class="set"><b>{=L:epg.si.crypt=}:</b></td>
 			<td>&nbsp;</td>
 			<td class="set"> <div align="left">{=Crypt=}</div></td>
