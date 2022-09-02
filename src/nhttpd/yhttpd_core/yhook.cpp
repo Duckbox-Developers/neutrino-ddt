@@ -325,12 +325,7 @@ std::string CyhookHandler::BuildHeader(bool cache)
 			strftime(timeStr, sizeof(timeStr), RFC1123FMT, gmtime(&timer));
 			result += string_printf("Date: %s\r\n", timeStr);
 			// connection type
-#ifdef Y_CONFIG_FEATURE_KEEP_ALIVE
-			if (keep_alive)
-				result += "Connection: keep-alive\r\n";
-			else
-#endif
-				result += "Connection: close\r\n";
+			result += "Connection: close\r\n";
 			// gzipped ?
 			if (UrlData["fileext"] == "gz")
 				result += "Content-Encoding: gzip\r\n";

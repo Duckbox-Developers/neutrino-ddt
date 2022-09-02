@@ -156,9 +156,8 @@ void CySocket::close(void)
 {
 	if (sock != 0 && sock != INVALID_SOCKET)
 		::close(sock);
-#ifndef Y_CONFIG_FEATURE_KEEP_ALIVE
+
 	sock = 0;
-#endif
 	isOpened = false;
 }
 //-----------------------------------------------------------------------------

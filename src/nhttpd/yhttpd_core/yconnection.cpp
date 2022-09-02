@@ -34,11 +34,7 @@ CWebserverConnection::CWebserverConnection(CWebserver *pWebserver)
 	Method = M_UNKNOWN;
 	HttpStatus = 0;
 	RequestCanceled = false;
-#ifdef Y_CONFIG_FEATURE_KEEP_ALIVE
-	keep_alive = true;
-#else
 	keep_alive = false;
-#endif
 }
 //-------------------------------------------------------------------------
 CWebserverConnection::CWebserverConnection()
@@ -73,9 +69,7 @@ void CWebserverConnection::EndConnection()
 		keep_alive = false;
 	RequestCanceled = true;
 	//	sock->Flush();
-#ifndef Y_CONFIG_FEATURE_KEEP_ALIVE
 	sock->close();
-#endif
 }
 //-------------------------------------------------------------------------
 // Main
@@ -97,15 +91,7 @@ void CWebserverConnection::HandleConnection()
 					- tv_connection_start.tv_usec));
 
 		// Keep-Alive checking
-#ifdef Y_CONFIG_FEATURE_KEEP_ALIVE
-		if (string_tolower(Request.HeaderList["Connection"]) == "close"
-			|| (httprotocol != "HTTP/1.1" && string_tolower(Request.HeaderList["Connection"]) != "keep-alive")
-			|| !Webserver->CheckKeepAliveAllowedByIP(sock->get_client_ip()))
-			keep_alive = false;
-#else
 		keep_alive = false;
-#endif
-
 		// Send a response
 		Response.SendResponse();
 

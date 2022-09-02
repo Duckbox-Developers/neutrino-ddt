@@ -137,101 +137,6 @@ bool CWebserver::run(void)
 			return false;
 		}
 	}
-#ifdef Y_CONFIG_FEATURE_KEEP_ALIVE
-
-	// initialize values for select
-	int listener = listenSocket.get_socket();// Open Listener
-	struct timeval tv; // timeout struct
-	FD_SET(listener, &master); // add the listener to the master set
-	fdmax = listener; // init max fd
-	fcntl(listener, F_SETFD, O_NONBLOCK);  // listener master socket non-blocking
-	int timeout_counter = 0; // Counter for Connection Timeout checking
-	int test_counter = 0; // Counter for Testing long running Connections
-
-	// main Webserver Loop
-	while (!terminate)
-	{
-		// select : init vars
-		read_fds = master; // copy it
-		tv.tv_usec = 10000; // microsec: Timeout for select ! for re-use / keep-alive socket
-		tv.tv_sec = 0; // seconds
-		int fd = -1;
-
-		// select : wait for socket activity
-		if (open_connections <= 0) // No open Connection. Wait in select.
-			fd = select(fdmax + 1, &read_fds, NULL, NULL, NULL); // wait for socket activity
-		else
-			fd = select(fdmax + 1, &read_fds, NULL, NULL, &tv); // wait for socket activity or timeout
-
-		// too much to do : sleep
-		if (open_connections >= HTTPD_MAX_CONNECTIONS - 1)
-			sleep(1);
-
-		// Socket Error?
-		if (fd == -1 && errno != EINTR)
-		{
-			perror("select");
-			return false;
-		}
-
-		// Socket Timeout?
-		if (fd == 0)
-		{
-			// Testoutput for long living threads
-			if (++test_counter >= MAX_TIMEOUTS_TO_TEST)
-			{
-				for (int j = 0; j < HTTPD_MAX_CONNECTIONS; j++)
-					if (SocketList[j] != NULL) // here is a socket
-						log_level_printf(2, "FD-TEST sock:%d handle:%d open:%d\n", SocketList[j]->get_socket(),
-							SocketList[j]->handling, SocketList[j]->isOpened);
-				test_counter = 0;
-			}
-			// some connection closing previous missed?
-			if (++timeout_counter >= MAX_TIMEOUTS_TO_CLOSE)
-			{
-				CloseConnectionSocketsByTimeout();
-				timeout_counter = 0;
-			}
-			continue; // main loop again
-		}
-		//----------------------------------------------------------------------------------------
-		// Check all observed descriptors & check new or re-use Connections
-		//----------------------------------------------------------------------------------------
-		for (int i = listener; i <= fdmax; i++)
-		{
-			int slot = -1;
-			if (FD_ISSET(i, &read_fds)) // Socket observed?
-			{
-				// we got one!!
-				if (i == listener) // handle new connections
-					slot = AcceptNewConnectionSocket();
-				else // Connection on an existing open Socket = reuse (keep-alive)
-				{
-					slot = SL_GetExistingSocket(i);
-					if (slot >= 0)
-						log_level_printf(2, "FD: reuse con fd:%d\n", SocketList[slot]->get_socket());
-				}
-				// prepare Connection handling
-				if (slot >= 0)
-					if (SocketList[slot] != NULL && !SocketList[slot]->handling && SocketList[slot]->isValid)
-					{
-						log_level_printf(2, "FD: START CON HANDLING con fd:%d\n", SocketList[slot]->get_socket());
-						FD_CLR(SocketList[slot]->get_socket(), &master); // remove from master set
-						SocketList[slot]->handling = true; // prepares for thread-handling
-						if (!handle_connection(SocketList[slot])) // handle this activity
-						{
-							// Can not handle more threads
-							char httpstr[] = HTTP_PROTOCOL " 503 Service Unavailable\r\n\r\n";
-							SocketList[slot]->Send(httpstr, strlen(httpstr));
-							SL_CloseSocketBySlot(slot);
-						}
-					}
-			}
-		}// for
-		CloseConnectionSocketsByTimeout(); // Check connections to close
-
-	}//while
-#else
 	while (!terminate)
 	{
 		CySocket *newConnectionSock;
@@ -250,7 +155,6 @@ bool CWebserver::run(void)
 #endif
 		handle_connection(newConnectionSock);
 	}
-#endif
 	return true;
 }
 //=============================================================================
@@ -521,20 +425,12 @@ void *WebThread(void *args)
 	con->HandleConnection();
 
 	// (3) end connection handling
-#ifdef Y_CONFIG_FEATURE_KEEP_ALIVE
-	if (!con->keep_alive)
-		log_level_printf(2, "FD SHOULD CLOSE sock:%d!!!\n", con->sock->get_socket());
-	else
-		ws->addSocketToMasterSet(con->sock->get_socket()); // add to master set
-#endif
 	if (!con->keep_alive)
 		con->sock->isValid = false;
 	con->sock->handling = false; // socket can be handled by webserver main loop (select) again
 
-#ifndef Y_CONFIG_FEATURE_KEEP_ALIVE
 	delete newConn->ySock;
 	newConn->ySock = NULL;
-#endif
 
 	// (4) end thread
 	delete con;
