@@ -82,12 +82,10 @@ void CControlAPI::init(CyhookHandler *hh)
 	if (PLUGIN_DIRS[0].empty())
 	{
 		// given in nhttpd.conf
-		PLUGIN_DIRS[0] = PLUGIN_DIRS[1] = hh->WebserverConfigList["WebsiteMain.override_directory"];
+		PLUGIN_DIRS[0] = PLUGIN_DIRS[1] = hh->WebserverConfigList["WebsiteMain.directory"];
 		PLUGIN_DIRS[1].append("/scripts");
-		PLUGIN_DIRS[2] = PLUGIN_DIRS[3] = hh->WebserverConfigList["WebsiteMain.directory"];
-		PLUGIN_DIRS[3].append("/scripts");
-		PLUGIN_DIRS[4] = g_settings.plugin_hdd_dir;
-		PLUGIN_DIRS[5] = PLUGINDIR;
+		PLUGIN_DIRS[2] = g_settings.plugin_hdd_dir;
+		PLUGIN_DIRS[3] = PLUGINDIR;
 	}
 }
 

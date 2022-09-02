@@ -83,12 +83,6 @@ function do_check_input_LogosURL()
 				</td>
 			</tr>
 			<tr>
-				<td>{=L:set.nhttpd.alternate_web_folder=}</td>
-				<td>
-					<input type="text" name="override_directory" size="20" value="{=ini-get:%(CONFIGDIR)/nhttpd.conf;WebsiteMain.override_directory~cache=}" title="{=L:set.nhttpd.alternate_web_folder=}"/>&nbsp;{=L:set.nhttpd.active_after_boot=}
-				</td>
-			</tr>
-			<tr>
 				<td>{=L:set.nhttpd.allowed_file_extensions=}</td>
 				<td><input type="text" name="mod_sendfile_mime_types" size="60" value="{=ini-get:%(CONFIGDIR)/nhttpd.conf;mod_sendfile.mime_types~cache=}"/></td>
 			</tr>

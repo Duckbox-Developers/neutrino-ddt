@@ -18,10 +18,8 @@ style_get()
 	active_style=$(config_get_value_direct $y_config_Y_Web 'style')
 
 	y_path_directory=$(config_get_value_direct $y_config_nhttpd 'WebsiteMain.directory')
-	y_path_override_directory=$(config_get_value_direct $y_config_nhttpd 'WebsiteMain.override_directory')
 
 	style_list=""
-	style_list="$style_list $(find $y_path_override_directory/styles -name 'Y_Dist-*')"
 	style_list="$style_list $(find $y_path_directory/styles -name 'Y_Dist-*')"
 
 	f_list=""
@@ -58,12 +56,9 @@ style_set()
 	test -n "$style" || return
 
 	y_path_directory=$(config_get_value_direct $y_config_nhttpd 'WebsiteMain.directory')
-	y_path_override_directory=$(config_get_value_direct $y_config_nhttpd 'WebsiteMain.override_directory')
 
 	cd $y_path_directory
-	if [ -e $y_path_override_directory/styles/Y_Dist-$style.css ]; then
-		cp $y_path_override_directory/styles/Y_Dist-$style.css Y_Dist.css
-	elif [ -e $y_path_directory/styles/Y_Dist-$style.css ]; then
+	if [ -e $y_path_directory/styles/Y_Dist-$style.css ]; then
 		cp $y_path_directory/styles/Y_Dist-$style.css Y_Dist.css
 	else
 		config_set_value_direct $y_config_Y_Web 'style'

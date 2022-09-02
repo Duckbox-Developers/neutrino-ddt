@@ -346,8 +346,7 @@ void Cyhttpd::ReadConfig(void)
 			Config->setBool("webserver.threading", OrgConfig.getBool("THREADS", true));
 			Config->setInt32("WebsiteMain.port", OrgConfig.getInt32("Port", HTTPD_STANDARD_PORT));
 			Config->setString("WebsiteMain.directory", OrgConfig.getString("PrivatDocRoot", PRIVATEDOCUMENTROOT));
-			if (!OrgConfig.getString("PublicDocRoot", "").empty())
-				Config->setString("WebsiteMain.override_directory", OrgConfig.getString("PublicDocRoot", PRIVATEDOCUMENTROOT));
+
 			// mod_auth
 			Config->setString("mod_auth.username", OrgConfig.getString("AuthUser", AUTHUSER));
 			Config->setString("mod_auth.password", OrgConfig.getString("AuthPassword", AUTHPASSWORD));
@@ -394,18 +393,12 @@ void Cyhttpd::ReadConfig(void)
 
 	// MainSite
 	ConfigList["WebsiteMain.directory"] = Config->getString("WebsiteMain.directory", PRIVATEDOCUMENTROOT);
-	ConfigList["WebsiteMain.override_directory"] = Config->getString("WebsiteMain.override_directory", PUBLICDOCUMENTROOT);
 
 	ConfigList["Tuxbox.DisplayLogos"] = Config->getString("Tuxbox.DisplayLogos", "true");
 	// Check location of logos
 	if (Config->getString("Tuxbox.LogosURL", "").empty())
 	{
-		if (access(ConfigList["WebsiteMain.override_directory"] + "/logos", R_OK) == 0)
-		{
-			Config->setString("Tuxbox.LogosURL", ConfigList["WebsiteMain.override_directory"] + "/logos");
-			have_config = false; //save config
-		}
-		else if (access(ConfigList["WebsiteMain.directory"] + "/logos", R_OK) == 0)
+		if (access(ConfigList["WebsiteMain.directory"] + "/logos", R_OK) == 0)
 		{
 			Config->setString("Tuxbox.LogosURL", ConfigList["WebsiteMain.directory"] + "/logos");
 			have_config = false; //save config

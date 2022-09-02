@@ -120,9 +120,7 @@ std::string CLanguage::getLanguageDir(void)
 {
 	std::string tmpfilename = "/" + Cyhttpd::ConfigList["Language.directory"], dir = "";
 
-	if (access(Cyhttpd::ConfigList["WebsiteMain.override_directory"] + tmpfilename, R_OK) == 0)
-		dir = Cyhttpd::ConfigList["WebsiteMain.override_directory"] + tmpfilename;
-	else if (access(Cyhttpd::ConfigList["WebsiteMain.directory"] + tmpfilename, R_OK) == 0)
+	if (access(Cyhttpd::ConfigList["WebsiteMain.directory"] + tmpfilename, R_OK) == 0)
 		dir = Cyhttpd::ConfigList["WebsiteMain.directory"] + tmpfilename;
 	return dir;
 }
