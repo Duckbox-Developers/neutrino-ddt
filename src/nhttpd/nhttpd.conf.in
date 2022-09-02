@@ -2,7 +2,6 @@ Language.directory=languages
 Language.selected=English
 Tuxbox.LogosURL=@TARGET_ICONSDIR@/logo
 WebsiteMain.directory=@TARGET_PRIVATE_HTTPDDIR@
-WebsiteMain.override_directory=@TARGET_PUBLIC_HTTPDDIR@
 WebsiteMain.port=80
 configfile.version=4
 mod_auth.authenticate=false

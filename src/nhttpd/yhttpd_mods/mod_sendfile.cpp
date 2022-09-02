@@ -190,11 +190,7 @@ std::string CmodSendfile::GetFileName(CyhookHandler *hh, std::string path, std::
 		tmpfilename = path + "/" + filename;
 	else
 		tmpfilename = path + filename;
-	if (access(hh->WebserverConfigList["WebsiteMain.override_directory"] + tmpfilename, R_OK) == 0)
-		tmpfilename = hh->WebserverConfigList["WebsiteMain.override_directory"] + tmpfilename;
-	else if (access(hh->WebserverConfigList["WebsiteMain.override_directory"] + tmpfilename + ".gz", R_OK) == 0)
-		tmpfilename = hh->WebserverConfigList["WebsiteMain.override_directory"] + tmpfilename + ".gz";
-	else if (access(hh->WebserverConfigList["WebsiteMain.directory"] + tmpfilename, R_OK) == 0)
+	if (access(hh->WebserverConfigList["WebsiteMain.directory"] + tmpfilename, R_OK) == 0)
 		tmpfilename = hh->WebserverConfigList["WebsiteMain.directory"] + tmpfilename;
 	else if (access(hh->WebserverConfigList["WebsiteMain.directory"] + tmpfilename + ".gz", R_OK) == 0)
 		tmpfilename = hh->WebserverConfigList["WebsiteMain.directory"] + tmpfilename + ".gz";

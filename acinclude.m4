@@ -177,9 +177,6 @@ TUXBOX_APPS_DIRECTORY_ONE(iconsdir_var, ICONSDIR_VAR, localstatedir, /var, /tuxb
 TUXBOX_APPS_DIRECTORY_ONE(private_httpddir, PRIVATE_HTTPDDIR, datadir, /share, /tuxbox/neutrino/httpd,
 	[--with-private_httpddir=PATH], [where to find private httpd files])
 
-TUXBOX_APPS_DIRECTORY_ONE(public_httpddir, PUBLIC_HTTPDDIR, localstatedir, /var, /tuxbox/httpd,
-	[--with-public_httpddir=PATH], [where to find public httpd files])
-
 TUXBOX_APPS_DIRECTORY_ONE(flagdir, FLAGDIR, localstatedir, /var, /etc,
 	[--with-flagdir=PATH], [where to find flag files])
 ])
@@ -200,7 +197,6 @@ AC_SUBST(THEMESDIR_VAR)
 AC_SUBST(ICONSDIR)
 AC_SUBST(ICONSDIR_VAR)
 AC_SUBST(PRIVATE_HTTPDDIR)
-AC_SUBST(PUBLIC_HTTPDDIR)
 dnl end workaround
 
 AC_DEFUN([_TUXBOX_APPS_LIB_CONFIG], [

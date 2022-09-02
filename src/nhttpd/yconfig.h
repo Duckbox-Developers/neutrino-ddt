@@ -54,7 +54,6 @@
 #define Y_CONFIG_FEATURE_UPLOAD y			// Add Feature: File Upload POST Command
 #define Y_CONFIG_FEATURE_SHOW_SERVER_CONFIG y		// Add Feature (in yParser): add /y/server-config
 //#define Y_CONFIG_USE_OPEN_SSL y			// Add Feature: use openSSL
-//#define Y_CONFIG_FEATURE_KEEP_ALIVE y			// Add Feature: Keep-alive //FIXME: does not work correctly now
 #define Y_CONFIG_FEATUE_SENDFILE_CAN_ACCESS_ALL y	// Add Feature: every file can be accessed (use carefully: security!!)
 //#define Y_CONFIG_FEATURE_CHROOT y			// Add Feature: Use Change Root for Security
 //#define Y_CONFIG_FEATURE_HTTPD_USER y			// Add Feature: Set User for yhttpd-Process
@@ -73,11 +72,7 @@
 #define Y_CONFIG_USE_AUTHHOOK y
 #endif
 
-#ifdef Y_CONFIG_FEATURE_KEEP_ALIVE
-#define HTTP_PROTOCOL "HTTP/1.1"
-#else
 #define HTTP_PROTOCOL "HTTP/1.0"
-#endif
 //=============================================================================
 // Configurations for systems/OSs <configure!>
 //=============================================================================
@@ -110,7 +105,6 @@
 #define MOVIEBROWSER_CONFIGFILE		CONFIGDIR"/moviebrowser.conf"
 
 #define PRIVATEDOCUMENTROOT		PRIVATE_HTTPDDIR
-#define PUBLICDOCUMENTROOT		PUBLIC_HTTPDDIR
 
 #define TUXBOX_LOGOS_URL		LOGODIR
 
