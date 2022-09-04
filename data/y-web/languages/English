@@ -100,6 +100,8 @@ bc.menue.remote_desc=Web-based Remote Control
 bc.menue.remote=Remote
 bc.menue.glcd_screenshot_desc=take a GLCD screenshot
 bc.menue.glcd_screenshot=GLCD Screenshot
+bc.menue.lcd4l_png_desc=LCD4L show
+bc.menue.lcd4l_png=LCD4L
 bc.menue.screenshot=Screenshot
 
 bc.menue.decrease_volume=decrease volumen

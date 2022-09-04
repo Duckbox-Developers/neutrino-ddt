@@ -160,6 +160,11 @@ function epg_plus_popup() {
 					<a target="work" title="{=L:bc.menue.glcd_screenshot_desc=}" href="Y_Tools_Glcd_Screenshot.yhtm">{=L:bc.menue.glcd_screenshot=}</a>
 				</li>
 				~=}
+				{=if-equal:{=ini-get:%(CONFIGDIR)/neutrino.conf;lcd4l_dpf_type;0=}~3~
+				<li>
+					<a target="work" title="{=L:bc.menue.lcd4l_png_desc=}" href="lcd4linux.html">{=L:bc.menue.lcd4l_png=}</a>
+				</li>
+				~=}
 				<li>
 					<a target="work" title="OSD-{=L:bc.menue.screenshot=}" href="Y_Tools_Screenshot.yhtm?osd=1&noremote=1">OSD-{=L:bc.menue.screenshot=}</a>
 				</li>
