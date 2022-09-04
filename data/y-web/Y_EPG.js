@@ -62,10 +62,6 @@ function show_epg_item(_index){
 	$("d_channel_id").update(epg_data[_index][6]);
 	var logo =epg_data[_index][7];
 	$('d_logo').update( (logo!="")?"<img class=\"channel_logos\" src=\""+logo+"\">":"" );
-//	var imdb_link = '<a target="_blank" class="exlink" href="http://german.imdb.com/find?s=all&q='+(epg_data[_index][0]).gsub(" ","+")+'">IMDb</a>';
-//	var klack_link = '<a target="_blank" class="exlink" href="http://www.klack.de/programmsuche.html?search=1&title='+(epg_data[_index][0]).gsub(" ","+")+'">klack.de</a>';
-//	var tvinfo_link = '<a target="_blank" class="exlink" href="http://www.tvinfo.de/exe.php3?quicksearch=1&volltext='+(epg_data[_index][0]).gsub(" ","+")+'&tpk=&showall=&genretipp=&target=list.inc">tvinfo.de</a>';
-//	$('d_lookup').update(imdb_link+" "+klack_link+" "+tvinfo_link);
 
 	var off=$('epg_plus').cumulativeScrollOffset();
 //	alert(off.inspect());

@@ -393,12 +393,6 @@ function dbox_rcsim(_key){
 function dbox_reload_neutrino(){
 	var sc=dbox_exec_tools("restart_neutrino");
 }
-function dbox_exec_command(_cmd)
-{
-	alert("Function dbox_exec_command is deactivated for security reasons");
-	var __cmd = _cmd.replace(/ /g, "&");
-//	return loadSyncURL("/control/exec?Y_Tools&exec_cmd&"+__cmd);
-}
 function dbox_exec_tools(_cmd)
 {
 	var __cmd = _cmd.replace(/ /g, "&");
@@ -443,15 +437,8 @@ function dbox_setmode(_mode)
 {
 	return loadSyncURL("/control/setmode?" + _mode);
 }
-/*live*/
-function live_kill_streams()
-{
-	dbox_exec_command("killall streamts");
-	dbox_exec_command("killall streampes");
-}
 function live_switchto(_mode)
 {
-	//live_kill_streams();
 	var _actual_spts = dbox_spts_status();
 	if(_mode == "tv" && !_actual_spts)
 		dbox_spts_set(true);
