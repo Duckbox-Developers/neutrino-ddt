@@ -100,6 +100,8 @@ bc.menue.remote_desc=Fernbedienung
 bc.menue.remote=Fernbedienung
 bc.menue.glcd_screenshot_desc=GLCD Screenshot erstellen
 bc.menue.glcd_screenshot=GLCD Screenshot
+bc.menue.lcd4l_png_desc=LCD4L Anzeigen
+bc.menue.lcd4l_png=LCD4L
 bc.menue.screenshot=Screenshot
 
 bc.menue.decrease_volume=Lautst&auml;rke verringern
