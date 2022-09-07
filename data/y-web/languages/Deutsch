@@ -150,6 +150,7 @@ bc.channels=Sender
 
 ====== Bouquet
 bou.bouquet=Bouquet
+bou.bouquet_popup_desc=Sender (popup)
 bou.bouquets_must_be_saved=Alle &Auml;nderungen m&uuml;ssen noch gespeichert werden!
 bou.bouquet_editor=Bouquet-Editor
 bou.bouquet_add=Bouquet hinzuf&uuml;gen

@@ -15,6 +15,7 @@ install_DATA =	favicon.ico \
 		Y_Boxcontrol_Bouquet_Editor_Main.yhtm \
 		Y_Boxcontrol_Bouquetlist.yhtm \
 		Y_Boxcontrol_Bouquets.yhtm \
+		Y_Boxcontrol_Bouquets_popup.yhtm \
 		Y_Boxcontrol_Channellist.yhtm \
 		Y_Boxcontrol_Menue.yhtm \
 		Y_Boxcontrol_Messages.yhtm \
