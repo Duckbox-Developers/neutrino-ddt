@@ -129,6 +129,9 @@ function get_data(){
 function epg_plus_popup() {
 	window.open("Y_EPG_Plus.yhtm","_blank","resizable=yes,scrollbars=yes");
 }
+function bou_bouquets_popup() {
+	window.open("Y_Boxcontrol_Bouquets_popup.yhtm","_blank","resizable=yes,scrollbars=yes");
+}
 //]]>
 </script>
 </head>
@@ -141,6 +144,7 @@ function epg_plus_popup() {
 			<ul id="secmenu_boxcontrol">
 				<li>
 					<a target="work" title="{=L:bc.menue.bouquets_desc=}" href="Y_Boxcontrol_Bouquets.yhtm">{=L:bc.menue.bouquets=}</a>
+					<a class="y_menu_popup_link" title="{=L:bou.bouquet_popup_desc=}" href="javascript:bou_bouquets_popup()"><img src="/images/popup.png"/></a>
 				</li>
 				<li>
 					<a target="work" href="Y_EPG_Plus.yhtm">{=L:live.epg_plus=}</a>

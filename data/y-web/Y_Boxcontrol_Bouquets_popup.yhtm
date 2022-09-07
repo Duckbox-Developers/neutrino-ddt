@@ -7,11 +7,11 @@
 	<div class="work_box_body">
 	<iframe src="Y_Boxcontrol_Bouquetlist.yhtm?bouquet=#akt"
 		scrolling="auto" marginheight="1" marginwidth="1" frameborder="0" name="bouquets"
-		style="height: 720px; width: 22%;">
+		style="height: 900px; width: 13%;">
 	</iframe>
 	<iframe src="Y_Boxcontrol_Channellist.yhtm?bouquet={=func:get_actual_bouquet_number=}"
 		scrolling="auto" marginheight="1" marginwidth="1" frameborder="0" name="content"
-		style="height: 720px; width: 76%;">
+		style="height: 900px; width: 85%;">
 	</iframe>
 	</div>
 </div>

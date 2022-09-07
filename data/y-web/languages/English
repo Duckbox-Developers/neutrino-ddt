@@ -150,6 +150,7 @@ bc.channels=Channels
 
 ====== Bouquet
 bou.bouquet=Bouquet
+bou.bouquet_popup_desc=Channel (popup)
 bou.bouquets_must_be_saved=All bouquets must be saved!
 bou.bouquet_editor=Bouquet-Editor
 bou.bouquet_add=add bouquet

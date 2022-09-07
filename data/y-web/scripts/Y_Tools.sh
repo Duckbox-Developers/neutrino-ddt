@@ -280,26 +280,7 @@ case "$1" in
 	fbshot)					shift 1; do_fbshot $* ;;
 	fbshot_clear)			do_fbshot_clear ;;
 	screenshot_clear)		do_screenshot_clear ;;
-	exec_cmd)				shift 1; $* ;;
 	restart_neutrino)		restart_neutrino ;;
-
-	timer_get_tvinfo)
-		shift 1
-		rm -r /tmp/tvinfo.xml
-		res=$(curl -o /tmp/tvinfo.xml -vs "https://www.tvinfo.de/share/openepg/schedule.php?username=$1&password=$2" 2>&1)
-		if  ! [ -s /tmp/tvinfo.xml ]
-		then
-			res="$res File empty!"
-		fi
-		echo "$res"
-		;;
-
-	restart_sectionsd)
-		killall sectionsd
-		sectionsd >/dev/null 2>&1
-		msg="sectionsd reboot. ok."
-		y_format_message_html
-		;;
 
 	mtd_space|var_space)
 		df | while read fs rest; do
