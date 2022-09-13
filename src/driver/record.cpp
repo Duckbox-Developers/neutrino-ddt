@@ -2246,6 +2246,12 @@ bool CStreamRec::Open(CZapitChannel *channel)
 		av_dict_set(&options, "headers", headers.c_str(), 0);
 	}
 
+	if (0 == strncmp(url.c_str(), "http://", 7) || 0 == strncmp(url.c_str(), "https://", 8))
+	{
+		av_dict_set(&options, "timeout", "20000000", 0); //20sec
+		av_dict_set(&options, "reconnect", "1", 0);
+	}
+
 	av_log_set_level(AV_LOG_DEBUG);
 	if (avformat_open_input(&ifcx, url.c_str(), NULL, &options) != 0)
 	{
