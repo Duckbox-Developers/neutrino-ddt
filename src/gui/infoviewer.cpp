@@ -2182,8 +2182,6 @@ void CInfoViewer::killTitle()
 	}
 	showButtonBar = false;
 	CInfoClock::getInstance()->enableInfoClock();
-
-	OnAfterKillTitle();
 }
 
 #if 0
