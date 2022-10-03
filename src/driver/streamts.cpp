@@ -805,7 +805,7 @@ _error:
 }
 
 CStreamStream::CStreamStream(int clientfd, t_channel_id chid, stream_pids_t &_pids)
-	: CStreamInstance(clientfd, chid, _pids, false)
+	: CStreamInstance(clientfd, chid, _pids, true)
 {
 	ifcx = NULL;
 	ofcx = NULL;
