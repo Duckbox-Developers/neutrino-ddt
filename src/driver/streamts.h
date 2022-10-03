@@ -54,14 +54,13 @@ class CStreamInstance : public OpenThreads::Thread
 		t_channel_id channel_id;
 		stream_pids_t pids;
 		stream_fds_t fds;
-		bool send_raw;
 
 		virtual bool Send(ssize_t r, unsigned char *_buf = NULL);
 		virtual void Close();
 		virtual void run();
 		friend class CStreamManager;
 	public:
-		CStreamInstance(int clientfd, t_channel_id chid, stream_pids_t &pids, bool send_raw);
+		CStreamInstance(int clientfd, t_channel_id chid, stream_pids_t &pids);
 		virtual ~CStreamInstance();
 		virtual bool Open();
 		virtual bool Start();
@@ -127,8 +126,8 @@ class CStreamManager : public OpenThreads::Thread
 		streammap_t streams;
 
 		bool	Listen();
-		bool	Parse(int fd, stream_pids_t &pids, t_channel_id &chid, CFrontend *&frontend, bool &send_raw);
-		void	AddPids(int fd, CZapitChannel *channel, stream_pids_t &pids, bool send_raw);
+		bool	Parse(int fd, stream_pids_t &pids, t_channel_id &chid, CFrontend *&frontend);
+		void	AddPids(int fd, CZapitChannel *channel, stream_pids_t &pids);
 		void	CheckStandby(bool enter);
 		CFrontend *FindFrontend(CZapitChannel *channel);
 		bool	StopAll();

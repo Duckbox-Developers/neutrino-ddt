@@ -3789,11 +3789,16 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 		return messages_return::handled;
 	}
 	else if (msg == NeutrinoMessages::EVT_STREAM_START) {
-		printf("NeutrinoMessages::EVT_STREAM_START\n");
+		int fd = (int) data;
+		printf("NeutrinoMessages::EVT_STREAM_START: fd %d\n", fd);
 		wakeupFromStandby();
 		if (g_Radiotext)
 			g_Radiotext->setPid(0);
 
+		if (!CStreamManager::getInstance()->AddClient(fd)) {
+			close(fd);
+			g_RCInput->postMsg(NeutrinoMessages::EVT_STREAM_STOP, 0);
+		}
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 		if (!CRecordManager::getInstance()->GetRecordCount()) {
 			CVFD::getInstance()->ShowIcon(FP_ICON_CAM1, false);

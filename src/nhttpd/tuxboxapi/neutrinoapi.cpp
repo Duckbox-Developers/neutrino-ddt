@@ -406,11 +406,29 @@ std::string CNeutrinoAPI::getVideoFramerateAsString(void)
 	videoDecoder->getPictureInfo(xres, yres, framerate);
 	switch (framerate)
 	{
+		case 0:
+			sframerate = "23.976fps";
+			break;
+		case 1:
+			sframerate = "24fps";
+			break;
 		case 2:
 			sframerate = "25fps";
 			break;
+		case 3:
+			sframerate = "29.97fps";
+			break;
+		case 4:
+			sframerate = "30fps";
+			break;
 		case 5:
 			sframerate = "50fps";
+			break;
+		case 6:
+			sframerate = "59.94fps";
+			break;
+		case 7:
+			sframerate = "60fps";
 			break;
 	}
 	return sframerate;
