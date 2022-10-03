@@ -198,7 +198,7 @@ void CStreamInstance::run()
 		dmx->addPid(*it);
 	}
 
-	dmx->Start(true);
+	dmx->Start();
 
 	if (!send_raw)
 		CCamManager::getInstance()->Start(channel_id, CCamManager::STREAM);
@@ -395,6 +395,7 @@ bool CStreamManager::Parse(int fd, stream_pids_t &pids, t_channel_id &chid, CFro
 {
 	char cbuf[512];
 	char *bp;
+	send_raw = false;
 
 	FILE *fp = fdopen(fd, "r+");
 	if (fp == NULL)
@@ -443,22 +444,19 @@ bool CStreamManager::Parse(int fd, stream_pids_t &pids, t_channel_id &chid, CFro
 
 	t_channel_id tmpid = 0;
 	bp = &cbuf[5];
-	if (sscanf(bp, "id=%" SCNx64, &tmpid) == 1)
-	{
-		channel = CServiceManager::getInstance()->FindChannel(tmpid);
-		chid = tmpid;
-	}
-	int tmpraw = 0;
-	bp = &cbuf[25];
 
-	if (sscanf(bp, "raw=%d", &tmpraw) == 1)
+	if (strstr(bp,"id="))
 	{
-		send_raw = (tmpraw > 0);
+		if (sscanf(bp, "id=%" SCNx64, &tmpid) == 1) {
+			channel = CServiceManager::getInstance()->FindChannel(tmpid);
+			chid = tmpid;
+			send_raw = false;
+			pids.clear(); // to catch and stream all pids later !
+		}
 	}
 
-	if (!tmpid)
+	else
 	{
-		bp = &cbuf[5];
 		u_int service;
 		u_int i1, i2, i3, i4, satpos;
 
@@ -471,22 +469,17 @@ bool CStreamManager::Parse(int fd, stream_pids_t &pids, t_channel_id &chid, CFro
 			{
 				printf("e2 -> n chid:%" SCNx64 "\n", tmp_channel->getChannelID());
 				channel = tmp_channel;
-				chid = tmp_channel->getChannelID();
+				chid = channel->getChannelID();
 				send_raw = true;
+				pids.clear(); // to catch and stream all pids later !
 			}
 		}
 	}
+
 	if (!channel)
 		return false;
 
 	printf("CStreamManager::Parse: channel_id %" PRIx64 " [%s] send %s\n", chid, channel->getName().c_str(), send_raw ? "raw" : "decrypted");
-
-	streammap_iterator_t it = streams.find(chid);
-	if (it != streams.end())
-	{
-		printf("CStreamManager::Parse: channel_id %" PRIx64 " already streaming, just add client %d\n", chid, fd);
-		return true;
-	}
 
 	if (IS_WEBCHAN(chid))
 		return true;
@@ -566,9 +559,8 @@ bool CStreamManager::AddClient(int connfd)
 	stream_pids_t pids;
 	t_channel_id channel_id;
 	CFrontend *frontend;
-	bool send_raw;
 
-	pids.clear(); // to catch and stream all pids later !
+	bool send_raw = false;
 
 	if (Parse(connfd, pids, channel_id, frontend, send_raw)) {
 		OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(mutex);
@@ -674,13 +666,11 @@ void CStreamManager::run()
 						perror("CStreamManager::run(): accept");
 						continue;
 					}
-
-					g_RCInput->postMsg(NeutrinoMessages::EVT_STREAM_START, 0);
+#if 0
 					if (!AddClient(connfd))
-					{
 						close(connfd);
-						g_RCInput->postMsg(NeutrinoMessages::EVT_STREAM_STOP, 0);
-					}
+#endif
+					g_RCInput->postMsg(NeutrinoMessages::EVT_STREAM_START, connfd);
 					poll_timeout = 1000;
 				}
 				else
