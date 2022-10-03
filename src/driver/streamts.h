@@ -61,7 +61,7 @@ class CStreamInstance : public OpenThreads::Thread
 		virtual void run();
 		friend class CStreamManager;
 	public:
-		CStreamInstance(int clientfd, t_channel_id chid, stream_pids_t &pids, bool send_raw = true);
+		CStreamInstance(int clientfd, t_channel_id chid, stream_pids_t &pids, bool send_raw);
 		virtual ~CStreamInstance();
 		virtual bool Open();
 		virtual bool Start();
