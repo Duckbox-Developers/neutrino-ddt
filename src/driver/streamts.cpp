@@ -675,12 +675,13 @@ void CStreamManager::run()
 						continue;
 					}
 
-					g_RCInput->postMsg(NeutrinoMessages::EVT_STREAM_START, 0);
 					if (!AddClient(connfd))
 					{
 						close(connfd);
 						g_RCInput->postMsg(NeutrinoMessages::EVT_STREAM_STOP, 0);
 					}
+					else
+						g_RCInput->postMsg(NeutrinoMessages::EVT_STREAM_START, 0);
 					poll_timeout = 1000;
 				}
 				else
