@@ -51,6 +51,8 @@ class CMiscMenue : public CMenuTarget, CChangeObserver
 		CMenuOptionChooser * shoutcast_onoff;
 		CMenuForwarder * epg_dir;
 		CMenuForwarder * epg_read_now;
+		CMenuOptionChooser * ecm_onoff;
+		CMenuOptionChooser * dec_onoff;
 		int width;
 		std::string epg_cache;
 		std::string epg_extendedcache;
@@ -66,6 +68,7 @@ class CMiscMenue : public CMenuTarget, CChangeObserver
 		int showMiscSettingsMenuEnergy();
 		int showMiscSettingsMenuChanlist();
 		int showMiscSettingsMenuOnlineServices();
+		int showMiscSettingsMenuStreaming();
 
 	public:
 		CMiscMenue();

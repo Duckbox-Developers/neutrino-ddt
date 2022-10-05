@@ -774,6 +774,11 @@ if (g_info.hw_caps->can_shutdown)
 	g_settings.recording_startstop_msg	   = configfile.getBool("recording_startstop_msg"     , true);
 	g_settings.recording_already_found_check   = configfile.getBool("recording_already_found_check", false);
 
+	// streaming
+	g_settings.streaming_ecmmode = configfile.getInt32("streaming_ecmmode", 0);
+	g_settings.streaming_decryptmode = configfile.getInt32("streaming_decryptmode", 1);
+	g_settings.streaming_port = configfile.getInt32("streaming_port", 31339);
+
 	g_settings.plugin_hdd_dir = configfile.getString( "plugin_hdd_dir", "/media/sda1/plugins" );
 
 	g_settings.plugins_disabled = configfile.getString( "plugins_disabled", "" );
@@ -1511,6 +1516,11 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setBool  ("recording_slow_warning"             , g_settings.recording_slow_warning         );
 	configfile.setBool  ("recording_startstop_msg"             , g_settings.recording_startstop_msg       );
 	configfile.setBool  ("recording_already_found_check"      , g_settings.recording_already_found_check  );
+
+	// streaming
+	configfile.setInt32("streaming_ecmmode", g_settings.streaming_ecmmode);
+	configfile.setInt32("streaming_decryptmode", g_settings.streaming_decryptmode);
+	configfile.setInt32("streaming_port", g_settings.streaming_port);
 
 	configfile.setString ( "plugin_hdd_dir", g_settings.plugin_hdd_dir );
 

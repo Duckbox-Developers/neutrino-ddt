@@ -534,6 +534,11 @@ struct SNeutrinoSettings
 	std::string recording_filename_template;
 	int recording_already_found_check;
 
+	// streaming;
+	int streaming_ecmmode;
+	int streaming_decryptmode;
+	int streaming_port;
+
 	// timeshift
 	int timeshift_pause;
 	int timeshift_auto;
