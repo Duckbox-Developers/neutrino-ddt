@@ -3368,7 +3368,9 @@ void CControlAPI::xmltvm3uCGI(CyhookHandler *hh)
 	/* strip off optional custom port */
 	if (url.rfind(":") != 4)
 		url = url.substr(0, url.rfind(":")); // strip off optional custom port
-	url += ":31339/id=";
+	url += ":";
+	url += std::to_string(g_settings.streaming_port);
+	url += "/id=";
 
 	for (unsigned int i = 0; i < g_bouquetManager->Bouquets.size(); i++)
 	{
@@ -3477,7 +3479,6 @@ void CControlAPI::xmltvlistCGI(CyhookHandler *hh)
 	hh->SendOk();
 }
 //-------------------------------------------------------------------------
-
 void CControlAPI::build_live_url(CyhookHandler *hh)
 {
 	int mode = NeutrinoAPI->Zapit->getMode();
@@ -3491,7 +3492,9 @@ void CControlAPI::build_live_url(CyhookHandler *hh)
 	if (url.rfind(":") != 4)
 		url = url.substr(0, url.rfind(":"));
 
-	url += ":31339/id=";
+	url += ":";
+	url += std::to_string(g_settings.streaming_port);
+	url += "/id=";
 
 	// response url
 	if (!hh->ParamList["vlc_link"].empty())
@@ -3534,7 +3537,9 @@ void CControlAPI::build_playlist(CyhookHandler *hh)
 	if (url.rfind(":") != 4)
 		url = url.substr(0, url.rfind(":"));
 
-	url += ":31339/id=";
+	url += ":";
+	url += std::to_string(g_settings.streaming_port);
+	url += "/id=";
 
 	if (!hh->ParamList["id"].empty())
 	{
