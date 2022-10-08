@@ -579,7 +579,7 @@ int CMiscMenue::showMiscSettingsMenuStreaming()
 
 	// port
 	CIntInput * miscSettings_streamingport = new CIntInput(LOCALE_STREAMING_PORT, &g_settings.streaming_port, 5, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, this);
-	CMenuForwarder * mf = new CMenuDForwarder(LOCALE_STREAMING_PORT, true, std::to_string(g_settings.streaming_port), miscSettings_streamingport);
+	CMenuForwarder * mf = new CMenuDForwarder(LOCALE_STREAMING_PORT, true, to_string(g_settings.streaming_port), miscSettings_streamingport);
 	ms_sservices->addItem(mf);
 
 	// ecm
