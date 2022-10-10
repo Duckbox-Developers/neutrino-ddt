@@ -1740,9 +1740,9 @@ moviebrowser.dir Pfad
 moviebrowser.directories Verzeichnisse
 moviebrowser.edit_book Markierung ändern
 moviebrowser.edit_book_name_info1 Neuer Markierungsname
-moviebrowser.edit_book_name_info2
+moviebrowser.edit_book_name_info2 Geben Sie den Namen für die neue Markierung ein
 moviebrowser.edit_book_pos_info1 Neue Position (s)
-moviebrowser.edit_book_pos_info2
+moviebrowser.edit_book_pos_info2 Geben Sie die neue Position in Sekunden ein
 moviebrowser.edit_book_type_info1 Neue Sprunglänge (s)
 moviebrowser.edit_book_type_info2 <0: zurück, >0: vor, 0: kein
 moviebrowser.edit_serie Name der Serie
@@ -1896,8 +1896,8 @@ moviebrowser.yt_search Suche nach Stichwort
 moviecut.cancel Bearbeiten des Filmes abbrechen?
 movieplayer.bookmark Bookmarks
 movieplayer.bookmarkname Bookmark Name
-movieplayer.bookmarkname_hint1 Geben Sie den Namen für das neue Lesezeichen ein
-movieplayer.bookmarkname_hint2
+movieplayer.bookmarkname_hint1 Neues Lesezeichen
+movieplayer.bookmarkname_hint2 Geben Sie den Namen für das neue Lesezeichen ein
 movieplayer.chapters Kapitel
 movieplayer.display_playtime Zeige Spielzeit im VFD/LCD
 movieplayer.fileplayback_audio Multiformat-Audiowiedergabe
