@@ -182,8 +182,8 @@ bool CStreamInstance::Open()
 	if (!tmpchan)
 		return false;
 
-	dmx = new cDemux(tmpchan->getRecordDemux());//FIXME
-	if (!dmx)
+	dmx = new cDemux(tmpchan->getStreamDemux());//FIXME
+	if(!dmx)
 		return false;
 	return dmx->Open(DMX_TP_CHANNEL, NULL, DMX_BUFFER_SIZE);
 }
@@ -374,7 +374,7 @@ CFrontend *CStreamManager::FindFrontend(CZapitChannel *channel)
 #ifdef ENABLE_PIP
 			/* FIXME until proper demux management */
 			t_channel_id pip_channel_id = CZapit::getInstance()->GetPipChannelID();
-			if ((pip_channel_id == chid) && (channel->getRecordDemux() == channel->getPipDemux()))
+			if ((pip_channel_id == chid) && (channel->getStreamDemux() == channel->getPipDemux()))
 				zapit.stopPip();
 #endif
 		}
