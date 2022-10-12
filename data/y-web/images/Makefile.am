@@ -70,6 +70,10 @@ if BOXMODEL_VUPLUS_ALL
 install_DATA += rc_vu_solo4k.png
 endif
 
+if BOXMODEL_E4HDULTRA
+install_DATA += e4hdultra.png
+endif
+
 if BOXTYPE_SPARK
 install_DATA += rc_spark_old.jpg \
 		rc_spark_new.jpg
