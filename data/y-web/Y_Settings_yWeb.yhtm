@@ -46,6 +46,7 @@ function do_init(){
 		case "10":	// vu+ uno 4k
 		case "11":	// zgemma h7
 		case "12":	// wwio bre2ze4k
+		case "13":	// axas e4hd
 			sel=(sel*1+val*1);
 			break;
 		default:
@@ -139,6 +140,7 @@ select {
 						<option value="10">VU+ | Uno 4K</option>
 						<option value="11">Zgemma | H7</option>
 						<option value="12">WWIO | BRE2ZE 4k</option>
+						<option value="13">AXAS | E4HD 4K Ultra</option>
 					</select>
 				</td>
 			</tr>
