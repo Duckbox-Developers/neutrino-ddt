@@ -27,9 +27,10 @@ function do_submit(){
 }
 function do_init(){
 	val = "{=ini-get:%(CONFIGDIR)/Y-Web.conf;fb;0~open=}";
-	var sel=4;
+	var sel=5;
 	switch(val){
-		case "-4":	// ufs913
+		case "-5":	// ufs913
+		case "-4":	// ufs912
 		case "-3":	// ufs910
 		case "-2":	// spark old
 		case "-1":	// spark new
@@ -46,6 +47,7 @@ function do_init(){
 		case "10":	// vu+ uno 4k
 		case "11":	// zgemma h7
 		case "12":	// wwio bre2ze4k
+		case "13":	// axas e4hd
 			sel=(sel*1+val*1);
 			break;
 		default:
@@ -122,7 +124,8 @@ select {
 				<td>{=L:set.yweb.remote=}</td>
 				<td colspan="3">
 					<select name="fb" title="{=L:remote=}">
-						<option value="-4">KATHREIN | 913</option>
+						<option value="-5">KATHREIN | 913</option>
+						<option value="-4">KATHREIN | 912</option>
 						<option value="-3">KATHREIN | 910</option>
 						<option value="-2">SPARK | (alt)</option>
 						<option value="-1">SPARK | (neu)</option>
@@ -139,6 +142,7 @@ select {
 						<option value="10">VU+ | Uno 4K</option>
 						<option value="11">Zgemma | H7</option>
 						<option value="12">WWIO | BRE2ZE 4k</option>
+						<option value="13">AXAS | E4HD 4K Ultra</option>
 					</select>
 				</td>
 			</tr>

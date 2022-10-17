@@ -126,7 +126,7 @@ const CNeutrinoYParser::TyFuncCall CNeutrinoYParser::yFuncCallList[] =
 	{"set_bouquet_edit_form",		&CNeutrinoYParser::func_set_bouquet_edit_form},
 	{"get_webtv_list",			&CNeutrinoYParser::func_get_webtv_list},
 	{"get_webradio_list",			&CNeutrinoYParser::func_get_webradio_list},
-	{"get_xmltv_list",			&CNeutrinoYParser::func_get_xmltv_list},
+	{"get_xmltv_list",			&CNeutrinoYParser::func_get_xmltv_list}
 };
 //-------------------------------------------------------------------------
 // y-func : dispatching and executing

@@ -695,6 +695,8 @@ CFrontend * CFEManager::allocateFE(CZapitChannel * channel, bool forrecord)
 		channel->setRecordDemux(dnum);
 		INFO("pip dyn demux: %d", dnum);
 		channel->setPipDemux(dnum);
+		INFO("pip stream demux: %d", dnum);
+		channel->setStreamDemux(dnum);
 		if (forrecord && !dnum) {
 			frontend = NULL;
 		} else {
@@ -703,6 +705,7 @@ CFrontend * CFEManager::allocateFE(CZapitChannel * channel, bool forrecord)
 #else
 		channel->setRecordDemux(frontend->fenumber+1);
 		channel->setPipDemux(frontend->fenumber+1);
+		channel->setStreamDemux(frontend->fenumber+1);
 		cDemux::SetSource(frontend->fenumber+1, frontend->fenumber);
 #ifdef ENABLE_PIP
 		/* FIXME until proper demux management */
