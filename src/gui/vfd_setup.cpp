@@ -134,6 +134,7 @@ int CVfdSetup::showSetup()
 		vfds->addItem(mf);
 	}
 
+#ifndef BOXMODEL_E4HDULTRA
 	if (CVFD::getInstance()->has_lcd)
 	{
 
@@ -201,6 +202,7 @@ int CVfdSetup::showSetup()
 		led_num->setHint("", LOCALE_MENU_HINT_VFD_INFOLINE);
 		vfds->addItem(led_num);
 	}
+#endif
 
 #if !defined BOXMODEL_VUSOLO4K && !defined BOXMODEL_VUDUO4K && !defined BOXMODEL_VUDUO4KSE && !defined BOXMODEL_VUULTIMO4K && !defined BOXMODEL_VUUNO4KSE && !defined BOXMODEL_DM8000 && !defined BOXMODEL_E4HDULTRA
 #if ENABLE_LCD4LINUX && ENABLE_GRAPHLCD
@@ -216,7 +218,9 @@ int CVfdSetup::showSetup()
 	if (g_settings.glcd_enable == 0)
 #endif
 	{
+#ifndef BOXMODEL_E4HDULTRA
 		vfds->addItem(GenericMenuSeparatorLine);
+#endif
 		vfds->addItem(new CMenuForwarder(LOCALE_LCD4L_SUPPORT, ((access("/usr/bin/lcd4linux", F_OK) == 0) || (access("/var/bin/lcd4linux", F_OK) == 0)), NULL, new CLCD4lSetup(), NULL, CRCInput::RC_yellow));
 	}
 #endif

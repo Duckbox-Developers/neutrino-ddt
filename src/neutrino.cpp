@@ -971,6 +971,13 @@ if (g_info.hw_caps->can_shutdown)
 	g_settings.lcd_vfd_scroll = configfile.getInt32("lcd_vfd_scroll", 1);
 #endif
 
+#if BOXMODEL_E4HDULTRA // fixme, needs menu
+	g_settings.lcd_setting[0] = 200;	// brightness
+	g_settings.lcd_setting[1] = 125;	// standby brightness
+	g_settings.lcd_setting[7] = 50;		// deep standby brightness (maybe unused)
+	g_settings.lcd_setting_dim_brightness = 125;
+#endif
+
 	//Picture-Viewer
 	g_settings.picviewer_slide_time = configfile.getInt32( "picviewer_slide_time", 10);
 	g_settings.picviewer_scaling = configfile.getInt32("picviewer_scaling", 1 /*(int)CPictureViewer::SIMPLE*/);
