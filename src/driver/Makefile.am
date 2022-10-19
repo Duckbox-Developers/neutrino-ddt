@@ -82,11 +82,19 @@ libneutrino_driver_a_SOURCES += \
 endif
 
 if BOXTYPE_ARMBOX
+if BOXMODEL_E4HDULTRA
+libneutrino_driver_a_SOURCES += \
+	fb_generic.cpp \
+	fb_accel.cpp \
+	fb_accel_arm.cpp \
+	lcdd.cpp
+else
 libneutrino_driver_a_SOURCES += \
 	fb_generic.cpp \
 	fb_accel.cpp \
 	fb_accel_arm.cpp \
 	simple_display.cpp
+endif
 endif
 
 if BOXTYPE_MIPSBOX
