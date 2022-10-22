@@ -301,7 +301,7 @@ AC_ARG_ENABLE(pip,
 AM_CONDITIONAL(ENABLE_PIP, test "$enable_pip" = "yes")
 
 case "$BOXMODEL" in
-	vusolo4k|vuduo4k|vuduo4kse|vuultimo4k|vuuno4kse|vuuno4k)
+	vusolo4k|vuduo4k|vuduo4kse|vuultimo4k|vuuno4kse|vuuno4k|e4hdultra)
 		AC_ARG_ENABLE(quadpip,
 			AS_HELP_STRING([--enable-quadpip], [enable quad picture in picture support @<:@default=no@:>@]),
 			AC_DEFINE(ENABLE_QUADPIP, 1, [enable quad picture in picture support]))
@@ -365,6 +365,15 @@ if test `dirname $0` = `pwd` || test "$0" = ./configure; then
 else
 	HWLIB_CFLAGS="$HWLIB_CFLAGS "'-D__file__="\"$(subst $(srcdir)/,,$(abspath $<))\""'
 	HWLIB_CFLAGS="$HWLIB_CFLAGS "'-D__path_file__="\"$(subst $(top_srcdir)/,,$(abspath $<))\""'
+fi
+
+AC_ARG_WITH(lcddev,
+	AC_HELP_STRING([--with-lcddev=devicename], [use devicename for lcd framebuffer device, e.g. /dev/fb1 ]),
+	[[with_lcddev=$withval]],
+	[[with_lcddev=no]]
+)
+if test x"$with_lcddev" != xno ; then
+	AC_DEFINE_UNQUOTED(LCD_DEV, "$withval", [Defines which device to use for lcd (e.g. /dev/fb1)])
 fi
 
 AC_CHECK_PROG(AR, ar, , ar)
