@@ -647,7 +647,7 @@ if (g_info.hw_caps->can_shutdown)
 	g_settings.widget_fade           = configfile.getBool("widget_fade"          , false );
 
 #ifdef ENABLE_GRAPHLCD
-#if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUDUO4KSE || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4KSE
+#if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUDUO4KSE || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4KSE || BOXMODEL_E4HDULTRA
 	g_settings.glcd_enable = configfile.getInt32("glcd_enable", 1);
 #else
 	g_settings.glcd_enable = configfile.getInt32("glcd_enable", 0);

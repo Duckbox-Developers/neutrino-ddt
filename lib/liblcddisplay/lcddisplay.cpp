@@ -192,7 +192,7 @@ int CLCDDisplay::setLCDContrast(int contrast)
 	fp = open("/dev/dbox/fp0", O_RDWR);
 
 	if (fp < 0)
-		fp = open("/dev/dbox/lcd0", O_RDWR);
+		fp = open(LCD_DEVICE, O_RDWR);
 	if (fp < 0)
 	{
 		printf("[LCD] can't open /dev/dbox/fp0(%m)\n");

@@ -30,7 +30,11 @@
 #include <string>
 #include <stdint.h> /* uint8_t */
 
+#ifndef LCD_DEV
 #define LCD_DEVICE		"/dev/dbox/lcd0"
+#else
+#define LCD_DEVICE		LCD_DEV
+#endif
 
 #define LCD_PIXEL_OFF		0x00
 #define LCD_PIXEL_ON		0xff
