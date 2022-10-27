@@ -763,7 +763,7 @@ start-block~rc_vu_solo4k
 <!--<area shape="circle" coords="33,28,10" id="113" alt="v1_mute" href="javascript:rcsim('KEY_POWER_TV');">-->
 <area shape="circle" coords="105,28,10" id ="116" alt="Power" href="javascript:rcsim('KEY_POWER');">
 <area shape="circle" coords="33,53,10" id ="388" alt="text" href="javascript:rcsim('KEY_TEXT');">
-<area shape="circle" coords="58,53,10" id ="370" alt="subtitle" href="javascript:rcsim('KEY_SUB');">
+<area shape="circle" coords="58,53,10" id ="370" alt="subtitle" href="javascript:rcsim('KEY_SUBTITLE');">
 <!--<area shape="circle" coords="82,53,10" id ="102" alt="v1_home" href="javascript:rcsim('KEY_HOME');">-->
 <!--<area shape="circle" coords="105,53,10" id ="107" alt="v1_end" href="javascript:rcsim('107');">-->
 <area shape="circle" coords="105,53,10" id ="107" alt="mute" href="javascript:rcsim('KEY_MUTE');">
@@ -935,7 +935,7 @@ start-block~rc_axas_e4hd
 <area shape="circle" coords="32,68,13" alt="KEY_POWER" href="javascript:rcsim('KEY_POWER')" />
 <area shape="circle" coords="125,68,11" alt="KEY_MUTE" href="javascript:rcsim('KEY_MUTE')" />
 <area shape="circle" coords="80,368,22" alt="KEY_OK" href="javascript:rcsim('KEY_OK')" />
-<area shape="circle" coords="28,322,14" alt="KEY_MENUE" href="javascript:rcsim('KEY_MENUE')" />
+<area shape="circle" coords="28,322,14" alt="KEY_MENU" href="javascript:rcsim('KEY_MENU')" />
 <area shape="circle" coords="127,321,15" alt="KEY_EXIT" href="javascript:rcsim('KEY_EXIT')" />
 <area shape="circle" coords="29,418,13" alt="KEY_EPG" href="javascript:rcsim('KEY_EPG')" />
 <area shape="circle" coords="127,417,13" alt="KEY_INFO" href="javascript:rcsim('KEY_INFO')" />
@@ -973,7 +973,7 @@ start-block~rc_axas_e4hd
 <area shape="rect" coords="48,504,76,517" alt="KEY_FORWARD" href="javascript:rcsim('KEY_FORWARD')" />
 <area shape="rect" coords="16,89,37,109" alt="KEY_HELP" href="javascript:rcsim('KEY_HELP')" />
 <area shape="rect" coords="51,89,72,110" alt="KEY_TIMER" href="javascript:rcsim('KEY_TIMER')" />
-<area shape="rect" coords="86,89,107,109" alt="KEY_TV_RADIO" href="javascript:rcsim('KEY_TV_RADIO')" />
+<area shape="rect" coords="86,89,107,109" alt="KEY_TV2" href="javascript:rcsim('KEY_TV2')" />
 <area shape="rect" coords="121,89,143,110" alt="KEY_AUDIO" href="javascript:rcsim('KEY_AUDIO')" />
 <area shape="rect" coords="64,225,94,252" alt="KEY_MEDIA" href="javascript:rcsim('KEY_MEDIA')" />
 <area shape="rect" coords="65,267,94,293" alt="KEY_HOME" href="javascript:rcsim('KEY_HOME')" />
