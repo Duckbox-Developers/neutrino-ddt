@@ -46,12 +46,6 @@
 #include <string>
 #include <list>
 
-#if HAVE_ARM_HARDWARE
-#define VIDEOMENU_VIDEOMODE_OPTION_COUNT 17
-#else
-#define VIDEOMENU_VIDEOMODE_OPTION_COUNT 13
-#endif
-
 struct SNeutrinoTheme
 {
 	unsigned char menu_Head_alpha;
