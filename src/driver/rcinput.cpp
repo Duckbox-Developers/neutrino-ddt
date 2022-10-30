@@ -1563,6 +1563,8 @@ const char *CRCInput::getSpecialKeyName(const unsigned int key)
 			return "video";
 		case RC_tv:
 			return "tv";
+		case RC_tv2:
+			return "tv2";
 		case RC_radio:
 			return "radio";
 		case RC_text:
