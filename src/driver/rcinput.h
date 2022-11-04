@@ -244,6 +244,7 @@ class CRCInput
 			RC_record	= KEY_RECORD,
 			RC_play		= KEY_PLAY,
 			RC_pause	= KEY_PAUSE,
+			RC_pvr		= KEY_PVR,
 #if BOXMODEL_DM8000
 			RC_forward	= KEY_NEXTSONG,
 			RC_rewind	= KEY_PREVIOUSSONG,

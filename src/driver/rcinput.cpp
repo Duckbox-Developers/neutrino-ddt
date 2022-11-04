@@ -1563,6 +1563,8 @@ const char *CRCInput::getSpecialKeyName(const unsigned int key)
 			return "video";
 		case RC_tv:
 			return "tv";
+		case RC_tv2:
+			return "tv2";
 		case RC_radio:
 			return "radio";
 		case RC_text:
@@ -1689,6 +1691,8 @@ const char *CRCInput::getSpecialKeyName(const unsigned int key)
 		case RC_switchvideomode:
 			return "videomode";
 #endif
+		case RC_pvr:
+			return "pvr";
 		default:
 			printf("unknown key: %d (0x%x) \n", key, key);
 			return "unknown";
