@@ -286,6 +286,9 @@ void nGLCD::Exec()
 #elif BOXMODEL_VUSOLO4K || BOXMODEL_VUUNO4KSE
 		for (int bx = 0; bx < 9; bx++)
 		{
+#elif BOXMODEL_E4HDULTRA
+		for (int bx = 0; bx < 6; bx++)
+		{
 #else
 		for (int bx = 0; bx < 3; bx++)
 		{
@@ -300,6 +303,9 @@ void nGLCD::Exec()
 		{
 #elif BOXMODEL_VUSOLO4K || BOXMODEL_VUUNO4KSE
 		for (int bx = 0; bx < 9; bx++)
+		{
+#elif BOXMODEL_E4HDULTRA
+		for (int bx = 0; bx < 6; bx++)
 		{
 #else
 		for (int bx = 0; bx < 3; bx++)
