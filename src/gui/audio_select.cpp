@@ -70,7 +70,7 @@ CAudioSelectMenuHandler::~CAudioSelectMenuHandler()
 
 }
 
-#if !HAVE_SH4_HARDWARE
+#if !HAVE_SH4_HARDWARE && !BOXMODEL_E4HDULTRA
 // -- this is a copy from neutrino.cpp!!
 #define AUDIOMENU_ANALOGOUT_OPTION_COUNT 3
 const CMenuOptionChooser::keyval AUDIOMENU_ANALOGOUT_OPTIONS[AUDIOMENU_ANALOGOUT_OPTION_COUNT] =
@@ -182,7 +182,7 @@ int CAudioSelectMenuHandler::doMenu ()
 		}
 		perc_str[i] = to_string(perc_val[i]) + "%";
 
-		CMenuForwarder *fw = new CMenuForwarder(is_mp ? mp->getAPIDDesc(i).c_str() : g_RemoteControl->current_PIDs.APIDs[i].desc, 
+		CMenuForwarder *fw = new CMenuForwarder(is_mp ? mp->getAPIDDesc(i).c_str() : g_RemoteControl->current_PIDs.APIDs[i].desc,
 				true, perc_str[i], this, "s", CRCInput::convertDigitToKey(i + 1));
 		fw->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
 		fw->setMarked(sel_apid == i);
@@ -190,7 +190,7 @@ int CAudioSelectMenuHandler::doMenu ()
 		AudioSelector->addItem(fw, sel_apid == i);
 	}
 	unsigned int shortcut_num = p_count;
-#if !HAVE_SH4_HARDWARE
+#if !HAVE_SH4_HARDWARE && !BOXMODEL_E4HDULTRA
 	if (p_count)
 		AudioSelector->addItem(GenericMenuSeparatorLine);
 

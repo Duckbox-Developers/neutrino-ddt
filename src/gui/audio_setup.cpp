@@ -87,6 +87,7 @@ int CAudioSetup::exec(CMenuTarget *parent, const std::string &actionKey)
 	return res;
 }
 
+#if !BOXMODEL_E4HDULTRA
 #define AUDIOMENU_ANALOGOUT_OPTION_COUNT 3
 const CMenuOptionChooser::keyval AUDIOMENU_ANALOGOUT_OPTIONS[AUDIOMENU_ANALOGOUT_OPTION_COUNT] =
 {
@@ -94,6 +95,7 @@ const CMenuOptionChooser::keyval AUDIOMENU_ANALOGOUT_OPTIONS[AUDIOMENU_ANALOGOUT
 	{ 1, LOCALE_AUDIOMENU_MONOLEFT  },
 	{ 2, LOCALE_AUDIOMENU_MONORIGHT }
 };
+#endif
 
 #define AUDIOMENU_AVSYNC_OPTION_COUNT 3
 const CMenuOptionChooser::keyval AUDIOMENU_AVSYNC_OPTIONS[AUDIOMENU_AVSYNC_OPTION_COUNT] =
@@ -120,11 +122,11 @@ int CAudioSetup::showAudioSetup()
 	CMenuWidget *audioSettings = new CMenuWidget(LOCALE_MAINSETTINGS_HEAD, NEUTRINO_ICON_SETTINGS, width);
 	audioSettings->setSelected(selected);
 	audioSettings->setWizardMode(is_wizard);
-
+#if !BOXMODEL_E4HDULTRA
 	//analog modes (stereo, mono l/r...)
 	CMenuOptionChooser *as_oj_analogmode 	= new CMenuOptionChooser(LOCALE_AUDIOMENU_ANALOG_MODE, &g_settings.audio_AnalogMode, AUDIOMENU_ANALOGOUT_OPTIONS, AUDIOMENU_ANALOGOUT_OPTION_COUNT, true, audioSetupNotifier);
 	as_oj_analogmode->setHint("", LOCALE_MENU_HINT_AUDIO_ANALOG_MODE);
-
+#endif
 	//dd subchannel auto on/off
 	CMenuOptionChooser *as_oj_ddsubchn = new CMenuOptionChooser(LOCALE_AUDIOMENU_DOLBYDIGITAL, &g_settings.audio_DolbyDigital, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, audioSetupNotifier);
 	as_oj_ddsubchn->setHint("", LOCALE_MENU_HINT_AUDIO_DD);
@@ -185,9 +187,11 @@ int CAudioSetup::showAudioSetup()
 	//paint items
 	audioSettings->addIntroItems(LOCALE_MAINSETTINGS_AUDIO);
 	//---------------------------------------------------------
+#if !BOXMODEL_E4HDULTRA
 	audioSettings->addItem(as_oj_analogmode);
 	audioSettings->addItem(GenericMenuSeparatorLine);
 	//---------------------------------------------------------
+#endif
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	audioSettings->addItem(as_oj_ac3);
 	audioSettings->addItem(as_oj_dts);

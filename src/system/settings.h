@@ -269,7 +269,9 @@ struct SNeutrinoSettings
 	int hdmi_dd;
 	int spdif_dd;
 #endif // HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+#if !BOXMODEL_E4HDULTRA
 	int analog_out;
+#endif
 	int audio_volume_percent_ac3;
 	int audio_volume_percent_pcm;
 
