@@ -309,7 +309,7 @@ bool CAudioSetupNotifier::changeNotify(const neutrino_locale_t OptionName, void 
 #endif
 {
 	//printf("notify: %d\n", OptionName);
-#if !BOXMODEL_E4HDULTRA
+#if !BOXMODEL_E4HDULTRA && !BOXMODEL_BRE2ZE4K
 	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_ANALOG_MODE))
 	{
 		g_Zapit->setAudioMode(g_settings.audio_AnalogMode);
@@ -328,15 +328,6 @@ bool CAudioSetupNotifier::changeNotify(const neutrino_locale_t OptionName, void 
 	{
 		audioDecoder->SetSpdifDD(g_settings.dts_pass ? true : false);
 	}
-#else
-	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_HDMI_DD))
-	{
-		audioDecoder->SetHdmiDD((HDMI_ENCODED_MODE) g_settings.hdmi_dd);
-	}
-	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_SPDIF_DD))
-	{
-		audioDecoder->SetSpdifDD(g_settings.spdif_dd ? true : false);
-	}
 #endif
 	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_AVSYNC))
 	{
@@ -347,6 +338,14 @@ bool CAudioSetupNotifier::changeNotify(const neutrino_locale_t OptionName, void 
 		pcrDemux->SetSyncMode((AVSYNC_TYPE)g_settings.avsync);
 	}
 #if HAVE_SH4_HARDWARE
+	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_HDMI_DD))
+	{
+		audioDecoder->SetHdmiDD((HDMI_ENCODED_MODE) g_settings.hdmi_dd);
+	}
+	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_SPDIF_DD))
+	{
+		audioDecoder->SetSpdifDD(g_settings.spdif_dd ? true : false);
+	}
 	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_MIXER_VOLUME_ANALOG))
 	{
 		audioDecoder->setMixerVolume("Analog", (long)(*((int *)(data))));
