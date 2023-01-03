@@ -40,6 +40,12 @@ extern int fh_crw_getsize(const char *, int *, int *, int, int);
 extern int fh_crw_load(const char *, unsigned char **, int *, int *);
 extern int fh_crw_id(const char *);
 #endif
+#ifdef FBV_SUPPORT_SVG
+extern int fh_svg_getsize (const char *, int *, int *, int, int);
+extern int fh_svg_load (const char *, unsigned char **, int *, int *);
+extern int svg_load_resize(const char *name, unsigned char **buffer, int* ox, int* oy, int dx, int dy);
+extern int fh_svg_id (const char *);
+#endif
 
 double CPictureViewer::m_aspect_ratio_correction;
 
@@ -74,6 +80,9 @@ void CPictureViewer::getSupportedImageFormats(std::vector<std::string> &exts)
 #ifdef FBV_SUPPORT_CRW
 	exts.push_back(".crw");
 #endif
+#ifdef FBV_SUPPORT_SVG
+	exts.push_back(".svg");
+#endif
 }
 
 void CPictureViewer::init_handlers(void)
@@ -92,6 +101,9 @@ void CPictureViewer::init_handlers(void)
 #endif
 #ifdef FBV_SUPPORT_CRW
 	add_format(fh_crw_getsize, fh_crw_load, fh_crw_id);
+#endif
+#ifdef FBV_SUPPORT_SVG
+	add_format (fh_svg_getsize, fh_svg_load, fh_svg_id);
 #endif
 }
 
@@ -637,7 +649,7 @@ bool CPictureViewer::GetLogoName(const uint64_t &channel_id, const std::string &
 	/* first the channel-id, then the channelname */
 	std::string strLogoName[2] = { (std::string)strChanId, SpecialChannelName };
 	/* first png, then jpg, then gif */
-	std::string strLogoExt[3] = { ".png", ".jpg", ".gif" };
+	std::string strLogoExt[4] = { ".svg", ".png", ".jpg", ".gif" };
 	std::string dirs[1] = { logo_path };
 
 	std::string tmp;
@@ -647,7 +659,7 @@ bool CPictureViewer::GetLogoName(const uint64_t &channel_id, const std::string &
 		if (dirs[k].length() < 1)
 			continue;
 		for (int i = 0; i < 2; i++)
-			for (int j = 0; j < 3; j++)
+			for (int j = 0; j < 4; j++)
 			{
 				tmp = dirs[k] + "/" + strLogoName[i] + strLogoExt[j];
 				if (!access(tmp.c_str(), R_OK))
@@ -704,7 +716,7 @@ found:
 #else
 bool CPictureViewer::GetLogoName(const uint64_t &channel_id, const std::string &ChannelName, std::string &name, int *width, int *height, std::string logo_path)
 {
-	std::string fileType[] = { ".png", ".jpg", ".gif" };
+	std::string fileType[] = { ".svg", ".png", ".jpg", ".gif" };
 
 	if (logo_path == "")
 		logo_path = logo_hdd_dir;
@@ -967,6 +979,10 @@ fb_pixel_t *CPictureViewer::int_getImage(const std::string &name, int *width, in
 		else
 #endif
 			load_ret = fh->get_pic(name.c_str(), &buffer, &x, &y);
+#ifdef FBV_SUPPORT_SVG
+		if (name.find(".svg") == (name.length() - 4))
+			bpp = 4;
+#endif
 		dprintf(DEBUG_INFO,  "[CPictureViewer] [%s - %d] load_result: %d \n", __func__, __LINE__, load_ret);
 
 		if (load_ret == FH_ERROR_OK)
@@ -985,6 +1001,15 @@ fb_pixel_t *CPictureViewer::int_getImage(const std::string &name, int *width, in
 			{
 				dprintf(DEBUG_INFO,  "[CPictureViewer] [%s - %d] resize  %s to %d x %d \n", __func__, __LINE__, name.c_str(), *width, *height);
 				if (bpp == 4)
+#ifdef FBV_SUPPORT_SVG
+					if (name.find(".svg") == (name.length() - 4))
+					{
+						svg_load_resize(name.c_str(), &buffer, &x, &y, *width, *height);
+						if (x != *width || y != *height)
+							buffer = ResizeA(buffer, x, y, *width, *height);
+					}
+					else
+#endif
 					buffer = ResizeA(buffer, x, y, *width, *height);
 				else
 					buffer = Resize(buffer, x, y, *width, *height, COLOR);

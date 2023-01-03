@@ -45,6 +45,9 @@
 #include <system/helpers.h>
 
 #include <cctype>
+#include <driver/pictureviewer/pictureviewer.h>
+
+extern CPictureViewer * g_PicViewer;
 
 #ifdef ENABLE_LCD4LINUX
 #include "driver/lcd4l.h"
@@ -386,21 +389,37 @@ void CMenuItem::paintItemButton(const bool select_mode, int item_height, const c
 		if (!active)
 			icon_name = NEUTRINO_ICON_BUTTON_DUMMY_SMALL;
 
-		frameBuffer->getIconSize(icon_name, &icon_w, &icon_h);
+		std::string fulliconname = frameBuffer->getIconPath(icon_name);
 
-		if (/*active  &&*/ icon_w > 0 && icon_h > 0 && icon_space_x >= icon_w)
+		if (fulliconname.find(".svg") == (fulliconname.length() - 4))
 		{
-			int icon_x = icon_space_mid - icon_w / 2;
-			int icon_y = y + item_height / 2 - icon_h / 2;
-			icon_painted = frameBuffer->paintIcon(icon_name, icon_x, icon_y);
-			if (icon_painted && (directKey != CRCInput::RC_nokey) && (directKey & CRCInput::RC_Repeat))
+			int icon_x, icon_y;
+			g_PicViewer->getSize(fulliconname.c_str(), &icon_w, &icon_h);
+			float h_ratio = float(item_height)*100.0/(float)icon_h;
+			icon_w = int(h_ratio*(float)icon_w/100.0) - 2*OFFSET_INNER_SMALL;
+			icon_h = item_height - 2*OFFSET_INNER_SMALL;
+			icon_y = y + item_height/2 - icon_h/2;
+			icon_x = icon_space_mid - icon_w/2;
+			icon_painted = g_PicViewer->DisplayImage(fulliconname, icon_x, icon_y, icon_w, icon_h);
+		}
+		else
+		{
+			frameBuffer->getIconSize(icon_name, &icon_w, &icon_h);
+
+			if (/*active  &&*/ icon_w > 0 && icon_h > 0 && icon_space_x >= icon_w)
 			{
-				static int longpress_icon_w = 0, longpress_icon_h = 0;
-				if (!longpress_icon_w)
-					frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_LONGPRESS, &longpress_icon_w, &longpress_icon_h);
-				frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_LONGPRESS,
+				int icon_x = icon_space_mid - icon_w / 2;
+				int icon_y = y + item_height / 2 - icon_h / 2;
+				icon_painted = frameBuffer->paintIcon(icon_name, icon_x, icon_y);
+				if (icon_painted && (directKey != CRCInput::RC_nokey) && (directKey & CRCInput::RC_Repeat))
+				{
+					static int longpress_icon_w = 0, longpress_icon_h = 0;
+					if (!longpress_icon_w)
+						frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_LONGPRESS, &longpress_icon_w, &longpress_icon_h);
+					frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_LONGPRESS,
 					std::min(icon_x + icon_w - longpress_icon_w / 2, name_start_x - longpress_icon_w),
 					std::min(icon_y + icon_h - longpress_icon_h / 2, y + item_height - longpress_icon_h));
+				}
 			}
 		}
 	}
