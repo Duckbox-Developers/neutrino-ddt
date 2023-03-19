@@ -548,6 +548,9 @@ struct SNeutrinoSettings
 	int default_logo;
 	std::string logo_hdd_dir;
 
+	int load_m3u_logos;
+	std::string m3u_logo_hdd_dir;
+
 	std::string plugin_hdd_dir;
 
 	std::string plugins_disabled;

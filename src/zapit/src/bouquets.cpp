@@ -780,7 +780,7 @@ void CBouquetManager::loadWebchannels(int mode)
 	{
 		std::string filename = (*it);
 		std::string extension = getFileExt(filename);
-		std::string tmp_name = randomFile(extension, LOGODIR_TMP);
+		std::string tmp_name = randomFile(extension, g_settings.m3u_logo_hdd_dir);
 		bool remove_tmp = false;
 
 		if (filename.compare(0, 1, "/") == 0)
@@ -994,13 +994,16 @@ void CBouquetManager::loadWebchannels(int mode)
 									snprintf(buf, sizeof(buf), "%llx", chid & 0xFFFFFFFFFFFFULL);
 									channel->setEPGmap("#" + new_epgxml + "=" + buf);
 								}
-								desc = "m3u_loading_logos";
-								if (!alogo.empty() && !g_PicViewer->GetLogoName(chid,title,desc))
+								if (g_settings.load_m3u_logos == 1)
 								{
-									channel->setAlternateLogo(alogo);
-									pthread_mutex_lock (&mutex);
-									LogoList.push_back(channel);
-									pthread_mutex_unlock (&mutex);
+									desc = "m3u_loading_logos";
+									if (!alogo.empty() && !g_PicViewer->GetLogoName(chid,title,desc))
+									{
+										channel->setAlternateLogo(alogo);
+										pthread_mutex_lock (&mutex);
+										LogoList.push_back(channel);
+										pthread_mutex_unlock (&mutex);
+									}
 								}
 								channel->flags = CZapitChannel::UPDATED;
 								if (gbouquet)
@@ -1150,7 +1153,7 @@ void* CBouquetManager::LogoThread(void* _logolist)
 	{
 		CZapitChannel *cc = (*it);
 		if (cc)
-			cc->setAlternateLogo(downloadUrlToLogo(cc->getAlternateLogo(), LOGODIR_TMP, cc->getChannelID()));
+			cc->setAlternateLogo(downloadUrlToLogo(cc->getAlternateLogo(), g_settings.m3u_logo_hdd_dir, cc->getChannelID()));
 	}
 	LogoList->clear();
 	pthread_mutex_unlock(&mutex);

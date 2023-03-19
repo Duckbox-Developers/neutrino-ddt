@@ -37,7 +37,6 @@
 
 #define LOGODIR		ICONSDIR "/logo"
 #define LOGODIR_VAR	ICONSDIR_VAR "/logo"
-#define LOGODIR_TMP	"/tmp/.logo"
 
 // control scripts
 #define AUDIOPLAYER_END_SCRIPT "audioplayer.end"

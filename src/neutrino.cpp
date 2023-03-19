@@ -794,6 +794,9 @@ if (g_info.hw_caps->can_shutdown)
 	g_settings.logo_hdd_dir = configfile.getString( "logo_hdd_dir", "/media/sda1/logos" );
 	g_settings.default_logo = configfile.getInt32( "default_logo", 0);
 
+	g_settings.m3u_logo_hdd_dir = configfile.getString( "m3u_logo_hdd_dir", "/media/sda1/logos" );
+	g_settings.load_m3u_logos = configfile.getInt32( "load_m3u_logos", 0);
+
 	g_settings.webtv_xml.clear();
 	int webtv_count = configfile.getInt32("webtv_xml_count", 0);
 	if (webtv_count) {
@@ -1540,6 +1543,9 @@ void CNeutrinoApp::saveSetup(const char * fname)
 
 	configfile.setString ( "logo_hdd_dir", g_settings.logo_hdd_dir );
 	configfile.setInt32  ( "default_logo", g_settings.default_logo );
+
+	configfile.setString ( "m3u_logo_hdd_dir", g_settings.m3u_logo_hdd_dir );
+	configfile.setInt32  ( "load_m3u_logos", g_settings.load_m3u_logos );
 
 	int webtv_count = 0;
 	for (std::list<std::string>::iterator it = g_settings.webtv_xml.begin(); it != g_settings.webtv_xml.end(); ++it) {
@@ -2471,7 +2477,6 @@ TIMER_START();
 	if (!scanSettings.loadSettings(NEUTRINO_SCAN_SETTINGS_FILE))
 		dprintf(DEBUG_NORMAL, "Loading of scan settings failed. Using defaults.\n");
 
-	CFileHelpers::getInstance()->removeDir(LOGODIR_TMP);
 	CFileHelpers::getInstance()->removeDir(COVERDIR_TMP);
 
 	/* set service manager options before starting zapit */
