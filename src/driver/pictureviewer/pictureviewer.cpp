@@ -678,7 +678,7 @@ bool CPictureViewer::GetLogoName(const uint64_t &channel_id, const std::string &
 	{
 		if (!cc->getAlternateLogo().empty())
 		{
-			std::string lname = downloadUrlToLogo(cc->getAlternateLogo(), LOGODIR_TMP, cc->getChannelID());
+			std::string lname = downloadUrlToLogo(cc->getAlternateLogo(), g_settings.m3u_logo_hdd_dir, cc->getChannelID());
 			tmp = lname;
 			cc->setAlternateLogo(lname);
 			goto found;
@@ -847,6 +847,7 @@ bool CPictureViewer::GetLogoName(const uint64_t &channel_id, const std::string &
 				v_path.push_back(id_tmp_path);
 			}
 		}
+
 		//check if file is available, name with real name is preferred, return true on success
 		for (size_t j = 0; j < v_path.size(); j++)
 		{
@@ -863,7 +864,7 @@ bool CPictureViewer::GetLogoName(const uint64_t &channel_id, const std::string &
 		{
 			if (!cc->getAlternateLogo().empty())
 			{
-				std::string lname = downloadUrlToLogo(cc->getAlternateLogo(), LOGODIR_TMP, cc->getChannelID());
+				std::string lname = downloadUrlToLogo(cc->getAlternateLogo(), g_settings.m3u_logo_hdd_dir, cc->getChannelID());
 				if (width && height)
 					getSize(lname.c_str(), width, height);
 				name = lname;
@@ -875,13 +876,19 @@ bool CPictureViewer::GetLogoName(const uint64_t &channel_id, const std::string &
 
 	if (g_settings.default_logo == 1)
 	{
-		std::string logo_tmp = DATADIR "/neutrino/icons/picon_default.png";
-		if (channel_id && access(logo_tmp, R_OK) != -1)
+		if (cc)
 		{
-			if (width && height)
-				getSize(logo_tmp.c_str(), width, height);
-			name = logo_tmp;
-			return true;
+			if (cc->getAlternateLogo().empty())
+			{
+				std::string logo_tmp = DATADIR "/neutrino/icons/picon_default.png";
+				if (channel_id && access(logo_tmp, R_OK) != -1)
+				{
+					if (width && height)
+						getSize(logo_tmp.c_str(), width, height);
+					name = logo_tmp;
+					return true;
+				}
+			}
 		}
 	}
 
