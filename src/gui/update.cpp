@@ -370,7 +370,6 @@ bool CFlashUpdate::getUpdateImage(const std::string & version)
 bool CFlashUpdate::checkVersion4Update()
 {
 	char msg[400];
-	CFlashVersionInfo * versionInfo;
 	dprintf(DEBUG_NORMAL, "[update] mode is %d\n", softupdate_mode);
 	if(softupdate_mode==1) //internet-update
 	{
@@ -387,29 +386,25 @@ bool CFlashUpdate::checkVersion4Update()
 		showGlobalStatus(20);
 		hide();
 
-		versionInfo = new CFlashVersionInfo(newVersion);//Memory leak: versionInfo
-		sprintf(msg, g_Locale->getText(LOCALE_FLASHUPDATE_MSGBOX), versionInfo->getDate(), versionInfo->getTime(), versionInfo->getReleaseCycle(), versionInfo->getType());
+		CFlashVersionInfo versionInfo(newVersion);
+		sprintf(msg, g_Locale->getText(LOCALE_FLASHUPDATE_MSGBOX), versionInfo.getDate(), versionInfo.getTime(), versionInfo.getReleaseCycle(), versionInfo.getType());
 
 		if(fileType <= '2')
 		{
-			if ((strncmp(RELEASE_CYCLE, versionInfo->getReleaseCycle(), 2) != 0) &&
+			if ((strncmp(RELEASE_CYCLE, versionInfo.getReleaseCycle(), 2) != 0) &&
 			    (ShowMsg(LOCALE_MESSAGEBOX_INFO, LOCALE_FLASHUPDATE_WRONGBASE, CMsgBox::mbrYes, CMsgBox::mbYes | CMsgBox::mbNo, NEUTRINO_ICON_UPDATE) != CMsgBox::mbrYes))
 			{
-				delete versionInfo;
 				//ShowHint(LOCALE_MESSAGEBOX_ERROR, LOCALE_FLASHUPDATE_WRONGBASE);
 				return false;
 			}
 
-			if ((strcmp("Release", versionInfo->getType()) != 0) &&
+			if ((strcmp("Release", versionInfo.getType()) != 0) &&
 			    //(ShowMsg(LOCALE_MESSAGEBOX_INFO, LOCALE_FLASHUPDATE_EXPERIMENTALIMAGE, CMsgBox::mbrYes, CMsgBox::mbYes | CMsgBox::mbNo, NEUTRINO_ICON_UPDATE) != CMsgBox::mbrYes))
 			    (ShowMsg(LOCALE_MESSAGEBOX_INFO, LOCALE_FLASHUPDATE_EXPERIMENTALIMAGE, CMsgBox::mbrYes, CMsgBox::mbYes | CMsgBox::mbNo, NEUTRINO_ICON_UPDATE) != CMsgBox::mbrYes))
 			{
-				delete versionInfo;
 				return false;
 			}
 		}
-
-		delete versionInfo;
 	}
 	else
 	{
