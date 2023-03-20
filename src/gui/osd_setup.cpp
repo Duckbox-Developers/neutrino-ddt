@@ -384,6 +384,11 @@ int COsdSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 		chooserDir(g_settings.logo_hdd_dir, false, action_str);
 		return res;
 	}
+	else if(actionKey=="m3u_logo_dir") {
+		const char *action_str = "logo";
+		chooserDir(g_settings.m3u_logo_hdd_dir, false, action_str);
+		return res;
+	}
 	else if(actionKey=="screenshot_dir") {
 		const char *action_str = "screenshot";
 		chooserDir(g_settings.screenshot_dir, true, action_str);
@@ -1214,6 +1219,18 @@ void COsdSetup::showOsdChannellogosSetup(CMenuWidget *menu_channellogos)
 	// default logo
 	mc = new CMenuOptionChooser(LOCALE_MISCSETTINGS_INFOBAR_DEFAULT_LOGO, &g_settings.default_logo, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this);
 	mc->setHint("", LOCALE_MENU_HINT_INFOBAR_DEFAULT_LOGO);
+	menu_channellogos->addItem(mc);
+
+	menu_channellogos->addItem(GenericMenuSeparatorLine);
+
+	// m3u logo directory
+	mf = new CMenuForwarder(LOCALE_MISCSETTINGS_INFOBAR_M3U_LOGO_HDD_DIR, true, g_settings.m3u_logo_hdd_dir, this, "m3u_logo_dir");
+	mf->setHint("", LOCALE_MENU_HINT_INFOBAR_M3U_LOGO_HDD_DIR);
+	menu_channellogos->addItem(mf);
+
+	// load m3u logo
+	mc = new CMenuOptionChooser(LOCALE_MISCSETTINGS_INFOBAR_LOAD_M3U_LOGO, &g_settings.load_m3u_logos, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this);
+	mc->setHint("", LOCALE_MENU_HINT_INFOBAR_LOAD_M3U_LOGO);
 	menu_channellogos->addItem(mc);
 
 #if 0
