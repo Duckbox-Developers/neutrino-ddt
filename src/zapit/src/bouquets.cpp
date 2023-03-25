@@ -317,8 +317,6 @@ void CBouquetManager::saveBouquets(const CZapitClient::bouquetMode bouquetMode, 
 				g_bouquetManager->deletePosition(satellitePosition);
 		}
 	}
-	if (bouquetMode == CZapitClient::BM_DONTTOUCHBOUQUETS)
-		return;
 
 	if ((bouquetMode == CZapitClient::BM_UPDATEBOUQUETS) || (bouquetMode == CZapitClient::BM_DELETEBOUQUETS)) {
 		while (!(Bouquets.empty())) {

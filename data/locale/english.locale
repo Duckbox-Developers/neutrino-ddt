@@ -1387,7 +1387,7 @@ menu.hint_saveas Save GUI settings to a file named neutrino.conf
 menu.hint_scan_auto Auto-scan selected provider
 menu.hint_scan_autoall Scan several selected providers at once
 menu.hint_scan_autoall_select Add selected satellites to scan
-menu.hint_scan_bouquet Update: add to current bouquets, erase:\nremove old bouquets, leave: dont add or change
+menu.hint_scan_bouquet Update: add to current bouquets, erase:\nremove old bouquets
 menu.hint_scan_bouquet_writenames Write services names to bouquets \n never > fovourites only > providers only > both
 menu.hint_scan_bw Select the channel bandwidth
 menu.hint_scan_cable Select cable network to scan
@@ -2278,7 +2278,6 @@ scants.actsatellite Satellite:
 scants.actterrestrial Terrestrial:
 scants.bouquet Bouquet
 scants.bouquet_erase erase old
-scants.bouquet_leave leave current
 scants.bouquet_update update
 scants.bouquet_writenames Write service names to bouquets
 scants.bouquet_writenames_bouquets providers

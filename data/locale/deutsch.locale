@@ -1387,7 +1387,7 @@ menu.hint_saveas Speichern der Einstellungen in einer Datei namens neutrino.conf
 menu.hint_scan_auto Automatischer Suchlauf ausgewählter Anbieter
 menu.hint_scan_autoall Automatischer Suchlauf aller ausgewählten Anbieter
 menu.hint_scan_autoall_select Suchlauf nur in ausgewählten Satelliten
-menu.hint_scan_bouquet erneuern: hinzufügen zu den Bouquets, löschen: entfernt alte Bouquets, nicht ändern: neue werden in 'Andere' angefügt
+menu.hint_scan_bouquet erneuern: hinzufügen zu den Bouquets, löschen: entfernt alte Bouquets
 menu.hint_scan_bouquet_writenames Originale Programmnamen in Bouquets speichern \nNie > nur Favoriten > nur Anbieter > Beide
 menu.hint_scan_bw Wählen Sie die Bandbreite
 menu.hint_scan_cable Wählen Sie ihr Kabelnetz für den Suchlauf
@@ -2278,7 +2278,6 @@ scants.actsatellite Satellit:
 scants.actterrestrial Terrestrisch:
 scants.bouquet Bouquets
 scants.bouquet_erase löschen
-scants.bouquet_leave nicht ändern
 scants.bouquet_update erneuern
 scants.bouquet_writenames Originalnamen in Bouquets schreiben
 scants.bouquet_writenames_bouquets nur Anbieter
