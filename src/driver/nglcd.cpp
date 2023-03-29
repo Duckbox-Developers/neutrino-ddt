@@ -35,6 +35,7 @@
 #include <driver/nglcd.h>
 #include <eitd/sectionsd.h>
 #include <math.h>
+#include <gui/infoviewer.h>
 
 #include "zlib.h"
 #include "png.h"
@@ -886,6 +887,28 @@ void nGLCD::Run(void)
 					Scale = 100;
 				else if (Scale < 0)
 					Scale = 0;
+
+				if (Epg.empty() && (CNeutrinoApp::getInstance()->getMode() == NeutrinoModes::mode_webtv || CNeutrinoApp::getInstance()->getMode() == NeutrinoModes::mode_webradio))
+				{
+					if (g_InfoViewer->get_livestreamInfo1() == "RESOLUTION=1x1" || g_InfoViewer->get_livestreamInfo1() == "") // first comes from best_bitrate_m3u8.lua
+						Epg = g_InfoViewer->get_livestreamInfo2();
+					else if (g_InfoViewer->get_livestreamInfo2() != "")
+						Epg = g_InfoViewer->get_livestreamInfo1() + " - " + g_InfoViewer->get_livestreamInfo2();
+					else
+						Epg = g_InfoViewer->get_livestreamInfo1();
+					EpgWidth = font_epg.Width(Epg);
+					doScrollEpg = EpgWidth > bitmap->Width() - 4;
+					scrollEpgForward = true;
+					scrollEpgSkip = 0;
+					if (doScrollEpg)
+					{
+						scrollEpgOffset = bitmap->Width() / g_settings.glcd_scroll_speed;
+						EpgWidth += scrollEpgOffset;
+					}
+					else
+						scrollEpgOffset = 0;
+				}
+
 			}
 		}
 
