@@ -892,8 +892,10 @@ void nGLCD::Run(void)
 				{
 					if (g_InfoViewer->get_livestreamInfo1() == "RESOLUTION=1x1" || g_InfoViewer->get_livestreamInfo1() == "") // first comes from best_bitrate_m3u8.lua
 						Epg = g_InfoViewer->get_livestreamInfo2();
-					else
+					else if (g_InfoViewer->get_livestreamInfo2() != "")
 						Epg = g_InfoViewer->get_livestreamInfo1() + " - " + g_InfoViewer->get_livestreamInfo2();
+					else
+						Epg = g_InfoViewer->get_livestreamInfo1();
 					EpgWidth = font_epg.Width(Epg);
 					doScrollEpg = EpgWidth > bitmap->Width() - 4;
 					scrollEpgForward = true;
