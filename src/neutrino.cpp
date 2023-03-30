@@ -658,16 +658,24 @@ if (g_info.hw_caps->can_shutdown)
 	g_settings.glcd_color_fg = configfile.getInt32("glcd_color_fg", GLCD::cColor::White);
 	g_settings.glcd_color_bg = configfile.getInt32("glcd_color_bg", GLCD::cColor::Black);
 	g_settings.glcd_color_bar = configfile.getInt32("glcd_color_bar", GLCD::cColor::Blue);
+#if BOXMODEL_VUDUO2
+	g_settings.glcd_percent_channel = configfile.getInt32("glcd_percent_channel", 45);
+	g_settings.glcd_percent_epg = configfile.getInt32("glcd_percent_epg", 45);
+	g_settings.glcd_percent_bar = configfile.getInt32("glcd_percent_bar", 10);
+	g_settings.glcd_percent_time = configfile.getInt32("glcd_percent_time", 0);
+	g_settings.glcd_show_logo = configfile.getInt32("glcd_show_logo", 0);
+#else
 	g_settings.glcd_percent_channel = configfile.getInt32("glcd_percent_channel", 22);
 	g_settings.glcd_percent_epg = configfile.getInt32("glcd_percent_epg", 16);
 	g_settings.glcd_percent_bar = configfile.getInt32("glcd_percent_bar", 8);
 	g_settings.glcd_percent_time = configfile.getInt32("glcd_percent_time", 32);
+	g_settings.glcd_show_logo = configfile.getInt32("glcd_show_logo", 1);
+#endif
 	g_settings.glcd_percent_time_standby = configfile.getInt32("glcd_percent_time_standby", 50);
 	g_settings.glcd_percent_logo = configfile.getInt32("glcd_percent_logo", 50);
 	g_settings.glcd_mirror_osd = configfile.getInt32("glcd_mirror_osd", 0);
 	g_settings.glcd_mirror_video = configfile.getInt32("glcd_mirror_video", 0);
 	g_settings.glcd_time_in_standby = configfile.getInt32("glcd_time_in_standby", 1);
-	g_settings.glcd_show_logo = configfile.getInt32("glcd_show_logo", 1);
 	g_settings.glcd_font = configfile.getString("glcd_font", FONTDIR "/neutrino.ttf");
 #if BOXMODEL_VUUNO4KSE
 	g_settings.glcd_brightness = configfile.getInt32("glcd_brightness", 25);
@@ -676,7 +684,7 @@ if (g_info.hw_caps->can_shutdown)
 	g_settings.glcd_brightness = configfile.getInt32("glcd_brightness", 75);
 	g_settings.glcd_brightness_standby = configfile.getInt32("glcd_brightness_standby", 45);
 #endif
-#if BOXMODEL_VUUNO4KSE
+#if BOXMODEL_VUUNO4KSE || BOXMODEL_VUDUO2
 	g_settings.glcd_scroll_speed = configfile.getInt32("glcd_scroll_speed", 1);
 #elif BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUDUO4KSE || BOXMODEL_VUULTIMO4K
 	g_settings.glcd_scroll_speed = configfile.getInt32("glcd_scroll_speed", 2);
