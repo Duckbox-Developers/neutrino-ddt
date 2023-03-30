@@ -399,6 +399,7 @@ start-block~remote
 		{=if-equal:{=var-get:boxtype=}~VU+ DUO4KSE~		{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 		{=if-equal:{=var-get:boxtype=}~VU+ ULTIMO4K~		{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 		{=if-equal:{=var-get:boxtype=}~VU+ DUO~			{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
+		{=if-equal:{=var-get:boxtype=}~VU+ DUO2~		{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 		{=if-equal:{=var-get:boxtype=}~VU+ ZERO4K~		{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 		{=if-equal:{=var-get:boxtype=}~VU+ UNO4KSE~		{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 		{=if-equal:{=var-get:boxtype=}~VU+ UNO4K~		{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
@@ -407,7 +408,7 @@ start-block~remote
 		{=if-equal:{=var-get:boxtype=}~AXAS E4HD 4K ULTRA~	{=include-block:Y_Blocks.txt;rc_axas_e4hd=}~
 
 		{=comment:fallback~=}					{=include-block:Y_Blocks.txt;rc_ufs910=}
-		=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
+		=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
 	~
 	{=if-equal:{=var-get:yfbtype=}~1~	{=include-block:Y_Blocks.txt;rc_ax_hd51=}~
 	{=if-equal:{=var-get:yfbtype=}~2~	{=include-block:Y_Blocks.txt;rc_mutant_hd51=}~
@@ -419,9 +420,10 @@ start-block~remote
 	{=if-equal:{=var-get:yfbtype=}~8~	{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 	{=if-equal:{=var-get:yfbtype=}~9~	{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
 	{=if-equal:{=var-get:yfbtype=}~10~	{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
-	{=if-equal:{=var-get:yfbtype=}~11~	{=include-block:Y_Blocks.txt;rc_zgemma_h7=}~
-	{=if-equal:{=var-get:yfbtype=}~12~	{=include-block:Y_Blocks.txt;rc_wwio_bre2ze4k=}~
-	{=if-equal:{=var-get:yfbtype=}~13~	{=include-block:Y_Blocks.txt;rc_axas_e4hd=}~
+	{=if-equal:{=var-get:yfbtype=}~11~	{=include-block:Y_Blocks.txt;rc_vu_solo4k=}~
+	{=if-equal:{=var-get:yfbtype=}~12~	{=include-block:Y_Blocks.txt;rc_zgemma_h7=}~
+	{=if-equal:{=var-get:yfbtype=}~13~	{=include-block:Y_Blocks.txt;rc_wwio_bre2ze4k=}~
+	{=if-equal:{=var-get:yfbtype=}~14~	{=include-block:Y_Blocks.txt;rc_axas_e4hd=}~
 	{=if-equal:{=var-get:yfbtype=}~-5~	{=include-block:Y_Blocks.txt;rc_ufs913=}~
 	{=if-equal:{=var-get:yfbtype=}~-4~	{=include-block:Y_Blocks.txt;rc_ufs913=}~
 	{=if-equal:{=var-get:yfbtype=}~-3~	{=include-block:Y_Blocks.txt;rc_ufs910=}~
@@ -429,7 +431,7 @@ start-block~remote
 	{=if-equal:{=var-get:yfbtype=}~-1~	{=include-block:Y_Blocks.txt;rc_spark_new=}~
 
 	{=comment:fallback~=}			{=include-block:Y_Blocks.txt;rc_ufs910=}
-	=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
+	=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
 =}
 end-block~remote
 
@@ -756,7 +758,7 @@ start-block~rc_mutant_hd51
 </map>
 end-block~rc_mutant_hd51
 
-# ------ Remote VU+ Solo 4K/Duo 4K/Ultimo 4K/Zero 4K/Uno 4K SE
+# ------ Remote VU+ Solo 4K/Duo 4K/Duo 4K SE/Ultimo 4K/Zero 4K/Uno 4K/Uno 4K SE/Duo/Duo2
 start-block~rc_vu_solo4k
 <img src="images/rc_vu_solo4k.png" usemap="#rc"/>
 <map name="rc" id="rc">
