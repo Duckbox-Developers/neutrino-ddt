@@ -54,7 +54,7 @@
 #include <iostream>
 #include <fstream>
 
-#if defined (BOXMODEL_VUPLUS_ARM)
+#if defined (BOXMODEL_VUPLUS_ARM) || defined (BOXMODEL_VUDUO2)
 #include <system/proc_tools.h>
 #endif
 
@@ -256,7 +256,7 @@ void CDBoxInfoWidget::paint()
 	height += mheight;	// time
 	height += mheight;	// uptime
 	height += mheight;	// load
-#if defined (BOXMODEL_VUPLUS_ARM)
+#if defined (BOXMODEL_VUPLUS_ARM) || defined (BOXMODEL_VUDUO2)
 	height += mheight;	// temp
 #endif
 	int cpuload_y1 = height;
@@ -437,7 +437,7 @@ void CDBoxInfoWidget::paint()
 	str_boot_title += ": ";
 	std::string str_up_title(g_Locale->getText(LOCALE_EXTRA_DBOXINFO_UPTIME));
 	str_up_title += ": ";
-#if defined (BOXMODEL_VUPLUS_ARM)
+#if defined (BOXMODEL_VUPLUS_ARM) || defined (BOXMODEL_VUDUO2)
 	std::string str_cputemp_title("CPU"/*g_Locale->getText(LOCALE_EXTRA_DBOXINFO_CPUTEMP)*/);
 	str_cputemp_title += ": ";
 #endif
@@ -502,14 +502,22 @@ void CDBoxInfoWidget::paint()
 	}
 	ypos += mheight;
 
-#if defined (BOXMODEL_VUPLUS_ARM)
+#if defined (BOXMODEL_VUPLUS_ARM) || defined (BOXMODEL_VUDUO2)
 	// paint cpu temp
 	char proc_cputemp[8];
+#if defined (BOXMODEL_VUDUO2)
+	proc_get("/proc/stb/sensors/temp0/value", proc_cputemp, sizeof(proc_cputemp));
+#else
 	proc_get("/sys/class/thermal/thermal_zone0/temp", proc_cputemp, sizeof(proc_cputemp));
+#endif
 	if (atoi(proc_cputemp) > 0)
 	{
 		char cpu_temp[16] = { 0 };
+#if defined (BOXMODEL_VUDUO2)
+		sprintf(cpu_temp, "%d °C", atoi(proc_cputemp));
+#else
 		sprintf(cpu_temp, "%d °C", atoi(proc_cputemp) / 1000);
+#endif
 		fm->RenderString(x + offsetw - time_width_total - 10, ypos + mheight, time_title_width, str_cputemp_title, COL_MENUCONTENTINACTIVE_TEXT);
 		fm->RenderString(x + offsetw - time_width_total - 10 + time_title_width, ypos + mheight, time_width, cpu_temp, COL_MENUCONTENT_TEXT);
 	}
