@@ -659,9 +659,9 @@ if (g_info.hw_caps->can_shutdown)
 	g_settings.glcd_color_bg = configfile.getInt32("glcd_color_bg", GLCD::cColor::Black);
 	g_settings.glcd_color_bar = configfile.getInt32("glcd_color_bar", GLCD::cColor::Blue);
 #if BOXMODEL_VUDUO2
-	g_settings.glcd_percent_channel = configfile.getInt32("glcd_percent_channel", 45);
+	g_settings.glcd_percent_channel = configfile.getInt32("glcd_percent_channel", 55);
 	g_settings.glcd_percent_epg = configfile.getInt32("glcd_percent_epg", 45);
-	g_settings.glcd_percent_bar = configfile.getInt32("glcd_percent_bar", 10);
+	g_settings.glcd_percent_bar = configfile.getInt32("glcd_percent_bar", 0);
 	g_settings.glcd_percent_time = configfile.getInt32("glcd_percent_time", 0);
 	g_settings.glcd_show_logo = configfile.getInt32("glcd_show_logo", 0);
 #else
