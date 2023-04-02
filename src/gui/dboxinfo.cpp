@@ -438,7 +438,11 @@ void CDBoxInfoWidget::paint()
 	std::string str_up_title(g_Locale->getText(LOCALE_EXTRA_DBOXINFO_UPTIME));
 	str_up_title += ": ";
 #if defined (BOXMODEL_VUPLUS_ARM) || defined (BOXMODEL_VUDUO2)
+#if defined (BOXMODEL_VUDUO2)
+	std::string str_cputemp_title("System"/*g_Locale->getText(LOCALE_EXTRA_DBOXINFO_SYSTEMP)*/);
+#else
 	std::string str_cputemp_title("CPU"/*g_Locale->getText(LOCALE_EXTRA_DBOXINFO_CPUTEMP)*/);
+#endif
 	str_cputemp_title += ": ";
 #endif
 
