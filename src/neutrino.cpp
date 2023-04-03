@@ -384,7 +384,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 #ifdef ENABLE_LCD4LINUX
 #if BOXMODEL_VUDUO2
 	g_settings.lcd4l_support = configfile.getInt32("lcd4l_support" , 1);
-	g_settings.lcd4l_dpf_type = configfile.getInt32("lcd4l_dpf_type", 2);
+	g_settings.lcd4l_dpf_type = configfile.getInt32("lcd4l_dpf_type", 3);
 #else
 	g_settings.lcd4l_support = configfile.getInt32("lcd4l_support" , 0);
 	g_settings.lcd4l_dpf_type = configfile.getInt32("lcd4l_dpf_type", 0);
