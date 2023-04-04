@@ -164,8 +164,13 @@ int CLCD4lSetup::show()
 	int max_brightness;
 	switch (g_settings.lcd4l_dpf_type) {
 		case 3: // PNG
+#if BOXMODEL_VUDUO2
+			enable_brightness = true;
+			max_brightness = 10;
+#else
 			enable_brightness = false;
 			max_brightness = 0;
+#endif
 			break;
 #if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUDUO4KSE || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4KSE || BOXMODEL_DM8000 || BOXMODEL_VUDUO2
 		case 2: // VUPLUS4K
