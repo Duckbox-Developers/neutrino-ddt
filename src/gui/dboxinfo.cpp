@@ -266,10 +266,15 @@ void CDBoxInfoWidget::paint()
 	if (frontend_count > 6)
 		height += mheight * 2;
 	else
+#if defined (BOXMODEL_VUDUO2)
+	if (frontend_count > 2)
+		height += mheight * (frontend_count - 2) - mheight;
+#else
 	if (frontend_count > 2)
 		height += mheight * (frontend_count - 2) - mheight * 2;
 //	else
 //		height -= mheight;
+#endif
 
 	int icon_w = 0, icon_h = 0;
 	frameBuffer->getIconSize(NEUTRINO_ICON_REC, &icon_w, &icon_h);
