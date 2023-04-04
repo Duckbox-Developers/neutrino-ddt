@@ -355,14 +355,6 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 		m_Brightness = Brightness;
 		lcd4linux(false);
 		lcd4linux(true);
-#if BOXMODEL_VUDUO2
-		int lcd_fd = open("/dev/lcd2", O_WRONLY);
-		if (lcd_fd)
-		{
-			ioctl(lcd_fd, 0x10, Brightness * 255 / 10);
-			close(lcd_fd);
-		}
-#endif
 	}
 
 	int Brightness_standby = g_settings.lcd4l_brightness_standby;
@@ -372,14 +364,6 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 		m_Brightness_standby = Brightness_standby;
 		lcd4linux(false);
 		lcd4linux(true);
-#if BOXMODEL_VUDUO2
-		int lcd_fd = open("/dev/lcd2", O_WRONLY);
-		if (lcd_fd)
-		{
-			ioctl(lcd_fd, 0x10, Brightness_standby * 255 / 10);
-			close(lcd_fd);
-		}
-#endif
 	}
 
 	/* ----------------------------------------------------------------- */

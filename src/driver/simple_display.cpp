@@ -84,6 +84,29 @@ static inline int dev_open()
 	return fd;
 }
 
+#if BOXMODEL_VUDUO2
+static void setlcdparam(void)
+{
+	int lcd_fd = open("/dev/lcd2", O_WRONLY);
+	if (CNeutrinoApp::getInstance()->getMode() == NeutrinoModes::mode_standby)
+	{
+		if (lcd_fd)
+		{
+			ioctl(lcd_fd, 0x10, g_settings.lcd4l_brightness_standby * 255 / 10);
+			close(lcd_fd);
+		}
+	}
+	else
+	{
+		if (lcd_fd)
+		{
+			ioctl(lcd_fd, 0x10, g_settings.lcd4l_brightness * 255 / 10);
+			close(lcd_fd);
+		}
+	}
+}
+#endif
+
 static void replace_umlauts(std::string __attribute__((unused)) &s)
 {
 #if BOXMODEL_HD51 || BOXMODEL_BRE2ZE4K || BOXMODEL_H7 || BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4KSE || BOXMODEL_VUDUO4K || BOXMODEL_VUDUO4KSE || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4KSE || BOXMODEL_E4HDULTRA || BOXMODEL_VUDUO2
@@ -151,6 +174,9 @@ CLCD *CLCD::getInstance()
 
 void CLCD::wake_up()
 {
+#if BOXMODEL_VUDUO2
+	setlcdparam();
+#endif
 	if (g_info.hw_caps->display_can_set_brightness)
 	{
 		if (atoi(g_settings.lcd_setting_dim_time.c_str()) > 0)
@@ -206,6 +232,9 @@ void CLCD::init(const char *, const char *, const char *, const char *, const ch
 
 void CLCD::setlcdparameter(void)
 {
+#if BOXMODEL_VUDUO2
+	setlcdparam();
+#endif
 	if (g_info.hw_caps->display_can_set_brightness)
 	{
 		last_toggle_state_power = g_settings.lcd_setting[SNeutrinoSettings::LCD_POWER];
@@ -595,6 +624,9 @@ int CLCD::getBrightness()
 
 void CLCD::setBrightnessStandby(int bright)
 {
+#if BOXMODEL_VUDUO2
+	setlcdparam();
+#endif
 	if (g_info.hw_caps->display_can_set_brightness)
 	{
 		g_settings.lcd_setting[SNeutrinoSettings::LCD_STANDBY_BRIGHTNESS] = bright;
@@ -653,6 +685,9 @@ void CLCD::togglePower(void)
 	else
 		showTime(true);
 
+#if BOXMODEL_VUDUO2
+	setlcdparam();
+#endif
 	if (g_info.hw_caps->display_can_set_brightness)
 	{
 		last_toggle_state_power = 1 - last_toggle_state_power;
@@ -948,4 +983,3 @@ void CLCD::ShowText(const char *str, bool update_timestamp)
 void CLCD::setEPGTitle(const std::string)
 {
 }
-
