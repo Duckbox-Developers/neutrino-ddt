@@ -641,7 +641,7 @@ int CDataResetNotifier::exec(CMenuTarget * /*parent*/, const std::string &action
 	return ret;
 }
 
-#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99
+#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2
 #if HAVE_DUCKBOX_HARDWARE
 void CFanControlNotifier::setSpeed(unsigned int speed)
 {
@@ -712,6 +712,48 @@ void CFanControlNotifier::setSpeed(unsigned int __attribute__((unused)) speed)
 		case 1:
 			write(cfd, "FFFFFFFF", 8);
 			break;
+	}
+	close(cfd);
+#endif
+#if defined (BOXMODEL_VUDUO2)
+	int cfd;
+	cfd = open("/proc/stb/fp/fan_pwm", O_WRONLY);
+	if (cfd < 0)
+	{
+		perror("Cannot open /proc/stb/fp/fan_pwm");
+		return;
+	}
+	switch (speed)
+	{
+		case 1:
+			write(cfd, "10", 2);
+			break;
+		case 2:
+			write(cfd, "20", 2);
+			break;
+		case 3:
+			write(cfd, "30", 2);
+			break;
+		case 4:
+			write(cfd, "40", 2);
+			break;
+		case 5:
+			write(cfd, "50", 2);
+			break;
+		case 6:
+			write(cfd, "60", 2);
+			break;
+		case 7:
+			write(cfd, "70", 2);
+			break;
+		case 8:
+			write(cfd, "80", 2);
+			break;
+		case 9:
+			write(cfd, "90", 2);
+			break;
+		case 10:
+			write(cfd, "100", 3);
 	}
 	close(cfd);
 #endif
