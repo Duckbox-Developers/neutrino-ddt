@@ -383,13 +383,20 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	CThemes::getTheme(configfile);
 
 #ifdef ENABLE_LCD4LINUX
+#if BOXMODEL_VUDUO2
+	g_settings.lcd4l_support = configfile.getInt32("lcd4l_support" , 1);
+	g_settings.lcd4l_dpf_type = configfile.getInt32("lcd4l_dpf_type", 3);
+	g_settings.lcd4l_brightness = configfile.getInt32("lcd4l_brightness", 4);
+	g_settings.lcd4l_brightness_standby = configfile.getInt32("lcd4l_brightness_standby", 2);
+#else
 	g_settings.lcd4l_support = configfile.getInt32("lcd4l_support" , 0);
-	g_settings.lcd4l_logodir = configfile.getString("lcd4l_logodir", LOGODIR);
 	g_settings.lcd4l_dpf_type = configfile.getInt32("lcd4l_dpf_type", 0);
-	g_settings.lcd4l_skin = configfile.getInt32("lcd4l_skin" , 0);
-	g_settings.lcd4l_skin_radio = configfile.getInt32("lcd4l_skin_radio" , 0);
 	g_settings.lcd4l_brightness = configfile.getInt32("lcd4l_brightness", 7);
 	g_settings.lcd4l_brightness_standby = configfile.getInt32("lcd4l_brightness_standby", 3);
+#endif
+	g_settings.lcd4l_logodir = configfile.getString("lcd4l_logodir", LOGODIR);
+	g_settings.lcd4l_skin = configfile.getInt32("lcd4l_skin" , 0);
+	g_settings.lcd4l_skin_radio = configfile.getInt32("lcd4l_skin_radio" , 1);
 	g_settings.lcd4l_convert = configfile.getInt32("lcd4l_convert", 1);
 #endif
 	g_settings.show_menu_hints_line = configfile.getBool("show_menu_hints_line", false);
@@ -450,9 +457,9 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	if (g_settings.channel_mode_initial_radio > -1)
 		g_settings.channel_mode_radio = g_settings.channel_mode_initial_radio;
 
-#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99
+#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2
 	g_settings.fan_speed = configfile.getInt32( "fan_speed", 1);
-	if(g_settings.fan_speed < 1) g_settings.fan_speed = 1;
+	if (g_settings.fan_speed < 1) g_settings.fan_speed = 1;
 #endif
 
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
@@ -651,7 +658,7 @@ if (g_info.hw_caps->can_shutdown)
 	g_settings.widget_fade           = configfile.getBool("widget_fade"          , false );
 
 #ifdef ENABLE_GRAPHLCD
-#if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUDUO4KSE || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4KSE || BOXMODEL_E4HDULTRA
+#if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUDUO4KSE || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4KSE || BOXMODEL_E4HDULTRA || BOXMODEL_VUDUO2
 	g_settings.glcd_enable = configfile.getInt32("glcd_enable", 1);
 #else
 	g_settings.glcd_enable = configfile.getInt32("glcd_enable", 0);
@@ -659,16 +666,24 @@ if (g_info.hw_caps->can_shutdown)
 	g_settings.glcd_color_fg = configfile.getInt32("glcd_color_fg", GLCD::cColor::White);
 	g_settings.glcd_color_bg = configfile.getInt32("glcd_color_bg", GLCD::cColor::Black);
 	g_settings.glcd_color_bar = configfile.getInt32("glcd_color_bar", GLCD::cColor::Blue);
+#if BOXMODEL_VUDUO2
+	g_settings.glcd_percent_channel = configfile.getInt32("glcd_percent_channel", 55);
+	g_settings.glcd_percent_epg = configfile.getInt32("glcd_percent_epg", 45);
+	g_settings.glcd_percent_bar = configfile.getInt32("glcd_percent_bar", 0);
+	g_settings.glcd_percent_time = configfile.getInt32("glcd_percent_time", 0);
+	g_settings.glcd_show_logo = configfile.getInt32("glcd_show_logo", 0);
+#else
 	g_settings.glcd_percent_channel = configfile.getInt32("glcd_percent_channel", 22);
 	g_settings.glcd_percent_epg = configfile.getInt32("glcd_percent_epg", 16);
 	g_settings.glcd_percent_bar = configfile.getInt32("glcd_percent_bar", 8);
 	g_settings.glcd_percent_time = configfile.getInt32("glcd_percent_time", 32);
+	g_settings.glcd_show_logo = configfile.getInt32("glcd_show_logo", 1);
+#endif
 	g_settings.glcd_percent_time_standby = configfile.getInt32("glcd_percent_time_standby", 50);
 	g_settings.glcd_percent_logo = configfile.getInt32("glcd_percent_logo", 50);
 	g_settings.glcd_mirror_osd = configfile.getInt32("glcd_mirror_osd", 0);
 	g_settings.glcd_mirror_video = configfile.getInt32("glcd_mirror_video", 0);
 	g_settings.glcd_time_in_standby = configfile.getInt32("glcd_time_in_standby", 1);
-	g_settings.glcd_show_logo = configfile.getInt32("glcd_show_logo", 1);
 	g_settings.glcd_font = configfile.getString("glcd_font", FONTDIR "/neutrino.ttf");
 #if BOXMODEL_VUUNO4KSE
 	g_settings.glcd_brightness = configfile.getInt32("glcd_brightness", 25);
@@ -677,7 +692,7 @@ if (g_info.hw_caps->can_shutdown)
 	g_settings.glcd_brightness = configfile.getInt32("glcd_brightness", 75);
 	g_settings.glcd_brightness_standby = configfile.getInt32("glcd_brightness_standby", 45);
 #endif
-#if BOXMODEL_VUUNO4KSE
+#if BOXMODEL_VUUNO4KSE || BOXMODEL_VUDUO2
 	g_settings.glcd_scroll_speed = configfile.getInt32("glcd_scroll_speed", 1);
 #elif BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUDUO4KSE || BOXMODEL_VUULTIMO4K
 	g_settings.glcd_scroll_speed = configfile.getInt32("glcd_scroll_speed", 2);
@@ -1285,7 +1300,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32( "channel_mode_initial", g_settings.channel_mode_initial );
 	configfile.setInt32( "channel_mode_initial_radio", g_settings.channel_mode_initial_radio );
 
-#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99
+#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2
 	configfile.setInt32( "fan_speed", g_settings.fan_speed);
 #endif
 
@@ -2568,7 +2583,7 @@ TIMER_START();
 	powerManager = new cPowerManager;
 	powerManager->Open();
 
-#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99
+#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2
 	//fan speed
 	CFanControlNotifier::setSpeed(g_settings.fan_speed);
 #endif
@@ -4280,7 +4295,7 @@ void CNeutrinoApp::ExitRun(int exit_code)
 	delete g_RCInput;
 	g_RCInput = NULL;
 
-#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99
+#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2
 	CFanControlNotifier::setSpeed(0);
 #endif
 
@@ -4532,7 +4547,7 @@ void CNeutrinoApp::standbyMode( bool bOnOff, bool fromDeepStandby )
 		bool alive = recordingstatus || CEpgScan::getInstance()->Running() ||
 			CStreamManager::getInstance()->StreamStatus();
 #endif
-#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99
+#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2
 		//fan speed
 		CFanControlNotifier::setSpeed(1);
 #endif
@@ -4581,7 +4596,7 @@ void CNeutrinoApp::standbyMode( bool bOnOff, bool fromDeepStandby )
 		}
 #endif
 		frameBuffer->setActive(true);
-#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99
+#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2
 		//fan speed
 		CFanControlNotifier::setSpeed(g_settings.fan_speed);
 #endif
