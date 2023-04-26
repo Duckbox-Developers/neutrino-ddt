@@ -602,6 +602,7 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 		bool flashing = false;
 		showGlobalStatus(100);
 
+#if !BOXMODEL_VUDUO && !BOXMODEL_VUDUO2
 		// create settings package
 		int copy_settings = ShowMsg(LOCALE_MESSAGEBOX_INFO, LOCALE_FLASHUPDATE_COPY_SETTINGS, CMsgBox::mbrYes, CMsgBox::mbYes | CMsgBox::mbNo, NEUTRINO_ICON_UPDATE);
 		if (copy_settings == CMsgBox::mbrYes)
@@ -616,6 +617,7 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 			my_system(3, TARGET_PREFIX "/bin/backup.sh", "/tmp", "backup_flash.tar.gz");
 			hintBox.hide();
 		}
+#endif
 
 		// get active partition
 		char c[2] = {0};
@@ -740,6 +742,7 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 		}
 #endif
 
+#if !BOXMODEL_VUDUO && !BOXMODEL_VUDUO2
 		// select partition
 		int selected = 0;
 		CMenuSelectorTarget *selector = new CMenuSelectorTarget(&selected);
@@ -797,6 +800,12 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 			flashing = true;
 			ofgwrite_options = "-m" + to_string(selected);
 		}
+#else
+		std::string ofgwrite_options("");
+		int restart = CMsgBox::mbrYes;
+		flashing = true;
+#endif
+
 		if (flashing)
 			ShowHint(LOCALE_MESSAGEBOX_INFO, LOCALE_FLASHUPDATE_START_OFGWRITE);
 		hide();
