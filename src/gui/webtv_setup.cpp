@@ -96,6 +96,7 @@ int CWebTVSetup::exec(CMenuTarget* parent, const std::string & actionKey)
 			fileFilter.addFilter("xml");
 			fileFilter.addFilter("tv");
 			fileFilter.addFilter("m3u");
+			fileFilter.addFilter("m3u8");
 			fileBrowser.Filter = &fileFilter;
 
 			dirname = dirname.substr(0, dirname.rfind('/'));

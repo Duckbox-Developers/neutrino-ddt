@@ -276,7 +276,7 @@ AC_DEFUN([TUXBOX_BOXTYPE], [
 AC_ARG_WITH(boxtype,
 	AS_HELP_STRING([--with-boxtype], [valid values: spark, generic, armbox, duckbox, spark7162, mipsbox]),
 	[case "${withval}" in
-		generic|armbox)
+		generic|armbox|mipsbox)
 			BOXTYPE="$withval"
 		;;
 		spark|spark7162)
