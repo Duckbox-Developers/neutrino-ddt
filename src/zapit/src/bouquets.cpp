@@ -911,6 +911,11 @@ void CBouquetManager::loadWebchannels(int mode)
 						printf("tvg-url: %s\n", epg_url.c_str());
 						if (!epg_url.empty())
 						{
+							std::string ext = getFileExt(epg_url);
+							if (ext == "gz")
+							{
+								str_replace(".gz", "", epg_url);
+							}
 							if (epg_url.find_first_of(',') != std::string::npos)
 							{
 								std::vector<std::string> epg_list = ::split(epg_url, ',');

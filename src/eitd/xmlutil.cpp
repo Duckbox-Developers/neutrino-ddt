@@ -706,7 +706,7 @@ void *insertEventsfromXMLTV(void *data)
 	{
 		readEventsFromXMLTV(url, ev_count);
 	}
-	else if (::downloadUrl(url, tmp_name))
+	else if (::downloadUrl(url, tmp_name, "", 60))
 	{
 		if (!access(tmp_name.c_str(), R_OK))
 		{
