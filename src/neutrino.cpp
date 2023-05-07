@@ -847,7 +847,7 @@ if (g_info.hw_caps->can_shutdown)
 		}
 	}
 
-	g_settings.xmltv_xml_m3u.clear();
+	g_settings.xmltv_xml_auto.clear();
 	g_settings.xmltv_xml.clear();
 	int xmltv_count = configfile.getInt32("xmltv_xml_count", 0);
 	if (xmltv_count) {
@@ -2719,7 +2719,7 @@ TIMER_STOP("################################## after all #######################
 	}
 
 	xmltv_xml_readepg();
-	xmltv_xml_m3u_readepg();
+	xmltv_xml_auto_readepg();
 
 	RealRun();
 	ExitRun(CNeutrinoApp::EXIT_REBOOT);
@@ -4145,7 +4145,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 	else if (msg == NeutrinoMessages::EVT_RELOAD_XMLTV) {
 		printf("CNeutrinoApp::handleMsg: reload xmltv epg\n");
 		xmltv_xml_readepg();
-		xmltv_xml_m3u_readepg();
+		xmltv_xml_auto_readepg();
 		return messages_return::handled;
 	}
 	if ((msg >= CRCInput::RC_WithData) && (msg < CRCInput::RC_WithData + 0x10000000)) {
