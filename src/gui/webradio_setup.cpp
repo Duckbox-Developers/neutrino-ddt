@@ -203,7 +203,7 @@ int CWebRadioSetup::Show()
 			g_settings.webradio_xml.push_back(f->getName());
 		}
 		g_Zapit->reinitChannels();
-		CNeutrinoApp::getInstance()->xmltv_xml_m3u_readepg();
+		CNeutrinoApp::getInstance()->xmltv_xml_auto_readepg();
 		changed = false;
 		hint.hide();
 	}
