@@ -46,11 +46,13 @@
 #include <vector>
 #include <neutrino_menue.h>
 #include "menue_target.h"
+#ifdef ENABLE_LUA
 extern "C" {
 #include <lua.h>
 #include <lauxlib.h>
 #include <lualib.h>
 }
+#endif
 
 #define NO_WIDGET_ID -1
 
@@ -92,10 +94,12 @@ class CChangeObserver
 		{
 			return false;
 		}
+#ifdef ENABLE_LUA
 		virtual bool changeNotify(lua_State * /*L*/, const std::string & /*luaId*/, const std::string & /*luaAction*/, void * /*Data*/)
 		{
 			return false;
 		}
+#endif
 };
 
 class CActivateObserver
@@ -117,9 +121,11 @@ class CMenuItem : public  CComponentsSignals
 		fb_pixel_t item_color, item_bgcolor;
 		bool initModeCondition(const int &stb_mode);
 		void initItemColors(const bool select_mode);
+#ifdef ENABLE_LUA
 		lua_State	*luaState;
 		std::string	luaAction;
 		std::string	luaId;
+#endif
 		neutrino_locale_t name;
 		std::string nameString;
 		neutrino_locale_t desc;
@@ -201,12 +207,14 @@ class CMenuItem : public  CComponentsSignals
 			hintText = text;
 		}
 
+#ifdef ENABLE_LUA
 		void setLua(lua_State *_luaState, std::string &_luaAction, std::string &_luaId)
 		{
 			luaState = _luaState;
 			luaAction = _luaAction;
 			luaId = _luaId;
 		};
+#endif
 		virtual const char *getName();
 		virtual void setName(const std::string &text);
 		virtual void setName(const neutrino_locale_t text);

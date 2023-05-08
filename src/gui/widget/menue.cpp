@@ -1869,12 +1869,15 @@ int CMenuOptionNumberChooser::exec(CMenuTarget *)
 	}
 
 	bool wantsRepaint = false;
+#ifdef ENABLE_LUA
 	if (observ && !luaAction.empty())
 	{
 		// optionValue is int*
 		wantsRepaint = observ->changeNotify(luaState, luaAction, luaId, (void *) to_string(*optionValue).c_str());
 	}
-	else if (observ)
+	else
+#endif
+	if (observ)
 		wantsRepaint = observ->changeNotify(name, optionValue);
 
 	// give the observer a chance to modify the value
@@ -2197,12 +2200,15 @@ int CMenuOptionChooser::exec(CMenuTarget *)
 	}
 	paint(true);
 	OnAfterChangeOption();
+#ifdef ENABLE_LUA
 	if (observ && !luaAction.empty())
 	{
 		if (optionValname)
 			wantsRepaint = observ->changeNotify(luaState, luaAction, luaId, optionValname);
 	}
-	else if (observ)
+	else
+#endif
+	if (observ)
 		wantsRepaint = observ->changeNotify(name, optionValue);
 
 	if (wantsRepaint)
@@ -2386,9 +2392,12 @@ int CMenuOptionStringChooser::exec(CMenuTarget *parent)
 
 		paint(true);
 	}
+#ifdef ENABLE_LUA
 	if (observ && !luaAction.empty())
 		wantsRepaint = observ->changeNotify(luaState, luaAction, luaId, (void *)(optionValuePtr ? optionValuePtr->c_str() : ""));
-	else if (observ)
+	else
+#endif
+	if (observ)
 	{
 		wantsRepaint = observ->changeNotify(name, (void *)(optionValuePtr ? optionValuePtr->c_str() : ""));
 	}

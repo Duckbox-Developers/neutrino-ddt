@@ -79,8 +79,49 @@ static bool vol_active = false;
 static inline int dev_open()
 {
 	int fd = open(DISPLAY_DEV, O_RDWR);
-	if (fd < 0)
-		fprintf(stderr, "[neutrino] simple_display: open " DISPLAY_DEV ": %m\n");
+
+	//
+	if(fd < 0)
+	{
+		// probe /dev/vfd
+		fd = open("/dev/vfd", O_RDWR);
+
+		if(fd < 0)
+		{
+			// probe /dev/display
+			fd = open("/dev/display", O_RDWR);
+
+			if(fd < 0)
+			{
+				// probe /dev/mcu
+				fd = open("/dev/mcu", O_RDWR);
+
+				if(fd < 0)
+				{
+					// probe /proc/vfd
+					fd = open("/proc/vfd", O_RDWR);
+
+					if(fd < 0)
+					{
+						// probe /dev/dbox/fp
+						fd = open("/dev/dbox/fp", O_RDWR);
+
+						if(fd < 0)
+						{
+							// probe /dev/oled0
+							fd = open("/dev/oled0", O_RDWR);
+
+							if(fd < 0)
+							{
+								fprintf(stderr, "[neutrino] simple_display: open " DISPLAY_DEV ": %m\n");
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	return fd;
 }
 

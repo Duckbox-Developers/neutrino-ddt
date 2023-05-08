@@ -268,8 +268,7 @@ fi
 
 AC_ARG_ENABLE(lua,
 	AS_HELP_STRING([--enable-lua], [enable Lua support @<:@default=yes@:>@]),
-	[enable_lua="$enableval"],
-	[enable_lua="yes"])
+	[enable_lua="$enableval"])
 
 if test "$enable_lua" = "yes"; then
 	AC_DEFINE(ENABLE_LUA, 1, [include Lua support])

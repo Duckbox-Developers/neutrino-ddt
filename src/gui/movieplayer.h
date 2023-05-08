@@ -53,11 +53,13 @@
 #include <OpenThreads/Thread>
 #include <OpenThreads/Condition>
 
+#ifdef ENABLE_LUA
 extern "C" {
 #include <lua.h>
 #include <lauxlib.h>
 #include <lualib.h>
 }
+#endif
 
 class CFrameBuffer;
 class CMoviePlayerGui : public CMenuTarget
@@ -118,9 +120,11 @@ class CMoviePlayerGui : public CMenuTarget
 	bool		time_forced;
 	CMoviePlayerGui::state playstate;
 	int keyPressed;
+#ifdef ENABLE_LUA
 	bool isLuaPlay;
 	bool haveLuaInfoFunc;
 	lua_State* luaState;
+#endif
 	bool blockedFromPlugin;
 	int speed;
 	int startposition;
@@ -246,7 +250,9 @@ class CMoviePlayerGui : public CMenuTarget
 	static void* bgPlayThread(void *arg);
 	static bool sortStreamList(livestream_info_t info1, livestream_info_t info2);
 	bool selectLivestream(std::vector<livestream_info_t> &streamList, int res, livestream_info_t* info);
+#ifdef ENABLE_LUA
 	bool luaGetUrl(const std::string &script, const std::string &file, std::vector<livestream_info_t> &streamList);
+#endif
 
 	CMoviePlayerGui(const CMoviePlayerGui&) {};
 	CMoviePlayerGui();
@@ -300,7 +306,9 @@ class CMoviePlayerGui : public CMenuTarget
 	void setFromInfoviewer(bool f) { fromInfoviewer = f; };
 	void setBlockedFromPlugin(bool b) { blockedFromPlugin = b; };
 	bool getBlockedFromPlugin() { return blockedFromPlugin; };
+#ifdef ENABLE_LUA
 	void setLuaInfoFunc(lua_State* L, bool func) { luaState = L; haveLuaInfoFunc = func; };
+#endif
 	void getLivestreamInfo(std::string *i1, std::string *i2) { *i1=livestreamInfo1; *i2=livestreamInfo2; };
 	bool getLiveUrl(const std::string &url, const std::string &script, std::string &realUrl, std::string &_pretty_name, std::string &info1, std::string &info2, std::string &header, std::string &url2);
 	bool IsAudioPlaying() { return is_audio_player; };
