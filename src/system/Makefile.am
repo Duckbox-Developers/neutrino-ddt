@@ -29,7 +29,6 @@ libneutrino_system_a_SOURCES = \
 	hddstat.cpp \
 	httptool.cpp \
 	lastchannel.cpp \
-	luaserver.cpp \
 	localize.cpp \
 	helpers.cpp \
 	ping.cpp \
@@ -39,3 +38,7 @@ libneutrino_system_a_SOURCES = \
 	sysload.cpp \
 	setting_helpers.cpp
 #	safe_system.c
+
+if ENABLE_LUA
+libneutrino_system_a_SOURCES += luaserver.cpp
+endif
