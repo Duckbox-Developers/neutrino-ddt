@@ -137,7 +137,7 @@ int CAudioSetup::showAudioSetup()
 
 	CMenuOptionChooser *as_oj_dts = new CMenuOptionChooser(LOCALE_AUDIOMENU_DTS, &g_settings.dts_pass, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, audioSetupNotifier);
 	as_oj_dts->setHint("", LOCALE_MENU_HINT_AUDIO_DTS);
-#else
+#elif HAVE_SH4_HARDWARE
 	//dd via hdmi
 	CMenuOptionChooser *as_oj_dd_hdmi = NULL;
 	if (g_info.hw_caps->has_HDMI)
@@ -195,7 +195,7 @@ int CAudioSetup::showAudioSetup()
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	audioSettings->addItem(as_oj_ac3);
 	audioSettings->addItem(as_oj_dts);
-#else
+#elif HAVE_SH4_HARDWARE
 	if (g_info.hw_caps->has_HDMI)
 		audioSettings->addItem(as_oj_dd_hdmi);
 	audioSettings->addItem(as_oj_dd_spdif);

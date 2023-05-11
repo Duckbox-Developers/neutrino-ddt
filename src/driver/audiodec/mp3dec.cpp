@@ -2,7 +2,7 @@
 	Neutrino-GUI  -   DBoxII-Project
 
 	Copyright (C) 2002 Bjoern Kalkbrenner <terminar@cyberphoria.org>
-   (C) 2002,2003,2004 Zwen <Zwen@tuxbox.org>
+	(C) 2002,2003,2004 Zwen <Zwen@tuxbox.org>
 	Copyright (C) 2010-2011 Stefan Seyfried
 
 	libmad MP3 low-level core
@@ -59,6 +59,8 @@
 #include <driver/display.h>
 extern cAudio *audioDecoder;
 
+extern "C"
+{
 //void id3_tag_addref(struct id3_tag *);
 void my_id3_tag_delref(struct id3_tag *);
 struct filetag
