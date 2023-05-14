@@ -468,7 +468,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.hdmi_dd = configfile.getInt32( "hdmi_dd", 0);
 	g_settings.spdif_dd = configfile.getInt32( "spdif_dd", 1);
 #endif // HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
-#if !BOXMODEL_E4HDULTRA && !BOXMODEL_BRE2ZE4K
+#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
 	g_settings.analog_out = configfile.getInt32( "analog_out", 1);
 #endif
 	g_settings.avsync = configfile.getInt32( "avsync", 1);
@@ -592,7 +592,7 @@ if (g_info.hw_caps->can_shutdown)
 	g_settings.infobar_show_tuner = configfile.getInt32("infobar_show_tuner", 1 );
 	g_settings.radiotext_enable = configfile.getBool("radiotext_enable"          , false);
 	//audio
-#if !BOXMODEL_E4HDULTRA && !BOXMODEL_BRE2ZE4K
+#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
 	g_settings.audio_AnalogMode = configfile.getInt32( "audio_AnalogMode", 0 );
 #endif
 	g_settings.audio_DolbyDigital    = configfile.getBool("audio_DolbyDigital"   , false);
@@ -1308,7 +1308,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32( "hdmi_dd", g_settings.hdmi_dd);
 	configfile.setInt32( "spdif_dd", g_settings.spdif_dd);
 #endif
-#if !BOXMODEL_E4HDULTRA && !BOXMODEL_BRE2ZE4K
+#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
 	configfile.setInt32( "analog_out", g_settings.analog_out);
 #endif
 	configfile.setInt32( "avsync", g_settings.avsync);
@@ -1407,7 +1407,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32("infobar_show_tuner"  , g_settings.infobar_show_tuner  );
 	configfile.setBool("radiotext_enable"          , g_settings.radiotext_enable);
 	//audio
-#if !BOXMODEL_E4HDULTRA && !BOXMODEL_BRE2ZE4K
+#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
 	configfile.setInt32( "audio_AnalogMode", g_settings.audio_AnalogMode );
 #endif
 	configfile.setBool("audio_DolbyDigital"   , g_settings.audio_DolbyDigital   );
@@ -2529,7 +2529,7 @@ TIMER_START();
 	audioDecoder->SetHdmiDD((HDMI_ENCODED_MODE)g_settings.hdmi_dd);
 	audioDecoder->SetSpdifDD(g_settings.spdif_dd ? true : false);
 #endif
-#if !BOXMODEL_E4HDULTRA && !BOXMODEL_BRE2ZE4K
+#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
 	audioDecoder->EnableAnalogOut(g_settings.analog_out ? true : false);
 #endif
 	audioSetupNotifier        = new CAudioSetupNotifier;
@@ -3473,7 +3473,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 		return messages_return::handled;
 	}
 	if(msg == NeutrinoMessages::EVT_ZAP_COMPLETE) {
-#if !BOXMODEL_E4HDULTRA && !BOXMODEL_BRE2ZE4K
+#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
 		CZapit::getInstance()->GetAudioMode(g_settings.audio_AnalogMode);
 		if(g_settings.audio_AnalogMode < 0 || g_settings.audio_AnalogMode > 2)
 			g_settings.audio_AnalogMode = 0;
@@ -3687,7 +3687,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 		g_audioMute->AudioMute(false, true);
 		return messages_return::handled;
 	}
-#if !BOXMODEL_E4HDULTRA && !BOXMODEL_BRE2ZE4K
+#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
 	else if( msg == CRCInput::RC_analog_on ) {
 		g_settings.analog_out = 1;
 		audioDecoder->EnableAnalogOut(true);
