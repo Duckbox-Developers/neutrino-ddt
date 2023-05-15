@@ -952,11 +952,11 @@ bool CMoviePlayerGui::luaGetUrl(const std::string &script, const std::string &fi
 
 	std::vector<std::string> args;
 	args.push_back(file);
-#ifdef ENABLE_LUA
+
 	CLuaInstance *lua = new CLuaInstance();
 	lua->runScript(lua_script.c_str(), &args, &result_code, &result_string);
 	delete lua;
-#endif
+
 	if ((result_code != "0") || result_string.empty()) {
 		if (box != NULL) {
 			box->hide();
