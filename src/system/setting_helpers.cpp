@@ -328,8 +328,9 @@ bool CAudioSetupNotifier::changeNotify(const neutrino_locale_t OptionName, void 
 	{
 		audioDecoder->SetSpdifDD(g_settings.dts_pass ? true : false);
 	}
+	else
 #endif
-	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_AVSYNC))
+	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_AVSYNC))
 	{
 		videoDecoder->SetSyncMode((AVSYNC_TYPE)g_settings.avsync);
 		audioDecoder->SetSyncMode((AVSYNC_TYPE)g_settings.avsync);
