@@ -27,6 +27,7 @@
 #include <set>
 #include <algorithm>
 #include <string>
+#include <ctime>
 
 #include <sectionsdclient/sectionsdtypes.h>
 #include <dvbsi++/event_information_section.h>
