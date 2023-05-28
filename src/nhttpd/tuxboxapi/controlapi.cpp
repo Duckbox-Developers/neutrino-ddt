@@ -182,6 +182,7 @@ const CControlAPI::TyCgiCall CControlAPI::yCgiCallList[] =
 	{"getdate",		&CControlAPI::GetDateCGI,		"text/plain"},
 	{"gettime",		&CControlAPI::GetTimeCGI,		"text/plain"},
 	{"info",		&CControlAPI::InfoCGI,			"text/plain"},
+	{"boxinfo",		&CControlAPI::BoxInfoCGI,		"text/plain"},
 	{"version",		&CControlAPI::VersionCGI,		""},
 	{"reloadsetup",		&CControlAPI::ReloadNeutrinoSetupCGI,	""},
 	{"reloadplugins",	&CControlAPI::ReloadPluginsCGI,		""},
@@ -841,6 +842,22 @@ void CControlAPI::InfoCGI(CyhookHandler *hh)
 	}
 }
 
+void CControlAPI::BoxInfoCGI(CyhookHandler *hh)
+{
+	std::string boxinfo(g_info.hw_caps->boxvendor);
+	std::string boxname(g_info.hw_caps->boxname);
+
+	boxinfo  = "vendor=" + boxinfo;
+	boxinfo += "\n";
+	boxinfo += "boxname=";
+	boxinfo += boxname;
+	boxinfo += "\n";
+	boxinfo += "boxarch=";
+	boxinfo += g_info.hw_caps->boxarch;
+
+	hh->printf("%s\n", boxinfo.c_str());
+}
+
 void CControlAPI::HWInfoCGI(CyhookHandler *hh)
 {
 	static CNetAdapter netadapter;
@@ -848,10 +865,6 @@ void CControlAPI::HWInfoCGI(CyhookHandler *hh)
 	std::transform(eth_id.begin(), eth_id.end(), eth_id.begin(), ::tolower);
 
 	std::string boxvendor(g_info.hw_caps->boxvendor);
-	/*
-	   I don't know the current legal situation.
-	   So better let's change the vendor's name to CST.
-	*/
 
 	hh->printf("%s %s (%s)\nMAC:%s\n", boxvendor.c_str(), g_info.hw_caps->boxname, g_info.hw_caps->boxarch, eth_id.c_str());
 }

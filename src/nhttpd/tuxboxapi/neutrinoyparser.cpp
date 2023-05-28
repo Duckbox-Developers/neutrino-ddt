@@ -862,13 +862,6 @@ std::string  CNeutrinoYParser::func_get_partition_list(CyhookHandler *, std::str
 std::string CNeutrinoYParser::func_get_boxtype(CyhookHandler *, std::string)
 {
 	std::string boxvendor(g_info.hw_caps->boxvendor);
-	/*
-	   I don't know the current legal situation.
-	   So better let's change the vendor's name to CST.
-
-	   After change this, you'll have to align code in Y_Blocks.txt
-	*/
-
 	std::string boxname(g_info.hw_caps->boxname);
 
 	return boxvendor + " " + boxname;
@@ -896,8 +889,16 @@ std::string  CNeutrinoYParser::func_get_current_stream_info(CyhookHandler *hh, s
 	hh->ParamList["vtxtpid"] = (serviceinfo.vtxtpid != 0) ? itoh(serviceinfo.vtxtpid) : "not available";
 	hh->ParamList["pmtpid"] = (serviceinfo.pmtpid != 0) ? itoh(serviceinfo.pmtpid) : "not available";
 	hh->ParamList["pcrpid"] = (serviceinfo.pcrpid != 0) ? itoh(serviceinfo.pcrpid) : "not available";
-	hh->ParamList["tsfrequency"] = string_printf("%d.%d MHz", serviceinfo.tsfrequency / 1000, serviceinfo.tsfrequency % 1000);
-	hh->ParamList["polarisation"] = serviceinfo.polarisation == 1 ? "h" : "v";
+
+	int mode = CNeutrinoApp::getInstance()->getMode();
+	if (mode == NeutrinoModes::mode_tv || mode == NeutrinoModes::mode_radio) {
+		hh->ParamList["tsfrequency"] = string_printf("%d.%d MHz", serviceinfo.tsfrequency / 1000, serviceinfo.tsfrequency % 1000);
+		hh->ParamList["polarisation"] = serviceinfo.polarisation == 1 ? "(H)" : "(V)";
+	} else {
+		hh->ParamList["tsfrequency"] = "not available";
+		hh->ParamList["polarisation"] = "";
+	}
+
 	hh->ParamList["ServiceName"] = NeutrinoAPI->GetServiceName(CZapit::getInstance()->GetCurrentChannelID());
 	hh->ParamList["Url"] = CZapit::getInstance()->GetCurrentChannel()->getUrl().c_str();
 	hh->ParamList["VideoFormat"] = NeutrinoAPI->getVideoResolutionAsString();
