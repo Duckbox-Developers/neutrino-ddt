@@ -716,7 +716,13 @@ void CNetworkSetup::testNetworkSettings()
 	CConfigFile config('\t');
 	config.loadConfig("/.version");
 	testsite = config.getString("homepage", defaultsite);
-	testsite.replace(0, testsite.find("www", 0), "");
+
+	if (strstr(testsite.c_str(), "http://"))
+		testsite.erase(0,7);
+	else if (strstr(testsite.c_str(), "https://"))
+		testsite.erase(0,8);
+	else
+		testsite.replace(0, testsite.find("www", 0), "");
 
 	//use default testdomain if testsite missing
 	if (testsite.length() == 0)
