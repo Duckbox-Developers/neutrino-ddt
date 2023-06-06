@@ -710,16 +710,22 @@ void CNetworkSetup::testNetworkSettings()
 
 	//set wiki-URL and wiki-IP
 	std::string wiki_URL = "wiki.tuxbox-neutrino.org";
-	std::string wiki_IP = "81.7.17.245";
+	std::string wiki_IP = "93.218.197.51";
 
 	//get www-domain testsite from /.version
 	CConfigFile config('\t');
 	config.loadConfig("/.version");
-	testsite = config.getString("homepage",defaultsite);
-	testsite.replace( 0, testsite.find("www",0), "" );
+	testsite = config.getString("homepage", defaultsite);
+
+	if (strstr(testsite.c_str(), "http://"))
+		testsite.erase(0,7);
+	else if (strstr(testsite.c_str(), "https://"))
+		testsite.erase(0,8);
+	else
+		testsite.replace(0, testsite.find("www", 0), "");
 
 	//use default testdomain if testsite missing
-	if (testsite.length()==0)
+	if (testsite.length() == 0)
 		testsite = defaultsite;
 
 	if (networkConfig->inet_static)
