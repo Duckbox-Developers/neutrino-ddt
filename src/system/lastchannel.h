@@ -19,7 +19,6 @@ nicht gespeichert werden.
 
 */
 
-
 #ifndef SEEN_LastChannel
 #define SEEN_LastChannel
 
@@ -33,13 +32,13 @@ class CLastChannel
 		struct _LastCh
 		{
 			t_channel_id channel_id;
-			long int   timestamp;
+			long int timestamp;
 			int channel_mode;
 		};
 
 		std::list<_LastCh> lastChannels;
 
-		unsigned long  secs_diff_before_store;
+		unsigned long secs_diff_before_store;
 		unsigned int maxSize;
 		bool shallRemoveEqualChannel;
 
@@ -51,10 +50,9 @@ class CLastChannel
 		unsigned int size() const;
 		void clear_storedelay(void);
 		void set_store_difftime(int secs);
-		int  get_store_difftime(void) const;
+		int get_store_difftime(void) const;
 		int get_mode(t_channel_id channel_id);
 		bool set_mode(t_channel_id channel_id);
 };
-
 
 #endif
