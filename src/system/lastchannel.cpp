@@ -24,7 +24,7 @@ nicht gespeichert werden.
 
 CLastChannel::CLastChannel(void)
 	: secs_diff_before_store(3)
-	, maxSize(11)
+	, maxSize(22)
 	, shallRemoveEqualChannel(true)
 {
 }
@@ -41,7 +41,7 @@ void CLastChannel::clear(void)
 
 void CLastChannel::store(t_channel_id channel_id)
 {
-	struct timeval  tv;
+	struct timeval tv;
 	unsigned long lastTimestamp(0);
 	unsigned long timeDiff;
 	std::list<_LastCh>::iterator It;
@@ -49,7 +49,7 @@ void CLastChannel::store(t_channel_id channel_id)
 	gettimeofday(&tv, NULL);
 
 	if (!this->lastChannels.empty())
-		lastTimestamp  = this->lastChannels.front().timestamp;
+		lastTimestamp = this->lastChannels.front().timestamp;
 
 	timeDiff = tv.tv_sec - lastTimestamp;
 
@@ -71,7 +71,7 @@ void CLastChannel::store(t_channel_id channel_id)
 	{
 		It = this->lastChannels.begin();
 		++It;
-		for (; It != this->lastChannels.end() ; ++It)
+		for (; It != this->lastChannels.end(); ++It)
 		{
 			if (channel_id == It->channel_id)
 			{
@@ -101,9 +101,9 @@ void CLastChannel::clear_storedelay(void)
 }
 
 // -- Get last Channel-Entry
-// -- IN:   n number of last channel in queue [0..]
-// --       0 = current channel
-// -- Return:  channelnumber or <0  (end of list)
+// -- IN: n = number of last channel in queue [0..]
+// --     0 = current channel
+// -- Return: channelnumber or < 0 (end of list)
 
 t_channel_id CLastChannel::getlast(int n)
 {
@@ -114,7 +114,6 @@ t_channel_id CLastChannel::getlast(int n)
 
 		return It->channel_id;
 	}
-
 	return 0;
 }
 
@@ -130,7 +129,7 @@ int CLastChannel::get_mode(t_channel_id channel_id)
 {
 	std::list<_LastCh>::iterator It;
 
-	for (It = this->lastChannels.begin(); It != this->lastChannels.end() ; ++It)
+	for (It = this->lastChannels.begin(); It != this->lastChannels.end(); ++It)
 	{
 		if (channel_id == It->channel_id)
 			return It->channel_mode;
@@ -142,7 +141,7 @@ bool CLastChannel::set_mode(t_channel_id channel_id)
 {
 	std::list<_LastCh>::iterator It;
 
-	for (It = this->lastChannels.begin(); It != this->lastChannels.end() ; ++It)
+	for (It = this->lastChannels.begin(); It != this->lastChannels.end(); ++It)
 	{
 		if (channel_id == It->channel_id)
 		{
