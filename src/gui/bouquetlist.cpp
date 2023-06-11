@@ -443,7 +443,7 @@ int CBouquetList::show(bool bShowChannelList)
 		}
 		else if ((msg == CRCInput::RC_timeout                             ) ||
 				(msg == CRCInput::RC_home) ||
-				((msg == CRCInput::RC_favorites) && (CNeutrinoApp::getInstance()->GetChannelMode() == LIST_MODE_FAV)))
+				((msg == CRCInput::RC_favorites || msg == CRCInput::RC_bookmarks) && (CNeutrinoApp::getInstance()->GetChannelMode() == LIST_MODE_FAV)))
 		{
 			selected = oldselected;
 			if(fader.StartFadeOut()) {
@@ -452,7 +452,7 @@ int CBouquetList::show(bool bShowChannelList)
 			} else
 				loop=false;
 		}
-		else if(msg == CRCInput::RC_red || msg == CRCInput::RC_favorites) {
+		else if(msg == CRCInput::RC_red || msg == CRCInput::RC_favorites || msg == CRCInput::RC_bookmarks) {
 			if (!favonly && CNeutrinoApp::getInstance()->GetChannelMode() != LIST_MODE_FAV) {
 				CNeutrinoApp::getInstance()->SetChannelMode(LIST_MODE_FAV);
 				hide();
