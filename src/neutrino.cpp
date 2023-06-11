@@ -3274,7 +3274,7 @@ int CNeutrinoApp::showChannelList(const neutrino_msg_t _msg, bool from_menu)
 	} else if(msg == CRCInput::RC_sat) {
 		SetChannelMode(LIST_MODE_SAT);
 		nNewChannel = bouquetList->exec(true);
-	} else if(msg == CRCInput::RC_favorites) || msg == CRCInput::RC_bookmarks) {
+	} else if(msg == CRCInput::RC_favorites || msg == CRCInput::RC_bookmarks) {
 		SetChannelMode(LIST_MODE_FAV);
 		if (bouquetList->Bouquets.empty())
 			SetChannelMode(LIST_MODE_PROV);
