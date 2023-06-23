@@ -29,7 +29,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-
 #ifndef __epgview__
 #define __epgview__
 
@@ -87,9 +86,9 @@ class CEpgData
 
 		MI_MOVIE_INFO *mp_movie_info;
 
-		void GetEPGData(const t_channel_id channel_id, uint64_t id, time_t* startzeit, bool clear = true );
-		void GetPrevNextEPGData( uint64_t id, time_t* startzeit );
-		void addTextToArray( const std::string & text, int screening );
+		void GetEPGData(const t_channel_id channel_id, uint64_t id, time_t* startzeit, bool clear = true);
+		void GetPrevNextEPGData( uint64_t id, time_t* startzeit);
+		void addTextToArray( const std::string & text, int screening);
 		void processTextToArray(std::string text, int screening = 0, bool has_cover = false);
 		void showText(int startPos, int ypos, bool has_cover = false, bool fullClear = true);
 		bool hasFollowScreenings(const t_channel_id channel_id, const std::string & title);
@@ -103,13 +102,11 @@ class CEpgData
 		CEpgData();
 		~CEpgData();
 		void start( );
-		int show(const t_channel_id channel_id, uint64_t id = 0, time_t* startzeit = NULL, bool doLoop = true, bool callFromfollowlist = false, bool mp_info = false );
+		int show(const t_channel_id channel_id, uint64_t id = 0, time_t* startzeit = NULL, bool doLoop = true, bool callFromfollowlist = false, bool mp_info = false);
 		int show_mp(MI_MOVIE_INFO *mi, int mp_position = 0, int mp_duration = 0, bool doLoop = true);
 		void hide();
 		void ResetModules();
 };
-
-
 
 class CEPGDataHandler : public CMenuTarget
 {
@@ -118,7 +115,4 @@ class CEPGDataHandler : public CMenuTarget
 
 };
 
-
-
 #endif
-
