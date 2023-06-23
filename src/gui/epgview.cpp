@@ -58,6 +58,10 @@
 #include <eitd/sectionsd.h>
 #include <timerdclient/timerdclient.h>
 
+#ifdef ENABLE_LUA
+#include <gui/lua/luainstance.h>
+#endif
+
 extern CPictureViewer * g_PicViewer;
 
 #define ICON_LARGE_WIDTH 26
@@ -120,11 +124,11 @@ void reformatExtendedEvents(std::string strItem, std::string strLabel, bool bUse
 
 CEpgData::CEpgData()
 {
-	bigFonts 	= false;
-	frameBuffer 	= CFrameBuffer::getInstance();
-	mp_movie_info 	= NULL;
-	header     	= NULL;
-	Bottombox 	= NULL;
+	bigFonts	= false;
+	frameBuffer	= CFrameBuffer::getInstance();
+	mp_movie_info	= NULL;
+	header		= NULL;
+	Bottombox	= NULL;
 	pb		= NULL;
 	font_title	= NULL;
 
@@ -1203,6 +1207,18 @@ int CEpgData::show(const t_channel_id channel_id, uint64_t a_id, time_t* a_start
 				} else
 					loop = false;
 				break;
+#ifdef ENABLE_LUA
+			case CRCInput::RC_0:
+			{
+				if (access(PLUGINDIR "/pr-auto-timer-menu.lua", F_OK) == 0)
+				{
+					CLuaInstance *lua = new CLuaInstance();
+					lua->runScript(PLUGINDIR "/pr-auto-timer-menu.lua", channel_name.c_str(), "*", epgData.title.c_str());
+					delete lua;
+				}
+				break;
+			}
+#endif
 			default:
 				if (msg == CRCInput::RC_home) {
 					if(fader.StartFadeOut()) {
@@ -1420,7 +1436,11 @@ void CEpgData::showProgressBar()
 
 #define TV_BUTTONS 0
 #define MP_BUTTONS 1
+#ifdef ENABLE_LUA
+struct button_label EpgButtons[][5] =
+#else
 struct button_label EpgButtons[][4] =
+#endif
 {
 	{
 		// TV_BUTTONS
@@ -1428,6 +1448,9 @@ struct button_label EpgButtons[][4] =
 		{ NEUTRINO_ICON_BUTTON_GREEN, LOCALE_TMDB_INFO },
 		{ NEUTRINO_ICON_BUTTON_YELLOW, LOCALE_TIMERBAR_CHANNELSWITCH },
 		{ NEUTRINO_ICON_BUTTON_BLUE, LOCALE_EPGVIEWER_MORE_SCREENINGS_SHORT }
+#ifdef ENABLE_LUA
+		, { NEUTRINO_ICON_BUTTON_0, LOCALE_AUTOTIMER }
+#endif
 	},
 	{
 		// MP_BUTTONS
@@ -1453,7 +1476,11 @@ void CEpgData::showTimerEventBar (bool pshow, bool adzap, bool mp_info)
 		return;
 	}
 
+#ifdef ENABLE_LUA
+	int MaxButtons = mp_info ? 2 : (access(PLUGINDIR "/pr-auto-timer-menu.lua", F_OK) == 0) ? 5 : 4; //TODO: auto-calc from struct
+#else
 	int MaxButtons = mp_info ? 2 : 4; //TODO: auto-calc from struct
+#endif
 
 	std::string adzap_button;
 	if (adzap)
