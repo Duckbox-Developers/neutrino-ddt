@@ -306,7 +306,7 @@ void CBouquetManager::saveUBouquets(void)
 	chmod(UBOUQUETS_XML, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 }
 
-void CBouquetManager::saveBouquets(const CZapitClient::bouquetMode bouquetMode, const char * const providerName, t_satellite_position satellitePosition)
+void CBouquetManager::saveBouquets(const CZapitClient::bouquetMode bouquetMode, const char * const /*providerName*/, t_satellite_position satellitePosition)
 {
 	if (bouquetMode == CZapitClient::BM_DELETEBOUQUETS) {
 		INFO("removing existing bouquets");
