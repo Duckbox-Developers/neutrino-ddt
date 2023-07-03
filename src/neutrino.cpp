@@ -289,6 +289,10 @@ CNeutrinoApp::CNeutrinoApp()
 #ifdef ENABLE_PIP
 	avinput_pip		= false;
 #endif
+
+	// remove standby flag
+	if (access("/tmp/.standby", F_OK) == 0)
+		unlink("/tmp/.standby");
 }
 
 /*-------------------------------------------------------------------------------------
