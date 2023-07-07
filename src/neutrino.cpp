@@ -290,6 +290,10 @@ CNeutrinoApp::CNeutrinoApp()
 #ifdef ENABLE_PIP
 	avinput_pip		= false;
 #endif
+
+	// remove standby flag
+	if (access("/tmp/.standby", F_OK) == 0)
+		unlink("/tmp/.standby");
 }
 
 /*-------------------------------------------------------------------------------------
@@ -323,40 +327,40 @@ typedef struct lcd_setting_t
 
 const lcd_setting_struct_t lcd_setting[SNeutrinoSettings::LCD_SETTING_COUNT] =
 {
-	{"lcd_brightness"       , DEFAULT_VFD_BRIGHTNESS       },
-	{"lcd_standbybrightness", DEFAULT_VFD_STANDBYBRIGHTNESS},
-	{"lcd_contrast"         , DEFAULT_LCD_CONTRAST         },
-	{"lcd_power"            , DEFAULT_LCD_POWER            },
-	{"lcd_inverse"          , DEFAULT_LCD_INVERSE          },
-	{"lcd_show_volume"      , DEFAULT_LCD_SHOW_VOLUME      },
-	{"lcd_autodimm"         , DEFAULT_LCD_AUTODIMM         },
-	{"lcd_deepbrightness"   , DEFAULT_VFD_STANDBYBRIGHTNESS }
+	{"lcd_brightness"         , DEFAULT_VFD_BRIGHTNESS       },
+	{"lcd_standbybrightness"  , DEFAULT_VFD_STANDBYBRIGHTNESS},
+	{"lcd_contrast"           , DEFAULT_LCD_CONTRAST         },
+	{"lcd_power"              , DEFAULT_LCD_POWER            },
+	{"lcd_inverse"            , DEFAULT_LCD_INVERSE          },
+	{"lcd_show_volume"        , DEFAULT_LCD_SHOW_VOLUME      },
+	{"lcd_autodimm"           , DEFAULT_LCD_AUTODIMM         },
+	{"lcd_deepbrightness"     , DEFAULT_VFD_STANDBYBRIGHTNESS}
 #if USE_STB_HAL
-	,{ "lcd_epgmode"        , 0 /*DEFAULT_LCD_EPGMODE*/ }
+	,{ "lcd_epgmode"          , 0 /*DEFAULT_LCD_EPGMODE*/    }
 #endif
 #if HAVE_SPARK_HARDWARE
-	,{"lcd_displaymode"      , DEFAULT_LCD_DISPLAYMODE    }
-	,{"lcd_standbydisplaymode", DEFAULT_LCD_DISPLAYMODE   }
+	,{"lcd_displaymode"       , DEFAULT_LCD_DISPLAYMODE      }
+	,{"lcd_standbydisplaymode", DEFAULT_LCD_DISPLAYMODE      }
 #endif
 };
 
 static SNeutrinoSettings::usermenu_t usermenu_default[] = {
-	{ CRCInput::RC_red,             "2,3,4,13",                             "",     "red"           },
-	{ CRCInput::RC_green,           "6",                                    "",     "green"         },
-	{ CRCInput::RC_yellow,          "7,31",                                 "",     "yellow"        },
-	{ CRCInput::RC_blue,            "12,11,20,21,19,14,29,30,15",           "",     "blue"          },
+	{ CRCInput::RC_red,       "2,3,4,13",                      "", "red"    },
+	{ CRCInput::RC_green,     "6",                             "", "green"  },
+	{ CRCInput::RC_yellow,    "7,31",                          "", "yellow" },
+	{ CRCInput::RC_blue,      "12,11,20,21,19,14,29,30,15",    "", "blue"   },
 #if BOXMODEL_BRE2ZE4K || BOXMODEL_HD51 || BOXMODEL_H7
-	{ CRCInput::RC_playpause,       "9",                                    "",     "5"             },
+	{ CRCInput::RC_playpause, "9",                             "", "5"      },
 #else
-	{ CRCInput::RC_play,            "9",                                    "",     "5"             },
+	{ CRCInput::RC_play,      "9",                             "", "5"      },
 #endif
-	{ CRCInput::RC_audio,           "27",                                   "",     "6"             },
+	{ CRCInput::RC_audio,     "27",                            "", "6"      },
 #if HAVE_SPARK_HARDWARE
-	{ CRCInput::RC_timer,           "19",                                   "",     "7"             },
-	{ CRCInput::RC_usb,             "31",                                   "",     "6"             },
-	{ CRCInput::RC_archive,         "30",                                   "",     "4"             },
+	{ CRCInput::RC_timer,     "19",                            "", "7"      },
+	{ CRCInput::RC_usb,       "31",                            "", "6"      },
+	{ CRCInput::RC_archive,   "30",                            "", "4"      },
 #endif
-	{ CRCInput::RC_nokey,           "",                                     "",     ""              },
+	{ CRCInput::RC_nokey,     "",                              "", ""       }
 };
 
 /**************************************************************************************

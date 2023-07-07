@@ -170,34 +170,34 @@ void CComponentsItem::paintInit(bool do_save_bg)
 		cc_fbdata_t fbdata[] =
 		{
 			//buffered bg
-			{true, CC_FBDATA_TYPE_BGSCREEN,		ix,		iy, 		dx + sw, 		dy + sw, 				0, 			0, 		0,					0, NULL, NULL, NULL, false},
+			{true, CC_FBDATA_TYPE_BGSCREEN,		ix,			iy,			dx + sw,	dy + sw,				0, 0, 0, 0, NULL, NULL, NULL, false},
 
 			//shadow corner bottom left
-			{sh_cbl, CC_FBDATA_TYPE_SHADOW_BOX, 	sh_cbl_x,	sh_cbl_y, 	sh_cdx, 	sh_cdy, 			col_shadow, 		box_rad,	corner_type & CORNER_BOTTOM_LEFT,	0, NULL, NULL, NULL, false},
+			{sh_cbl, CC_FBDATA_TYPE_SHADOW_BOX,	sh_cbl_x,		sh_cbl_y,		sh_cdx,		sh_cdy,					col_shadow,		box_rad,		corner_type & CORNER_BOTTOM_LEFT,	0, NULL, NULL, NULL, false},
 			//clean up inside body
-			{sh_cbl, CC_FBDATA_TYPE_SHADOW_BOX, 	sh_cbl_x - sw + th,	sh_cbl_y - sw, 	sh_cdx + sw, 	sh_cdy, 			col_shadow_clean, 	box_rad,	corner_type & CORNER_BOTTOM_LEFT,	0, NULL, NULL, NULL, false},
+			{sh_cbl, CC_FBDATA_TYPE_SHADOW_BOX,	sh_cbl_x - sw + th,	sh_cbl_y - sw,		sh_cdx + sw,	sh_cdy,					col_shadow_clean,	box_rad,		corner_type & CORNER_BOTTOM_LEFT,	0, NULL, NULL, NULL, false},
 
 			//shadow bar bottom
-			{sh_bb, CC_FBDATA_TYPE_SHADOW_BOX, 	sh_bx,		sh_by, 		sh_bdx, 	sw, 				col_shadow, 		0,		CORNER_NONE,				0, NULL, NULL, NULL, false},
+			{sh_bb, CC_FBDATA_TYPE_SHADOW_BOX,	sh_bx,			sh_by,			sh_bdx,		sw,					col_shadow,		0,			CORNER_NONE,				0, NULL, NULL, NULL, false},
 
 			//shadow corner bottom right
-			{sh_cbr, CC_FBDATA_TYPE_SHADOW_BOX, 	sh_cbr_x,	sh_cbr_y, 	sh_cdx, 	sh_cdy, 			col_shadow, 		box_rad,	corner_type & CORNER_BOTTOM_RIGHT,	0, NULL, NULL, NULL, false},
+			{sh_cbr, CC_FBDATA_TYPE_SHADOW_BOX,	sh_cbr_x,		sh_cbr_y,		sh_cdx,		sh_cdy,					col_shadow,		box_rad,		corner_type & CORNER_BOTTOM_RIGHT,	0, NULL, NULL, NULL, false},
 			//clean up inside body
-			{sh_cbr, CC_FBDATA_TYPE_SHADOW_BOX, 	sh_cbr_x - sw,	sh_cbr_y - sw, 	sh_cdx, 	sh_cdy, 			col_shadow_clean, 	box_rad,	corner_type & CORNER_BOTTOM_RIGHT,	0, NULL, NULL, NULL, false},
+			{sh_cbr, CC_FBDATA_TYPE_SHADOW_BOX,	sh_cbr_x - sw,		sh_cbr_y - sw,		sh_cdx,		sh_cdy,					col_shadow_clean,	box_rad,		corner_type & CORNER_BOTTOM_RIGHT,	0, NULL, NULL, NULL, false},
 
 			//shadow bar right
-			{sh_br, CC_FBDATA_TYPE_SHADOW_BOX, 	sh_rx,		sh_ry,		sw, 		sh_rdy, 			col_shadow, 		0,		CORNER_NONE,				0, NULL, NULL, NULL, false},
+			{sh_br, CC_FBDATA_TYPE_SHADOW_BOX,	sh_rx,			sh_ry,			sw,		sh_rdy,					col_shadow,		0,			CORNER_NONE,				0, NULL, NULL, NULL, false},
 
 			//shadow corner top right
-			{sh_ctr, CC_FBDATA_TYPE_SHADOW_BOX, 	sh_ctr_x,	sh_ctr_y, 	sh_cdx, 	sh_cdy - sh_cdy_size_offset, 	col_shadow, 		box_rad,	corner_type & CORNER_TOP_RIGHT,		0, NULL, NULL, NULL, false},
+			{sh_ctr, CC_FBDATA_TYPE_SHADOW_BOX,	sh_ctr_x,		sh_ctr_y,		sh_cdx,		sh_cdy - sh_cdy_size_offset,		col_shadow,		box_rad,		corner_type & CORNER_TOP_RIGHT,		0, NULL, NULL, NULL, false},
 			//clean up inside body
-			{sh_ctr, CC_FBDATA_TYPE_SHADOW_BOX, 	sh_ctr_x - sw,	sh_ctr_y - sw + th, sh_cdx, 	sh_cdy - sh_cdy_size_offset + sw, 	col_shadow_clean, 	box_rad,	corner_type & CORNER_TOP_RIGHT,		0, NULL, NULL, NULL, false},
+			{sh_ctr, CC_FBDATA_TYPE_SHADOW_BOX,	sh_ctr_x - sw,		sh_ctr_y - sw + th,	sh_cdx,		sh_cdy - sh_cdy_size_offset + sw,	col_shadow_clean,	box_rad,		corner_type & CORNER_TOP_RIGHT,		0, NULL, NULL, NULL, false},
 
 			//main box
-			{true, CC_FBDATA_TYPE_BOX,		ix + th,  	iy + th,  	dx - 2 * th,     	dy - 2 * th,    			col_body,       	max(0, box_rad - th),	corner_type,				0, NULL, NULL, NULL, false},
+			{true, CC_FBDATA_TYPE_BOX,		ix + th,		iy + th,		dx - 2 * th,	dy - 2 * th,				col_body,		max(0, box_rad - th),	corner_type,	0, NULL, NULL, NULL, false},
 
 			//frame
-			{true, CC_FBDATA_TYPE_FRAME,		ix,		iy, 		dx, 		dy, 				col_frame_cur,		box_rad,	corner_type,				th, NULL, NULL, NULL, false}
+			{true, CC_FBDATA_TYPE_FRAME,		ix,			iy,			dx,		dy,					col_frame_cur,		box_rad,		corner_type,	th, NULL, NULL, NULL, false}
 		};
 
 		for (size_t i = 0; i < (sizeof(fbdata) / sizeof(fbdata[0])) ; i++)

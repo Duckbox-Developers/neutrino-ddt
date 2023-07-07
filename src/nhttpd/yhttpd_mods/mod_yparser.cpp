@@ -72,9 +72,9 @@ void CyParser::init(CyhookHandler *hh)
 //=============================================================================
 const CyParser::TyCgiCall CyParser::yCgiCallList[] =
 {
-	{ "cgi", 			&CyParser::cgi, 				"text/html; charset=UTF-8" },
+	{ "cgi", 			&CyParser::cgi, 				"text/html; charset=UTF-8" }
 #ifdef Y_CONFIG_FEATURE_SHOW_SERVER_CONFIG
-	{ "server-config", 	&CyParser::cgi_server_config, 	"text/html"},
+	,{ "server-config", 	&CyParser::cgi_server_config, 	"text/html"}
 #endif
 };
 //-----------------------------------------------------------------------------
@@ -739,7 +739,7 @@ const CyParser::TyFuncCall CyParser::yFuncCallList[] =
 	{ "do_reload_httpd_config", 	&CyParser::func_do_reload_httpd_config },
 	{ "httpd_change", 				&CyParser::func_change_httpd },
 	{ "get_languages_as_dropdown",	&CyParser::func_get_languages_as_dropdown },
-	{ "set_language",				&CyParser::func_set_language },
+	{ "set_language",				&CyParser::func_set_language }
 };
 
 //-------------------------------------------------------------------------

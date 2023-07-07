@@ -320,6 +320,8 @@ CUPnPDevice::CUPnPDevice(std::string url)
 							eurl = urlbase + "/";
 						else if (p[0] == '/')
 							eurl = urlbase + std::string(p);
+						else if (!strncmp(p, "http", 4))
+							eurl = std::string(p);
 						else
 							eurl = urlbase + "/" + std::string(p);
 						founde = true;
@@ -331,6 +333,8 @@ CUPnPDevice::CUPnPDevice(std::string url)
 							curl = urlbase + "/";
 						else if (p[0] == '/')
 							curl = urlbase + std::string(p);
+						else if (!strncmp(p, "http", 4))
+							curl = std::string(p);
 						else
 							curl = urlbase + "/" + std::string(p);
 						foundc = true;

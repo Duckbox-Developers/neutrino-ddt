@@ -108,29 +108,29 @@ void CComponentsDetailsLine::paint(bool do_save_bg)
 		cc_fbdata_t fbdata[] =
 		{
 			/*buffered bg full width and height */
-			{true, CC_FBDATA_TYPE_BGSCREEN,	x,			y_mark_top, 		width,			y_mark_down - y_mark_top + h_mark_down + sw,	0, 0, 0, 0, NULL, NULL, NULL, false},
+			{true, CC_FBDATA_TYPE_BGSCREEN,	x,			y_mark_top,			width,			y_mark_down - y_mark_top + h_mark_down + sw,	0, 0, 0, 0, NULL, NULL, NULL, false},
 
 			/* vertical item mark | */
-			{true, CC_FBDATA_TYPE_BOX, 	x + width - dl_w - sw, 	y_mark_top, 		dl_w, 			h_mark_top, 		col_body, 	0, 0, 0, NULL, NULL, NULL, false},
-			{true, CC_FBDATA_TYPE_BOX, 	x + width - sw,		y_mark_top + sw, 		sw, 			h_mark_top - sw, 		col_shadow, 	0, 0, 0, NULL, NULL, NULL, false},
-			{true, CC_FBDATA_TYPE_BOX, 	x + width - dl_w,		y_mark_top + h_mark_top, 	dl_w, 			sw,	 		col_shadow, 	0, 0, 0, NULL, NULL, NULL, false},
+			{true, CC_FBDATA_TYPE_BOX,	x + width - dl_w - sw,	y_mark_top,			dl_w,			h_mark_top,		col_body,	0, 0, 0, NULL, NULL, NULL, false},
+			{true, CC_FBDATA_TYPE_BOX,	x + width - sw,		y_mark_top + sw,		sw,			h_mark_top - sw,	col_shadow,	0, 0, 0, NULL, NULL, NULL, false},
+			{true, CC_FBDATA_TYPE_BOX,	x + width - dl_w,	y_mark_top + h_mark_top,	dl_w,			sw,			col_shadow,	0, 0, 0, NULL, NULL, NULL, false},
 
 			/* horizontal item line - */
-			{true, CC_FBDATA_TYPE_BOX, 	x, 			y - dl_w / 2,		width - dl_w - sw,		dl_w, 			col_body, 	0, 0, 0, NULL, NULL, NULL, false},
-			{true, CC_FBDATA_TYPE_BOX, 	x + dl_w,			y + dl_w / 2 + dx_c,		width - 2 * dl_w - sw,	sw, 			col_shadow, 	0, 0, 0, NULL, NULL, NULL, false},
+			{true, CC_FBDATA_TYPE_BOX,	x,			y - dl_w / 2,			width - dl_w - sw,	dl_w,			col_body,	0, 0, 0, NULL, NULL, NULL, false},
+			{true, CC_FBDATA_TYPE_BOX,	x + dl_w,		y + dl_w / 2 + dx_c,		width - 2 * dl_w - sw,	sw,			col_shadow,	0, 0, 0, NULL, NULL, NULL, false},
 
 			/* vertical connect line [ */
-			{true, CC_FBDATA_TYPE_BOX, 	x,			y + dl_w / 2 + dx_c, 		dl_w, 			y_down - y - dl_w, 		col_body, 	0, 0, 0, NULL, NULL, NULL, false},
-			{true, CC_FBDATA_TYPE_BOX, 	x + dl_w,			y + dl_w / 2 + dx_c,		sw, 			y_down - y - dl_w,		col_shadow, 	0, 0, 0, NULL, NULL, NULL, false},
+			{true, CC_FBDATA_TYPE_BOX,	x,			y + dl_w / 2 + dx_c,		dl_w,			y_down - y - dl_w,	col_body,	0, 0, 0, NULL, NULL, NULL, false},
+			{true, CC_FBDATA_TYPE_BOX,	x + dl_w,		y + dl_w / 2 + dx_c,		sw,			y_down - y - dl_w,	col_shadow,	0, 0, 0, NULL, NULL, NULL, false},
 
 			/* horizontal info line - */
-			{true, CC_FBDATA_TYPE_BOX, 	x,			y_down - dl_w / 2,		width - dl_w - sw, 		dl_w, 			col_body, 	0, 0, 0, NULL, NULL, NULL, false},
-			{true, CC_FBDATA_TYPE_BOX, 	x + sw,			y_down + dl_w / 2 + dx_c,	width - dl_w - 2 * sw,	sw, 			col_shadow, 	0, 0, 0, NULL, NULL, NULL, false},
+			{true, CC_FBDATA_TYPE_BOX,	x,			y_down - dl_w / 2,		width - dl_w - sw,	dl_w,			col_body,	0, 0, 0, NULL, NULL, NULL, false},
+			{true, CC_FBDATA_TYPE_BOX,	x + sw,			y_down + dl_w / 2 + dx_c,	width - dl_w - 2 * sw,	sw,			col_shadow,	0, 0, 0, NULL, NULL, NULL, false},
 
 			/* vertical info mark | */
-			{true, CC_FBDATA_TYPE_BOX, 	x + width - dl_w - sw,	y_mark_down, 		dl_w, 			h_mark_down, 		col_body, 	0, 0, 0, NULL, NULL, NULL, false},
-			{true, CC_FBDATA_TYPE_BOX, 	x + width - sw,		y_mark_down + sw,		sw, 			h_mark_down - sw,		col_shadow, 	0, 0, 0, NULL, NULL, NULL, false},
-			{true, CC_FBDATA_TYPE_BOX, 	x + width - dl_w,		y_mark_down + h_mark_down, dl_w, 			sw,	 		col_shadow, 	0, 0, 0, NULL, NULL, NULL, false},
+			{true, CC_FBDATA_TYPE_BOX,	x + width - dl_w - sw,	y_mark_down,			dl_w,			h_mark_down,		col_body,	0, 0, 0, NULL, NULL, NULL, false},
+			{true, CC_FBDATA_TYPE_BOX,	x + width - sw,		y_mark_down + sw,		sw,			h_mark_down - sw,	col_shadow,	0, 0, 0, NULL, NULL, NULL, false},
+			{true, CC_FBDATA_TYPE_BOX,	x + width - dl_w,	y_mark_down + h_mark_down,	dl_w,			sw,	 		col_shadow,	0, 0, 0, NULL, NULL, NULL, false}
 		};
 
 		for (size_t i = 0; i < (sizeof(fbdata) / sizeof(fbdata[0])) ; i++)
