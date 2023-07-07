@@ -58,7 +58,7 @@ font_sizes_struct fixed_font[SNeutrinoSettings::FONT_TYPE_FIXED_COUNT] =
 	{NONEXISTANT_LOCALE, 20, CNeutrinoFonts::FONT_STYLE_ITALIC,  1},
 	{NONEXISTANT_LOCALE, 16, CNeutrinoFonts::FONT_STYLE_BOLD,    1},
 	{NONEXISTANT_LOCALE, 16, CNeutrinoFonts::FONT_STYLE_REGULAR, 1},
-	{NONEXISTANT_LOCALE, 16, CNeutrinoFonts::FONT_STYLE_ITALIC,  1},
+	{NONEXISTANT_LOCALE, 16, CNeutrinoFonts::FONT_STYLE_ITALIC,  1}
 };
 
 const font_sizes_struct signal_font = {NONEXISTANT_LOCALE, 14, CNeutrinoFonts::FONT_STYLE_REGULAR, 1};
