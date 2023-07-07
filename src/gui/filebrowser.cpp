@@ -1409,7 +1409,7 @@ int CFileBrowser::paintFoot(bool show)
 		{ NEUTRINO_ICON_BUTTON_YELLOW,		NONEXISTANT_LOCALE,		sort_text.c_str(),	sort_text_len,	false },
 		{ NEUTRINO_ICON_BUTTON_BLUE,		LOCALE_AUDIOPLAYER_SHUFFLE,	NULL,			0,		false },
 		{ NEUTRINO_ICON_BUTTON_OKAY,		LOCALE_FILEBROWSER_SELECT,	NULL,			0,		false },
-		{ NEUTRINO_ICON_BUTTON_PLAY,		LOCALE_FILEBROWSER_MARK,	NULL,			0,		false },
+		{ NEUTRINO_ICON_BUTTON_PLAY,		LOCALE_FILEBROWSER_MARK,	NULL,			0,		false }
 	};
 
 	button_label_ext buttons_filelistmode[] = {
@@ -1417,7 +1417,7 @@ int CFileBrowser::paintFoot(bool show)
 		{ NEUTRINO_ICON_BUTTON_OKAY,		LOCALE_FILEBROWSER_SELECT,	NULL,			0,		false },
 		{ NEUTRINO_ICON_BUTTON_MUTE_SMALL,	LOCALE_FILEBROWSER_DELETE,	NULL,			0,		false },
 		{ NEUTRINO_ICON_BUTTON_PLAY,		LOCALE_FILEBROWSER_MARK,	NULL,			0,		false },
-		{ NEUTRINO_ICON_BUTTON_BLUE,		locale_filebrowser_filter,	NULL,			0,		false },
+		{ NEUTRINO_ICON_BUTTON_BLUE,		locale_filebrowser_filter,	NULL,			0,		false }
 	};
 
 	if (playlistmode) {

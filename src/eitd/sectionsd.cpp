@@ -1329,7 +1329,7 @@ static s_cmd_table connectionCommands[sectionsd::numberOfCommands] =
 	{	commandReadSIfromXML,			"commandReadSIfromXML"			},
 	{	commandWriteSI2XML,			"commandWriteSI2XML"			},
 	{	commandSetConfig,			"commandSetConfig"			},
-	{	commandReadSIfromXMLTV,			"commandReadSIfromXMLTV"		},
+	{	commandReadSIfromXMLTV,			"commandReadSIfromXMLTV"		}
 };
 
 bool sectionsd_parse_command(CBasicMessage::Header &rmsg, int connfd)

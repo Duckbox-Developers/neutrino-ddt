@@ -20,7 +20,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-
 static std::string keys_english[2][KEY_ROWS][KEY_COLUMNS] =
 {
 	{
@@ -71,9 +70,8 @@ static std::string keys_russian[2][KEY_ROWS][KEY_COLUMNS] =
 
 struct keyboard_layout keyboards[] =
 {
-	{ "English", "english", keys_english }
-	, { "Deutsch", "deutsch", keys_deutsch }
-	, { "Русский", "russkij", keys_russian }
+	{ "English", "english", keys_english },
+	{ "Deutsch", "deutsch", keys_deutsch },
+	{ "Русский", "russkij", keys_russian }
 };
 #define LAYOUT_COUNT (sizeof(keyboards)/sizeof(struct keyboard_layout))
-
