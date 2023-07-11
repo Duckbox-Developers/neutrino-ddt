@@ -1084,9 +1084,9 @@ void CMP3Dec::GetID3(FILE *in, CAudioMetaData *const m)
 	} const info[] =
 	{
 		{ ID3_FRAME_TITLE,  "Title"},
-		{ "TIT3",           0},	 /* Subtitle */
-		{ "TCOP",           0,},  /* Copyright */
-		{ "TPRO",           0,},  /* Produced */
+		{ "TIT3",           0},	/* Subtitle */
+		{ "TCOP",           0},	/* Copyright */
+		{ "TPRO",           0},	/* Produced */
 		{ "TCOM",           "Composer"},
 		{ ID3_FRAME_ARTIST, "Artist"},
 		{ "TPE2",           "Orchestra"},
