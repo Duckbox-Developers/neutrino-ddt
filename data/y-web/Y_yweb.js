@@ -87,4 +87,3 @@ else
 		var ext = new Y.extension();
 		ext.read_items();
 	}
-
