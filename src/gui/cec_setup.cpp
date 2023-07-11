@@ -233,4 +233,3 @@ bool CCECSetup::changeNotify(const neutrino_locale_t OptionName, void * /*data*/
 
 	return false;
 }
-

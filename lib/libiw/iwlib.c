@@ -32,42 +32,42 @@
  */
 struct	iw15_range
 {
-	__u32		throughput;
-	__u32		min_nwid;
-	__u32		max_nwid;
-	__u16		num_channels;
-	__u8		num_frequency;
-	struct iw_freq	freq[IW15_MAX_FREQUENCIES];
-	__s32		sensitivity;
+	__u32			throughput;
+	__u32			min_nwid;
+	__u32			max_nwid;
+	__u16			num_channels;
+	__u8			num_frequency;
+	struct iw_freq		freq[IW15_MAX_FREQUENCIES];
+	__s32			sensitivity;
 	struct iw_quality	max_qual;
-	__u8		num_bitrates;
-	__s32		bitrate[IW15_MAX_BITRATES];
-	__s32		min_rts;
-	__s32		max_rts;
-	__s32		min_frag;
-	__s32		max_frag;
-	__s32		min_pmp;
-	__s32		max_pmp;
-	__s32		min_pmt;
-	__s32		max_pmt;
-	__u16		pmp_flags;
-	__u16		pmt_flags;
-	__u16		pm_capa;
-	__u16		encoding_size[IW15_MAX_ENCODING_SIZES];
-	__u8		num_encoding_sizes;
-	__u8		max_encoding_tokens;
-	__u16		txpower_capa;
-	__u8		num_txpower;
-	__s32		txpower[IW15_MAX_TXPOWER];
-	__u8		we_version_compiled;
-	__u8		we_version_source;
-	__u16		retry_capa;
-	__u16		retry_flags;
-	__u16		r_time_flags;
-	__s32		min_retry;
-	__s32		max_retry;
-	__s32		min_r_time;
-	__s32		max_r_time;
+	__u8			num_bitrates;
+	__s32			bitrate[IW15_MAX_BITRATES];
+	__s32			min_rts;
+	__s32			max_rts;
+	__s32			min_frag;
+	__s32			max_frag;
+	__s32			min_pmp;
+	__s32			max_pmp;
+	__s32			min_pmt;
+	__s32			max_pmt;
+	__u16			pmp_flags;
+	__u16			pmt_flags;
+	__u16			pm_capa;
+	__u16			encoding_size[IW15_MAX_ENCODING_SIZES];
+	__u8			num_encoding_sizes;
+	__u8			max_encoding_tokens;
+	__u16			txpower_capa;
+	__u8			num_txpower;
+	__s32			txpower[IW15_MAX_TXPOWER];
+	__u8			we_version_compiled;
+	__u8			we_version_source;
+	__u16			retry_capa;
+	__u16			retry_flags;
+	__u16			r_time_flags;
+	__s32			min_retry;
+	__s32			max_retry;
+	__s32			min_r_time;
+	__s32			max_r_time;
 	struct iw_quality	avg_qual;
 };
 
@@ -93,7 +93,8 @@ union	iw_range_raw
 /**************************** VARIABLES ****************************/
 
 /* Modes as human readable strings */
-const char *const iw_operation_mode[] = { "Auto",
+const char *const iw_operation_mode[] = {
+		"Auto",
 		"Ad-Hoc",
 		"Managed",
 		"Master",
@@ -155,7 +156,7 @@ const struct iw_modul_descr	iw_modul_list[] =
 	{
 		IW_MODUL_CUSTOM, "custom",
 		"Driver specific modulation (check driver documentation)"
-	},
+	}
 };
 
 /* Disable runtime version warning in iw_get_range_info() */
@@ -248,15 +249,15 @@ iw_get_ifname(char 	*name,	/* Where to store the name */
  * or not).
  */
 void
-iw_enum_devices(int		skfd,
+iw_enum_devices(int	skfd,
 	iw_enum_handler	fn,
-	char 		*args[],
+	char		*args[],
 	int		count)
 {
 	char		buff[1024];
-	FILE 	*fh;
-	struct ifconf ifc;
-	struct ifreq *ifr;
+	FILE		*fh;
+	struct ifconf	ifc;
+	struct ifreq	*ifr;
 	int		i;
 
 #ifndef IW_RESTRIC_ENUM
@@ -341,8 +342,8 @@ int
 iw_get_kernel_we_version(void)
 {
 	char		buff[1024];
-	FILE 	*fh;
-	char 	*p;
+	FILE		*fh;
+	char		*p;
 	int		v;
 
 	/* Check if /proc/net/wireless is available */
@@ -392,9 +393,9 @@ iw_get_kernel_we_version(void)
  */
 static int
 print_iface_version_info(int	skfd,
-	char 	*ifname,
-	char 	*args[],		/* Command line args */
-	int	count)		/* Args count */
+			char	*ifname,
+			char	*args[],		/* Command line args */
+			int	count)			/* Args count */
 {
 	struct iwreq		wrq;
 	char			buffer[sizeof(iwrange) * 2];	/* Large enough */
@@ -440,7 +441,6 @@ print_iface_version_info(int	skfd,
 		fprintf(stderr, "%-8.16s  Wireless Extension version too old.\n\n",
 			ifname);
 	}
-
 
 	return (0);
 }
@@ -489,8 +489,8 @@ iw_print_version_info(const char 	*toolname)
  */
 int
 iw_get_range_info(int		skfd,
-	const char 	*ifname,
-	iwrange 	*range)
+		const char 	*ifname,
+		iwrange 	*range)
 {
 	struct iwreq		wrq;
 	char			buffer[sizeof(iwrange) * 2];	/* Large enough */
@@ -614,13 +614,13 @@ iw_get_range_info(int		skfd,
  */
 int
 iw_get_priv_info(int		skfd,
-	const char 	*ifname,
-	iwprivargs 	**ppriv)
+		const char	*ifname,
+		iwprivargs	**ppriv)
 {
 	struct iwreq		wrq;
-	iwprivargs 		*priv = NULL;	/* Not allocated yet */
+	iwprivargs		*priv = NULL;	/* Not allocated yet */
 	int			maxpriv = 16;	/* Minimum for compatibility WE<13 */
-	iwprivargs 		*newpriv;
+	iwprivargs		*newpriv;
 
 	/* Some driver may return a very large number of ioctls. Some
 	 * others a very small number. We now use a dynamic allocation
@@ -683,9 +683,9 @@ iw_get_priv_info(int		skfd,
  * what's *really* needed to configure a device...
  */
 int
-iw_get_basic_config(int			skfd,
-	const char 	*ifname,
-	wireless_config 	*info)
+iw_get_basic_config(int		skfd,
+		const char	*ifname,
+		wireless_config	*info)
 {
 	struct iwreq		wrq;
 
@@ -759,9 +759,9 @@ iw_get_basic_config(int			skfd,
  * We support only the restricted set as above...
  */
 int
-iw_set_basic_config(int			skfd,
-	const char 	*ifname,
-	wireless_config 	*info)
+iw_set_basic_config(int		skfd,
+		const char	*ifname,
+		wireless_config	*info)
 {
 	struct iwreq		wrq;
 	int			ret = 0;
@@ -1741,11 +1741,11 @@ iw_in_key_full(int		skfd,
  * Output a power management value with all attributes...
  */
 void
-iw_print_pm_value(char 	*buffer,
-	int		buflen,
-	int		value,
-	int		flags,
-	int		we_version)
+iw_print_pm_value(char	*buffer,
+		int	buflen,
+		int	value,
+		int	flags,
+		int	we_version)
 {
 	/* Check size */
 	if (buflen < 25)
@@ -1811,9 +1811,9 @@ iw_print_pm_value(char 	*buffer,
  * Output a power management mode
  */
 void
-iw_print_pm_mode(char 	*buffer,
-	int	buflen,
-	int	flags)
+iw_print_pm_mode(char	*buffer,
+		int	buflen,
+		int	flags)
 {
 	/* Check size */
 	if (buflen < 28)
@@ -1853,11 +1853,11 @@ iw_print_pm_mode(char 	*buffer,
  * Output a retry value with all attributes...
  */
 void
-iw_print_retry_value(char 	*buffer,
-	int	buflen,
-	int	value,
-	int	flags,
-	int	we_version)
+iw_print_retry_value(char	*buffer,
+		int		buflen,
+		int		value,
+		int		flags,
+		int		we_version)
 {
 	/* Check buffer size */
 	if (buflen < 20)
@@ -1925,10 +1925,10 @@ iw_print_retry_value(char 	*buffer,
  * Inspired from irdadump...
  */
 void
-iw_print_timeval(char 				*buffer,
-	int				buflen,
-	const struct timeval 		*timev,
-	const struct timezone 	*tz)
+iw_print_timeval(char			*buffer,
+		int			buflen,
+		const struct timeval	*timev,
+		const struct timezone	*tz)
 {
 	int s;
 
@@ -1950,8 +1950,8 @@ iw_print_timeval(char 				*buffer,
  * Check if interface support the right MAC address type...
  */
 int
-iw_check_mac_addr_type(int		skfd,
-	const char 	*ifname)
+iw_check_mac_addr_type(int	skfd,
+		const char	*ifname)
 {
 	struct ifreq		ifr;
 
@@ -1984,8 +1984,8 @@ iw_check_mac_addr_type(int		skfd,
  * Check if interface support the right interface address type...
  */
 int
-iw_check_if_addr_type(int		skfd,
-	const char 	*ifname)
+iw_check_if_addr_type(int	skfd,
+		const char 	*ifname)
 {
 	struct ifreq		ifr;
 
@@ -2013,8 +2013,8 @@ iw_check_if_addr_type(int		skfd,
  * Check if interface support the right address types...
  */
 int
-iw_check_addr_type(int		skfd,
-	char 	*ifname)
+iw_check_addr_type(int	skfd,
+		char	*ifname)
 {
 	/* Check the interface address type */
 	if (iw_check_if_addr_type(skfd, ifname) < 0)
@@ -2034,10 +2034,10 @@ iw_check_addr_type(int		skfd,
  * Ask the kernel for the MAC address of an interface.
  */
 int
-iw_get_mac_addr(int			skfd,
+iw_get_mac_addr(int		skfd,
 	const char 		*ifname,
-	struct ether_addr 	*eth,
-	unsigned short 	*ptype)
+	struct ether_addr	*eth,
+	unsigned short		*ptype)
 {
 	struct ifreq	ifr;
 	int		ret;
@@ -2060,10 +2060,10 @@ iw_get_mac_addr(int			skfd,
  * Display an arbitrary length MAC address in readable format.
  */
 char *
-iw_mac_ntop(const unsigned char 	*mac,
-	int				maclen,
-	char 			*buf,
-	int				buflen)
+iw_mac_ntop(const unsigned char	*mac,
+		int		maclen,
+		char		*buf,
+		int		buflen)
 {
 	int	i;
 
@@ -2085,8 +2085,8 @@ iw_mac_ntop(const unsigned char 	*mac,
  * Display an Ethernet address in readable format.
  */
 void
-iw_ether_ntop(const struct ether_addr 	*eth,
-	char 			*buf)
+iw_ether_ntop(const struct ether_addr	*eth,
+		char			*buf)
 {
 	sprintf(buf, "%02X:%02X:%02X:%02X:%02X:%02X",
 		eth->ether_addr_octet[0], eth->ether_addr_octet[1],
@@ -2101,8 +2101,8 @@ iw_ether_ntop(const struct ether_addr 	*eth,
  * chipset report, and the driver doesn't filter it.
  */
 char *
-iw_sawap_ntop(const struct sockaddr 	*sap,
-	char 			*buf)
+iw_sawap_ntop(const struct sockaddr	*sap,
+		char			*buf)
 {
 	const struct ether_addr ether_zero = {{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }};
 	const struct ether_addr ether_bcast = {{ 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF }};
@@ -2126,11 +2126,11 @@ iw_sawap_ntop(const struct sockaddr 	*sap,
  * Return address size.
  */
 int
-iw_mac_aton(const char 	*orig,
-	unsigned char 	*mac,
-	int			macmax)
+iw_mac_aton(const char	*orig,
+	unsigned char	*mac,
+	int		macmax)
 {
-	const char 	*p = orig;
+	const char	*p = orig;
 	int		maclen = 0;
 
 	/* Loop on all bytes of the string */
@@ -2247,8 +2247,8 @@ iw_in_inet(char *name, struct sockaddr *sap)
  */
 int
 iw_in_addr(int		skfd,
-	const char 	*ifname,
-	char 	*bufp,
+	const char	*ifname,
+	char		*bufp,
 	struct sockaddr *sap)
 {
 	/* Check if it is a hardware or IP address */
@@ -2340,7 +2340,7 @@ static const int priv_type_size[] =
 	sizeof(__u32),			/* IW_PRIV_TYPE_INT */
 	sizeof(struct iw_freq),		/* IW_PRIV_TYPE_FLOAT */
 	sizeof(struct sockaddr),	/* IW_PRIV_TYPE_ADDR */
-	0,				/* Not defined */
+	0				/* Not defined */
 };
 
 /*------------------------------------------------------------------*/
@@ -2637,7 +2637,7 @@ static const struct iw_ioctl_description standard_ioctl_descr[] =
 		.token_size	= 1,
 		.min_tokens	= sizeof(struct iw_pmksa),
 		.max_tokens	= sizeof(struct iw_pmksa),
-	},
+	}
 };
 static const unsigned int standard_ioctl_num = (sizeof(standard_ioctl_descr) /
 		sizeof(struct iw_ioctl_description));
@@ -2689,7 +2689,7 @@ static const struct iw_ioctl_description standard_event_descr[] =
 		.header_type	= IW_HEADER_TYPE_POINT,
 		.token_size	= 1,
 		.max_tokens	= sizeof(struct iw_pmkid_cand),
-	},
+	}
 };
 static const unsigned int standard_event_num = (sizeof(standard_event_descr) /
 		sizeof(struct iw_ioctl_description));
@@ -2707,7 +2707,7 @@ static const int event_type_size[] =
 	0,
 	IW_EV_POINT_PK_LEN,	/* Without variable payload */
 	IW_EV_PARAM_PK_LEN,	/* IW_HEADER_TYPE_PARAM */
-	IW_EV_QUAL_PK_LEN,	/* IW_HEADER_TYPE_QUAL */
+	IW_EV_QUAL_PK_LEN	/* IW_HEADER_TYPE_QUAL */
 };
 
 /*------------------------------------------------------------------*/
@@ -2716,9 +2716,9 @@ static const int event_type_size[] =
  * individual events from the event stream.
  */
 void
-iw_init_event_stream(struct stream_descr 	*stream,	/* Stream of events */
-	char 			*data,
-	int			len)
+iw_init_event_stream(struct stream_descr	*stream,	/* Stream of events */
+			char			*data,
+			int			len)
 {
 	/* Cleanup */
 	memset((char *) stream, '\0', sizeof(struct stream_descr));
@@ -2733,16 +2733,16 @@ iw_init_event_stream(struct stream_descr 	*stream,	/* Stream of events */
  * Extract the next event from the event stream.
  */
 int
-iw_extract_event_stream(struct stream_descr 	*stream,	/* Stream of events */
-	struct iw_event 	*iwe,	/* Extracted event */
-	int			we_version)
+iw_extract_event_stream(struct stream_descr	*stream,	/* Stream of events */
+			struct iw_event		*iwe,		/* Extracted event */
+			int			we_version)
 {
-	const struct iw_ioctl_description 	*descr = NULL;
-	int		event_type = 0;
-	unsigned int	event_len = 1;		/* Invalid */
-	char 	*pointer;
+	const struct iw_ioctl_description	*descr = NULL;
+	int					event_type = 0;
+	unsigned int				event_len = 1;	/* Invalid */
+	char					*pointer;
 	/* Don't "optimise" the following variable, it will crash */
-	unsigned	cmd_index;		/* *MUST* be unsigned */
+	unsigned				cmd_index;	/* *MUST* be unsigned */
 
 	/* Check for end of stream */
 	if ((stream->current + IW_EV_LCP_PK_LEN) > stream->end)
@@ -2966,10 +2966,10 @@ iw_extract_event_stream(struct stream_descr 	*stream,	/* Stream of events */
  * Process/store one element from the scanning results in wireless_scan
  */
 static inline struct wireless_scan *
-iw_process_scanning_token(struct iw_event 		*event,
-	struct wireless_scan 	*wscan)
+iw_process_scanning_token(struct iw_event	*event,
+			struct wireless_scan 	*wscan)
 {
-	struct wireless_scan 	*oldwscan;
+	struct wireless_scan	*oldwscan;
 
 	/* Now, let's decode the event */
 	switch (event->cmd)
@@ -3055,9 +3055,9 @@ iw_process_scanning_token(struct iw_event 		*event,
  */
 int
 iw_process_scan(int			skfd,
-	char 			*ifname,
-	int			we_version,
-	wireless_scan_head 	*context)
+		char			*ifname,
+		int			we_version,
+		wireless_scan_head	*context)
 {
 	struct iwreq		wrq;
 	unsigned char 	*buffer = NULL;		/* Results */
@@ -3210,9 +3210,9 @@ realloc:
  */
 int
 iw_scan(int			skfd,
-	char 			*ifname,
+	char			*ifname,
 	int			we_version,
-	wireless_scan_head 	*context)
+	wireless_scan_head	*context)
 {
 	int		delay;		/* in ms */
 

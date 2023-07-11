@@ -340,7 +340,7 @@ const unsigned short int nationaltable23[14][2] =
 	{ '#',    0x00A4 }, /* A    RO    */
 	{ '#',    0x00CB }, /* B SR/HR/SL */
 	{ '#',    0x00A4 }, /* C SV/FI/HU */
-	{ 0x20A4, 0x011F }, /* D    TR    */
+	{ 0x20A4, 0x011F }  /* D    TR    */
 };
 const unsigned short int nationaltable40[14] =
 {
@@ -357,7 +357,7 @@ const unsigned short int nationaltable40[14] =
 	0x0162, /* A    RO    */
 	0x010C, /* B SR/HR/SL */
 	0x00C9, /* C SV/FI/HU */
-	0x0130, /* D    TR    */
+	0x0130  /* D    TR    */
 };
 const unsigned short int nationaltable5b[14][6] =
 {
@@ -374,7 +374,7 @@ const unsigned short int nationaltable5b[14][6] =
 	{ 0x00C2, 0x015E, 0x01CD, 0x01CF, 0x0131, 0x0163 }, /* A    RO    */
 	{ 0x0106, 0x017D, 0x00D0, 0x0160, 0x0451, 0x010D }, /* B SR/HR/SL */
 	{ 0x00C4, 0x00D6, 0x00C5, 0x00DC,    '_', 0x00E9 }, /* C SV/FI/HU */
-	{ 0x015E, 0x00D6, 0x00C7, 0x00DC, 0x011E, 0x0131 }, /* D    TR    */
+	{ 0x015E, 0x00D6, 0x00C7, 0x00DC, 0x011E, 0x0131 }  /* D    TR    */
 };
 const unsigned short int nationaltable7b[14][4] =
 {
@@ -391,7 +391,7 @@ const unsigned short int nationaltable7b[14][4] =
 	{ 0x00E2, 0x015F, 0x01CE, 0x00EE }, /* A    RO    */
 	{ 0x0107, 0x017E, 0x0111, 0x0161 }, /* B SR/HR/SL */
 	{ 0x00E4, 0x00F6, 0x00E5, 0x00FC }, /* C SV/FI/HU */
-	{ 0x015F, 0x00F6, 0x00E7, 0x00FC }, /* D    TR    */
+	{ 0x015F, 0x00F6, 0x00E7, 0x00FC }  /* D    TR    */
 };
 
 const char countrystring[] =
@@ -496,7 +496,7 @@ struct _pid_table
 unsigned char restoreaudio = 0;
 
 #define MAXMENULANGUAGE 10 /* 0 deutsch, 1 englisch, 2 franzˆsisch, 3 niederl‰ndisch, 4 griechisch, 5 italienisch, 6 polnisch, 7 schwedisch, 8 suomi, 9 portuguesa, 10 russian */
-const int menusubset[] =   { NAT_DE, NAT_UK, NAT_FR, NAT_UK, NAT_GR, NAT_IT, NAT_PL, NAT_SW, NAT_SW,   NAT_SP,      NAT_RB};                                                //FIXME
+const int menusubset[] =   { NAT_DE, NAT_UK, NAT_FR, NAT_UK, NAT_GR, NAT_IT, NAT_PL, NAT_SW, NAT_SW, NAT_SP, NAT_RB}; //FIXME
 
 #define Menu_StartX (StartX + fontwidth*9/2)
 #define Menu_StartY (StartY + (25 - Menu_Height) * fontheight / 2)
@@ -932,7 +932,7 @@ const char catchmenutext[][81] =
 	{
 		"        ÌÔÓ w&bratx  ÒÚ pokazatx       "
 		"0000000011110000000000110000000000000000"
-	},
+	}
 };
 
 const char message_3[][39] =
@@ -947,7 +947,7 @@ const char message_3[][39] =
 	{ "„    s|ker efter TextTV tj{nster    ‰È" },
 	{ "„   etsit{{n Teksti-TV -palvelua    ‰È" },
 	{ "„  Procurar servicos de teletexto   ‰È" },
-	{ "„   W&polnqetsq poisk teleteksta    ‰È" },
+	{ "„   W&polnqetsq poisk teleteksta    ‰È" }
 };
 const char message_3_blank[] = "„                                   ‰È";
 const char message_7[][39] =
@@ -962,7 +962,7 @@ const char message_7[][39] =
 	{ "„ ingen TextTV p} denna transponder ‰È" },
 	{ "„    Ei Teksti-TV:t{ l{hettimell{   ‰È" },
 	{ "„  nao ha teletexto no transponder  ‰È" },
-	{ "„  Na transpondere net teleteksta   ‰È" },
+	{ "„  Na transpondere net teleteksta   ‰È" }
 };
 const char message_8[][39] =
 {
@@ -976,7 +976,7 @@ const char message_8[][39] =
 	{ "„  v{ntar p} mottagning av sida 100 ‰È" },
 	{ "„        Odotetaan sivua 100        ‰È" },
 	{ "„   esperando recepcao na pag 100   ‰È" },
-	{ "„   Ovidanie priema stranic& 100    ‰È" },
+	{ "„   Ovidanie priema stranic& 100    ‰È" }
 };
 const char message8pagecolumn[] = /* last(!) column of page to show in each language */
 {
@@ -1124,7 +1124,7 @@ fb_pixel_t bgra[SIZECOLTABLE];
 unsigned short rd0[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x00 << 8, 0x00 << 8, 0x00 << 8, 0,      0      };
 unsigned short gn0[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x20 << 8, 0x10 << 8, 0x20 << 8, 0,      0      };
 unsigned short bl0[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x40 << 8, 0x20 << 8, 0x40 << 8, 0,      0      };
-unsigned short tr0[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x0000, 0x0000, 0x0A00, 0xFFFF, 0x3000 };
+unsigned short tr0[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x0000,    0x0000,    0x0A00,    0xFFFF, 0x3000 };
 struct fb_cmap colormap_0 = {0, SIZECOLTABLE, rd0, gn0, bl0, tr0};
 
 /* tables for color table remapping, first entry (no remapping) skipped, offsets for color index */
@@ -1357,7 +1357,7 @@ const char lcd_layout[] =
 	_X__ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i __X_,
 	__X_ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i _X__,
 	___X i X___, ____ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i ____, ____ i ____, ___X i X___,
-	____ i _XXX, XXXX i XXXX, XXXX i XXXX, XXXX i XXXX, XXXX i XXXX, XXXX i XXXX, XXXX i XXXX, XXXX i XXXX, XXXX i XXXX, XXXX i XXXX, XXXX i XXXX, XXXX i XXXX, XXXX i XXXX, XXXX i XXXX, XXX_ i ____,
+	____ i _XXX, XXXX i XXXX, XXXX i XXXX, XXXX i XXXX, XXXX i XXXX, XXXX i XXXX, XXXX i XXXX, XXXX i XXXX, XXXX i XXXX, XXXX i XXXX, XXXX i XXXX, XXXX i XXXX, XXXX i XXXX, XXXX i XXXX, XXX_ i ____
 
 #undef i
 };
@@ -1591,7 +1591,7 @@ const char lcd_digits[] =
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 #endif
 /* functions */

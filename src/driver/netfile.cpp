@@ -2099,4 +2099,3 @@ int base64_encode(char *dest, const char *src)
 
 	return retval;
 }
-
