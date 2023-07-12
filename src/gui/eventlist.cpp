@@ -1440,4 +1440,3 @@ bool CEventFinderMenu::changeNotify(const neutrino_locale_t OptionName, void *)
 	}
 	return false;
 }
-

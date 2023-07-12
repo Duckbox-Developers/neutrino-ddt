@@ -188,4 +188,3 @@ inline void CStartUpWizard::killBackgroundLogo()
 {
 	CFrameBuffer::getInstance()->stopFrame();
 }
-

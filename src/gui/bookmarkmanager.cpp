@@ -287,4 +287,3 @@ void CBookmarkManager::paint()
 	visible = true;
 	frameBuffer->blit();
 }
-

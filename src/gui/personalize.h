@@ -258,7 +258,7 @@ typedef struct feat_keys_t
 {
 	neutrino_locale_t locale_name;
 	neutrino_msg_t key;
-}feat_keys_struct_t;
+} feat_keys_struct_t;
 
 const struct feat_keys_t feat_key[CPersonalizeGui::PERSONALIZE_FEAT_KEY_MAX] =
 {
@@ -270,4 +270,3 @@ const struct feat_keys_t feat_key[CPersonalizeGui::PERSONALIZE_FEAT_KEY_MAX] =
 };
 
 #endif
-

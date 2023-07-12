@@ -34,9 +34,9 @@
 */
 
 
-/****************************************************************************
- * Includes																	*
- ****************************************************************************/
+/************
+ * Includes *
+ ************/
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -89,13 +89,13 @@ void id3_finish_file(struct id3_file *file);
 
 #define ProgName "CMP3Dec"
 
-/****************************************************************************
- * Global variables.														*
- ****************************************************************************/
+/*********************
+ * Global variables. *
+ *********************/
 
-/****************************************************************************
- * Return an error string associated with a mad error code.					*
- ****************************************************************************/
+/************************************************************
+ * Return an error string associated with a mad error code. *
+ ************************************************************/
 /* Mad version 0.14.2b introduced the mad_stream_errorstr() function.
  * For previous library versions a replacement is provided below.
  */
@@ -1084,9 +1084,9 @@ void CMP3Dec::GetID3(FILE *in, CAudioMetaData *const m)
 	} const info[] =
 	{
 		{ ID3_FRAME_TITLE,  "Title"},
-		{ "TIT3",           0},	 /* Subtitle */
-		{ "TCOP",           0,},  /* Copyright */
-		{ "TPRO",           0,},  /* Produced */
+		{ "TIT3",           0},	/* Subtitle */
+		{ "TCOP",           0},	/* Copyright */
+		{ "TPRO",           0},	/* Produced */
 		{ "TCOM",           "Composer"},
 		{ ID3_FRAME_ARTIST, "Artist"},
 		{ "TPE2",           "Orchestra"},
