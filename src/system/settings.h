@@ -867,13 +867,13 @@ struct SNeutrinoSettings
 	int picviewer_scaling;
 
 	//audioplayer
-	int   audioplayer_display;
-	int   audioplayer_follow;
-	int   audioplayer_highprio;
-	int   audioplayer_select_title_by_name;
-	int   audioplayer_repeat_on;
-	int   audioplayer_show_playlist;
-	int   audioplayer_enable_sc_metadata;
+	int audioplayer_display;
+	int audioplayer_follow;
+	int audioplayer_highprio;
+	int audioplayer_select_title_by_name;
+	int audioplayer_repeat_on;
+	int audioplayer_show_playlist;
+	int audioplayer_enable_sc_metadata;
 	std::string shoutcast_dev_id;
 	int shoutcast_enabled;
 
@@ -884,10 +884,11 @@ struct SNeutrinoSettings
 	int filebrowser_use_filter;
 
 	//movieplayer
-	int   movieplayer_repeat_on;
+	int movieplayer_repeat_on;
 	int movieplayer_display_playtime;
 	std::string tmdb_api_key;
 	int tmdb_enabled;
+	int eof_cnt;
 
 	//zapit setup
 	std::string StartChannelTV;
