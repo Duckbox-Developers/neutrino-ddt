@@ -157,6 +157,8 @@ int CMediaPlayerSetup::showMediaPlayerSetup()
 	mc->setHint("", LOCALE_MENU_HINT_MOVIEPLAYER_DISPLAY_PLAYTIME);
 	mediaSetup->addItem(mc);
 
+	mediaSetup->addItem(GenericMenuSeparatorLine);
+
 	CMenuOptionNumberChooser * ef = new CMenuOptionNumberChooser(LOCALE_MOVIEPLAYER_EOF_CNT, &g_settings.eof_cnt, true, 1, 10, NULL);
 //	ef->setHint("", LOCALE_MENU_HINT_MOVIEPLAYER_EOF_CNT);
 	mediaSetup->addItem(ef);
