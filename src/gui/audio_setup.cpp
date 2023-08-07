@@ -87,7 +87,7 @@ int CAudioSetup::exec(CMenuTarget *parent, const std::string &actionKey)
 	return res;
 }
 
-#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
+#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
 #define AUDIOMENU_ANALOGOUT_OPTION_COUNT 3
 const CMenuOptionChooser::keyval AUDIOMENU_ANALOGOUT_OPTIONS[AUDIOMENU_ANALOGOUT_OPTION_COUNT] =
 {
@@ -122,7 +122,7 @@ int CAudioSetup::showAudioSetup()
 	CMenuWidget *audioSettings = new CMenuWidget(LOCALE_MAINSETTINGS_HEAD, NEUTRINO_ICON_SETTINGS, width);
 	audioSettings->setSelected(selected);
 	audioSettings->setWizardMode(is_wizard);
-#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
+#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
 	//analog modes (stereo, mono l/r...)
 	CMenuOptionChooser *as_oj_analogmode 	= new CMenuOptionChooser(LOCALE_AUDIOMENU_ANALOG_MODE, &g_settings.audio_AnalogMode, AUDIOMENU_ANALOGOUT_OPTIONS, AUDIOMENU_ANALOGOUT_OPTION_COUNT, true, audioSetupNotifier);
 	as_oj_analogmode->setHint("", LOCALE_MENU_HINT_AUDIO_ANALOG_MODE);
@@ -187,7 +187,7 @@ int CAudioSetup::showAudioSetup()
 	//paint items
 	audioSettings->addIntroItems(LOCALE_MAINSETTINGS_AUDIO);
 	//---------------------------------------------------------
-#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
+#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
 	audioSettings->addItem(as_oj_analogmode);
 	audioSettings->addItem(GenericMenuSeparatorLine);
 	//---------------------------------------------------------
