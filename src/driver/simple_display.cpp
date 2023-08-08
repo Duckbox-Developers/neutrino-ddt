@@ -1004,6 +1004,9 @@ void CLCD::ShowIcon(fp_icon i, bool on)
 
 void CLCD::ShowText(const char *str, bool update_timestamp)
 {
+#if BOXMODEL_VUULTIMO
+	return;
+#else
 	int fd = dev_open();
 	int len = strlen(str);
 	if (fd < 0)
@@ -1019,6 +1022,7 @@ void CLCD::ShowText(const char *str, bool update_timestamp)
 		if (len > g_info.hw_caps->display_xres)
 			last_display += (len - g_info.hw_caps->display_xres) / 5;
 	}
+#endif
 }
 
 void CLCD::setEPGTitle(const std::string)
