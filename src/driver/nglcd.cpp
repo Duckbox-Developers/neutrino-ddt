@@ -139,7 +139,10 @@ void nGLCD::LcdAnalogClock(int posx, int posy, int dia)
 	mAngleInRad = ((6 * tm_) * (2 * pi_ / 360));
 	mAngleSave = mAngleInRad;
 	mAngleInRad -= pi_ / 2;
-#if BOXMODEL_E4HDULTRA
+#if BOXMODEL_VUULTIMO
+	mx_ = int((dia * 0.13 * cos(mAngleInRad)));
+	my_ = int((dia * 0.13 * sin(mAngleInRad)));
+#elif BOXMODEL_E4HDULTRA
 	mx_ = int((dia * 0.30 * cos(mAngleInRad)));
 	my_ = int((dia * 0.30 * sin(mAngleInRad)));
 #elif BOXMODEL_VUUNO4KSE
@@ -153,7 +156,10 @@ void nGLCD::LcdAnalogClock(int posx, int posy, int dia)
 	hAngleInRad = ((30 * th_) * (2 * pi_ / 360));
 	hAngleInRad += mAngleSave / 12;
 	hAngleInRad -= pi_ / 2;
-#if BOXMODEL_E4HDULTRA
+#if BOXMODEL_VUULTIMO
+	hx_ = int((dia * 0.08 * cos(hAngleInRad)));
+	hy_ = int((dia * 0.08 * sin(hAngleInRad)));
+#elif BOXMODEL_E4HDULTRA
 	hx_ = int((dia * 0.20 * cos(hAngleInRad)));
 	hy_ = int((dia * 0.20 * sin(hAngleInRad)));
 #elif BOXMODEL_VUUNO4KSE
