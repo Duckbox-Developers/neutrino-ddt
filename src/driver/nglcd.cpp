@@ -785,8 +785,8 @@ void nGLCD::Run(void)
 					Channel = g_Locale->getText(LOCALE_GLCD_VOLUME);
 					ChannelWidth = font_channel.Width(Channel);
 					doScrollChannel = ChannelWidth > bitmap->Width() - 4;
-					scrollChannelSkip = 0;
 					scrollChannelForward = true;
+					scrollChannelSkip = 0;
 					if (doScrollChannel)
 					{
 						scrollChannelOffset = bitmap->Width() / g_settings.glcd_scroll_speed;
@@ -809,8 +809,8 @@ void nGLCD::Run(void)
 					Epg = stagingEpg;
 					EpgWidth = font_epg.Width(Epg);
 					doScrollEpg = EpgWidth > bitmap->Width() - 4;
-					scrollEpgSkip = 0;
 					scrollEpgForward = true;
+					scrollEpgSkip = 0;
 					if (doScrollEpg)
 					{
 						scrollEpgOffset = bitmap->Width() / g_settings.glcd_scroll_speed;
@@ -824,8 +824,8 @@ void nGLCD::Run(void)
 					Channel = stagingChannel;
 					ChannelWidth = font_channel.Width(Channel);
 					doScrollChannel = ChannelWidth > bitmap->Width() - 4;
-					scrollChannelSkip = 0;
 					scrollChannelForward = true;
+					scrollChannelSkip = 0;
 					if (doScrollChannel)
 					{
 						scrollChannelOffset = bitmap->Width() / g_settings.glcd_scroll_speed;
@@ -906,6 +906,10 @@ void nGLCD::Run(void)
 #if 0 // FIXME: scroll problem, high load
 					doScrollEpg = EpgWidth > bitmap->Width() - 4;
 					scrollEpgForward = true;
+#else
+					doScrollEpg = false;
+					scrollEpgForward = false;
+#endif
 					scrollEpgSkip = 0;
 					if (doScrollEpg)
 					{
@@ -913,7 +917,6 @@ void nGLCD::Run(void)
 						EpgWidth += scrollEpgOffset;
 					}
 					else
-#endif
 						scrollEpgOffset = 0;
 				}
 
