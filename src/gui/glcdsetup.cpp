@@ -162,43 +162,44 @@ bool GLCD_Menu::changeNotify (const neutrino_locale_t OptionName, void *Data)
 	if (!Data)
 		return false;
 	nGLCD *nglcd = nGLCD::getInstance();
-	switch(OptionName) {
-	case LOCALE_GLCD_SELECT_FG:
-		g_settings.glcd_color_fg = GLCD_Menu::index2color(*((int *) Data));
-		break;
-	case LOCALE_GLCD_SELECT_BG:
-		g_settings.glcd_color_bg = GLCD_Menu::index2color(*((int *) Data));
-		break;
-	case LOCALE_GLCD_SELECT_BAR:
-		g_settings.glcd_color_bar = GLCD_Menu::index2color(*((int *) Data));
-		break;
-	case LOCALE_GLCD_ENABLE:
-		if (g_settings.glcd_enable)
-			nglcd->Resume();
-		else
-			nglcd->Suspend();
-		return true;
-	case LOCALE_GLCD_MIRROR_OSD:
-		nglcd->MirrorOSD(*((int *) Data));
-		break;
-	case LOCALE_GLCD_MIRROR_VIDEO:
-		nglcd->Update();
-		break;
-	case LOCALE_GLCD_BRIGHTNESS:
-	case LOCALE_GLCD_BRIGHTNESS_STANDBY:
-	case LOCALE_GLCD_SHOW_LOGO:
-	case LOCALE_GLCD_SIZE_BAR:
-	case LOCALE_GLCD_SIZE_CHANNEL:
-	case LOCALE_GLCD_SIZE_EPG:
-	case LOCALE_GLCD_SIZE_LOGO:
-	case LOCALE_GLCD_SIZE_TIME:
-	case LOCALE_GLCD_SIZE_TIME_STANDBY:
-	case LOCALE_GLCD_TIME_IN_STANDBY:
-	case LOCALE_GLCD_SCROLL:
-	case LOCALE_GLCD_SCROLL_SPEED:
-		break;
-	default:
-		return false;
+	switch(OptionName)
+	{
+		case LOCALE_GLCD_SELECT_FG:
+			g_settings.glcd_color_fg = GLCD_Menu::index2color(*((int *) Data));
+			break;
+		case LOCALE_GLCD_SELECT_BG:
+			g_settings.glcd_color_bg = GLCD_Menu::index2color(*((int *) Data));
+			break;
+		case LOCALE_GLCD_SELECT_BAR:
+			g_settings.glcd_color_bar = GLCD_Menu::index2color(*((int *) Data));
+			break;
+		case LOCALE_GLCD_ENABLE:
+			if (g_settings.glcd_enable)
+				nglcd->Resume();
+			else
+				nglcd->Suspend();
+			return true;
+		case LOCALE_GLCD_MIRROR_OSD:
+			nglcd->MirrorOSD(*((int *) Data));
+			break;
+		case LOCALE_GLCD_MIRROR_VIDEO:
+			nglcd->Update();
+			break;
+		case LOCALE_GLCD_BRIGHTNESS:
+		case LOCALE_GLCD_BRIGHTNESS_STANDBY:
+		case LOCALE_GLCD_SHOW_LOGO:
+		case LOCALE_GLCD_SIZE_BAR:
+		case LOCALE_GLCD_SIZE_CHANNEL:
+		case LOCALE_GLCD_SIZE_EPG:
+		case LOCALE_GLCD_SIZE_LOGO:
+		case LOCALE_GLCD_SIZE_TIME:
+		case LOCALE_GLCD_SIZE_TIME_STANDBY:
+		case LOCALE_GLCD_TIME_IN_STANDBY:
+		case LOCALE_GLCD_SCROLL:
+		case LOCALE_GLCD_SCROLL_SPEED:
+			break;
+		default:
+			return false;
 	}
 	if (((OptionName == LOCALE_GLCD_TIME_IN_STANDBY || OptionName == LOCALE_GLCD_BRIGHTNESS_STANDBY) && g_settings.glcd_percent_time_standby) || OptionName == LOCALE_GLCD_SIZE_TIME_STANDBY)
 		nglcd->StandbyMode(true);
