@@ -784,8 +784,16 @@ void nGLCD::Run(void)
 				{
 					Channel = g_Locale->getText(LOCALE_GLCD_VOLUME);
 					ChannelWidth = font_channel.Width(Channel);
-					doScrollChannel = ChannelWidth > bitmap->Width() - 4;
-					scrollChannelForward = true;
+					if (g_settings.glcd_scroll)
+					{
+						doScrollChannel = ChannelWidth > bitmap->Width() - 4;
+						scrollChannelForward = true;
+					}
+					else
+					{
+						doScrollChannel = false;
+						scrollChannelForward = false;
+					}
 					scrollChannelSkip = 0;
 					if (doScrollChannel)
 					{
@@ -808,8 +816,16 @@ void nGLCD::Run(void)
 				{
 					Epg = stagingEpg;
 					EpgWidth = font_epg.Width(Epg);
-					doScrollEpg = EpgWidth > bitmap->Width() - 4;
-					scrollEpgForward = true;
+					if (g_settings.glcd_scroll)
+					{
+						doScrollEpg = EpgWidth > bitmap->Width() - 4;
+						scrollEpgForward = true;
+					}
+					else
+					{
+						doScrollEpg = false;
+						scrollEpgForward = false;
+					}
 					scrollEpgSkip = 0;
 					if (doScrollEpg)
 					{
@@ -823,8 +839,16 @@ void nGLCD::Run(void)
 				{
 					Channel = stagingChannel;
 					ChannelWidth = font_channel.Width(Channel);
-					doScrollChannel = ChannelWidth > bitmap->Width() - 4;
-					scrollChannelForward = true;
+					if (g_settings.glcd_scroll)
+					{
+						doScrollChannel = ChannelWidth > bitmap->Width() - 4;
+						scrollChannelForward = true;
+					}
+					else
+					{
+						doScrollChannel = false;
+						scrollChannelForward = false;
+					}
 					scrollChannelSkip = 0;
 					if (doScrollChannel)
 					{
@@ -854,8 +878,16 @@ void nGLCD::Run(void)
 					EpgWidth = 0;
 					Scale = 0;
 					doScrollEpg = false;
-					doScrollChannel = ChannelWidth > bitmap->Width() - 4;
-					scrollChannelForward = true;
+					if (g_settings.glcd_scroll)
+					{
+						doScrollChannel = ChannelWidth > bitmap->Width() - 4;
+						scrollChannelForward = true;
+					}
+					else
+					{
+						doScrollChannel = false;
+						scrollChannelForward = false;
+					}
 					scrollChannelSkip = 0;
 					if (doScrollChannel)
 					{
@@ -876,8 +908,16 @@ void nGLCD::Run(void)
 				{
 					Epg = info_CurrentNext.current_name;
 					EpgWidth = font_epg.Width(Epg);
-					doScrollEpg = EpgWidth > bitmap->Width() - 4;
-					scrollEpgForward = true;
+					if (g_settings.glcd_scroll)
+					{
+						doScrollEpg = EpgWidth > bitmap->Width() - 4;
+						scrollEpgForward = true;
+					}
+					else
+					{
+						doScrollEpg = false;
+						scrollEpgForward = false;
+					}
 					scrollEpgSkip = 0;
 					if (doScrollEpg)
 					{

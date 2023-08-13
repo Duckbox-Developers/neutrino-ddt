@@ -814,6 +814,7 @@ const char *locale_real_names[] =
 	"glcd.mirror_osd",
 	"glcd.mirror_video",
 	"glcd.restart",
+	"glcd.scroll",
 	"glcd.scroll_speed",
 	"glcd.select.bar",
 	"glcd.select.bg",
