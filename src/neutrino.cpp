@@ -695,6 +695,7 @@ if (g_info.hw_caps->can_shutdown)
 	g_settings.glcd_brightness = configfile.getInt32("glcd_brightness", 75);
 	g_settings.glcd_brightness_standby = configfile.getInt32("glcd_brightness_standby", 45);
 #endif
+	g_settings.glcd_scroll = configfile.getInt32("glcd_scroll", 1);
 #if BOXMODEL_VUUNO4KSE || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO
 	g_settings.glcd_scroll_speed = configfile.getInt32("glcd_scroll_speed", 1);
 #elif BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUDUO4KSE || BOXMODEL_VUULTIMO4K
@@ -1484,6 +1485,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setString("glcd_font", g_settings.glcd_font);
 	configfile.setInt32("glcd_brightness", g_settings.glcd_brightness);
 	configfile.setInt32("glcd_brightness_standby", g_settings.glcd_brightness_standby);
+	configfile.setInt32("glcd_scroll", g_settings.glcd_scroll);
 	configfile.setInt32("glcd_scroll_speed", g_settings.glcd_scroll_speed);
 	configfile.setInt32("glcd_selected_config", g_settings.glcd_selected_config);
 #endif

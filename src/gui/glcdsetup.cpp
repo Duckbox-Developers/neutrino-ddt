@@ -194,6 +194,7 @@ bool GLCD_Menu::changeNotify (const neutrino_locale_t OptionName, void *Data)
 	case LOCALE_GLCD_SIZE_TIME:
 	case LOCALE_GLCD_SIZE_TIME_STANDBY:
 	case LOCALE_GLCD_TIME_IN_STANDBY:
+	case LOCALE_GLCD_SCROLL:
 	case LOCALE_GLCD_SCROLL_SPEED:
 		break;
 	default:
@@ -268,6 +269,9 @@ void GLCD_Menu::GLCD_Menu_Settings()
 	m.addItem(new CMenuOptionNumberChooser(LOCALE_GLCD_BRIGHTNESS_STANDBY,
 				&g_settings.glcd_brightness_standby, true, 0, 100, this));
 	m.addItem(GenericMenuSeparatorLine);
+	m.addItem(new CMenuOptionChooser(LOCALE_GLCD_SCROLL, &g_settings.glcd_scroll,
+				OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this,
+				CRCInput::convertDigitToKey(shortcut++)));
 	m.addItem(new CMenuOptionNumberChooser(LOCALE_GLCD_SCROLL_SPEED,
 				&g_settings.glcd_scroll_speed, true, 1, 63, this));
 	m.addItem(GenericMenuSeparatorLine);

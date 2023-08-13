@@ -787,7 +787,8 @@ glcd.head GraphLCD
 glcd.mirror_osd OSD-Menü auf GraphLCD anzeigen
 glcd.mirror_video Videobild auf GraphLCD anzeigen
 glcd.restart Neu erkennen
-glcd.scroll_speed Scroll-Geschwindigkeit
+glcd.scroll Laufschrift
+glcd.scroll_speed Geschwindigkeit der Laufschrift
 glcd.select.bar Fortschrittsbalken-Farbe
 glcd.select.bg Hintergrund-Farbe
 glcd.select.fg Vordergrund-Farbe

@@ -815,6 +815,7 @@ struct SNeutrinoSettings
 	int glcd_show_logo;
 	int glcd_brightness;
 	int glcd_brightness_standby;
+	int glcd_scroll;
 	int glcd_scroll_speed;
 	int glcd_selected_config;
 #endif
