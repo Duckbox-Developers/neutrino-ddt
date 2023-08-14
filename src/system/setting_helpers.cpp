@@ -309,7 +309,7 @@ bool CAudioSetupNotifier::changeNotify(const neutrino_locale_t OptionName, void 
 #endif
 {
 	//printf("notify: %d\n", OptionName);
-#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
+#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUUNO || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
 	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_ANALOG_MODE))
 	{
 		g_Zapit->setAudioMode(g_settings.audio_AnalogMode);
@@ -642,7 +642,7 @@ int CDataResetNotifier::exec(CMenuTarget * /*parent*/, const std::string &action
 	return ret;
 }
 
-#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO
+#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUUNO
 #if HAVE_DUCKBOX_HARDWARE
 void CFanControlNotifier::setSpeed(unsigned int speed)
 {
@@ -716,7 +716,7 @@ void CFanControlNotifier::setSpeed(unsigned int __attribute__((unused)) speed)
 	}
 	close(cfd);
 #endif
-#if defined (BOXMODEL_VUDUO2) || defined (BOXMODEL_VUULTIMO)
+#if defined (BOXMODEL_VUDUO2) || defined (BOXMODEL_VUULTIMO) || defined (BOXMODEL_VUUNO)
 	int cfd;
 	cfd = open("/proc/stb/fp/fan_pwm", O_WRONLY);
 	if (cfd < 0)
