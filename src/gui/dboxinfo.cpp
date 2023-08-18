@@ -249,6 +249,7 @@ static std::string bytes2string(uint64_t bytes, bool binary)
 
 void CDBoxInfoWidget::paint()
 {
+	int frontend_count = CFEManager::getInstance()->getFrontendCount();
 	height = hheight;
 	height += mheight/2;	// space
 	int cpuload_y0 = height;
@@ -257,12 +258,12 @@ void CDBoxInfoWidget::paint()
 	height += mheight;	// uptime
 	height += mheight;	// load
 #if defined (BOXMODEL_VUPLUS_ARM) || defined (BOXMODEL_VUDUO2) || defined (BOXMODEL_VUULTIMO) || defined (BOXMODEL_VUUNO)
-	height += mheight;	// temp
+	if (frontend_count < 7)
+		height += mheight;	// temp
 #endif
 	int cpuload_y1 = height;
 	height += mheight/2;	// space
 
-	int frontend_count = CFEManager::getInstance()->getFrontendCount();
 	if (frontend_count > 6)
 		height += mheight * 2;
 	else
