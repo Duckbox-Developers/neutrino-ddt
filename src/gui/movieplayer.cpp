@@ -182,8 +182,9 @@ void CMoviePlayerGui::Init(void)
 
 	frameBuffer = CFrameBuffer::getInstance();
 
-	if (playback == NULL)
-		playback = new cPlayback(0);
+	// init playback instance
+	playback = getPlayback();
+
 	if (moviebrowser == NULL)
 		moviebrowser = new CMovieBrowser();
 	if (bookmarkmanager == NULL)
@@ -2992,4 +2993,12 @@ size_t CMoviePlayerGui::GetReadCount()
 		res = this_read - last_read;
 	last_read = this_read;
 	return (size_t) res;
+}
+
+cPlayback *CMoviePlayerGui::getPlayback()
+{
+	if (playback == NULL) // mutex needed ?
+		playback = new cPlayback(0);
+
+	return playback;
 }
