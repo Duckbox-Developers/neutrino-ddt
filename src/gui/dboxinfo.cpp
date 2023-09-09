@@ -54,7 +54,7 @@
 #include <iostream>
 #include <fstream>
 
-#if defined (BOXMODEL_VUPLUS_ARM) || defined (BOXMODEL_VUDUO2)
+#if defined (BOXMODEL_VUPLUS_ARM) || defined (BOXMODEL_VUDUO2) || defined (BOXMODEL_VUULTIMO) || defined (BOXMODEL_VUUNO)
 #include <system/proc_tools.h>
 #endif
 
@@ -249,6 +249,7 @@ static std::string bytes2string(uint64_t bytes, bool binary)
 
 void CDBoxInfoWidget::paint()
 {
+	int frontend_count = CFEManager::getInstance()->getFrontendCount();
 	height = hheight;
 	height += mheight/2;	// space
 	int cpuload_y0 = height;
@@ -256,17 +257,17 @@ void CDBoxInfoWidget::paint()
 	height += mheight;	// time
 	height += mheight;	// uptime
 	height += mheight;	// load
-#if defined (BOXMODEL_VUPLUS_ARM) || defined (BOXMODEL_VUDUO2)
-	height += mheight;	// temp
+#if defined (BOXMODEL_VUPLUS_ARM) || defined (BOXMODEL_VUDUO2) || defined (BOXMODEL_VUULTIMO) || defined (BOXMODEL_VUUNO)
+	if (frontend_count < 7)
+		height += mheight;	// temp
 #endif
 	int cpuload_y1 = height;
 	height += mheight/2;	// space
 
-	int frontend_count = CFEManager::getInstance()->getFrontendCount();
 	if (frontend_count > 6)
 		height += mheight * 2;
 	else
-#if defined (BOXMODEL_VUDUO2)
+#if defined (BOXMODEL_VUDUO2) || defined (BOXMODEL_VUULTIMO)
 	if (frontend_count == 3)
 		height += mheight * (frontend_count - 2) - mheight;
 	else
@@ -442,8 +443,8 @@ void CDBoxInfoWidget::paint()
 	str_boot_title += ": ";
 	std::string str_up_title(g_Locale->getText(LOCALE_EXTRA_DBOXINFO_UPTIME));
 	str_up_title += ": ";
-#if defined (BOXMODEL_VUPLUS_ARM) || defined (BOXMODEL_VUDUO2)
-#if defined (BOXMODEL_VUDUO2)
+#if defined (BOXMODEL_VUPLUS_ARM) || defined (BOXMODEL_VUDUO2) || defined (BOXMODEL_VUULTIMO) || defined (BOXMODEL_VUUNO)
+#if defined (BOXMODEL_VUDUO2) || defined (BOXMODEL_VUULTIMO) || defined (BOXMODEL_VUUNO)
 	std::string str_cputemp_title("System"/*g_Locale->getText(LOCALE_EXTRA_DBOXINFO_SYSTEMP)*/);
 #else
 	std::string str_cputemp_title("CPU"/*g_Locale->getText(LOCALE_EXTRA_DBOXINFO_CPUTEMP)*/);
@@ -511,10 +512,10 @@ void CDBoxInfoWidget::paint()
 	}
 	ypos += mheight;
 
-#if defined (BOXMODEL_VUPLUS_ARM) || defined (BOXMODEL_VUDUO2)
+#if defined (BOXMODEL_VUPLUS_ARM) || defined (BOXMODEL_VUDUO2) || defined (BOXMODEL_VUULTIMO) || defined (BOXMODEL_VUUNO)
 	// paint cpu temp
 	char proc_cputemp[8];
-#if defined (BOXMODEL_VUDUO2)
+#if defined (BOXMODEL_VUDUO2) || defined (BOXMODEL_VUULTIMO) || defined (BOXMODEL_VUUNO)
 	proc_get("/proc/stb/sensors/temp0/value", proc_cputemp, sizeof(proc_cputemp));
 #else
 	proc_get("/sys/class/thermal/thermal_zone0/temp", proc_cputemp, sizeof(proc_cputemp));
@@ -522,7 +523,7 @@ void CDBoxInfoWidget::paint()
 	if (atoi(proc_cputemp) > 0)
 	{
 		char cpu_temp[16] = { 0 };
-#if defined (BOXMODEL_VUDUO2)
+#if defined (BOXMODEL_VUDUO2) || defined (BOXMODEL_VUULTIMO) || defined (BOXMODEL_VUUNO)
 		sprintf(cpu_temp, "%d °C", atoi(proc_cputemp));
 #else
 		sprintf(cpu_temp, "%d °C", atoi(proc_cputemp) / 1000);

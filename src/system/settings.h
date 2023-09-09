@@ -229,7 +229,7 @@ struct SNeutrinoSettings
 	int infobar_subchan_disp_pos;
 	int infobar_buttons_usertitle;
 	int infobar_analogclock;
-#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2
+#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUUNO
 	int fan_speed;
 #endif
 	int infobar_show;
@@ -811,6 +811,7 @@ struct SNeutrinoSettings
 	int glcd_show_logo;
 	int glcd_brightness;
 	int glcd_brightness_standby;
+	int glcd_scroll;
 	int glcd_scroll_speed;
 	int glcd_selected_config;
 #endif
@@ -868,13 +869,13 @@ struct SNeutrinoSettings
 	int picviewer_scaling;
 
 	//audioplayer
-	int   audioplayer_display;
-	int   audioplayer_follow;
-	int   audioplayer_highprio;
-	int   audioplayer_select_title_by_name;
-	int   audioplayer_repeat_on;
-	int   audioplayer_show_playlist;
-	int   audioplayer_enable_sc_metadata;
+	int audioplayer_display;
+	int audioplayer_follow;
+	int audioplayer_highprio;
+	int audioplayer_select_title_by_name;
+	int audioplayer_repeat_on;
+	int audioplayer_show_playlist;
+	int audioplayer_enable_sc_metadata;
 	std::string shoutcast_dev_id;
 	int shoutcast_enabled;
 
@@ -885,12 +886,18 @@ struct SNeutrinoSettings
 	int filebrowser_use_filter;
 
 	//movieplayer
+<<<<<<< HEAD
 	int   movieplayer_repeat_on;
 	int  movieplayer_display_playtime;
 	std::string youtube_dev_id;
 	int youtube_enabled;
+=======
+	int movieplayer_repeat_on;
+	int movieplayer_display_playtime;
+>>>>>>> origin/master
 	std::string tmdb_api_key;
 	int tmdb_enabled;
+	int eof_cnt;
 
 	//zapit setup
 	std::string StartChannelTV;

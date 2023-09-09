@@ -787,7 +787,8 @@ glcd.head GraphLCD
 glcd.mirror_osd OSD-Menü auf GraphLCD anzeigen
 glcd.mirror_video Videobild auf GraphLCD anzeigen
 glcd.restart Neu erkennen
-glcd.scroll_speed Scroll-Geschwindigkeit
+glcd.scroll Laufschrift
+glcd.scroll_speed Geschwindigkeit der Laufschrift
 glcd.select.bar Fortschrittsbalken-Farbe
 glcd.select.bg Hintergrund-Farbe
 glcd.select.fg Vordergrund-Farbe
@@ -1905,6 +1906,7 @@ movieplayer.bookmarkname_hint1 Neues Lesezeichen
 movieplayer.bookmarkname_hint2 Geben Sie den Namen für das neue Lesezeichen ein
 movieplayer.chapters Kapitel
 movieplayer.display_playtime Zeige Spielzeit im VFD/LCD
+movieplayer.eof_cnt EOF-Wiederholungen nach Serverabbruch (WebTV/WebRadio)
 movieplayer.fileplayback_audio Multiformat-Audiowiedergabe
 movieplayer.fileplayback_video Multiformat-Videowiedergabe
 movieplayer.head Movieplayer

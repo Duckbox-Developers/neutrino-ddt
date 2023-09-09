@@ -139,7 +139,10 @@ void nGLCD::LcdAnalogClock(int posx, int posy, int dia)
 	mAngleInRad = ((6 * tm_) * (2 * pi_ / 360));
 	mAngleSave = mAngleInRad;
 	mAngleInRad -= pi_ / 2;
-#if BOXMODEL_E4HDULTRA
+#if BOXMODEL_VUULTIMO
+	mx_ = int((dia * 0.13 * cos(mAngleInRad)));
+	my_ = int((dia * 0.13 * sin(mAngleInRad)));
+#elif BOXMODEL_E4HDULTRA
 	mx_ = int((dia * 0.30 * cos(mAngleInRad)));
 	my_ = int((dia * 0.30 * sin(mAngleInRad)));
 #elif BOXMODEL_VUUNO4KSE
@@ -153,7 +156,10 @@ void nGLCD::LcdAnalogClock(int posx, int posy, int dia)
 	hAngleInRad = ((30 * th_) * (2 * pi_ / 360));
 	hAngleInRad += mAngleSave / 12;
 	hAngleInRad -= pi_ / 2;
-#if BOXMODEL_E4HDULTRA
+#if BOXMODEL_VUULTIMO
+	hx_ = int((dia * 0.08 * cos(hAngleInRad)));
+	hy_ = int((dia * 0.08 * sin(hAngleInRad)));
+#elif BOXMODEL_E4HDULTRA
 	hx_ = int((dia * 0.20 * cos(hAngleInRad)));
 	hy_ = int((dia * 0.20 * sin(hAngleInRad)));
 #elif BOXMODEL_VUUNO4KSE
@@ -778,9 +784,17 @@ void nGLCD::Run(void)
 				{
 					Channel = g_Locale->getText(LOCALE_GLCD_VOLUME);
 					ChannelWidth = font_channel.Width(Channel);
-					doScrollChannel = ChannelWidth > bitmap->Width() - 4;
+					if (g_settings.glcd_scroll)
+					{
+						doScrollChannel = ChannelWidth > bitmap->Width() - 4;
+						scrollChannelForward = true;
+					}
+					else
+					{
+						doScrollChannel = false;
+						scrollChannelForward = false;
+					}
 					scrollChannelSkip = 0;
-					scrollChannelForward = true;
 					if (doScrollChannel)
 					{
 						scrollChannelOffset = bitmap->Width() / g_settings.glcd_scroll_speed;
@@ -802,9 +816,17 @@ void nGLCD::Run(void)
 				{
 					Epg = stagingEpg;
 					EpgWidth = font_epg.Width(Epg);
-					doScrollEpg = EpgWidth > bitmap->Width() - 4;
+					if (g_settings.glcd_scroll)
+					{
+						doScrollEpg = EpgWidth > bitmap->Width() - 4;
+						scrollEpgForward = true;
+					}
+					else
+					{
+						doScrollEpg = false;
+						scrollEpgForward = false;
+					}
 					scrollEpgSkip = 0;
-					scrollEpgForward = true;
 					if (doScrollEpg)
 					{
 						scrollEpgOffset = bitmap->Width() / g_settings.glcd_scroll_speed;
@@ -817,9 +839,17 @@ void nGLCD::Run(void)
 				{
 					Channel = stagingChannel;
 					ChannelWidth = font_channel.Width(Channel);
-					doScrollChannel = ChannelWidth > bitmap->Width() - 4;
+					if (g_settings.glcd_scroll)
+					{
+						doScrollChannel = ChannelWidth > bitmap->Width() - 4;
+						scrollChannelForward = true;
+					}
+					else
+					{
+						doScrollChannel = false;
+						scrollChannelForward = false;
+					}
 					scrollChannelSkip = 0;
-					scrollChannelForward = true;
 					if (doScrollChannel)
 					{
 						scrollChannelOffset = bitmap->Width() / g_settings.glcd_scroll_speed;
@@ -848,8 +878,16 @@ void nGLCD::Run(void)
 					EpgWidth = 0;
 					Scale = 0;
 					doScrollEpg = false;
-					doScrollChannel = ChannelWidth > bitmap->Width() - 4;
-					scrollChannelForward = true;
+					if (g_settings.glcd_scroll)
+					{
+						doScrollChannel = ChannelWidth > bitmap->Width() - 4;
+						scrollChannelForward = true;
+					}
+					else
+					{
+						doScrollChannel = false;
+						scrollChannelForward = false;
+					}
 					scrollChannelSkip = 0;
 					if (doScrollChannel)
 					{
@@ -870,8 +908,16 @@ void nGLCD::Run(void)
 				{
 					Epg = info_CurrentNext.current_name;
 					EpgWidth = font_epg.Width(Epg);
-					doScrollEpg = EpgWidth > bitmap->Width() - 4;
-					scrollEpgForward = true;
+					if (g_settings.glcd_scroll)
+					{
+						doScrollEpg = EpgWidth > bitmap->Width() - 4;
+						scrollEpgForward = true;
+					}
+					else
+					{
+						doScrollEpg = false;
+						scrollEpgForward = false;
+					}
 					scrollEpgSkip = 0;
 					if (doScrollEpg)
 					{
@@ -897,8 +943,13 @@ void nGLCD::Run(void)
 					else
 						Epg = g_InfoViewer->get_livestreamInfo1();
 					EpgWidth = font_epg.Width(Epg);
+#if 0 // FIXME: scroll problem, high load
 					doScrollEpg = EpgWidth > bitmap->Width() - 4;
 					scrollEpgForward = true;
+#else
+					doScrollEpg = false;
+					scrollEpgForward = false;
+#endif
 					scrollEpgSkip = 0;
 					if (doScrollEpg)
 					{

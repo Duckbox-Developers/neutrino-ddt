@@ -602,7 +602,7 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 		bool flashing = false;
 		showGlobalStatus(100);
 
-#if !BOXMODEL_VUDUO && !BOXMODEL_VUDUO2
+#if !BOXMODEL_VUDUO && !BOXMODEL_VUDUO2 && !BOXMODEL_VUULTIMO && !BOXMODEL_VUUNO
 		// create settings package
 		int copy_settings = ShowMsg(LOCALE_MESSAGEBOX_INFO, LOCALE_FLASHUPDATE_COPY_SETTINGS, CMsgBox::mbrYes, CMsgBox::mbYes | CMsgBox::mbNo, NEUTRINO_ICON_UPDATE);
 		if (copy_settings == CMsgBox::mbrYes)
@@ -742,7 +742,7 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 		}
 #endif
 
-#if !BOXMODEL_VUDUO && !BOXMODEL_VUDUO2
+#if !BOXMODEL_VUDUO && !BOXMODEL_VUDUO2 && !BOXMODEL_VUULTIMO && !BOXMODEL_VUUNO
 		// select partition
 		int selected = 0;
 		CMenuSelectorTarget *selector = new CMenuSelectorTarget(&selected);

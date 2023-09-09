@@ -461,7 +461,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	if (g_settings.channel_mode_initial_radio > -1)
 		g_settings.channel_mode_radio = g_settings.channel_mode_initial_radio;
 
-#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2
+#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUUNO
 	g_settings.fan_speed = configfile.getInt32( "fan_speed", 1);
 	if (g_settings.fan_speed < 1) g_settings.fan_speed = 1;
 #endif
@@ -473,7 +473,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.hdmi_dd = configfile.getInt32( "hdmi_dd", 0);
 	g_settings.spdif_dd = configfile.getInt32( "spdif_dd", 1);
 #endif // HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
-#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
+#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUUNO || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
 	g_settings.analog_out = configfile.getInt32( "analog_out", 1);
 #endif
 	g_settings.avsync = configfile.getInt32( "avsync", 1);
@@ -597,7 +597,7 @@ if (g_info.hw_caps->can_shutdown)
 	g_settings.infobar_show_tuner = configfile.getInt32("infobar_show_tuner", 1 );
 	g_settings.radiotext_enable = configfile.getBool("radiotext_enable"          , false);
 	//audio
-#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
+#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUUNO || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
 	g_settings.audio_AnalogMode = configfile.getInt32( "audio_AnalogMode", 0 );
 #endif
 	g_settings.audio_DolbyDigital    = configfile.getBool("audio_DolbyDigital"   , false);
@@ -662,7 +662,7 @@ if (g_info.hw_caps->can_shutdown)
 	g_settings.widget_fade           = configfile.getBool("widget_fade"          , false );
 
 #ifdef ENABLE_GRAPHLCD
-#if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUDUO4KSE || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4KSE || BOXMODEL_E4HDULTRA || BOXMODEL_VUDUO2
+#if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUDUO4KSE || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4KSE || BOXMODEL_E4HDULTRA || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO
 	g_settings.glcd_enable = configfile.getInt32("glcd_enable", 1);
 #else
 	g_settings.glcd_enable = configfile.getInt32("glcd_enable", 0);
@@ -670,7 +670,7 @@ if (g_info.hw_caps->can_shutdown)
 	g_settings.glcd_color_fg = configfile.getInt32("glcd_color_fg", GLCD::cColor::White);
 	g_settings.glcd_color_bg = configfile.getInt32("glcd_color_bg", GLCD::cColor::Black);
 	g_settings.glcd_color_bar = configfile.getInt32("glcd_color_bar", GLCD::cColor::Blue);
-#if BOXMODEL_VUDUO2
+#if BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO
 	g_settings.glcd_percent_channel = configfile.getInt32("glcd_percent_channel", 55);
 	g_settings.glcd_percent_epg = configfile.getInt32("glcd_percent_epg", 45);
 	g_settings.glcd_percent_bar = configfile.getInt32("glcd_percent_bar", 0);
@@ -696,7 +696,8 @@ if (g_info.hw_caps->can_shutdown)
 	g_settings.glcd_brightness = configfile.getInt32("glcd_brightness", 75);
 	g_settings.glcd_brightness_standby = configfile.getInt32("glcd_brightness_standby", 45);
 #endif
-#if BOXMODEL_VUUNO4KSE || BOXMODEL_VUDUO2
+	g_settings.glcd_scroll = configfile.getInt32("glcd_scroll", 1);
+#if BOXMODEL_VUUNO4KSE || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO
 	g_settings.glcd_scroll_speed = configfile.getInt32("glcd_scroll_speed", 1);
 #elif BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUDUO4KSE || BOXMODEL_VUULTIMO4K
 	g_settings.glcd_scroll_speed = configfile.getInt32("glcd_scroll_speed", 2);
@@ -1025,6 +1026,7 @@ if (g_info.hw_caps->can_shutdown)
 #else
 	g_settings.movieplayer_display_playtime = configfile.getInt32("movieplayer_display_playtime", 0);
 #endif
+	g_settings.eof_cnt = configfile.getInt32("movieplayer_eof_cnt", 1);
 
 #ifdef YOUTUBE_DEV_ID
 	g_settings.youtube_dev_id = YOUTUBE_DEV_ID;
@@ -1304,7 +1306,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32( "channel_mode_initial", g_settings.channel_mode_initial );
 	configfile.setInt32( "channel_mode_initial_radio", g_settings.channel_mode_initial_radio );
 
-#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2
+#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUUNO
 	configfile.setInt32( "fan_speed", g_settings.fan_speed);
 #endif
 
@@ -1315,7 +1317,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32( "hdmi_dd", g_settings.hdmi_dd);
 	configfile.setInt32( "spdif_dd", g_settings.spdif_dd);
 #endif
-#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
+#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUUNO || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
 	configfile.setInt32( "analog_out", g_settings.analog_out);
 #endif
 	configfile.setInt32( "avsync", g_settings.avsync);
@@ -1414,7 +1416,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32("infobar_show_tuner"  , g_settings.infobar_show_tuner  );
 	configfile.setBool("radiotext_enable"          , g_settings.radiotext_enable);
 	//audio
-#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
+#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUUNO || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
 	configfile.setInt32( "audio_AnalogMode", g_settings.audio_AnalogMode );
 #endif
 	configfile.setBool("audio_DolbyDigital"   , g_settings.audio_DolbyDigital   );
@@ -1486,6 +1488,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setString("glcd_font", g_settings.glcd_font);
 	configfile.setInt32("glcd_brightness", g_settings.glcd_brightness);
 	configfile.setInt32("glcd_brightness_standby", g_settings.glcd_brightness_standby);
+	configfile.setInt32("glcd_scroll", g_settings.glcd_scroll);
 	configfile.setInt32("glcd_scroll_speed", g_settings.glcd_scroll_speed);
 	configfile.setInt32("glcd_selected_config", g_settings.glcd_selected_config);
 #endif
@@ -1705,6 +1708,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	//Movie-Player
 	configfile.setInt32( "movieplayer_repeat_on", g_settings.movieplayer_repeat_on );
 	configfile.setInt32( "movieplayer_display_playtime", g_settings.movieplayer_display_playtime );
+	configfile.setInt32( "movieplayer_eof_cnt", g_settings.eof_cnt );
 #ifndef YOUTUBE_DEV_ID
 	configfile.setString( "youtube_dev_id", g_settings.youtube_dev_id );
 #endif
@@ -2535,7 +2539,7 @@ TIMER_START();
 	audioDecoder->SetHdmiDD((HDMI_ENCODED_MODE)g_settings.hdmi_dd);
 	audioDecoder->SetSpdifDD(g_settings.spdif_dd ? true : false);
 #endif
-#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
+#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUUNO || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
 	audioDecoder->EnableAnalogOut(g_settings.analog_out ? true : false);
 #endif
 	audioSetupNotifier        = new CAudioSetupNotifier;
@@ -2587,7 +2591,7 @@ TIMER_START();
 	powerManager = new cPowerManager;
 	powerManager->Open();
 
-#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2
+#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUUNO
 	//fan speed
 	CFanControlNotifier::setSpeed(g_settings.fan_speed);
 #endif
@@ -3480,7 +3484,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 		return messages_return::handled;
 	}
 	if(msg == NeutrinoMessages::EVT_ZAP_COMPLETE) {
-#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
+#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUUNO || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
 		CZapit::getInstance()->GetAudioMode(g_settings.audio_AnalogMode);
 		if(g_settings.audio_AnalogMode < 0 || g_settings.audio_AnalogMode > 2)
 			g_settings.audio_AnalogMode = 0;
@@ -3694,7 +3698,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 		g_audioMute->AudioMute(false, true);
 		return messages_return::handled;
 	}
-#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
+#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUUNO || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
 	else if( msg == CRCInput::RC_analog_on ) {
 		g_settings.analog_out = 1;
 		audioDecoder->EnableAnalogOut(true);
@@ -4300,7 +4304,7 @@ void CNeutrinoApp::ExitRun(int exit_code)
 	delete g_RCInput;
 	g_RCInput = NULL;
 
-#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2
+#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUUNO
 	CFanControlNotifier::setSpeed(0);
 #endif
 
@@ -4552,7 +4556,7 @@ void CNeutrinoApp::standbyMode( bool bOnOff, bool fromDeepStandby )
 		bool alive = recordingstatus || CEpgScan::getInstance()->Running() ||
 			CStreamManager::getInstance()->StreamStatus();
 #endif
-#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2
+#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUUNO
 		//fan speed
 		CFanControlNotifier::setSpeed(1);
 #endif
@@ -4601,7 +4605,7 @@ void CNeutrinoApp::standbyMode( bool bOnOff, bool fromDeepStandby )
 		}
 #endif
 		frameBuffer->setActive(true);
-#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2
+#if BOXMODEL_DM8000 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUUNO
 		//fan speed
 		CFanControlNotifier::setSpeed(g_settings.fan_speed);
 #endif
