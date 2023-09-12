@@ -32,7 +32,6 @@
 #include <string>
 #include <driver/colorgradient.h>
 
-
 class CComponentsItem : public CComponents
 {
 	protected:

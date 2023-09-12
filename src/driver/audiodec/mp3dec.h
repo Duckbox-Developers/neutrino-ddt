@@ -33,7 +33,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-
 #ifndef __MP3_DEC__
 #define __MP3_DEC__
 
@@ -78,6 +77,4 @@ class CMP3Dec : public CBaseDec
 
 };
 
-
 #endif
-

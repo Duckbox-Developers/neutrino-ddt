@@ -5,4 +5,3 @@ extern void fb_display(unsigned char *rgbbuff, int x_size, int y_size, int x_pan
 extern void getCurrentRes(int *x, int *y);
 unsigned char *make15color_errdiff(unsigned char *orgin, int x, int y);
 #endif
-

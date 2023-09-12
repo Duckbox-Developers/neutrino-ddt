@@ -65,4 +65,3 @@ struct aotom_ioctl_data
 #define VFDDISPLAYCHARS 0xc0425a00
 #define VFDDISPLAYCLR   0xc0425b00
 #define VFDSETMODE      0xc0425aff
-

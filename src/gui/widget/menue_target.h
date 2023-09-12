@@ -18,7 +18,6 @@
 	along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef __MENU_TARGET__
 #define __MENU_TARGET__
 
@@ -47,6 +46,5 @@ class CMenuTarget
 			return 0;
 		}
 };
-
 
 #endif /*__MENU_TARGET__*/

@@ -27,7 +27,6 @@
 #include "cc_frm.h"
 #include "cc_item_text.h"
 
-
 class CComponentsExtTextForm : public CComponentsForm, public CCTextScreen
 {
 	private:

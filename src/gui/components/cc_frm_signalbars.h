@@ -26,11 +26,9 @@
 #ifndef __SIGNALBARS_H__
 #define __SIGNALBARS_H__
 
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-
 
 #include <gui/components/cc_frm.h>
 #include <gui/components/cc_item_progressbar.h>

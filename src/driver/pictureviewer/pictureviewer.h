@@ -133,11 +133,10 @@ class CPictureViewer
 		bool checkfreemem(size_t bufsize);
 };
 
-
-#define FH_ERROR_OK 0
-#define FH_ERROR_FILE 1		/* read/access error */
-#define FH_ERROR_FORMAT 2	/* file format error */
-#define FH_ERROR_MALLOC 3	/* error during malloc */
+#define FH_ERROR_OK	0
+#define FH_ERROR_FILE	1	/* read/access error */
+#define FH_ERROR_FORMAT	2	/* file format error */
+#define FH_ERROR_MALLOC	3	/* error during malloc */
 
 #define dbout(fmt, args...) {struct timeval tv; gettimeofday(&tv,NULL); \
 		printf("PV[%ld|%02ld] " fmt, (long)tv.tv_sec, (long)tv.tv_usec/10000, ## args);}

@@ -52,5 +52,4 @@ Basic attributes and member functions for component sub classes
 #include "cc_frm_slider.h"
 #include "cc_frm_window.h"
 
-
 #endif /*__N_COMPONENTS__*/

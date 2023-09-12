@@ -230,6 +230,4 @@ typedef struct button_label_cc
 ///CC CENTERED used for x or y position or booth. An item with this parameter will paint automatically centered
 #define CC_CENTERED		-2
 
-
-
 #endif
