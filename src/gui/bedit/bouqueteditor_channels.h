@@ -20,7 +20,6 @@
 	along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef __bouqueteditor_channels__
 #define __bouqueteditor_channels__
 

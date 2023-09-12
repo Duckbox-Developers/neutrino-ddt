@@ -24,11 +24,9 @@
 #ifndef __CC_FORM_H__
 #define __CC_FORM_H__
 
-
 #include "config.h"
 #include "cc_base.h"
 #include "cc_item.h"
-
 
 class CComponentsForm : public CComponentsItem
 {

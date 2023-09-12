@@ -22,7 +22,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-
 #ifndef __stringinput__
 #define __stringinput__
 
@@ -155,7 +154,6 @@ class CEnquiryInput : public CPINInput
 		}
 };
 
-
 class CPLPINInput : public CPINInput
 {
 	protected:
@@ -182,6 +180,5 @@ class CPINChangeWidget : public CStringInput
 		CPINChangeWidget(const neutrino_locale_t Name, std::string *Value, int Size, const neutrino_locale_t Hint_1, const char *const Valid_Chars = (const char *) "0123456789", CChangeObserver *Observ = NULL)
 			: CStringInput(Name, Value, Size, Hint_1, NONEXISTANT_LOCALE, Valid_Chars, Observ) {};
 };
-
 
 #endif

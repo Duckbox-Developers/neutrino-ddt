@@ -24,7 +24,6 @@
 #ifndef __CC_TIMER__
 #define __CC_TIMER__
 
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

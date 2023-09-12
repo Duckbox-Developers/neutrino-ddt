@@ -31,7 +31,7 @@
 #define OFS_STREAM_TAB		17
 #define SIZE_STREAM_TAB_ROW	5
 #define OFS_ENIGMA_TAB		31
-#define SIZE_ENIGMA_TAB_ROW   4
+#define SIZE_ENIGMA_TAB_ROW	4
 
 #define ES_TYPE_MPEG12		0x02
 #define ES_TYPE_AVC		0x1b
@@ -503,4 +503,3 @@ int CGenPsi::genpsi(int fd)
 	return 1;
 
 }
-

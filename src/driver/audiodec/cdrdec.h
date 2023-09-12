@@ -25,7 +25,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-
 #ifndef __CDR_DEC__
 #define __CDR_DEC__
 
@@ -40,4 +39,3 @@ class CCdrDec : public CWavDec
 };
 
 #endif
-

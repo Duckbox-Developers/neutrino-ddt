@@ -21,13 +21,11 @@
 	along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef __C_NAVIBAR__
 #define __C_NAVIBAR__
 
 #include <gui/components/cc.h>
 #include <driver/fontrenderer.h>
-
 
 /**
 	CNaviBar is sub class of CComponentsFrmChain.
@@ -204,4 +202,3 @@ class CNaviBar : public CComponentsFrmChain
 };
 
 #endif
-

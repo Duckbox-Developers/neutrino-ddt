@@ -17,6 +17,5 @@ AM_CPPFLAGS += \
 
 noinst_LIBRARIES = libneutrino_gui_moviebrowser.a
 
-
 libneutrino_gui_moviebrowser_a_SOURCES = \
 	mb.cpp

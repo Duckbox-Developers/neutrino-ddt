@@ -29,7 +29,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-
 #ifndef __stringinput_ext__
 #define __stringinput_ext__
 
@@ -93,7 +92,6 @@ class CExtendedInput : public CMenuTarget
 
 		void enableSaveScreen(bool enable);
 };
-
 
 class CExtendedInput_Item
 {
@@ -171,7 +169,6 @@ class CExtendedInput_Item_newLiner : public CExtendedInput_Item
 			return false;
 		};
 };
-
 
 class CExtendedInput_Item_Char : public CExtendedInput_Item
 {
