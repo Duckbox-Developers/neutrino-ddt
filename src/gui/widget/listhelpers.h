@@ -18,7 +18,6 @@
 	along with this program; if not, see http://www.gnu.org/licenses/
 */
 
-
 #ifndef __LISTHELPERS__
 #define __LISTHELPERS__
 /* allow to trick the compiler into overriding template definitions */

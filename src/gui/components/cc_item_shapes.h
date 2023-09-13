@@ -79,7 +79,6 @@ class CComponentsShapeSquare : public CComponentsItem
 		void paint(bool do_save_bg = CC_SAVE_SCREEN_YES);
 };
 
-
 /**Small and easy to apply box paint methode without expilcit object declaration
 * @return 			bool, true = painted
 *

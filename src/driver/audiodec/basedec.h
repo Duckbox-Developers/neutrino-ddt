@@ -25,7 +25,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-
 #ifndef __BASE_DEC__
 #define __BASE_DEC__
 
@@ -65,6 +64,4 @@ class CBaseDec
 		unsigned static int mSamplerate;
 };
 
-
 #endif
-

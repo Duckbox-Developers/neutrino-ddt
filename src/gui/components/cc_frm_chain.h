@@ -24,10 +24,8 @@
 #ifndef __CC_FORM_CHAIN_H__
 #define __CC_FORM_CHAIN_H__
 
-
 #include <config.h>
 #include "cc_frm.h"
-
 
 //! Sub class of CComponentsForm. Creates a dynamic form with chained items.
 /*!

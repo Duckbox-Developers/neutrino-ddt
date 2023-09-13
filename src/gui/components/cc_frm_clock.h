@@ -26,7 +26,6 @@
 #ifndef __CC_CLOCK__
 #define __CC_CLOCK__
 
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

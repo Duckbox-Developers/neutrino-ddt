@@ -232,7 +232,6 @@ class CComponentsText : public CCTextScreen, public CComponentsItem
 		bool clearSavedScreen();
 };
 
-
 //! Sub class of CComponentsText. Shows text with transparent background
 class CComponentsTextTransp : public CComponentsText
 {
@@ -250,7 +249,6 @@ class CComponentsTextTransp : public CComponentsText
 			enableTboxSaveScreen(true);
 		};
 };
-
 
 //! Sub class of CComponentsText. Shows text as label, text color=inactive mode, depending from color settings.
 /*!

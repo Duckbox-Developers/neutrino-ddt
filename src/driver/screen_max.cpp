@@ -9,12 +9,8 @@
  *
  */
 
-
-
-
 #include <global.h>
 #include <driver/screen_max.h>
-
 
 // -- this is a simple odd class provided for 'static' usage
 // -- to calculate max. usage of a preferred  menue size (x,y)
@@ -28,7 +24,6 @@
 //         16:9 Zoom-Mode on a Thomson TV set will e.g. be 625x415
 //
 //  2004-03-17 rasc
-
 
 int w_max(int w_size, int w_add)
 {
@@ -71,6 +66,3 @@ int getScreenStartY(int height)
 	int r = (((g_settings.screen_EndY - g_settings.screen_StartY) - y) / 2) + g_settings.screen_StartY;
 	return r < 0 ? 0 : r;
 }
-
-
-

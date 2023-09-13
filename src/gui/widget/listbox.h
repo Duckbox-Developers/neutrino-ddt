@@ -88,5 +88,4 @@ class CListBox : public CMenuTarget, public CListHelpers
 		virtual int exec(CMenuTarget *parent, const std::string &actionKey);
 };
 
-
 #endif

@@ -29,7 +29,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-
 #ifndef __mountchooser__
 #define __mountchooser__
 
@@ -61,6 +60,4 @@ class CMountChooser : public CMenuWidget
 
 };
 
-
 #endif
-

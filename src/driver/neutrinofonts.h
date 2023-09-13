@@ -149,5 +149,4 @@ class CNeutrinoFonts
 		void deleteDynFontExtAll();
 };
 
-
 #endif //__neutrinofonts__

@@ -37,7 +37,6 @@
 #ifndef MOVIEBROWSER_HELP_H_
 #define MOVIEBROWSER_HELP_H_
 
-
 #include <gui/widget/helpbox.h>
 
 // Class to show moviebrowser's help, to be used by rc_help key

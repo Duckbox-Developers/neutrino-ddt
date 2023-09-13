@@ -31,7 +31,6 @@
 #include <global.h>
 #include <gui/widget/buttons.h> //for compatibility with 'button_label' type
 
-
 /*!
 CComponentsFooter, sub class of CComponentsHeader provides prepared container for footer
 It's usable like a header but without caption, and context button icons as default.
@@ -175,7 +174,5 @@ class CComponentsFooter : public CComponentsHeader, public CCButtonSelect
 			enableButtonShadow(CC_SHADOW_OFF);
 		}
 };
-
-
 
 #endif

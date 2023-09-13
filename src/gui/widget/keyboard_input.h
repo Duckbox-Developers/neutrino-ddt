@@ -20,7 +20,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-
 #ifndef __keyboard_input__
 #define __keyboard_input__
 

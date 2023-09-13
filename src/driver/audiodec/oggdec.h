@@ -25,7 +25,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-
 #ifndef __OGG_DEC__
 #define __OGG_DEC__
 
@@ -71,6 +70,4 @@ class COggDec : public CBaseDec
 		static void *OutputDsp(void *);
 };
 
-
 #endif
-

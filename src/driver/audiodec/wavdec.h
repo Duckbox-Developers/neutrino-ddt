@@ -25,7 +25,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-
 #ifndef __WAV_DEC__
 #define __WAV_DEC__
 
@@ -49,6 +48,4 @@ class CWavDec : public CBaseDec
 		int header_size;
 };
 
-
 #endif
-

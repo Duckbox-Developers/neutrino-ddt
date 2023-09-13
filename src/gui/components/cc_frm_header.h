@@ -24,7 +24,6 @@
 #ifndef __CC_FORM_HEADER_H__
 #define __CC_FORM_HEADER_H__
 
-
 #include "cc_frm.h"
 #include "cc_item_picture.h"
 #include "cc_item_text.h"

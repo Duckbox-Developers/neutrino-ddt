@@ -24,7 +24,6 @@
 #ifndef __CC_BTN_SEL_H__
 #define __CC_BTN_SEL_H__
 
-
 #include "cc_frm_button.h"
 
 /*!

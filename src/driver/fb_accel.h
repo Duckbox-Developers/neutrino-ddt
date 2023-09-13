@@ -19,7 +19,6 @@
 	private functions for the fbaccel class (only used in CFrameBuffer)
 */
 
-
 #ifndef __fbaccel__
 #define __fbaccel__
 #include <config.h>

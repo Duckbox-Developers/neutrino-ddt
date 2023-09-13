@@ -16,7 +16,6 @@ AM_CPPFLAGS += \
 
 noinst_LIBRARIES = libneutrino_gui_components.a
 
-
 libneutrino_gui_components_a_SOURCES = \
 	cc_base.cpp \
 	cc_button_select.cpp \

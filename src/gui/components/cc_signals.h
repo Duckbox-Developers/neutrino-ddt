@@ -133,5 +133,4 @@ class CComponentsSignals : public sigc::trackable
 		sigc::signal<void> OnSelect;
 };
 
-
 #endif
