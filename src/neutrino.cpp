@@ -4396,6 +4396,9 @@ void CNeutrinoApp::tvMode( bool rezap )
 #ifdef ENABLE_PIP
 	if (g_info.hw_caps->can_pip)
 	{
+		if (!pipVideoDecoder[0]) {
+			pipVideoDecoder[0] = new cVideo(0, NULL, NULL, 1);
+		}
 		pipVideoDecoder[0]->Pig(g_settings.pip_x, g_settings.pip_y,
 			g_settings.pip_width, g_settings.pip_height,
 			frameBuffer->getScreenWidth(true), frameBuffer->getScreenHeight(true));
@@ -4663,6 +4666,9 @@ void CNeutrinoApp::radioMode( bool rezap)
 #ifdef ENABLE_PIP
 	if (g_info.hw_caps->can_pip)
 	{
+		if (!pipVideoDecoder[0]) {
+			pipVideoDecoder[0] = new cVideo(0, NULL, NULL, 1);
+		}
 		pipVideoDecoder[0]->Pig(g_settings.pip_radio_x, g_settings.pip_radio_y,
 			g_settings.pip_radio_width, g_settings.pip_radio_height,
 			frameBuffer->getScreenWidth(true), frameBuffer->getScreenHeight(true));
@@ -4732,13 +4738,14 @@ void CNeutrinoApp::StartAVInputPiP() {
 	if (!g_info.hw_caps->can_pip)
 		return;
 
+	if (!pipVideoDecoder[0]) {
+		pipVideoDecoder[0] = new cVideo(0, NULL, NULL, 1);
+	}
 	if (!pipVideoDemux[0]) {
 		pipVideoDemux[0] = new cDemux(1);
 		pipVideoDemux[0]->Open(DMX_VIDEO_CHANNEL);
-		if (!pipVideoDecoder[0]) {
-			pipVideoDecoder[0] = new cVideo(0, NULL, NULL, 1);
-		}
 	}
+
 	pipVideoDemux[0]->SetSource(1, 2);
 	pipVideoDecoder[0]->SetStreamType((VIDEO_FORMAT) 1);
 	pipVideoDemux[0]->Start();
