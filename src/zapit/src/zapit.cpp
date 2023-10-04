@@ -726,12 +726,12 @@ bool CZapit::StartPip(const t_channel_id channel_id, int pip)
 #endif
 
 	INFO("[pip %d] vpid %X apid %X pcr %X", pip, newchannel->getVideoPid(), newchannel->getAudioPid(), newchannel->getPcrPid());
+	if (!pipVideoDecoder[pip]) {
+		pipVideoDecoder[pip] = new cVideo(0, NULL, NULL, dnum);
+	}
 	if (!pipVideoDemux[pip]) {
 		pipVideoDemux[pip] = new cDemux(dnum);
 		pipVideoDemux[pip]->Open(DMX_VIDEO_CHANNEL);
-		if (!pipVideoDecoder[pip]) {
-			pipVideoDecoder[pip] = new cVideo(0, NULL, NULL, dnum);
-		}
 	}
 
 	pipVideoDemux[pip]->SetSource(dnum, pip_fe[pip]->getNumber());
@@ -747,12 +747,12 @@ bool CZapit::StartPip(const t_channel_id channel_id, int pip)
 	pipVideoDecoder[pip]->Pig(g_settings.pip_x,g_settings.pip_y,g_settings.pip_width,g_settings.pip_height,g_settings.screen_width,g_settings.screen_height);
 	pipVideoDecoder[pip]->ShowPig(1);
 
+	if (!pipAudioDecoder[pip]) {
+		pipAudioDecoder[pip] = new cAudio(0, NULL, NULL, dnum);
+	}
 	if (!pipAudioDemux[pip]) {
 		pipAudioDemux[pip] = new cDemux(dnum);
 		pipAudioDemux[pip]->Open(DMX_AUDIO_CHANNEL);
-		if (!pipAudioDecoder[pip]) {
-			pipAudioDecoder[pip] = new cAudio(0, NULL, NULL, dnum);
-		}
 	}
 
 	if (newchannel->getAudioChannel())
@@ -2264,21 +2264,9 @@ bool CZapit::Start(Z_start_arg *ZapStart_arg)
 	audioDemux = new cDemux();
 	audioDemux->Open(DMX_AUDIO_CHANNEL);
 
-        videoDecoder = new cVideo(video_mode, videoDemux->getChannel(), videoDemux->getBuffer());
-        videoDecoder->Standby(false);
-        audioDecoder = new cAudio(audioDemux->getBuffer(), videoDecoder->GetTVEnc(), NULL /*videoDecoder->GetTVEncSD()*/);
-
-#ifdef ENABLE_PIP
-	if (g_info.hw_caps->can_pip)
-	{
-		for (unsigned i=0; i < (unsigned int) g_info.hw_caps->pip_devs; i++)
-		{
-			pipVideoDecoder[i] = new cVideo(0, NULL, NULL, i+1);
-			pipVideoDecoder[i]->ShowPig(0);
-			pipAudioDecoder[i] = new cAudio(0, NULL, NULL, i+1);
-		}
-	}
-#endif
+	videoDecoder = new cVideo(video_mode, videoDemux->getChannel(), videoDemux->getBuffer());
+	videoDecoder->Standby(false);
+	audioDecoder = new cAudio(audioDemux->getBuffer(), videoDecoder->GetTVEnc(), NULL /*videoDecoder->GetTVEncSD()*/);
 
 	videoDecoder->SetAudioHandle(audioDecoder->GetHandle());
 
