@@ -2046,9 +2046,9 @@ void CChannelList::paintItem(int pos, const bool firstpaint)
 		else if (rec_mode & CRecordManager::RECMODE_TSHIFT)
 			record_icon = NEUTRINO_ICON_AUTO_SHIFT;
 
+#ifdef ENABLE_PIP
 		//set pip icon
 		const char *pip_icon = NULL;
-#ifdef ENABLE_PIP
 		if ((*chanlist)[curr]->getChannelID() == CZapit::getInstance()->GetPipChannelID())
 			pip_icon = NEUTRINO_ICON_PIP;
 #endif
@@ -2105,6 +2105,7 @@ void CChannelList::paintItem(int pos, const bool firstpaint)
 			}
 		}
 
+#ifdef ENABLE_PIP
 		if (pip_icon)
 		{
 			frameBuffer->getIconSize(pip_icon, &icon_w, &icon_h);
@@ -2114,6 +2115,7 @@ void CChannelList::paintItem(int pos, const bool firstpaint)
 				icon_x_right -= icon_w + OFFSET_INNER_MID;
 			}
 		}
+#endif
 
 		if (record_icon)
 		{

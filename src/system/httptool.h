@@ -34,6 +34,7 @@
 #define __httptool__
 
 #include <gui/widget/progresswindow.h>
+#include <curl/curl.h>
 
 #include <string>
 
@@ -44,8 +45,11 @@ class CHTTPTool
 		int	iGlobalProgressEnd;
 		int	iGlobalProgressBegin;
 
-		CProgressWindow	*statusViewer;
-		static int show_progress(void *clientp, double dltotal, double dlnow, double ultotal, double ulnow);
+		CProgressWindow *statusViewer;
+#if !CURL_AT_LEAST_VERSION( 7,32,0 )
+		static int show_progress_old(void *clientp, double dltotal, double dlnow, double ultotal, double ulnow);
+#endif
+		static int show_progress(void *clientp, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow);
 		static size_t CurlWriteToString(void *ptr, size_t size, size_t nmemb, void *data);
 
 	public:
@@ -54,8 +58,6 @@ class CHTTPTool
 
 		bool downloadFile(const std::string &URL, const char *const downloadTarget, int globalProgressEnd = -1, int connecttimeout = 10000, int timeout = 1800);
 		std::string downloadString(const std::string &URL, int globalProgressEnd = -1, int connecttimeout = 10000, int timeout = 1800);
-
 };
-
 
 #endif

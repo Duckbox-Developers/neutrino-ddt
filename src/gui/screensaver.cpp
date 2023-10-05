@@ -58,8 +58,10 @@ CScreenSaver::CScreenSaver()
 	status_mute	= CAudioMute::getInstance()->getStatus();
 	scr_clock	= NULL;
 	clr.i_color	= COL_DARK_GRAY;
+#ifdef ENABLE_PIP
 	for (unsigned int i = 0; i < 3; i++)
 		pip_channel_id[i] = 0;
+#endif
 	idletime	= time(NULL);
 }
 
