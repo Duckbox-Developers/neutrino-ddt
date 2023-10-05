@@ -4393,7 +4393,7 @@ void CNeutrinoApp::tvMode( bool rezap )
 		videoDecoder->Standby(false);
 	}
 
-#ifdef ENABLE_PIP
+#if 0//def ENABLE_PIP
 	if (g_info.hw_caps->can_pip)
 	{
 		pipVideoDecoder[0]->Pig(g_settings.pip_x, g_settings.pip_y,
@@ -4660,7 +4660,7 @@ void CNeutrinoApp::radioMode( bool rezap)
 		videoDecoder->Standby(false);
 	}
 
-#ifdef ENABLE_PIP
+#if 0//def ENABLE_PIP
 	if (g_info.hw_caps->can_pip)
 	{
 		pipVideoDecoder[0]->Pig(g_settings.pip_radio_x, g_settings.pip_radio_y,
