@@ -662,23 +662,58 @@ bool CZapit::StopPip(int pip)
 
 	if (pip_channel_id[pip]) {
 		INFO("[pip %d] stop %llx", pip, pip_channel_id[pip]);
-		pipVideoDecoder[pip]->ShowPig(0);
 		CCamManager::getInstance()->Stop(pip_channel_id[pip], CCamManager::PIP);
-		pipVideoDemux[pip]->Stop();
-		pipVideoDecoder[pip]->Stop();
-		pipAudioDemux[pip]->Stop();
-		pipAudioDecoder[pip]->Stop();
 		pip_fe[pip] = NULL;
 		pip_channel_id[pip] = 0;
-		return true;
 	}
-	return false;
+
+	if (pipVideoDemux[pip])
+	{
+		pipVideoDemux[pip]->Stop();
+		delete pipVideoDemux[pip];
+		pipVideoDemux[pip] = NULL;
+	}
+	if (pipVideoDecoder[pip])
+	{
+		pipVideoDecoder[pip]->ShowPig(0);
+		pipVideoDecoder[pip]->Stop();
+		pipVideoDecoder[pip]->closeDevice();
+		delete pipVideoDecoder[pip];
+		pipVideoDecoder[pip] = NULL;
+	}
+	if (pipAudioDemux[pip])
+	{
+		pipAudioDemux[pip]->Stop();
+		delete pipAudioDemux[pip];
+		pipAudioDemux[pip] = NULL;
+	}
+	if (pipAudioDecoder[pip])
+	{
+		pipAudioDecoder[pip]->Stop();
+		pipAudioDecoder[pip]->closeDevice();
+		delete pipAudioDecoder[pip];
+		pipAudioDecoder[pip] = NULL;
+	}
+
+	return true;
 }
 
 bool CZapit::StartPip(const t_channel_id channel_id, int pip)
 {
 	if (!g_info.hw_caps->can_pip)
 		return false;
+
+	if (CNeutrinoApp::getInstance()->avinput_pip) {
+		StopPip(0);
+	}
+
+	pipVideoDecoder[pip] = new cVideo(0, NULL, NULL, pip+1);
+	pipVideoDecoder[pip]->ShowPig(0);
+	pipVideoDemux[pip] = new cDemux(pip+1);
+	pipVideoDemux[pip]->Open(DMX_VIDEO_CHANNEL);
+	pipAudioDecoder[pip] = new cAudio(0, NULL, NULL, pip+1);
+	pipAudioDemux[pip] = new cDemux(pip+1);
+	pipAudioDemux[pip]->Open(DMX_AUDIO_CHANNEL);
 
 	CZapitChannel* newchannel;
 	bool transponder_change;
@@ -2268,7 +2303,7 @@ bool CZapit::Start(Z_start_arg *ZapStart_arg)
         videoDecoder->Standby(false);
         audioDecoder = new cAudio(audioDemux->getBuffer(), videoDecoder->GetTVEnc(), NULL /*videoDecoder->GetTVEncSD()*/);
 
-#ifdef ENABLE_PIP
+#if 0//def ENABLE_PIP
 	if (g_info.hw_caps->can_pip)
 	{
 		for (unsigned i=0; i < (unsigned int) g_info.hw_caps->pip_devs; i++)

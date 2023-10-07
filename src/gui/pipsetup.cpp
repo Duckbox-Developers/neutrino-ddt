@@ -206,8 +206,12 @@ void CPipSetup::paint()
 	int y = (frameBuffer->getScreenHeight() - mheight*4)/2;
 
 	if (pipVideoDecoder[0] != NULL)
+	{
 		if (pipVideoDecoder[0]->getBlank())
 			frameBuffer->paintBoxRel(x_coord, y_coord, width, height, COL_MENUCONTENT_PLUS_0);
+	}
+	else
+		frameBuffer->paintBoxRel(x_coord, y_coord, width, height, COL_MENUCONTENT_PLUS_0);
 
 	frameBuffer->paintBoxRel(x, y, mwidth, mheight*4, COL_MENUCONTENT_PLUS_0);
 
