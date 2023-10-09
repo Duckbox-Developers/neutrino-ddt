@@ -135,6 +135,7 @@ bool CQuadPiPSetupNotifier::changeNotify(const neutrino_locale_t, void * /*Data*
 		videoDecoder->QuadPiP(true);
 		for (unsigned i=0; i < pip_devs; i++)
 		{
+			CZapit::getInstance()->OpenPip(i);
 			usleep (100);	// delay time for zap etc.
 			if (i == 0)
 			{
@@ -169,15 +170,7 @@ bool CQuadPiPSetupNotifier::changeNotify(const neutrino_locale_t, void * /*Data*
 		for (unsigned i=0; i < (unsigned int) g_info.hw_caps->pip_devs; i++)
 		{
 			CCamManager::getInstance()->Stop(g_settings.quadpip_channel_id_window[i], CCamManager::PIP);
-			if (pipVideoDemux[i])
-				pipVideoDemux[i]->Stop();
-			if (pipAudioDemux[i])
-				pipAudioDemux[i]->Stop();
-			if (pipVideoDecoder[i])
-			{
-				pipVideoDecoder[i]->ShowPig(0);
-				pipVideoDecoder[i]->Stop();
-			}
+			CZapit::getInstance()->StopPip(i);
 			g_Zapit->stopPip(i);
 		}
 		g_Zapit->Rezap();
