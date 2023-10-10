@@ -4407,14 +4407,6 @@ void CNeutrinoApp::tvMode( bool rezap )
 		videoDecoder->Standby(false);
 	}
 
-#if 0//def ENABLE_PIP
-	if (g_info.hw_caps->can_pip)
-	{
-		pipVideoDecoder[0]->Pig(g_settings.pip_x, g_settings.pip_y,
-			g_settings.pip_width, g_settings.pip_height,
-			frameBuffer->getScreenWidth(true), frameBuffer->getScreenHeight(true));
-	}
-#endif
 #if 0
 	if(mode != NeutrinoModes::mode_ts /*&& autoshift*/) {
 		//printf("standby on: autoshift ! stopping ...\n");
@@ -4674,14 +4666,6 @@ void CNeutrinoApp::radioMode( bool rezap)
 		videoDecoder->Standby(false);
 	}
 
-#if 0//def ENABLE_PIP
-	if (g_info.hw_caps->can_pip)
-	{
-		pipVideoDecoder[0]->Pig(g_settings.pip_radio_x, g_settings.pip_radio_y,
-			g_settings.pip_radio_width, g_settings.pip_radio_height,
-			frameBuffer->getScreenWidth(true), frameBuffer->getScreenHeight(true));
-	}
-#endif
 	CRecordManager::getInstance()->StopAutoRecord();
 
 	if (mode != NeutrinoModes::mode_webtv && mode != NeutrinoModes::mode_webradio) {
