@@ -2308,21 +2308,9 @@ bool CZapit::Start(Z_start_arg *ZapStart_arg)
 	audioDemux = new cDemux();
 	audioDemux->Open(DMX_AUDIO_CHANNEL);
 
-        videoDecoder = new cVideo(video_mode, videoDemux->getChannel(), videoDemux->getBuffer());
-        videoDecoder->Standby(false);
-        audioDecoder = new cAudio(audioDemux->getBuffer(), videoDecoder->GetTVEnc(), NULL /*videoDecoder->GetTVEncSD()*/);
-
-#if 0//def ENABLE_PIP
-	if (g_info.hw_caps->can_pip)
-	{
-		for (unsigned i=0; i < (unsigned int) g_info.hw_caps->pip_devs; i++)
-		{
-			pipVideoDecoder[i] = new cVideo(0, NULL, NULL, i+1);
-			pipVideoDecoder[i]->ShowPig(0);
-			pipAudioDecoder[i] = new cAudio(0, NULL, NULL, i+1);
-		}
-	}
-#endif
+	videoDecoder = new cVideo(video_mode, videoDemux->getChannel(), videoDemux->getBuffer());
+	videoDecoder->Standby(false);
+	audioDecoder = new cAudio(audioDemux->getBuffer(), videoDecoder->GetTVEnc(), NULL /*videoDecoder->GetTVEncSD()*/);
 
 	videoDecoder->SetAudioHandle(audioDecoder->GetHandle());
 
