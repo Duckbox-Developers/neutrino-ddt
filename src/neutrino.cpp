@@ -2743,7 +2743,8 @@ TIMER_STOP("################################## after all #######################
 	if (g_info.hw_caps->can_pip)
 	{
 		CZapit::getInstance()->OpenPip(0);
-		pipVideoDecoder[0]->Pig(g_settings.pip_x, g_settings.pip_y, g_settings.pip_width, g_settings.pip_height, frameBuffer->getScreenWidth(true), frameBuffer->getScreenHeight(true));
+		if (pipVideoDecoder[0])
+			pipVideoDecoder[0]->Pig(g_settings.pip_x, g_settings.pip_y, g_settings.pip_width, g_settings.pip_height, frameBuffer->getScreenWidth(true), frameBuffer->getScreenHeight(true));
 		usleep(100);
 		CZapit::getInstance()->StopPip(0);
 	}
@@ -4743,20 +4744,25 @@ void CNeutrinoApp::StartAVInputPiP() {
 	if (!g_info.hw_caps->can_pip)
 		return;
 
-	if (!pipVideoDemux[0]) {
+	if (!pipVideoDemux[0])
+	{
 		pipVideoDemux[0] = new cDemux(1);
 		pipVideoDemux[0]->Open(DMX_VIDEO_CHANNEL);
-		if (!pipVideoDecoder[0]) {
-			pipVideoDecoder[0] = new cVideo(0, NULL, NULL, 1);
-		}
 	}
-	pipVideoDemux[0]->SetSource(1, 2);
-	pipVideoDecoder[0]->SetStreamType((VIDEO_FORMAT) 1);
-	pipVideoDemux[0]->Start();
-	pipVideoDecoder[0]->Start(0, 0, 0);
-	pipVideoDecoder[0]->open_AVInput_Device();
-	pipVideoDecoder[0]->Pig(g_settings.pip_x, g_settings.pip_y, g_settings.pip_width, g_settings.pip_height, g_settings.screen_width, g_settings.screen_height);
-	pipVideoDecoder[0]->ShowPig(1);
+
+	if (!pipVideoDecoder[0])
+		pipVideoDecoder[0] = new cVideo(0, NULL, NULL, 1);
+
+	if (pipVideoDecoder[0] && pipVideoDemux[0])
+	{
+		pipVideoDemux[0]->SetSource(1, 2);
+		pipVideoDecoder[0]->SetStreamType((VIDEO_FORMAT) 1);
+		pipVideoDemux[0]->Start();
+		pipVideoDecoder[0]->Start(0, 0, 0);
+		pipVideoDecoder[0]->open_AVInput_Device();
+		pipVideoDecoder[0]->Pig(g_settings.pip_x, g_settings.pip_y, g_settings.pip_width, g_settings.pip_height, g_settings.screen_width, g_settings.screen_height);
+		pipVideoDecoder[0]->ShowPig(1);
+	}
 	avinput_pip = true;
 }
 
