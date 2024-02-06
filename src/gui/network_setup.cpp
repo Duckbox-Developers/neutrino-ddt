@@ -687,15 +687,15 @@ void CNetworkSetup::showCurrentNetworkSettings()
 
 const char * CNetworkSetup::mypinghost(std::string &host)
 {
-        int retvalue = pinghost(host);
-        switch (retvalue)
-        {
-                case 1: return (g_Locale->getText(LOCALE_PING_OK));
-                case 0: return (g_Locale->getText(LOCALE_PING_UNREACHABLE));
-                case -1: return (g_Locale->getText(LOCALE_PING_PROTOCOL));
-                case -2: return (g_Locale->getText(LOCALE_PING_SOCKET));
-        }
-        return "";
+	int retvalue = pinghost(host);
+	switch (retvalue)
+	{
+		case 1: return (g_Locale->getText(LOCALE_PING_OK));
+		case 0: return (g_Locale->getText(LOCALE_PING_UNREACHABLE));
+		case -1: return (g_Locale->getText(LOCALE_PING_PROTOCOL));
+		case -2: return (g_Locale->getText(LOCALE_PING_SOCKET));
+	}
+	return "";
 }
 
 void CNetworkSetup::testNetworkSettings()
@@ -710,7 +710,7 @@ void CNetworkSetup::testNetworkSettings()
 
 	//set wiki-URL and wiki-IP
 	std::string wiki_URL = "wiki.tuxbox-neutrino.org";
-	std::string wiki_IP = "93.218.197.51";
+	std::string wiki_IP = "77.11.53.128";
 
 	//get www-domain testsite from /.version
 	CConfigFile config('\t');
