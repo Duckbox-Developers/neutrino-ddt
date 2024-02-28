@@ -5385,7 +5385,7 @@ void CNeutrinoApp::StopSubtitles(bool enable_glcd_mirroring)
 
 void CNeutrinoApp::StartSubtitles(bool show)
 {
-	//printf("%s: %s\n", __FUNCTION__, show ? "Show" : "Not show");
+	//printf("[neutrino] %s: %s\n", __FUNCTION__, show ? "Show" : "Not show");
 	if (CMoviePlayerGui::getInstance().Playing()) {
 		CMoviePlayerGui::getInstance().StartSubtitles(show);
 		return;
