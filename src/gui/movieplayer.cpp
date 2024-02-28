@@ -2064,6 +2064,11 @@ void CMoviePlayerGui::PlayFileEnd(bool restore)
 	if (filelist_it == filelist.end())
 		FileTimeOSD->kill();
 
+	/* stop subtitle playback if running */
+	playback->SetSubtitlePid(0);
+	playback->SetTeletextPid(0);
+	dvbsub_stop();
+
 	playback->SetSpeed(1);
 	playback->Close();
 #if HAVE_SH4_HARDWARE
