@@ -288,7 +288,11 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 #endif // DYNAMIC_DEMUX
 #else
 			source = channel->getRecordDemux();
+#ifdef DYNAMIC_DEMUX
 			demux = channel->getPipDemux();
+#else
+			demux = source;
+#endif // DYNAMIC_DEMUX
 #endif
 			INFO("PIP: fe_num %d dmx_src %d", source, demux);
 			break;
