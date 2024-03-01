@@ -1601,7 +1601,7 @@ void CFrameBuffer::fbCopyArea(uint32_t width, uint32_t height, uint32_t dst_x, u
 	}
 }
 
-void CFrameBuffer::blit2FB(void *fbbuff, uint32_t width, uint32_t height, uint32_t xoff, uint32_t yoff, uint32_t xp, uint32_t yp, bool /*transp*/)
+void CFrameBuffer::blit2FB(void *fbbuff, uint32_t width, uint32_t height, uint32_t xoff, uint32_t yoff, uint32_t xp, uint32_t yp, bool transp)
 {
 	int  xc, yc;
 
@@ -1611,8 +1611,22 @@ void CFrameBuffer::blit2FB(void *fbbuff, uint32_t width, uint32_t height, uint32
 	fb_pixel_t  *data = (fb_pixel_t *) fbbuff;
 
 	fb_pixel_t *d = getFrameBufferPointer() + xoff + swidth * yoff;
-	fb_pixel_t *d2;
+	if (transp) {
+		fb_pixel_t *pixpos = data + yp * width;
+		int len = (xc - xp) * sizeof(fb_pixel_t);
+		if (width == xRes && swidth == xRes && xoff == 0 && xp == 0) {
+			memmove(d, pixpos, (yc - yp) * len);
+			return;
+		}
+		for (int count = 0; count < yc - yp; count++) {
+			memmove(d, pixpos + xp, len);
+			d += swidth;
+			pixpos += width;
+		}
+		return;
+	}
 
+	fb_pixel_t *d2;
 	for (int count = 0; count < yc; count++)
 	{
 		fb_pixel_t *pixpos = &data[(count + yp) * width];
