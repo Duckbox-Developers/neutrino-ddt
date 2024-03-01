@@ -198,6 +198,8 @@ void cDvbSubtitleBitmaps::Draw(int &min_x, int &min_y, int &max_x, int &max_y)
 			max_x = xoff + nw;
 		if (max_y < (yoff + nh))
 			max_y = yoff + nh;
+
+		free(newdata);
 	}
 
 	if (Count())
