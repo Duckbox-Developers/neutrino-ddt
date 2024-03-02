@@ -834,7 +834,12 @@ void CBouquetManager::loadWebchannels(int mode)
 						const char *epgid = xmlGetAttribute(l1, "epgid");
 						const char *xmltv = xmlGetAttribute(l1, "xmltv");
 						const char *epgmap = xmlGetAttribute(l1, "epgmap");
+						const char *alogo = xmlGetAttribute(l1, "logo");
 						const char *script = xmlGetAttribute(l1, "script");
+						if(alogo && !strlen(alogo))
+						{
+							alogo = NULL;	//skip 0 len logo
+						}
 						t_channel_id epg_id = 0;
 						if (epgid)
 							epg_id = strtoull(epgid, NULL, 16);
@@ -875,6 +880,12 @@ void CBouquetManager::loadWebchannels(int mode)
 								std::string new_epgmap(epgmap);
 								if(!new_epgmap.empty())
 									channel->setEPGmap("#" + new_epgmap + "=" + buf);
+							}
+							std::string helper = "alternate_logos";
+							if (alogo && !g_PicViewer->GetLogoName(chid, std::string(title), helper))
+							{
+								channel->setAlternateLogo(std::string(alogo));
+								LogoList.push_back(channel);
 							}
 							channel->flags = CZapitChannel::UPDATED;
 							if (gbouquet)
