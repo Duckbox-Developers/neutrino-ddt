@@ -109,7 +109,7 @@ bool CySocket::initSSL(void)
 {
 	SSL_load_error_strings(); // Load SSL Error Strings
 	SSL_library_init(); // Load SSL Library
-	if (0 == RAND_status()) // set Random
+	if (RAND_status() == 0) // set Random
 	{
 		aprintf("ySocket:SSL got no rand\n");
 		return false;
