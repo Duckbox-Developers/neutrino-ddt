@@ -891,7 +891,7 @@ int CTestMenu::exec(CMenuTarget* parent, const std::string &actionKey)
 		return menu_return::RETURN_REPAINT;
 	}
 	else if (actionKey == "msgbox_test_no_yes"){
-		int msgRet = ShowMsg("Testmenu: MsgBox test", "Test for MsgBox,\nPlease press key! ...", CMsgBox::mbrOk, CMsgBox::mbNoYes, NULL, 500);
+		int msgRet = ShowMsg("Testmenu: MsgBox test", "Test for MsgBox,\nPlease press key! ...", CMsgBox::mbrOk, CMsgBox::mbYesNo, NULL, 500);
 
 		std::string msg_txt = "Return value of MsgBox test is ";
 		msg_txt += to_string(msgRet);
