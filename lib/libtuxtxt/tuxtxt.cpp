@@ -377,7 +377,7 @@ void dump_page()
 /* out: 18 bit triplet data, <0 if invalid number, not cached, or hamming error */
 int iTripletNumber2Data(int iONr, tstCachedPage *pstCachedPage, unsigned char *pagedata)
 {
-	if (iONr > 506 || 0 == pstCachedPage)
+	if (iONr > 506 || pstCachedPage == 0)
 		return -1;
 
 	unsigned char *p;
@@ -388,16 +388,16 @@ int iTripletNumber2Data(int iONr, tstCachedPage *pstCachedPage, unsigned char *p
 		p = pagedata + 40 * (packet - 1) + packetoffset + 1;
 	else if (packet <= 25)
 	{
-		if (0 == pstCachedPage->pageinfo.p24)
+		if (pstCachedPage->pageinfo.p24 == 0)
 			return -1;
 		p = pstCachedPage->pageinfo.p24 + 40 * (packet - 24) + packetoffset + 1;
 	}
 	else
 	{
 		int descode = packet - 26;
-		if (0 == pstCachedPage->pageinfo.ext)
+		if (pstCachedPage->pageinfo.ext == 0)
 			return -1;
-		if (0 == pstCachedPage->pageinfo.ext->p26[descode])
+		if (pstCachedPage->pageinfo.ext->p26[descode] == 0)
 			return -1;
 		p = pstCachedPage->pageinfo.ext->p26[descode] + packetoffset;	/* first byte (=designation code) is not cached */
 	}
@@ -462,15 +462,14 @@ void eval_object(int iONr, tstCachedPage *pstCachedPage,
 		}
 		iONr++;
 	}
-	while (0 == eval_triplet(iOData, pstCachedPage, pAPx, pAPy, pAPx0, pAPy0, &drcssubp, &gdrcssubp, &endcol, &attrPassive, pagedata)
-		|| iONr1 == iONr); /* repeat until termination reached */
+	while (eval_triplet(iOData, pstCachedPage, pAPx, pAPy, pAPx0, pAPy0, &drcssubp, &gdrcssubp, &endcol, &attrPassive, pagedata) == 0 || iONr1 == iONr); /* repeat until termination reached */
 }
 
 void eval_NumberedObject(int p, int s, int packet, int triplet, int high,
 	unsigned char *pAPx, unsigned char *pAPy,
 	unsigned char *pAPx0, unsigned char *pAPy0)
 {
-	if (!packet || 0 == tuxtxt_cache.astCachetable[p][s])
+	if (!packet || tuxtxt_cache.astCachetable[p][s] == 0)
 		return;
 	unsigned char pagedata[23 * 40];
 	tuxtxt_decompress_page(p, s, pagedata);
@@ -522,7 +521,7 @@ int eval_triplet(int iOData, tstCachedPage *pstCachedPage,
 		switch (iMode)
 		{
 			case 0x00:
-				if (0 == (iData >> 5))
+				if ((iData >> 5) == 0)
 				{
 					int newcolor = iData & 0x1f;
 					if (*endcol < 0) /* passive object */
@@ -591,7 +590,7 @@ int eval_triplet(int iOData, tstCachedPage *pstCachedPage,
 					page_atrb[offset].charset = C_G3;
 				break;
 			case 0x03:
-				if (0 == (iData >> 5))
+				if ((iData >> 5) == 0)
 				{
 					int newcolor = iData & 0x1f;
 					if (*endcol < 0) /* passive object */
@@ -833,7 +832,7 @@ int eval_triplet(int iOData, tstCachedPage *pstCachedPage,
 		switch (iMode)
 		{
 			case 0x00:
-				if (0 == (iData >> 5))
+				if ((iData >> 5) == 0)
 				{
 #if TUXTXT_DEBUG
 					if (dumpl25)
@@ -854,15 +853,15 @@ int eval_triplet(int iOData, tstCachedPage *pstCachedPage,
 					if (dumpl25)
 					{
 						printf("  AP=%d,0", RowAddress2Row(iAddress));
-						if (0 == (iData >> 5))
+						if ((iData >> 5) == 0)
 							printf("  FRowCol T%x#%x", (iData >> 3) & 0x03, iData & 0x07);
-						else if (3 == (iData >> 5))
+						else if ((iData >> 5) == 3)
 							printf("  FRowCol++ T%x#%x", (iData >> 3) & 0x03, iData & 0x07);
 					}
 #endif
-					if (row <= 24 && 0 == (iData >> 5))
+					if (row <= 24 && (iData >> 5) == 0)
 						maxrow = row;
-					else if (3 == (iData >> 5))
+					else if ((iData >> 5) == 3)
 						maxrow = 24;
 					else
 						maxrow = -1;
@@ -887,9 +886,9 @@ int eval_triplet(int iOData, tstCachedPage *pstCachedPage,
 				{
 					if (iAddress == 0x3f)
 						printf("  AP=0,0");
-					if (0 == (iData >> 5))
+					if ((iData >> 5) == 0)
 						printf("  Address Display R0 FRowCol T%x#%x", (iData >> 3) & 0x03, iData & 0x07);
-					else if (3 == (iData >> 5))
+					else if ((iData >> 5) == 3)
 						printf("  Address Display R0->24 FRowCol T%x#%x", (iData >> 3) & 0x03, iData & 0x07);
 				}
 #endif
@@ -902,9 +901,9 @@ int eval_triplet(int iOData, tstCachedPage *pstCachedPage,
 						int row = *pAPy0; // + *pAPy;
 						int maxrow;
 
-						if (row <= 24 && 0 == (iData >> 5))
+						if (row <= 24 && (iData >> 5) == 0)
 							maxrow = row;
-						else if (3 == (iData >> 5))
+						else if ((iData >> 5) == 3)
 							maxrow = 24;
 						else
 							maxrow = -1;
@@ -1002,7 +1001,7 @@ int eval_triplet(int iOData, tstCachedPage *pstCachedPage,
 			case 0x15:
 			case 0x16:
 			case 0x17:
-				if (0 == (iAddress & 0x08))	/* Object Definition illegal or only level 3.5 */
+				if ((iAddress & 0x08) == 0)	/* Object Definition illegal or only level 3.5 */
 					break; /* ignore */
 #if TUXTXT_DEBUG
 				if (dumpl25)
@@ -1034,7 +1033,7 @@ int eval_triplet(int iOData, tstCachedPage *pstCachedPage,
 				return 0xFF; /* termination by object definition */
 				break;
 			case 0x18:
-				if (0 == (iData & 0x10)) /* DRCS Mode reserved or only level 3.5 */
+				if ((iData & 0x10) == 0) /* DRCS Mode reserved or only level 3.5 */
 					break; /* ignore */
 #if TUXTXT_DEBUG
 				if (dumpl25)
