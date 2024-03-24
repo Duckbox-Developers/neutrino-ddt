@@ -193,7 +193,7 @@ void tuxtxt_decode_btt()
 	int i, current, b1, b2, b3, b4;
 	unsigned char btt[23 * 40] = {0};
 
-	if (tuxtxt_cache.subpagetable[0x1f0] == 0xff || 0 == tuxtxt_cache.astCachetable[0x1f0][tuxtxt_cache.subpagetable[0x1f0]]) /* not yet received */
+	if (tuxtxt_cache.subpagetable[0x1f0] == 0xff || tuxtxt_cache.astCachetable[0x1f0][tuxtxt_cache.subpagetable[0x1f0]] == 0) /* not yet received */
 		return;
 	tuxtxt_decompress_page(0x1f0, tuxtxt_cache.subpagetable[0x1f0], btt);
 	if (btt[799] == ' ') /* not completely received or error */
@@ -260,7 +260,7 @@ void tuxtxt_decode_adip() /* additional information table */
 	for (i = 0; i <= tuxtxt_cache.maxadippg; i++)
 	{
 		p = tuxtxt_cache.adippg[i];
-		if (!p || tuxtxt_cache.subpagetable[p] == 0xff || 0 == tuxtxt_cache.astCachetable[p][tuxtxt_cache.subpagetable[p]]) /* not cached (avoid segfault) */
+		if (!p || tuxtxt_cache.subpagetable[p] == 0xff || tuxtxt_cache.astCachetable[p][tuxtxt_cache.subpagetable[p]] == 0) /* not cached (avoid segfault) */
 			continue;
 
 		tuxtxt_decompress_page(p, tuxtxt_cache.subpagetable[p], padip);
@@ -981,7 +981,7 @@ void *tuxtxt_CacheThread(void * /*arg*/)
 									do
 									{
 										for (;
-											l >= 2 && 0 == tuxtxt_cache.flofpages[tuxtxt_cache.current_page[magazine]][l];
+											l >= 2 && tuxtxt_cache.flofpages[tuxtxt_cache.current_page[magazine]][l] == 0;
 											l--)
 											; /* find used linkindex */
 										for (;

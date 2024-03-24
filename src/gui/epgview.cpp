@@ -744,14 +744,14 @@ int CEpgData::show(const t_channel_id channel_id, uint64_t a_id, time_t* a_start
 				if (nPosDot < epgData.info2.length() && nPosDot < epgData.info1.length()) {   // Make sure we don't overrun the buffer
 
 					// Check if the stuff after the dot equals the beginning of info2
-					if (0 == epgData.info2.find(epgData.info1.substr(nPosDot, epgData.info1.length() - nPosDot))) {
+					if (epgData.info2.find(epgData.info1.substr(nPosDot, epgData.info1.length() - nPosDot)) == 0) {
 						strEpisode = epgData.info1.substr(0, nPosDot) + "\n";
 						bHide = true;
 					}
 				}
 			}
 			// Compare strings normally if not positively found to be equal before
-			if (false == bHide && 0 == epgData.info2.find(epgData.info1)) {
+			if (false == bHide && epgData.info2.find(epgData.info1) == 0) {
 				bHide = true;
 			}
 		}
