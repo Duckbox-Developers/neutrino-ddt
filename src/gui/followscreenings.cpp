@@ -77,7 +77,7 @@ CChannelEventList *CFollowScreenings::getFollowScreenings(void)
 int CFollowScreenings::exec(CMenuTarget* /*parent*/, const std::string & actionKey)
 {
 	unsigned long a;
-	if (1 == sscanf(actionKey.c_str(), "%lu", &a)) {
+	if (sscanf(actionKey.c_str(), "%lu", &a) == 1) {
 		int ix = 0;
 		CChannelEventList::iterator e;
 		for (e = followlist.begin(); e != followlist.end(); e++, ix++)

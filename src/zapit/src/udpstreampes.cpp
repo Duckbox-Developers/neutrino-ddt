@@ -95,8 +95,8 @@ void RestartUdpSender()
    pthread_attr_t ThreadAttr;
    struct sched_param SchedParam;
 
-   if ( Send.Socket != -1 ) {
-      if( -1 == close( Send.Socket ) ) {
+   if (Send.Socket != -1) {
+      if (close( Send.Socket) == -1) {
          perror("ERROR: RestartUdpSender() - close");
          fflush(stderr);
       }
@@ -108,8 +108,7 @@ void RestartUdpSender()
       fflush(stderr);
       exit(-1);
    }
-   if( -1 == connect( Send.Socket, (struct sockaddr*)&(Send.Addr),
-                                                    Send.AddrLen ) ) {
+   if (connect( Send.Socket, (struct sockaddr*)&(Send.Addr), Send.AddrLen) == -1) {
       perror("ERROR: RestartUdpSender() - connect");
       fprintf(stderr, "EXIT\n");
       fflush(stderr);
@@ -122,8 +121,8 @@ void RestartUdpSender()
    pthread_attr_setschedparam(&ThreadAttr, &SchedParam);
 
    // bei Polling fuehrt die hohe Proritaet zu DmxBufferOverflows
-   if ( -1 == pthread_create(&(Send.Thread), 0, // &ThreadAttr,
-                                                  UdpSender, 0 ) ) {
+   if (pthread_create(&(Send.Thread), 0, // &ThreadAttr,
+                                             UdpSender, 0) == -1) {
       perror("ERROR: RestartUdpSender() - pthread_create");
       fprintf(stderr, "EXIT\n");
       fflush(stderr);
@@ -159,22 +158,20 @@ void * UdpSender( void * Ptr )
             Send.Packet = i;
             // MSG_DONTWAIT ist notwendig, weil bei blocking I/O send()
             // frueher oder spaeter haengen bleibt -> Watchdog
-            if ( -1 == write (Send.Socket, ReadPtr,
-                            DATA_PER_PACKET ) ) {
-//            while ( -1 == send (Send.Socket, ReadPtr,
-//                            DATA_PER_PACKET, MSG_DONTWAIT ) ) {
-//               if( errno != EAGAIN ) {
-   //               pselect(1, NULL, &wfds, NULL, &ts, NULL);
-   //            } else {
+            if (write (Send.Socket, ReadPtr, DATA_PER_PACKET) == -1) {
+//              while (send (Send.Socket, ReadPtr, DATA_PER_PACKET, MSG_DONTWAIT) == -1) {
+//                  if (errno != EAGAIN) {
+//                      pselect(1, NULL, &wfds, NULL, &ts, NULL);
+//                  } else {
                   Send.Watchdog = WATCHDOG_TRESHOLD;
                   perror("ERROR: UdpSender() - send");
                   fflush(stderr);
                   pthread_exit(0);
- //              }
+//                  }
             }
-            if ( ((PacketHeaderType*)ReadPtr)->Status == 2 ) {
-               for ( u=0; u< StreamThreadNum; u++ ) free( SPkt.Buf[u] );
-               close( Send.Socket );
+            if (((PacketHeaderType*)ReadPtr)->Status == 2) {
+               for (u=0; u< StreamThreadNum; u++ ) free( SPkt.Buf[u]);
+               close(Send.Socket);
                StreamStop = 1;
                pthread_exit(0);
             }
@@ -199,7 +196,7 @@ void * DmxTSReader( void * /*Ptr*/ )
 	unsigned u;
 
    fd_dvr = open("/dev/dvb/adapter0/dvr0", O_RDONLY);
-   if (-1 == fd_dvr) {
+   if (fd_dvr == -1) {
       perror("ERROR: main() - dvr0 open");
       fprintf(stderr, "EXIT\n");
       fflush(stderr);
@@ -208,14 +205,14 @@ void * DmxTSReader( void * /*Ptr*/ )
 
 	for (u = 0; u < StreamNum; u++) {
 		Stream[u].fd = open("/dev/dvb/adapter0/demux0", O_RDWR);
-		if (-1 == Stream[u].fd) {
+		if (Stream[u].fd == -1) {
 			perror("ERROR: main() - demux0 open");
 			fprintf(stderr, "EXIT\n");
 			fflush(stderr);
 			exit(-1);
 		}
-		if ( -1 == ioctl(Stream[u].fd, DMX_SET_BUFFER_SIZE, //256*1024) ) {
-			Stream[u].BufPacketNum * NET_DATA_PER_PACKET * DMX_BUF_FACTOR) ) {
+		if (ioctl(Stream[u].fd, DMX_SET_BUFFER_SIZE, //256*1024) ) {
+			Stream[u].BufPacketNum * NET_DATA_PER_PACKET * DMX_BUF_FACTOR) == -1) {
 			perror("ERROR: main() - dmx set buffer ioctl");
 			fprintf(stderr, "EXIT\n");
 			fflush(stderr);
@@ -308,12 +305,12 @@ void * DmxTSReader( void * /*Ptr*/ )
    }
 
 	for (u = 0; u < StreamNum; u++) {
-		if ( -1 == ioctl(Stream[u].fd, DMX_STOP, 0) ) {
+		if (ioctl(Stream[u].fd, DMX_STOP, 0) == -1) {
 			perror("ERROR: DmxReader() - dmx stop ioctl");
 			fprintf(stderr, "Pid %x\n", Stream[u].Filter.pid);
 			fflush(stderr);
 		}
-		close( Stream[u].fd );
+		close(Stream[u].fd);
 	}
    close( fd_dvr );
    free( CurStream->Buf[0] );
@@ -331,15 +328,15 @@ void * DmxReader( void * Ptr )
    BufSize = (CurStream->BufPacketNum) * NET_DATA_PER_PACKET;
 
    CurStream->fd = open("/dev/dvb/adapter0/demux0", O_RDWR);
-   if (-1 == CurStream->fd) {
+   if (CurStream->fd == -1) {
       perror("ERROR: main() - demux0 open");
       fprintf(stderr, "EXIT\n");
       fflush(stderr);
       exit(-1);
    }
 
-   if ( -1 == ioctl(CurStream->fd, DMX_SET_BUFFER_SIZE, // 1024*1024) ) {
-       CurStream->BufPacketNum * NET_DATA_PER_PACKET * DMX_BUF_FACTOR) ) {
+   if (ioctl(CurStream->fd, DMX_SET_BUFFER_SIZE, // 1024*1024) ) {
+       CurStream->BufPacketNum * NET_DATA_PER_PACKET * DMX_BUF_FACTOR) == -1) {
       perror("ERROR: main() - dmx set buffer ioctl");
       fprintf(stderr, "EXIT\n");
       fflush(stderr);
@@ -404,7 +401,7 @@ void * DmxReader( void * Ptr )
 
       BufLen = 0;
    }
-   if ( -1 == ioctl(CurStream->fd, DMX_STOP, 0) ) {
+   if (ioctl(CurStream->fd, DMX_STOP, 0) == -1) {
       perror("ERROR: DmxReader() - dmx stop ioctl");
       fprintf(stderr, "Pid %x\n", CurStream->Filter.pid);
       fflush(stderr);
@@ -422,7 +419,7 @@ void ReadLine( char String[] )
 
    StrPtr = String;
    while (StrPtr-String < STRING_SIZE-1 ) {
-      if ( 1 == read(STDIN_FILENO, &c, 1) ) {
+      if (read(STDIN_FILENO, &c, 1) == 1) {
          if ((*StrPtr++=c)=='\n') break;
       }
    }
@@ -652,8 +649,7 @@ int main ()
 
    // Adresse fuer Send.Socket ermitteln
    Send.AddrLen = sizeof(struct sockaddr_in);
-   if ( -1 == getpeername(STDIN_FILENO,
-                (struct sockaddr *)&(Send.Addr), &(Send.AddrLen)) ) {
+   if (getpeername(STDIN_FILENO, (struct sockaddr *)&(Send.Addr), &(Send.AddrLen)) == -1) {
       perror("ERROR: main() - getpeername");
       fprintf(stderr, "EXIT\n");
       fflush(stderr);
