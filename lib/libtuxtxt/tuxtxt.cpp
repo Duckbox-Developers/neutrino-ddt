@@ -120,7 +120,7 @@ void gethotlist()
 			if (!fgets(line, sizeof(line), hl))
 				break;
 
-			if (1 == sscanf(line, "%x", (unsigned int *)&hotlist[maxhotlist + 1]))
+			if (sscanf(line, "%x", (unsigned int *)&hotlist[maxhotlist + 1]) == 1)
 			{
 				if (hotlist[maxhotlist + 1] >= 0x100 && hotlist[maxhotlist + 1] <= 0x899)
 				{
@@ -1918,47 +1918,47 @@ int Init(int source)
 			if (!fgets(line, sizeof(line), conf))
 				break;
 
-			if (1 == sscanf(line, "ScreenMode16x9Normal %i", &ival))
+			if (sscanf(line, "ScreenMode16x9Normal %i", &ival) == 1)
 				screen_mode1 = ival & 1;
-			else if (1 == sscanf(line, "Brightness %i", &ival))
+			else if (sscanf(line, "Brightness %i", &ival) == 1)
 				color_mode = ival;
-			else if (1 == sscanf(line, "AutoNational %i", &ival))
+			else if (sscanf(line, "AutoNational %i", &ival) == 1)
 				auto_national = ival & 1;
-			else if (1 == sscanf(line, "NationalSubset %i", &ival))
+			else if (sscanf(line, "NationalSubset %i", &ival) == 1)
 			{
 				if (ival >= 0 && ival <= (int) MAX_NATIONAL_SUBSET)
 					national_subset = ival;
 			}
-			else if (1 == sscanf(line, "MenuLanguage %i", &ival))
+			else if (sscanf(line, "MenuLanguage %i", &ival) == 1)
 			{
 				if (ival >= 0 && ival <= MAXMENULANGUAGE)
 					menulanguage = ival;
 			}
-			else if (1 == sscanf(line, "SwapUpDown %i", &ival))
+			else if (sscanf(line, "SwapUpDown %i", &ival) == 1)
 				swapupdown = ival & 1;
-			else if (1 == sscanf(line, "ShowHexPages %i", &ival))
+			else if (sscanf(line, "ShowHexPages %i", &ival) == 1)
 				showhex = ival & 1;
-			else if (1 == sscanf(line, "Transparency %i", &ival))
+			else if (sscanf(line, "Transparency %i", &ival) == 1)
 				trans_mode = ival;
-			else if (1 == sscanf(line, "TTFWidthFactor16 %i", &ival))
+			else if (sscanf(line, "TTFWidthFactor16 %i", &ival) == 1)
 				TTFWidthFactor16 = ival;
-			else if (1 == sscanf(line, "TTFHeightFactor16 %i", &ival))
+			else if (sscanf(line, "TTFHeightFactor16 %i", &ival) == 1)
 				TTFHeightFactor16 = ival;
-			else if (1 == sscanf(line, "TTFShiftX %i", &ival))
+			else if (sscanf(line, "TTFShiftX %i", &ival) == 1)
 				TTFShiftX = ival;
-			else if (1 == sscanf(line, "TTFShiftY %i", &ival))
+			else if (sscanf(line, "TTFShiftY %i", &ival) == 1)
 				TTFShiftY = ival;
-			else if (1 == sscanf(line, "Screenmode %i", &ival))
+			else if (sscanf(line, "Screenmode %i", &ival) == 1)
 				screenmode = ival;
-			else if (1 == sscanf(line, "ShowFLOF %i", &ival))
+			else if (sscanf(line, "ShowFLOF %i", &ival) == 1)
 				showflof = ival & 1;
-			else if (1 == sscanf(line, "Show39 %i", &ival))
+			else if (sscanf(line, "Show39 %i", &ival) == 1)
 				show39 = ival & 1;
-			else if (1 == sscanf(line, "ShowLevel2p5 %i", &ival))
+			else if (sscanf(line, "ShowLevel2p5 %i", &ival) == 1)
 				showl25 = ival & 1;
-			else if (1 == sscanf(line, "DumpLevel2p5 %i", &ival))
+			else if (sscanf(line, "DumpLevel2p5 %i", &ival) == 1)
 				dumpl25 = ival & 1;
-			else if (1 == sscanf(line, "UseTTF %i", &ival))
+			else if (sscanf(line, "UseTTF %i", &ival) == 1)
 				usettf = ival & 1;
 		}
 		fclose(conf);
