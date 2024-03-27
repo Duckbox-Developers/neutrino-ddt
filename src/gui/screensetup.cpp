@@ -500,7 +500,7 @@ void CScreenSetup::loadBorders()
 				t_channel_id chan;
 				long long unsigned _chan;
 				borderFrame b;
-				if (5 == sscanf(s, "%llx %d %d %d %d", &_chan, &b.sx, &b.sy, &b.ex, &b.ey)) {
+				if (sscanf(s, "%llx %d %d %d %d", &_chan, &b.sx, &b.sy, &b.ex, &b.ey) == 5) {
 					chan = _chan;
 					borderMap[chan] = b;
 				}
