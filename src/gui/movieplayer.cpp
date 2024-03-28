@@ -1918,7 +1918,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			CTimeInput jumpTime (LOCALE_MPKEY_GOTO, &Value, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, NULL, &cancel);
 			jumpTime.exec(NULL, "");
 			jumpTime.hide();
-			if (!cancel && (3 == sscanf(Value.c_str(), "%d:%d:%d", &hh, &mm, &ss)))
+			if (!cancel && (sscanf(Value.c_str(), "%d:%d:%d", &hh, &mm, &ss) == 3))
 				SetPosition(1000 * (hh * 3600 + mm * 60 + ss), true);
 
 		} else if (msg == CRCInput::RC_help) {

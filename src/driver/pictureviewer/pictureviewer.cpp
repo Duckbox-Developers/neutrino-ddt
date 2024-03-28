@@ -1192,8 +1192,8 @@ static size_t getCachedMemSize(void)
 		{
 			char unit[10];
 			*unit = 0;
-			if ((3 == sscanf(buf, "%[^:]: %zu %s", a, &v, unit))
-				|| (2 == sscanf(buf, "%[^:]: %zu", a, &v)))
+			if ((sscanf(buf, "%[^:]: %zu %s", a, &v, unit) == 3)
+				|| (sscanf(buf, "%[^:]: %zu", a, &v) == 2))
 			{
 				if (*unit == 'k')
 					v <<= 10;

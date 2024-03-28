@@ -73,7 +73,7 @@ void CKernelOptions::updateStatus(void)
 		char buf[200];
 		while (fgets(buf, sizeof(buf), f)) {
 			char name[sizeof(buf)];
-			if (1 == sscanf(buf, "%s", name))
+			if (sscanf(buf, "%s", name) == 1)
 				for (unsigned int i = 0; i < modules.size(); i++) {
 					if (name == modules[i].moduleList.back().first) {
 						modules[i].installed = true;
@@ -240,7 +240,7 @@ void CKernelOptions::load()
 			if (t)
 				*t = 0;
 			char name[200];
-			if (1 == sscanf(buf, "%s", name)) {
+			if (sscanf(buf, "%s", name) == 1) {
 				for (unsigned int i = 0; i < modules.size(); i++)
 					if (modules[i].moduleList.back().first == name) {
 						modules[i].active = modules[i].active_orig = 1;

@@ -151,7 +151,7 @@ void C3DSetup::load()
 			t_channel_id chan;
 			long long unsigned int _chan;
 			int mode;
-			if (2 == sscanf(s, "%llx %d", &_chan, &mode)) {
+			if (sscanf(s, "%llx %d", &_chan, &mode) == 2) {
 				chan = _chan;
 				threeDMap[chan] = (CFrameBuffer::Mode3D) mode;
 			}
