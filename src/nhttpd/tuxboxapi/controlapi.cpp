@@ -173,6 +173,7 @@ const CControlAPI::TyCgiCall CControlAPI::yCgiCallList[] =
 	{"signal",		&CControlAPI::SignalInfoCGI,		"text/plain"},
 	{"getonidsid",		&CControlAPI::GetChannelIDCGI,		"text/plain"},
 	{"getchannelid",	&CControlAPI::GetChannelIDCGI,		""},
+	{"getchannelinfo",	&CControlAPI::GetChannelInfoCGI,	""},
 	{"getepgid",		&CControlAPI::GetEpgIDCGI,		""},
 	{"currenttpchannels",	&CControlAPI::GetTPChannel_IDCGI,	"text/plain"},
 	// boxcontrol - system
@@ -734,6 +735,41 @@ void CControlAPI::GetChannelIDCGI(CyhookHandler *hh)
 	result = hh->outPair("id", string_printf(PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS, channel_id), true);
 	result += hh->outPair("short_id", string_printf(PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS, channel_id & 0xFFFFFFFFFFFFULL), false);
 	result = hh->outObject("id", result);
+	hh->SendResult(result);
+}
+
+// get actual channel_info
+void CControlAPI::GetChannelInfoCGI(CyhookHandler *hh)
+{
+	t_channel_id channel_id = CZapit::getInstance()->GetCurrentChannelID();
+	CZapitChannel *channel = CServiceManager::getInstance()->FindChannel48(channel_id);
+
+	hh->outStart();
+	std::string result = "";
+	result = hh->outObject("name", hh->outValue(channel->getName()) + "\n");
+
+	CShortEPGData epg;
+	CSectionsdClient::CurrentNextInfo CurrentNext;
+	CEitManager::getInstance()->getCurrentNextServiceKey(channel_id, CurrentNext);
+
+	if (CurrentNext.flags & CSectionsdClient::epgflags::has_current)
+	{
+		result += hh->outObject("epg_now", hh->outValue(CurrentNext.current_name) + "\n");
+		result += hh->outObject("duration", string_printf("%d/", (abs(time(NULL) - CurrentNext.current_zeit.startzeit) + 30) / 60) + string_printf("%d\n", CurrentNext.current_zeit.dauer / 60));
+	}
+	else
+	{
+		result += hh->outObject("epg_now", "\n");
+		result += hh->outObject("duration", "0/0\n");
+	}
+
+	if (CurrentNext.flags & CSectionsdClient::epgflags::has_next)
+	{
+		result += hh->outObject("epg_next", hh->outValue(CurrentNext.next_name) + "\n");
+	}
+	else
+		result += hh->outObject("epg_next", "\n");
+
 	hh->SendResult(result);
 }
 
