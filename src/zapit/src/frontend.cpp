@@ -315,10 +315,12 @@ void CFrontend::getFEInfo(void)
 				}
 #endif
 				break;
+#if _HAVE_DVB57
 			case SYS_DTMB:
 				deliverySystemMask |= DTMB;
 				printf("[fe%d/%d] add delivery system DTMB (delivery_system: %d)\n", adapter, fenumber, (fe_delivery_system_t)prop[0].u.buffer.data[i]);
 				break;
+#endif
 			default:
 				printf("[fe%d/%d] ERROR: delivery system unknown (delivery_system: %d)\n", adapter, fenumber, (fe_delivery_system_t)prop[0].u.buffer.data[i]);
 				continue;
