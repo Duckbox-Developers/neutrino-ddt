@@ -269,6 +269,9 @@ CNeutrinoApp::CNeutrinoApp()
 	frameBuffer = CFrameBuffer::getInstance();
 	frameBuffer->setIconBasePath(ICONSDIR);
 	SetupFrameBuffer();
+#if BOXMODEL_DM820 // needs setup twice
+	SetupFrameBuffer();
+#endif
 
 	mode 			= NeutrinoModes::mode_unknown;
 	lastMode		= NeutrinoModes::mode_unknown;
