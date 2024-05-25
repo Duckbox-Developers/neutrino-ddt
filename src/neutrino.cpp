@@ -269,7 +269,7 @@ CNeutrinoApp::CNeutrinoApp()
 	frameBuffer = CFrameBuffer::getInstance();
 	frameBuffer->setIconBasePath(ICONSDIR);
 	SetupFrameBuffer();
-#if BOXMODEL_DM820 // needs setup twice
+#if BOXMODEL_DM820 || BOXMODEL_DM900 // needs setup twice
 	SetupFrameBuffer();
 #endif
 
