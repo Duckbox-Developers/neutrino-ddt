@@ -746,7 +746,7 @@ uint32_t CFrontend::getBitErrorRate(void) const
 	return ber;
 }
 
-#if BOXMODEL_DM820
+#if BOXMODEL_DM820 || BOXMODEL_DM900
 #define M_STRENGTH 350
 #define M_SNR 35
 #else
