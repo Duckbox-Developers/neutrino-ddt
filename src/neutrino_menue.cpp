@@ -255,6 +255,13 @@ void CNeutrinoApp::InitMenuMain()
 	mf->setHint(NEUTRINO_ICON_HINT_REBOOT, LOCALE_MENU_HINT_REBOOT);
 	personalize.addItem(MENU_MAIN, mf, &g_settings.personalize[SNeutrinoSettings::P_MAIN_REBOOT]);
 
+#if BOXMODEL_DM820 || BOXMODEL_DM900
+	//rescue mode
+	mf = new CMenuForwarder(LOCALE_MAINMENU_RESCUEMODE, true, NULL, this, "rescue_mode", CRCInput::RC_nokey);
+	mf->setHint(NEUTRINO_ICON_HINT_RESCUEMODE, LOCALE_MENU_HINT_RESCUEMODE);
+	personalize.addItem(MENU_MAIN, mf, &g_settings.personalize[SNeutrinoSettings::P_MAIN_REBOOT]);
+#endif
+
 	//shutdown
 	if (g_info.hw_caps->can_shutdown) {
 		mf = new CMenuForwarder(LOCALE_MAINMENU_SHUTDOWN, true, NULL, this, "shutdown", CRCInput::RC_standby);
