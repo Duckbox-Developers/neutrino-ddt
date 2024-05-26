@@ -4804,6 +4804,18 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 	if (actionKey == "help_recording") {
 		ShowMsg(LOCALE_SETTINGS_HELP, LOCALE_RECORDINGMENU_HELP, CMsgBox::mbrBack, CMsgBox::mbBack);
 	}
+#if BOXMODEL_DM820 || BOXMODEL_DM900 // rescue mode
+	else if (actionKey=="rescue_mode")
+	{
+		FILE *f = fopen("/tmp/.reboot", "w");
+		if (f)
+			fclose(f);
+		proc_put("/proc/stb/fp/boot_mode", "rescue");
+		ExitRun(CNeutrinoApp::EXIT_REBOOT);
+		unlink("/tmp/.reboot");
+		returnval = menu_return::RETURN_NONE;
+	}
+#endif
 	else if (actionKey=="shutdown")
 	{
 		ExitRun(CNeutrinoApp::EXIT_SHUTDOWN);
