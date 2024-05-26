@@ -406,9 +406,12 @@ start-block~remote
 		{=if-equal:{=var-get:boxtype=}~AirDigital Zgemma H7~	{=include-block:Y_Blocks.txt;rc_zgemma_h7=}~
 		{=if-equal:{=var-get:boxtype=}~WWIO BRE2ZE4K~		{=include-block:Y_Blocks.txt;rc_wwio_bre2ze4k=}~
 		{=if-equal:{=var-get:boxtype=}~AXAS E4HD 4K ULTRA~	{=include-block:Y_Blocks.txt;rc_axas_e4hd=}~
+		{=if-equal:{=var-get:boxtype=}~DM 8000HD~		{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
+		{=if-equal:{=var-get:boxtype=}~DM 820HD~		{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
+		{=if-equal:{=var-get:boxtype=}~DM 900 UHD~		{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
 
 		{=comment:fallback~=}					{=include-block:Y_Blocks.txt;rc_ufs910=}
-		=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
+		=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
 	~
 	{=if-equal:{=var-get:yfbtype=}~1~	{=include-block:Y_Blocks.txt;rc_ax_hd51=}~
 	{=if-equal:{=var-get:yfbtype=}~2~	{=include-block:Y_Blocks.txt;rc_mutant_hd51=}~
@@ -424,6 +427,9 @@ start-block~remote
 	{=if-equal:{=var-get:yfbtype=}~12~	{=include-block:Y_Blocks.txt;rc_zgemma_h7=}~
 	{=if-equal:{=var-get:yfbtype=}~13~	{=include-block:Y_Blocks.txt;rc_wwio_bre2ze4k=}~
 	{=if-equal:{=var-get:yfbtype=}~14~	{=include-block:Y_Blocks.txt;rc_axas_e4hd=}~
+	{=if-equal:{=var-get:yfbtype=}~15~	{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
+	{=if-equal:{=var-get:yfbtype=}~16~	{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
+	{=if-equal:{=var-get:yfbtype=}~17~	{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
 	{=if-equal:{=var-get:yfbtype=}~-5~	{=include-block:Y_Blocks.txt;rc_ufs913=}~
 	{=if-equal:{=var-get:yfbtype=}~-4~	{=include-block:Y_Blocks.txt;rc_ufs913=}~
 	{=if-equal:{=var-get:yfbtype=}~-3~	{=include-block:Y_Blocks.txt;rc_ufs910=}~
@@ -431,7 +437,7 @@ start-block~remote
 	{=if-equal:{=var-get:yfbtype=}~-1~	{=include-block:Y_Blocks.txt;rc_spark_new=}~
 
 	{=comment:fallback~=}			{=include-block:Y_Blocks.txt;rc_ufs910=}
-	=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
+	=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
 =}
 end-block~remote
 
@@ -835,7 +841,7 @@ start-block~rc_zgemma_h7
 <area shape="rect" coords="67,394,28,355" alt="KEY_VOLUMEUP" href="javascript:rcsim('KEY_VOLUMEUP')" />
 <area shape="rect" coords="67,439,28,400" alt="KEY_VOLUMEDOWN" href="javascript:rcsim('KEY_VOLUMEDOWN')" />
 <area shape="rect" coords="119,439,77,415" alt="KEY_PORTAL" href="javascript:rcsim('KEY_BOOKMARKS')" />
-<area shape="rect" coords="169,394,130,355" alt="KEY_PAGEUP" href="javascript:rcsim('KEY_PAGEUP)" />
+<area shape="rect" coords="169,394,130,355" alt="KEY_PAGEUP" href="javascript:rcsim('KEY_PAGEUP')" />
 <area shape="recr" coords="169,439,130,400" alt="KEY_PAGEDOWN" href="javascript:rcsim('KEY_PAGEDOWN')" />
 <area shape="rect" coords="78,356,119,377" alt="KEY_MENU" href="javascript:rcsim('KEY_MENU')" />
 <area shape="rect" coords="27,317,55,344" alt="KEY_HOME" href="javascript:rcsim('KEY_HOME')" />
@@ -893,7 +899,7 @@ start-block~rc_wwio_bre2ze4k
 <area shape="rect" coords="26,247,54,283" alt="KEY_VOLUMEUP" href="javascript:rcsim('KEY_VOLUMEUP')" />
 <area shape="rect" coords="26,292,54,328" alt="KEY_VOLUMEDOWN" href="javascript:rcsim('KEY_VOLUMEDOWN')" />
 <area shape="rect" coords="68,275,91,296" alt="KEY_PORTAL" href="javascript:rcsim('KEY_BOOKMARKS')" />
-<area shape="rect" coords="103,247,131,283" alt="KEY_PAGEUP" href="javascript:rcsim('KEY_PAGEUP)" />
+<area shape="rect" coords="103,247,131,283" alt="KEY_PAGEUP" href="javascript:rcsim('KEY_PAGEUP')" />
 <area shape="recr" coords="104,291,132,327" alt="KEY_PAGEDOWN" href="javascript:rcsim('KEY_PAGEDOWN')" />
 <area shape="rect" coords="14,342,38,366" alt="KEY_MENU" href="javascript:rcsim('KEY_MENU')" />
 <area shape="rect" coords="120,342,144,366" alt="KEY_HOME" href="javascript:rcsim('KEY_HOME')" />
@@ -985,3 +991,51 @@ start-block~rc_axas_e4hd
 <area shape="poly" coords="43,323,63,351,55,359,55,370,58,380,61,386,41,405,35,402,29,402,20,387,17,369,19,356,23,344,26,339,36,338,45,325,45,325" alt="KEY_LEFT" href="javascript:rcsim('KEY_LEFT')" />
 </map>
 end-block~rc_axas_e4hd
+
+--- Remote Dreambox RC20
+start-block~rc_dm_rc20
+<img src="images/rc_dm_rc20.png" usemap="#rc"/>
+<map name="rc" id="rc">
+<area shape="rect" coords="137,27,166,37" alt="KEY_POWER" href="javascript:rcsim('KEY_POWER')" />
+<area shape="rect" coords="97,45,125,53" alt="KEY_HELP" href="javascript:rcsim('KEY_HELP')" />
+<area shape="rect" coords="54,66,82,75" alt="KEY_1" href="javascript:rcsim('KEY_1')" />
+<area shape="rect" coords="94,66,122,75" alt="KEY_2" href="javascript:rcsim('KEY_2')" />
+<area shape="rect" coords="138,66,166,75" alt="KEY_3" href="javascript:rcsim('KEY_3')" />
+<area shape="rect" coords="54,85,85,95" alt="KEY_4" href="javascript:rcsim('KEY_4')" />
+<area shape="rect" coords="95,85,125,95" alt="KEY_5" href="javascript:rcsim('KEY_5')" />
+<area shape="rect" coords="138,85,168,95" alt="KEY_6" href="javascript:rcsim('KEY_6')" />
+<area shape="rect" coords="54,105,85,115" alt="KEY_7" href="javascript:rcsim('KEY_7')" />
+<area shape="rect" coords="94,105,125,115" alt="KEY_8" href="javascript:rcsim('KEY_8')" />
+<area shape="rect" coords="138,105,166,115" alt="KEY_9" href="javascript:rcsim('KEY_9')" />
+<area shape="rect" coords="94,125,125,135" alt="KEY_0" href="javascript:rcsim('KEY_0')" />
+<area shape="rect" coords="54,125,85,135" alt="KEY_PREVIOUS" href="javascript:rcsim('KEY_PREVIOUS')" />
+<area shape="rect" coords="138,125,166,135" alt="KEY_NEXT" href="javascript:rcsim('KEY_NEXT')" />
+<area shape="rect" coords="53,153,73,163" alt="KEY_RED" href="javascript:rcsim('KEY_RED')" />
+<area shape="rect" coords="85,153,106,163" alt="KEY_GREEN" href="javascript:rcsim('KEY_GREEN')" />
+<area shape="rect" coords="118,153,139,163" alt="KEY_YELLOW" href="javascript:rcsim('KEY_YELLOW')" />
+<area shape="rect" coords="149,153,170,163" alt="KEY_BLUE" href="javascript:rcsim('KEY_BLUE')" />
+<area shape="rect" coords="53,179,71,195" alt="KEY_INFO" href="javascript:rcsim('KEY_INFO')" />
+<area shape="rect" coords="152,179,170,195" alt="KEY_MENU" href="javascript:rcsim('KEY_MENU')" />
+<area shape="rect" coords="53,137,68,253" alt="KEY_AUDIO" href="javascript:rcsim('KEY_AUDIO')" />
+<area shape="rect" coords="155,238,172,255" alt="KEY_PVR" href="javascript:rcsim('KEY_PVR')" />
+<area shape="rect" coords="70,200,90,225" alt="KEY_LEFT" href="javascript:rcsim('KEY_LEFT')" />
+<area shape="rect" coords="135,200,150,230" alt="KEY_RIGHT" href="javascript:rcsim('KEY_RIGHT')" />
+<area shape="rect" coords="100,175,130,190" alt="KEY_UP" href="javascript:rcsim('KEY_UP')" />
+<area shape="rect" coords="95,240,130,255" alt="KEY_DOWN" href="javascript:rcsim('KEY_DOWN')" />
+<area shape="rect" coords="100,205,125,225" alt="KEY_OK" href="javascript:rcsim('KEY_OK')" />
+<area shape="rect" coords="65,275,90,290" alt="KEY_VOLUMEUP" href="javascript:rcsim('KEY_VOLUMEUP')" />
+<area shape="rect" coords="70,310,90,320" alt="KEY_VOLUMEDOWN" href="javascript:rcsim('KEY_VOLUMEDOWN')" />
+<area shape="rect" coords="100,272,122,285" alt="KEY_HOME" href="javascript:rcsim('KEY_HOME')" />
+<area shape="rect" coords="105,310,120,325" alt="KEY_MUTE" href="javascript:rcsim('KEY_MUTE')" />
+<area shape="rect" coords="145,275,160,295" alt="KEY_PAGEUP" href="javascript:rcsim('KEY_PAGEUP')" />
+<area shape="recr" coords="133,307,150,325" alt="KEY_PAGEDOWN" href="javascript:rcsim('KEY_PAGEDOWN')" />
+<area shape="rect" coords="65,355,80,370" alt="KEY_REWIND" href="javascript:rcsim('KEY_REWIND')" />
+<area shape="rect" coords="90,355,108,370" alt="KEY_PLAYPAUSE" href="javascript:rcsim('KEY_PLAYPAUSE')" />
+<area shape="rect" coords="120,355,134,370" alt="KEY_STOP" href="javascript:rcsim('KEY_STOP')" />
+<area shape="rect" coords="145,355,160,370" alt="KEY_FORWARD" href="javascript:rcsim('KEY_FORWARD')" />
+<area shape="rect" coords="65,385,80,400" alt="KEY_TV" href="javascript:rcsim('KEY_TV')" />
+<area shape="rect" coords="92,385,108,400" alt="KEY_RADIO" href="javascript:rcsim('KEY_RADIO')" />
+<area shape="rect" coords="120,385,135,400" alt="KEY_TEXT" href="javascript:rcsim('KEY_TEXT')" />
+<area shape="rect" coords="145,385,160,400" alt="KEY_RECORD" href="javascript:rcsim('KEY_RECORD')" />
+</map>
+end-block~rc_dm_rc20
