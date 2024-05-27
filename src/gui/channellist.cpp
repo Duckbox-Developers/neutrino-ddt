@@ -2280,10 +2280,17 @@ void CChannelList::updateVfd()
 		char nameAndDescription[255];
 		snprintf(nameAndDescription, sizeof(nameAndDescription), "%s - %s",
 				chan->getName().c_str(), p_event->description.c_str());
+#if BOXMODEL_DM820
+		CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, nameAndDescription);
+#else
 		CVFD::getInstance()->showMenuText(0, nameAndDescription, -1, true); // UTF-8
+#endif
 	} else
+#if BOXMODEL_DM820
+		CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, chan->getName().c_str());
+#else
 		CVFD::getInstance()->showMenuText(0, chan->getName().c_str(), -1, true); // UTF-8
-
+#endif
 #ifdef ENABLE_LCD4LINUX
 	if (g_settings.lcd4l_support)
 		LCD4l->CreateFile("/tmp/lcd/menu", chan->getName().c_str(), g_settings.lcd4l_convert);

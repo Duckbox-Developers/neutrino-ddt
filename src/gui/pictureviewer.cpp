@@ -792,7 +792,11 @@ void CPictureViewerGui::view(unsigned int index, bool unscaled)
 	m_unscaled = unscaled;
 	selected=index;
 
+#if BOXMODEL_DM820
+	CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, playlist[index].Name.c_str());
+#else
 	CVFD::getInstance()->showMenuText(0, playlist[index].Name.c_str());
+#endif
 	char timestring[19];
 	strftime(timestring, 18, "%d-%m-%Y %H:%M", gmtime(&playlist[index].Date));
 	//CVFD::getInstance()->showMenuText(1, timestring); //FIXME
@@ -843,7 +847,11 @@ void CPictureViewerGui::endView()
 
 void CPictureViewerGui::deletePicFile(unsigned int index, bool mode)
 {
+#if BOXMODEL_DM820
+	CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, playlist[index].Name.c_str());
+#else
 	CVFD::getInstance()->showMenuText(0, playlist[index].Name.c_str());
+#endif
 	if (ShowMsg(LOCALE_FILEBROWSER_DELETE, playlist[index].Filename, CMsgBox::mbrNo, CMsgBox::mbYes|CMsgBox::mbNo)==CMsgBox::mbrYes)
 	{
 		unlink(playlist[index].Filename.c_str());

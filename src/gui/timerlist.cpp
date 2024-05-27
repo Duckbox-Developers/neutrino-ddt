@@ -1392,7 +1392,11 @@ void CTimerList::paintItem(int pos)
 				default:
 					;
 			}
+#if BOXMODEL_DM820
+			CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, line1.c_str());
+#else
 			CVFD::getInstance()->showMenuText(0, line1.c_str(), -1, true);
+#endif
 		}
 	}
 }

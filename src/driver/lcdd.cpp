@@ -390,10 +390,14 @@ static std::string splitString(const std::string &text, const int maxwidth, LcdF
 /* display "big" and "small" text.
    TODO: right now, "big" is hardcoded as utf-8, small is not (for EPG)
  */
-void CLCD::showTextScreen(const std::string &big, const std::string &small, const int showmode, const bool perform_wakeup, const bool centered)
+void CLCD::showTextScreen(const std::string &big, const std::string &small, /*const*/ int showmode, const bool perform_wakeup, const bool centered)
 {
 	if (!has_lcd)
 		return;
+
+#if BOXMODEL_DM820	// lcd to small
+	showmode = 0x01;
+#endif
 
 	unsigned int lcd_width  = display.xres;
 	unsigned int lcd_height = display.yres;
