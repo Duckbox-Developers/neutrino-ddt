@@ -150,9 +150,13 @@ int CVfdSetup::showSetup()
 		oj = new CMenuOptionChooser("Power LCD"/*LOCALE_LCDMENU_POWER*/, &g_settings.lcd_setting[SNeutrinoSettings::LCD_POWER], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, new CLCDNotifier(), CRCInput::RC_nokey);
 		vfds->addItem(oj);
 #endif
+#if BOXMODEL_DM820
+		g_settings.lcd_setting[SNeutrinoSettings::LCD_INVERSE] = 0;
+#else
 		//option invert
 		oj = new CMenuOptionChooser("Invert LCD"/*LOCALE_LCDMENU_INVERSE*/, &g_settings.lcd_setting[SNeutrinoSettings::LCD_INVERSE], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, new CLCDNotifier(), CRCInput::RC_nokey);
 		vfds->addItem(oj);
+#endif
 #endif
 
 		if (g_info.hw_caps->display_has_statusline)
@@ -163,6 +167,10 @@ int CVfdSetup::showSetup()
 			vfds->addItem(oj);
 		}
 
+#if BOXMODEL_DM820
+		g_settings.lcd_info_line = 0;
+		g_settings.lcd_scroll = 0;
+#else
 		//info line options
 		oj = new CMenuOptionChooser(LOCALE_LCD_INFO_LINE, &g_settings.lcd_info_line, LCD_INFO_OPTIONS, LCD_INFO_OPTION_COUNT, true);
 		oj->setHint("", LOCALE_MENU_HINT_VFD_INFOLINE);
@@ -190,6 +198,7 @@ int CVfdSetup::showSetup()
 			oj->setHint("", LOCALE_MENU_HINT_VFD_SCROLL);
 			vfds->addItem(oj);
 		}
+#endif
 #endif
 
 		//notify rc-lock
