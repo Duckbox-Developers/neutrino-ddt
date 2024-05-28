@@ -406,9 +406,12 @@ start-block~remote
 		{=if-equal:{=var-get:boxtype=}~AirDigital Zgemma H7~	{=include-block:Y_Blocks.txt;rc_zgemma_h7=}~
 		{=if-equal:{=var-get:boxtype=}~WWIO BRE2ZE4K~		{=include-block:Y_Blocks.txt;rc_wwio_bre2ze4k=}~
 		{=if-equal:{=var-get:boxtype=}~AXAS E4HD 4K ULTRA~	{=include-block:Y_Blocks.txt;rc_axas_e4hd=}~
+		{=if-equal:{=var-get:boxtype=}~DM 8000HD~		{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
+		{=if-equal:{=var-get:boxtype=}~DM 820HD~		{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
+		{=if-equal:{=var-get:boxtype=}~DM 900 UHD~		{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
 
 		{=comment:fallback~=}					{=include-block:Y_Blocks.txt;rc_ufs910=}
-		=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
+		=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
 	~
 	{=if-equal:{=var-get:yfbtype=}~1~	{=include-block:Y_Blocks.txt;rc_ax_hd51=}~
 	{=if-equal:{=var-get:yfbtype=}~2~	{=include-block:Y_Blocks.txt;rc_mutant_hd51=}~
@@ -424,6 +427,9 @@ start-block~remote
 	{=if-equal:{=var-get:yfbtype=}~12~	{=include-block:Y_Blocks.txt;rc_zgemma_h7=}~
 	{=if-equal:{=var-get:yfbtype=}~13~	{=include-block:Y_Blocks.txt;rc_wwio_bre2ze4k=}~
 	{=if-equal:{=var-get:yfbtype=}~14~	{=include-block:Y_Blocks.txt;rc_axas_e4hd=}~
+	{=if-equal:{=var-get:yfbtype=}~15~	{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
+	{=if-equal:{=var-get:yfbtype=}~16~	{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
+	{=if-equal:{=var-get:yfbtype=}~17~	{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
 	{=if-equal:{=var-get:yfbtype=}~-5~	{=include-block:Y_Blocks.txt;rc_ufs913=}~
 	{=if-equal:{=var-get:yfbtype=}~-4~	{=include-block:Y_Blocks.txt;rc_ufs913=}~
 	{=if-equal:{=var-get:yfbtype=}~-3~	{=include-block:Y_Blocks.txt;rc_ufs910=}~
@@ -431,7 +437,7 @@ start-block~remote
 	{=if-equal:{=var-get:yfbtype=}~-1~	{=include-block:Y_Blocks.txt;rc_spark_new=}~
 
 	{=comment:fallback~=}			{=include-block:Y_Blocks.txt;rc_ufs910=}
-	=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
+	=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
 =}
 end-block~remote
 
@@ -835,7 +841,7 @@ start-block~rc_zgemma_h7
 <area shape="rect" coords="67,394,28,355" alt="KEY_VOLUMEUP" href="javascript:rcsim('KEY_VOLUMEUP')" />
 <area shape="rect" coords="67,439,28,400" alt="KEY_VOLUMEDOWN" href="javascript:rcsim('KEY_VOLUMEDOWN')" />
 <area shape="rect" coords="119,439,77,415" alt="KEY_PORTAL" href="javascript:rcsim('KEY_BOOKMARKS')" />
-<area shape="rect" coords="169,394,130,355" alt="KEY_PAGEUP" href="javascript:rcsim('KEY_PAGEUP)" />
+<area shape="rect" coords="169,394,130,355" alt="KEY_PAGEUP" href="javascript:rcsim('KEY_PAGEUP')" />
 <area shape="recr" coords="169,439,130,400" alt="KEY_PAGEDOWN" href="javascript:rcsim('KEY_PAGEDOWN')" />
 <area shape="rect" coords="78,356,119,377" alt="KEY_MENU" href="javascript:rcsim('KEY_MENU')" />
 <area shape="rect" coords="27,317,55,344" alt="KEY_HOME" href="javascript:rcsim('KEY_HOME')" />
@@ -893,7 +899,7 @@ start-block~rc_wwio_bre2ze4k
 <area shape="rect" coords="26,247,54,283" alt="KEY_VOLUMEUP" href="javascript:rcsim('KEY_VOLUMEUP')" />
 <area shape="rect" coords="26,292,54,328" alt="KEY_VOLUMEDOWN" href="javascript:rcsim('KEY_VOLUMEDOWN')" />
 <area shape="rect" coords="68,275,91,296" alt="KEY_PORTAL" href="javascript:rcsim('KEY_BOOKMARKS')" />
-<area shape="rect" coords="103,247,131,283" alt="KEY_PAGEUP" href="javascript:rcsim('KEY_PAGEUP)" />
+<area shape="rect" coords="103,247,131,283" alt="KEY_PAGEUP" href="javascript:rcsim('KEY_PAGEUP')" />
 <area shape="recr" coords="104,291,132,327" alt="KEY_PAGEDOWN" href="javascript:rcsim('KEY_PAGEDOWN')" />
 <area shape="rect" coords="14,342,38,366" alt="KEY_MENU" href="javascript:rcsim('KEY_MENU')" />
 <area shape="rect" coords="120,342,144,366" alt="KEY_HOME" href="javascript:rcsim('KEY_HOME')" />
@@ -985,3 +991,51 @@ start-block~rc_axas_e4hd
 <area shape="poly" coords="43,323,63,351,55,359,55,370,58,380,61,386,41,405,35,402,29,402,20,387,17,369,19,356,23,344,26,339,36,338,45,325,45,325" alt="KEY_LEFT" href="javascript:rcsim('KEY_LEFT')" />
 </map>
 end-block~rc_axas_e4hd
+
+--- Remote Dreambox RC20
+start-block~rc_dm_rc20
+<img src="images/rc_dm_rc20.png" usemap="#rc"/>
+<map name="rc" id="rc">
+<area shape="rect" coords="105,15,140,32" alt="KEY_POWER" href="javascript:rcsim('KEY_POWER')" />
+<area shape="rect" coords="61,39,99,54" alt="KEY_HELP" href="javascript:rcsim('KEY_HELP')" >
+<area shape="rect" coords="20,61,56,77" alt="KEY_1" href="javascript:rcsim('KEY_1')" />
+<area shape="rect" coords="62,61,99,75" alt="KEY_2" href="javascript:rcsim('KEY_2')" />
+<area shape="rect" coords="105,61,140,76" alt="KEY_3" href="javascript:rcsim('KEY_3')" />
+<area shape="rect" coords="21,84,56,98" alt="KEY_4" href="javascript:rcsim('KEY_4')" />
+<area shape="rect" coords="62,83,100,99" alt="KEY_5" href="javascript:rcsim('KEY_5')" />
+<area shape="rect" coords="105,83,140,98" alt="KEY_6" href="javascript:rcsim('KEY_6')" />
+<area shape="rect" coords="22,106,56,120" alt="KEY_7" href="javascript:rcsim('KEY_7')" />
+<area shape="rect" coords="62,106,99,121" alt="KEY_8" href="javascript:rcsim('KEY_8')" />
+<area shape="rect" coords="105,106,140,120" alt="KEY_9" href="javascript:rcsim('KEY_9')" />
+<area shape="rect" coords="62,129,99,142" alt="KEY_0" href="javascript:rcsim('KEY_0')" />
+<area shape="rect" coords="22,128,57,143" alt="KEY_PREVIOUS" href="javascript:rcsim('KEY_PREVIOUS')" />
+<area shape="rect" coords="104,128,140,143" alt="KEY_NEXT" href="javascript:rcsim('KEY_NEXT')" />
+<area shape="rect" coords="21,159,48,175" alt="KEY_RED" href="javascript:rcsim('KEY_RED')" />
+<area shape="rect" coords="52,159,79,174" alt="KEY_GREEN" href="javascript:rcsim('KEY_GREEN')" />
+<area shape="rect" coords="81,158,111,174" alt="KEY_YELLOW" href="javascript:rcsim('KEY_YELLOW')" />
+<area shape="rect" coords="113,158,140,175" alt="KEY_BLUE" href="javascript:rcsim('KEY_BLUE')" />
+<area shape="circle" coords="35,194,11" alt="KEY_INFO" href="javascript:rcsim('KEY_INFO')" />
+<area shape="circle" coords="126,193,10" alt="KEY_MENU" href="javascript:rcsim('KEY_MENU')" />
+<area shape="circle" coords="34,252,11" alt="KEY_AUDIO" href="javascript:rcsim('KEY_AUDIO')" />
+<area shape="circle" coords="127,253,11" alt="KEY_PVR" href="javascript:rcsim('KEY_PVR')" />
+<area shape="poly" coords="36,220,54,201,62,207,56,221,61,241,55,243,35,224" alt="KEY_LEFT" href="javascript:rcsim('KEY_LEFT')" />
+<area shape="poly" coords="105,220,106,221,100,207,106,203,125,222,107,243,100,240,105,222"alt="KEY_RIGHT"  href="javascript:rcsim('KEY_RIGHT')" />
+<area shape="poly" coords="60,196,81,178,102,199,96,203,86,200,76,198,66,204,59,197" alt="KEY_UP" href="javascript:rcsim('KEY_UP')" />
+<area shape="poly" coords="62,247,66,242,79,248,96,244,99,249,84,265,79,266,61,249" alt="KEY_DOWN" href="javascript:rcsim('KEY_DOWN')" />
+<area shape="circle" coords="80,223,18" alt="KEY_OK" href="javascript:rcsim('KEY_OK')" />
+<area shape="poly" coords="40,274,33,302,60,293,44,271,39,273,39,274,39,274" alt="KEY_VOLUMEUP" href="javascript:rcsim('KEY_VOLUMEUP')" />
+<area shape="poly" coords="39,307,63,300,62,329,53,331,37,307" alt="KEY_VOLUMEDOWN" href="javascript:rcsim('KEY_VOLUMEDOWN')" />
+<area shape="rect" coords="68,277,93,293" alt="KEY_HOME" href="javascript:rcsim('KEY_HOME')" />
+<area shape="circle" coords="81,320,9" alt="KEY_MUTE" href="javascript:rcsim('KEY_MUTE')" />
+<area shape="poly" coords="100,291,119,268,125,270,128,302,100,292" alt="KEY_PAGEUP"href="javascript:rcsim('KEY_PAGEUP')" />
+<area shape="poly" coords="96,300,125,309,109,329,99,328,95,300" alt="KEY_PAGEDOWN"href="javascript:rcsim('KEY_PAGEDOWN')" />
+<area shape="circle" coords="43,361,10" alt="KEY_REWIND" href="javascript:rcsim('KEY_REWIND')" />
+<area shape="circle" coords="67,361,10" alt="KEY_PLAYPAUSE" href="javascript:rcsim('KEY_PLAYPAUSE')" />
+<area shape="circle" coords="93,360,9" alt="KEY_STOP" href="javascript:rcsim('KEY_STOP')" />
+<area shape="circle" coords="118,361,10" alt="KEY_FORWARD" href="javascript:rcsim('KEY_FORWARD')" />
+<area shape="circle" coords="44,390,10" alt="KEY_TV" href="javascript:rcsim('KEY_TV')" />
+<area shape="circle" coords="68,389,10" alt="KEY_RADIO" href="javascript:rcsim('KEY_RADIO')" />
+<area shape="circle" coords="93,389,10" alt="KEY_TEXT" href="javascript:rcsim('KEY_TEXT')" />
+<area shape="circle" coords="117,389,10" alt="KEY_RECORD" href="javascript:rcsim('KEY_RECORD')" />
+</map>
+end-block~rc_dm_rc20

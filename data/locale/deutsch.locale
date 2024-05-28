@@ -983,6 +983,7 @@ mainmenu.pausesectionsd EPG auslesen
 mainmenu.pictureviewer Bildbetrachter
 mainmenu.radiomode Radio-Modus
 mainmenu.reboot Neustart
+mainmenu.rescuemode Neustart im Wiederherstellungsmodus
 mainmenu.recording Aufnehmen
 mainmenu.recording_stop Stopp
 mainmenu.avinputmode HDMI-Eingang (Modus)
@@ -1345,6 +1346,7 @@ menu.hint_protection Schützen Sie Inhalte per PIN-Code\nStandard-PIN ist 0000
 menu.hint_quadpip QuadPiP aktivieren
 menu.hint_radiomode Schaltet zum Radio-Modus
 menu.hint_reboot Startet die Box neu\nDer Neustart erfolgt ohne Bestätigung!
+menu.hint_rescuemode Startet die Box im Wiederherstellungsmodus neu\nDer Neustart erfolgt ohne Bestätigung!
 menu.hint_record_already_found_check Prüft vor dem Setzen eines neues Aufnahmetimers, ob ein gleichnamiger Titel bereits vorhanden ist
 menu.hint_record_apid_ac3 Schließt bei einer Aufnahme die durch den Sender definierte Tonspur 'Dolby Digital' in die Aufnahme ein, sofern diese vorhanden ist
 menu.hint_record_apid_alt Sind weitere Tonspuren verfügbar, dann können diese hiermit bei einer Aufnahme entsprechend ein- bzw. ausgeschlossen werden

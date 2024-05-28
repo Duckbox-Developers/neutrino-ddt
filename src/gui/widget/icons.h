@@ -193,6 +193,7 @@
 #define NEUTRINO_ICON_HINT_SERVICE	"hint_service"
 #define NEUTRINO_ICON_HINT_SLEEPTIMER	"hint_sleeptimer"
 #define NEUTRINO_ICON_HINT_REBOOT	"hint_reboot"
+#define NEUTRINO_ICON_HINT_RESCUEMODE	"hint_reboot"
 #define NEUTRINO_ICON_HINT_SHUTDOWN	"hint_shutdown"
 #define NEUTRINO_ICON_HINT_INFO		"hint_info"
 #define NEUTRINO_ICON_HINT_CI		"hint_ci"

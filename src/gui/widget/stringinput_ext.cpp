@@ -196,7 +196,11 @@ int CExtendedInput::exec(CMenuTarget *parent, const std::string &)
 	{
 		if (*valueString != dispval)
 		{
+#if BOXMODEL_DM820
+			CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, valueString->c_str());
+#else
 			CVFD::getInstance()->showMenuText(1, valueString->c_str(), selectedChar + 1);
+#endif
 			dispval = *valueString;
 		}
 
@@ -234,7 +238,11 @@ int CExtendedInput::exec(CMenuTarget *parent, const std::string &)
 			{
 				inputFields[oldSelectedChar]->paint(x + offset, y + hheight + offset, false);
 				inputFields[selectedChar]->paint(x + offset, y + hheight + offset, true);
+#if BOXMODEL_DM820
+				CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, valueString->c_str());
+#else
 				CVFD::getInstance()->showMenuText(1, valueString->c_str(), selectedChar + 1);
+#endif
 			}
 		}
 		else if (msg == CRCInput::RC_right)
@@ -270,7 +278,11 @@ int CExtendedInput::exec(CMenuTarget *parent, const std::string &)
 			{
 				inputFields[oldSelectedChar]->paint(x + offset, y + hheight + offset, false);
 				inputFields[selectedChar]->paint(x + offset, y + hheight + offset, true);
+#if BOXMODEL_DM820
+				CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, valueString->c_str());
+#else
 				CVFD::getInstance()->showMenuText(1, valueString->c_str(), selectedChar + 1);
+#endif
 			}
 		}
 		else if ((*CRCInput::getUnicodeValue(msg)) || (msg == CRCInput::RC_red) || (msg == CRCInput::RC_green) || (msg == CRCInput::RC_blue) || (msg == CRCInput::RC_yellow)

@@ -202,8 +202,12 @@ void CBookmarkManager::paintItem(int pos)
 		// LCD Display
 		if (i_selected)
 		{
+#if BOXMODEL_DM820
+			CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, theBookmark.getName());
+#else
 			CVFD::getInstance()->showMenuText(0, theBookmark.getName(), -1, true); // UTF-8
 			CVFD::getInstance()->showMenuText(1, theBookmark.getUrl(), -1, true); // UTF-8
+#endif
 		}
 	}
 	frameBuffer->blit();

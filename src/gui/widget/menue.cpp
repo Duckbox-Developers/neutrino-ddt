@@ -223,7 +223,11 @@ void CMenuItem::paintItemCaption(const bool select_mode, const char *right_text,
 			ssize_t len = strlen(left_text) + strlen(right_text) + 2;
 			char str[len];
 			snprintf(str, len, "%s %s", left_text, right_text);
+#if BOXMODEL_DM820
+			CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, str);
+#else
 			CVFD::getInstance()->showMenuText(0, str, -1, true);
+#endif
 #ifdef ENABLE_LCD4LINUX
 			if (g_settings.lcd4l_support)
 				lcd4l_text = str;
@@ -231,7 +235,11 @@ void CMenuItem::paintItemCaption(const bool select_mode, const char *right_text,
 		}
 		else
 		{
+#if BOXMODEL_DM820
+			CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, left_text);
+#else
 			CVFD::getInstance()->showMenuText(0, left_text, -1, true);
+#endif
 #ifdef ENABLE_LCD4LINUX
 			if (g_settings.lcd4l_support)
 				lcd4l_text = left_text;

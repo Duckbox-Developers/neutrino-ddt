@@ -245,7 +245,7 @@ class CRCInput
 			RC_play		= KEY_PLAY,
 			RC_pause	= KEY_PAUSE,
 			RC_pvr		= KEY_PVR,
-#if BOXMODEL_DM8000
+#if BOXMODEL_DM820 || BOXMODEL_DM900 || BOXMODEL_DM8000
 			RC_forward	= KEY_NEXTSONG,
 			RC_rewind	= KEY_PREVIOUSSONG,
 #else
@@ -279,7 +279,7 @@ class CRCInput
 			RC_prog4	= KEY_PROG4,
 			RC_media	= KEY_MEDIA,
 			RC_search	= KEY_SEARCH,
-#if BOXMODEL_DM8000
+#if BOXMODEL_DM820 || BOXMODEL_DM900 || BOXMODEL_DM8000
 			RC_nextsong	= KEY_FORWARD,
 			RC_previoussong	= KEY_REWIND,
 #else

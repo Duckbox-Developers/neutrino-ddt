@@ -621,7 +621,11 @@ void CBouquetList::paintItem(int pos)
 	if (i_selected)
 	{
 		if (npos < (int) Bouquets.size())
+#if BOXMODEL_DM820
+			CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, lname);
+#else
 			CVFD::getInstance()->showMenuText(0, lname, -1, true);
+#endif
 #ifdef ENABLE_LCD4LINUX
 		if (g_settings.lcd4l_support)
 			LCD4l->CreateFile("/tmp/lcd/menu", lname, g_settings.lcd4l_convert);

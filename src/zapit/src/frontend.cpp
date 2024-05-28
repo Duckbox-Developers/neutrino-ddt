@@ -315,10 +315,12 @@ void CFrontend::getFEInfo(void)
 				}
 #endif
 				break;
+#if _HAVE_DVB57
 			case SYS_DTMB:
 				deliverySystemMask |= DTMB;
 				printf("[fe%d/%d] add delivery system DTMB (delivery_system: %d)\n", adapter, fenumber, (fe_delivery_system_t)prop[0].u.buffer.data[i]);
 				break;
+#endif
 			default:
 				printf("[fe%d/%d] ERROR: delivery system unknown (delivery_system: %d)\n", adapter, fenumber, (fe_delivery_system_t)prop[0].u.buffer.data[i]);
 				continue;
@@ -744,11 +746,19 @@ uint32_t CFrontend::getBitErrorRate(void) const
 	return ber;
 }
 
+#if BOXMODEL_DM820 || BOXMODEL_DM900
+#define M_STRENGTH 350
+#define M_SNR 35
+#else
+#define M_STRENGTH 1
+#define M_SNR 1
+#endif
+
 uint16_t CFrontend::getSignalStrength(void) const
 {
 	uint16_t strength = 0;
 	fop(ioctl, FE_READ_SIGNAL_STRENGTH, &strength);
-
+	strength = strength * M_STRENGTH;
 	return strength;
 }
 
@@ -756,6 +766,7 @@ uint16_t CFrontend::getSignalNoiseRatio(void) const
 {
 	uint16_t snr = 0;
 	fop(ioctl, FE_READ_SNR, &snr);
+	snr = snr * M_SNR;
 	return snr;
 }
 

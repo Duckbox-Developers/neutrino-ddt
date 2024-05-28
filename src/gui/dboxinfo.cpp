@@ -54,7 +54,7 @@
 #include <iostream>
 #include <fstream>
 
-#if defined (BOXMODEL_VUPLUS_ARM) || defined (BOXMODEL_VUDUO2) || defined (BOXMODEL_VUULTIMO) || defined (BOXMODEL_VUUNO)
+#if defined (BOXMODEL_VUPLUS_ARM) || defined (BOXMODEL_VUDUO2) || defined (BOXMODEL_VUULTIMO) || defined (BOXMODEL_VUUNO) || defined (BOXMODEL_DM900)
 #include <system/proc_tools.h>
 #endif
 
@@ -257,7 +257,7 @@ void CDBoxInfoWidget::paint()
 	height += mheight;	// time
 	height += mheight;	// uptime
 	height += mheight;	// load
-#if defined (BOXMODEL_VUPLUS_ARM) || defined (BOXMODEL_VUDUO2) || defined (BOXMODEL_VUULTIMO) || defined (BOXMODEL_VUUNO)
+#if defined (BOXMODEL_VUPLUS_ARM) || defined (BOXMODEL_VUDUO2) || defined (BOXMODEL_VUULTIMO) || defined (BOXMODEL_VUUNO) || defined (BOXMODEL_DM900)
 	if (frontend_count < 7)
 		height += mheight;	// temp
 #endif
@@ -443,7 +443,7 @@ void CDBoxInfoWidget::paint()
 	str_boot_title += ": ";
 	std::string str_up_title(g_Locale->getText(LOCALE_EXTRA_DBOXINFO_UPTIME));
 	str_up_title += ": ";
-#if defined (BOXMODEL_VUPLUS_ARM) || defined (BOXMODEL_VUDUO2) || defined (BOXMODEL_VUULTIMO) || defined (BOXMODEL_VUUNO)
+#if defined (BOXMODEL_VUPLUS_ARM) || defined (BOXMODEL_VUDUO2) || defined (BOXMODEL_VUULTIMO) || defined (BOXMODEL_VUUNO) || defined (BOXMODEL_DM900)
 #if defined (BOXMODEL_VUDUO2) || defined (BOXMODEL_VUULTIMO) || defined (BOXMODEL_VUUNO)
 	std::string str_cputemp_title("System"/*g_Locale->getText(LOCALE_EXTRA_DBOXINFO_SYSTEMP)*/);
 #else
@@ -512,7 +512,7 @@ void CDBoxInfoWidget::paint()
 	}
 	ypos += mheight;
 
-#if defined (BOXMODEL_VUPLUS_ARM) || defined (BOXMODEL_VUDUO2) || defined (BOXMODEL_VUULTIMO) || defined (BOXMODEL_VUUNO)
+#if defined (BOXMODEL_VUPLUS_ARM) || defined (BOXMODEL_VUDUO2) || defined (BOXMODEL_VUULTIMO) || defined (BOXMODEL_VUUNO) || defined (BOXMODEL_DM900)
 	// paint cpu temp
 	char proc_cputemp[8];
 #if defined (BOXMODEL_VUDUO2) || defined (BOXMODEL_VUULTIMO) || defined (BOXMODEL_VUUNO)

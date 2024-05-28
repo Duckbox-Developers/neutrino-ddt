@@ -1213,7 +1213,11 @@ void CFileBrowser::paintItem(unsigned int pos)
 		actual_file->Name = fname_temp;
 
 		if (currpos == selected)
+#if BOXMODEL_DM820
+			CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, FILESYSTEM_ENCODING_TO_UTF8_STRING(actual_file->getFileName()).c_str());
+#else
 			CVFD::getInstance()->showMenuText(0, FILESYSTEM_ENCODING_TO_UTF8_STRING(actual_file->getFileName()).c_str(), -1, true); // UTF-8
+#endif
 
 		switch(actual_file->getType())
 		{
