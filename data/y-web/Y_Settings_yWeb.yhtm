@@ -49,6 +49,9 @@ function do_init(){
 		case "12":	// zgemma h7
 		case "13":	// wwio bre2ze4k
 		case "14":	// axas e4hd
+		case "15":	// DM 8000HD
+		case "16":	// DM 820HD
+		case "17":	// DM 900 UHD
 			sel=(sel*1+val*1);
 			break;
 		default:
