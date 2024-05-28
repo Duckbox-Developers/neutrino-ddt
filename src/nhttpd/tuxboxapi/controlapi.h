@@ -41,6 +41,7 @@ class CControlAPI : public Cyhook
 			}
 		} fsort;
 
+		void rc_sync(int fd);
 		int rc_send(int ev, unsigned int code, unsigned int value);
 
 		// send functions for ExecuteCGI (controld api)
