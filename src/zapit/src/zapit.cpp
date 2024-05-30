@@ -2149,7 +2149,11 @@ bool CZapit::StopPlayBack(bool send_pmt, bool __attribute__ ((unused)) blank)
 	if (playbackStopForced)
 		return false;
 
+#if BOXMODEL_DM820
+	videoDecoder->Stop(standby ? false : blank);
+#else
 	videoDecoder->Stop(false);
+#endif
 	videoDemux->Stop();
 	audioDemux->Stop();
 	pcrDemux->Stop();

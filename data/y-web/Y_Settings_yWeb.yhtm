@@ -37,18 +37,23 @@ function do_init(){
 		case "0":	// auto
 		case "1":	// ax hd51
 		case "2":	// mutant hd51
-		case "3":	// vu+ solo 4k
-		case "4":	// vu+ duo 4k
-		case "5":	// vu+ duo 4k se
-		case "6":	// vu+ ultimo 4k
-		case "7":	// vu+ duo
-		case "8":	// vu+ duo
-		case "9":	// vu+ zero 4k
-		case "10":	// vu+ uno 4k se
-		case "11":	// vu+ uno 4k
-		case "12":	// zgemma h7
-		case "13":	// wwio bre2ze4k
-		case "14":	// axas e4hd
+		case "3":	// vu+ uno
+		case "4":	// vu+ duo
+		case "5":	// vu+ duo2
+		case "6":	// vu+ ultimo
+		case "7":	// vu+ solo 4k
+		case "8":	// vu+ duo 4k
+		case "9":	// vu+ duo 4k se
+		case "10":	// vu+ ultimo 4k
+		case "11":	// vu+ zero 4k
+		case "12":	// vu+ uno 4k se
+		case "13":	// vu+ uno 4k
+		case "14":	// zgemma h7
+		case "15":	// wwio bre2ze4k
+		case "16":	// axas e4hd
+		case "17":	// DM 8000HD
+		case "18":	// DM 820HD
+		case "19":	// DM 900 UHD
 			sel=(sel*1+val*1);
 			break;
 		default:
@@ -133,18 +138,23 @@ select {
 						<option value="0" selected="selected">{=L:automatic=}</option>
 						<option value="1">AX | HD51</option>
 						<option value="2">Mutant | HD51</option>
-						<option value="3">VU+ | Solo 4K</option>
-						<option value="4">VU+ | Duo 4k</option>
-						<option value="5">VU+ | Duo 4k se</option>
-						<option value="6">VU+ | Ultimo 4K</option>
-						<option value="7">VU+ | Duo</option>
-						<option value="8">VU+ | Duo2</option>
-						<option value="9">VU+ | Zero 4K</option>
-						<option value="10">VU+ | Uno 4K SE</option>
-						<option value="11">VU+ | Uno 4K</option>
-						<option value="12">Zgemma | H7</option>
-						<option value="13">WWIO | BRE2ZE 4k</option>
-						<option value="14">AXAS | E4HD 4K Ultra</option>
+						<option value="3">VU+ | Uno</option>
+						<option value="4">VU+ | Duo</option>
+						<option value="5">VU+ | Duo2</option>
+						<option value="6">VU+ | Ultimo</option>
+						<option value="7">VU+ | Solo 4K</option>
+						<option value="8">VU+ | Duo 4K</option>
+						<option value="9">VU+ | Duo 4K SE</option>
+						<option value="10">VU+ | Ultimo 4K</option>
+						<option value="11">VU+ | Zero 4K</option>
+						<option value="12">VU+ | Uno 4K SE</option>
+						<option value="13">VU+ | Uno 4K</option>
+						<option value="14">Zgemma | H7</option>
+						<option value="15">WWIO | BRE2ZE 4K</option>
+						<option value="16">AXAS | E4HD 4K Ultra</option>
+						<option value="17">Dreambox | DM 8000HD</option>
+						<option value="18">Dreambox | DM 820HD</option>
+						<option value="19">Dreambox | DM 900 UHD</option>
 					</select>
 				</td>
 			</tr>
