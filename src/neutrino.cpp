@@ -269,7 +269,7 @@ CNeutrinoApp::CNeutrinoApp()
 	frameBuffer = CFrameBuffer::getInstance();
 	frameBuffer->setIconBasePath(ICONSDIR);
 	SetupFrameBuffer();
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM900 // needs setup twice
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM900 || BOXMODEL_DM920 // needs setup twice
 	SetupFrameBuffer();
 #endif
 
@@ -664,7 +664,7 @@ if (g_info.hw_caps->can_shutdown)
 	g_settings.widget_fade           = configfile.getBool("widget_fade"          , false );
 
 #ifdef ENABLE_GRAPHLCD
-#if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUDUO4KSE || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4KSE || BOXMODEL_E4HDULTRA || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_DM900
+#if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUDUO4KSE || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4KSE || BOXMODEL_E4HDULTRA || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_DM900 || BOXMODEL_DM920
 	g_settings.glcd_enable = configfile.getInt32("glcd_enable", 1);
 #else
 	g_settings.glcd_enable = configfile.getInt32("glcd_enable", 0);
@@ -699,7 +699,7 @@ if (g_info.hw_caps->can_shutdown)
 	g_settings.glcd_brightness_standby = configfile.getInt32("glcd_brightness_standby", 45);
 #endif
 	g_settings.glcd_scroll = configfile.getInt32("glcd_scroll", 1);
-#if BOXMODEL_VUUNO4KSE || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_DM900
+#if BOXMODEL_VUUNO4KSE || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_DM900 || BOXMODEL_DM920
 	g_settings.glcd_scroll_speed = configfile.getInt32("glcd_scroll_speed", 1);
 #elif BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUDUO4KSE || BOXMODEL_VUULTIMO4K
 	g_settings.glcd_scroll_speed = configfile.getInt32("glcd_scroll_speed", 2);
@@ -4816,7 +4816,7 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 	if (actionKey == "help_recording") {
 		ShowMsg(LOCALE_SETTINGS_HELP, LOCALE_RECORDINGMENU_HELP, CMsgBox::mbrBack, CMsgBox::mbBack);
 	}
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM900 // rescue mode
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM900 || BOXMODEL_DM920 // rescue mode
 	else if (actionKey=="rescue_mode")
 	{
 		FILE *f = fopen("/tmp/.reboot", "w");
@@ -5255,7 +5255,7 @@ void CNeutrinoApp::loadKeys(const char * fname)
 	g_settings.mpkey_pause = tconfig->getInt32( "mpkey.pause", CRCInput::RC_playpause );
 #else
 	g_settings.mpkey_play = tconfig->getInt32( "mpkey.play", CRCInput::RC_play );
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM900 || BOXMODEL_DM8000
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM900 || BOXMODEL_DM920 || BOXMODEL_DM8000
 	g_settings.mpkey_pause = tconfig->getInt32( "mpkey.pause", CRCInput::RC_play );
 #else
 	g_settings.mpkey_pause = tconfig->getInt32( "mpkey.pause", CRCInput::RC_pause );
