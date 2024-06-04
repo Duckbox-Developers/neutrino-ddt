@@ -582,6 +582,20 @@ case "$BOXMODEL" in
 		AC_DEFINE(BOXMODEL_DREAMBOX_ALL, 1, [dreambox_all])
 	;;
 esac
+
+# all dreambox arm BOXMODELs
+case "$BOXMODEL" in
+	dm900|dm920)
+		AC_DEFINE(BOXMODEL_DREAMBOX_ARM, 1, [dreambox_arm])
+	;;
+esac
+
+# all dreambox mips BOXMODELs
+case "$BOXMODEL" in
+	dm8000|dm820|dm7080)
+		AC_DEFINE(BOXMODEL_DREAMBOX_MIPS, 1, [dreambox_mips])
+	;;
+esac
 ])
 
 dnl backward compatiblity
