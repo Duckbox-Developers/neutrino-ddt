@@ -150,7 +150,7 @@ int CVfdSetup::showSetup()
 		oj = new CMenuOptionChooser("Power LCD"/*LOCALE_LCDMENU_POWER*/, &g_settings.lcd_setting[SNeutrinoSettings::LCD_POWER], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, new CLCDNotifier(), CRCInput::RC_nokey);
 		vfds->addItem(oj);
 #endif
-#if BOXMODEL_DM820 || BOXMODEL_DM7080
+#if BOXMODEL_DM820
 		g_settings.lcd_setting[SNeutrinoSettings::LCD_INVERSE] = 0;
 #else
 		//option invert
