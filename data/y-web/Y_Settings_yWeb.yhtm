@@ -53,7 +53,9 @@ function do_init(){
 		case "16":	// axas e4hd
 		case "17":	// DM 8000HD
 		case "18":	// DM 820HD
-		case "19":	// DM 900 UHD
+		case "19":	// DM 7080HD
+		case "20":	// DM 900 UHD
+		case "21":	// DM 920 UHD
 			sel=(sel*1+val*1);
 			break;
 		default:
@@ -154,7 +156,9 @@ select {
 						<option value="16">AXAS | E4HD 4K Ultra</option>
 						<option value="17">Dreambox | DM 8000HD</option>
 						<option value="18">Dreambox | DM 820HD</option>
-						<option value="19">Dreambox | DM 900 UHD</option>
+						<option value="19">Dreambox | DM 7080HD</option>
+						<option value="20">Dreambox | DM 900 UHD</option>
+						<option value="21">Dreambox | DM 920 UHD</option>
 					</select>
 				</td>
 			</tr>
