@@ -410,10 +410,12 @@ start-block~remote
 		{=if-equal:{=var-get:boxtype=}~AXAS E4HD 4K ULTRA~	{=include-block:Y_Blocks.txt;rc_axas_e4hd=}~
 		{=if-equal:{=var-get:boxtype=}~DM 8000HD~		{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
 		{=if-equal:{=var-get:boxtype=}~DM 820HD~		{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
+		{=if-equal:{=var-get:boxtype=}~DM 7080HD~		{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
 		{=if-equal:{=var-get:boxtype=}~DM 900 UHD~		{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
+		{=if-equal:{=var-get:boxtype=}~DM 920 UHD~		{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
 
 		{=comment:fallback~=}					{=include-block:Y_Blocks.txt;rc_ufs910=}
-		=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
+		=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
 	~
 	{=if-equal:{=var-get:yfbtype=}~1~	{=include-block:Y_Blocks.txt;rc_ax_hd51=}~
 	{=if-equal:{=var-get:yfbtype=}~2~	{=include-block:Y_Blocks.txt;rc_mutant_hd51=}~
@@ -434,6 +436,8 @@ start-block~remote
 	{=if-equal:{=var-get:yfbtype=}~17~	{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
 	{=if-equal:{=var-get:yfbtype=}~18~	{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
 	{=if-equal:{=var-get:yfbtype=}~19~	{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
+	{=if-equal:{=var-get:yfbtype=}~20~	{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
+	{=if-equal:{=var-get:yfbtype=}~21~	{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
 	{=if-equal:{=var-get:yfbtype=}~-5~	{=include-block:Y_Blocks.txt;rc_ufs913=}~
 	{=if-equal:{=var-get:yfbtype=}~-4~	{=include-block:Y_Blocks.txt;rc_ufs913=}~
 	{=if-equal:{=var-get:yfbtype=}~-3~	{=include-block:Y_Blocks.txt;rc_ufs910=}~
@@ -441,7 +445,7 @@ start-block~remote
 	{=if-equal:{=var-get:yfbtype=}~-1~	{=include-block:Y_Blocks.txt;rc_spark_new=}~
 
 	{=comment:fallback~=}			{=include-block:Y_Blocks.txt;rc_ufs910=}
-	=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
+	=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
 =}
 end-block~remote
 
