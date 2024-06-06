@@ -145,7 +145,7 @@ int CVfdSetup::showSetup()
 		CMenuOptionChooser* oj;
 
 #if ENABLE_LCD
-#if 0
+#if BOXMODEL_DM8000 || BOXMODEL_DM7080
 		//option power
 		oj = new CMenuOptionChooser("Power LCD"/*LOCALE_LCDMENU_POWER*/, &g_settings.lcd_setting[SNeutrinoSettings::LCD_POWER], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, new CLCDNotifier(), CRCInput::RC_nokey);
 		vfds->addItem(oj);
@@ -383,7 +383,7 @@ bool CLCDNotifier::changeNotify(const neutrino_locale_t, void * Data)
 	int state = *(int *)Data;
 
 	dprintf(DEBUG_NORMAL, "CLCDNotifier: state: %d\n", state);
-#if 0
+#if BOXMODEL_DM8000 || BOXMODEL_DM7080
 	CVFD::getInstance()->setPower(state);
 #else
 	CVFD::getInstance()->setPower(1);
