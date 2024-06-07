@@ -1004,7 +1004,7 @@ void CLCD::ShowIcon(fp_icon i, bool on)
 
 void CLCD::ShowText(const char *str, bool update_timestamp)
 {
-#if BOXMODEL_VUULTIMO || BOXMODEL_VUPLUS_ARM || BOXMODEL_E4HDULTRA
+#if BOXMODEL_VUULTIMO || BOXMODEL_VUPLUS_ARM || BOXMODEL_E4HDULTRA || BOXMODEL_DREAMBOX_ARM
 	return;
 #else
 	int fd = dev_open();
