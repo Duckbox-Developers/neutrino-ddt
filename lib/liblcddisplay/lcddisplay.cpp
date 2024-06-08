@@ -40,6 +40,10 @@
 #include <byteswap.h>
 #include <string.h>
 
+#if BOXMODEL_DM8000 || BOXMODEL_DM7080
+#include <system/helpers.h>
+#endif
+
 #ifndef BYTE_ORDER
 #error "no BYTE_ORDER defined!"
 #endif
@@ -210,40 +214,46 @@ int CLCDDisplay::setLCDContrast(int contrast)
 
 int CLCDDisplay::setLCDBrightness(int brightness)
 {
-	printf("setLCDBrightness %d\n", brightness);
+#if BOXMODEL_DM8000 || BOXMODEL_DM7080
+	if (!file_exists("/tmp/usbtft"))
+	{
+#endif
+		printf("setLCDBrightness %d\n", brightness);
 
-	FILE *f = fopen("/proc/stb/lcd/oled_brightness", "w");
-	if (!f)
-		f = fopen("/proc/stb/fp/oled_brightness", "w");
-	if (f)
-	{
-		if (fprintf(f, "%d", brightness) == 0)
-			printf("write /proc/stb/lcd/oled_brightness failed!! (%m)\n");
-		fclose(f);
-	}
-	else
-	{
-		int fp;
-		if ((fp = open("/dev/dbox/fp0", O_RDWR)) < 0)
+		FILE *f = fopen("/proc/stb/lcd/oled_brightness", "w");
+		if (!f)
+			f = fopen("/proc/stb/fp/oled_brightness", "w");
+		if (f)
 		{
-			printf("[LCD] can't open /dev/dbox/fp0\n");
-			return (-1);
+			if (fprintf(f, "%d", brightness) == 0)
+				printf("write /proc/stb/lcd/oled_brightness failed!! (%m)\n");
+			fclose(f);
+		}
+		else
+		{
+			int fp;
+			if ((fp = open("/dev/dbox/fp0", O_RDWR)) < 0)
+			{
+				printf("[LCD] can't open /dev/dbox/fp0\n");
+				return (-1);
+			}
+
+			if (ioctl(fp, FP_IOCTL_LCD_DIMM, &brightness) < 0)
+				printf("[LCD] can't set lcd brightness (%m)\n");
+			close(fp);
 		}
 
-		if (ioctl(fp, FP_IOCTL_LCD_DIMM, &brightness) < 0)
-			printf("[LCD] can't set lcd brightness (%m)\n");
-		close(fp);
+		if (brightness == 0)
+		{
+			memset(_buffer, inverted, raw_buffer_size);
+			update();
+		}
+
+		last_brightness = brightness;
+#if BOXMODEL_DM8000 || BOXMODEL_DM7080
 	}
-
-	if (brightness == 0)
-	{
-		memset(_buffer, inverted, raw_buffer_size);
-		update();
-	}
-
-	last_brightness = brightness;
-
-	return (0);
+#endif
+		return (0);
 }
 
 bool CLCDDisplay::isAvailable()
