@@ -408,11 +408,11 @@ start-block~remote
 		{=if-equal:{=var-get:boxtype=}~AirDigital Zgemma H7~	{=include-block:Y_Blocks.txt;rc_zgemma_h7=}~
 		{=if-equal:{=var-get:boxtype=}~WWIO BRE2ZE4K~		{=include-block:Y_Blocks.txt;rc_wwio_bre2ze4k=}~
 		{=if-equal:{=var-get:boxtype=}~AXAS E4HD 4K ULTRA~	{=include-block:Y_Blocks.txt;rc_axas_e4hd=}~
-		{=if-equal:{=var-get:boxtype=}~DM 8000HD~		{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
-		{=if-equal:{=var-get:boxtype=}~DM 820HD~		{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
-		{=if-equal:{=var-get:boxtype=}~DM 7080HD~		{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
-		{=if-equal:{=var-get:boxtype=}~DM 900 UHD~		{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
-		{=if-equal:{=var-get:boxtype=}~DM 920 UHD~		{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
+		{=if-equal:{=var-get:boxtype=}~DM 8000HD~		{=include-block:Y_Blocks.txt;rc_dm_rc10=}~
+		{=if-equal:{=var-get:boxtype=}~DM 820HD~		{=include-block:Y_Blocks.txt;rc_dm_rc10=}~
+		{=if-equal:{=var-get:boxtype=}~DM 7080HD~		{=include-block:Y_Blocks.txt;rc_dm_rc10=}~
+		{=if-equal:{=var-get:boxtype=}~DM 900 UHD~		{=include-block:Y_Blocks.txt;rc_dm_rc10=}~
+		{=if-equal:{=var-get:boxtype=}~DM 920 UHD~		{=include-block:Y_Blocks.txt;rc_dm_rc10=}~
 
 		{=comment:fallback~=}					{=include-block:Y_Blocks.txt;rc_ufs910=}
 		=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}=}
@@ -433,11 +433,11 @@ start-block~remote
 	{=if-equal:{=var-get:yfbtype=}~14~	{=include-block:Y_Blocks.txt;rc_zgemma_h7=}~
 	{=if-equal:{=var-get:yfbtype=}~15~	{=include-block:Y_Blocks.txt;rc_wwio_bre2ze4k=}~
 	{=if-equal:{=var-get:yfbtype=}~16~	{=include-block:Y_Blocks.txt;rc_axas_e4hd=}~
-	{=if-equal:{=var-get:yfbtype=}~17~	{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
-	{=if-equal:{=var-get:yfbtype=}~18~	{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
-	{=if-equal:{=var-get:yfbtype=}~19~	{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
-	{=if-equal:{=var-get:yfbtype=}~20~	{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
-	{=if-equal:{=var-get:yfbtype=}~21~	{=include-block:Y_Blocks.txt;rc_dm_rc20=}~
+	{=if-equal:{=var-get:yfbtype=}~17~	{=include-block:Y_Blocks.txt;rc_dm_rc10=}~
+	{=if-equal:{=var-get:yfbtype=}~18~	{=include-block:Y_Blocks.txt;rc_dm_rc10=}~
+	{=if-equal:{=var-get:yfbtype=}~19~	{=include-block:Y_Blocks.txt;rc_dm_rc10=}~
+	{=if-equal:{=var-get:yfbtype=}~20~	{=include-block:Y_Blocks.txt;rc_dm_rc10=}~
+	{=if-equal:{=var-get:yfbtype=}~21~	{=include-block:Y_Blocks.txt;rc_dm_rc10=}~
 	{=if-equal:{=var-get:yfbtype=}~-5~	{=include-block:Y_Blocks.txt;rc_ufs913=}~
 	{=if-equal:{=var-get:yfbtype=}~-4~	{=include-block:Y_Blocks.txt;rc_ufs913=}~
 	{=if-equal:{=var-get:yfbtype=}~-3~	{=include-block:Y_Blocks.txt;rc_ufs910=}~
@@ -1000,9 +1000,9 @@ start-block~rc_axas_e4hd
 </map>
 end-block~rc_axas_e4hd
 
---- Remote Dreambox RC20
-start-block~rc_dm_rc20
-<img src="images/rc_dm_rc20.png" usemap="#rc"/>
+--- Remote Dreambox RC10
+start-block~rc_dm_rc10
+<img src="images/rc_dm_rc10.png" usemap="#rc"/>
 <map name="rc" id="rc">
 <area shape="rect" coords="105,15,140,32" alt="KEY_POWER" href="javascript:rcsim('KEY_POWER')" />
 <area shape="rect" coords="61,39,99,54" alt="KEY_HELP" href="javascript:rcsim('KEY_HELP')" >
@@ -1046,4 +1046,4 @@ start-block~rc_dm_rc20
 <area shape="circle" coords="93,389,10" alt="KEY_TEXT" href="javascript:rcsim('KEY_TEXT')" />
 <area shape="circle" coords="117,389,10" alt="KEY_RECORD" href="javascript:rcsim('KEY_RECORD')" />
 </map>
-end-block~rc_dm_rc20
+end-block~rc_dm_rc10
