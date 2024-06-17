@@ -395,7 +395,7 @@ void CLCD::showTextScreen(const std::string &big, const std::string &small, /*co
 	if (!has_lcd)
 		return;
 
-#if BOXMODEL_DM820	// lcd to small
+#if BOXMODEL_DM820 || BOXMODEL_DM7080	// lcd to small
 	showmode = 0x01;
 #endif
 

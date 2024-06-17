@@ -67,7 +67,7 @@ install_DATA += rc_ax_hd51.png \
 endif
 
 if BOXMODEL_DREAMBOX_ALL
-install_DATA += rc_dm_rc20.png
+install_DATA += rc_dm_rc10.png
 endif
 
 if BOXMODEL_VUPLUS_ALL
