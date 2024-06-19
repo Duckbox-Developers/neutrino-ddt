@@ -780,7 +780,26 @@ uint16_t CFrontend::getSignalStrength(void) const
 		printf("%s: FE_READ_SIGNAL_STRENGTH failed: %m\n", __FUNCTION__);
 
 #if BOXMODEL_DREAMBOX_ALL
-	strength = strength * 1.85;
+	if
+	(	   strstr(info.name, "BCM4506")
+		|| strstr(info.name, "BCM4506 (internal)")
+		|| strstr(info.name, "BCM4505")
+		|| strstr(info.name, "BCM73625 (G3)")
+		|| strstr(info.name, "BCM45208")
+		|| strstr(info.name, "BCM45308")
+		|| strstr(info.name, "BCM3158")
+	)
+	{
+		strength = strength * 1.88;
+	}
+	else if (strstr(info.name, "Si2166B"))
+	{
+		strength = (strength * 288);
+	}
+	else if (strstr(info.name, "Si2166D"))
+	{
+		strength = (strength * 288);
+	}
 #endif
 
 	return strength;
