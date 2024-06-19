@@ -764,7 +764,7 @@ uint16_t CFrontend::getSignalStrength(void) const
 
 	if (fop(ioctl, FE_GET_PROPERTY, &props) < 0 && errno != ERANGE)
 	{
-		printf("%s: DTV_STAT_SIGNAL_STRENGTH failed: %m\n", __FUNCTION__);
+		printf("%s: DTV_STAT_SIGNAL_STRENGTH failed\n", __FUNCTION__);
 	}
 	else
 	{
@@ -777,7 +777,7 @@ uint16_t CFrontend::getSignalStrength(void) const
 #endif
 	// fallback to old DVB API
 	if (!strength && fop(ioctl, FE_READ_SIGNAL_STRENGTH, &strength) < 0 && errno != ERANGE)
-		printf("%s: FE_READ_SIGNAL_STRENGTH failed: %m\n", __FUNCTION__);
+		printf("%s: FE_READ_SIGNAL_STRENGTH failed\n", __FUNCTION__);
 
 #if BOXMODEL_DREAMBOX_ALL
 	if
@@ -815,10 +815,8 @@ uint16_t CFrontend::getSignalNoiseRatio(void) const
 		max_value = 4200; //1600;
 	else if (info.type == FE_QAM)	// DVB-C
 		max_value = 6200; //4200;
-#ifdef SYS_DVBT2
 	else if (info.type == FE_OFDM)	// DVB-T
 		max_value = 5000; //2900;
-#endif
 #endif
 
 #if DVB_API_VERSION > 5 || DVB_API_VERSION == 5 && DVB_API_VERSION_MINOR >= 10
@@ -830,7 +828,7 @@ uint16_t CFrontend::getSignalNoiseRatio(void) const
 
 	if (fop(ioctl, FE_GET_PROPERTY, &props) < 0 && errno != ERANGE)
 	{
-		printf("%s DTV_STAT_CNR failed: %m\n", __FUNCTION__);
+		printf("%s: DTV_STAT_CNR failed\n", __FUNCTION__);
 	}
 	else
 	{
@@ -849,7 +847,7 @@ uint16_t CFrontend::getSignalNoiseRatio(void) const
 #endif
 	// fallback to old DVB API
 	if (!snr && fop(ioctl, FE_READ_SNR, &snr) < 0 && errno != ERANGE)
-		printf("%s: FE_READ_SNR failed: %m\n", __FUNCTION__);
+		printf("%s: FE_READ_SNR failed\n", __FUNCTION__);
 
 #if BOXMODEL_DREAMBOX_ALL
 	if
