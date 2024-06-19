@@ -43,6 +43,10 @@
 #include <linux/dvb/frontend.h>
 #include <linux/dvb/version.h>
 
+#if DVB_API_VERSION > 5 || DVB_API_VERSION == 5 && DVB_API_VERSION_MINOR >= 10
+#include <errno.h>
+#endif
+
 #include <hardware_caps.h>
 
 extern transponder_list_t transponders;
@@ -746,27 +750,109 @@ uint32_t CFrontend::getBitErrorRate(void) const
 	return ber;
 }
 
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM900 || BOXMODEL_DM920
-#define M_STRENGTH 350
-#define M_SNR 35
-#else
-#define M_STRENGTH 1
-#define M_SNR 1
-#endif
-
 uint16_t CFrontend::getSignalStrength(void) const
 {
 	uint16_t strength = 0;
-	fop(ioctl, FE_READ_SIGNAL_STRENGTH, &strength);
-	strength = strength * M_STRENGTH;
+
+#if DVB_API_VERSION > 5 || DVB_API_VERSION == 5 && DVB_API_VERSION_MINOR >= 10
+	dtv_property prop[1];
+	memset(prop, 0, sizeof(prop));
+	prop[0].cmd = DTV_STAT_SIGNAL_STRENGTH;
+	dtv_properties props;
+	props.props = prop;
+	props.num = 1;
+
+	if (fop(ioctl, FE_GET_PROPERTY, &props) < 0 && errno != ERANGE)
+	{
+		printf("%s: DTV_STAT_SIGNAL_STRENGTH failed: %m\n", __FUNCTION__);
+	}
+	else
+	{
+		for(unsigned int i = 0; i < prop[0].u.st.len; i++)
+		{
+			if (prop[0].u.st.stat[i].scale == FE_SCALE_RELATIVE)
+				strength = prop[0].u.st.stat[i].uvalue;
+		}
+	}
+#endif
+	// fallback to old DVB API
+	if (!strength && fop(ioctl, FE_READ_SIGNAL_STRENGTH, &strength) < 0 && errno != ERANGE)
+		printf("%s: FE_READ_SIGNAL_STRENGTH failed: %m\n", __FUNCTION__);
+
 	return strength;
 }
 
 uint16_t CFrontend::getSignalNoiseRatio(void) const
 {
 	uint16_t snr = 0;
-	fop(ioctl, FE_READ_SNR, &snr);
-	snr = snr * M_SNR;
+
+#if BOXMODEL_DREAMBOX_ALL
+	int max_value = 4200; //1600;
+	if (info.type == FE_QPSK)	// DVB-S
+		max_value = 4200; //1600;
+	else if (info.type == FE_QAM)	// DVB-C
+		max_value = 6200; //4200;
+#ifdef SYS_DVBT2
+	else if (info.type == FE_OFDM)	// DVB-T
+		max_value = 5000; //2900;
+#endif
+#endif
+
+#if DVB_API_VERSION > 5 || DVB_API_VERSION == 5 && DVB_API_VERSION_MINOR >= 10
+	dtv_property prop[1];
+	prop[0].cmd = DTV_STAT_CNR;
+	dtv_properties props;
+	props.props = prop;
+	props.num = 1;
+
+	if (fop(ioctl, FE_GET_PROPERTY, &props) < 0 && errno != ERANGE)
+	{
+		printf("%s DTV_STAT_CNR failed: %m\n", __FUNCTION__);
+	}
+	else
+	{
+		for(unsigned int i = 0; i < prop[0].u.st.len; i++)
+		{
+			if (prop[0].u.st.stat[i].scale == FE_SCALE_DECIBEL)
+			{
+				snr = prop[0].u.st.stat[i].svalue / 10;
+			}
+			else if (prop[0].u.st.stat[i].scale == FE_SCALE_RELATIVE)
+			{
+				snr = prop[0].u.st.stat[i].svalue;
+			}
+		}
+	}
+#endif
+	// fallback to old DVB API
+	if (!snr && fop(ioctl, FE_READ_SNR, &snr) < 0 && errno != ERANGE)
+		printf("%s: FE_READ_SNR failed: %m\n", __FUNCTION__);
+
+#if BOXMODEL_DREAMBOX_ALL
+	if
+	(	   strstr(info.name, "BCM4506")
+		|| strstr(info.name, "BCM4506 (internal)")
+		|| strstr(info.name, "BCM4505")
+		|| strstr(info.name, "BCM73625 (G3)")
+		|| strstr(info.name, "BCM45208")
+		|| strstr(info.name, "BCM45308")
+		|| strstr(info.name, "BCM3158")
+	)
+	{
+		snr = (snr >= max_value ? 65535 : snr * 65535 / max_value);
+	}
+	else if (strstr(info.name, "Si2166B"))
+	{
+		snr = (snr * 240);
+		snr = (snr >= max_value ? 65535 : snr * 65535 / max_value);
+	}
+	else if (strstr(info.name, "Si2166D"))
+	{
+		max_value = 1620;
+		snr = (snr >= max_value ? 65535 : snr * 65535 / max_value);
+	}
+#endif
+
 	return snr;
 }
 
