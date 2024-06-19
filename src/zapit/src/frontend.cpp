@@ -779,6 +779,10 @@ uint16_t CFrontend::getSignalStrength(void) const
 	if (!strength && fop(ioctl, FE_READ_SIGNAL_STRENGTH, &strength) < 0 && errno != ERANGE)
 		printf("%s: FE_READ_SIGNAL_STRENGTH failed: %m\n", __FUNCTION__);
 
+#if BOXMODEL_DREAMBOX_ALL
+	strength = strength * 1.85;
+#endif
+
 	return strength;
 }
 
