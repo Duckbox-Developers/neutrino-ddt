@@ -4355,7 +4355,7 @@ void CNeutrinoApp::saveEpg(int _mode)
 		}
 		CVFD::getInstance()->Clear();
 		CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
-#if BOXMODEL_DM820 || BOXMODEL_DM7080
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000
 		CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, g_Locale->getText(LOCALE_EPG_SAVING));
 #else
 		CVFD::getInstance()->ShowText(g_Locale->getText(LOCALE_EPG_SAVING));
@@ -4503,7 +4503,7 @@ void CNeutrinoApp::standbyMode(bool bOnOff, bool fromDeepStandby)
 #ifdef ENABLE_GRAPHLCD
 		nGLCD::StandbyMode(true);
 #endif
-#if BOXMODEL_DM820 || BOXMODEL_DM7080
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000
 		CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, "standby...");
 #else
 		CVFD::getInstance()->ShowText("standby...");
@@ -4585,7 +4585,7 @@ void CNeutrinoApp::standbyMode(bool bOnOff, bool fromDeepStandby)
 		// Active standby off
 		powerManager->SetStandby(false, false);
 		CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
-#if BOXMODEL_DM820 || BOXMODEL_DM7080
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000
 		CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, "resume");
 #else
 		CVFD::getInstance()->ShowText("resume");
@@ -5057,7 +5057,7 @@ void stop_daemons(bool stopall, bool for_flash)
 	if (for_flash) {
 		CVFD::getInstance()->Clear();
 		CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
-#if BOXMODEL_DM820 || BOXMODEL_DM7080
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000
 		CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, "Stop daemons...");
 #else
 		CVFD::getInstance()->ShowText("Stop daemons...");
@@ -5641,7 +5641,7 @@ void CNeutrinoApp::CheckFastScan(bool standby, bool reload)
 		}
 		if (standby || (new_fst != scansettings.fst_version)) {
 			CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
-#if BOXMODEL_DM820 || BOXMODEL_DM7080
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000
 			CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, g_Locale->getText(LOCALE_SATSETUP_FASTSCAN_HEAD));
 #else
 			CVFD::getInstance()->ShowText(g_Locale->getText(LOCALE_SATSETUP_FASTSCAN_HEAD));

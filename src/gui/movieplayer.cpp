@@ -492,7 +492,7 @@ void CMoviePlayerGui::updateLcd(bool display_playtime)
 		}
 
 //		CVFD::getInstance()->setMode(LCD_MODE);
-#if BOXMODEL_DM820 || BOXMODEL_DM7080
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000
 		CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, lcd.c_str());
 #else
 		CVFD::getInstance()->showMenuText(0, lcd.c_str(), -1, true);
@@ -564,7 +564,7 @@ void CMoviePlayerGui::updateLcd(bool display_playtime)
 			break;
 	}
 	lcd += name;
-#if BOXMODEL_DM820 || BOXMODEL_DM7080
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000
 	CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, lcd.c_str());
 #else
 	CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8);

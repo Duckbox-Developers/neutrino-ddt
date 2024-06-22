@@ -792,7 +792,7 @@ void CPictureViewerGui::view(unsigned int index, bool unscaled)
 	m_unscaled = unscaled;
 	selected=index;
 
-#if BOXMODEL_DM820 || BOXMODEL_DM7080
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000
 	CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, playlist[index].Name.c_str());
 #else
 	CVFD::getInstance()->showMenuText(0, playlist[index].Name.c_str());
@@ -847,7 +847,7 @@ void CPictureViewerGui::endView()
 
 void CPictureViewerGui::deletePicFile(unsigned int index, bool mode)
 {
-#if BOXMODEL_DM820 || BOXMODEL_DM7080
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000
 	CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, playlist[index].Name.c_str());
 #else
 	CVFD::getInstance()->showMenuText(0, playlist[index].Name.c_str());
