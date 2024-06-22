@@ -621,7 +621,7 @@ void CBouquetList::paintItem(int pos)
 	if (i_selected)
 	{
 		if (npos < (int) Bouquets.size())
-#if BOXMODEL_DM820 || BOXMODEL_DM7080
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000
 			CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, lname);
 #else
 			CVFD::getInstance()->showMenuText(0, lname, -1, true);

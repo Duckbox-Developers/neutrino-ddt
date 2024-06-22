@@ -167,7 +167,7 @@ int CVfdSetup::showSetup()
 			vfds->addItem(oj);
 		}
 
-#if BOXMODEL_DM820 || BOXMODEL_DM7080
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000
 		g_settings.lcd_info_line = 0;
 		g_settings.lcd_scroll = 0;
 #else

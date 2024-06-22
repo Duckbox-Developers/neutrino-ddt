@@ -515,7 +515,7 @@ int CKeyboardInput::exec(CMenuTarget *parent, const std::string &)
 		if (changed)
 		{
 			changed = false;
-#if BOXMODEL_DM820 || BOXMODEL_DM7080
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000
 			CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, inputString->c_str());
 #else
 			CVFD::getInstance()->showMenuText(1, inputString->c_str(), selected + 1);
