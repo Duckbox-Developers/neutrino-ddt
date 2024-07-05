@@ -225,7 +225,6 @@ class CRCInput
 			RC_bottom_right	= KEY_BOTTOMRIGHT,  /* /include/linux/input.h: #define KEY_BOTTOMRIGHT		0x1a5 */ /* in patched input.h */
 
 			RC_audio	= KEY_AUDIO,
-			RC_video	= KEY_VIDEO,
 			RC_tv		= KEY_TV,
 			RC_tv2		= KEY_TV2,
 			RC_radio	= KEY_RADIO,
@@ -235,7 +234,13 @@ class CRCInput
 			RC_epg		= KEY_INFO,
 #else
 			RC_info		= KEY_INFO,
+#if BOXMODEL_DREAMBOX_ALL
+			RC_epg		= KEY_VIDEO,
+			RC_video	= KEY_EPG,
+#else
 			RC_epg		= KEY_EPG,
+			RC_video	= KEY_VIDEO,
+#endif
 #endif
 			RC_recall	= KEY_LAST,
 			RC_favorites	= KEY_FAVORITES,
@@ -245,7 +250,7 @@ class CRCInput
 			RC_play		= KEY_PLAY,
 			RC_pause	= KEY_PAUSE,
 			RC_pvr		= KEY_PVR,
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM900 || BOXMODEL_DM920 || BOXMODEL_DM8000
+#if BOXMODEL_DREAMBOX_ALL
 			RC_forward	= KEY_NEXTSONG,
 			RC_rewind	= KEY_PREVIOUSSONG,
 #else
@@ -279,7 +284,7 @@ class CRCInput
 			RC_prog4	= KEY_PROG4,
 			RC_media	= KEY_MEDIA,
 			RC_search	= KEY_SEARCH,
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM900 || BOXMODEL_DM920 || BOXMODEL_DM8000
+#if BOXMODEL_DREAMBOX_ALL
 			RC_nextsong	= KEY_FORWARD,
 			RC_previoussong	= KEY_REWIND,
 #else
