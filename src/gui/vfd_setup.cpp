@@ -145,7 +145,7 @@ int CVfdSetup::showSetup()
 		CMenuOptionChooser* oj;
 
 #if ENABLE_LCD
-#if BOXMODEL_DM8000 || BOXMODEL_DM7080
+#if BOXMODEL_DM8000 || BOXMODEL_DM7080 || BOXMODEL_DM7020HD
 		//option power
 		oj = new CMenuOptionChooser("Power LCD"/*LOCALE_LCDMENU_POWER*/, &g_settings.lcd_setting[SNeutrinoSettings::LCD_POWER], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, new CLCDNotifier(), CRCInput::RC_nokey);
 		vfds->addItem(oj);
@@ -167,7 +167,7 @@ int CVfdSetup::showSetup()
 			vfds->addItem(oj);
 		}
 
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD
 		g_settings.lcd_info_line = 0;
 		g_settings.lcd_scroll = 0;
 #else
@@ -216,7 +216,7 @@ int CVfdSetup::showSetup()
 		vfds->addItem(led_num);
 	}
 
-#if !defined BOXMODEL_VUSOLO4K && !defined BOXMODEL_VUDUO4K && !defined BOXMODEL_VUDUO4KSE && !defined BOXMODEL_VUULTIMO4K && !defined BOXMODEL_VUUNO4KSE && !defined BOXMODEL_DM820 && !defined BOXMODEL_DM7080 && !defined BOXMODEL_DM900 && !defined BOXMODEL_DM920 && !defined BOXMODEL_DM8000 && !defined BOXMODEL_E4HDULTRA && !defined BOXMODEL_VUDUO2
+#if !defined BOXMODEL_VUSOLO4K && !defined BOXMODEL_VUDUO4K && !defined BOXMODEL_VUDUO4KSE && !defined BOXMODEL_VUULTIMO4K && !defined BOXMODEL_VUUNO4KSE && !defined BOXMODEL_DM7020HD && !defined BOXMODEL_DM820 && !defined BOXMODEL_DM7080 && !defined BOXMODEL_DM900 && !defined BOXMODEL_DM920 && !defined BOXMODEL_DM8000 && !defined BOXMODEL_E4HDULTRA && !defined BOXMODEL_VUDUO2
 #if ENABLE_LCD4LINUX && ENABLE_GRAPHLCD
 	if (g_settings.glcd_enable != 0 && g_settings.lcd4l_support != 0) {
 		g_settings.glcd_enable = 0;
@@ -226,7 +226,7 @@ int CVfdSetup::showSetup()
 #endif
 
 #ifdef ENABLE_LCD4LINUX
-#if !defined BOXMODEL_VUSOLO4K && !defined BOXMODEL_VUDUO4K && !defined BOXMODEL_VUDUO4KSE && !defined BOXMODEL_VUULTIMO4K && !defined BOXMODEL_VUUNO4KSE && !defined BOXMODEL_DM820 && !defined BOXMODEL_DM7080 && !defined BOXMODEL_DM900 && !defined BOXMODEL_DM920 && !defined BOXMODEL_DM8000 && !defined BOXMODEL_E4HDULTRA && !defined BOXMODEL_VUDUO2 && defined (ENABLE_GRAPHLCD)
+#if !defined BOXMODEL_VUSOLO4K && !defined BOXMODEL_VUDUO4K && !defined BOXMODEL_VUDUO4KSE && !defined BOXMODEL_VUULTIMO4K && !defined BOXMODEL_VUUNO4KSE && !defined BOXMODEL_DM7020HD && !defined BOXMODEL_DM820 && !defined BOXMODEL_DM7080 && !defined BOXMODEL_DM900 && !defined BOXMODEL_DM920 && !defined BOXMODEL_DM8000 && !defined BOXMODEL_E4HDULTRA && !defined BOXMODEL_VUDUO2 && defined (ENABLE_GRAPHLCD)
 	if (g_settings.glcd_enable == 0)
 #endif
 	{
@@ -238,7 +238,7 @@ int CVfdSetup::showSetup()
 #ifdef ENABLE_GRAPHLCD
 	GLCD_Menu glcdMenu;
 #ifdef ENABLE_LCD4LINUX
-#if !defined BOXMODEL_VUSOLO4K && !defined BOXMODEL_VUDUO4K && !defined BOXMODEL_VUDUO4KSE && !defined BOXMODEL_VUULTIMO4K && !defined BOXMODEL_VUUNO4KSE && !defined BOXMODEL_DM820 && !defined BOXMODEL_DM7080 && !defined BOXMODEL_DM900 && !defined BOXMODEL_DM920 && !defined BOXMODEL_DM8000 && !defined BOXMODEL_E4HDULTRA && !defined BOXMODEL_VUDUO2
+#if !defined BOXMODEL_VUSOLO4K && !defined BOXMODEL_VUDUO4K && !defined BOXMODEL_VUDUO4KSE && !defined BOXMODEL_VUULTIMO4K && !defined BOXMODEL_VUUNO4KSE && !defined BOXMODEL_DM7020HD && !defined BOXMODEL_DM820 && !defined BOXMODEL_DM7080 && !defined BOXMODEL_DM900 && !defined BOXMODEL_DM920 && !defined BOXMODEL_DM8000 && !defined BOXMODEL_E4HDULTRA && !defined BOXMODEL_VUDUO2
 	if (g_settings.lcd4l_support == 0)
 #endif
 #endif
@@ -383,7 +383,7 @@ bool CLCDNotifier::changeNotify(const neutrino_locale_t, void * Data)
 	int state = *(int *)Data;
 
 	dprintf(DEBUG_NORMAL, "CLCDNotifier: state: %d\n", state);
-#if BOXMODEL_DM8000 || BOXMODEL_DM7080
+#if BOXMODEL_DM8000 || BOXMODEL_DM7080 || BOXMODEL_DM7020HD
 	CVFD::getInstance()->setPower(state);
 #else
 	CVFD::getInstance()->setPower(1);

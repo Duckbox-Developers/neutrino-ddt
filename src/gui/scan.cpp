@@ -410,7 +410,7 @@ neutrino_msg_t CScanTs::handleMsg(neutrino_msg_t msg, neutrino_msg_data_t data)
 			paintLine(xpos2, ypos_transponder, w - (8*fw), buffer);
 			total = data;
 			snprintf(str, sizeof(buffer), "scan: %d/%d", done, total);
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD
 			CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, str);
 #else
 			CVFD::getInstance()->showMenuText(0, str, -1, true);
@@ -423,7 +423,7 @@ neutrino_msg_t CScanTs::handleMsg(neutrino_msg_t msg, neutrino_msg_data_t data)
 			sprintf(buffer, "%d/%d", done, total);
 			paintLine(xpos2, ypos_transponder, w - (8*fw), buffer);
 			snprintf(str, sizeof(buffer), "scan %d/%d", done, total);
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD
 			CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, str);
 #else
 			CVFD::getInstance()->showMenuText(0, str, -1, true);

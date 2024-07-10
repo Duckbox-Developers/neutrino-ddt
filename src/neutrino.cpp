@@ -475,7 +475,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.hdmi_dd = configfile.getInt32( "hdmi_dd", 0);
 	g_settings.spdif_dd = configfile.getInt32( "spdif_dd", 1);
 #endif // HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
-#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUUNO || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
+#if HAVE_SH4_HARDWARE || BOXMODEL_DM7020HD || BOXMODEL_DM8000 || BOXMODEL_VUUNO || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
 	g_settings.analog_out = configfile.getInt32( "analog_out", 1);
 #endif
 	g_settings.avsync = configfile.getInt32( "avsync", 1);
@@ -599,7 +599,7 @@ if (g_info.hw_caps->can_shutdown)
 	g_settings.infobar_show_tuner = configfile.getInt32("infobar_show_tuner", 1 );
 	g_settings.radiotext_enable = configfile.getBool("radiotext_enable"          , false);
 	//audio
-#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUUNO || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
+#if HAVE_SH4_HARDWARE || BOXMODEL_DM7020HD || BOXMODEL_DM8000 || BOXMODEL_VUUNO || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
 	g_settings.audio_AnalogMode = configfile.getInt32( "audio_AnalogMode", 0 );
 #endif
 	g_settings.audio_DolbyDigital    = configfile.getBool("audio_DolbyDigital"   , false);
@@ -1312,7 +1312,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32( "hdmi_dd", g_settings.hdmi_dd);
 	configfile.setInt32( "spdif_dd", g_settings.spdif_dd);
 #endif
-#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUUNO || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
+#if HAVE_SH4_HARDWARE || BOXMODEL_DM7020HD || BOXMODEL_DM8000 || BOXMODEL_VUUNO || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
 	configfile.setInt32( "analog_out", g_settings.analog_out);
 #endif
 	configfile.setInt32( "avsync", g_settings.avsync);
@@ -1411,7 +1411,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32("infobar_show_tuner"  , g_settings.infobar_show_tuner  );
 	configfile.setBool("radiotext_enable"          , g_settings.radiotext_enable);
 	//audio
-#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUUNO || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
+#if HAVE_SH4_HARDWARE || BOXMODEL_DM7020HD || BOXMODEL_DM8000 || BOXMODEL_VUUNO || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
 	configfile.setInt32( "audio_AnalogMode", g_settings.audio_AnalogMode );
 #endif
 	configfile.setBool("audio_DolbyDigital"   , g_settings.audio_DolbyDigital   );
@@ -2530,7 +2530,7 @@ TIMER_START();
 	audioDecoder->SetHdmiDD((HDMI_ENCODED_MODE)g_settings.hdmi_dd);
 	audioDecoder->SetSpdifDD(g_settings.spdif_dd ? true : false);
 #endif
-#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUUNO || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
+#if HAVE_SH4_HARDWARE || BOXMODEL_DM7020HD || BOXMODEL_DM8000 || BOXMODEL_VUUNO || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
 	audioDecoder->EnableAnalogOut(g_settings.analog_out ? true : false);
 #endif
 	audioSetupNotifier        = new CAudioSetupNotifier;
@@ -3486,7 +3486,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 		return messages_return::handled;
 	}
 	if(msg == NeutrinoMessages::EVT_ZAP_COMPLETE) {
-#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUUNO || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
+#if HAVE_SH4_HARDWARE || BOXMODEL_DM7020HD || BOXMODEL_DM8000 || BOXMODEL_VUUNO || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
 		CZapit::getInstance()->GetAudioMode(g_settings.audio_AnalogMode);
 		if(g_settings.audio_AnalogMode < 0 || g_settings.audio_AnalogMode > 2)
 			g_settings.audio_AnalogMode = 0;
@@ -3700,7 +3700,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 		g_audioMute->AudioMute(false, true);
 		return messages_return::handled;
 	}
-#if HAVE_SH4_HARDWARE || BOXMODEL_DM8000 || BOXMODEL_VUUNO || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
+#if HAVE_SH4_HARDWARE || BOXMODEL_DM7020HD || BOXMODEL_DM8000 || BOXMODEL_VUUNO || BOXMODEL_VUDUO || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4K || BOXMODEL_HD51
 	else if( msg == CRCInput::RC_analog_on ) {
 		g_settings.analog_out = 1;
 		audioDecoder->EnableAnalogOut(true);
@@ -4350,7 +4350,7 @@ void CNeutrinoApp::saveEpg(int _mode)
 		}
 		CVFD::getInstance()->Clear();
 		CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD
 		CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, g_Locale->getText(LOCALE_EPG_SAVING));
 #else
 		CVFD::getInstance()->ShowText(g_Locale->getText(LOCALE_EPG_SAVING));
@@ -4498,7 +4498,7 @@ void CNeutrinoApp::standbyMode(bool bOnOff, bool fromDeepStandby)
 #ifdef ENABLE_GRAPHLCD
 		nGLCD::StandbyMode(true);
 #endif
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD
 		CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, "standby...");
 #else
 		CVFD::getInstance()->ShowText("standby...");
@@ -4580,7 +4580,7 @@ void CNeutrinoApp::standbyMode(bool bOnOff, bool fromDeepStandby)
 		// Active standby off
 		powerManager->SetStandby(false, false);
 		CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD
 		CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, "resume");
 #else
 		CVFD::getInstance()->ShowText("resume");
@@ -5052,7 +5052,7 @@ void stop_daemons(bool stopall, bool for_flash)
 	if (for_flash) {
 		CVFD::getInstance()->Clear();
 		CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD
 		CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, "Stop daemons...");
 #else
 		CVFD::getInstance()->ShowText("Stop daemons...");
@@ -5250,7 +5250,7 @@ void CNeutrinoApp::loadKeys(const char * fname)
 	g_settings.mpkey_pause = tconfig->getInt32( "mpkey.pause", CRCInput::RC_playpause );
 #else
 	g_settings.mpkey_play = tconfig->getInt32( "mpkey.play", CRCInput::RC_play );
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM900 || BOXMODEL_DM920 || BOXMODEL_DM8000
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM900 || BOXMODEL_DM920 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD
 	g_settings.mpkey_pause = tconfig->getInt32( "mpkey.pause", CRCInput::RC_play );
 #else
 	g_settings.mpkey_pause = tconfig->getInt32( "mpkey.pause", CRCInput::RC_pause );
@@ -5636,7 +5636,7 @@ void CNeutrinoApp::CheckFastScan(bool standby, bool reload)
 		}
 		if (standby || (new_fst != scansettings.fst_version)) {
 			CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD
 			CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, g_Locale->getText(LOCALE_SATSETUP_FASTSCAN_HEAD));
 #else
 			CVFD::getInstance()->ShowText(g_Locale->getText(LOCALE_SATSETUP_FASTSCAN_HEAD));
