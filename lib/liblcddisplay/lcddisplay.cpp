@@ -40,7 +40,7 @@
 #include <byteswap.h>
 #include <string.h>
 
-#if BOXMODEL_DM8000 || BOXMODEL_DM7080
+#if BOXMODEL_DM8000 || BOXMODEL_DM7080 || BOXMODEL_DM7020HD
 #include <system/helpers.h>
 #endif
 
@@ -214,7 +214,7 @@ int CLCDDisplay::setLCDContrast(int contrast)
 
 int CLCDDisplay::setLCDBrightness(int brightness)
 {
-#if BOXMODEL_DM8000 || BOXMODEL_DM7080
+#if BOXMODEL_DM8000 || BOXMODEL_DM7080 || BOXMODEL_DM7020HD
 	if (!file_exists("/tmp/usbtft"))
 	{
 #endif
@@ -250,7 +250,7 @@ int CLCDDisplay::setLCDBrightness(int brightness)
 		}
 
 		last_brightness = brightness;
-#if BOXMODEL_DM8000 || BOXMODEL_DM7080
+#if BOXMODEL_DM8000 || BOXMODEL_DM7080 || BOXMODEL_DM7020HD
 	}
 #endif
 		return (0);
