@@ -62,8 +62,17 @@ int main(int argc, char **argv)
 			{
 				char path[255];
 				sprintf(path, "%s/", argv[i + 1]);
-				printf("Reading epg cache from %s....\n", path);
+				printf("Reading epg cache from %s...\n", path);
 				client.readSIfromXML(path);
+			}
+		}
+		else if (!strcmp(argv[i], "--readxmltvepg")) {
+			if (argv[i+1])
+			{
+				char url[255];
+				sprintf(url, "%s", argv[i+1]);
+				printf("Reading xmltv epg from %s...\n", url);
+				client.readSIfromXMLTV(url);
 			}
 		}
 		else if (!strcmp(argv[i], "--dump"))
