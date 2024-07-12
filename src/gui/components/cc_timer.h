@@ -32,6 +32,7 @@
 #include <OpenThreads/ScopedLock>
 #include <OpenThreads/Thread>
 #include <OpenThreads/Condition>
+#include <string>
 
 /**CComponentsTimer
 * 	Member of CComponents. Provides a generic timer class
