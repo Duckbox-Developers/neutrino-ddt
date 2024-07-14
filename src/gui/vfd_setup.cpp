@@ -383,7 +383,7 @@ bool CLCDNotifier::changeNotify(const neutrino_locale_t, void * Data)
 	int state = *(int *)Data;
 
 	dprintf(DEBUG_NORMAL, "CLCDNotifier: state: %d\n", state);
-#if BOXMODEL_DM8000 || BOXMODEL_DM7080 || BOXMODEL_DM7020HD
+#if BOXMODEL_DM8000 || BOXMODEL_DM7020HD || BOXMODEL_DM7080
 	CVFD::getInstance()->setPower(state);
 #else
 	CVFD::getInstance()->setPower(1);

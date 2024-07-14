@@ -384,7 +384,7 @@ int CVideoSettings::showVideoSetup()
 		videosetup->addItem(zm);
 	}
 
-#if BOXMODEL_VUPLUS_ARM || BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM900 || BOXMODEL_DM920
+#if BOXMODEL_VUPLUS_ARM || BOXMODEL_DM820 || BOXMODEL_DM7020HD || BOXMODEL_DM7080 || BOXMODEL_DM900 || BOXMODEL_DM920
 	if (file_exists("/proc/stb/video/hdmi_colorspace"))
 #else
 	if (file_exists("/proc/stb/video/hdmi_colorimetry_choices"))
