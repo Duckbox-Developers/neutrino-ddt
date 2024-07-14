@@ -338,7 +338,11 @@ const lcd_setting_struct_t lcd_setting[SNeutrinoSettings::LCD_SETTING_COUNT] =
 	{"lcd_autodimm"           , DEFAULT_LCD_AUTODIMM         },
 	{"lcd_deepbrightness"     , DEFAULT_VFD_STANDBYBRIGHTNESS}
 #if USE_STB_HAL
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD
+	,{ "lcd_epgmode"          , 3 /*DEFAULT_LCD_EPGMODE*/    }
+#else
 	,{ "lcd_epgmode"          , 0 /*DEFAULT_LCD_EPGMODE*/    }
+#endif
 #endif
 #if HAVE_SPARK_HARDWARE
 	,{"lcd_displaymode"       , DEFAULT_LCD_DISPLAYMODE      }
