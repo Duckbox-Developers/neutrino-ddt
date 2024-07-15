@@ -232,12 +232,14 @@ class CRCInput
 #if BOXMODEL_VUPLUS_ALL
 			RC_info		= KEY_HELP,
 			RC_epg		= KEY_INFO,
+			RC_video	= KEY_VIDEO,
 #else
-			RC_info		= KEY_INFO,
 #if BOXMODEL_DREAMBOX_ALL
+			RC_info		= KEY_INFO,
 			RC_epg		= KEY_VIDEO,
 			RC_video	= KEY_EPG,
 #else
+			RC_info		= KEY_INFO,
 			RC_epg		= KEY_EPG,
 			RC_video	= KEY_VIDEO,
 #endif
