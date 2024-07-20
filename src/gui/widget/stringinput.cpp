@@ -436,7 +436,7 @@ int CStringInput::exec(CMenuTarget *parent, const std::string &)
 		frameBuffer->blit();
 		if (*valueString != dispval)
 		{
-#if BOXMODEL_DM820 || BOXMODEL_DM7080
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD
 			CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, valueString->c_str());
 #else
 			CVFD::getInstance()->showMenuText(1, valueString->c_str(), selected + 1);

@@ -1025,7 +1025,7 @@ start-block~rc_dm_rc10
 <area shape="circle" coords="35,194,11" alt="KEY_INFO" href="javascript:rcsim('KEY_INFO')" />
 <area shape="circle" coords="126,193,10" alt="KEY_MENU" href="javascript:rcsim('KEY_MENU')" />
 <area shape="circle" coords="34,252,11" alt="KEY_AUDIO" href="javascript:rcsim('KEY_AUDIO')" />
-<area shape="circle" coords="127,253,11" alt="KEY_PVR" href="javascript:rcsim('KEY_PVR')" />
+<area shape="circle" coords="127,253,11" alt="KEY_VIDEO" href="javascript:rcsim('KEY_VIDEO')" />
 <area shape="poly" coords="36,220,54,201,62,207,56,221,61,241,55,243,35,224" alt="KEY_LEFT" href="javascript:rcsim('KEY_LEFT')" />
 <area shape="poly" coords="105,220,106,221,100,207,106,203,125,222,107,243,100,240,105,222"alt="KEY_RIGHT"  href="javascript:rcsim('KEY_RIGHT')" />
 <area shape="poly" coords="60,196,81,178,102,199,96,203,86,200,76,198,66,204,59,197" alt="KEY_UP" href="javascript:rcsim('KEY_UP')" />

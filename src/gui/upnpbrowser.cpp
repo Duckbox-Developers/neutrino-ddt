@@ -953,7 +953,7 @@ bool CUpnpBrowserGui::selectItem(std::string id)
 
 void CUpnpBrowserGui::paintDeviceInfo()
 {
-#if BOXMODEL_DM820 || BOXMODEL_DM7080
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD
 	CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, m_devices[m_selecteddevice].friendlyname.c_str());
 #else
 	CVFD::getInstance()->showMenuText(0, m_devices[m_selecteddevice].friendlyname.c_str(), -1, true);
@@ -1127,7 +1127,7 @@ void CUpnpBrowserGui::paintItemInfo(UPnPEntry *entry)
 	int preferred=entry->preferred;
 
 	// LCD
-#if BOXMODEL_DM820 || BOXMODEL_DM7080
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD
 	CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, entry->title.c_str());
 #else
 	CVFD::getInstance()->showMenuText(0, entry->title.c_str(), -1, true);

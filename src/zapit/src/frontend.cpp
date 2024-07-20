@@ -43,6 +43,10 @@
 #include <linux/dvb/frontend.h>
 #include <linux/dvb/version.h>
 
+#if DVB_API_VERSION > 5 || DVB_API_VERSION == 5 && DVB_API_VERSION_MINOR >= 10
+#include <errno.h>
+#endif
+
 #include <hardware_caps.h>
 
 extern transponder_list_t transponders;
@@ -96,7 +100,7 @@ typedef enum dvb_fec {
 	f4_5,
 	f9_10,
 	fNone = 15
-#if !defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE)
+#if (!defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE)) || (defined (BOXMODEL_DM820) || defined (BOXMODEL_DM7080))
 	,
 	f13_45,
 	f9_20,
@@ -244,14 +248,17 @@ void CFrontend::getFEInfo(void)
 		bool found = false;
 		while (getline(in, line))
 		{
-			if (line.find("NIM Socket "+to_string(fenumber)+":") !=std::string::npos)
+			if (line.find("NIM Socket " + to_string(fenumber) + ":") != std::string::npos)
 				found = true;
 
 			if ((line.find("Name:") != std::string::npos) && found)
 			{
-				//printf("NIM SOCKET: %s\n",line.substr(line.find_first_of(":")+2).c_str());
+				//printf("NIM SOCKET: %s\n", line.substr(line.find_first_of(":") + 2).c_str());
 #if BOXMODEL_VUPLUS_ALL
 				sprintf(info.name,"%s", line.substr(line.find_first_of(":") + 9).c_str());
+				// no hybrid for BCM3466 T2 tuner
+				if (!strncmp(line.substr(line.find_first_of("(") + 1).c_str(), "BCM3466)", 5))
+					found = false;
 #else
 				std::string tmp = info.name;
 				sprintf(info.name,"%s (%s)", tmp.c_str(), line.substr(line.find_first_of(":") + 2).c_str());
@@ -301,13 +308,13 @@ void CFrontend::getFEInfo(void)
 				printf("[fe%d/%d] add delivery system DVB-S (delivery_system: %d)\n", adapter, fenumber, (fe_delivery_system_t)prop[0].u.buffer.data[i]);
 				break;
 			case SYS_DVBS2:
-#if !defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE)
+#if (!defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE)) || (defined (BOXMODEL_DM820) || defined (BOXMODEL_DM7080))
 			case SYS_DVBS2X:
 #endif
 				deliverySystemMask |= DVB_S2;
 				fe_can_multistream = info.caps & FE_CAN_MULTISTREAM;
 				printf("[fe%d/%d] add delivery system DVB-S2 (delivery_system: %d / Multistream: %s)\n", adapter, fenumber, (fe_delivery_system_t)prop[0].u.buffer.data[i], fe_can_multistream ? "yes" :"no");
-#if !defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE)
+#if (!defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE)) || (defined (BOXMODEL_DM820) || defined (BOXMODEL_DM7080))
 				if (fe_can_multistream)
 				{
 					deliverySystemMask |= DVB_S2X;
@@ -501,7 +508,7 @@ fe_code_rate_t CFrontend::getCodeRate(const uint8_t fec_inner, delivery_system_t
 		case f9_10:
 			fec = FEC_9_10;
 			break;
-#if !defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE)
+#if (!defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE)) || (defined (BOXMODEL_DM820) || defined (BOXMODEL_DM7080))
 		case f13_45:
 			fec = FEC_13_45;
 			break;
@@ -746,27 +753,130 @@ uint32_t CFrontend::getBitErrorRate(void) const
 	return ber;
 }
 
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM900 || BOXMODEL_DM920
-#define M_STRENGTH 350
-#define M_SNR 35
-#else
-#define M_STRENGTH 1
-#define M_SNR 1
-#endif
-
 uint16_t CFrontend::getSignalStrength(void) const
 {
 	uint16_t strength = 0;
-	fop(ioctl, FE_READ_SIGNAL_STRENGTH, &strength);
-	strength = strength * M_STRENGTH;
+
+#if DVB_API_VERSION > 5 || DVB_API_VERSION == 5 && DVB_API_VERSION_MINOR >= 10
+	dtv_property prop[1];
+	memset(prop, 0, sizeof(prop));
+	prop[0].cmd = DTV_STAT_SIGNAL_STRENGTH;
+	dtv_properties props;
+	props.props = prop;
+	props.num = 1;
+
+	if (fop(ioctl, FE_GET_PROPERTY, &props) < 0 && errno != ERANGE)
+	{
+		printf("%s: DTV_STAT_SIGNAL_STRENGTH failed\n", __FUNCTION__);
+	}
+	else
+	{
+		for(unsigned int i = 0; i < prop[0].u.st.len; i++)
+		{
+			if (prop[0].u.st.stat[i].scale == FE_SCALE_RELATIVE)
+				strength = prop[0].u.st.stat[i].uvalue;
+		}
+	}
+#endif
+	// fallback to old DVB API
+	if (!strength && fop(ioctl, FE_READ_SIGNAL_STRENGTH, &strength) < 0 && errno != ERANGE)
+		printf("%s: FE_READ_SIGNAL_STRENGTH failed\n", __FUNCTION__);
+
+#if BOXMODEL_DREAMBOX_ALL
+	if
+	(	   strstr(info.name, "BCM4506")
+		|| strstr(info.name, "BCM4506 (internal)")
+		|| strstr(info.name, "BCM4505")
+		|| strstr(info.name, "BCM73625 (G3)")
+		|| strstr(info.name, "BCM45208")
+		|| strstr(info.name, "BCM45308")
+		|| strstr(info.name, "BCM3158")
+	)
+	{
+		strength = strength * 1.88;
+	}
+	else if (strstr(info.name, "Si2166B"))
+	{
+		strength = (strength * 288);
+	}
+	else if (strstr(info.name, "Si2166D"))
+	{
+		strength = (strength * 288);
+	}
+#endif
+
 	return strength;
 }
 
 uint16_t CFrontend::getSignalNoiseRatio(void) const
 {
 	uint16_t snr = 0;
-	fop(ioctl, FE_READ_SNR, &snr);
-	snr = snr * M_SNR;
+
+#if BOXMODEL_DREAMBOX_ALL
+	int max_value = 4200; //1600;
+	if (info.type == FE_QPSK)	// DVB-S
+		max_value = 4200; //1600;
+	else if (info.type == FE_QAM)	// DVB-C
+		max_value = 6200; //4200;
+	else if (info.type == FE_OFDM)	// DVB-T
+		max_value = 5000; //2900;
+#endif
+
+#if DVB_API_VERSION > 5 || DVB_API_VERSION == 5 && DVB_API_VERSION_MINOR >= 10
+	dtv_property prop[1];
+	prop[0].cmd = DTV_STAT_CNR;
+	dtv_properties props;
+	props.props = prop;
+	props.num = 1;
+
+	if (fop(ioctl, FE_GET_PROPERTY, &props) < 0 && errno != ERANGE)
+	{
+		printf("%s: DTV_STAT_CNR failed\n", __FUNCTION__);
+	}
+	else
+	{
+		for(unsigned int i = 0; i < prop[0].u.st.len; i++)
+		{
+			if (prop[0].u.st.stat[i].scale == FE_SCALE_DECIBEL)
+			{
+				snr = prop[0].u.st.stat[i].svalue / 10;
+			}
+			else if (prop[0].u.st.stat[i].scale == FE_SCALE_RELATIVE)
+			{
+				snr = prop[0].u.st.stat[i].svalue;
+			}
+		}
+	}
+#endif
+	// fallback to old DVB API
+	if (!snr && fop(ioctl, FE_READ_SNR, &snr) < 0 && errno != ERANGE)
+		printf("%s: FE_READ_SNR failed\n", __FUNCTION__);
+
+#if BOXMODEL_DREAMBOX_ALL
+	if
+	(	   strstr(info.name, "BCM4506")
+		|| strstr(info.name, "BCM4506 (internal)")
+		|| strstr(info.name, "BCM4505")
+		|| strstr(info.name, "BCM73625 (G3)")
+		|| strstr(info.name, "BCM45208")
+		|| strstr(info.name, "BCM45308")
+		|| strstr(info.name, "BCM3158")
+	)
+	{
+		snr = (snr >= max_value ? 65535 : snr * 65535 / max_value);
+	}
+	else if (strstr(info.name, "Si2166B"))
+	{
+		snr = (snr * 240);
+		snr = (snr >= max_value ? 65535 : snr * 65535 / max_value);
+	}
+	else if (strstr(info.name, "Si2166D"))
+	{
+		max_value = 1620;
+		snr = (snr >= max_value ? 65535 : snr * 65535 / max_value);
+	}
+#endif
+
 	return snr;
 }
 
@@ -1021,7 +1131,7 @@ void CFrontend::getDelSys(delivery_system_t delsys, int f, int m, const char *&f
 		case PSK_8:
 			mod = "8PSK";
 			break;
-#if !defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE)
+#if (!defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE)) || (defined (BOXMODEL_DM820) || defined (BOXMODEL_DM7080))
 		case APSK_8:
 			mod = "8APSK";
 			break;
@@ -1139,7 +1249,7 @@ void CFrontend::getDelSys(delivery_system_t delsys, int f, int m, const char *&f
 		fec = "0";
 		break;
 #endif
-#if !defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE)
+#if (!defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE)) || (defined (BOXMODEL_DM820) || defined (BOXMODEL_DM7080))
 	case FEC_13_45:
 		fec = "13/45";
 		break;
@@ -1434,7 +1544,7 @@ int CFrontend::setFrontend(const FrontendParameters *feparams, bool nowait)
 		fec = FEC_NONE;
 		break;
 #endif
-#if !defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE)
+#if (!defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE)) || (defined (BOXMODEL_DM820) || defined (BOXMODEL_DM7080))
 	case FEC_13_45:
 		fec = FEC_13_45;
 		break;

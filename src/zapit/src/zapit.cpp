@@ -2149,7 +2149,7 @@ bool CZapit::StopPlayBack(bool send_pmt, bool __attribute__ ((unused)) blank)
 	if (playbackStopForced)
 		return false;
 
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM900 || BOXMODEL_DM920
+#if BOXMODEL_DM820 || BOXMODEL_DM7020HD || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM900 || BOXMODEL_DM920
 	videoDecoder->Stop(standby ? false : blank);
 #else
 	videoDecoder->Stop(false);
