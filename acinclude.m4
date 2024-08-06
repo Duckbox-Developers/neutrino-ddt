@@ -319,7 +319,7 @@ AC_ARG_WITH(boxtype,
 			BOXTYPE="armbox"
 			BOXMODEL="$withval"
 		;;
-		vuduo|vuduo2|vuuno|vuultimo|dm7020hd|dm820|dm7080|dm8000)
+		vuduo|vuduo2|vuuno|vuultimo|dm7020hd|dm820|dm7080|dm8000|dm800se|dm800sev2)
 			BOXTYPE="mipsbox"
 			BOXMODEL="$withval"
 		;;
@@ -333,7 +333,7 @@ AC_ARG_WITH(boxmodel,
 	AS_HELP_STRING([--with-boxmodel], [valid for duckbox: ufs910, ufs912, ufs913, ufs922, atevio7500, fortis_hdbox, octagon1008, cuberevo, cuberevo_mini, cuberevo_mini2, cuberevo_250hd, cuberevo_2000hd, cuberevo_3000hd, ipbox9900, ipbox99, ipbox55, tf7700])
 AS_HELP_STRING([], [valid for spark: spark, spark7162])
 AS_HELP_STRING([], [valid for armbox: bre2ze4k, hd51, e4hdultra, vusolo4k, vuduo4k, vuduo4kse, vuultimo4k, vuzero4k, vuuno4kse, vuuno4k, h7, dm900, dm920])
-AS_HELP_STRING([], [valid for mipsbox: vuduo, vuduo2, vuuno, vuultimo, dm7020hd, dm820, dm7080, dm8000])
+AS_HELP_STRING([], [valid for mipsbox: vuduo, vuduo2, vuuno, vuultimo, dm7020hd, dm820, dm7080, dm8000, dm800se, dm800sev2])
 AS_HELP_STRING([], [valid for generic: raspi]),
 	[case "${withval}" in
 		ufs910|ufs912|ufs913|ufs922|atevio7500|fortis_hdbox|octagon1008|cuberevo|cuberevo_mini|cuberevo_mini2|cuberevo_250hd|cuberevo_2000hd|cuberevo_3000hd|ipbox9900|ipbox99|ipbox55|tf7700)
@@ -357,7 +357,7 @@ AS_HELP_STRING([], [valid for generic: raspi]),
 				AC_MSG_ERROR([unknown model $withval for boxtype $BOXTYPE])
 			fi
 		;;
-		vuduo|vuduo2|vuuno|vuultimo|dm7020hd|dm820|dm7080|dm8000)
+		vuduo|vuduo2|vuuno|vuultimo|dm7020hd|dm820|dm7080|dm8000|dm800se|dm800sev2)
 			if test "$BOXTYPE" = "mipsbox"; then
 				BOXMODEL="$withval"
 			else
@@ -430,6 +430,8 @@ AM_CONDITIONAL(BOXMODEL_DM7080, test "$BOXMODEL" = "dm7080")
 AM_CONDITIONAL(BOXMODEL_DM900, test "$BOXMODEL" = "dm900")
 AM_CONDITIONAL(BOXMODEL_DM920, test "$BOXMODEL" = "dm920")
 AM_CONDITIONAL(BOXMODEL_DM8000, test "$BOXMODEL" = "dm8000")
+AM_CONDITIONAL(BOXMODEL_DM800SE, test "$BOXMODEL" = "dm800se")
+AM_CONDITIONAL(BOXMODEL_DM800SEV2, test "$BOXMODEL" = "dm800sev2")
 AM_CONDITIONAL(BOXMODEL_H7, test "$BOXMODEL" = "h7")
 AM_CONDITIONAL(BOXMODEL_OSMIO4K, test "$BOXMODEL" = "osmio4k")
 AM_CONDITIONAL(BOXMODEL_OSMIO4KPLUS, test "$BOXMODEL" = "osmio4kplus")
@@ -440,9 +442,9 @@ AM_CONDITIONAL(BOXMODEL_VUPLUS_ALL, test "$BOXMODEL" = "vusolo4k" -o "$BOXMODEL"
 AM_CONDITIONAL(BOXMODEL_VUPLUS_ARM, test "$BOXMODEL" = "vusolo4k" -o "$BOXMODEL" = "vuduo4k" -o "$BOXMODEL" = "vuduo4kse" -o "$BOXMODEL" = "vuultimo4k" -o "$BOXMODEL" = "vuzero4k" -o "$BOXMODEL" = "vuuno4kse" -o "$BOXMODEL" = "vuuno4k")
 AM_CONDITIONAL(BOXMODEL_VUPLUS_MIPS, test "$BOXMODEL" = "vuduo" -o "$BOXMODEL" = "vuduo2" -o "$BOXMODEL" = "vuuno" -o "$BOXMODEL" = "vuultimo")
 
-AM_CONDITIONAL(BOXMODEL_DREAMBOX_ALL, test "$BOXMODEL" = "dm7020hd" -o "$BOXMODEL" = "dm8000" -o "$BOXMODEL" = "dm820" -o "$BOXMODEL" = "dm7080" -o "$BOXMODEL" = "dm900" -o "$BOXMODEL" = "dm920")
+AM_CONDITIONAL(BOXMODEL_DREAMBOX_ALL, test "$BOXMODEL" = "dm7020hd" -o "$BOXMODEL" = "dm8000" -o "$BOXMODEL" = "dm800se" -o "$BOXMODEL" = "dm800sev2" -o "$BOXMODEL" = "dm820" -o "$BOXMODEL" = "dm7080" -o "$BOXMODEL" = "dm900" -o "$BOXMODEL" = "dm920")
 AM_CONDITIONAL(BOXMODEL_DREAMBOX_ARM, test "$BOXMODEL" = "dm900" -o "$BOXMODEL" = "dm920")
-AM_CONDITIONAL(BOXMODEL_DREAMBOX_MIPS, test "$BOXMODEL" = "dm7020hd" -o "$BOXMODEL" = "dm8000" -o "$BOXMODEL" = "dm820" -o "$BOXMODEL" = "dm7080")
+AM_CONDITIONAL(BOXMODEL_DREAMBOX_MIPS, test "$BOXMODEL" = "dm7020hd" -o "$BOXMODEL" = "dm8000" -o "$BOXMODEL" = "dm800se" -o "$BOXMODEL" = "dm800sev2" -o "$BOXMODEL" = "dm820" -o "$BOXMODEL" = "dm7080")
 
 if test "$BOXTYPE" = "spark"; then
 	AC_DEFINE(HAVE_SPARK_HARDWARE, 1, [building for a goldenmedia 990 or edision pingulux])
@@ -541,6 +543,10 @@ elif test "$BOXMODEL" = "dm920"; then
 	AC_DEFINE(BOXMODEL_DM920, 1, [dm920])
 elif test "$BOXMODEL" = "dm8000"; then
 	AC_DEFINE(BOXMODEL_DM8000, 1, [dm8000])
+elif test "$BOXMODEL" = "dm800se"; then
+	AC_DEFINE(BOXMODEL_DM800SE, 1, [dm800se])
+elif test "$BOXMODEL" = "dm800sev2"; then
+	AC_DEFINE(BOXMODEL_DM800SEV2, 1, [dm800sev2])
 elif test "$BOXMODEL" = "h7"; then
 	AC_DEFINE(BOXMODEL_H7, 1, [h7])
 elif test "$BOXMODEL" = "osmio4k"; then
@@ -581,7 +587,7 @@ esac
 
 # all dreambox BOXMODELs
 case "$BOXMODEL" in
-	dm7020hd|dm8000|dm820|dm7080|dm900|dm920)
+	dm7020hd|dm8000|dm800se|dm800sev2|dm820|dm7080|dm900|dm920)
 		AC_DEFINE(BOXMODEL_DREAMBOX_ALL, 1, [dreambox_all])
 	;;
 esac
@@ -595,7 +601,7 @@ esac
 
 # all dreambox mips BOXMODELs
 case "$BOXMODEL" in
-	dm7020hd|dm8000|dm820|dm7080)
+	dm7020hd|dm8000|dm800se|dm800sev2|dm820|dm7080)
 		AC_DEFINE(BOXMODEL_DREAMBOX_MIPS, 1, [dreambox_mips])
 	;;
 esac

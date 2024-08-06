@@ -196,7 +196,7 @@ int CExtendedInput::exec(CMenuTarget *parent, const std::string &)
 	{
 		if (*valueString != dispval)
 		{
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2
 			CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, valueString->c_str());
 #else
 			CVFD::getInstance()->showMenuText(1, valueString->c_str(), selectedChar + 1);
@@ -238,7 +238,7 @@ int CExtendedInput::exec(CMenuTarget *parent, const std::string &)
 			{
 				inputFields[oldSelectedChar]->paint(x + offset, y + hheight + offset, false);
 				inputFields[selectedChar]->paint(x + offset, y + hheight + offset, true);
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2
 				CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, valueString->c_str());
 #else
 				CVFD::getInstance()->showMenuText(1, valueString->c_str(), selectedChar + 1);
@@ -278,7 +278,7 @@ int CExtendedInput::exec(CMenuTarget *parent, const std::string &)
 			{
 				inputFields[oldSelectedChar]->paint(x + offset, y + hheight + offset, false);
 				inputFields[selectedChar]->paint(x + offset, y + hheight + offset, true);
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2
 				CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, valueString->c_str());
 #else
 				CVFD::getInstance()->showMenuText(1, valueString->c_str(), selectedChar + 1);
