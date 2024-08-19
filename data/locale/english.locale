@@ -2117,6 +2117,7 @@ rclock.title Lock remote control
 rclock.unlockmsg Remote control unlocked
 recording.already_found %s\nwas already found. Nevertheless start record?
 recording.already_found_check Check recordings
+recording.error Recording not possible.\nNo or space to low (%llu GB), min. %llu GB needed!
 recording.failed Recording failed!
 recording.is_running This channel already recording. Start new record?
 recording.start Start recording, please wait ...
@@ -2133,6 +2134,7 @@ recordingmenu.apids_std record standard stream
 recordingmenu.auto_cover Auto-thumbnail
 recordingmenu.data_pids Data streams
 recordingmenu.defdir Recording directory
+recordingmenu.dirsize Minimal size recording directory (0=off)
 recordingmenu.dvbsub_pids record dvbsub stream
 recordingmenu.end_of_recording_epg EPG act. Event
 recordingmenu.end_of_recording_max max. Recordingtime

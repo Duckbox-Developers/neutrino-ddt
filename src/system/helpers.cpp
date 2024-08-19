@@ -52,6 +52,7 @@
 #include <neutrino.h>
 #include <driver/fontrenderer.h>
 //#include <driver/framebuffer.h>
+#include <gui/widget/msgbox.h>
 #include <system/helpers.h>
 #include <system/helpers-json.h>
 #include <driver/framebuffer.h>
@@ -98,7 +99,7 @@ bool file_exists(const char *filename)
 	}
 }
 
-void  wakeup_hdd(const char *hdd_dir)
+void wakeup_hdd(const char *hdd_dir)
 {
 	if (!check_dir(hdd_dir) && hdd_get_standby(hdd_dir))
 	{
@@ -392,6 +393,30 @@ bool get_mem_usage(unsigned long &kbtotal, unsigned long &kbfree)
 	kbfree = kbfree + cached + buffers;
 	printf("mem: total %ld cached %ld free %ld\n", kbtotal, cached, kbfree);
 	return true;
+}
+
+bool check_recdir(std::string recdir, uint64_t minfree)
+{
+	if (minfree == 0)
+		return true;
+
+	uint64_t recfree = 0;
+	struct statfs s;
+	if (::statfs(recdir.c_str(), &s) == 0)
+	{
+		if (s.f_blocks > 0)
+			recfree = s.f_bfree * s.f_bsize / 1024 / 1024 / 1024;
+		if (recfree < minfree)
+		{
+			char errmsg[512] = "";
+			sprintf(errmsg, g_Locale->getText(LOCALE_RECORDING_ERROR), recfree, minfree);
+			ShowMsg(LOCALE_MESSAGEBOX_ERROR, errmsg, CMsgBox::mbrOk, CMsgBox::mbOk, NEUTRINO_ICON_ERROR);
+			return false;
+		}
+		else
+			return true;
+	}
+	return false;
 }
 
 std::string find_executable(const char *name)
