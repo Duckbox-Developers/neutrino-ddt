@@ -229,7 +229,7 @@ struct SNeutrinoSettings
 	int infobar_subchan_disp_pos;
 	int infobar_buttons_usertitle;
 	int infobar_analogclock;
-#if BOXMODEL_DM8000 || BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUUNO
+#if BOXMODEL_DM8000 || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2 || BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUUNO
 	int fan_speed;
 #endif
 	int infobar_show;
@@ -516,6 +516,7 @@ struct SNeutrinoSettings
 	int recording_stream_vtxt_pid;
 	int recording_stream_subtitle_pids;
 	int recording_stream_pmt_pid;
+	int record_dirsize;
 #if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	int recording_bufsize;
 	int recording_bufsize_dmx;

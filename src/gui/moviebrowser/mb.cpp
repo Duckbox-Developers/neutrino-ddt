@@ -1607,7 +1607,7 @@ void CMovieBrowser::refreshLCD(void)
 	if (m_vMovieInfo.empty() || m_movieSelectionHandler == NULL)
 		return;
 
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2
 	CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, m_movieSelectionHandler->epgTitle.c_str());
 #else
 	CVFD::getInstance()->showMenuText(0, m_movieSelectionHandler->epgTitle.c_str(), -1, true); // UTF-8
@@ -4519,7 +4519,7 @@ int CMenuSelector::paint(bool selected)
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(stringstartposName,   y + height, dx - (stringstartposName - x), optionName, color);
 
 	if (selected)
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2
 		CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, optionName);
 #else
 		CVFD::getInstance()->showMenuText(0, optionName, -1, true); // UTF-8

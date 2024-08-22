@@ -643,7 +643,7 @@ int CDataResetNotifier::exec(CMenuTarget * /*parent*/, const std::string &action
 	return ret;
 }
 
-#if BOXMODEL_DM8000 || BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUUNO
+#if BOXMODEL_DM8000 || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2 || BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUUNO
 #if HAVE_DUCKBOX_HARDWARE
 void CFanControlNotifier::setSpeed(unsigned int speed)
 {
@@ -698,7 +698,7 @@ void CFanControlNotifier::setSpeed(unsigned int speed)
 #else
 void CFanControlNotifier::setSpeed(unsigned int __attribute__((unused)) speed)
 {
-#if defined (BOXMODEL_DM8000) || defined (BOXMODEL_DM820) || defined (BOXMODEL_DM7080)
+#if defined (BOXMODEL_DM8000) || defined (BOXMODEL_DM800SE) || defined (BOXMODEL_DM800SEV2) || defined (BOXMODEL_DM820) || defined (BOXMODEL_DM7080)
 	int cfd;
 	cfd = open("/proc/stb/fp/fan_vlt", O_WRONLY);
 	if (cfd < 0)

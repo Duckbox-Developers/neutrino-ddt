@@ -223,7 +223,7 @@ void CMenuItem::paintItemCaption(const bool select_mode, const char *right_text,
 			ssize_t len = strlen(left_text) + strlen(right_text) + 2;
 			char str[len];
 			snprintf(str, len, "%s %s", left_text, right_text);
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2
 			CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, str);
 #else
 			CVFD::getInstance()->showMenuText(0, str, -1, true);
@@ -235,7 +235,7 @@ void CMenuItem::paintItemCaption(const bool select_mode, const char *right_text,
 		}
 		else
 		{
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2
 			CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, left_text);
 #else
 			CVFD::getInstance()->showMenuText(0, left_text, -1, true);

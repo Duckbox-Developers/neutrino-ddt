@@ -2147,6 +2147,7 @@ rclock.title Fernbedienung sperren
 rclock.unlockmsg Fernbedienung reaktiviert
 recording.already_found %s\nwurde bereits gefunden. Trotzdem aufnehmen?
 recording.already_found_check Prüfe Aufnahmen
+recording.error Aufnahme nicht möglich.\nZu wenig Speicher (%llu GB), min. %llu GB frei erforderlich!
 recording.failed Aufzeichnung ist fehlgeschlagen!
 recording.is_running Folgende Aufnahme läuft bereits! Neue Aufnahme starten?
 recording.start Starte Aufnahme, bitte warten ...
@@ -2163,6 +2164,7 @@ recordingmenu.apids_std Standard Tonspur aufnehmen
 recordingmenu.auto_cover Autom. Film-Vorschaubild
 recordingmenu.data_pids Daten-Spuren
 recordingmenu.defdir Aufnahmeverzeichnis
+recordingmenu.dirsize Minimale Größe des Aufnahmeverzeichnisses (0=aus)
 recordingmenu.dvbsub_pids Untertitel aufnehmen
 recordingmenu.end_of_recording_epg EPG aktuelles Event
 recordingmenu.end_of_recording_max max. Aufnahmezeit

@@ -62,6 +62,7 @@ bool get_fs_usage(const char *dir, uint64_t &btotal, uint64_t &bused, long *bsiz
 bool get_mem_usage(unsigned long &total, unsigned long &free);
 int mySleep(int sec);
 
+bool check_recdir(std::string recdir, uint64_t minfree = 16);
 std::string find_executable(const char *name);
 bool exec_controlscript(std::string script);
 /* basically what "foo=`command`" does in the shell */

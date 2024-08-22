@@ -2280,13 +2280,13 @@ void CChannelList::updateVfd()
 		char nameAndDescription[255];
 		snprintf(nameAndDescription, sizeof(nameAndDescription), "%s - %s",
 				chan->getName().c_str(), p_event->description.c_str());
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2
 		CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, nameAndDescription);
 #else
 		CVFD::getInstance()->showMenuText(0, nameAndDescription, -1, true); // UTF-8
 #endif
 	} else
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2
 		CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, chan->getName().c_str());
 #else
 		CVFD::getInstance()->showMenuText(0, chan->getName().c_str(), -1, true); // UTF-8

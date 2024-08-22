@@ -339,7 +339,7 @@ const lcd_setting_struct_t lcd_setting[SNeutrinoSettings::LCD_SETTING_COUNT] =
 	{"lcd_autodimm"           , DEFAULT_LCD_AUTODIMM         },
 	{"lcd_deepbrightness"     , DEFAULT_VFD_STANDBYBRIGHTNESS}
 #if USE_STB_HAL
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2 || BOXMODEL_DM7020HD
 	,{ "lcd_epgmode"          , 3 /*DEFAULT_LCD_EPGMODE*/    }
 #else
 	,{ "lcd_epgmode"          , 0 /*DEFAULT_LCD_EPGMODE*/    }
@@ -468,7 +468,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	if (g_settings.channel_mode_initial_radio > -1)
 		g_settings.channel_mode_radio = g_settings.channel_mode_initial_radio;
 
-#if BOXMODEL_DM8000 || BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUUNO
+#if BOXMODEL_DM8000 || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2 || BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUUNO
 	g_settings.fan_speed = configfile.getInt32( "fan_speed", 1);
 	if (g_settings.fan_speed < 1) g_settings.fan_speed = 1;
 #endif
@@ -795,6 +795,7 @@ if (g_info.hw_caps->can_shutdown)
 	g_settings.recording_stream_subtitle_pids  = configfile.getBool("recordingmenu.stream_subtitle_pids", true);
 	g_settings.recording_stream_pmt_pid        = configfile.getBool("recordingmenu.stream_pmt_pid"      , false);
 	g_settings.recording_filename_template     = configfile.getString("recordingmenu.filename_template" , "%C_%T_%d_%t");
+	g_settings.record_dirsize                  = configfile.getInt32("record_dirsize", 16);
 #if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	g_settings.recording_bufsize               = configfile.getInt32("recording_bufsize", 4);
 	g_settings.recording_bufsize_dmx           = configfile.getInt32("recording_bufsize_dmx", 2);
@@ -1313,7 +1314,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32( "channel_mode_initial", g_settings.channel_mode_initial );
 	configfile.setInt32( "channel_mode_initial_radio", g_settings.channel_mode_initial_radio );
 
-#if BOXMODEL_DM8000 || BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUUNO
+#if BOXMODEL_DM8000 || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2 || BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUUNO
 	configfile.setInt32( "fan_speed", g_settings.fan_speed);
 #endif
 
@@ -1549,6 +1550,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setBool  ("recordingmenu.stream_subtitle_pids" , g_settings.recording_stream_subtitle_pids );
 	configfile.setBool  ("recordingmenu.stream_pmt_pid"       , g_settings.recording_stream_pmt_pid       );
 	configfile.setString("recordingmenu.filename_template"    , g_settings.recording_filename_template    );
+	configfile.getInt32 ("record_dirsize"                     , g_settings.record_dirsize                 );
 #if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	configfile.setInt32 ("recording_bufsize"                  , g_settings.recording_bufsize);
 	configfile.setInt32 ("recording_bufsize_dmx"              , g_settings.recording_bufsize_dmx);
@@ -2598,7 +2600,7 @@ TIMER_START();
 	powerManager = new cPowerManager;
 	powerManager->Open();
 
-#if BOXMODEL_DM8000 || BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUUNO
+#if BOXMODEL_DM8000 || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2 || BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUUNO
 	//fan speed
 	CFanControlNotifier::setSpeed(g_settings.fan_speed);
 #endif
@@ -4322,7 +4324,7 @@ void CNeutrinoApp::ExitRun(int exit_code)
 	delete g_RCInput;
 	g_RCInput = NULL;
 
-#if BOXMODEL_DM8000 || BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUUNO
+#if BOXMODEL_DM8000 || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2 || BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUUNO
 	CFanControlNotifier::setSpeed(0);
 #endif
 
@@ -4366,7 +4368,7 @@ void CNeutrinoApp::saveEpg(int _mode)
 		}
 		CVFD::getInstance()->Clear();
 		CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2 || BOXMODEL_DM7020HD
 		CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, g_Locale->getText(LOCALE_EPG_SAVING));
 #else
 		CVFD::getInstance()->ShowText(g_Locale->getText(LOCALE_EPG_SAVING));
@@ -4514,7 +4516,7 @@ void CNeutrinoApp::standbyMode(bool bOnOff, bool fromDeepStandby)
 #ifdef ENABLE_GRAPHLCD
 		nGLCD::StandbyMode(true);
 #endif
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2 || BOXMODEL_DM7020HD
 		CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, "standby...");
 #else
 		CVFD::getInstance()->ShowText("standby...");
@@ -4580,7 +4582,7 @@ void CNeutrinoApp::standbyMode(bool bOnOff, bool fromDeepStandby)
 		bool alive = recordingstatus || CEpgScan::getInstance()->Running() ||
 			CStreamManager::getInstance()->StreamStatus();
 #endif
-#if BOXMODEL_DM8000 || BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUUNO
+#if BOXMODEL_DM8000 || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2 || BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUUNO
 		//fan speed
 		CFanControlNotifier::setSpeed(1);
 #endif
@@ -4596,7 +4598,7 @@ void CNeutrinoApp::standbyMode(bool bOnOff, bool fromDeepStandby)
 		// Active standby off
 		powerManager->SetStandby(false, false);
 		CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2 || BOXMODEL_DM7020HD
 		CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, "resume");
 #else
 		CVFD::getInstance()->ShowText("resume");
@@ -4633,7 +4635,7 @@ void CNeutrinoApp::standbyMode(bool bOnOff, bool fromDeepStandby)
 		}
 #endif
 		frameBuffer->setActive(true);
-#if BOXMODEL_DM8000 || BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUUNO
+#if BOXMODEL_DM8000 || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2 || BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_UFS922 || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_VUDUO2 || BOXMODEL_VUULTIMO || BOXMODEL_VUUNO
 		//fan speed
 		CFanControlNotifier::setSpeed(g_settings.fan_speed);
 #endif
@@ -5068,7 +5070,7 @@ void stop_daemons(bool stopall, bool for_flash)
 	if (for_flash) {
 		CVFD::getInstance()->Clear();
 		CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2 || BOXMODEL_DM7020HD
 		CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, "Stop daemons...");
 #else
 		CVFD::getInstance()->ShowText("Stop daemons...");
@@ -5266,7 +5268,7 @@ void CNeutrinoApp::loadKeys(const char * fname)
 	g_settings.mpkey_pause = tconfig->getInt32( "mpkey.pause", CRCInput::RC_playpause );
 #else
 	g_settings.mpkey_play = tconfig->getInt32( "mpkey.play", CRCInput::RC_play );
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM900 || BOXMODEL_DM920 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM900 || BOXMODEL_DM920 || BOXMODEL_DM8000 || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2 || BOXMODEL_DM7020HD
 	g_settings.mpkey_pause = tconfig->getInt32( "mpkey.pause", CRCInput::RC_play );
 #else
 	g_settings.mpkey_pause = tconfig->getInt32( "mpkey.pause", CRCInput::RC_pause );
@@ -5652,7 +5654,7 @@ void CNeutrinoApp::CheckFastScan(bool standby, bool reload)
 		}
 		if (standby || (new_fst != scansettings.fst_version)) {
 			CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM7020HD
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2 || BOXMODEL_DM7020HD
 			CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, g_Locale->getText(LOCALE_SATSETUP_FASTSCAN_HEAD));
 #else
 			CVFD::getInstance()->ShowText(g_Locale->getText(LOCALE_SATSETUP_FASTSCAN_HEAD));
