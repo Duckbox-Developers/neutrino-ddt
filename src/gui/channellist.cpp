@@ -2740,6 +2740,10 @@ void CChannelList::processTextToArray(std::string text, int screening) // UTF-8
 	std::string	aktLine = "";
 	std::string	aktWord = "";
 	int	aktWidth = 0;
+
+	if(!text.empty())
+		text = str_replace("\\n", "\n", text);
+
 	text += ' ';
 	const char *text_= text.c_str();
 
