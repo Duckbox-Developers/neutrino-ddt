@@ -51,11 +51,14 @@ function do_init(){
 		case "14":	// zgemma h7
 		case "15":	// wwio bre2ze4k
 		case "16":	// axas e4hd
-		case "17":	// DM 8000HD
-		case "18":	// DM 820HD
-		case "19":	// DM 7080HD
-		case "20":	// DM 900 UHD
-		case "21":	// DM 920 UHD
+		case "17":	// DM 800HD SE
+		case "18":	// DM 800HD SE V2
+		case "19":	// DM 7020HD
+		case "20":	// DM 8000HD
+		case "21":	// DM 820HD
+		case "22":	// DM 7080HD
+		case "23":	// DM 900 UHD
+		case "24":	// DM 920 UHD
 			sel=(sel*1+val*1);
 			break;
 		default:
@@ -154,11 +157,14 @@ select {
 						<option value="14">Zgemma | H7</option>
 						<option value="15">WWIO | BRE2ZE 4K</option>
 						<option value="16">AXAS | E4HD 4K Ultra</option>
-						<option value="17">Dreambox | DM 8000HD</option>
-						<option value="18">Dreambox | DM 820HD</option>
-						<option value="19">Dreambox | DM 7080HD</option>
-						<option value="20">Dreambox | DM 900 UHD</option>
-						<option value="21">Dreambox | DM 920 UHD</option>
+						<option value="17">Dreambox | DM 800HD SE</option>
+						<option value="18">Dreambox | DM 800HD SE V2</option>
+						<option value="19">Dreambox | DM 7020HD</option>
+						<option value="20">Dreambox | DM 8000HD</option>
+						<option value="21">Dreambox | DM 820HD</option>
+						<option value="22">Dreambox | DM 7080HD</option>
+						<option value="23">Dreambox | DM 900 UHD</option>
+						<option value="24">Dreambox | DM 920 UHD</option>
 					</select>
 				</td>
 			</tr>
