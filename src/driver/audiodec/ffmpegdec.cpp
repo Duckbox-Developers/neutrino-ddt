@@ -310,16 +310,16 @@ CBaseDec::RetCode CFfmpegDec::Decoder(FILE *_in, int /*OutputFd*/, State *state,
 	av_opt_set_int(swr, "in_channel_layout",	c->channel_layout,	0);
 	//av_opt_set_int(swr, "out_channel_layout",	c->channel_layout,	0);
 	av_opt_set_int(swr, "out_channel_layout",	AV_CH_LAYOUT_STEREO,	0);
-	av_opt_set_int(swr, "in_sample_rate",		c->sample_rate,		0);
 #else
 	if (!c->ch_layout.nb_channels) // Is this even possible?
 		c->ch_layout = AV_CHANNEL_LAYOUT_STEREO;
 
-	av_opt_set_chlayout(swr, "in_chlayout",	&c->ch_layout,	0);
-	//av_opt_set_int(swr, "out_chlayout",	c->ch_layout,	0);
+	av_opt_set_chlayout(swr, "in_chlayout",		&c->ch_layout,		0);
+	//av_opt_set_int(swr, "out_chlayout",		&c->ch_layout,		0);
 	AVChannelLayout out_chlayout = AV_CHANNEL_LAYOUT_STEREO;
-	av_opt_set_chlayout(swr, "out_chlayout",	&out_chlayout,	0);
+	av_opt_set_chlayout(swr, "out_chlayout",	&out_chlayout,		0);
 #endif
+	av_opt_set_int(swr, "in_sample_rate",		c->sample_rate,		0);
 	av_opt_set_int(swr, "out_sample_rate",		c->sample_rate,		0);
 	av_opt_set_sample_fmt(swr, "in_sample_fmt",	c->sample_fmt,          0);
 	av_opt_set_sample_fmt(swr, "out_sample_fmt",   	AV_SAMPLE_FMT_S16,      0);
