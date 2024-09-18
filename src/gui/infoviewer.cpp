@@ -1653,7 +1653,7 @@ void CInfoViewer::sendNoEpg(const t_channel_id for_channel_id)
 void CInfoViewer::getEPG(const t_channel_id for_channel_id, CSectionsdClient::CurrentNextInfo &info)
 {
 	/* to clear the oldinfo for channels without epg, call getEPG() with for_channel_id = 0 */
-	if (for_channel_id == 0 || IS_WEBCHAN(for_channel_id))
+	if (for_channel_id == 0 /*|| IS_WEBCHAN(for_channel_id)*/)
 	{
 		oldinfo.current_uniqueKey = 0;
 		return;
