@@ -1713,7 +1713,6 @@ void CChannelList::paintDetails(int index)
 		}
 
 		if (!(text2.empty())) {
-			text2 = str_replace("\\n", " ", text2);
 			while ( text2.find_first_of("[ -.+*#?=!$%&/]+") == 0 )
 				text2 = text2.substr( 1 );
 			text2 = text2.substr( 0, text2.find('\n') );
@@ -2741,9 +2740,6 @@ void CChannelList::processTextToArray(std::string text, int screening) // UTF-8
 	std::string	aktLine = "";
 	std::string	aktWord = "";
 	int	aktWidth = 0;
-
-	if(!text.empty())
-		text = str_replace("\\n", "\n", text);
 
 	text += ' ';
 	const char *text_= text.c_str();
