@@ -159,6 +159,7 @@ int CLuaInstCurl::CurlDownload(lua_State *L)
 		useProxy	bool		true (default)
 		followRedir	bool		true
 		maxRedirs	number		20
+		httpheader	table		empty
 	*/
 
 	/*
