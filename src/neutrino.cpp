@@ -329,8 +329,13 @@ typedef struct lcd_setting_t
 
 const lcd_setting_struct_t lcd_setting[SNeutrinoSettings::LCD_SETTING_COUNT] =
 {
+#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2 || BOXMODEL_DM7020HD
+	{"lcd_brightness"         , DEFAULT_LCD_BRIGHTNESS       },
+	{"lcd_standbybrightness"  , DEFAULT_LCD_STANDBYBRIGHTNESS},
+#else
 	{"lcd_brightness"         , DEFAULT_VFD_BRIGHTNESS       },
 	{"lcd_standbybrightness"  , DEFAULT_VFD_STANDBYBRIGHTNESS},
+#endif
 	{"lcd_contrast"           , DEFAULT_LCD_CONTRAST         },
 	{"lcd_power"              , DEFAULT_LCD_POWER            },
 	{"lcd_inverse"            , DEFAULT_LCD_INVERSE          },
