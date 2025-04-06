@@ -1945,7 +1945,6 @@ bool CMovieBrowser::onButtonPressMainFrame(neutrino_msg_t msg)
 		hideDetailsLine();
 //		if (m_windowFocus == MB_FOCUS_MOVIE_INFO2 && m_settings.browserAdditional)
 //			onSetFocusNext();
-//		else if (show_mode != MB_SHOW_YT)
 		onSetGUIWindowPrev();
 	}
 	else if (msg == CRCInput::RC_right)
@@ -1953,7 +1952,6 @@ bool CMovieBrowser::onButtonPressMainFrame(neutrino_msg_t msg)
 		hideDetailsLine();
 //		if (m_windowFocus == MB_FOCUS_BROWSER && m_settings.browserAdditional)
 //			onSetFocusNext();
-//		else if (show_mode != MB_SHOW_YT)
 		onSetGUIWindowNext();
 	}
 	else if (msg == CRCInput::RC_green)

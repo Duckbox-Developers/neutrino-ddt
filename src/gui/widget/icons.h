@@ -96,7 +96,6 @@
 #define NEUTRINO_ICON_MOUNTED		"mounted"
 #define NEUTRINO_ICON_MULTIMEDIA	"multimedia"
 #define NEUTRINO_ICON_MOVIEPLAYER	"icon_movieplayer"
-#define NEUTRINO_ICON_YTPLAY		"icon_ytplay"
 #define NEUTRINO_ICON_NOT_MOUNTED	"not_mounted"
 #define NEUTRINO_ICON_PAUSE		"mp_pause"
 #define NEUTRINO_ICON_PLAY 		"mp_play"
@@ -266,8 +265,6 @@
 #define NEUTRINO_ICON_WARNING		"warning"
 
 /* misc */
-#define NEUTRINO_ICON_HINT_YTPLAY	"hint_ytplay"
-
 #define NEUTRINO_ICON_EPG		"epg"
 
 #define NEUTRINO_ICON_BUTTON_LONGPRESS	"longpress"
