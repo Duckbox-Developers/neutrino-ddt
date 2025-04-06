@@ -188,6 +188,11 @@ if test "$enable_lcd4linux" = "yes"; then
 	AC_DEFINE(ENABLE_LCD4LINUX, 1, [include Lcd4Linux support])
 fi
 
+AC_ARG_ENABLE(radiotext,
+	AS_HELP_STRING([--enable-radiotext], [enable RadioText support @<:@default=no@:>@]),
+	AC_DEFINE(ENABLE_RADIOTEXT, 1, [enable RadioText support]))
+AM_CONDITIONAL(ENABLE_RADIOTEXT, test "$enable_radiotext" = "yes")
+
 AC_ARG_ENABLE(aitscan,
 	AS_HELP_STRING([--enable-aitscan], [enable Application Information Table support @<:@default=no@:>@]),
 	AC_DEFINE(ENABLE_AITSCAN, 1, [enable Application Information Table support]))

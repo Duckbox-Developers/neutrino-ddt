@@ -53,7 +53,9 @@
 #include <system/helpers.h>
 #include <system/hddstat.h>
 #include <daemonc/remotecontrol.h>
+#if ENABLE_RADIOTEXT
 #include <driver/radiotext.h>
+#endif
 #include <driver/volume.h>
 #include <driver/fontrenderer.h>
 
@@ -170,10 +172,12 @@ void CInfoViewerBB::getBBIconInfo()
 			if (!isRadioMode)
 				iconView = checkBBIcon(NEUTRINO_ICON_VTXT, &w, &h);
 			break;
+#if ENABLE_RADIOTEXT
 		case CInfoViewerBB::ICON_RT:
 			if (isRadioMode && g_settings.radiotext_enable)
 				iconView = checkBBIcon(NEUTRINO_ICON_RADIOTEXTGET, &w, &h);
 			break;
+#endif
 		case CInfoViewerBB::ICON_DD:
 			if( g_settings.infobar_show_dd_available )
 				iconView = checkBBIcon(NEUTRINO_ICON_DD, &w, &h);
@@ -514,6 +518,7 @@ void CInfoViewerBB::showIcon_DD()
 	showBBIcons(CInfoViewerBB::ICON_DD, dd_icon);
 }
 
+#if ENABLE_RADIOTEXT
 void CInfoViewerBB::showIcon_RadioText(bool rt_available)
 {
 	if (!is_visible || !g_settings.radiotext_enable)
@@ -527,6 +532,7 @@ void CInfoViewerBB::showIcon_RadioText(bool rt_available)
 
 	showBBIcons(CInfoViewerBB::ICON_RT, rt_icon);
 }
+#endif
 
 void CInfoViewerBB::showIcon_16_9()
 {

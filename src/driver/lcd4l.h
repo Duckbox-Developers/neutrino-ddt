@@ -75,7 +75,9 @@ class CLCD4l
 		std::string	m_Resolution;
 		std::string	m_AspectRatio;
 		int		m_Videotext;
+#if ENABLE_RADIOTEXT
 		int		m_Radiotext;
+#endif
 		std::string	m_DolbyDigital;
 		int		m_Tuner;
 		int		m_Volume;

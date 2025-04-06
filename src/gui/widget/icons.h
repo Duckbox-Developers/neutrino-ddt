@@ -105,9 +105,11 @@
 #define NEUTRINO_ICON_REW		"mp_b-skip"
 #define NEUTRINO_ICON_FF 		"mp_f-skip"
 #define NEUTRINO_ICON_QUESTION		"question"
+#if ENABLE_RADIOTEXT
 #define NEUTRINO_ICON_RADIOTEXTGET	"radiotextget"
 #define NEUTRINO_ICON_RADIOTEXTWAIT	"radiotextwait"
 #define NEUTRINO_ICON_RADIOTEXTOFF	"radiotextoff"
+#endif
 #define NEUTRINO_ICON_RECORDING		"recording"
 #define NEUTRINO_ICON_REC		"rec"
 #define NEUTRINO_ICON_REC_GRAY		"rec_gray"

@@ -77,7 +77,9 @@
 #include <gui/webtv_setup.h>
 #include <gui/miscsettings_menu.h>
 
+#if ENABLE_RADIOTEXT
 #include <driver/radiotext.h>
+#endif
 #include <driver/record.h>
 #include <driver/screen_max.h>
 

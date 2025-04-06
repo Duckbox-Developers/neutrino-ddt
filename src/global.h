@@ -96,8 +96,10 @@ class CLocaleManager;
 NEUTRINO_CPP CLocaleManager	*g_Locale;
 class CVideoSettings;
 NEUTRINO_CPP CVideoSettings	*g_videoSettings;
+#if ENABLE_RADIOTEXT
 class CRadioText;
 NEUTRINO_CPP CRadioText		*g_Radiotext;
+#endif
 
 #ifndef DISABLE_GUI_MOUNT
 #define ENABLE_GUI_MOUNT

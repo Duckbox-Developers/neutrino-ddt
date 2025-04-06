@@ -304,8 +304,9 @@ struct SNeutrinoSettings
 	std::string ci_pincode[4];
 	int ci_check_live;
 	int ci_tuner;
+#if ENABLE_RADIOTEXT
 	int radiotext_enable;
-
+#endif
 	//screen saver
 	int screensaver_delay;
 	std::string screensaver_dir;

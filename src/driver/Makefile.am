@@ -33,9 +33,13 @@ libneutrino_driver_a_SOURCES = \
 	genpsi.cpp \
 	moviecut.cpp \
 	movieinfo.cpp \
-	neutrinofonts.cpp \
+	neutrinofonts.cpp
+if ENABLE_RADIOTEXT
+libneutrino_driver_a_SOURCES += \
 	radiotext.cpp \
-	radiotools.cpp \
+	radiotools.cpp
+endif
+libneutrino_driver_a_SOURCES += \
 	rcinput.cpp \
 	record.cpp \
 	scanepg.cpp \

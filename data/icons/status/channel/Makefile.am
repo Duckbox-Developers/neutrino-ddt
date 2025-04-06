@@ -7,10 +7,14 @@ install_DATA = \
 	ca2_gray.png \
 	dd.png \
 	dd_avail.png \
-	dd_gray.png \
+	dd_gray.png
+if ENABLE_RADIOTEXT
+install_DATA += \
 	radiotextget.png \
 	radiotextoff.png \
-	radiotextwait.png \
+	radiotextwait.png
+endif
+install_DATA += \
 	res_000.png \
 	res_1080.png \
 	res_1280.png \

@@ -59,7 +59,9 @@
 #include <driver/neutrinofonts.h>
 #include <driver/screenshot.h>
 #include <driver/volume.h>
+#if ENABLE_RADIOTEXT
 #include <driver/radiotext.h>
+#endif
 
 #include <zapit/femanager.h>
 #include <system/debug.h>
@@ -724,10 +726,12 @@ int COsdSetup::showOsdSetup()
 
 	osd_menu->addItem(GenericMenuSeparatorLine);
 
+#if ENABLE_RADIOTEXT
 	// radiotext
 	mc = new CMenuOptionChooser(LOCALE_MISCSETTINGS_RADIOTEXT, &g_settings.radiotext_enable, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this);
 	mc->setHint("", LOCALE_MENU_HINT_INFOBAR_RADIOTEXT);
 	osd_menu->addItem(mc);
+#endif
 
 	// subchannel menu position
 	mc = new CMenuOptionChooser(LOCALE_INFOVIEWER_SUBCHAN_DISP_POS, &g_settings.infobar_subchan_disp_pos, INFOBAR_SUBCHAN_DISP_POS_OPTIONS, INFOBAR_SUBCHAN_DISP_POS_OPTIONS_COUNT, true);
@@ -739,7 +743,9 @@ int COsdSetup::showOsdSetup()
 
 	int res = osd_menu->exec(NULL, "");
 
+#if ENABLE_RADIOTEXT
 	resetRadioText();
+#endif
 
 	if (oldVolumeSize != g_settings.volume_size)
 		CVolumeHelper::getInstance()->refresh();
@@ -1554,9 +1560,11 @@ bool COsdSetup::changeNotify(const neutrino_locale_t OptionName, void * data)
 		g_settings.theme.rounded_corners = * (int*) data;
 		return true;
 	}
+#if ENABLE_RADIOTEXT
 	else if(ARE_LOCALES_EQUAL(OptionName, LOCALE_MISCSETTINGS_RADIOTEXT)) {
 		resetRadioText();
 	}
+#endif
 	else if(ARE_LOCALES_EQUAL(OptionName, LOCALE_EXTRA_VOLUME_DIGITS)) {
 		CVolumeHelper::getInstance()->refresh();
 		return false;
@@ -1577,6 +1585,7 @@ bool COsdSetup::changeNotify(const neutrino_locale_t OptionName, void * data)
 	return false;
 }
 
+#if ENABLE_RADIOTEXT
 void COsdSetup::resetRadioText()
 {
 	if (g_settings.radiotext_enable) {
@@ -1597,7 +1606,7 @@ void COsdSetup::resetRadioText()
 		g_Radiotext = NULL;
 	}
 }
-
+#endif
 
 int COsdSetup::showContextChanlistMenu(CChannelList *parent_channellist)
 {

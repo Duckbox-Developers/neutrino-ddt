@@ -47,7 +47,9 @@
 #include <driver/record.h>
 #include <driver/fade.h>
 #include <driver/display.h>
+#if ENABLE_RADIOTEXT
 #include <driver/radiotext.h>
+#endif
 #include <driver/fontrenderer.h>
 
 #include <gui/color.h>
@@ -1256,12 +1258,13 @@ void CChannelList::zapToChannel(CZapitChannel *channel, bool force)
 		selected_chid = (*chanlist)[tuned]->getChannelID();
 
 	if(force || (selected_chid != channel->getChannelID())) {
+#if ENABLE_RADIOTEXT
 		if ((g_settings.radiotext_enable) && ((CNeutrinoApp::getInstance()->getMode()) == NeutrinoModes::mode_radio) && (g_Radiotext))
 		{
 			// stop radiotext PES decoding before zapping
 			g_Radiotext->radiotext_stop();
 		}
-
+#endif
 		selected_chid = channel->getChannelID();
 		bool startvideo = (g_settings.parentallock_prompt == PARENTALLOCK_PROMPT_NEVER) ||
 				  (channel->Locked() == g_settings.parentallock_defaultlocked);
