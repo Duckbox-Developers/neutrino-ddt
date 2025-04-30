@@ -518,7 +518,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 		g_settings.ci_rpr[i] = configfile.getInt32(cfg_key, 9);
 #endif
 		sprintf(cfg_key, "ci_op_%d", i);
-		g_settings.ci_op[i] = configfile.getInt32(cfg_key, 0);
+		g_settings.ci_op[i] = configfile.getInt32(cfg_key, 1);
 		sprintf(cfg_key, "ci_ignore_messages_%d", i);
 		g_settings.ci_ignore_messages[i] = configfile.getInt32(cfg_key, 0);
 		sprintf(cfg_key, "ci_save_pincode_%d", i);
