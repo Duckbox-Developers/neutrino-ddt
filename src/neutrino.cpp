@@ -517,6 +517,8 @@ int CNeutrinoApp::loadSetup(const char * fname)
 		sprintf(cfg_key, "ci_rpr_%d", i);
 		g_settings.ci_rpr[i] = configfile.getInt32(cfg_key, 9);
 #endif
+		sprintf(cfg_key, "ci_op_%d", i);
+		g_settings.ci_op[i] = configfile.getInt32(cfg_key, 0);
 		sprintf(cfg_key, "ci_ignore_messages_%d", i);
 		g_settings.ci_ignore_messages[i] = configfile.getInt32(cfg_key, 0);
 		sprintf(cfg_key, "ci_save_pincode_%d", i);
@@ -1352,6 +1354,8 @@ void CNeutrinoApp::saveSetup(const char * fname)
 		sprintf(cfg_key, "ci_rpr_%d", i);
 		configfile.setInt32(cfg_key, g_settings.ci_rpr[i]);
 #endif
+		sprintf(cfg_key, "ci_op_%d", i);
+		configfile.setInt32(cfg_key, g_settings.ci_op[i]);
 		sprintf(cfg_key, "ci_ignore_messages_%d", i);
 		configfile.setInt32(cfg_key, g_settings.ci_ignore_messages[i]);
 		sprintf(cfg_key, "ci_save_pincode_%d", i);
@@ -2525,6 +2529,7 @@ TIMER_START();
 	ZapStart_arg.ci_delay = g_settings.ci_delay;
 	memcpy(ZapStart_arg.ci_rpr, g_settings.ci_rpr, sizeof(g_settings.ci_rpr));
 #endif
+	memcpy(ZapStart_arg.ci_op, g_settings.ci_op, sizeof(g_settings.ci_op));
 	ZapStart_arg.volume = g_settings.current_volume;
 	ZapStart_arg.webtv_xml = &g_settings.webtv_xml;
 	ZapStart_arg.webradio_xml = &g_settings.webradio_xml;

@@ -295,6 +295,7 @@ struct SNeutrinoSettings
 	int avsync;
 	int ci_standby_reset;
 	int ci_clock[4];
+	int ci_op[4];
 #if BOXMODEL_VUPLUS_ALL
 	int ci_delay;
 	int ci_rpr[4];
