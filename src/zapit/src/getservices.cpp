@@ -683,7 +683,7 @@ void CServiceManager::ParseSatTransponders(delivery_system_t delsys, xmlNodePtr 
 			case 2: // 8PSK
 				feparams.modulation = PSK_8;
 				break;
-#if !defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE)
+#if !defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE) && !defined(BOXMODEL_DCUBE)
 			case 3: // 8APSK
 				feparams.modulation = APSK_8;
 				break;

@@ -149,7 +149,7 @@ const CMenuOptionChooser::keyval VIDEOMENU_COLORFORMAT_TDT_HDMI_OPTIONS[VIDEOMEN
  * key value of -1 means the mode is not available
  * TODO: instead of #ifdef select at run time
  */
-#if HAVE_SH4_HARDWARE || HAVE_MIPS_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_MIPS_HARDWARE || BOXMODEL_DCUBE
 #define VIDEOMENU_VIDEOMODE_OPTION_COUNT 13
 CMenuOptionChooser::keyval_ext VIDEOMENU_VIDEOMODE_OPTIONS[VIDEOMENU_VIDEOMODE_OPTION_COUNT] =
 {

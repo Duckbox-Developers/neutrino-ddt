@@ -59,6 +59,7 @@ function do_init(){
 		case "22":	// DM 7080HD
 		case "23":	// DM 900 UHD
 		case "24":	// DM 920 UHD
+		case "25":	// D-Cube R2
 			sel=(sel*1+val*1);
 			break;
 		default:
@@ -165,6 +166,7 @@ select {
 						<option value="22">Dreambox | DM 7080HD</option>
 						<option value="23">Dreambox | DM 900 UHD</option>
 						<option value="24">Dreambox | DM 920 UHD</option>
+						<option value="25">D-Cube R2 | D-Cube R2</option>
 					</select>
 				</td>
 			</tr>

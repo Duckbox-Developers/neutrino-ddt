@@ -59,11 +59,15 @@ install_DATA =	accept.png \
 		x_red.png \
 		zap.png
 
+if BOXMODEL_DCUBE
+install_DATA += rc_dcube.png
+else
 if BOXTYPE_ARMBOX
 install_DATA += rc_ax_hd51.png \
 		rc_mutant_hd51.png \
 		rc_wwio_bre2ze4k.png \
 		rc_zgemma_h7.png
+endif
 endif
 
 if BOXMODEL_DREAMBOX_ALL

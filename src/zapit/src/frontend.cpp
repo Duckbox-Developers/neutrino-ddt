@@ -100,7 +100,7 @@ typedef enum dvb_fec {
 	f4_5,
 	f9_10,
 	fNone = 15
-#if (!defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE)) || (defined (BOXMODEL_DM820) || defined (BOXMODEL_DM7080))
+#if (!defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE) && !defined(BOXMODEL_DCUBE)) || (defined (BOXMODEL_DM820) || defined (BOXMODEL_DM7080))
 	,
 	f13_45,
 	f9_20,
@@ -311,13 +311,13 @@ void CFrontend::getFEInfo(void)
 				printf("[fe%d/%d] add delivery system DVB-S (delivery_system: %d)\n", adapter, fenumber, (fe_delivery_system_t)prop[0].u.buffer.data[i]);
 				break;
 			case SYS_DVBS2:
-#if (!defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE)) || (defined (BOXMODEL_DM820) || defined (BOXMODEL_DM7080))
+#if (!defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE) && !defined(BOXMODEL_DCUBE)) || (defined (BOXMODEL_DM820) || defined (BOXMODEL_DM7080))
 			case SYS_DVBS2X:
 #endif
 				deliverySystemMask |= DVB_S2;
 				fe_can_multistream = info.caps & FE_CAN_MULTISTREAM;
 				printf("[fe%d/%d] add delivery system DVB-S2 (delivery_system: %d / Multistream: %s)\n", adapter, fenumber, (fe_delivery_system_t)prop[0].u.buffer.data[i], fe_can_multistream ? "yes" :"no");
-#if (!defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE)) || (defined (BOXMODEL_DM820) || defined (BOXMODEL_DM7080))
+#if (!defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE) && !defined(BOXMODEL_DCUBE)) || (defined (BOXMODEL_DM820) || defined (BOXMODEL_DM7080))
 				if (fe_can_multistream)
 				{
 					deliverySystemMask |= DVB_S2X;
@@ -511,7 +511,7 @@ fe_code_rate_t CFrontend::getCodeRate(const uint8_t fec_inner, delivery_system_t
 		case f9_10:
 			fec = FEC_9_10;
 			break;
-#if (!defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE)) || (defined (BOXMODEL_DM820) || defined (BOXMODEL_DM7080))
+#if (!defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE) && !defined(BOXMODEL_DCUBE)) || (defined (BOXMODEL_DM820) || defined (BOXMODEL_DM7080))
 		case f13_45:
 			fec = FEC_13_45;
 			break;
@@ -1134,7 +1134,7 @@ void CFrontend::getDelSys(delivery_system_t delsys, int f, int m, const char *&f
 		case PSK_8:
 			mod = "8PSK";
 			break;
-#if (!defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE)) || (defined (BOXMODEL_DM820) || defined (BOXMODEL_DM7080))
+#if (!defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE) && !defined(BOXMODEL_DCUBE)) || (defined (BOXMODEL_DM820) || defined (BOXMODEL_DM7080))
 		case APSK_8:
 			mod = "8APSK";
 			break;
@@ -1252,7 +1252,7 @@ void CFrontend::getDelSys(delivery_system_t delsys, int f, int m, const char *&f
 		fec = "0";
 		break;
 #endif
-#if (!defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE)) || (defined (BOXMODEL_DM820) || defined (BOXMODEL_DM7080))
+#if (!defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE) && !defined(BOXMODEL_DCUBE)) || (defined (BOXMODEL_DM820) || defined (BOXMODEL_DM7080))
 	case FEC_13_45:
 		fec = "13/45";
 		break;
@@ -1547,7 +1547,7 @@ int CFrontend::setFrontend(const FrontendParameters *feparams, bool nowait)
 		fec = FEC_NONE;
 		break;
 #endif
-#if (!defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE)) || (defined (BOXMODEL_DM820) || defined (BOXMODEL_DM7080))
+#if (!defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE) && !defined(BOXMODEL_DCUBE)) || (defined (BOXMODEL_DM820) || defined (BOXMODEL_DM7080))
 	case FEC_13_45:
 		fec = FEC_13_45;
 		break;
