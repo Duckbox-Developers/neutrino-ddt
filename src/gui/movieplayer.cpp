@@ -910,19 +910,22 @@ void* CMoviePlayerGui::bgPlayThread(void *arg)
 
 	while(webtv_started) {
 		if (mp->playback->GetPosition(mp->position, mp->duration, mp->isWebChannel)) {
-			if (pos == mp->position)
+			if (eof_max > 0)
 			{
-				eof++;
-				printf("CMoviePlayerGui::bgPlayThread: eof counter: %d\n", eof);
-			}
-			else
-				eof = 0;
+				if (pos == mp->position)
+				{
+					eof++;
+					printf("CMoviePlayerGui::bgPlayThread: eof counter: %d\n", eof);
+				}
+				else
+					eof = 0;
 
-			if (eof > eof_max) {
-				printf("CMoviePlayerGui::bgPlayThread: playback stopped, try to rezap...\n");
-				g_RCInput->postMsg(NeutrinoMessages::EVT_WEBTV_ZAP_COMPLETE, (neutrino_msg_data_t) chid);
-				chidused = true;
-				break;
+				if (eof > eof_max) {
+					printf("CMoviePlayerGui::bgPlayThread: playback stopped, try to rezap...\n");
+					g_RCInput->postMsg(NeutrinoMessages::EVT_WEBTV_ZAP_COMPLETE, (neutrino_msg_data_t) chid);
+					chidused = true;
+					break;
+				}
 			}
 			pos = mp->position;
 		}

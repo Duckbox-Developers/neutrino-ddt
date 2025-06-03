@@ -159,7 +159,7 @@ int CMediaPlayerSetup::showMediaPlayerSetup()
 
 	mediaSetup->addItem(GenericMenuSeparatorLine);
 
-	CMenuOptionNumberChooser * ef = new CMenuOptionNumberChooser(LOCALE_MOVIEPLAYER_EOF_CNT, &g_settings.eof_cnt, true, 1, 25, NULL);
+	CMenuOptionNumberChooser * ef = new CMenuOptionNumberChooser(LOCALE_MOVIEPLAYER_EOF_CNT, &g_settings.eof_cnt, true, 0, 25, NULL);
 //	ef->setHint("", LOCALE_MENU_HINT_MOVIEPLAYER_EOF_CNT);
 	mediaSetup->addItem(ef);
 
