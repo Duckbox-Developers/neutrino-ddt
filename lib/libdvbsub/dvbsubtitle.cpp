@@ -255,8 +255,12 @@ cDvbSubtitleConverter::~cDvbSubtitleConverter()
 {
 	if (avctx)
 	{
+#if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(57, 83, 100)
 		avcodec_close(avctx);
 		av_free(avctx);
+#else
+		avcodec_free_context(&avctx);
+#endif
 		avctx = NULL;
 	}
 	delete bitmaps;
