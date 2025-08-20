@@ -742,7 +742,7 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 		}
 #endif
 
-#if !BOXMODEL_VUDUO && !BOXMODEL_VUDUO2 && !BOXMODEL_VUULTIMO && !BOXMODEL_VUUNO
+#if !BOXMODEL_VUDUO && !BOXMODEL_VUDUO2 && !BOXMODEL_VUULTIMO && !BOXMODEL_VUUNO && !BOXMODEL_DM900 && !BOXMODEL_DM920
 		// select partition
 		int selected = 0;
 		CMenuSelectorTarget *selector = new CMenuSelectorTarget(&selected);
