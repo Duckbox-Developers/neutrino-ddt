@@ -271,10 +271,10 @@ static inline void fixNumericLocaleInput(char *begin, char *end)
 #endif
 #elif defined(__ANDROID__) || defined(__QNXNTO__)
 #define snprintf snprintf
-#elif __cplusplus >= 201103L
-#if !defined(__MINGW32__) && !defined(__CYGWIN__)
-#define snprintf std::snprintf
-#endif
+//#elif __cplusplus >= 201103L
+//#if !defined(__MINGW32__) && !defined(__CYGWIN__)
+//#define snprintf std::snprintf
+//#endif
 #endif
 
 #if defined(__QNXNTO__)
@@ -4752,10 +4752,10 @@ Value &Path::make(Value &root) const
 #endif
 #elif defined(__ANDROID__) || defined(__QNXNTO__)
 #define snprintf snprintf
-#elif __cplusplus >= 201103L
-#if !defined(__MINGW32__) && !defined(__CYGWIN__)
-#define snprintf std::snprintf
-#endif
+//#elif __cplusplus >= 201103L
+//#if !defined(__MINGW32__) && !defined(__CYGWIN__)
+//#define snprintf std::snprintf
+//#endif
 #endif
 
 #if defined(__BORLANDC__)
