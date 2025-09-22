@@ -121,4 +121,3 @@ class CKeybindSetup : public CMenuTarget, public CChangeObserver
 };
 
 #endif
-

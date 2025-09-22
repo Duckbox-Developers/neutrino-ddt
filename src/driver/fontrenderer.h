@@ -79,7 +79,7 @@ class Font
 			FULLBG = 2
 		};
 
-		void RenderString(int x, int y, const int width, const char         *text, const fb_pixel_t color, const int boxheight = 0, const unsigned int flags = IS_UTF8, fb_pixel_t *buffer = NULL, int stride = 0);
+		void RenderString(int x, int y, const int width, const char        *text, const fb_pixel_t color, const int boxheight = 0, const unsigned int flags = IS_UTF8, fb_pixel_t *buffer = NULL, int stride = 0);
 		void RenderString(int x, int y, const int width, const std::string &text, const fb_pixel_t color, const int boxheight = 0, const unsigned int flags = IS_UTF8, fb_pixel_t *buffer = NULL, int stride = 0);
 
 		int getRenderWidth(const char         *text, const bool utf8_encoded = true);

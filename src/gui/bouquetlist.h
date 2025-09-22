@@ -45,20 +45,20 @@ class CFrameBuffer;
 
 typedef enum bouquetSwitchMode
 {
-    bsmBouquets,	// pressing OK shows list of all Bouquets
-    bsmChannels,	// pressing OK shows list of all channels of active bouquets
-    bsmAllChannels	// OK shows lsit of all channels
+	bsmBouquets,	// pressing OK shows list of all Bouquets
+	bsmChannels,	// pressing OK shows list of all channels of active bouquets
+	bsmAllChannels	// OK shows lsit of all channels
 } BouquetSwitchMode;
 
 class CBouquet
 {
 
 	public:
-		int				unique_key;
+		int			unique_key;
 		bool			bLocked;
-		CChannelList*	channelList;
-		CZapitBouquet * zapitBouquet;
-		t_satellite_position satellitePosition;
+		CChannelList		*channelList;
+		CZapitBouquet		*zapitBouquet;
+		t_satellite_position	satellitePosition;
 
 		CBouquet(const int Unique_key, const char * const Name, const bool locked, bool vlist = false)
 		{
@@ -91,13 +91,13 @@ class CBouquetList : public CListHelpers
 		int			header_height;
 		int			footer_height;
 
-		int		width;
-		int		height;
-		int		x;
-		int		y;
+		int			width;
+		int			height;
+		int			x;
+		int			y;
 
-		bool		favonly;
-		bool		save_bouquets;
+		bool			favonly;
+		bool			save_bouquets;
 
 		void paintItem(int pos);
 		void paint();
