@@ -272,7 +272,11 @@ bool CPlugins::parseCfg(plugin *plugin_data)
 	if (plugin_data->name.empty())
 		plugin_data->name = plugin_data->filename;
 
-	std::string fileType[] = { ".png", ".svg" };
+	std::string fileType[] = { ".png"
+#ifdef ENABLE_SVG
+				 , ".svg"
+#endif
+	};
 	std::string h_path[] = { plugin_data->hinticon, plugin_data->filename + "_hint" };
 
 	for (size_t i = 0; i < (sizeof(fileType) / sizeof(fileType[0])); i++)

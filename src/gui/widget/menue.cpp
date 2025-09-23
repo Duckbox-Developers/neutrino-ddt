@@ -399,6 +399,7 @@ void CMenuItem::paintItemButton(const bool select_mode, int item_height, const c
 
 		std::string fulliconname = frameBuffer->getIconPath(icon_name);
 
+#if ENABLE_SVG
 		if (fulliconname.find(".svg") == (fulliconname.length() - 4))
 		{
 			int icon_x, icon_y;
@@ -411,6 +412,7 @@ void CMenuItem::paintItemButton(const bool select_mode, int item_height, const c
 			icon_painted = g_PicViewer->DisplayImage(fulliconname, icon_x, icon_y, icon_w, icon_h);
 		}
 		else
+#endif
 		{
 			frameBuffer->getIconSize(icon_name, &icon_w, &icon_h);
 

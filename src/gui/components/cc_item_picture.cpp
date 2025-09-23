@@ -185,9 +185,11 @@ void CComponentsPicture::initCCItem()
 	if (pos == string::npos)
 		do_scale = false;
 
+#if ENABLE_SVG
 	// always scale svg's
 	if (pic_name.find(".svg") == (pic_name.length() - 4))
 		do_scale = true;
+#endif
 
 	//initial internal size
 	if (!do_scale)

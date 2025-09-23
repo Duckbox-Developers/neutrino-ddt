@@ -253,6 +253,10 @@ if test "$enable_dynamicdemux" = "yes"; then
 	AC_DEFINE(DYNAMIC_DEMUX,1,[use dynamic demux])
 fi
 
+AC_ARG_ENABLE(svg,
+	AS_HELP_STRING([--enable-svg], [enable experimantal svg image support @<:@default=no@:>@]),
+	AC_DEFINE(ENABLE_SVG, 1, [enable experimental svg image support]))
+AM_CONDITIONAL(ENABLE_SVG, test "$enable_svg" = "yes")
 
 AC_ARG_ENABLE(arm-acc,
 	AS_HELP_STRING(--disable-arm-acc,disable arm hardware acceleration),

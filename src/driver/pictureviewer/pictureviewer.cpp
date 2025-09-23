@@ -649,7 +649,13 @@ bool CPictureViewer::GetLogoName(const uint64_t &channel_id, const std::string &
 	/* first the channel-id, then the channelname */
 	std::string strLogoName[2] = { (std::string)strChanId, SpecialChannelName };
 	/* first png, then jpg, then gif */
-	std::string strLogoExt[4] = { ".svg", ".png", ".jpg", ".gif" };
+	std::string strLogoExt[4] = {
+#ifdef FBV_SUPPORT_SVG
+			".svg",
+#endif
+			".png", ".jpg", ".gif"
+	};
+
 	std::string dirs[1] = { logo_path };
 
 	std::string tmp;
@@ -716,7 +722,12 @@ found:
 #else
 bool CPictureViewer::GetLogoName(const uint64_t &channel_id, const std::string &ChannelName, std::string &name, int *width, int *height, std::string logo_path)
 {
-	std::string fileType[] = { ".svg", ".png", ".jpg", ".gif" };
+	std::string fileType[] = {
+#ifdef FBV_SUPPORT_SVG
+			".svg",
+#endif
+			".png", ".jpg", ".gif"
+	};
 
 	if (logo_path == "")
 		logo_path = logo_hdd_dir;
