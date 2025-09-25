@@ -258,7 +258,7 @@ typedef enum
 	FP_FLAG_SCROLL_DELAY		= 0x08, /* delayed scroll start */
 	FP_FLAG_ALIGN_LEFT		= 0x10, /* align the text in display from the left (default) */
 	FP_FLAG_ALIGN_RIGHT		= 0x20, /* align the text in display from the right (arabic) */
-	FP_FLAG_UPDATE_SCROLL_POS	= 0x40, /* update the current position for scrolling */
+	FP_FLAG_UPDATE_SCROLL_POS	= 0x40  /* update the current position for scrolling */
 } fp_flag;
 
 typedef struct
