@@ -623,7 +623,6 @@ void MI_MOVIE_INFO::clear(void)
 	tfile = "";
 	marked = false;
 	delAsk = true;
-	source = UNKNOWN;
 }
 
 bool CMovieInfo::loadFile(CFile &file, std::string &buffer)
