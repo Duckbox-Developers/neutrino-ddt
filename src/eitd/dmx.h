@@ -131,4 +131,3 @@ class DMX
 };
 
 #endif /* __sectionsd__dmx_h__ */
-

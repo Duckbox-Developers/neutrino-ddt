@@ -77,8 +77,7 @@ typedef enum
 	HANDLED_REDIRECTION,	// Set new URL and send HTTPD Object Moved
 	HANDLED_SENDFILE,		// Set new URL and Send File
 	HANDLED_REWRITE,		// Set new URL and call Hooks again
-	HANDLED_CONTINUE,		// handled but go on
-
+	HANDLED_CONTINUE		// handled but go on
 } THandleStatus;
 typedef std::list<Cyhook *> THookList;
 

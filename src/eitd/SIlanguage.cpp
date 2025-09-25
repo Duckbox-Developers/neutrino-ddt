@@ -248,4 +248,3 @@ CSectionsdClient::SIlanguageMode_t SIlanguage::getMode()
 {
 	return mode;
 }
-

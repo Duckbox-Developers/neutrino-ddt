@@ -70,4 +70,3 @@ void printdate_ms(FILE *f);
 void showProfiling(std::string text);
 
 #endif /* __sectionsd__debug_h__ */
-

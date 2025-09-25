@@ -51,4 +51,3 @@ void addEPGFilter(t_original_network_id onid, t_transport_stream_id tsid, t_serv
 void clearEPGFilter();
 
 #endif /* __sectionsd__debug_h__ */
-

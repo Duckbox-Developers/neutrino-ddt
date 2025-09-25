@@ -124,4 +124,3 @@ std::string CLanguage::getLanguageDir(void)
 		dir = Cyhttpd::ConfigList["WebsiteMain.directory"] + tmpfilename;
 	return dir;
 }
-

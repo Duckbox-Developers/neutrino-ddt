@@ -206,7 +206,7 @@ class CListFrame
 			AUTO_HIGH	= 0x02,
 			SCROLL		= 0x04,
 			TITLE  		= 0x08,
-			HEADER_LINE = 0x80
+			HEADER_LINE	= 0x80
 		} mode;
 };
 

@@ -94,4 +94,3 @@ void CLogging::printf(const char *fmt, ...)
 	}
 	pthread_mutex_unlock(&Log_mutex);
 }
-

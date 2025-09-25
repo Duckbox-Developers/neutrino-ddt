@@ -25,4 +25,3 @@ libnhttpd_tuxboxapi_a_SOURCES = \
 	controlapi.cpp \
 	neutrinoapi.cpp \
 	neutrinoyparser.cpp
-	

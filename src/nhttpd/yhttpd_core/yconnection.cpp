@@ -149,4 +149,3 @@ long CWebserverConnection::GetEnlapsedResponseTime()
 	return ((tv_now.tv_sec - tv_connection_Response_start.tv_sec) * 1000000
 			+ (tv_now.tv_usec - tv_connection_Response_start.tv_usec));
 }
-

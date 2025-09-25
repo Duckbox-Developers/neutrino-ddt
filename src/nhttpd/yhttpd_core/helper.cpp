@@ -4,8 +4,8 @@
 //=============================================================================
 
 // c
-#include <cstdio> 		// printf prototype.
-#include <cstdlib> 		// calloc and free prototypes.
+#include <cstdio>		// printf prototype.
+#include <cstdlib>		// calloc and free prototypes.
 #include <cstring>		// str* and memset prototypes.
 #include <cstdarg>
 #include <sstream>
