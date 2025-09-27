@@ -1099,7 +1099,7 @@ menu.hint_epg_cache Maximum in Tagen zukünftiger EPG-Daten
 menu.hint_epg_dir Speicherverzeichnis auf einem externen Datenträger zum Speichern von EPG-Daten
 menu.hint_epg_extendedcache Maximum in Stunden, die die EPG-Daten bzw. die Event-Beschreibungen zwischengespeichert werden
 menu.hint_epg_fonts Ändern Sie die Schriftgrößen der EPG-Details
-menu.hint_epg_max_events Maxiale Anzahl der Events im Zwischenspeicher
+menu.hint_epg_max_events Maximale Anzahl der Events im Zwischenspeicher
 menu.hint_epg_old_events Veraltete EPG-Daten werden nach dieser Zeit (in Stunden) verworfen
 menu.hint_epg_read Liest nach einem Neustart die EPG-Daten von einem externen Datenträger wieder ein
 menu.hint_epg_read_frequently Liest die EPG-Daten in regelmäßigen Abständen von einem externen Datenträger
