@@ -46,4 +46,3 @@ class CmWebLog : public Cyhook
 		virtual THandleStatus 	Hook_ReadConfig(CConfigFile *Config, CStringList &ConfigList);
 };
 #endif // __yhttpd_mod_weblog_h__
-

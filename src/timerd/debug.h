@@ -35,5 +35,4 @@ extern int timerd_debug;
 	} while(0)
 #define dperror(str) {perror("[timerd] " str);}
 
-
 #endif

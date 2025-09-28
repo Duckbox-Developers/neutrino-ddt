@@ -117,4 +117,3 @@ std::string CmAuth::decodeBase64(const char *b64buffer)
 	else
 		return "";
 }
-

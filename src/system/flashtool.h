@@ -140,5 +140,4 @@ class CMTDInfo
 		std::string findMTDsystem();
 };
 
-
 #endif

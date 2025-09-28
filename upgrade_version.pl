@@ -34,7 +34,7 @@ if (!$new_version) {
 }
 
 @files = (
-	  "configure.ac",
+	  "configure.ac"
 	  );
 
 for $file (@files) {

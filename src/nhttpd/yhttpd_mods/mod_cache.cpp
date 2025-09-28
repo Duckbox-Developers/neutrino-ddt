@@ -268,4 +268,3 @@ void CmodCache::yCacheClear(CyhookHandler *hh)
 	hh->SendHTMLFooter();
 
 }
-

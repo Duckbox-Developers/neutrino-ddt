@@ -21,4 +21,3 @@ libyhttpdmods_a_SOURCES = \
 	mod_sendfile.cpp \
 	mod_weblog.cpp \
 	mod_yparser.cpp
-

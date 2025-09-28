@@ -10,10 +10,10 @@ cd /tmp
 /bin/sync
 
 if [ -e /tmp/.reboot ] ; then
-    /bin/dt -t"Rebooting..."
+    /bin/dt -t "Rebooting..."
     /sbin/reboot -f
 else
-    /bin/dt -t"Panic..."
+    /bin/dt -t "Panic..."
     sleep 5
     /sbin/reboot -f
 fi

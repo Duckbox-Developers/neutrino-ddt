@@ -7,4 +7,3 @@ pkginclude_HEADERS = \
 	getservices.h nit.h pat.h pmt.h scan.h sdt.h settings.h \
 	transponder.h types.h video_c.h xmlinterface.h zapit.h \
 	fileparser.h queue.h
-

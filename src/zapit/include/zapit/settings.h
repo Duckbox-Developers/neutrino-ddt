@@ -24,7 +24,6 @@
 #ifndef __zapit__settings_h__
 #define __zapit__settings_h__
 
-
 #ifdef HAVE_CONFIG_H
 #include                "config.h"
 #else
@@ -50,6 +49,5 @@
 #define WEBRADIO_XML	CONFIGDIR "/webradio_usr.xml"
 
 #define CAMD_UDS_NAME  "/tmp/camd.socket"
-
 
 #endif /* __zapit__settings_h__ */
