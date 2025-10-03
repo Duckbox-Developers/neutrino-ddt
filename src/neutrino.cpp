@@ -237,7 +237,7 @@ CBouquetList   * AllFavBouquetList;
 CPlugins       * g_Plugins;
 CRemoteControl * g_RemoteControl;
 CPictureViewer * g_PicViewer;
-#if !HAVE_SPARK_HARDWARE
+#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
 CCAMMenuHandler * g_CamHandler;
 #endif
 CVolume        * g_volume;
@@ -2634,7 +2634,7 @@ TIMER_START();
 	g_InfoViewer = new CInfoViewer;
 	g_EventList = new CEventList;
 
-#if !HAVE_SPARK_HARDWARE
+#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
 	g_CamHandler = new CCAMMenuHandler();
 	g_CamHandler->init();
 #endif
@@ -3404,7 +3404,7 @@ bool CNeutrinoApp::wakeupFromStandby(void)
 		CStreamManager::getInstance()->StreamStatus();
 
 	if ((mode == NeutrinoModes::mode_standby) && !alive) {
-#if !HAVE_SPARK_HARDWARE
+#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
 		if(g_settings.ci_standby_reset) {
 			g_CamHandler->exec(NULL, "ca_ci_reset0");
 			g_CamHandler->exec(NULL, "ca_ci_reset1");
@@ -3578,7 +3578,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 		return( res & ( 0xFFFFFFFF - messages_return::unhandled ) );
 	}
 
-#if !HAVE_SPARK_HARDWARE
+#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
 	/* we assume g_CamHandler free/delete data if needed */
 	res = g_CamHandler->handleMsg(msg, data);
 	if( res != messages_return::unhandled ) {
@@ -4640,7 +4640,7 @@ void CNeutrinoApp::standbyMode(bool bOnOff, bool fromDeepStandby)
 		}
 #endif
 
-#if !HAVE_SPARK_HARDWARE
+#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
 		if(!recordingstatus && g_settings.ci_standby_reset) {
 			g_CamHandler->exec(NULL, "ca_ci_reset0");
 			g_CamHandler->exec(NULL, "ca_ci_reset1");
@@ -5593,7 +5593,7 @@ void CNeutrinoApp::Cleanup()
 	printf("cleanup 13\n");fflush(stdout);
 	delete g_Plugins; g_Plugins = NULL;
 	printf("cleanup 16\n");fflush(stdout);
-#if !HAVE_SPARK_HARDWARE
+#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
 	delete g_CamHandler; g_CamHandler = NULL;
 	printf("cleanup 17\n");fflush(stdout);
 #endif
