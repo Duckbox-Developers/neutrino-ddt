@@ -172,11 +172,13 @@ libneutrino_gui2_a_SOURCES = \
 	motorcontrol.cpp
 
 if !BOXTYPE_SPARK
+if !BOXMODEL_DM800
 if !BOXMODEL_DM800SE
 if !BOXMODEL_DM800SEV2
 if !BOXMODEL_DM820
 libneutrino_gui2_a_SOURCES += \
 	cam_menu.cpp
+endif
 endif
 endif
 endif

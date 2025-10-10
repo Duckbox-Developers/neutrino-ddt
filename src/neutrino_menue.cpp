@@ -38,7 +38,7 @@
 #include "gui/audio_select.h"
 #include "gui/bedit/bouqueteditor_bouquets.h"
 #include "gui/bouquetlist.h"
-#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
+#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800 && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
 #include "gui/cam_menu.h"
 #endif
 #include "gui/dboxinfo.h"
@@ -81,7 +81,7 @@
 
 extern CPlugins       * g_Plugins;
 extern CRemoteControl * g_RemoteControl;
-#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
+#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800 && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
 extern CCAMMenuHandler * g_CamHandler;
 #endif
 // extern bool has_hdd;
@@ -279,7 +279,7 @@ void CNeutrinoApp::InitMenuMain()
 	mf->setHint(NEUTRINO_ICON_HINT_INFO, LOCALE_MENU_HINT_INFO);
 	personalize.addItem(MENU_MAIN, mf, &g_settings.personalize[SNeutrinoSettings::P_MAIN_INFOMENU]);
 
-#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
+#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800 && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
 	//cisettings
 	if (cCA::GetInstance()->GetNumberCISlots() > 0 || cCA::GetInstance()->GetNumberSmartCardSlots() > 0) {
 		mf = new CMenuForwarder(LOCALE_CI_SETTINGS, true, NULL, g_CamHandler);
@@ -382,7 +382,7 @@ void CNeutrinoApp::InitMenuSettings()
 	mf->setHint(NEUTRINO_ICON_HINT_HDD, LOCALE_MENU_HINT_HDD);
 	personalize.addItem(MENU_SETTINGS, mf, &g_settings.personalize[SNeutrinoSettings::P_MSET_DRIVES]);
 
-#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
+#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800 && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
 	// cisettings
 	mf = new CMenuForwarder(LOCALE_CI_SETTINGS, true, NULL, g_CamHandler);
 	mf->setHint(NEUTRINO_ICON_HINT_CI, LOCALE_MENU_HINT_CI);

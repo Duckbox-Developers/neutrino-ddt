@@ -237,7 +237,7 @@ CBouquetList   * AllFavBouquetList;
 CPlugins       * g_Plugins;
 CRemoteControl * g_RemoteControl;
 CPictureViewer * g_PicViewer;
-#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
+#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800 && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
 CCAMMenuHandler * g_CamHandler;
 #endif
 CVolume        * g_volume;
@@ -331,7 +331,7 @@ typedef struct lcd_setting_t
 
 const lcd_setting_struct_t lcd_setting[SNeutrinoSettings::LCD_SETTING_COUNT] =
 {
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2 || BOXMODEL_DM7020HD
+#if BOXMODEL_DREAMBOX_MIPS
 	{"lcd_brightness"         , DEFAULT_LCD_BRIGHTNESS       },
 	{"lcd_standbybrightness"  , DEFAULT_LCD_STANDBYBRIGHTNESS},
 #else
@@ -345,7 +345,7 @@ const lcd_setting_struct_t lcd_setting[SNeutrinoSettings::LCD_SETTING_COUNT] =
 	{"lcd_autodimm"           , DEFAULT_LCD_AUTODIMM         },
 	{"lcd_deepbrightness"     , DEFAULT_VFD_STANDBYBRIGHTNESS}
 #if USE_STB_HAL
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2 || BOXMODEL_DM7020HD
+#if BOXMODEL_DREAMBOX_MIPS
 	,{ "lcd_epgmode"          , 3 /*DEFAULT_LCD_EPGMODE*/    }
 #else
 	,{ "lcd_epgmode"          , 0 /*DEFAULT_LCD_EPGMODE*/    }
@@ -2634,7 +2634,7 @@ TIMER_START();
 	g_InfoViewer = new CInfoViewer;
 	g_EventList = new CEventList;
 
-#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
+#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800 && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
 	g_CamHandler = new CCAMMenuHandler();
 	g_CamHandler->init();
 #endif
@@ -3404,7 +3404,7 @@ bool CNeutrinoApp::wakeupFromStandby(void)
 		CStreamManager::getInstance()->StreamStatus();
 
 	if ((mode == NeutrinoModes::mode_standby) && !alive) {
-#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
+#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800 && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
 		if(g_settings.ci_standby_reset) {
 			g_CamHandler->exec(NULL, "ca_ci_reset0");
 			g_CamHandler->exec(NULL, "ca_ci_reset1");
@@ -3578,7 +3578,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 		return( res & ( 0xFFFFFFFF - messages_return::unhandled ) );
 	}
 
-#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
+#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800 && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
 	/* we assume g_CamHandler free/delete data if needed */
 	res = g_CamHandler->handleMsg(msg, data);
 	if( res != messages_return::unhandled ) {
@@ -4377,7 +4377,7 @@ void CNeutrinoApp::saveEpg(int _mode)
 		}
 		CVFD::getInstance()->Clear();
 		CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2 || BOXMODEL_DM7020HD
+#if BOXMODEL_DREAMBOX_MIPS
 		CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, g_Locale->getText(LOCALE_EPG_SAVING));
 #else
 		CVFD::getInstance()->ShowText(g_Locale->getText(LOCALE_EPG_SAVING));
@@ -4526,7 +4526,7 @@ void CNeutrinoApp::standbyMode(bool bOnOff, bool fromDeepStandby)
 #ifdef ENABLE_GRAPHLCD
 		nGLCD::StandbyMode(true);
 #endif
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2 || BOXMODEL_DM7020HD
+#if BOXMODEL_DREAMBOX_MIPS
 		CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, "standby...");
 #else
 		CVFD::getInstance()->ShowText("standby...");
@@ -4610,7 +4610,7 @@ void CNeutrinoApp::standbyMode(bool bOnOff, bool fromDeepStandby)
 		// Active standby off
 		powerManager->SetStandby(false, false);
 		CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2 || BOXMODEL_DM7020HD
+#if BOXMODEL_DREAMBOX_MIPS
 		CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, "resume");
 #else
 		CVFD::getInstance()->ShowText("resume");
@@ -4640,7 +4640,7 @@ void CNeutrinoApp::standbyMode(bool bOnOff, bool fromDeepStandby)
 		}
 #endif
 
-#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
+#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800 && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
 		if(!recordingstatus && g_settings.ci_standby_reset) {
 			g_CamHandler->exec(NULL, "ca_ci_reset0");
 			g_CamHandler->exec(NULL, "ca_ci_reset1");
@@ -5084,7 +5084,7 @@ void stop_daemons(bool stopall, bool for_flash)
 	if (for_flash) {
 		CVFD::getInstance()->Clear();
 		CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2 || BOXMODEL_DM7020HD
+#if BOXMODEL_DREAMBOX_MIPS
 		CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, "Stop daemons...");
 #else
 		CVFD::getInstance()->ShowText("Stop daemons...");
@@ -5286,7 +5286,7 @@ void CNeutrinoApp::loadKeys(const char * fname)
 	g_settings.mpkey_pause = tconfig->getInt32( "mpkey.pause", CRCInput::RC_playpause );
 #else
 	g_settings.mpkey_play = tconfig->getInt32( "mpkey.play", CRCInput::RC_play );
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM900 || BOXMODEL_DM920 || BOXMODEL_DM8000 || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2 || BOXMODEL_DM7020HD
+#if BOXMODEL_DREAMBOX_ALL
 	g_settings.mpkey_pause = tconfig->getInt32( "mpkey.pause", CRCInput::RC_play );
 #else
 	g_settings.mpkey_pause = tconfig->getInt32( "mpkey.pause", CRCInput::RC_pause );
@@ -5593,7 +5593,7 @@ void CNeutrinoApp::Cleanup()
 	printf("cleanup 13\n");fflush(stdout);
 	delete g_Plugins; g_Plugins = NULL;
 	printf("cleanup 16\n");fflush(stdout);
-#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
+#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800 && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
 	delete g_CamHandler; g_CamHandler = NULL;
 	printf("cleanup 17\n");fflush(stdout);
 #endif
@@ -5673,7 +5673,7 @@ void CNeutrinoApp::CheckFastScan(bool standby, bool reload)
 		}
 		if (standby || (new_fst != scansettings.fst_version)) {
 			CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
-#if BOXMODEL_DM820 || BOXMODEL_DM7080 || BOXMODEL_DM8000 || BOXMODEL_DM800SE || BOXMODEL_DM800SEV2 || BOXMODEL_DM7020HD
+#if BOXMODEL_DREAMBOX_MIPS
 			CVFD::getInstance()->setMode(CVFD::MODE_MENU_UTF8, g_Locale->getText(LOCALE_SATSETUP_FASTSCAN_HEAD));
 #else
 			CVFD::getInstance()->ShowText(g_Locale->getText(LOCALE_SATSETUP_FASTSCAN_HEAD));

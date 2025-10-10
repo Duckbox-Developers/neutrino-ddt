@@ -91,7 +91,7 @@
 extern CRemoteControl * g_RemoteControl;	/* neutrino.cpp */
 extern CPlugins * g_Plugins;			/* neutrino.cpp */
 extern cVideo * videoDecoder;
-#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
+#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800 && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
 extern CCAMMenuHandler * g_CamHandler;
 #endif
 std::string CUserMenu::tmp;
@@ -492,7 +492,7 @@ bool CUserMenu::showUserMenu(neutrino_msg_t msg)
 			menu_item->setHint("", LOCALE_MENU_HINT_VIDEO_THREE_D);
 			break;
 		}
-#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
+#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800 && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
 		case SNeutrinoSettings::ITEM_CAM:
 		{
 			keyhelper.get(&key,&icon);

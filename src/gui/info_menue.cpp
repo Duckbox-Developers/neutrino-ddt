@@ -41,7 +41,7 @@
 
 #include <driver/screen_max.h>
 
-#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
+#if !HAVE_SPARK_HARDWARE && !BOXMODEL_DM800 && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM820
 #include "gui/cam_menu.h"
 extern CCAMMenuHandler * g_CamHandler;
 #endif
