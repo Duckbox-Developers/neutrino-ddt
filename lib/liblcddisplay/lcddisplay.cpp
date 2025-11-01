@@ -191,6 +191,7 @@ void CLCDDisplay::setFlipped(bool onoff)
 
 int CLCDDisplay::setLCDContrast(int contrast)
 {
+#if !BOXMODEL_DM800 && !BOXMODEL_DM800SE && !BOXMODEL_DM800SEV2 && !BOXMODEL_DM8000 && !BOXMODEL_DM820 && !BOXMODEL_DM7080 && !BOXMODEL_DM7020HD
 	int fp;
 
 	fp = open("/dev/dbox/fp0", O_RDWR);
@@ -208,6 +209,7 @@ int CLCDDisplay::setLCDContrast(int contrast)
 		printf("[LCD] can't set lcd contrast(%m)\n");
 	}
 	close(fp);
+#endif
 
 	return (0);
 }
