@@ -54,7 +54,7 @@
 #include <iostream>
 #include <fstream>
 
-#if defined (BOXMODEL_VUPLUS_ARM) || defined (BOXMODEL_VUDUO2) || defined (BOXMODEL_VUULTIMO) || defined (BOXMODEL_VUUNO) || defined (BOXMODEL_DM900) || defined (BOXMODEL_DM920)
+#if defined (BOXMODEL_VUPLUS_ARM) || defined (BOXMODEL_VUDUO2) || defined (BOXMODEL_VUULTIMO) || defined (BOXMODEL_VUUNO) || defined (BOXMODEL_DM900) || defined (BOXMODEL_DM920) || defined (BOXMODEL_DM800SE) || defined (BOXMODEL_DM800SEV2)
 #include <system/proc_tools.h>
 #endif
 
