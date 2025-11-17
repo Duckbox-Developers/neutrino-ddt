@@ -5,6 +5,7 @@
 // c++
 #include <cerrno>
 #include <csignal>
+#include <string>
 
 // system
 #include <stdio.h>
@@ -121,7 +122,7 @@ CWebserver::~CWebserver()
 bool CWebserver::run(void)
 {
 	set_threadname("ywebsrv::run");
-	if (!listenSocket.listen(port, HTTPD_MAX_CONNECTIONS))
+	if (!listenSocket.listen(port, HTTPD_MAX_CONNECTIONS, bindAddress))
 	{
 		if (port != HTTPD_STANDARD_PORT)
 		{
@@ -131,7 +132,7 @@ bool CWebserver::run(void)
 		}
 		fprintf(stderr, "[yhttpd] Socket cannot bind and listen on port %d. Retrying port %d.\n", HTTPD_STANDARD_PORT, HTTPD_FALLBACK_PORT);
 		port = HTTPD_FALLBACK_PORT;
-		if (!listenSocket.listen(port, HTTPD_MAX_CONNECTIONS))
+		if (!listenSocket.listen(port, HTTPD_MAX_CONNECTIONS, bindAddress))
 		{
 			fprintf(stderr, "[yhttpd] Socket cannot bind and listen on port %d. Abort.\n", HTTPD_FALLBACK_PORT);
 			return false;

@@ -18,6 +18,7 @@
 #include <netinet/in.h>
 #include <sys/types.h>
 #include <arpa/inet.h>
+#include <string>
 
 // yhttpd
 #include <yconfig.h>
@@ -56,6 +57,7 @@ class CWebserver
 		bool 		terminate;				// flag: indicate to terminate the Webserver
 		CySocket 	listenSocket;				// Master Socket for listening
 		unsigned int 	port;					// Port to listen on
+		std::string	bindAddress;				// Address/interface to bind to
 		bool 		handle_connection(CySocket *newSock);	// Create a new Connection Instance and handle Connection
 
 		// Connection Socket handling
@@ -74,10 +76,11 @@ class CWebserver
 		CWebserver();
 		~CWebserver(void);
 
-		void 		init(unsigned int _port, bool _is_threading) // Initialize Webserver Settings
+		void 		init(unsigned int _port, bool _is_threading, const std::string &_bindAddress = std::string()) // Initialize Webserver Settings
 		{
 			port = _port;
 			is_threading = _is_threading;
+			bindAddress = _bindAddress;
 		}
 		void		set_conf_no_keep_alive_ips(CStringVector _conf_no_keep_alive_ips)
 		{
