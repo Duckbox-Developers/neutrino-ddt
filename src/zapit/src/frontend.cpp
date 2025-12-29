@@ -56,7 +56,6 @@ extern int zapit_debug;
 #define NORTH	1
 #define EAST	0
 #define WEST	1
-#define USALS
 
 #define FE_MAX_PROPS 18
 
@@ -100,6 +99,9 @@ typedef enum dvb_fec {
 	f4_5,
 	f9_10,
 	f6_7,
+#if _HAVE_DVB57
+	f2_5,
+#endif
 	fNone = 15
 #if (!defined (HAVE_SH4_HARDWARE) && !defined (HAVE_MIPS_HARDWARE) && !defined(BOXMODEL_DCUBE)) || (defined (BOXMODEL_DM820) || defined (BOXMODEL_DM7080))
 	,
@@ -494,6 +496,11 @@ fe_code_rate_t CFrontend::getCodeRate(const uint8_t fec_inner, delivery_system_t
 		case f2_3:
 			fec = FEC_2_3;
 			break;
+#if _HAVE_DVB57
+		case f2_5:
+			fec = FEC_2_5;
+			break;
+#endif
 		case f3_4:
 			fec = FEC_3_4;
 			break;
@@ -1006,11 +1013,17 @@ void CFrontend::getXMLDelsysFEC(fe_code_rate_t xmlfec, delivery_system_t & delsy
 	case FEC_S2_8PSK_2_3:
 		fec = FEC_2_3;
 		break;
+#if 0 //_HAVE_DVB57
+	case FEC_2_5:
+		fec = FEC_2_5;
+		break;
+#endif
 	case FEC_3_4:
 	case FEC_S2_QPSK_3_4:
 	case FEC_S2_8PSK_3_4:
 		fec = FEC_3_4;
 		break;
+//	case FEC_3_5:
 	case FEC_S2_QPSK_3_5:
 	case FEC_S2_8PSK_3_5:
 		fec = FEC_3_5;
@@ -1038,6 +1051,7 @@ void CFrontend::getXMLDelsysFEC(fe_code_rate_t xmlfec, delivery_system_t & delsy
 	case FEC_S2_8PSK_8_9:
 		fec = FEC_8_9;
 		break;
+//	case FEC_9_10:
 	case FEC_S2_QPSK_9_10:
 	case FEC_S2_8PSK_9_10:
 		fec = FEC_9_10;
