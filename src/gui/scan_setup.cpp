@@ -56,7 +56,6 @@
 #include <system/debug.h>
 #include <system/helpers.h>
 
-#include <zapit/femanager.h>
 #include <zapit/getservices.h>
 #include <zapit/scan.h>
 #include <zapit/zapit.h>
