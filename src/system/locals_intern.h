@@ -2282,6 +2282,7 @@ const char *locale_real_names[] =
 	"scants.actterrestrial",
 	"scants.bouquet",
 	"scants.bouquet_erase",
+	"scants.bouquet_leave",
 	"scants.bouquet_update",
 	"scants.bouquet_writenames",
 	"scants.bouquet_writenames_bouquets",

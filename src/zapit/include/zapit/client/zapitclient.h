@@ -90,6 +90,7 @@ class CZapitClient:public CBasicClient
 	enum bouquetMode
 		{
 			BM_DELETEBOUQUETS,
+			BM_DONTTOUCHBOUQUETS,
 			BM_UPDATEBOUQUETS
 		};
 
